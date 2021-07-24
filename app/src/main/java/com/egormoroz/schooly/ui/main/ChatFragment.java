@@ -1,7 +1,5 @@
 package com.egormoroz.schooly.ui.main;
 
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,24 +10,20 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.egormoroz.schooly.MainActivity;
-import com.egormoroz.schooly.ui.chat.Dialog;
-import com.egormoroz.schooly.ui.chat.def.ChatActivity;
-import com.egormoroz.schooly.ui.chat.def.MessageActivity;
-import com.egormoroz.schooly.ui.chat.fixtures.DialogsFixtures;
 import com.egormoroz.schooly.R;
+import com.egormoroz.schooly.ui.chat.Dialog;
+import com.egormoroz.schooly.ui.chat.fixtures.DialogsFixtures;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.squareup.picasso.Picasso;
 import com.stfalcon.chatkit.commons.ImageLoader;
 import com.stfalcon.chatkit.dialogs.DialogsList;
 import com.stfalcon.chatkit.dialogs.DialogsListAdapter;
 
-import java.io.IOException;
 import java.util.Objects;
 
 import static android.content.ContentValues.TAG;
@@ -37,10 +31,7 @@ import static android.content.ContentValues.TAG;
 public class ChatFragment extends Fragment implements DialogsListAdapter.OnDialogClickListener<Dialog>,
         DialogsListAdapter.OnDialogLongClickListener<Dialog>  {
 
-    private Object DialogActivity;
-
     public static ChatFragment newInstance(){return new ChatFragment();}
-    ChatActivity chat = new ChatActivity();
 
     @Override
     public void onViewCreated(@Nullable View view, @NonNull Bundle savedInstanceState) {
@@ -57,23 +48,15 @@ public class ChatFragment extends Fragment implements DialogsListAdapter.OnDialo
     public void onDialogClick(Dialog dialog) {
         open();
     }
+
     public void open() {
-        //        context.startActivity(new Intent(context, DialogFragment.class));
-        Fragment fragment = new androidx.fragment.app.DialogFragment();
+        Fragment fragment = new DialogFragment();
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.messagesList, fragment);
+        fragmentTransaction.replace(R.id.dialogsList, fragment);
         Log.d(TAG, "signInWithCredential:success");
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
-
-
-//        Fragment fragment = new Tasks();
-//        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-//        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//        fragmentTransaction.replace(R.id.messagesList, fragment);
-//        fragmentTransaction.addToBackStack(null);
-//        fragmentTransaction.commit();
     }
 
 
