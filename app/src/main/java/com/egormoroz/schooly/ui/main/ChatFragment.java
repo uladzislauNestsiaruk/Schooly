@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.egormoroz.schooly.MainActivity;
@@ -29,6 +30,8 @@ import com.stfalcon.chatkit.dialogs.DialogsListAdapter;
 
 import java.io.IOException;
 import java.util.Objects;
+
+import static android.content.ContentValues.TAG;
 
 public class ChatFragment extends Fragment implements DialogsListAdapter.OnDialogClickListener<Dialog>,
         DialogsListAdapter.OnDialogLongClickListener<Dialog>  {
@@ -50,15 +53,29 @@ public class ChatFragment extends Fragment implements DialogsListAdapter.OnDialo
             }
         });
     }
-
-    public static void open(Context context) {
-        context.startActivity(new Intent(context, ChatFragment.class));
-    }
-
-    @Override
     public void onDialogClick(Dialog dialog) {
-        DialogFragment.open(this);
+        open();
     }
+    public void open() {
+        //        context.startActivity(new Intent(context, DialogFragment.class));
+        Fragment fragment = new androidx.fragment.app.DialogFragment();
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.messagesList, fragment);
+        Log.d(TAG, "signInWithCredential:success");
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+
+
+//        Fragment fragment = new Tasks();
+//        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+//        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//        fragmentTransaction.replace(R.id.messagesList, fragment);
+//        fragmentTransaction.addToBackStack(null);
+//        fragmentTransaction.commit();
+    }
+
+
 
     DialogsList dialogsList;
     protected ImageLoader imageLoader;
@@ -89,17 +106,17 @@ public class ChatFragment extends Fragment implements DialogsListAdapter.OnDialo
         dialogsAdapter.setOnDialogClickListener(getActivity().findViewById(R.id.dialogsList));
         dialogsAdapter.setOnDialogLongClickListener(getActivity().findViewById(R.id.dialogsList));
         dialogsList.setAdapter(dialogsAdapter);
+        dialogsAdapter.setOnDialogClickListener(new DialogsListAdapter.OnDialogClickListener<Dialog>() {
+            @Override
+            public void onDialogClick(Dialog dialog) {
+                open();
+            }
+        });
     }
 
     @Override
     public void onDialogLongClick(Dialog dialog) {
            //TODO:: CONTEXT MENU
-    }
-
-
-    @Override
-    public void onDialogClick(Dialog dialog) {
-        //TODO:: CONTEXT MENU
     }
 
 
