@@ -3,6 +3,7 @@ package com.egormoroz.schooly.ui.main;
 public class UserInformation {
     String Nick;
     String phone;
+    int uid;
     String password;
     String gender = "Helicopter";
     int age = 404;
@@ -11,12 +12,14 @@ public class UserInformation {
     }
     public UserInformation(String nick, String phone, String password) {
         Nick = nick;
+        this.uid = uid;
         this.phone = phone;
         this.password = password;
     }
 
     public UserInformation(String nick, String phone, String password, String gender, int age) {
         Nick = nick;
+        this.uid = uid;
         this.phone = phone;
         this.password = password;
         this.gender = gender;
@@ -26,6 +29,10 @@ public class UserInformation {
     public String getNick() {
         return Nick;
     }
+
+    public int getUid() { return uid;}
+
+    public void setUid() {this.uid = uid; }
 
     public void setNick(String nick) {
         Nick = nick;
