@@ -42,7 +42,7 @@ public class DialogFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.activity_default_messages, container, false);
 
-        messagesList = root.findViewById(R.id.messagesList);
+//        messagesList = root.findViewById(R.id.messagesList);
         initAdapter();
 
         return root;

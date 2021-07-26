@@ -37,22 +37,24 @@ public abstract class MessageActivity extends DemoMessagesActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_default_messages);
 
-        this.messagesList = findViewById(R.id.messagesList);
+//        this.messagesList = findViewById(R.id.messagesList);
         initAdapter();
 
-        RelativeLayout input = findViewById(R.id.input);
-        ImageView sendfile=findViewById(R.id.sendimage);
-        ImageView sendvoice=findViewById(R.id.voicemessage);
-        ImageView sendmessage=findViewById(R.id.sendmessage);
-        EditText editmessage=findViewById(R.id.editmessage);
-        if(editmessage.isInEditMode()){
-            sendmessage.setVisibility(View.VISIBLE);
-            sendfile.setVisibility(View.GONE);
-            sendvoice.setVisibility(View.GONE);
-        }else {
-            sendfile.setVisibility(View.VISIBLE);
-            sendvoice.setVisibility(View.VISIBLE);
-        }
+
+
+//        RelativeLayout input = findViewById(R.id.input);
+//        ImageView sendfile=findViewById(R.id.sendimage);
+//        ImageView sendvoice=findViewById(R.id.voicemessage);
+//        ImageView sendmessage=findViewById(R.id.sendmessage);
+//        EditText editmessage=findViewById(R.id.editmessage);
+//        if(editmessage.isInEditMode()){
+//            sendmessage.setVisibility(View.VISIBLE);
+//            sendfile.setVisibility(View.GONE);
+//            sendvoice.setVisibility(View.GONE);
+//        }else {
+//            sendfile.setVisibility(View.VISIBLE);
+//            sendvoice.setVisibility(View.VISIBLE);
+//        }
 
     }
 

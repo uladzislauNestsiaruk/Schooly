@@ -31,44 +31,51 @@
 <!--    </com.stfalcon.chatkit.messages.MessageInput>-->
 
 
-    <com.stfalcon.chatkit.messages.MessagesList
-        android:id="@+id/messagesList"
+<!--    <com.stfalcon.chatkit.messages.MessagesList-->
+<!--        android:id="@+id/messagesList"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:layout_above="@+id/input"-->
+<!--        android:layout_alignParentStart="true"-->
+<!--        android:layout_alignParentTop="true"-->
+<!--        android:layout_marginTop="0dp"-->
+<!--        android:layout_marginBottom="0dp" >-->
+
+<!--        <ImageView-->
+<!--            android:id="@+id/playvoicemessage"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:visibility="gone"-->
+<!--            android:src="@drawable/ic_play"-->
+<!--            android:layout_centerVertical="true"-->
+<!--            android:layout_alignParentEnd="true"-->
+<!--            android:layout_marginEnd="4dp"/>-->
+
+<!--        <ImageView-->
+<!--            android:id="@+id/stopvoicemessage"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:visibility="gone"-->
+<!--            android:src="@drawable/ic_stop"-->
+<!--            android:layout_centerVertical="true"-->
+<!--            android:layout_alignParentEnd="true"-->
+<!--            android:layout_marginEnd="4dp"/>-->
+
+<!--        <View-->
+<!--            android:id="@+id/voicemessageview"-->
+<!--            android:layout_width="44dp"-->
+<!--            android:layout_height="200dp"-->
+<!--            android:background="@drawable/corners12voicemessage"-->
+<!--            />-->
+
+<!--    </com.stfalcon.chatkit.messages.MessagesList>-->
+
+    <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/input"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="0dp"
-        android:layout_marginBottom="0dp" >
+        android:layout_height="match_parent">
 
-        <ImageView
-            android:id="@+id/playvoicemessage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:src="@drawable/ic_play"
-            android:layout_centerVertical="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="4dp"/>
 
-        <ImageView
-            android:id="@+id/stopvoicemessage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:src="@drawable/ic_stop"
-            android:layout_centerVertical="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="4dp"/>
-
-        <View
-            android:id="@+id/voicemessageview"
-            android:layout_width="44dp"
-            android:layout_height="200dp"
-            android:background="@drawable/corners12voicemessage"
-            />
-
-    </com.stfalcon.chatkit.messages.MessagesList>
+    </androidx.recyclerview.widget.RecyclerView>
 
     <RelativeLayout
         android:id="@+id/input"
@@ -123,40 +130,6 @@
             android:layout_marginEnd="8dp"/>
 
         </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingStart="10dp"
-        android:paddingTop="12dp"
-        android:paddingEnd="10dp"
-        android:paddingBottom="10dp"
-        android:background="@drawable/cornerstextmessagesfromme">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/montserrat_bold"
-            android:textColor="@color/white"
-            android:textSize="14sp"/>
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingStart="10dp"
-        android:paddingTop="12dp"
-        android:paddingEnd="10dp"
-        android:paddingBottom="10dp"
-        android:background="@drawable/cornerstextmessagesfromother">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/montserrat_bold"
-            android:textColor="@color/white"
-            android:textSize="14sp"/>
-    </RelativeLayout>
 
 
 
