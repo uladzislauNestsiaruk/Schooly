@@ -4,6 +4,7 @@ public class UserInformation {
     String Nick;
     String phone;
     int uid;
+    String Avatar;
     String password;
     String gender = "Helicopter";
     int age = 404;
@@ -29,7 +30,7 @@ public class UserInformation {
     public String getNick() {
         return Nick;
     }
-
+    public String getAvatar() {return Avatar;}
     public int getUid() { return uid;}
 
     public void setUid() {this.uid = uid; }
