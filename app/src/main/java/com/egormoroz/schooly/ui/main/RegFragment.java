@@ -30,6 +30,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -43,8 +44,11 @@ import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.firebase.auth.PhoneAuthProvider.OnVerificationStateChangedCallbacks;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -167,7 +171,7 @@ public class RegFragment extends Fragment {
         return isPhoneValid;
     }
     boolean isPasswordCorrect(String password){
-        boolean digits = false, characters = true;
+        boolean digits = false, characters = false;
         for(char c : password.toCharArray()){
             if(isDigit(c))
                 digits = true;
@@ -196,6 +200,7 @@ public class RegFragment extends Fragment {
         signInClient = GoogleSignIn.getClient(getActivity(), gso);
         AuthenticationBase = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance();
+        reference = database.getReference("Users");
     }
     public void GoogleAuthorization(){
         GoogleEnter.setOnClickListener(new View.OnClickListener() {
@@ -226,6 +231,21 @@ public class RegFragment extends Fragment {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "createUserWithEmail:success");
                             FirebaseUser user = AuthenticationBase.getCurrentUser();
+                            database = FirebaseDatabase.getInstance();
+                            reference = database.getReference("users");
+                            UserInformation info = new UserInformation("Steve", email, user.getUid(),
+                                    "AVA", password, "Helicopter",  1000);
+
+                            reference.child(user.getUid()).push().setValue(info, new DatabaseReference.CompletionListener() {
+                                @Override
+                                public void onComplete(@Nullable @org.jetbrains.annotations.Nullable DatabaseError error, @NonNull @NotNull DatabaseReference ref) {
+                                    if(error == null)
+                                        Log.d(TAG, "ALL FINE");
+                                    else
+                                        Log.d(TAG, error.toString());
+                                }
+                            });
+
                             setCurrentFragment(MainFragment.newInstance());
                         } else {
                             // If sign in fails, display a message to the user.
