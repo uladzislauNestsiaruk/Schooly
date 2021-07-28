@@ -63,6 +63,7 @@ public class RegFragment extends Fragment {
     public static RegFragment newInstance(){return new RegFragment();}
     int RC_SIGN_IN = 175;
     final int GOOGLE_SIGN_IN = 101;
+    final String databaseUrl = "https://schooly-47238-default-rtdb.europe-west1.firebasedatabase.app";
     final int Phone_Request_Code = 102;
     private static final String TAG = "###########";
     boolean isPhoneValid = false;
@@ -119,8 +120,9 @@ public class RegFragment extends Fragment {
                 isPhoneValid = data.getExtras().getBoolean("IsPhoneValid");
                 String phone = String.valueOf(phoneEditText.getText()).trim();
                 String password = String.valueOf(passwordEditText.getText()).trim();
+                String nick = String.valueOf(nickNameEditText.getText()).trim();
                 if(isPhoneValid)
-                    createNewEmailUser(makeEmail(phone), password);
+                    createNewEmailUser(makeEmail(phone), password, nick);
                 break;
         }
     }
@@ -199,8 +201,8 @@ public class RegFragment extends Fragment {
                 .build();
         signInClient = GoogleSignIn.getClient(getActivity(), gso);
         AuthenticationBase = FirebaseAuth.getInstance();
-        database = FirebaseDatabase.getInstance();
-        reference = database.getReference("Users");
+        database = FirebaseDatabase.getInstance(databaseUrl);
+        reference = database.getReference("users");
     }
     public void GoogleAuthorization(){
         GoogleEnter.setOnClickListener(new View.OnClickListener() {
@@ -222,7 +224,7 @@ public class RegFragment extends Fragment {
         BottomNavigationView bnv = getActivity().findViewById(R.id.bottomNavigationView);
         bnv.setVisibility(bnv.GONE);
     }
-    public void createNewEmailUser(String email, String password){
+    public void createNewEmailUser(String email, String password, String nick){
         AuthenticationBase.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
                     @Override
@@ -231,21 +233,9 @@ public class RegFragment extends Fragment {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "createUserWithEmail:success");
                             FirebaseUser user = AuthenticationBase.getCurrentUser();
-                            database = FirebaseDatabase.getInstance();
-                            reference = database.getReference("users");
-                            UserInformation info = new UserInformation("Steve", email, user.getUid(),
+                            UserInformation info = new UserInformation(nick, getPhone(email), user.getUid(),
                                     "AVA", password, "Helicopter",  1000);
-
-                            reference.child(user.getUid()).push().setValue(info, new DatabaseReference.CompletionListener() {
-                                @Override
-                                public void onComplete(@Nullable @org.jetbrains.annotations.Nullable DatabaseError error, @NonNull @NotNull DatabaseReference ref) {
-                                    if(error == null)
-                                        Log.d(TAG, "ALL FINE");
-                                    else
-                                        Log.d(TAG, error.toString());
-                                }
-                            });
-
+                            reference.child(user.getUid()).setValue(info);
                             setCurrentFragment(MainFragment.newInstance());
                         } else {
                             // If sign in fails, display a message to the user.
@@ -262,5 +252,11 @@ public class RegFragment extends Fragment {
             email += phone.toCharArray()[i];
         email += "@gmail.com";
         return email;
+    }
+    String getPhone(String email){
+        String res = email;
+        res = res.replace("schooly", "");
+        res = res.replace("@gmail.com", "");
+        return "+" + res;
     }
 }
