@@ -2,37 +2,21 @@ package com.egormoroz.schooly;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.egormoroz.schooly.ui.chat.def.ChatActivity;
-import com.egormoroz.schooly.ui.main.EnterFragment;
 import com.egormoroz.schooly.ui.main.MainFragment;
-import com.egormoroz.schooly.ui.main.MessengerFragment;
-import com.egormoroz.schooly.ui.main.NontificationFragment;
-import com.egormoroz.schooly.ui.main.RegFragment;
 import com.egormoroz.schooly.ui.main.RegisrtationstartFragment;
 import com.egormoroz.schooly.ui.news.NewsFragment;
 import com.egormoroz.schooly.ui.people.PeopleFragment;
 import com.egormoroz.schooly.ui.profile.ProfileFragment;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -40,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 //        Toolbar toolbar = findViewById(R.id.toolbar);
 //        AppBarLayout appBarLayout = findViewById(R.id.AppBarLayout);
 //        setSupportActionBar(toolbar);
@@ -95,6 +80,8 @@ public class MainActivity extends AppCompatActivity {
 //        toolbarTitle.setText(getString(R.string.app_name));
 //        toolbarTitle.setTextColor(getColor(R.color.app_color));
         ///////////Authorization block
+
+        ///////////
         if(IsEntered())
             setCurrentFragment(MainFragment.newInstance());
         else
