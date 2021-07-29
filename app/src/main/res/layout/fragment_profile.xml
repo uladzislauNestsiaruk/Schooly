@@ -21,7 +21,6 @@
             android:id="@+id/usernick"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="tyomaa"
             android:textSize="20dp"
             android:textColor="@color/app_color"
             android:fontFamily="@font/montserrat_bold"

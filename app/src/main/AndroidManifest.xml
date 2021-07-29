@@ -11,7 +11,7 @@
         android:theme="@style/Theme.Schooly">
 
 
-        <activity android:name=".ui.main.DialogFragment"></activity>
+        <activity android:name=".ui.main.MessageActivity"></activity>
         <activity android:name=".ui.main.PhoneCodeActivity"></activity>
         <activity
             android:name=".MainActivity"

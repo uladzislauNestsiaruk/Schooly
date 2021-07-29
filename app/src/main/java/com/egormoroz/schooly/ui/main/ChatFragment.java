@@ -52,14 +52,7 @@ public class ChatFragment extends Fragment implements DialogsListAdapter.OnDialo
     }
 
     public void open() {
-//        Fragment fragment = new DialogFragment();
-//        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-//        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//        fragmentTransaction.replace(R.id.dialogsList, fragment);
-//        Log.d(TAG, "signInWithCredential:success");
-//        fragmentTransaction.addToBackStack(null);
-//       fragmentTransaction.commit();
-        Intent i = new Intent(getActivity(), DialogFragment.class);
+        Intent i = new Intent(getActivity(), MessageActivity.class);
         startActivity(i);
         ((Activity) getActivity()).overridePendingTransition(0, 0);
     }

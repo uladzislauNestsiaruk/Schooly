@@ -15,6 +15,7 @@ import androidx.core.app.ActivityCompat;
 
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.ui.chat.DemoMessagesActivity;
+import com.egormoroz.schooly.ui.chat.Message;
 import com.egormoroz.schooly.ui.chat.fixtures.MessagesFixtures;
 import com.stfalcon.chatkit.messages.MessageInput;
 import com.stfalcon.chatkit.messages.MessagesList;
@@ -23,17 +24,10 @@ import com.stfalcon.chatkit.messages.MessagesListAdapter;
 import java.io.IOException;
 
 
-public class DialogFragment extends DemoMessagesActivity
+public class MessageActivity extends DemoMessagesActivity
         implements MessageInput.InputListener,
         MessageInput.AttachmentsListener,
         MessageInput.TypingListener {
-
-
-   // private RecordButton recordButton = null;
-    // private MediaRecorder recorder = null;
-
-   // private PlayButton   playButton = null;
-    //  private MediaPlayer   player = null;
 
     private static final int REQUEST_RECORD_AUDIO_PERMISSION = 200;
     private MessagesList messagesList;
@@ -84,7 +78,6 @@ public class DialogFragment extends DemoMessagesActivity
         } catch (IOException e) {
             Log.e(LOG_TAG, "prepare() failed");
         }
-
         recorder.start();
     }
 
@@ -107,6 +100,8 @@ int id = 0;
         input.setInputListener(this);
         input.setTypingListener(this);
         input.setAttachmentsListener(this);
+    }
+    public void  RecAudio(){
         ImageView voiceinput=findViewById(R.id.voiceinput);
         voiceinput.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -117,6 +112,7 @@ int id = 0;
                         v.setPressed(true);
                         startRecording();
                         break;
+                  //      messagesAdapter.addToStart(MessagesFixtures.getVoiceMessage(), true);
                     case MotionEvent.ACTION_UP:
                         v.setPressed(false);
                         stopRecording();
@@ -130,7 +126,6 @@ int id = 0;
 
         });
     }
-
     @Override
     public boolean onSubmit(CharSequence input) {
         super.messagesAdapter.addToStart(
