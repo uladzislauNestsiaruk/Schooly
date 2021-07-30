@@ -12,7 +12,7 @@ import java.util.Date;
 public final class MessagesFixtures extends FixturesData {
     private DatabaseReference messagesRef;
     private MessagesFixtures(DatabaseReference ref) {
-        messagesRef = ref;
+        messagesRef = ref.child("messages");
         throw new AssertionError();
     }
     private static void uploadMessage(DatabaseReference ref, Message message){

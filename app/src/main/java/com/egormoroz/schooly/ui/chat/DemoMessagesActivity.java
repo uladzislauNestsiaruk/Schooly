@@ -7,13 +7,18 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.egormoroz.schooly.CONST;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import com.stfalcon.chatkit.commons.ImageLoader;
@@ -22,6 +27,7 @@ import com.stfalcon.chatkit.messages.MessagesListAdapter;
 import com.egormoroz.schooly.ui.chat.fixtures.MessagesFixtures;
 
 
+import org.jetbrains.annotations.NotNull;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -37,7 +43,7 @@ public abstract class DemoMessagesActivity extends AppCompatActivity
     protected final String senderId = "0";
     protected ImageLoader imageLoader;
     protected MessagesListAdapter<Message> messagesAdapter;
-
+    private String dialogId;
     private Menu menu;
     private int selectionCount;
     private Date lastLoadedDate;
@@ -45,12 +51,11 @@ public abstract class DemoMessagesActivity extends AppCompatActivity
     private DatabaseReference ref;
     private FirebaseAuth authDatabase;
     private String userId;
-    private String chatId;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initFirebase();
         imageLoader = (imageView, url, payload) -> Picasso.get().load(url).into(imageView);
+        initFirebase();
     }
 
     @Override
@@ -108,7 +113,7 @@ public abstract class DemoMessagesActivity extends AppCompatActivity
     protected void loadMessages() {
         //imitation of internet connection
         new Handler().postDelayed(() -> {
-            ArrayList<Message> messages = MessagesFixtures.getMessages(lastLoadedDate);
+            ArrayList<Message> messages = MessagesFixtures.getMessages(lastLoadedDate, ref);
             lastLoadedDate = messages.get(messages.size() - 1).getCreatedAt();
             messagesAdapter.addToEnd(messages, false);
         }, 1000);
@@ -130,7 +135,11 @@ public abstract class DemoMessagesActivity extends AppCompatActivity
         database  = FirebaseDatabase.getInstance(CONST.RealtimeDatabaseUrl);
         authDatabase = FirebaseAuth.getInstance();
         userId = authDatabase.getCurrentUser().getUid();
+        Log.d("######", userId);
+        ref = database.getReference("users").child(userId).child("chats");
 
-        ref = database.getReference(userId).child("chats").child(chatId);
+    }
+    public void getChatId(String id){
+        dialogId = id;
     }
 }

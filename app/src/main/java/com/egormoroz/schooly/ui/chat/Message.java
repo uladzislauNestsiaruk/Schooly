@@ -1,5 +1,6 @@
 package com.egormoroz.schooly.ui.chat;
 
+import com.google.firebase.database.Exclude;
 import com.google.firebase.database.IgnoreExtraProperties;
 import com.stfalcon.chatkit.commons.models.IMessage;
 import com.stfalcon.chatkit.commons.models.MessageContentType;
@@ -36,7 +37,7 @@ public class Message implements IMessage,
     public Date getCreatedAt() {
         return createdAt;
     }
-
+    @Exclude
     @Override
     public User getUser() {
         return this.user;
@@ -75,6 +76,12 @@ public class Message implements IMessage,
 
         private String url;
 
+        public Image() {
+
+        }
+        public String getUrl(){
+            return url;
+        }
         public Image(String url) {
             this.url = url;
         }
@@ -84,10 +91,8 @@ public class Message implements IMessage,
 
         private String url;
         private int duration;
+        public Voice(){
 
-        public Voice(String url, int duration) {
-            this.url = url;
-            this.duration = duration;
         }
 
         public String getUrl() {
@@ -96,6 +101,10 @@ public class Message implements IMessage,
 
         public int getDuration() {
             return duration;
+        }
+        public Voice(String url, int duration) {
+            this.url = url;
+            this.duration = duration;
         }
     }
 

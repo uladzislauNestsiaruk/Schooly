@@ -67,8 +67,8 @@ public class ChatActivity extends DemoDialogsActivity {
     }
     private  void initFirebase(){
         database  = FirebaseDatabase.getInstance(CONST.RealtimeDatabaseUrl);
-        ref = database.getReference("chats");
         authDatabase = FirebaseAuth.getInstance();
         userId = authDatabase.getCurrentUser().getUid();
+        ref = database.getReference("users").child(userId).child("chats");
     }
 }

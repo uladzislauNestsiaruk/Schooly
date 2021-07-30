@@ -74,7 +74,9 @@ public final class DialogsFixtures extends FixturesData {
                 date);
     }
     private static void uploadDialog(DatabaseReference ref, String userId, Dialog dialog){
-        ref.child(userId).push().setValue(dialog);
+        String id = ref.push().getKey();
+        ref.push().setValue(dialog);
+        dialog.setId(id);
     }
     private static void uploadDialogs(DatabaseReference ref, String userId,
                                       ArrayList<Dialog> dialogs){

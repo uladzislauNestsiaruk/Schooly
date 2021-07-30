@@ -55,11 +55,13 @@ public class ChatFragment extends Fragment implements DialogsListAdapter.OnDialo
         });
     }
     public void onDialogClick(Dialog dialog) {
-        open();
+        open(dialog);
     }
 
-    public void open() {
+    public void open(Dialog dialog) {
+        String dialogId = dialog.getId();
         Intent i = new Intent(getActivity(), MessageActivity.class);
+        i.putExtra("dialogId", dialogId);
         startActivity(i);
         ((Activity) getActivity()).overridePendingTransition(0, 0);
     }
@@ -99,7 +101,7 @@ public class ChatFragment extends Fragment implements DialogsListAdapter.OnDialo
         dialogsAdapter.setOnDialogClickListener(new DialogsListAdapter.OnDialogClickListener<Dialog>() {
             @Override
             public void onDialogClick(Dialog dialog) {
-                open();
+                open(dialog);
             }
         });
         dialogsAdapter.setOnDialogLongClickListener(new DialogsListAdapter.OnDialogLongClickListener<Dialog>() {
@@ -117,9 +119,9 @@ public class ChatFragment extends Fragment implements DialogsListAdapter.OnDialo
 
     private  void initFirebase(){
         database  = FirebaseDatabase.getInstance(CONST.RealtimeDatabaseUrl);
-        ref = database.getReference("chats");
         authDatabase = FirebaseAuth.getInstance();
         userId = authDatabase.getCurrentUser().getUid();
+        ref = database.getReference("users").child(userId).child("chats");
     }
 
 }

@@ -2,6 +2,7 @@ package com.egormoroz.schooly.ui.main;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
@@ -44,6 +45,8 @@ public class MessageActivity extends DemoMessagesActivity
     private int[]  grantResult[];
     private static String fileName = null;
     private static final String LOG_TAG = "AudioRecordTest";
+    private Intent dialogIntent;
+    private String dialogId;
 
     private MediaRecorder recorder = null;
 
@@ -116,6 +119,7 @@ int id = 0;
         MessageInput input = findViewById(R.id.input);
         input.setInputListener(this);
         input.setTypingListener(this);
+        getCurrentChatId();
         RecAudio();
     }
 
@@ -196,5 +200,10 @@ int id = 0;
     @Override
     public void onSelectionChanged(int count) {
 
+    }
+    public void getCurrentChatId(){
+        dialogIntent = getIntent();
+        dialogId = dialogIntent.getStringExtra("dialogId");
+        getChatId(dialogId);
     }
 }
