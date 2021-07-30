@@ -10,6 +10,10 @@ import android.view.Menu;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.egormoroz.schooly.CONST;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
 
 import com.stfalcon.chatkit.commons.ImageLoader;
@@ -37,11 +41,15 @@ public abstract class DemoMessagesActivity extends AppCompatActivity
     private Menu menu;
     private int selectionCount;
     private Date lastLoadedDate;
-
+    private  FirebaseDatabase database;
+    private DatabaseReference ref;
+    private FirebaseAuth authDatabase;
+    private String userId;
+    private String chatId;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        initFirebase();
         imageLoader = (imageView, url, payload) -> Picasso.get().load(url).into(imageView);
     }
 
@@ -117,5 +125,12 @@ public abstract class DemoMessagesActivity extends AppCompatActivity
             return String.format(Locale.getDefault(), "%s: %s (%s)",
                     message.getUser().getName(), text, createdAt);
         };
+    }
+    private  void initFirebase(){
+        database  = FirebaseDatabase.getInstance(CONST.RealtimeDatabaseUrl);
+        authDatabase = FirebaseAuth.getInstance();
+        userId = authDatabase.getCurrentUser().getUid();
+
+        ref = database.getReference(userId).child("chats").child(chatId);
     }
 }

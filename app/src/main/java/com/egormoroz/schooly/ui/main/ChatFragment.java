@@ -16,11 +16,15 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.egormoroz.schooly.CONST;
 import com.egormoroz.schooly.MainActivity;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.ui.chat.Dialog;
 import com.egormoroz.schooly.ui.chat.fixtures.DialogsFixtures;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
 import com.stfalcon.chatkit.commons.ImageLoader;
 import com.stfalcon.chatkit.dialogs.DialogsList;
@@ -32,7 +36,10 @@ import static android.content.ContentValues.TAG;
 
 public class ChatFragment extends Fragment implements DialogsListAdapter.OnDialogClickListener<Dialog>,
         DialogsListAdapter.OnDialogLongClickListener<Dialog>  {
-
+    FirebaseDatabase database;
+    DatabaseReference ref;
+    FirebaseAuth authDatabase;
+    String userId;
     public static ChatFragment newInstance(){return new ChatFragment();}
 
     @Override
@@ -78,13 +85,14 @@ public class ChatFragment extends Fragment implements DialogsListAdapter.OnDialo
         BottomNavigationView bnv = getActivity().findViewById(R.id.bottomNavigationView);
         bnv.setVisibility(bnv.GONE);
         super.onCreate(SavedInstanceState);
+        initFirebase();
         initAdapter();
         return root;
     }
 
     private void initAdapter() {
         dialogsAdapter = new DialogsListAdapter<>(imageLoader);
-        dialogsAdapter.setItems(DialogsFixtures.getDialogs());
+        dialogsAdapter.setItems(DialogsFixtures.getDialogs(ref, userId));
         dialogsAdapter.setOnDialogClickListener(getActivity().findViewById(R.id.dialogsList));
         dialogsAdapter.setOnDialogLongClickListener(getActivity().findViewById(R.id.dialogsList));
         dialogsList.setAdapter(dialogsAdapter);
@@ -107,5 +115,11 @@ public class ChatFragment extends Fragment implements DialogsListAdapter.OnDialo
         //TODO:: CONTEXT MENU
     }
 
+    private  void initFirebase(){
+        database  = FirebaseDatabase.getInstance(CONST.RealtimeDatabaseUrl);
+        ref = database.getReference("chats");
+        authDatabase = FirebaseAuth.getInstance();
+        userId = authDatabase.getCurrentUser().getUid();
+    }
 
 }

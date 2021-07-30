@@ -22,6 +22,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.egormoroz.schooly.CONST;
 import com.egormoroz.schooly.MainActivity;
 import com.egormoroz.schooly.R;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -63,7 +64,7 @@ public class RegFragment extends Fragment {
     public static RegFragment newInstance(){return new RegFragment();}
     int RC_SIGN_IN = 175;
     final int GOOGLE_SIGN_IN = 101;
-    final String databaseUrl = "https://schooly-47238-default-rtdb.europe-west1.firebasedatabase.app";
+    final String databaseUrl = CONST.RealtimeDatabaseUrl;
     final int Phone_Request_Code = 102;
     private static final String TAG = "###########";
     boolean isPhoneValid = false;
