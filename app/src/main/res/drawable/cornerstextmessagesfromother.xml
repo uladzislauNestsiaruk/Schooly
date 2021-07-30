@@ -6,7 +6,7 @@
                 android:bottomRightRadius="16dp"
                 android:bottomLeftRadius="0dp"
                 android:topRightRadius="16dp"/>
+            <solid android:color="@color/app_grey"/>
         </shape>
-        <color android:color="@color/app_grey"/>
     </item>
 </selector>

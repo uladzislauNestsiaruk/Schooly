@@ -1,38 +1,23 @@
 package com.egormoroz.schooly.ui.main;
 
+import com.google.firebase.database.IgnoreExtraProperties;
+
+@IgnoreExtraProperties
 public class UserInformation {
-    String Nick;
-    String phone;
-    int uid;
-    String password;
-    String gender = "Helicopter";
-    int age = 404;
+    private String Nick;
+    private String phone;
+    private String uid;
+    private String Avatar = "Seg";
+    private String password;
+    private String gender = "Helicopter";
+    private int age = 404;
     public UserInformation(){
 
-    }
-    public UserInformation(String nick, String phone, String password) {
-        Nick = nick;
-        this.uid = uid;
-        this.phone = phone;
-        this.password = password;
-    }
-
-    public UserInformation(String nick, String phone, String password, String gender, int age) {
-        Nick = nick;
-        this.uid = uid;
-        this.phone = phone;
-        this.password = password;
-        this.gender = gender;
-        this.age = age;
     }
 
     public String getNick() {
         return Nick;
     }
-
-    public int getUid() { return uid;}
-
-    public void setUid() {this.uid = uid; }
 
     public void setNick(String nick) {
         Nick = nick;
@@ -44,6 +29,16 @@ public class UserInformation {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getUid() { return uid;}
+
+    public void setUid() {this.uid = uid; }
+
+    public String getAvatar() {return Avatar;}
+
+    public void setAvatar(String Avatar){
+        this.Avatar = Avatar;
     }
 
     public String getPassword() {
@@ -70,4 +65,14 @@ public class UserInformation {
         this.age = age;
     }
 
+    public UserInformation(String nick, String phone, String uid, String Avatar, String password,
+                           String gender, int age) {
+        this.Nick = nick;
+        this.uid = uid;
+        this.phone = phone;
+        this.password = password;
+        this.gender = gender;
+        this.age = age;
+        this.Avatar = Avatar;
+    }
 }

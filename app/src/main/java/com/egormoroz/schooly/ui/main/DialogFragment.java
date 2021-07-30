@@ -1,93 +1,61 @@
 package com.egormoroz.schooly.ui.main;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 
 import com.egormoroz.schooly.R;
+import com.egormoroz.schooly.ui.chat.DemoMessagesActivity;
 import com.egormoroz.schooly.ui.chat.fixtures.MessagesFixtures;
-import com.stfalcon.chatkit.commons.ImageLoader;
 import com.stfalcon.chatkit.messages.MessageInput;
 import com.stfalcon.chatkit.messages.MessagesList;
 import com.stfalcon.chatkit.messages.MessagesListAdapter;
 
-public class DialogFragment extends Fragment
+
+public class DialogFragment extends DemoMessagesActivity
         implements MessageInput.InputListener,
         MessageInput.AttachmentsListener,
         MessageInput.TypingListener {
 
-    public static void open(FragmentActivity context) {
+    public static void open(Context context) {
         context.startActivity(new Intent(context, DialogFragment.class));
     }
 
     private MessagesList messagesList;
-    protected final String senderId = "0";
-    protected ImageLoader imageLoader;
-    protected MessagesListAdapter messagesAdapter;
-
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.activity_default_messages, container, false);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_default_messages);
 
-//        messagesList = root.findViewById(R.id.messagesList);
+        this.messagesList = findViewById(R.id.messagesList);
         initAdapter();
 
-        return root;
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        RelativeLayout input = view.findViewById(R.id.input);
-        ImageView sendfile = view.findViewById(R.id.sendimage);
-        ImageView sendvoice = view.findViewById(R.id.voicemessage);
-        ImageView sendmessage = view.findViewById(R.id.sendmessage);
-        EditText editmessage = view.findViewById(R.id.editmessage);
-        if (editmessage.isInEditMode()) {
-            sendmessage.setVisibility(View.VISIBLE);
-            sendfile.setVisibility(View.GONE);
-            sendvoice.setVisibility(View.GONE);
-        } else {
-            sendfile.setVisibility(View.VISIBLE);
-            sendvoice.setVisibility(View.VISIBLE);
-        }
+        MessageInput input = findViewById(R.id.input);
+        input.setInputListener(this);
+        input.setTypingListener(this);
+        input.setAttachmentsListener(this);
     }
 
     @Override
     public boolean onSubmit(CharSequence input) {
-        messagesAdapter.addToStart(
+        super.messagesAdapter.addToStart(
                 MessagesFixtures.getTextMessage(input.toString()), true);
         return true;
     }
 
     @Override
     public void onAddAttachments() {
-        messagesAdapter.addToStart(
+        super.messagesAdapter.addToStart(
                 MessagesFixtures.getImageMessage(), true);
     }
 
     private void initAdapter() {
-        messagesAdapter = new MessagesListAdapter<>( senderId, imageLoader);
-        messagesAdapter.enableSelectionMode((MessagesListAdapter.SelectionListener) this);
-        messagesAdapter.setLoadMoreListener((MessagesListAdapter.OnLoadMoreListener) this);
-//        super.messagesAdapter.registerViewClickListener(R.id.messageUserAvatar,
-//                (view, message) -> AppUtils.showToast(MessageActivity.this,
-//                        message.getUser().getName() + " avatar click",
-//                        false));
-        messagesList.setAdapter(messagesAdapter);
+        super.messagesAdapter = new MessagesListAdapter<>(super.senderId, super.imageLoader);
+        super.messagesAdapter.enableSelectionMode(this);
+        super.messagesAdapter.setLoadMoreListener(this);
+        this.messagesList.setAdapter(super.messagesAdapter);
     }
 
     @Override
@@ -98,5 +66,10 @@ public class DialogFragment extends Fragment
     @Override
     public void onStopTyping() {
         Log.v("Typing listener", getString(R.string.stop_typing_status));
+    }
+
+    @Override
+    public void onSelectionChanged(int count) {
+
     }
 }

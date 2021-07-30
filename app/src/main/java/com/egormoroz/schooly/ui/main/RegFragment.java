@@ -30,6 +30,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -43,8 +44,11 @@ import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.firebase.auth.PhoneAuthProvider.OnVerificationStateChangedCallbacks;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -59,6 +63,7 @@ public class RegFragment extends Fragment {
     public static RegFragment newInstance(){return new RegFragment();}
     int RC_SIGN_IN = 175;
     final int GOOGLE_SIGN_IN = 101;
+    final String databaseUrl = "https://schooly-47238-default-rtdb.europe-west1.firebasedatabase.app";
     final int Phone_Request_Code = 102;
     private static final String TAG = "###########";
     boolean isPhoneValid = false;
@@ -115,8 +120,9 @@ public class RegFragment extends Fragment {
                 isPhoneValid = data.getExtras().getBoolean("IsPhoneValid");
                 String phone = String.valueOf(phoneEditText.getText()).trim();
                 String password = String.valueOf(passwordEditText.getText()).trim();
+                String nick = String.valueOf(nickNameEditText.getText()).trim();
                 if(isPhoneValid)
-                    createNewEmailUser(makeEmail(phone), password);
+                    createNewEmailUser(makeEmail(phone), password, nick);
                 break;
         }
     }
@@ -167,7 +173,7 @@ public class RegFragment extends Fragment {
         return isPhoneValid;
     }
     boolean isPasswordCorrect(String password){
-        boolean digits = false, characters = true;
+        boolean digits = false, characters = false;
         for(char c : password.toCharArray()){
             if(isDigit(c))
                 digits = true;
@@ -195,7 +201,8 @@ public class RegFragment extends Fragment {
                 .build();
         signInClient = GoogleSignIn.getClient(getActivity(), gso);
         AuthenticationBase = FirebaseAuth.getInstance();
-        database = FirebaseDatabase.getInstance();
+        database = FirebaseDatabase.getInstance(databaseUrl);
+        reference = database.getReference("users");
     }
     public void GoogleAuthorization(){
         GoogleEnter.setOnClickListener(new View.OnClickListener() {
@@ -217,7 +224,7 @@ public class RegFragment extends Fragment {
         BottomNavigationView bnv = getActivity().findViewById(R.id.bottomNavigationView);
         bnv.setVisibility(bnv.GONE);
     }
-    public void createNewEmailUser(String email, String password){
+    public void createNewEmailUser(String email, String password, String nick){
         AuthenticationBase.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
                     @Override
@@ -226,6 +233,9 @@ public class RegFragment extends Fragment {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "createUserWithEmail:success");
                             FirebaseUser user = AuthenticationBase.getCurrentUser();
+                            UserInformation info = new UserInformation(nick, getPhone(email), user.getUid(),
+                                    "AVA", password, "Helicopter",  1000);
+                            reference.child(user.getUid()).setValue(info);
                             setCurrentFragment(MainFragment.newInstance());
                         } else {
                             // If sign in fails, display a message to the user.
@@ -242,5 +252,11 @@ public class RegFragment extends Fragment {
             email += phone.toCharArray()[i];
         email += "@gmail.com";
         return email;
+    }
+    String getPhone(String email){
+        String res = email;
+        res = res.replace("schooly", "");
+        res = res.replace("@gmail.com", "");
+        return "+" + res;
     }
 }

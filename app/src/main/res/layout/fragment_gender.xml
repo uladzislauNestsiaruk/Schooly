@@ -39,39 +39,74 @@
             android:layout_marginTop="90dp"
             android:textColor="@color/app_color2"/>
 
-        <TextView
-            android:id="@+id/man"
-            android:layout_width="wrap_content"
+        <RadioGroup
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_centerHorizontal="true"
             android:layout_below="@+id/choosegender"
-            android:text="@string/man"
-            android:textSize="18sp"
-            android:textColor="@color/greygender1"
-            android:fontFamily="@font/montserrat_extrabold"
-            android:background="@drawable/cornersgender"
-            android:paddingBottom="13dp"
-            android:paddingTop="13dp"
-            android:paddingStart="39dp"
-            android:paddingEnd="39dp"/>
+            android:layout_marginTop="20dp">
 
-        <TextView
-            android:id="@+id/woman"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_centerHorizontal="true"
-            android:layout_below="@+id/man"
-            android:text="@string/woman"
-            android:textSize="18sp"
-            android:textColor="@color/greygender1"
-            android:fontFamily="@font/montserrat_extrabold"
-            android:background="@drawable/cornersgender"
-            android:paddingBottom="13dp"
-            android:paddingTop="13dp"
-            android:paddingStart="41dp"
-            android:paddingEnd="41dp"/>
+            <RadioButton
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/man"
+                android:gravity="center"
+                android:layout_marginStart="88dp"
+                android:layout_marginEnd="88dp"
+                android:textSize="18sp"
+                android:button="@color/transparent"
+                android:background="@drawable/radio_selector"
+                android:textColor="@drawable/radio_botton_text"
+                android:fontFamily="@font/montserrat_extrabold"/>
+
+            <RadioButton
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/woman"
+                android:gravity="center"
+                android:layout_marginStart="88dp"
+                android:layout_marginEnd="88dp"
+                android:textSize="18sp"
+                android:layout_marginTop="20dp"
+                android:button="@color/transparent"
+                android:background="@drawable/radio_selector"
+                android:textColor="@drawable/radio_botton_text"
+                android:fontFamily="@font/montserrat_extrabold"/>
+
+        </RadioGroup>
+
+<!--        <TextView-->
+<!--            android:id="@+id/man"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="20dp"-->
+<!--            android:layout_centerHorizontal="true"-->
+<!--            android:layout_below="@+id/choosegender"-->
+<!--            android:text="@string/man"-->
+<!--            android:textSize="18sp"-->
+<!--            android:textColor="@color/greygender1"-->
+<!--            android:fontFamily="@font/montserrat_extrabold"-->
+<!--            android:background="@drawable/cornersgender"-->
+<!--            android:paddingBottom="13dp"-->
+<!--            android:paddingTop="13dp"-->
+<!--            android:paddingStart="39dp"-->
+<!--            android:paddingEnd="39dp"/>-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/woman"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="20dp"-->
+<!--            android:layout_centerHorizontal="true"-->
+<!--            android:layout_below="@+id/man"-->
+<!--            android:text="@string/woman"-->
+<!--            android:textSize="18sp"-->
+<!--            android:textColor="@color/greygender1"-->
+<!--            android:fontFamily="@font/montserrat_extrabold"-->
+<!--            android:background="@drawable/cornersgender"-->
+<!--            android:paddingBottom="13dp"-->
+<!--            android:paddingTop="13dp"-->
+<!--            android:paddingStart="41dp"-->
+<!--            android:paddingEnd="41dp"/>-->
 
         <ImageView
             android:layout_width="wrap_content"

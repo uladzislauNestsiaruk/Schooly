@@ -1,5 +1,6 @@
 package com.egormoroz.schooly.ui.profile;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,9 +35,13 @@ public class ProfileFragment extends Fragment {
         return root;
     }
 
+    @SuppressLint("ResourceType")
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        TextView nickname =view.findViewById(R.id.usernick);
+        nickname.setText(R.id.editnickregistration);
 
 //        TextView pub = view.findViewById(R.id.pub);
 //        pub.setOnClickListener(new View.OnClickListener() {

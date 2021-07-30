@@ -66,6 +66,16 @@ public class MainFragment extends Fragment {
             }
         });
 
+        ImageView nontifications=view.findViewById(R.id.nontification);
+        nontifications.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((MainActivity)getActivity()).setCurrentFragment(GenderFragment.newInstance());
+//
+            }
+        });
+
+
 //        ImageView chat=view.findViewById(R.id.chat);
 //        chat.setOnClickListener(new View.OnClickListener() {
 //

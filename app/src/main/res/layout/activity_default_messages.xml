@@ -4,134 +4,35 @@
     android:layout_height="match_parent"
     android:background="@color/white">
 
-
-    <!--    <com.stfalcon.chatkit.messages.MessageInput-->
-<!--        android:id="@+id/input"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginStart="32dp"-->
-<!--        android:layout_marginEnd="32dp"-->
-<!--        android:layout_marginBottom="16dp"-->
-<!--        android:background="@drawable/corners10"-->
-<!--        android:layout_alignParentBottom="true"-->
-<!--        app:inputHint="@string/messages"-->
-<!--        app:inputButtonIcon="@drawable/ic_sendmessage"-->
-<!--        app:inputButtonBackground="@drawable/corners"-->
-<!--        app:inputHintColor="@color/white"-->
-<!--        app:showAttachmentButton="false"-->
-<!--        app:attachmentButtonMargin="20dp"-->
-<!--        app:inputButtonDefaultBgPressedColor="@color/white">-->
-
-<!--        <ImageView-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginEnd="40dp"-->
-<!--            android:src="@drawable/ic_voicemessage"/>-->
-
-<!--    </com.stfalcon.chatkit.messages.MessageInput>-->
-
-
-<!--    <com.stfalcon.chatkit.messages.MessagesList-->
-<!--        android:id="@+id/messagesList"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent"-->
-<!--        android:layout_above="@+id/input"-->
-<!--        android:layout_alignParentStart="true"-->
-<!--        android:layout_alignParentTop="true"-->
-<!--        android:layout_marginTop="0dp"-->
-<!--        android:layout_marginBottom="0dp" >-->
-
-<!--        <ImageView-->
-<!--            android:id="@+id/playvoicemessage"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:visibility="gone"-->
-<!--            android:src="@drawable/ic_play"-->
-<!--            android:layout_centerVertical="true"-->
-<!--            android:layout_alignParentEnd="true"-->
-<!--            android:layout_marginEnd="4dp"/>-->
-
-<!--        <ImageView-->
-<!--            android:id="@+id/stopvoicemessage"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:visibility="gone"-->
-<!--            android:src="@drawable/ic_stop"-->
-<!--            android:layout_centerVertical="true"-->
-<!--            android:layout_alignParentEnd="true"-->
-<!--            android:layout_marginEnd="4dp"/>-->
-
-<!--        <View-->
-<!--            android:id="@+id/voicemessageview"-->
-<!--            android:layout_width="44dp"-->
-<!--            android:layout_height="200dp"-->
-<!--            android:background="@drawable/corners12voicemessage"-->
-<!--            />-->
-
-<!--    </com.stfalcon.chatkit.messages.MessagesList>-->
-
-    <androidx.recyclerview.widget.RecyclerView
+    <com.stfalcon.chatkit.messages.MessagesList
+        android:id="@+id/messagesList"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_above="@+id/input"
+        app:incomingAvatarHeight="56dp"
+        app:incomingAvatarWidth="56dp" />
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_above="@+id/input"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:background="@color/app_grey" />
 
-    </androidx.recyclerview.widget.RecyclerView>
-
-    <RelativeLayout
+    <com.stfalcon.chatkit.messages.MessageInput
         android:id="@+id/input"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginBottom="16dp"
-        android:layout_alignParentBottom="true"
-        android:background="@drawable/corners10">
-
-        <EditText
-        android:id="@+id/editmessage"
-        style="@style/AppTabTextAppearance"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginEnd="32dp"
-        android:layout_centerVertical="true"
-        android:hint="@string/messages"
-        android:textColorHint="@color/white"/>
-
-        <ImageView
-            android:id="@+id/voicemessage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_voicemessage"
-            android:layout_centerVertical="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="16dp"/>
-
-        <ImageView
-            android:id="@+id/sendimage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_image"
-            android:layout_centerVertical="true"
-            android:layout_toLeftOf="@id/voicemessage"
-            android:layout_marginEnd="12sp"/>
-
-
-        <ImageView
-            android:id="@+id/sendmessage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/corners"
-            android:padding="6dp"
-            android:visibility="gone"
-            android:src="@drawable/ic_sendmessage"
-            android:layout_centerVertical="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="8dp"/>
-
-        </RelativeLayout>
-
-
-
+        android:layout_alignParentBottom="true"
+        app:attachmentButtonBackground="?attr/selectableItemBackgroundBorderless"
+        app:attachmentButtonDefaultIconColor="@color/app_color"
+        app:attachmentButtonDefaultIconPressedColor="@color/app_color2"
+        app:attachmentButtonHeight="27dp"
+        app:attachmentButtonWidth="27dp"
+        app:inputButtonBackground="@drawable/ic_send"
+        app:inputButtonDefaultIconColor="@color/white"
+        app:inputButtonDefaultIconDisabledColor="@color/white60"
+        app:showAttachmentButton="true" />
 
 </RelativeLayout>
