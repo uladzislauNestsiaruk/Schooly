@@ -107,7 +107,11 @@
                 android:layout_marginStart="25dp"/>
 
             <EditText
+<<<<<<< HEAD
                 android:id="@+id/editnickregistration"
+=======
+                android:id="@+id/egitnickreg"
+>>>>>>> 377173e069db684c2a1c811cdca0ab4493c7b4ca
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/nick"

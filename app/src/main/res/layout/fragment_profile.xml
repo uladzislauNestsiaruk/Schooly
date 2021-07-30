@@ -21,7 +21,11 @@
             android:id="@+id/usernick"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+<<<<<<< HEAD
             android:textSize="20sp"
+=======
+            android:textSize="20dp"
+>>>>>>> 377173e069db684c2a1c811cdca0ab4493c7b4ca
             android:textColor="@color/app_color"
             android:fontFamily="@font/montserrat_bold"
             android:layout_marginTop="16dp"

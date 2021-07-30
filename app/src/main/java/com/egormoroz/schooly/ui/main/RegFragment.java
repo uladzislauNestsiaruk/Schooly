@@ -188,7 +188,7 @@ public class RegFragment extends Fragment {
         return true;
     }
     public void initElements(View root){
-        nickNameEditText = root.findViewById(R.id.egitnick);
+        nickNameEditText = root.findViewById(R.id.egitnickreg);
         passwordEditText = root.findViewById(R.id.editpassword);
         phoneEditText = root.findViewById(R.id.editphone);
         GoogleEnter = root.findViewById(R.id.GoogleEnter);

@@ -5,6 +5,8 @@ package com.egormoroz.schooly.ui.chat.fixtures;
 import com.egormoroz.schooly.ui.chat.Dialog;
 import com.egormoroz.schooly.ui.chat.User;
 import com.egormoroz.schooly.ui.chat.Message;
+import com.egormoroz.schooly.ui.main.UserInformation;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;

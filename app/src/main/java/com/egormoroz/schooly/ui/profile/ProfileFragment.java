@@ -41,7 +41,11 @@ public class ProfileFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         TextView nickname =view.findViewById(R.id.usernick);
+<<<<<<< HEAD
         nickname.setText(R.id.editnickregistration);
+=======
+        nickname.setText(getString(R.id.egitnickreg));
+>>>>>>> 377173e069db684c2a1c811cdca0ab4493c7b4ca
 
 //        TextView pub = view.findViewById(R.id.pub);
 //        pub.setOnClickListener(new View.OnClickListener() {
