@@ -1,6 +1,7 @@
 package com.egormoroz.schooly.ui.main;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
@@ -17,18 +18,20 @@ import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.ui.chat.DemoMessagesActivity;
 import com.egormoroz.schooly.ui.chat.Message;
 import com.egormoroz.schooly.ui.chat.fixtures.MessagesFixtures;
+
 import com.stfalcon.chatkit.messages.MessageInput;
 import com.stfalcon.chatkit.messages.MessagesList;
 import com.stfalcon.chatkit.messages.MessagesListAdapter;
 
 import java.io.IOException;
+import java.security.SecureRandom;
 
 
 public class MessageActivity extends DemoMessagesActivity
         implements MessageInput.InputListener,
         MessageInput.AttachmentsListener,
         MessageInput.TypingListener {
-
+    String TAG = "############";
     private static final int REQUEST_RECORD_AUDIO_PERMISSION = 200;
     private MessagesList messagesList;
     private boolean permissionToRecordAccepted = false;
@@ -87,6 +90,8 @@ public class MessageActivity extends DemoMessagesActivity
         recorder = null;
     }
 int id = 0;
+    static SecureRandom rnd = new SecureRandom();
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,26 +104,26 @@ int id = 0;
         MessageInput input = findViewById(R.id.input);
         input.setInputListener(this);
         input.setTypingListener(this);
-        input.setAttachmentsListener(this);
-    }
-    public void  RecAudio(){
-        ImageView voiceinput=findViewById(R.id.voiceinput);
+        ImageView voiceinput = findViewById(R.id.voiceinput);
         voiceinput.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
+            public boolean onTouch(View view, MotionEvent event) {
                 switch (event.getAction() & MotionEvent.ACTION_MASK) {
 
                     case MotionEvent.ACTION_DOWN:
-                        v.setPressed(true);
+                        view.setPressed(true);
                         startRecording();
+                        Log.d(TAG, "Recording started");
                         break;
-                  //      messagesAdapter.addToStart(MessagesFixtures.getVoiceMessage(), true);
+
                     case MotionEvent.ACTION_UP:
-                        v.setPressed(false);
+                        view.setPressed(false);
                         stopRecording();
                         id += 1;
                         fileName = getExternalCacheDir().getAbsolutePath();
                         fileName += "/audiorecordtest" + id + ".3gp";
+                        Log.d(TAG, "Recording stop");
+                        messagesAdapter.addToStart(getVoiceMessage(), true);
                         break;
                 }
                 return true;
@@ -126,6 +131,13 @@ int id = 0;
 
         });
     }
+
+    public static Message getVoiceMessage() {
+        Message message = new Message(MessagesFixtures.getRandomId(), MessagesFixtures.getUser(), null);
+        message.setVoice(new Message.Voice(fileName, rnd.nextInt(200) + 30));
+        return message;
+    }
+
     @Override
     public boolean onSubmit(CharSequence input) {
         super.messagesAdapter.addToStart(
@@ -138,14 +150,46 @@ int id = 0;
                 MessagesFixtures.getImageMessage(), true);
     }
 
+    @SuppressLint("ClickableViewAccessibility")
+    public void onMessageViewClick(View view, Message message) {
+
+    }
     private void initAdapter() {
         super.messagesAdapter = new MessagesListAdapter<>(super.senderId, super.imageLoader);
         super.messagesAdapter.enableSelectionMode(this);
         super.messagesAdapter.setLoadMoreListener(this);
-//        super.messagesAdapter.registerViewClickListener(R.id.messageUserAvatar,
-//                (view, message) -> AppUtils.showToast(DefaultMessagesActivity.this,
-//                        message.getUser().getName() + " avatar click",
-//                        false));
+        super.messagesAdapter.setOnMessageViewClickListener(new MessagesListAdapter.OnMessageViewClickListener<Message>() {
+            @Override
+            @SuppressLint("ClickableViewAccessibility")
+            public void onMessageViewClick(View view, Message message) {
+                ImageView voiceinput = findViewById(R.id.voiceinput);
+                voiceinput.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View view, MotionEvent event) {
+                        switch (event.getAction() & MotionEvent.ACTION_MASK) {
+
+                            case MotionEvent.ACTION_DOWN:
+                                view.setPressed(true);
+                                startRecording();
+                                Log.d(TAG, "Recording started");
+                                break;
+
+                            case MotionEvent.ACTION_UP:
+                                view.setPressed(false);
+                                stopRecording();
+                                id += 1;
+                                fileName = getExternalCacheDir().getAbsolutePath();
+                                fileName += "/audiorecordtest" + id + ".3gp";
+                                Log.d(TAG, "Recording stop");
+                                messagesAdapter.addToStart(getVoiceMessage(), true);
+                                break;
+                        }
+                        return true;
+                    }
+
+                });
+            }
+        });
         this.messagesList.setAdapter(super.messagesAdapter);
     }
 

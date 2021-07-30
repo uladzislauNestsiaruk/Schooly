@@ -52,11 +52,7 @@ public class ChatFragment extends Fragment implements DialogsListAdapter.OnDialo
     }
 
     public void open() {
-<<<<<<< HEAD
-        Intent i = new Intent(getActivity(), DialogFragment.class);
-=======
         Intent i = new Intent(getActivity(), MessageActivity.class);
->>>>>>> 377173e069db684c2a1c811cdca0ab4493c7b4ca
         startActivity(i);
         ((Activity) getActivity()).overridePendingTransition(0, 0);
     }
