@@ -2,6 +2,9 @@ package com.egormoroz.schooly.ui.chat;
 
 
 
+import android.app.ActivityManager;
+import android.content.ComponentName;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -10,8 +13,10 @@ import android.view.Menu;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
 
 import com.egormoroz.schooly.CONST;
+import com.egormoroz.schooly.ui.main.MessageActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -39,7 +44,7 @@ public abstract class DemoMessagesActivity extends AppCompatActivity
         MessagesListAdapter.OnLoadMoreListener {
 
     private static final int TOTAL_MESSAGES_COUNT = 100;
-
+    private String TAG = "##########";
     protected final String senderId = "0";
     protected ImageLoader imageLoader;
     protected MessagesListAdapter<Message> messagesAdapter;
@@ -47,15 +52,11 @@ public abstract class DemoMessagesActivity extends AppCompatActivity
     private Menu menu;
     private int selectionCount;
     private Date lastLoadedDate;
-    private  FirebaseDatabase database;
     private DatabaseReference ref;
-    private FirebaseAuth authDatabase;
-    private String userId;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         imageLoader = (imageView, url, payload) -> Picasso.get().load(url).into(imageView);
-        initFirebase();
     }
 
     @Override
@@ -131,15 +132,7 @@ public abstract class DemoMessagesActivity extends AppCompatActivity
                     message.getUser().getName(), text, createdAt);
         };
     }
-    private  void initFirebase(){
-        database  = FirebaseDatabase.getInstance(CONST.RealtimeDatabaseUrl);
-        authDatabase = FirebaseAuth.getInstance();
-        userId = authDatabase.getCurrentUser().getUid();
-        Log.d("######", userId);
-        ref = database.getReference("users").child(userId).child("chats");
-
-    }
-    public void getChatId(String id){
-        dialogId = id;
+    public void getReference(DatabaseReference ref){
+        this.ref = ref;
     }
 }
