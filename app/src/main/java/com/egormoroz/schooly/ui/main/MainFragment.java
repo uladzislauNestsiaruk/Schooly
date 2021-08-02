@@ -72,14 +72,6 @@ public class MainFragment extends Fragment {
         });
 
 
-        TextView shop =view.findViewById(R.id.shop);
-        shop.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ((MainActivity)getActivity()).setCurrentFragment(NicknameFragment.newInstance());
-            }
-        });
-
 
 //        ImageView chat=view.findViewById(R.id.chat);
 //        chat.setOnClickListener(new View.OnClickListener() {

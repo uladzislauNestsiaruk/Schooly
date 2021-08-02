@@ -12,13 +12,27 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.egormoroz.schooly.CONST;
 import com.egormoroz.schooly.MainActivity;
 import com.egormoroz.schooly.R;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import org.jetbrains.annotations.NotNull;
 
 public class ProfileFragment extends Fragment {
-
+    FirebaseAuth AuthenticationBase;
+    FirebaseDatabase database;
+    DatabaseReference reference;
     public static ProfileFragment newInstance() {
         return new ProfileFragment();
     }
@@ -39,9 +53,19 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        initFirebase();
         TextView nickname =view.findViewById(R.id.usernick);
-        nickname.setText(R.id.editnickregistration);
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+                nickname.setText(snapshot.child("nick").getValue(String.class));
+            }
+
+            @Override
+            public void onCancelled(@NonNull @NotNull DatabaseError error) {
+
+            }
+        });
 
 //        TextView pub = view.findViewById(R.id.pub);
 //        pub.setOnClickListener(new View.OnClickListener() {
@@ -80,5 +104,9 @@ public class ProfileFragment extends Fragment {
 //        });
 
     }
-
+    public void initFirebase(){
+        AuthenticationBase = FirebaseAuth.getInstance();
+        database = FirebaseDatabase.getInstance(CONST.RealtimeDatabaseUrl);
+        reference = database.getReference("users").child(AuthenticationBase.getCurrentUser().getUid());
+    }
 }
