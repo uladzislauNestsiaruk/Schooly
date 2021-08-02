@@ -2,6 +2,7 @@ package com.egormoroz.schooly.ui.chat.fixtures;
 
 import com.egormoroz.schooly.ui.chat.Message;
 import com.egormoroz.schooly.ui.chat.User;
+import com.google.firebase.database.DatabaseReference;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -9,10 +10,18 @@ import java.util.Date;
 
 
 public final class MessagesFixtures extends FixturesData {
-    private MessagesFixtures() {
+    private DatabaseReference messagesRef;
+    private MessagesFixtures(DatabaseReference ref) {
+        messagesRef = ref.child("messages");
         throw new AssertionError();
     }
-
+    private static void uploadMessage(DatabaseReference ref, Message message){
+        ref.push().setValue(message);
+    }
+    private static void uploadMessages(DatabaseReference ref, ArrayList<Message> messages){
+        for(Message message : messages)
+            uploadMessage(ref, message);
+    }
     public static Message getImageMessage() {
         Message message = new Message(getRandomId(), getUser(), null);
         message.setImage(new Message.Image(getRandomImage()));
@@ -33,7 +42,7 @@ public final class MessagesFixtures extends FixturesData {
         return new Message(getRandomId(), getUser(), text);
     }
 
-    public static ArrayList<Message> getMessages(Date startDate) {
+    public static ArrayList<Message> getMessages(Date startDate, DatabaseReference ref) {
         ArrayList<Message> messages = new ArrayList<>();
         for (int i = 0; i < 10/*days count*/; i++) {
             int countPerDay = rnd.nextInt(5) + 1;
@@ -54,10 +63,11 @@ public final class MessagesFixtures extends FixturesData {
                 messages.add(message);
             }
         }
+        uploadMessages(ref, messages);
         return messages;
     }
 
-    private static User getUser() {
+    public static User getUser() {
         boolean even = rnd.nextBoolean();
         return new User(
                 even ? "0" : "1",

@@ -5,17 +5,24 @@ import android.content.Intent;
 import android.os.Bundle;
 
 
+import com.egormoroz.schooly.CONST;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.ui.chat.Message;
 import com.egormoroz.schooly.ui.chat.DemoDialogsActivity;
 import com.egormoroz.schooly.ui.chat.Dialog;
 import com.egormoroz.schooly.ui.main.ChatFragment;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.stfalcon.chatkit.dialogs.DialogsList;
 import com.stfalcon.chatkit.dialogs.DialogsListAdapter;
 import com.egormoroz.schooly.ui.chat.fixtures.DialogsFixtures;
 
 public class ChatActivity extends DemoDialogsActivity {
-
+    FirebaseDatabase database;
+    DatabaseReference ref;
+    FirebaseAuth authDatabase;
+    String userId;
     public static void open(Context context) {
         context.startActivity(new Intent(context, ChatActivity.class));
     }
@@ -26,8 +33,8 @@ public class ChatActivity extends DemoDialogsActivity {
    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_default_dialogs);
-
         dialogsList = findViewById(R.id.dialogsList);
+        initFirebase();
         initAdapter();
     }
 
@@ -38,7 +45,7 @@ public class ChatActivity extends DemoDialogsActivity {
 
     private void initAdapter() {
         super.dialogsAdapter = new DialogsListAdapter<>(super.imageLoader);
-        super.dialogsAdapter.setItems(DialogsFixtures.getDialogs());
+        super.dialogsAdapter.setItems(DialogsFixtures.getDialogs(ref, userId));
 
         super.dialogsAdapter.setOnDialogClickListener(this);
         super.dialogsAdapter.setOnDialogLongClickListener(this);
@@ -57,5 +64,11 @@ public class ChatActivity extends DemoDialogsActivity {
     //for example
     private void onNewDialog(Dialog dialog) {
         dialogsAdapter.addItem(dialog);
+    }
+    private  void initFirebase(){
+        database  = FirebaseDatabase.getInstance(CONST.RealtimeDatabaseUrl);
+        authDatabase = FirebaseAuth.getInstance();
+        userId = authDatabase.getCurrentUser().getUid();
+        ref = database.getReference("users").child(userId).child("chats");
     }
 }

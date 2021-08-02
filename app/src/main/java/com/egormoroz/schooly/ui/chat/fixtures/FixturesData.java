@@ -72,7 +72,7 @@ abstract class FixturesData {
         }
     };
 
-    static String getRandomId() {
+    public static String getRandomId() {
         return Long.toString(UUID.randomUUID().getLeastSignificantBits());
     }
 

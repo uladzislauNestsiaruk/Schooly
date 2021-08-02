@@ -6,17 +6,23 @@ import com.egormoroz.schooly.ui.chat.Dialog;
 import com.egormoroz.schooly.ui.chat.User;
 import com.egormoroz.schooly.ui.chat.Message;
 import com.egormoroz.schooly.ui.main.UserInformation;
+import com.google.firebase.database.DatabaseReference;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
 public final class DialogsFixtures extends FixturesData {
-    private DialogsFixtures() {
+    private DatabaseReference chatsReference;
+    private String userId;
+    private DialogsFixtures(DatabaseReference ref, String userId) {
+        chatsReference = ref;
+        this.userId = userId;
         throw new AssertionError();
     }
 
-    public static ArrayList<Dialog> getDialogs() {
+    public static ArrayList<Dialog> getDialogs(DatabaseReference ref, String userId) {
+
         ArrayList<Dialog> chats = new ArrayList<>();
 
         for (int i = 0; i < 20; i++) {
@@ -26,7 +32,7 @@ public final class DialogsFixtures extends FixturesData {
 
             chats.add(getDialog(i, calendar.getTime()));
         }
-
+        uploadDialogs(ref, userId, chats);
         return chats;
     }
 
@@ -66,5 +72,15 @@ public final class DialogsFixtures extends FixturesData {
                 getUser(),
                 getRandomMessage(),
                 date);
+    }
+    private static void uploadDialog(DatabaseReference ref, String userId, Dialog dialog){
+        String id = ref.push().getKey();
+        ref.push().setValue(dialog);
+        dialog.setId(id);
+    }
+    private static void uploadDialogs(DatabaseReference ref, String userId,
+                                      ArrayList<Dialog> dialogs){
+        for(Dialog dialog : dialogs)
+            uploadDialog(ref, userId, dialog);
     }
 }

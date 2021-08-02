@@ -1,11 +1,13 @@
 package com.egormoroz.schooly.ui.chat;
 
+import com.google.firebase.database.Exclude;
+import com.google.firebase.database.IgnoreExtraProperties;
 import com.stfalcon.chatkit.commons.models.IMessage;
 import com.stfalcon.chatkit.commons.models.MessageContentType;
 
 import java.util.Date;
 
-
+@IgnoreExtraProperties
 public class Message implements IMessage,
         MessageContentType.Image,
         MessageContentType  {
@@ -17,15 +19,8 @@ public class Message implements IMessage,
     private Image image;
     private Voice voice;
 
-    public Message(String id, User user, String text) {
-        this(id, user, text, new Date());
-    }
+    public Message(){
 
-    public Message(String id, User user, String text, Date createdAt) {
-        this.id = id;
-        this.text = text;
-        this.user = user;
-        this.createdAt = createdAt;
     }
 
     @Override
@@ -42,7 +37,7 @@ public class Message implements IMessage,
     public Date getCreatedAt() {
         return createdAt;
     }
-
+    @Exclude
     @Override
     public User getUser() {
         return this.user;
@@ -81,6 +76,12 @@ public class Message implements IMessage,
 
         private String url;
 
+        public Image() {
+
+        }
+        public String getUrl(){
+            return url;
+        }
         public Image(String url) {
             this.url = url;
         }
@@ -90,10 +91,8 @@ public class Message implements IMessage,
 
         private String url;
         private int duration;
+        public Voice(){
 
-        public Voice(String url, int duration) {
-            this.url = url;
-            this.duration = duration;
         }
 
         public String getUrl() {
@@ -103,5 +102,21 @@ public class Message implements IMessage,
         public int getDuration() {
             return duration;
         }
+        public Voice(String url, int duration) {
+            this.url = url;
+            this.duration = duration;
+        }
     }
+
+    public Message(String id, User user, String text) {
+        this(id, user, text, new Date());
+    }
+
+    public Message(String id, User user, String text, Date createdAt) {
+        this.id = id;
+        this.text = text;
+        this.user = user;
+        this.createdAt = createdAt;
+    }
+
 }

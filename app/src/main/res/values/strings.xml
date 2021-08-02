@@ -21,6 +21,8 @@
     <string name="reg">регистрация</string>
     <string name="redact">Редактировать</string>
 
+    <string name="createnickname">Придумай никнейм</string>
+
     <string name="codeissended">Код отправлен на номер телефона</string>
     <string name="writecode">Введи код</string>
     <string name="sendnewcode">Отправить повторно</string>
