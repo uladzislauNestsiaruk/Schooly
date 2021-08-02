@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -67,6 +68,15 @@ public class MainFragment extends Fragment {
             public void onClick(View v) {
                 ((MainActivity)getActivity()).setCurrentFragment(GenderFragment.newInstance());
 //
+            }
+        });
+
+
+        TextView shop =view.findViewById(R.id.shop);
+        shop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((MainActivity)getActivity()).setCurrentFragment(NicknameFragment.newInstance());
             }
         });
 
