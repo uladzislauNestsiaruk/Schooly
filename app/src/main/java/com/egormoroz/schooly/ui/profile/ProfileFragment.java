@@ -67,24 +67,6 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-//        TextView pub = view.findViewById(R.id.pub);
-//        pub.setOnClickListener(new View.OnClickListener() {
-//
-//            @Override
-//            public void onClick(View v) {
-//                pub.setBackgroundColor(getResources().getColor(R.color.purple_300));
-//                pub.setTextColor(getResources().getColor(R.color.white));
-//            }
-//        });
-//
-//        TextView quote = view.findViewById(R.id.quote);
-//        quote.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                quote.setBackgroundColor(getResources().getColor(R.color.purple_300));
-//                quote.setTextColor(getResources().getColor(R.color.white));
-//            }
-//        });
 
         ImageView imageView = view.findViewById(R.id.settingsIcon);
         imageView.setOnClickListener(new View.OnClickListener() {
@@ -95,13 +77,31 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-//        FloatingActionButton FAB=view.findViewById(R.id.floating_action_button);
-//        FAB.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                ((MainActivity)getActivity()).setCurrentFragment(GalleryFragment.newInstance());
-//            }
-//        });
+        ImageView arrowtowardrobe = view.findViewById(R.id.arrowtowardrobe);
+        arrowtowardrobe.setOnClickListener(new View.OnClickListener() {
+
+
+            @Override
+            public void onClick(View v) {
+                ((MainActivity)getActivity()).setCurrentFragment(WardrobeFragment.newInstance());
+            }
+        });
+
+        TextView editing=view.findViewById(R.id.redact);
+        editing.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((MainActivity)getActivity()).setCurrentFragment(EditingFragment.newInstance());
+            }
+        });
+
+        TextView texttowardrobe=view.findViewById(R.id.shielf);
+        texttowardrobe.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((MainActivity)getActivity()).setCurrentFragment(WardrobeFragment.newInstance());
+            }
+        });
 
     }
     public void initFirebase(){

@@ -23,6 +23,9 @@
 
     <string name="createnickname">Придумай никнейм</string>
 
+    <string name="add">Добавить</string>
+    <string name="mes">Сообщение</string>
+
     <string name="codeissended">Код отправлен на номер телефона</string>
     <string name="writecode">Введи код</string>
     <string name="sendnewcode">Отправить повторно</string>

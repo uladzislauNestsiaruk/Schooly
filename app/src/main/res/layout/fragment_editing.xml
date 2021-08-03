@@ -19,7 +19,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:layout_marginStart="24dp"
+                android:layout_marginStart="26dp"
                 android:background="@drawable/corners14"
                 android:src="@drawable/left_arrow"/>
 
@@ -31,7 +31,7 @@
                 android:layout_marginTop="11dp"
                 android:layout_toRightOf="@+id/back_toprofile"
                 android:text="@string/editing"
-                android:textColor="@color/app_color2"
+                android:textColor="@color/app_color"
                 android:textSize="22sp"
                 android:fontFamily="@font/montserrat_bold"/>
 
@@ -45,25 +45,39 @@
                 android:textColor="@color/white"
                 android:background="@drawable/corners15dpappcolor"
                 android:padding="12dp"
-                android:textSize="12sp"
+                android:textSize="14sp"
                 android:fontFamily="@font/montserrat_bold"/>
 
             <TextView
                 android:id="@+id/usernameediting"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textSize="16sp"
                 android:layout_marginTop="368dp"
                 android:layout_marginLeft="24dp"
                 android:text="@string/usernameediting"
                 android:textColor="@color/grey"
                 android:fontFamily="@font/montserrat_bold"/>
+
+            <EditText
+                android:id="@+id/edittextnickname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="24dp"
+                android:layout_marginStart="24dp"
+                android:layout_below="@+id/usernameediting"
+                android:textColor="@color/app_color"
+                android:textSize="20sp"
+                android:maxLength="24"
+                android:fontFamily="@font/montserrat_bold"/>
             <TextView
                 android:id="@+id/biography"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/usernameediting"
-                android:layout_marginTop="47dp"
-                android:layout_marginLeft="24dp"
+                android:layout_below="@id/edittextnickname"
+                android:textSize="16sp"
+                android:layout_marginTop="16dp"
+                android:layout_marginStart="24dp"
                 android:text="@string/bio"
                 android:textColor="@color/grey"
                 android:fontFamily="@font/montserrat_bold"/>
