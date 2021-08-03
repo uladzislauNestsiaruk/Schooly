@@ -136,8 +136,11 @@ public class RegFragment extends Fragment {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
-                            FirebaseUser user = AuthenticationBase.getCurrentUser();
-                            setCurrentFragment(MainFragment.newInstance());
+                            boolean isNickEmpty = saveData(reference, AuthenticationBase.getCurrentUser());
+                            if(isNickEmpty)
+                                setCurrentFragment(NicknameFragment.newInstance());
+                            else
+                                setCurrentFragment(MainFragment.newInstance());
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
@@ -234,9 +237,9 @@ public class RegFragment extends Fragment {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "createUserWithEmail:success");
                             FirebaseUser user = AuthenticationBase.getCurrentUser();
-                            UserInformation info = new UserInformation(nick, getPhone(email), user.getUid(),
+                            UserInformation res = new UserInformation(nick, getPhone(email), user.getUid(),
                                     "AVA", password, "Helicopter",  1000);
-                            reference.child(user.getUid()).setValue(info);
+                            reference.child(user.getUid()).setValue(res);
                             setCurrentFragment(MainFragment.newInstance());
                         } else {
                             // If sign in fails, display a message to the user.
@@ -259,5 +262,15 @@ public class RegFragment extends Fragment {
         res = res.replace("schooly", "");
         res = res.replace("@gmail.com", "");
         return "+" + res;
+    }
+    public void setNickName(){
+        setCurrentFragment(NicknameFragment.newInstance());
+    }
+    public boolean saveData(DatabaseReference ref, FirebaseUser user){
+        String nick = String.valueOf(nickNameEditText.getText()).trim();
+        UserInformation res = new UserInformation(nick, "unknown", user.getUid(),
+                "AVA", "unknown", "Helicopter",  1000);
+        ref.child(user.getUid()).setValue(res);
+        return nick.isEmpty();
     }
 }

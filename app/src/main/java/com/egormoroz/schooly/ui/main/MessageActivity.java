@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 
+import com.egormoroz.schooly.CONST;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.ui.chat.DemoMessagesActivity;
 import com.egormoroz.schooly.ui.chat.Message;
@@ -22,11 +23,20 @@ import com.egormoroz.schooly.ui.chat.fixtures.MessagesFixtures;
 
 import com.egormoroz.schooly.ui.chat.holders.InVoiceHolder;
 import com.egormoroz.schooly.ui.chat.holders.OutVoiceHolder;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.stfalcon.chatkit.commons.models.IMessage;
 import com.stfalcon.chatkit.messages.MessageHolders;
 import com.stfalcon.chatkit.messages.MessageInput;
 import com.stfalcon.chatkit.messages.MessagesList;
 import com.stfalcon.chatkit.messages.MessagesListAdapter;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.security.SecureRandom;
@@ -38,6 +48,7 @@ public class MessageActivity extends DemoMessagesActivity
         MessageInput.TypingListener{
     private static final Object CONTENT_TYPE_VOICE = 0;
     String TAG = "############";
+    private String userId;
     private static final int REQUEST_RECORD_AUDIO_PERMISSION = 200;
     private MessagesList messagesList;
     private boolean permissionToRecordAccepted = false;
@@ -47,11 +58,11 @@ public class MessageActivity extends DemoMessagesActivity
     private static final String LOG_TAG = "AudioRecordTest";
     private Intent dialogIntent;
     private String dialogId;
-
     private MediaRecorder recorder = null;
-
     private MediaPlayer   player = null;
-
+    private FirebaseAuth AuthenticationDatabase;
+    private FirebaseDatabase database;
+    private DatabaseReference ref;
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode){
@@ -105,7 +116,7 @@ public class MessageActivity extends DemoMessagesActivity
         recorder.release();
         recorder = null;
     }
-int id = 0;
+    int id = 0;
     static SecureRandom rnd = new SecureRandom();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,6 +131,7 @@ int id = 0;
         input.setInputListener(this);
         input.setTypingListener(this);
         getCurrentChatId();
+        initFirebase();
         RecAudio();
     }
 
@@ -204,6 +216,22 @@ int id = 0;
     public void getCurrentChatId(){
         dialogIntent = getIntent();
         dialogId = dialogIntent.getStringExtra("dialogId");
-        getChatId(dialogId);
+    }
+    public void sendId(DatabaseReference ref){
+        super.getReference(ref);
+    }
+    private void initFirebase(){
+        AuthenticationDatabase = FirebaseAuth.getInstance();
+        database = FirebaseDatabase.getInstance(CONST.RealtimeDatabaseUrl);
+        ref = database.getReference();
+        userId = AuthenticationDatabase.getCurrentUser().getUid();
+        ref = ref.child("users").child(userId).child("chats");
+        ref = getParentReference(dialogId, ref);
+        Log.d(TAG, dialogId +  " -> reference: " + ref.toString());
+        sendId(ref) ;
+    }
+    private DatabaseReference getParentReference(String id, DatabaseReference ref){
+        Query query = ref.orderByChild("id").equalTo(id);
+        return query.getRef().child(id);
     }
 }
