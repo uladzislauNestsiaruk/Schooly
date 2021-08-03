@@ -6,13 +6,16 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 
+
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 
 import com.egormoroz.schooly.CONST;
@@ -40,12 +43,19 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.security.SecureRandom;
+import java.time.Duration;
+import java.time.Instant;
+
+import static java.time.temporal.ChronoField.INSTANT_SECONDS;
 
 
 public class MessageActivity extends DemoMessagesActivity
         implements MessageInput.InputListener,
         MessageInput.AttachmentsListener,
         MessageInput.TypingListener{
+
+
+
     private static final Object CONTENT_TYPE_VOICE = 0;
     String TAG = "############";
     private String userId;
@@ -53,7 +63,6 @@ public class MessageActivity extends DemoMessagesActivity
     private MessagesList messagesList;
     private boolean permissionToRecordAccepted = false;
     private String [] permissions = {Manifest.permission.RECORD_AUDIO};
-    private int[]  grantResult[];
     private static String fileName = null;
     private static final String LOG_TAG = "AudioRecordTest";
     private Intent dialogIntent;
@@ -63,6 +72,12 @@ public class MessageActivity extends DemoMessagesActivity
     private FirebaseAuth AuthenticationDatabase;
     private FirebaseDatabase database;
     private DatabaseReference ref;
+    private long time_start = 1;
+    private long time_stop = 1;
+    private long time = 0;
+    private Duration duration;
+
+
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode){
@@ -76,6 +91,8 @@ public class MessageActivity extends DemoMessagesActivity
     private void startPlaying() {
         player = new MediaPlayer();
         try {
+            fileName = getExternalCacheDir().getAbsolutePath();
+            fileName += "/audiorecordtest" + id + 1 + ".3gp";
             player.setDataSource(fileName);
             player.prepare();
             player.start();
@@ -97,7 +114,10 @@ public class MessageActivity extends DemoMessagesActivity
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void startRecording() {
+        fileName = getExternalCacheDir().getAbsolutePath();
+        fileName += "/audiorecordtest" + id + 1 + ".3gp";
         recorder = new MediaRecorder();
         recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         recorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
@@ -125,8 +145,6 @@ public class MessageActivity extends DemoMessagesActivity
         ActivityCompat.requestPermissions(this, permissions, REQUEST_RECORD_AUDIO_PERMISSION);
         this.messagesList = findViewById(R.id.messagesList);
         initAdapter();
-        fileName = getExternalCacheDir().getAbsolutePath();
-        fileName += "/audiorecordtest" + id + 1 + ".3gp";
         MessageInput input = findViewById(R.id.input);
         input.setInputListener(this);
         input.setTypingListener(this);
@@ -144,12 +162,14 @@ public class MessageActivity extends DemoMessagesActivity
     public void RecAudio(){
         ImageView voiceinput = findViewById(R.id.voiceinput);
         voiceinput.setOnTouchListener(new View.OnTouchListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public boolean onTouch(View view, MotionEvent event) {
                 switch (event.getAction() & MotionEvent.ACTION_MASK) {
 
                     case MotionEvent.ACTION_DOWN:
                         view.setPressed(true);
+                        id += 1;
                         startRecording();
                         Log.d(TAG, "Recording started");
                         break;
@@ -157,9 +177,6 @@ public class MessageActivity extends DemoMessagesActivity
                     case MotionEvent.ACTION_UP:
                         view.setPressed(false);
                         stopRecording();
-                        id += 1;
-                        fileName = getExternalCacheDir().getAbsolutePath();
-                        fileName += "/audiorecordtest" + id + ".3gp";
                         Log.d(TAG, "Recording stop");
                         messagesAdapter.addToStart(getVoiceMessage(), true);
                         break;
@@ -178,11 +195,13 @@ public class MessageActivity extends DemoMessagesActivity
                 MessagesFixtures.getTextMessage(input.toString()), true);
         return true;
     }
+
     @Override
     public void onAddAttachments() {
         super.messagesAdapter.addToStart(
                 MessagesFixtures.getImageMessage(), true);
     }
+
 
     private void initAdapter() {
         super.messagesAdapter = new MessagesListAdapter<>(super.senderId, super.imageLoader);
@@ -213,13 +232,19 @@ public class MessageActivity extends DemoMessagesActivity
     public void onSelectionChanged(int count) {
 
     }
+
+
     public void getCurrentChatId(){
         dialogIntent = getIntent();
         dialogId = dialogIntent.getStringExtra("dialogId");
     }
+
+
     public void sendId(DatabaseReference ref){
         super.getReference(ref);
     }
+
+
     private void initFirebase(){
         AuthenticationDatabase = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance(CONST.RealtimeDatabaseUrl);
@@ -230,6 +255,8 @@ public class MessageActivity extends DemoMessagesActivity
         Log.d(TAG, dialogId +  " -> reference: " + ref.toString());
         sendId(ref) ;
     }
+
+
     private DatabaseReference getParentReference(String id, DatabaseReference ref){
         Query query = ref.orderByChild("id").equalTo(id);
         return query.getRef().child(id);

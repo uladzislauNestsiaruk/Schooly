@@ -19,7 +19,7 @@ public class OutVoiceHolder
 
     public OutVoiceHolder(View itemView, Object payload) {
         super(itemView, payload);
-        tvDuration = itemView.findViewById(R.id.duration);
+      //  tvDuration = itemView.findViewById(R.id.duration);
         tvTime = itemView.findViewById(R.id.time);
     }
 

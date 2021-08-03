@@ -60,20 +60,13 @@ public class ProfileFragment extends Fragment {
             public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
                 nickname.setText(snapshot.child("nick").getValue(String.class));
             }
-<<<<<<< HEAD
-=======
 
             @Override
             public void onCancelled(@NonNull @NotNull DatabaseError error) {
 
             }
         });
->>>>>>> 50ba921cb9c79ca0ba479fe147b1395b60c97eab
 
-            @Override
-            public void onCancelled(@NonNull @NotNull DatabaseError error) {
-            }
-        });
 
         ImageView imageView = view.findViewById(R.id.settingsIcon);
         imageView.setOnClickListener(new View.OnClickListener() {
@@ -87,7 +80,7 @@ public class ProfileFragment extends Fragment {
         ImageView arrowtowardrobe = view.findViewById(R.id.arrowtowardrobe);
         arrowtowardrobe.setOnClickListener(new View.OnClickListener() {
 
-<<<<<<< HEAD
+
             @Override
             public void onClick(View v) {
                 ((MainActivity)getActivity()).setCurrentFragment(WardrobeFragment.newInstance());
@@ -110,8 +103,6 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-=======
->>>>>>> 50ba921cb9c79ca0ba479fe147b1395b60c97eab
     }
     public void initFirebase(){
         AuthenticationBase = FirebaseAuth.getInstance();
