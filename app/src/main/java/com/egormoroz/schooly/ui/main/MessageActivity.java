@@ -4,10 +4,12 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -153,6 +155,25 @@ public class MessageActivity extends DemoMessagesActivity
         RecAudio();
     }
 
+    public int getDuration(String mUri) {
+        int duration;
+        MediaMetadataRetriever mmr = new MediaMetadataRetriever();
+        mmr.setDataSource(mUri);
+        String time = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+        duration = Integer.parseInt(time);
+//        if (time != null) {
+//            try {
+//                duration = Integer.parseInt(time);
+//            } catch(NumberFormatException e) {
+//                // Deal with the situation like
+//                duration = 0;
+//            }
+//        }
+
+        mmr.release();
+        return duration;
+    }
+
     public Message getVoiceMessage() {
         Message message = new Message(MessagesFixtures.getRandomId(), MessagesFixtures.getUser(), null);
         message.setVoice(new Message.Voice(fileName, rnd.nextInt(200) + 30));
@@ -176,10 +197,17 @@ public class MessageActivity extends DemoMessagesActivity
 
                     case MotionEvent.ACTION_UP:
                         view.setPressed(false);
-                        stopRecording();
-                        Log.d(TAG, "Recording stop");
-                        messagesAdapter.addToStart(getVoiceMessage(), true);
-                        break;
+                        time = getDuration(fileName);
+                        if (time < 1) {
+                            Log.d(TAG, "Recording failed");
+                            break;
+                        }
+                        else {
+                            stopRecording();
+                            Log.d(TAG, "Recording stop");
+                            messagesAdapter.addToStart(getVoiceMessage(), true);
+                            break;
+                        }
                 }
                 return true;
             }
