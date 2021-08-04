@@ -9,12 +9,10 @@ import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.Build;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
-
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -25,30 +23,18 @@ import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.ui.chat.DemoMessagesActivity;
 import com.egormoroz.schooly.ui.chat.Message;
 import com.egormoroz.schooly.ui.chat.fixtures.MessagesFixtures;
-
-import com.egormoroz.schooly.ui.chat.holders.InVoiceHolder;
-import com.egormoroz.schooly.ui.chat.holders.OutVoiceHolder;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
-import com.stfalcon.chatkit.commons.models.IMessage;
-import com.stfalcon.chatkit.messages.MessageHolders;
+import com.stfalcon.chatkit.commons.ViewHolder;
 import com.stfalcon.chatkit.messages.MessageInput;
 import com.stfalcon.chatkit.messages.MessagesList;
 import com.stfalcon.chatkit.messages.MessagesListAdapter;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.io.IOException;
 import java.security.SecureRandom;
 import java.time.Duration;
-import java.time.Instant;
-
-import static java.time.temporal.ChronoField.INSTANT_SECONDS;
 
 
 public class MessageActivity extends DemoMessagesActivity
@@ -58,7 +44,7 @@ public class MessageActivity extends DemoMessagesActivity
 
 
 
-    private static final Object CONTENT_TYPE_VOICE = 0;
+
     String TAG = "############";
     private String userId;
     private static final int REQUEST_RECORD_AUDIO_PERMISSION = 200;
@@ -78,7 +64,6 @@ public class MessageActivity extends DemoMessagesActivity
     private long time_stop = 1;
     private long time = 0;
     private Duration duration;
-
 
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -134,12 +119,19 @@ public class MessageActivity extends DemoMessagesActivity
     }
 
     private void stopRecording() {
-        recorder.stop();
+        if (recorder != null) {
+        recorder.reset();
         recorder.release();
         recorder = null;
+        time = getDuration(fileName);
+        messagesAdapter.addToStart(getVoiceMessage(), true);
+        }
     }
+
     int id = 0;
     static SecureRandom rnd = new SecureRandom();
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -189,9 +181,7 @@ public class MessageActivity extends DemoMessagesActivity
                     case MotionEvent.ACTION_UP:
                         view.setPressed(false);
                         stopRecording();
-                        time = getDuration(fileName);
                         Log.d(TAG, "Recording stop" + time);
-                        messagesAdapter.addToStart(getVoiceMessage(), true);
                         break;
                 }
                 return true;
