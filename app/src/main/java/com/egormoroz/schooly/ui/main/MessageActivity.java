@@ -160,16 +160,7 @@ public class MessageActivity extends DemoMessagesActivity
         MediaMetadataRetriever mmr = new MediaMetadataRetriever();
         mmr.setDataSource(mUri);
         String time = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-        duration = Integer.parseInt(time);
-//        if (time != null) {
-//            try {
-//                duration = Integer.parseInt(time);
-//            } catch(NumberFormatException e) {
-//                // Deal with the situation like
-//                duration = 0;
-//            }
-//        }
-
+        duration = Integer.parseInt(time)/1000;
         mmr.release();
         return duration;
     }
@@ -197,17 +188,11 @@ public class MessageActivity extends DemoMessagesActivity
 
                     case MotionEvent.ACTION_UP:
                         view.setPressed(false);
+                        stopRecording();
                         time = getDuration(fileName);
-                        if (time < 1) {
-                            Log.d(TAG, "Recording failed");
-                            break;
-                        }
-                        else {
-                            stopRecording();
-                            Log.d(TAG, "Recording stop");
-                            messagesAdapter.addToStart(getVoiceMessage(), true);
-                            break;
-                        }
+                        Log.d(TAG, "Recording stop" + time);
+                        messagesAdapter.addToStart(getVoiceMessage(), true);
+                        break;
                 }
                 return true;
             }
