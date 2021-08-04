@@ -2,11 +2,19 @@ package com.egormoroz.schooly.ui.chat.fixtures;
 
 
 
+import androidx.annotation.NonNull;
+
 import com.egormoroz.schooly.ui.chat.Dialog;
 import com.egormoroz.schooly.ui.chat.User;
 import com.egormoroz.schooly.ui.chat.Message;
 import com.egormoroz.schooly.ui.main.UserInformation;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -82,5 +90,20 @@ public final class DialogsFixtures extends FixturesData {
                                       ArrayList<Dialog> dialogs){
         for(Dialog dialog : dialogs)
             uploadDialog(ref, userId, dialog);
+    }
+    public ArrayList<Dialog> getDialogs(DatabaseReference ref){
+        ArrayList<Dialog> res = new ArrayList<>();
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull @NotNull DatabaseError error) {
+
+            }
+        });
+        return res;
     }
 }

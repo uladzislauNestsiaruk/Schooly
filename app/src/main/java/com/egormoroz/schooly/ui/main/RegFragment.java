@@ -49,6 +49,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import org.jetbrains.annotations.NotNull;
@@ -189,7 +190,22 @@ public class RegFragment extends Fragment {
         return digits && characters && password.length() > 8;
     }
     boolean isNickCorrect(String nickname){
-        return true;
+        DatabaseReference reference = database.getReference().child("users");
+        Query query = reference.orderByChild("nick").equalTo(nickname);
+        final boolean[] res = new boolean[1];
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+                boolean temp = !snapshot.exists();
+                res[0] = temp;
+            }
+
+            @Override
+            public void onCancelled(@NonNull @NotNull DatabaseError error) {
+
+            }
+        });
+        return res[0];
     }
     public void initElements(View root){
         nickNameEditText = root.findViewById(R.id.editnickregistration);

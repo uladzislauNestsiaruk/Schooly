@@ -46,8 +46,6 @@ public class RegisrtationstartFragment extends Fragment {
         //if(AuthBase.getCurrentUser() != null)
          //   setCurrentFragment(MainFragment.newInstance());
         //////////
-
-       //+375292247725
         RegistrationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
