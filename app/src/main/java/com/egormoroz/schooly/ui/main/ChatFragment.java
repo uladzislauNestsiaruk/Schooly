@@ -30,12 +30,13 @@ import com.stfalcon.chatkit.commons.ImageLoader;
 import com.stfalcon.chatkit.dialogs.DialogsList;
 import com.stfalcon.chatkit.dialogs.DialogsListAdapter;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 import static android.content.ContentValues.TAG;
 
 public class ChatFragment extends Fragment implements DialogsListAdapter.OnDialogClickListener<Dialog>,
-        DialogsListAdapter.OnDialogLongClickListener<Dialog>  {
+        DialogsListAdapter.OnDialogLongClickListener<Dialog>, sendDialogs {
     FirebaseDatabase database;
     DatabaseReference ref;
     FirebaseAuth authDatabase;
@@ -57,7 +58,6 @@ public class ChatFragment extends Fragment implements DialogsListAdapter.OnDialo
     public void onDialogClick(Dialog dialog) {
         open(dialog);
     }
-
     public void open(Dialog dialog) {
         String dialogId = dialog.getId();
         Intent i = new Intent(getActivity(), MessageActivity.class);
@@ -65,20 +65,14 @@ public class ChatFragment extends Fragment implements DialogsListAdapter.OnDialo
         startActivity(i);
         ((Activity) getActivity()).overridePendingTransition(0, 0);
     }
-
-
-
     DialogsList dialogsList;
     protected ImageLoader imageLoader;
     protected DialogsListAdapter<Dialog> dialogsAdapter;
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         imageLoader = (imageView, url, payload) -> Picasso.get().load(url).into(imageView);
     }
-
-
     @Override
     public View onCreateView (@NonNull LayoutInflater inflater, @NonNull ViewGroup container,
                               @Nullable Bundle SavedInstanceState) {
@@ -91,10 +85,8 @@ public class ChatFragment extends Fragment implements DialogsListAdapter.OnDialo
         initAdapter();
         return root;
     }
-
     private void initAdapter() {
         dialogsAdapter = new DialogsListAdapter<>(imageLoader);
-        dialogsAdapter.setItems(DialogsFixtures.getDialogs(ref, userId));
         dialogsAdapter.setOnDialogClickListener(getActivity().findViewById(R.id.dialogsList));
         dialogsAdapter.setOnDialogLongClickListener(getActivity().findViewById(R.id.dialogsList));
         dialogsList.setAdapter(dialogsAdapter);
@@ -111,12 +103,10 @@ public class ChatFragment extends Fragment implements DialogsListAdapter.OnDialo
             }
         });
     }
-
     @Override
     public void onDialogLongClick(Dialog dialog) {
         //TODO:: CONTEXT MENU
     }
-
     private  void initFirebase(){
         database  = FirebaseDatabase.getInstance(CONST.RealtimeDatabaseUrl);
         authDatabase = FirebaseAuth.getInstance();
@@ -124,4 +114,9 @@ public class ChatFragment extends Fragment implements DialogsListAdapter.OnDialo
         ref = database.getReference("users").child(userId).child("chats");
     }
 
+    @Override
+    public void setDialogs(ArrayList<Dialog> dialogs) {
+        Log.d("#####", dialogs.size() + " receive");
+        dialogsAdapter.setItems(DialogsFixtures.getDialogs(dialogs));
+    }
 }

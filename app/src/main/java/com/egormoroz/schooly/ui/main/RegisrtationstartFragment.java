@@ -43,9 +43,8 @@ public class RegisrtationstartFragment extends Fragment {
         RegistrationButton = root.findViewById(R.id.registr);
         EnterButton = root.findViewById(R.id.enter);
         ////////////Is user Logged in
-        //if(AuthBase.getCurrentUser() != null)
-         //   setCurrentFragment(MainFragment.newInstance());
-        //////////
+        if(AuthBase.getCurrentUser() != null)
+          setCurrentFragment(MainFragment.newInstance());
         RegistrationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

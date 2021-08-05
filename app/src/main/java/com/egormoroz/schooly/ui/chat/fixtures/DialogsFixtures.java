@@ -2,6 +2,8 @@ package com.egormoroz.schooly.ui.chat.fixtures;
 
 
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
 import com.egormoroz.schooly.ui.chat.Dialog;
@@ -11,6 +13,7 @@ import com.egormoroz.schooly.ui.main.UserInformation;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
@@ -19,6 +22,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public final class DialogsFixtures extends FixturesData {
     private DatabaseReference chatsReference;
@@ -29,19 +34,8 @@ public final class DialogsFixtures extends FixturesData {
         throw new AssertionError();
     }
 
-    public static ArrayList<Dialog> getDialogs(DatabaseReference ref, String userId) {
-
-        ArrayList<Dialog> chats = new ArrayList<>();
-
-        for (int i = 0; i < 20; i++) {
-            Calendar calendar = Calendar.getInstance();
-            calendar.add(Calendar.DAY_OF_MONTH, -(i * i));
-            calendar.add(Calendar.MINUTE, -(i * i));
-
-            chats.add(getDialog(i, calendar.getTime()));
-        }
-        uploadDialogs(ref, userId, chats);
-        return chats;
+    public static ArrayList<Dialog> getDialogs(ArrayList<Dialog> dialogArrayList) {
+        return dialogArrayList;
     }
 
     private static Dialog getDialog(int i, Date lastMessageCreatedAt) {
@@ -90,20 +84,5 @@ public final class DialogsFixtures extends FixturesData {
                                       ArrayList<Dialog> dialogs){
         for(Dialog dialog : dialogs)
             uploadDialog(ref, userId, dialog);
-    }
-    public ArrayList<Dialog> getDialogs(DatabaseReference ref){
-        ArrayList<Dialog> res = new ArrayList<>();
-        ref.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull @NotNull DatabaseError error) {
-
-            }
-        });
-        return res;
     }
 }

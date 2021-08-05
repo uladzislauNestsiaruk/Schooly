@@ -1,6 +1,7 @@
 package com.egormoroz.schooly.ui.main;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,21 +13,34 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.egormoroz.schooly.CONST;
 import com.egormoroz.schooly.MainActivity;
 import com.egormoroz.schooly.R;
+import com.egormoroz.schooly.ui.chat.Dialog;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.GenericTypeIndicator;
+import com.google.firebase.database.ValueEventListener;
 import com.stfalcon.chatkit.commons.ImageLoader;
 import com.stfalcon.chatkit.commons.models.IDialog;
 import com.stfalcon.chatkit.dialogs.DialogsListAdapter;
+
+import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MainFragment extends Fragment {
 
     protected DialogsListAdapter<IDialog> dialogsAdapter;
 
     protected ImageLoader imageLoader;
-
     private MainViewModel mainViewModel;
-
     public static MainFragment newInstance() {
         return new MainFragment();
     }
@@ -49,48 +63,28 @@ public class MainFragment extends Fragment {
     }
 
     @Override
-    public void onViewCreated(@Nullable View view,@NonNull Bundle savedInstanceState){
+    public void onViewCreated(@Nullable View view,@NonNull Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        ImageView chat=view.findViewById(R.id.chat);
+        ImageView chat = view.findViewById(R.id.chat);
         chat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((MainActivity)getActivity()).setCurrentFragment(ChatFragment.newInstance());
+                ((MainActivity) getActivity()).setCurrentFragment(ChatFragment.newInstance());
 //                Intent intent = new Intent(getActivity(), ChatActivity.class);
 //                startActivity(intent);
             }
         });
 
-        ImageView nontifications=view.findViewById(R.id.nontification);
+        ImageView nontifications = view.findViewById(R.id.nontification);
         nontifications.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((MainActivity)getActivity()).setCurrentFragment(GenderFragment.newInstance());
+                ((MainActivity) getActivity()).setCurrentFragment(GenderFragment.newInstance());
 //
             }
         });
-
-
-
-//        ImageView chat=view.findViewById(R.id.chat);
-//        chat.setOnClickListener(new View.OnClickListener() {
-//
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent(this, ChatActivity);
-//            }
-//        });
-
-
-
-//        View viewsubj=view.findViewById(R.id.subj);
-//        viewsubj.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                ((MainActivity)getActivity()).setCurrentFragment(SubjectFragment.newInstance());
-//            }
-//        });
     }
+
 
 }
