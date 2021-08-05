@@ -31,11 +31,10 @@ import com.stfalcon.chatkit.dialogs.DialogsListAdapter;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Objects;
 import java.util.UUID;
-
-import static android.content.ContentValues.TAG;
 
 public class ChatFragment extends Fragment implements DialogsListAdapter.OnDialogClickListener<Dialog>,
         DialogsListAdapter.OnDialogLongClickListener<Dialog>, sendDialogs {
@@ -75,6 +74,7 @@ public class ChatFragment extends Fragment implements DialogsListAdapter.OnDialo
         super.onCreate(savedInstanceState);
         imageLoader = (imageView, url, payload) -> Picasso.get().load(url).into(imageView);
     }
+
     @Override
     public View onCreateView (@NonNull LayoutInflater inflater, @NonNull ViewGroup container,
                               @Nullable Bundle SavedInstanceState) {
@@ -87,11 +87,12 @@ public class ChatFragment extends Fragment implements DialogsListAdapter.OnDialo
         initAdapter();
         return root;
     }
+
     private void initAdapter() {
         dialogsAdapter = new DialogsListAdapter<>(imageLoader);
         dialogsAdapter.setOnDialogClickListener(getActivity().findViewById(R.id.dialogsList));
         dialogsAdapter.setOnDialogLongClickListener(getActivity().findViewById(R.id.dialogsList));
-        dialogsList.setAdapter(dialogsAdapter);
+        dialogsAdapter.setItems(getDialogs());
         dialogsAdapter.setOnDialogClickListener(new DialogsListAdapter.OnDialogClickListener<Dialog>() {
             @Override
             public void onDialogClick(Dialog dialog) {
@@ -104,6 +105,7 @@ public class ChatFragment extends Fragment implements DialogsListAdapter.OnDialo
                 Toast.makeText(getActivity(), dialog.getDialogName(), Toast.LENGTH_SHORT).show();
             }
         });
+        dialogsList.setAdapter(dialogsAdapter);
     }
     @Override
     public void onDialogLongClick(Dialog dialog) {
@@ -119,7 +121,7 @@ public class ChatFragment extends Fragment implements DialogsListAdapter.OnDialo
     @Override
     public void setDialogs(ArrayList<Dialog> dialogs) {
         Log.d("#####", dialogs.size() + " receive");
-        dialogsAdapter.setItems(getDialogs(dialogs));
+        dialogsAdapter.setItems(getDialogs());
     }
 
 
@@ -139,13 +141,24 @@ public class ChatFragment extends Fragment implements DialogsListAdapter.OnDialo
 //            this.userId = userId;
 //            throw new AssertionError();
 //        }
+static String TAG = "Dialogs";
+    public static ArrayList<Dialog> getDialogs() {
+        ArrayList<Dialog> chats = new ArrayList<>();
+        Log.d(TAG, "created dialogs");
+        for (int i = 0; i < 20; i++) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.add(Calendar.DAY_OF_MONTH, -(i * i));
+            calendar.add(Calendar.MINUTE, -(i * i));
 
-        public static ArrayList<Dialog> getDialogs(ArrayList<Dialog> dialogArrayList) {
-            return dialogArrayList;
+            chats.add(getDialog(i, calendar.getTime()));
         }
+
+        return chats;
+    }
 
         private static Dialog getDialog(int i, Date lastMessageCreatedAt) {
             ArrayList<User> users = getUsers();
+            Log.d(TAG, "created dialog once");
             return new Dialog(
                     getRandomId(),
                     users.size() > 1 ? groupChatTitles.get(users.size() - 2) : users.get(0).getName(),
@@ -181,16 +194,16 @@ public class ChatFragment extends Fragment implements DialogsListAdapter.OnDialo
                     getRandomMessage(),
                     date);
         }
-        private static void uploadDialog(DatabaseReference ref, String userId, Dialog dialog){
-            String id = ref.push().getKey();
-            ref.push().setValue(dialog);
-            dialog.setId(id);
-        }
-        private static void uploadDialogs(DatabaseReference ref, String userId,
-                                          ArrayList<Dialog> dialogs){
-            for(Dialog dialog : dialogs)
-                uploadDialog(ref, userId, dialog);
-        }
+//        private static void uploadDialog(DatabaseReference ref, String userId, Dialog dialog){
+//            String id = ref.push().getKey();
+//            ref.push().setValue(dialog);
+//            dialog.setId(id);
+//        }
+//        private static void uploadDialogs(DatabaseReference ref, String userId,
+//                                          ArrayList<Dialog> dialogs){
+//            for(Dialog dialog : dialogs)
+//                uploadDialog(ref, userId, dialog);
+//        }
 
 
     static SecureRandom rnd = new SecureRandom();

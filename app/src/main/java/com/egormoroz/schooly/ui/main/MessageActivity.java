@@ -12,7 +12,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -63,13 +62,11 @@ public class MessageActivity extends Activity
     }
 
     private static final int TOTAL_MESSAGES_COUNT = 100;
-    private String TAG = "##########";
+    private final String TAG = "##########";
     protected final String senderId = "0";
     protected ImageLoader imageLoader;
     protected MessagesListAdapter<Message> messagesAdapter;
     private String dialogId;
-    private Menu menu;
-    private int selectionCount;
     private Date lastLoadedDate;
     private DatabaseReference ref;
     private static final byte CONTENT_TYPE_VOICE = 1;
@@ -77,7 +74,7 @@ public class MessageActivity extends Activity
     private static final int REQUEST_RECORD_AUDIO_PERMISSION = 200;
     private MessagesList messagesList;
     private boolean permissionToRecordAccepted = false;
-    private String [] permissions = {Manifest.permission.RECORD_AUDIO};
+    private final String [] permissions = {Manifest.permission.RECORD_AUDIO};
     private static String fileName = null;
     private static final String LOG_TAG = "AudioRecordTest";
     private Intent dialogIntent;
@@ -85,7 +82,7 @@ public class MessageActivity extends Activity
     private MediaPlayer   player = null;
     private FirebaseAuth AuthenticationDatabase;
     private FirebaseDatabase database;
-    private long time = 0;
+    private final long time = 0;
     private int duration;
 
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -156,8 +153,8 @@ public class MessageActivity extends Activity
               messagesAdapter.addToStart(getVoiceMessage(fileName, duration), true);
               duration = duration / 10;
               ImageView play = findViewById(R.id.pb_play);
-              TextView dura = findViewById(R.id.duration);
-              dura.setText(String.valueOf(duration));
+//              TextView dura = findViewById(R.id.durationVoice);
+//              dura.setText(String.valueOf(duration));
              }
         }
     }
@@ -175,6 +172,14 @@ public class MessageActivity extends Activity
         MessageInput input = findViewById(R.id.input);
         input.setInputListener(this);
         input.setTypingListener(this);
+     //   ImageView play = findViewById(R.id.pb_play);
+//        play.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                boolean start = true;
+//                onPlay(start);
+//            }
+//        });
         getCurrentChatId();
         initFirebase();
         RecAudio();
@@ -190,11 +195,7 @@ public class MessageActivity extends Activity
         return duration;
     }
 
-    public Message getVoiceMessage() {
-        Message message = new Message(getRandomId(), getUser(), null);
-        message.setVoice(new Message.Voice(fileName, rnd.nextInt(200) + 30));
-        return message;
-    }
+
     @SuppressLint("ClickableViewAccessibility")
     public void RecAudio(){
         ImageView voiceinput = findViewById(R.id.voiceinput);
@@ -260,12 +261,12 @@ public class MessageActivity extends Activity
         messagesAdapter = new MessagesListAdapter<>(senderId,holders, imageLoader);
         messagesAdapter.enableSelectionMode(this);
         messagesAdapter.setLoadMoreListener(this);
-        messagesAdapter.setOnMessageClickListener(new MessagesListAdapter.OnMessageClickListener<Message>() {
-            @Override
-            public void onMessageClick(Message message) {
-                onPlay(true);
-            }
-        });
+//        messagesAdapter.setOnMessageClickListener(new MessagesListAdapter.OnMessageClickListener<Message>() {
+//            @Override
+//            public void onMessageClick(Message message) {
+//                onPlay(true);
+//            }
+//        });
 
         this.messagesList.setAdapter(messagesAdapter);
 
@@ -314,12 +315,6 @@ public class MessageActivity extends Activity
         Query query = ref.orderByChild("id").equalTo(id);
         return query.getRef().child(id);
     }
-
-
-
-
-
-
 
 
 
