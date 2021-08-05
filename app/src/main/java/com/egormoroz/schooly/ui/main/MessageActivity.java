@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -23,28 +24,35 @@ import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.ui.chat.DemoMessagesActivity;
 import com.egormoroz.schooly.ui.chat.Message;
 import com.egormoroz.schooly.ui.chat.fixtures.MessagesFixtures;
+import com.egormoroz.schooly.ui.chat.holders.IncomingVoiceMessageViewHolder;
+import com.egormoroz.schooly.ui.chat.holders.OutcomingVoiceMessageViewHolder;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
-import com.stfalcon.chatkit.commons.ViewHolder;
+import com.stfalcon.chatkit.messages.MessageHolders;
 import com.stfalcon.chatkit.messages.MessageInput;
 import com.stfalcon.chatkit.messages.MessagesList;
 import com.stfalcon.chatkit.messages.MessagesListAdapter;
 
 import java.io.IOException;
 import java.security.SecureRandom;
-import java.time.Duration;
+
 
 
 public class MessageActivity extends DemoMessagesActivity
         implements MessageInput.InputListener,
         MessageInput.AttachmentsListener,
+        MessageHolders.ContentChecker<Message>,
         MessageInput.TypingListener{
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        messagesAdapter.addToStart(MessagesFixtures.getTextMessage(), true);
+    }
 
-
-
+    private static final byte CONTENT_TYPE_VOICE = 1;
     String TAG = "############";
     private String userId;
     private static final int REQUEST_RECORD_AUDIO_PERMISSION = 200;
@@ -60,10 +68,8 @@ public class MessageActivity extends DemoMessagesActivity
     private FirebaseAuth AuthenticationDatabase;
     private FirebaseDatabase database;
     private DatabaseReference ref;
-    private long time_start = 1;
-    private long time_stop = 1;
     private long time = 0;
-    private Duration duration;
+    private int duration;
 
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -123,14 +129,24 @@ public class MessageActivity extends DemoMessagesActivity
         recorder.reset();
         recorder.release();
         recorder = null;
-        time = getDuration(fileName);
-        messagesAdapter.addToStart(getVoiceMessage(), true);
+        try {
+        duration = getDuration(fileName);}
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        if (duration <= 9) Log.d(TAG, "Voice too small");
+        else {
+              messagesAdapter.addToStart(MessagesFixtures.getVoiceMessage(fileName, duration), true);
+              duration = duration / 10;
+              ImageView play = findViewById(R.id.pb_play);
+              TextView dura = findViewById(R.id.duration);
+              dura.setText(String.valueOf(duration));
+             }
         }
     }
 
     int id = 0;
     static SecureRandom rnd = new SecureRandom();
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -152,7 +168,7 @@ public class MessageActivity extends DemoMessagesActivity
         MediaMetadataRetriever mmr = new MediaMetadataRetriever();
         mmr.setDataSource(mUri);
         String time = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-        duration = Integer.parseInt(time)/1000;
+        duration = Integer.parseInt(time)/100;
         mmr.release();
         return duration;
     }
@@ -182,11 +198,11 @@ public class MessageActivity extends DemoMessagesActivity
                         view.setPressed(false);
                         stopRecording();
                         Log.d(TAG, "Recording stop" + time);
+
                         break;
                 }
                 return true;
             }
-
         });
     }
 
@@ -205,9 +221,26 @@ public class MessageActivity extends DemoMessagesActivity
                 MessagesFixtures.getImageMessage(), true);
     }
 
+    @Override
+    public boolean hasContentFor(Message message, byte type) {
+        if (type == CONTENT_TYPE_VOICE) {
+            return message.getVoice() != null
+                    && message.getVoice().getUrl() != null
+                    && !message.getVoice().getUrl().isEmpty();
+        }
+        return false;
+    }
 
     private void initAdapter() {
-        super.messagesAdapter = new MessagesListAdapter<>(super.senderId, super.imageLoader);
+        MessageHolders holders = new MessageHolders()
+                .registerContentType(
+                        CONTENT_TYPE_VOICE,
+                        IncomingVoiceMessageViewHolder.class,
+                        R.layout.incoming_voice,
+                        OutcomingVoiceMessageViewHolder.class,
+                        R.layout.outcoming_voice,
+                         this);
+        super.messagesAdapter = new MessagesListAdapter<>(super.senderId,holders, super.imageLoader);
         super.messagesAdapter.enableSelectionMode(this);
         super.messagesAdapter.setLoadMoreListener(this);
         super.messagesAdapter.setOnMessageClickListener(new MessagesListAdapter.OnMessageClickListener<Message>() {

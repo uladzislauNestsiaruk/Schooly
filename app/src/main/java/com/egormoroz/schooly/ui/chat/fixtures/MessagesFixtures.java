@@ -25,15 +25,16 @@ public final class MessagesFixtures extends FixturesData {
     public static Message getImageMessage() {
         Message message = new Message(getRandomId(), getUser(), null);
         message.setImage(new Message.Image(getRandomImage()));
-        return message;
-    }
+        return message;}
 
-    public static Message getVoiceMessage() {
+        //useful//
+
+    public static Message getVoiceMessage(String FileName, int Duration) {
         Message message = new Message(getRandomId(), getUser(), null);
-        message.setVoice(new Message.Voice("http://example.com", rnd.nextInt(200) + 30));
+        message.setVoice(new Message.Voice(FileName, Duration));
         return message;
     }
-
+        //////////
     public static Message getTextMessage() {
         return getTextMessage(getRandomName());
     }

@@ -146,13 +146,15 @@
         app:inputButtonDefaultIconColor="@color/white"
         app:inputButtonDefaultIconDisabledColor="@color/white60"
         app:showAttachmentButton="true" >
+
         <ImageView
             android:id="@+id/voiceinput"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_voicemessage"
-            android:layout_marginStart="100dp"
-            />
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="50dp"
+            android:src="@drawable/ic_voicemessage" />
     </com.stfalcon.chatkit.messages.MessageInput>
 
 </RelativeLayout>

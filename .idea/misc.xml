@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Users/Дима/Documents/GitHub/Schooly_NEW/app/src/main/res/drawable/ic_voicemessage.xml" value="0.13177083333333334" />
+        <entry key="..\:/Users/Дима/Documents/GitHub/Schooly_NEW/app/src/main/res/layout/activity_default_messages.xml" value="0.1" />
+        <entry key="..\:/Users/Дима/Documents/GitHub/Schooly_NEW/app/src/main/res/layout/incoming_voice.xml" value="0.4" />
+        <entry key="..\:/Users/Дима/Documents/GitHub/Schooly_NEW/app/src/main/res/layout/outcoming_voice.xml" value="0.1" />
+        <entry key="..\:/Users/Дима/Documents/GitHub/Schooly_NEW/app/src/main/res/layout/voice_player.xml" value="0.1" />
+        <entry key="..\:/Users/Дима/Documents/GitHub/Schooly_NEW/app/src/main/res/layout/voiceplayer.xml" value="0.115625" />
+      </map>
+    </option>
+  </component>
   <component name="FindBugsConfigurable">
     <option name="make" value="true" />
     <option name="effort" value="default" />

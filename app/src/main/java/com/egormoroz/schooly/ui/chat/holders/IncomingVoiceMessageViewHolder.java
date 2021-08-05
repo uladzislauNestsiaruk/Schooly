@@ -11,15 +11,15 @@ import com.stfalcon.chatkit.utils.DateFormatter;
 /*
  * Created by troy379 on 05.04.17.
  */
-public class OutVoiceHolder
-        extends MessageHolders.OutcomingTextMessageViewHolder<Message> {
+public class IncomingVoiceMessageViewHolder
+        extends MessageHolders.IncomingTextMessageViewHolder<Message> {
 
     private TextView tvDuration;
     private TextView tvTime;
 
-    public OutVoiceHolder(View itemView, Object payload) {
+    public IncomingVoiceMessageViewHolder(View itemView, Object payload) {
         super(itemView, payload);
-      //  tvDuration = itemView.findViewById(R.id.duration);
+        tvDuration = itemView.findViewById(R.id.duration);
         tvTime = itemView.findViewById(R.id.time);
     }
 

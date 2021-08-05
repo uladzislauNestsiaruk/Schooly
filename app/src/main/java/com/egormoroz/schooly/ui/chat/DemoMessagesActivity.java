@@ -27,6 +27,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import com.stfalcon.chatkit.commons.ImageLoader;
+import com.stfalcon.chatkit.messages.MessageHolders;
 import com.stfalcon.chatkit.messages.MessagesListAdapter;
 
 import com.egormoroz.schooly.ui.chat.fixtures.MessagesFixtures;
@@ -60,43 +61,6 @@ public abstract class DemoMessagesActivity extends AppCompatActivity
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        messagesAdapter.addToStart(MessagesFixtures.getTextMessage(), true);
-    }
-
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        this.menu = menu;
-//        getMenuInflater().inflate(R., menu);
-//        onSelectionChanged(0);
-//        return true;
-//    }
-
-//    @Override
- //   public boolean onOptionsItemSelected(MenuItem item) {
-//        switch (item.getItemId()) {
-//            case R.id.action_delete:
-//                messagesAdapter.deleteSelectedMessages();
-//                break;
-//            case R.id.action_copy:
-//                messagesAdapter.copySelectedMessagesText(this, getMessageStringFormatter(), true);
-//             //   AppUtils.showToast(this, R.string.copied_message, true);
-//                break;
-//        }
-//        return true;
-//    }
-
-    @Override
-    public void onBackPressed() {
-        if (selectionCount == 0) {
-            super.onBackPressed();
-        } else {
-            messagesAdapter.unselectAllItems();
-        }
-    }
-
-    @Override
     public void onLoadMore(int page, int totalItemsCount) {
         Log.i("TAG", "onLoadMore: " + page + " " + totalItemsCount);
         if (totalItemsCount < TOTAL_MESSAGES_COUNT) {
@@ -104,12 +68,6 @@ public abstract class DemoMessagesActivity extends AppCompatActivity
         }
     }
 
-//    @Override
-//    public void onSelectionChanged(int count) {
-//        this.selectionCount = count;
-//        menu.findItem(R.id.action_delete).setVisible(count > 0);
-//        menu.findItem(R.id.action_copy).setVisible(count > 0);
-//    }
 
     protected void loadMessages() {
         //imitation of internet connection
@@ -135,4 +93,6 @@ public abstract class DemoMessagesActivity extends AppCompatActivity
     public void getReference(DatabaseReference ref){
         this.ref = ref;
     }
+
+    public abstract boolean hasContentFor(Message message, byte type);
 }
