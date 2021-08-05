@@ -4,9 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 
-/*
- * Created by troy379 on 06.04.17.
- */
+
 public final class FormatUtils {
     private FormatUtils() {
         throw new AssertionError();

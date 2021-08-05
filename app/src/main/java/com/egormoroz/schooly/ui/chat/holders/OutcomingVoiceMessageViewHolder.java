@@ -8,9 +8,6 @@ import com.egormoroz.schooly.ui.chat.Message;
 import com.stfalcon.chatkit.messages.MessageHolders;
 import com.stfalcon.chatkit.utils.DateFormatter;
 
-/*
- * Created by troy379 on 05.04.17.
- */
 public class OutcomingVoiceMessageViewHolder
         extends MessageHolders.OutcomingTextMessageViewHolder<Message> {
 
