@@ -2,6 +2,7 @@ package com.egormoroz.schooly.ui.main;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.MediaMetadataRetriever;
@@ -9,7 +10,9 @@ import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -21,7 +24,6 @@ import androidx.core.app.ActivityCompat;
 
 import com.egormoroz.schooly.CONST;
 import com.egormoroz.schooly.R;
-import com.egormoroz.schooly.ui.chat.DemoMessagesActivity;
 import com.egormoroz.schooly.ui.chat.Message;
 import com.egormoroz.schooly.ui.chat.User;
 import com.egormoroz.schooly.ui.chat.holders.IncomingVoiceMessageViewHolder;
@@ -30,6 +32,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.stfalcon.chatkit.commons.ImageLoader;
 import com.stfalcon.chatkit.messages.MessageHolders;
 import com.stfalcon.chatkit.messages.MessageInput;
 import com.stfalcon.chatkit.messages.MessagesList;
@@ -37,14 +40,18 @@ import com.stfalcon.chatkit.messages.MessagesListAdapter;
 
 import java.io.IOException;
 import java.security.SecureRandom;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.UUID;
 
 
-public class MessageActivity extends DemoMessagesActivity
+public class MessageActivity extends Activity
         implements MessageInput.InputListener,
+        MessagesListAdapter.SelectionListener,
+        MessagesListAdapter.OnLoadMoreListener,
         MessageInput.AttachmentsListener,
         MessageHolders.ContentChecker<Message>,
         MessageInput.TypingListener{
@@ -55,8 +62,17 @@ public class MessageActivity extends DemoMessagesActivity
         messagesAdapter.addToStart(getTextMessage(), true);
     }
 
+    private static final int TOTAL_MESSAGES_COUNT = 100;
+    private String TAG = "##########";
+    protected final String senderId = "0";
+    protected ImageLoader imageLoader;
+    protected MessagesListAdapter<Message> messagesAdapter;
+    private String dialogId;
+    private Menu menu;
+    private int selectionCount;
+    private Date lastLoadedDate;
+    private DatabaseReference ref;
     private static final byte CONTENT_TYPE_VOICE = 1;
-    String TAG = "############";
     private String userId;
     private static final int REQUEST_RECORD_AUDIO_PERMISSION = 200;
     private MessagesList messagesList;
@@ -65,12 +81,10 @@ public class MessageActivity extends DemoMessagesActivity
     private static String fileName = null;
     private static final String LOG_TAG = "AudioRecordTest";
     private Intent dialogIntent;
-    private String dialogId;
     private MediaRecorder recorder = null;
     private MediaPlayer   player = null;
     private FirebaseAuth AuthenticationDatabase;
     private FirebaseDatabase database;
-    private DatabaseReference ref;
     private long time = 0;
     private int duration;
 
@@ -213,14 +227,14 @@ public class MessageActivity extends DemoMessagesActivity
 
     @Override
     public boolean onSubmit(CharSequence input) {
-        super.messagesAdapter.addToStart(
+        messagesAdapter.addToStart(
                getTextMessage(input.toString()), true);
         return true;
     }
 
     @Override
     public void onAddAttachments() {
-        super.messagesAdapter.addToStart(
+        messagesAdapter.addToStart(
               getImageMessage(), true);
     }
 
@@ -243,17 +257,17 @@ public class MessageActivity extends DemoMessagesActivity
                         OutcomingVoiceMessageViewHolder.class,
                         R.layout.outcoming_voice,
                          this);
-        super.messagesAdapter = new MessagesListAdapter<>(super.senderId,holders, super.imageLoader);
-        super.messagesAdapter.enableSelectionMode(this);
-        super.messagesAdapter.setLoadMoreListener(this);
-        super.messagesAdapter.setOnMessageClickListener(new MessagesListAdapter.OnMessageClickListener<Message>() {
+        messagesAdapter = new MessagesListAdapter<>(senderId,holders, imageLoader);
+        messagesAdapter.enableSelectionMode(this);
+        messagesAdapter.setLoadMoreListener(this);
+        messagesAdapter.setOnMessageClickListener(new MessagesListAdapter.OnMessageClickListener<Message>() {
             @Override
             public void onMessageClick(Message message) {
                 onPlay(true);
             }
         });
 
-        this.messagesList.setAdapter(super.messagesAdapter);
+        this.messagesList.setAdapter(messagesAdapter);
 
     }
 
@@ -280,7 +294,7 @@ public class MessageActivity extends DemoMessagesActivity
 
 
     public void sendId(DatabaseReference ref){
-        super.getReference(ref);
+//        database.getReference(ref);
     }
 
 
@@ -411,6 +425,37 @@ public class MessageActivity extends DemoMessagesActivity
     private DatabaseReference messagesRef;
 
 
+
+    @Override
+    public void onLoadMore(int page, int totalItemsCount) {
+        Log.i("TAG", "onLoadMore: " + page + " " + totalItemsCount);
+        if (totalItemsCount < TOTAL_MESSAGES_COUNT) {
+            loadMessages();
+        }
+    }
+
+
+    protected void loadMessages() {
+        //imitation of internet connection
+        new Handler().postDelayed(() -> {
+            ArrayList<Message> messages = MessageActivity.getMessages(lastLoadedDate, ref);
+            lastLoadedDate = messages.get(messages.size() - 1).getCreatedAt();
+            messagesAdapter.addToEnd(messages, false);
+        }, 1000);
+    }
+
+    private MessagesListAdapter.Formatter<Message> getMessageStringFormatter() {
+        return message -> {
+            String createdAt = new SimpleDateFormat("MMM d, EEE 'at' h:mm a", Locale.getDefault())
+                    .format(message.getCreatedAt());
+
+            String text = message.getText();
+            if (text == null) text = "[attachment]";
+
+            return String.format(Locale.getDefault(), "%s: %s (%s)",
+                    message.getUser().getName(), text, createdAt);
+        };
+    }
 
 //    private MessagesFixtures(DatabaseReference ref) {
 //        messagesRef = ref.child("messages");
