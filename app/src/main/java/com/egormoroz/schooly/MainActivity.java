@@ -15,6 +15,8 @@ import androidx.fragment.app.FragmentTransaction;
 import com.egormoroz.schooly.ui.chat.Dialog;
 import com.egormoroz.schooly.ui.main.ChatFragment;
 import com.egormoroz.schooly.ui.main.MainFragment;
+import com.egormoroz.schooly.ui.main.MainViewModel;
+import com.egormoroz.schooly.ui.main.RegisrtationstartFragment;
 import com.egormoroz.schooly.ui.news.NewsFragment;
 import com.egormoroz.schooly.ui.people.PeopleFragment;
 import com.egormoroz.schooly.ui.profile.ProfileFragment;
@@ -26,7 +28,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
-import com.egormoroz.schooly.ui.main.*;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -88,13 +90,15 @@ public class MainActivity extends AppCompatActivity implements
             }
         });
         initFirebase();
-        //getDialogs();
+     //   getDialogs();
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_top_nav, menu);
         return true;
     }
+
     public void setCurrentFragment(Fragment fragment) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.frame, fragment);
@@ -116,26 +120,26 @@ public class MainActivity extends AppCompatActivity implements
             fragment.setDialogs(dialogs);
         }
     }
-    public void getDialogs(){
-        reference = database.getReference().child("users").
-                child(AuthenticationBase.getCurrentUser().getUid()).child("chats");
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
-                GenericTypeIndicator<HashMap<String, Dialog>> indicator =
-                        new GenericTypeIndicator<HashMap<String, Dialog>>(){};
-                HashMap<String, Dialog> mapka = snapshot.getValue(indicator);
-                Log.d("######", mapka.size() + " download");
-                for(Map.Entry<String, Dialog> cur : mapka.entrySet())
-                    dialogs.add(cur.getValue());
-            }
-
-            @Override
-            public void onCancelled(@NonNull @NotNull DatabaseError error) {
-
-            }
-        });
-    }
+//    public void getDialogs(){
+//        reference = database.getReference().child("users").
+//                child(AuthenticationBase.getCurrentUser().getUid()).child("chats");
+//        reference.addValueEventListener(new ValueEventListener() {
+////            @Override
+////            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+////                GenericTypeIndicator<HashMap<String, Dialog>> indicator =
+////                        new GenericTypeIndicator<HashMap<String, Dialog>>(){};
+//////                HashMap<String, Dialog> mapka = snapshot.getValue(indicator);
+//////                Log.d("######", mapka.size() + " download");
+////                for(Map.Entry<String, Dialog> cur : mapka.entrySet())
+////                    dialogs.add(cur.getValue());
+////            }
+//
+//            @Override
+//            public void onCancelled(@NonNull @NotNull DatabaseError error) {
+//
+//            }
+//        });
+//    }
     public void initFirebase(){
         database = FirebaseDatabase.getInstance(CONST.RealtimeDatabaseUrl);
         AuthenticationBase = FirebaseAuth.getInstance();

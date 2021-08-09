@@ -27,6 +27,7 @@ import com.egormoroz.schooly.ui.chat.Message;
 import com.egormoroz.schooly.ui.chat.User;
 import com.egormoroz.schooly.ui.chat.holders.IncomingVoiceMessageViewHolder;
 import com.egormoroz.schooly.ui.chat.holders.OutcomingVoiceMessageViewHolder;
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -54,6 +55,7 @@ public class MessageActivity extends Activity
         MessageInput.AttachmentsListener,
         MessageHolders.ContentChecker<Message>,
         MessageInput.TypingListener{
+
 
     @Override
     protected void onStart() {
@@ -84,6 +86,7 @@ public class MessageActivity extends Activity
     private FirebaseDatabase database;
     private final long time = 0;
     private int duration;
+    ImageView play;
 
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -150,9 +153,11 @@ public class MessageActivity extends Activity
         }
         if (duration <= 9) Log.d(TAG, "Voice too small");
         else {
-              messagesAdapter.addToStart(getVoiceMessage(fileName, duration), true);
-              duration = duration / 10;
-              ImageView play = findViewById(R.id.pb_play);
+            duration = duration / 10;
+            messagesAdapter.addToStart(getVoiceMessage(fileName, duration), true);
+
+//              setContentView(R.layout.incoming_voice);
+//              PlayAudio(play);
 //              TextView dura = findViewById(R.id.durationVoice);
 //              dura.setText(String.valueOf(duration));
              }
@@ -172,14 +177,6 @@ public class MessageActivity extends Activity
         MessageInput input = findViewById(R.id.input);
         input.setInputListener(this);
         input.setTypingListener(this);
-     //   ImageView play = findViewById(R.id.pb_play);
-//        play.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                boolean start = true;
-//                onPlay(start);
-//            }
-//        });
         getCurrentChatId();
         initFirebase();
         RecAudio();
@@ -215,7 +212,7 @@ public class MessageActivity extends Activity
                     case MotionEvent.ACTION_UP:
                         view.setPressed(false);
                         stopRecording();
-                        Log.d(TAG, "Recording stop" + time);
+                        Log.d(TAG, "Recording stop" + duration);
 
                         break;
                 }
@@ -224,6 +221,16 @@ public class MessageActivity extends Activity
         });
     }
 
+    private void PlayAudio(ImageView play) {
+        play =findViewById(R.id.pb_play);
+        play.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                boolean start = true;
+                onPlay(start);
+            }
+        });
+    }
 
 
     @Override
@@ -258,15 +265,16 @@ public class MessageActivity extends Activity
                         OutcomingVoiceMessageViewHolder.class,
                         R.layout.outcoming_voice,
                          this);
-        messagesAdapter = new MessagesListAdapter<>(senderId,holders, imageLoader);
+        messagesAdapter = new MessagesListAdapter<>(senderId, holders, imageLoader);
         messagesAdapter.enableSelectionMode(this);
         messagesAdapter.setLoadMoreListener(this);
-//        messagesAdapter.setOnMessageClickListener(new MessagesListAdapter.OnMessageClickListener<Message>() {
-//            @Override
-//            public void onMessageClick(Message message) {
-//                onPlay(true);
-//            }
-//        });
+        ImageView play =findViewById(R.id.playvoicemessage);
+        messagesAdapter.setOnMessageClickListener(new MessagesListAdapter.OnMessageClickListener<Message>() {
+            @Override
+            public void onMessageClick(Message message) {
+                onPlay(true);
+            }
+        });
 
         this.messagesList.setAdapter(messagesAdapter);
 
