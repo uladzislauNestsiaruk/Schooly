@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements
             }
         });
         initFirebase();
-        getDialogs();
+     //   getDialogs();
     }
 
     @Override
@@ -120,26 +120,26 @@ public class MainActivity extends AppCompatActivity implements
             fragment.setDialogs(dialogs);
         }
     }
-    public void getDialogs(){
-        reference = database.getReference().child("users").
-                child(AuthenticationBase.getCurrentUser().getUid()).child("chats");
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
-                GenericTypeIndicator<HashMap<String, Dialog>> indicator =
-                        new GenericTypeIndicator<HashMap<String, Dialog>>(){};
-                HashMap<String, Dialog> mapka = snapshot.getValue(indicator);
-                Log.d("######", mapka.size() + " download");
-                for(Map.Entry<String, Dialog> cur : mapka.entrySet())
-                    dialogs.add(cur.getValue());
-            }
-
-            @Override
-            public void onCancelled(@NonNull @NotNull DatabaseError error) {
-
-            }
-        });
-    }
+//    public void getDialogs(){
+//        reference = database.getReference().child("users").
+//                child(AuthenticationBase.getCurrentUser().getUid()).child("chats");
+//        reference.addValueEventListener(new ValueEventListener() {
+////            @Override
+////            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+////                GenericTypeIndicator<HashMap<String, Dialog>> indicator =
+////                        new GenericTypeIndicator<HashMap<String, Dialog>>(){};
+//////                HashMap<String, Dialog> mapka = snapshot.getValue(indicator);
+//////                Log.d("######", mapka.size() + " download");
+////                for(Map.Entry<String, Dialog> cur : mapka.entrySet())
+////                    dialogs.add(cur.getValue());
+////            }
+//
+//            @Override
+//            public void onCancelled(@NonNull @NotNull DatabaseError error) {
+//
+//            }
+//        });
+//    }
     public void initFirebase(){
         database = FirebaseDatabase.getInstance(CONST.RealtimeDatabaseUrl);
         AuthenticationBase = FirebaseAuth.getInstance();
