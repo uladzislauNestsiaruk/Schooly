@@ -85,6 +85,7 @@
                 android:layout_marginTop="-110dp"
                 android:layout_marginStart="40dp"
                 android:layout_marginEnd="40dp"
+                android:paddingBottom="24dp"
                 android:elevation="14dp"
                 android:background="@drawable/corners30dp">
 
@@ -119,12 +120,26 @@
                     android:textSize="14sp"
                     android:textColor="@color/app_grey"
                     android:padding="4dp"
+                    android:inputType="text"
                     android:maxLength="24"
+                    android:digits="abcdefghijklmnopqrstuvwxyz012345678ABCDEFGHIJKLMNOPQRSTUVWXYZ"
                     android:layout_marginStart="25dp"
                     android:layout_marginEnd="90dp"
                     android:layout_marginTop="10dp"
-                    android:layout_marginBottom="32dp"
                     android:fontFamily="@font/montserrat_bold"/>
+
+                <TextView
+                    android:id="@+id/errornickname"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/editnickregistration"
+                    android:layout_marginTop="2dp"
+                    android:textSize="10sp"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginEnd="8dp"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:textColor="@color/app_grey"/>
+
 
 
             </RelativeLayout>
@@ -137,6 +152,7 @@
                 android:layout_marginTop="42dp"
                 android:layout_marginStart="40dp"
                 android:layout_marginEnd="40dp"
+                android:paddingBottom="24dp"
                 android:elevation="14dp"
                 android:background="@drawable/corners30dp">
 
@@ -176,8 +192,20 @@
                     android:layout_marginStart="25dp"
                     android:layout_marginEnd="90dp"
                     android:layout_marginTop="10dp"
-                    android:layout_marginBottom="32dp"
                     android:fontFamily="@font/montserrat_bold"/>
+
+                <TextView
+                    android:id="@+id/errorphone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/editphone"
+                    android:layout_marginTop="2dp"
+                    android:textSize="10sp"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginEnd="8dp"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:textColor="@color/app_grey"/>
+
 
 
             </RelativeLayout>
@@ -190,6 +218,7 @@
                 android:layout_marginTop="42dp"
                 android:layout_marginStart="40dp"
                 android:layout_marginEnd="40dp"
+                android:paddingBottom="24dp"
                 android:elevation="14dp"
                 android:background="@drawable/corners30dp">
 
@@ -229,8 +258,19 @@
                     android:layout_marginStart="25dp"
                     android:layout_marginEnd="90dp"
                     android:layout_marginTop="10dp"
-                    android:layout_marginBottom="32dp"
                     android:fontFamily="@font/montserrat_bold"/>
+
+                <TextView
+                    android:id="@+id/errorpassword"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/editpassword"
+                    android:layout_marginTop="2dp"
+                    android:textSize="10sp"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginEnd="8dp"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:textColor="@color/app_grey"/>
 
 
             </RelativeLayout>

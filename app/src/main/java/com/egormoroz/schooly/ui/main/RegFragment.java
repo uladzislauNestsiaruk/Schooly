@@ -1,28 +1,25 @@
 package com.egormoroz.schooly.ui.main;
-
-import android.app.Activity;
+import static java.lang.Character.isDigit;
+import static java.lang.Character.isLetter;
 import android.content.Intent;
-import android.icu.text.LocaleDisplayNames;
-import android.nfc.Tag;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-
 import com.egormoroz.schooly.CONST;
+import com.egormoroz.schooly.ErrorList;
 import com.egormoroz.schooly.MainActivity;
 import com.egormoroz.schooly.R;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -31,43 +28,30 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
-import com.google.firebase.auth.PhoneAuthCredential;
-import com.google.firebase.auth.PhoneAuthOptions;
-import com.google.firebase.auth.PhoneAuthProvider;
-import com.google.firebase.auth.PhoneAuthProvider.OnVerificationStateChangedCallbacks;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import org.jetbrains.annotations.NotNull;
-
-import java.sql.Time;
-import java.util.concurrent.Executor;
-import java.util.concurrent.TimeUnit;
-
-import static java.lang.Character.isDigit;
-import static java.lang.Character.isLetter;
-
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 public class RegFragment extends Fragment {
-    public static RegFragment newInstance(){return new RegFragment();}
-    int RC_SIGN_IN = 175;
+    public static RegFragment newInstance() {
+        return new RegFragment();
+    }
     final int GOOGLE_SIGN_IN = 101;
     final String databaseUrl = CONST.RealtimeDatabaseUrl;
     final int Phone_Request_Code = 102;
     private static final String TAG = "###########";
+    private static Pattern VALID_PHONE_NUMBER = Pattern.compile("^[0-9.()-]{10,25}$");
     boolean isPhoneValid = false;
     FirebaseAuth AuthenticationBase;
     GoogleSignInOptions gso;
@@ -76,7 +60,7 @@ public class RegFragment extends Fragment {
     DatabaseReference reference;
     RelativeLayout GoogleEnter;
     EditText passwordEditText, nickNameEditText, phoneEditText;
-    TextView continueRegistrationButton;
+    TextView continueRegistrationButton, errorTextnickname, errorTextphone, errorTextPassword;
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
@@ -91,15 +75,6 @@ public class RegFragment extends Fragment {
         ////////////Phone + password registration
         PasswordAuthorization();
         return root;
-    }
-    public void setCurrentFragment(Fragment fragment) {
-        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.frame, fragment);
-        ft.commit();
-    }
-    public void AuthorizationThrowGoogle(){
-        Intent signInIntent = signInClient.getSignInIntent();
-        startActivityForResult(signInIntent, GOOGLE_SIGN_IN);
     }
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -123,11 +98,216 @@ public class RegFragment extends Fragment {
                 String phone = String.valueOf(phoneEditText.getText()).trim();
                 String password = String.valueOf(passwordEditText.getText()).trim();
                 String nick = String.valueOf(nickNameEditText.getText()).trim();
-                if(isPhoneValid)
+                if (isPhoneValid)
                     createNewEmailUser(makeEmail(phone), password, nick);
                 break;
         }
     }
+    @Override
+    public void onViewCreated(@Nullable View view, @NonNull Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        ImageView gotostartregfromreg = view.findViewById(R.id.arrow);
+        gotostartregfromreg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((MainActivity) getActivity()).setCurrentFragment(RegisrtationstartFragment.newInstance());
+            }
+        });
+    }
+    /////////////////////// INITIALIZATION /////////////////////
+    public void initElements(View root) {
+        nickNameEditText = root.findViewById(R.id.editnickregistration);
+        nickNameEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                String nickName = String.valueOf(nickNameEditText.getText()).trim();
+                if (!isNickCorrect(nickName))
+                    showErrorMessage(ErrorList.NICK_IS_USED, errorTextnickname);
+                else
+                    showErrorMessage(ErrorList.NOTHING, errorTextnickname);
+            }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+        passwordEditText = root.findViewById(R.id.editpassword);
+        phoneEditText = root.findViewById(R.id.editphone);
+        GoogleEnter = root.findViewById(R.id.GoogleEnter);
+        continueRegistrationButton = root.findViewById(R.id.next);
+        errorTextPassword = root.findViewById(R.id.errorpassword);
+        errorTextnickname = root.findViewById(R.id.errornickname);
+        errorTextphone = root.findViewById(R.id.errorphone);
+        passwordEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+            @Override
+            public void afterTextChanged(Editable s) {
+                String password = String.valueOf(passwordEditText.getText()).trim();
+                isPasswordCorrect(password);
+            }
+        });
+        phoneEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String phone = String.valueOf(phoneEditText.getText()).trim();
+                if (!isPhoneCorrect(phone))
+                    showErrorMessage(ErrorList.PHONE_ERROR, errorTextphone);
+                else
+                    showErrorMessage(ErrorList.NOTHING, errorTextphone);
+            }
+        });
+    }
+    public void appBarInit() {
+        BottomNavigationView bnv = getActivity().findViewById(R.id.bottomNavigationView);
+        bnv.setVisibility(bnv.GONE);
+    }
+    /////////////////////// TOOLS /////////////////////////////
+    public void showErrorMessage(ErrorList tag, TextView errorText) {
+        switch (tag) {
+            case NOT_ENOUGH_SYMBOL_ERROR:
+                errorText.setText("The minimum number of symbols is 8");
+                break;
+            case ONLY_ENGLISH_SYMBOLS_ERROR:
+                errorText.setText("Оnly English symbols in the nickname");
+                break;
+            case INVALID_SYMBOLS_ERROR:
+                errorText.setText("Invalid symbols");
+                break;
+            case NOT_ONLY_NUMBERS_ERROR:
+                errorText.setText("The password must contain more than just numbers");
+                break;
+            case NOT_ONLY_LETTERS:
+                errorText.setText("The password must contain more than just letters");
+                break;
+            case NOTHING:
+                errorText.setText(" ");
+                break;
+            case NICK_IS_USED:
+                errorText.setText("Nickname is already being used");
+                break;
+            case PHONE_ERROR:
+                errorText.setText("Phone is not correct");
+                break;
+            case ERROR_EMPTY_PHONE:
+                errorText.setText("You didn't enter your phone");
+                break;
+        }
+    }
+    public void setCurrentFragment(Fragment fragment) {
+        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.frame, fragment);
+        ft.commit();
+    }
+    String makeEmail(String phone) {
+        String email = "schooly";
+        for (int i = 1; i < phone.length(); i++)
+            email += phone.toCharArray()[i];
+        email += "@gmail.com";
+        return email;
+    }
+    String getPhone(String email) {
+        String res = email;
+        res = res.replace("schooly", "");
+        res = res.replace("@gmail.com", "");
+        return "+" + res;
+    }
+    /////////////////////// FIREBASE METHODS //////////////////
+    public void initFirebase() {
+        gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+        signInClient = GoogleSignIn.getClient(getActivity(), gso);
+        AuthenticationBase = FirebaseAuth.getInstance();
+        database = FirebaseDatabase.getInstance(databaseUrl);
+        reference = database.getReference("users");
+    }
+    public boolean saveData(DatabaseReference ref, FirebaseUser user) {
+        String nick = String.valueOf(nickNameEditText.getText()).trim();
+        UserInformation res = new UserInformation(nick, "unknown", user.getUid(),
+                "AVA", "unknown", "Helicopter", 1000);
+        ref.child(nick).setValue(res);
+        return nick.isEmpty();
+    }
+    /////////////////////// CHECK METHODS /////////////////////
+    boolean isPhoneValid(String phone) {
+        Intent phoneIntent = new Intent(getActivity(), PhoneCodeActivity.class);
+        phoneIntent.putExtra("Phone", phone);
+        startActivityForResult(phoneIntent, Phone_Request_Code);
+        return isPhoneValid;
+    }
+    boolean isPasswordCorrect(String password) {
+        boolean digits = false, characters = false;
+        for (char c : password.toCharArray()) {
+            if (isDigit(c)) digits = true;
+            else if (isLetter(c)) characters = true;
+            else return false;
+        }
+        if (password.length() < 8)
+            showErrorMessage(ErrorList.NOT_ENOUGH_SYMBOL_ERROR, errorTextPassword);
+        else
+            showErrorMessage(ErrorList.NOTHING, errorTextPassword);
+        if (!digits && password.length() >= 8)
+            showErrorMessage(ErrorList.NOT_ONLY_LETTERS, errorTextPassword);
+        if (!characters && password.length() >= 8)
+            showErrorMessage(ErrorList.NOT_ONLY_NUMBERS_ERROR, errorTextPassword);
+        return digits && characters && password.length() > 8;
+    }
+    boolean isNickCorrect(String nickname) {
+        if(nickname.length() < 4){
+            showErrorMessage(ErrorList.ERROR_NICK_IS_TO_SHORT, errorTextnickname);
+            return false;
+        }
+        return isNickUnique(nickname, reference);
+    }
+    public boolean isPhoneCorrect(String phone) {
+        if (phone.length() == 0) {
+            showErrorMessage(ErrorList.ERROR_EMPTY_PHONE, errorTextphone);
+            return false;
+        }
+        char p[] = phone.toCharArray();
+        if (p[0] != '+')
+            return false;
+        phone = phone.replace(p[0] + "", "");
+        Matcher m = VALID_PHONE_NUMBER.matcher(phone);
+        return m.matches();
+    }
+    public boolean isNickUnique(String nickname, DatabaseReference ref){
+        final boolean[] res = {true};
+        ref = ref.child(nickname);
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists())
+                    res[0] = false;
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        return res[0];
+    }
+    ////////////////////// AUTHORIZATION METHODS(GOOGLE) //////
     private void firebaseAuthWithGoogle(String idToken) {
         AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
         AuthenticationBase.signInWithCredential(credential)
@@ -138,10 +318,8 @@ public class RegFragment extends Fragment {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
                             boolean isNickEmpty = saveData(reference, AuthenticationBase.getCurrentUser());
-                            if(isNickEmpty)
-                                setCurrentFragment(NicknameFragment.newInstance());
-                            else
-                                setCurrentFragment(MainFragment.newInstance());
+                            if (isNickEmpty) setCurrentFragment(NicknameFragment.newInstance());
+                            else setCurrentFragment(MainFragment.newInstance());
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
@@ -149,82 +327,11 @@ public class RegFragment extends Fragment {
                     }
                 });
     }
-    @Override
-    public void onViewCreated(@Nullable View view,@NonNull Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        ImageView gotostartregfromreg = view.findViewById(R.id.arrow);
-        gotostartregfromreg.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ((MainActivity) getActivity()).setCurrentFragment(RegisrtationstartFragment.newInstance());
-            }
-        });
+    public void AuthorizationThrowGoogle() {
+        Intent signInIntent = signInClient.getSignInIntent();
+        startActivityForResult(signInIntent, GOOGLE_SIGN_IN);
     }
-    public void RegistrationPhonePassword(){
-        String nickName = String.valueOf(nickNameEditText.getText()).trim();
-        String phone = String.valueOf(phoneEditText.getText()).trim();
-        String password = String.valueOf(passwordEditText.getText()).trim();
-        if(!isPasswordCorrect(password))
-            return;
-        if(!isNickCorrect(nickName))
-            return;
-        if(!isPhoneValid(phone))
-            return;
-    }
-    boolean isPhoneValid(String phone){
-        Intent phoneIntent = new Intent(getActivity(), PhoneCodeActivity.class);
-        phoneIntent.putExtra("Phone", phone);
-        startActivityForResult(phoneIntent, Phone_Request_Code);
-        return isPhoneValid;
-    }
-    boolean isPasswordCorrect(String password){
-        boolean digits = false, characters = false;
-        for(char c : password.toCharArray()){
-            if(isDigit(c))
-                digits = true;
-            else if(isLetter(c))
-                characters = true;
-            else
-                return false;
-        }
-        return digits && characters && password.length() > 8;
-    }
-    boolean isNickCorrect(String nickname){
-        DatabaseReference reference = database.getReference().child("users");
-        Query query = reference.orderByChild("nick").equalTo(nickname);
-        final boolean[] res = new boolean[1];
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
-                boolean temp = !snapshot.exists();
-                res[0] = temp;
-            }
-
-            @Override
-            public void onCancelled(@NonNull @NotNull DatabaseError error) {
-
-            }
-        });
-        return res[0];
-    }
-    public void initElements(View root){
-        nickNameEditText = root.findViewById(R.id.editnickregistration);
-        passwordEditText = root.findViewById(R.id.editpassword);
-        phoneEditText = root.findViewById(R.id.editphone);
-        GoogleEnter = root.findViewById(R.id.GoogleEnter);
-        continueRegistrationButton = root.findViewById(R.id.next);
-    }
-    public void initFirebase(){
-        gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
-                .requestEmail()
-                .build();
-        signInClient = GoogleSignIn.getClient(getActivity(), gso);
-        AuthenticationBase = FirebaseAuth.getInstance();
-        database = FirebaseDatabase.getInstance(databaseUrl);
-        reference = database.getReference("users");
-    }
-    public void GoogleAuthorization(){
+    public void GoogleAuthorization() {
         GoogleEnter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -232,19 +339,33 @@ public class RegFragment extends Fragment {
             }
         });
     }
-    public void PasswordAuthorization(){
+    ////////////////////// AUTHORIZATION METHODS(PHONE) ///////
+    public void RegistrationPhonePassword() {
+        String nickName = String.valueOf(nickNameEditText.getText()).trim();
+        String phone = String.valueOf(phoneEditText.getText()).trim();
+        String password = String.valueOf(passwordEditText.getText()).trim();
+        if (!isPasswordCorrect(password))
+            return;
+        if (!isNickCorrect(nickName))
+            return;
+        if (!isPhoneValid(phone))
+            return;
+    }
+    public void PasswordAuthorization() {
         continueRegistrationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 RegistrationPhonePassword();
+                if (passwordEditText.getText().length() == 0)
+                    errorTextPassword.setText("You didn't enter your password");
+                if (nickNameEditText.getText().length() == 0)
+                    errorTextnickname.setText("You didn't enter your nickname");
+                if (phoneEditText.getText().length() == 0)
+                    errorTextphone.setText("You didn't enter your phone");
             }
         });
     }
-    public void appBarInit(){
-        BottomNavigationView bnv = getActivity().findViewById(R.id.bottomNavigationView);
-        bnv.setVisibility(bnv.GONE);
-    }
-    public void createNewEmailUser(String email, String password, String nick){
+    public void createNewEmailUser(String email, String password, String nick) {
         AuthenticationBase.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
                     @Override
@@ -254,8 +375,8 @@ public class RegFragment extends Fragment {
                             Log.d(TAG, "createUserWithEmail:success");
                             FirebaseUser user = AuthenticationBase.getCurrentUser();
                             UserInformation res = new UserInformation(nick, getPhone(email), user.getUid(),
-                                    "AVA", password, "Helicopter",  1000);
-                            reference.child(user.getUid()).setValue(res);
+                                    "AVA", password, "Helicopter", 1000);
+                            reference.child(nick).setValue(res);
                             setCurrentFragment(MainFragment.newInstance());
                         } else {
                             // If sign in fails, display a message to the user.
@@ -265,28 +386,5 @@ public class RegFragment extends Fragment {
                         }
                     }
                 });
-    }
-    String makeEmail(String phone){
-        String email = "schooly";
-        for(int i = 1; i < phone.length(); i++)
-            email += phone.toCharArray()[i];
-        email += "@gmail.com";
-        return email;
-    }
-    String getPhone(String email){
-        String res = email;
-        res = res.replace("schooly", "");
-        res = res.replace("@gmail.com", "");
-        return "+" + res;
-    }
-    public void setNickName(){
-        setCurrentFragment(NicknameFragment.newInstance());
-    }
-    public boolean saveData(DatabaseReference ref, FirebaseUser user){
-        String nick = String.valueOf(nickNameEditText.getText()).trim();
-        UserInformation res = new UserInformation(nick, "unknown", user.getUid(),
-                "AVA", "unknown", "Helicopter",  1000);
-        ref.child(user.getUid()).setValue(res);
-        return nick.isEmpty();
     }
 }
