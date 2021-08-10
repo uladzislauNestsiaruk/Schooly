@@ -24,7 +24,7 @@
             android:src="@drawable/ic_play" />
 
         <TextView
-            android:id="@+id/duration"
+            android:id="@+id/durationVoice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"

@@ -16,7 +16,7 @@ public class OutcomingVoiceMessageViewHolder
 
     public OutcomingVoiceMessageViewHolder(View itemView, Object payload) {
         super(itemView, payload);
-        tvDuration = itemView.findViewById(R.id.duration);
+        tvDuration = itemView.findViewById(R.id.durationVoice);
         tvTime = itemView.findViewById(R.id.time);
     }
 

@@ -221,8 +221,8 @@ public class MessageActivity extends Activity
         });
     }
 
-    private void PlayAudio(ImageView play) {
-        play =findViewById(R.id.pb_play);
+    private void PlayAudio() {
+        play = findViewById(R.id.playvoicemessage);
         play.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -268,7 +268,6 @@ public class MessageActivity extends Activity
         messagesAdapter = new MessagesListAdapter<>(senderId, holders, imageLoader);
         messagesAdapter.enableSelectionMode(this);
         messagesAdapter.setLoadMoreListener(this);
-        ImageView play =findViewById(R.id.playvoicemessage);
         messagesAdapter.setOnMessageClickListener(new MessagesListAdapter.OnMessageClickListener<Message>() {
             @Override
             public void onMessageClick(Message message) {
