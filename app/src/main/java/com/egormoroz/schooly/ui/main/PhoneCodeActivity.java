@@ -1,5 +1,4 @@
 package com.egormoroz.schooly.ui.main;
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,16 +10,12 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.egormoroz.schooly.ErrorList;
 import com.egormoroz.schooly.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.appbar.AppBarLayout;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -30,15 +25,9 @@ import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.firebase.auth.PhoneAuthProvider.OnVerificationStateChangedCallbacks;
-
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
-
 public class PhoneCodeActivity extends AppCompatActivity {
-    final int Phone_Request_Code = 102;
     final int PhoneSMSResend = 30000;
     final int Second = 1000;
     String TAG = "############";
@@ -65,6 +54,7 @@ public class PhoneCodeActivity extends AppCompatActivity {
         resendSMS();
         enterCode();
     }
+    //////////////////////// INITIALIZATION //////////////////
     public void initElements(){
         resendCode = findViewById(R.id.resendCodeTextView);
         backButton = findViewById(R.id.backfromphonecode);
@@ -81,39 +71,45 @@ public class PhoneCodeActivity extends AppCompatActivity {
     public void initFirebase(){
         AuthenticationBase = FirebaseAuth.getInstance();
     }
-    public void phoneVerification(String phone){
-        PhoneAuthOptions options = PhoneAuthOptions.newBuilder(AuthenticationBase)
-                .setPhoneNumber(phone)       // Phone number to verify
-                .setTimeout(30L, TimeUnit.SECONDS) // Timeout and unit
-                .setActivity(this)                 // Activity (for callback binding)
-                .setCallbacks(callbacks)          // OnVerificationStateChangedCallbacks
-                .build();
-        PhoneAuthProvider.verifyPhoneNumber(options);
+    //////////////////////// TOOLS ///////////////////////////
+    public void startTimer(){
+        resendCode.setVisibility(View.GONE);
+        resendCode.setEnabled(false);
+        timer = new CountDownTimer(PhoneSMSResend, Second) {
+            @Override
+            public void onTick(long l) {
+                timerText.setText("You can resend SMS after: " + l / Second);
+            }
+            @Override
+            public void onFinish() {
+                timerText.setVisibility(View.GONE);
+                resendCode.setVisibility(View.VISIBLE);
+                resendCode.setEnabled(true);
+                timerText.setText("You can resend SMS");
+            }
+        };
+        timer.start();
     }
-    private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
-        AuthenticationBase.signInWithCredential(credential)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "signInWithCredential:success");
-                            FirebaseUser user = task.getResult().getUser();
-                            user.delete();
-                            data.putExtra("IsPhoneValid", true);
-                            setResult(RESULT_OK, data);
-                            finish();
-                            // Update UI
-                        } else {
-                            // Sign in failed, display a message and update the UI
-                            Log.w(TAG, "signInWithCredential:failure", task.getException());
-                            if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
-                                showErrorMessage(ErrorList.WRONG_SMS_CODE_ERROR);
-                            }
-                        }
-                    }
-                });
+    public void showErrorMessage(ErrorList tag){
+        switch (tag){
+            case SMS_LIMIT_ERROR:
+                errorText.setText("Sorry, you exceeded your SMS limit: 4 sms per hour");
+                break;
+            case TO_MANY_REQUESTS_ERROR:
+                errorText.setText("Sorry, our database has too many request, please retry later");
+                break;
+            case UNKNOWN_REGISTRATION_ERROR:
+                errorText.setText("Sorry, you have unknown error, please retry");
+                break;
+            case WRONG_SMS_CODE_ERROR:
+                errorText.setText("Wrong code, please check it out");
+                break;
+            case WRONG_PHONE_NUMBER_ERROR:
+                errorText.setText("Phone number is invalid, please check it out");
+                break;
+        }
     }
+    /////////////////////// SMS CODE METHODS /////////////////
     public void sendSMS(){
         callbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
             @Override
@@ -128,7 +124,6 @@ public class PhoneCodeActivity extends AppCompatActivity {
                 setResult(RESULT_OK, data);
                 finish();
             }
-
             @Override
             public void onCodeSent(@NonNull String verificationId,
                                    @NonNull PhoneAuthProvider.ForceResendingToken token) {
@@ -143,25 +138,6 @@ public class PhoneCodeActivity extends AppCompatActivity {
             }
         };
         phoneVerification(phone);
-    }
-    public void startTimer(){
-        resendCode.setVisibility(View.GONE);
-        resendCode.setEnabled(false);
-        timer = new CountDownTimer(PhoneSMSResend, Second) {
-            @Override
-            public void onTick(long l) {
-                timerText.setText("You can resend SMS after: " + l / Second);
-            }
-
-            @Override
-            public void onFinish() {
-                timerText.setVisibility(View.GONE);
-                resendCode.setVisibility(View.VISIBLE);
-                resendCode.setEnabled(true);
-                timerText.setText("You can resend SMS");
-            }
-        };
-        timer.start();
     }
     public void enterCode(){
         SMSCode.addTextChangedListener(new TextWatcher() {
@@ -194,25 +170,6 @@ public class PhoneCodeActivity extends AppCompatActivity {
             }
         });
     }
-    public void showErrorMessage(ErrorList tag){
-        switch (tag){
-            case SMS_LIMIT_ERROR:
-                errorText.setText("Sorry, you exceeded your SMS limit: 4 sms per hour");
-                break;
-            case TO_MANY_REQUESTS_ERROR:
-                errorText.setText("Sorry, our database has too many request, please retry later");
-                break;
-            case UNKNOWN_REGISTRATION_ERROR:
-                errorText.setText("Sorry, you have unknown error, please retry");
-                break;
-            case WRONG_SMS_CODE_ERROR:
-                errorText.setText("Wrong code, please check it out");
-                break;
-            case WRONG_PHONE_NUMBER_ERROR:
-                errorText.setText("Phone number is invalid, please check it out");
-                break;
-        }
-    }
     public void resendSMS(){
         resendCode.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -221,5 +178,39 @@ public class PhoneCodeActivity extends AppCompatActivity {
                 startTimer();
             }
         });
+    }
+    ////////////////////// PHONE VERIFICATION METHODS ////////
+    public void phoneVerification(String phone){
+        PhoneAuthOptions options = PhoneAuthOptions.newBuilder(AuthenticationBase)
+                .setPhoneNumber(phone)       // Phone number to verify
+                .setTimeout(30L, TimeUnit.SECONDS) // Timeout and unit
+                .setActivity(this)                 // Activity (for callback binding)
+                .setCallbacks(callbacks)          // OnVerificationStateChangedCallbacks
+                .build();
+        PhoneAuthProvider.verifyPhoneNumber(options);
+    }
+    private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
+        AuthenticationBase.signInWithCredential(credential)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d(TAG, "signInWithCredential:success");
+                            FirebaseUser user = task.getResult().getUser();
+                            user.delete();
+                            data.putExtra("IsPhoneValid", true);
+                            setResult(RESULT_OK, data);
+                            finish();
+                            // Update UI
+                        } else {
+                            // Sign in failed, display a message and update the UI
+                            Log.w(TAG, "signInWithCredential:failure", task.getException());
+                            if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
+                                showErrorMessage(ErrorList.WRONG_SMS_CODE_ERROR);
+                            }
+                        }
+                    }
+                });
     }
 }

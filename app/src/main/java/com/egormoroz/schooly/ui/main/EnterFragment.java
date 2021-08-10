@@ -1,23 +1,18 @@
 package com.egormoroz.schooly.ui.main;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-
 import com.egormoroz.schooly.MainActivity;
 import com.egormoroz.schooly.R;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -27,22 +22,13 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
-
-import java.util.concurrent.Executor;
-
-import static com.egormoroz.schooly.ui.main.Authorization.EnterThrowGoogle;
-import static java.lang.Character.isDigit;
-import static java.lang.Character.isLetter;
-
 public class EnterFragment extends Fragment {
-    FirebaseAuth AuthBase;
     public static EnterFragment newInstance(){return new EnterFragment();}
     EditText phoneEditText;
     EditText passwordEditText;
@@ -51,7 +37,6 @@ public class EnterFragment extends Fragment {
     RelativeLayout GoogleEnter;
     FirebaseAuth AuthenticationBase;
     TextView continueButton;
-    int RC_SIGN_IN = 175;
     int GOOGLE_SIGN_IN = 101;
     private static final String TAG = "###########";
     @Override
@@ -60,8 +45,6 @@ public class EnterFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_enter, container, false);
         BottomNavigationView bnv = getActivity().findViewById(R.id.bottomNavigationView);
         bnv.setVisibility(bnv.GONE);
-//        AppBarLayout abl = getActivity().findViewById(R.id.AppBarLayout);
-//        abl.setVisibility(abl.GONE);
         initElements(root);
         ////////////////Init network references
         initFirebase();
@@ -70,16 +53,6 @@ public class EnterFragment extends Fragment {
         /////////////Simple authorization
         PasswordPhoneAuthorizationClick();
         return root;
-    }
-
-    public void setCurrentFragment(Fragment fragment) {
-        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.frame, fragment);
-        ft.commit();
-    }
-    public void AuthorizationThrowGoogle(){
-        Intent signInIntent = signInClient.getSignInIntent();
-        startActivityForResult(signInIntent, GOOGLE_SIGN_IN);
     }
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -128,6 +101,7 @@ public class EnterFragment extends Fragment {
             }
         });
     }
+    ///////////////////////////// INITIALIZATION ////////////////
     public void initElements(View root){
         GoogleEnter = root.findViewById(R.id.GoogleEnter);
         phoneEditText = root.findViewById(R.id.egitnick);
@@ -142,6 +116,20 @@ public class EnterFragment extends Fragment {
         signInClient = GoogleSignIn.getClient(getActivity(), gso);
         AuthenticationBase = FirebaseAuth.getInstance();
     }
+    ///////////////////////////// TOOLS /////////////////////////
+    String makeEmail(String phone){
+        String email = "schooly";
+        for(int i = 1; i < phone.length(); i++)
+            email += phone.toCharArray()[i];
+        email += "@gmail.com";
+        return email;
+    }
+    public void setCurrentFragment(Fragment fragment) {
+        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.frame, fragment);
+        ft.commit();
+    }
+    ///////////////////////////// AUTHORIZATION METHODS(GOOGLE) /
     public void GoogleAuthorizationClick(){
         GoogleEnter.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -150,6 +138,11 @@ public class EnterFragment extends Fragment {
             }
         });
     }
+    public void AuthorizationThrowGoogle(){
+        Intent signInIntent = signInClient.getSignInIntent();
+        startActivityForResult(signInIntent, GOOGLE_SIGN_IN);
+    }
+    //////////////////////////// AUTHORIZATION METHODS(PHONE) ///
     public void PasswordPhoneAuthorizationClick(){
         continueButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -161,6 +154,8 @@ public class EnterFragment extends Fragment {
     public void PasswordPhoneAuthorization(){
         String phone = String.valueOf(phoneEditText.getText()).trim();
         String password = String.valueOf(passwordEditText.getText()).trim();
+        if(phone.length() == 0 || password.length() == 0)
+            return;
         AuthenticationBase.signInWithEmailAndPassword(makeEmail(phone), password)
                 .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
                     @Override
@@ -176,12 +171,5 @@ public class EnterFragment extends Fragment {
                         }
                     }
                 });
-    }
-    String makeEmail(String phone){
-        String email = "schooly";
-        for(int i = 1; i < phone.length(); i++)
-            email += phone.toCharArray()[i];
-        email += "@gmail.com";
-        return email;
     }
 }
