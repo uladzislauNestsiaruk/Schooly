@@ -15,16 +15,13 @@ import androidx.fragment.app.Fragment;
 import com.egormoroz.schooly.CONST;
 import com.egormoroz.schooly.MainActivity;
 import com.egormoroz.schooly.R;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import org.jetbrains.annotations.NotNull;
@@ -55,7 +52,9 @@ public class ProfileFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         initFirebase();
         TextView nickname =view.findViewById(R.id.usernick);
-        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+        /////////////////////////TO DO/////////////////////
+        Query query = reference.orderByChild("uid").equalTo(AuthenticationBase.getCurrentUser().getUid());
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
                 nickname.setText(snapshot.child("nick").getValue(String.class));
@@ -66,8 +65,7 @@ public class ProfileFragment extends Fragment {
 
             }
         });
-
-
+        //////////////////////////////////////////////////
         ImageView imageView = view.findViewById(R.id.settingsIcon);
         imageView.setOnClickListener(new View.OnClickListener() {
 
@@ -107,6 +105,6 @@ public class ProfileFragment extends Fragment {
     public void initFirebase(){
         AuthenticationBase = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance(CONST.RealtimeDatabaseUrl);
-        reference = database.getReference("users").child(AuthenticationBase.getCurrentUser().getUid());
+        reference = database.getReference("users");
     }
 }

@@ -18,10 +18,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.egormoroz.schooly.CONST;
 import com.egormoroz.schooly.ErrorList;
+import com.egormoroz.schooly.FirebaseCallbacks;
 import com.egormoroz.schooly.MainActivity;
 import com.egormoroz.schooly.R;
+import com.egormoroz.schooly.RecentMethods;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -39,8 +43,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 public class RegFragment extends Fragment {
@@ -116,18 +120,18 @@ public class RegFragment extends Fragment {
     }
     /////////////////////// INITIALIZATION /////////////////////
     public void initElements(View root) {
+        errorTextPassword = root.findViewById(R.id.errorpassword);
+        errorTextnickname = root.findViewById(R.id.errornickname);
+        errorTextphone = root.findViewById(R.id.errorphone);
         nickNameEditText = root.findViewById(R.id.editnickregistration);
         nickNameEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                String nickName = String.valueOf(nickNameEditText.getText()).trim();
-                if (!isNickCorrect(nickName))
-                    showErrorMessage(ErrorList.NICK_IS_USED, errorTextnickname);
-                else
-                    showErrorMessage(ErrorList.NOTHING, errorTextnickname);
             }
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String nickName = String.valueOf(s);
+                RecentMethods.isNickCorrect(nickName, reference, errorTextnickname);
             }
             @Override
             public void afterTextChanged(Editable s) {
@@ -137,9 +141,6 @@ public class RegFragment extends Fragment {
         phoneEditText = root.findViewById(R.id.editphone);
         GoogleEnter = root.findViewById(R.id.GoogleEnter);
         continueRegistrationButton = root.findViewById(R.id.next);
-        errorTextPassword = root.findViewById(R.id.errorpassword);
-        errorTextnickname = root.findViewById(R.id.errornickname);
-        errorTextphone = root.findViewById(R.id.errorphone);
         passwordEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -169,9 +170,9 @@ public class RegFragment extends Fragment {
             public void afterTextChanged(Editable s) {
                 String phone = String.valueOf(phoneEditText.getText()).trim();
                 if (!isPhoneCorrect(phone))
-                    showErrorMessage(ErrorList.PHONE_ERROR, errorTextphone);
+                    RecentMethods.showErrorMessage(ErrorList.PHONE_ERROR, errorTextphone);
                 else
-                    showErrorMessage(ErrorList.NOTHING, errorTextphone);
+                    RecentMethods.showErrorMessage(ErrorList.NOTHING, errorTextphone);
             }
         });
     }
@@ -180,42 +181,6 @@ public class RegFragment extends Fragment {
         bnv.setVisibility(bnv.GONE);
     }
     /////////////////////// TOOLS /////////////////////////////
-    public void showErrorMessage(ErrorList tag, TextView errorText) {
-        switch (tag) {
-            case NOT_ENOUGH_SYMBOL_ERROR:
-                errorText.setText("The minimum number of symbols is 8");
-                break;
-            case ONLY_ENGLISH_SYMBOLS_ERROR:
-                errorText.setText("Оnly English symbols in the nickname");
-                break;
-            case INVALID_SYMBOLS_ERROR:
-                errorText.setText("Invalid symbols");
-                break;
-            case NOT_ONLY_NUMBERS_ERROR:
-                errorText.setText("The password must contain more than just numbers");
-                break;
-            case NOT_ONLY_LETTERS:
-                errorText.setText("The password must contain more than just letters");
-                break;
-            case NOTHING:
-                errorText.setText(" ");
-                break;
-            case NICK_IS_USED:
-                errorText.setText("Nickname is already being used");
-                break;
-            case PHONE_ERROR:
-                errorText.setText("Phone is not correct");
-                break;
-            case ERROR_EMPTY_PHONE:
-                errorText.setText("You didn't enter your phone");
-                break;
-        }
-    }
-    public void setCurrentFragment(Fragment fragment) {
-        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.frame, fragment);
-        ft.commit();
-    }
     String makeEmail(String phone) {
         String email = "schooly";
         for (int i = 1; i < phone.length(); i++)
@@ -262,25 +227,18 @@ public class RegFragment extends Fragment {
             else return false;
         }
         if (password.length() < 8)
-            showErrorMessage(ErrorList.NOT_ENOUGH_SYMBOL_ERROR, errorTextPassword);
+            RecentMethods.showErrorMessage(ErrorList.NOT_ENOUGH_SYMBOL_ERROR, errorTextPassword);
         else
-            showErrorMessage(ErrorList.NOTHING, errorTextPassword);
+            RecentMethods.showErrorMessage(ErrorList.NOTHING, errorTextPassword);
         if (!digits && password.length() >= 8)
-            showErrorMessage(ErrorList.NOT_ONLY_LETTERS, errorTextPassword);
+            RecentMethods.showErrorMessage(ErrorList.NOT_ONLY_LETTERS, errorTextPassword);
         if (!characters && password.length() >= 8)
-            showErrorMessage(ErrorList.NOT_ONLY_NUMBERS_ERROR, errorTextPassword);
+            RecentMethods.showErrorMessage(ErrorList.NOT_ONLY_NUMBERS_ERROR, errorTextPassword);
         return digits && characters && password.length() > 8;
-    }
-    boolean isNickCorrect(String nickname) {
-        if(nickname.length() < 4){
-            showErrorMessage(ErrorList.ERROR_NICK_IS_TO_SHORT, errorTextnickname);
-            return false;
-        }
-        return isNickUnique(nickname, reference);
     }
     public boolean isPhoneCorrect(String phone) {
         if (phone.length() == 0) {
-            showErrorMessage(ErrorList.ERROR_EMPTY_PHONE, errorTextphone);
+            RecentMethods.showErrorMessage(ErrorList.ERROR_EMPTY_PHONE, errorTextphone);
             return false;
         }
         char p[] = phone.toCharArray();
@@ -289,23 +247,6 @@ public class RegFragment extends Fragment {
         phone = phone.replace(p[0] + "", "");
         Matcher m = VALID_PHONE_NUMBER.matcher(phone);
         return m.matches();
-    }
-    public boolean isNickUnique(String nickname, DatabaseReference ref){
-        final boolean[] res = {true};
-        ref = ref.child(nickname);
-        ref.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.exists())
-                    res[0] = false;
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-        return res[0];
     }
     ////////////////////// AUTHORIZATION METHODS(GOOGLE) //////
     private void firebaseAuthWithGoogle(String idToken) {
@@ -318,8 +259,8 @@ public class RegFragment extends Fragment {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
                             boolean isNickEmpty = saveData(reference, AuthenticationBase.getCurrentUser());
-                            if (isNickEmpty) setCurrentFragment(NicknameFragment.newInstance());
-                            else setCurrentFragment(MainFragment.newInstance());
+                            if (isNickEmpty) RecentMethods.setCurrentFragment(NicknameFragment.newInstance(), getActivity());
+                            else RecentMethods.setCurrentFragment(MainFragment.newInstance(), getActivity());
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
@@ -341,12 +282,12 @@ public class RegFragment extends Fragment {
     }
     ////////////////////// AUTHORIZATION METHODS(PHONE) ///////
     public void RegistrationPhonePassword() {
-        String nickName = String.valueOf(nickNameEditText.getText()).trim();
+        String nickError = String.valueOf(errorTextnickname.getText()).trim();
         String phone = String.valueOf(phoneEditText.getText()).trim();
         String password = String.valueOf(passwordEditText.getText()).trim();
         if (!isPasswordCorrect(password))
             return;
-        if (!isNickCorrect(nickName))
+        if (!nickError.isEmpty())
             return;
         if (!isPhoneValid(phone))
             return;
