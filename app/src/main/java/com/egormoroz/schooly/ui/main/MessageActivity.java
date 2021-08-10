@@ -14,6 +14,7 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -56,7 +57,6 @@ public class MessageActivity extends Activity
         MessageHolders.ContentChecker<Message>,
         MessageInput.TypingListener{
 
-
     @Override
     protected void onStart() {
         super.onStart();
@@ -77,7 +77,7 @@ public class MessageActivity extends Activity
     private MessagesList messagesList;
     private boolean permissionToRecordAccepted = false;
     private final String [] permissions = {Manifest.permission.RECORD_AUDIO};
-    private static String fileName = null;
+    public static String fileName = null;
     private static final String LOG_TAG = "AudioRecordTest";
     private Intent dialogIntent;
     private MediaRecorder recorder = null;
@@ -86,6 +86,7 @@ public class MessageActivity extends Activity
     private FirebaseDatabase database;
     private final long time = 0;
     private int duration;
+    private boolean start = true;
     ImageView play;
 
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -112,11 +113,12 @@ public class MessageActivity extends Activity
     }
 
     private void stopPlaying() {
+        player.stop();
         player.release();
         player = null;
     }
 
-    private void onPlay(boolean start) {
+    public void onPlay(boolean start) {
         if (start) {
             startPlaying();
         } else {
@@ -153,13 +155,9 @@ public class MessageActivity extends Activity
         }
         if (duration <= 9) Log.d(TAG, "Voice too small");
         else {
-            duration = duration / 10;
-            messagesAdapter.addToStart(getVoiceMessage(fileName, duration), true);
+               duration = duration / 10;
+               messagesAdapter.addToStart(getVoiceMessage(fileName, duration), true);
 
-//              setContentView(R.layout.incoming_voice);
-//              PlayAudio(play);
-//              TextView dura = findViewById(R.id.durationVoice);
-//              dura.setText(String.valueOf(duration));
              }
         }
     }
@@ -213,7 +211,6 @@ public class MessageActivity extends Activity
                         view.setPressed(false);
                         stopRecording();
                         Log.d(TAG, "Recording stop" + duration);
-
                         break;
                 }
                 return true;
@@ -222,11 +219,10 @@ public class MessageActivity extends Activity
     }
 
     private void PlayAudio() {
-        play = findViewById(R.id.playvoicemessage);
+        play = findViewById(R.id.play);
         play.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                boolean start = true;
                 onPlay(start);
             }
         });
@@ -268,12 +264,13 @@ public class MessageActivity extends Activity
         messagesAdapter = new MessagesListAdapter<>(senderId, holders, imageLoader);
         messagesAdapter.enableSelectionMode(this);
         messagesAdapter.setLoadMoreListener(this);
-        messagesAdapter.setOnMessageClickListener(new MessagesListAdapter.OnMessageClickListener<Message>() {
-            @Override
-            public void onMessageClick(Message message) {
-                onPlay(true);
-            }
-        });
+//        messagesAdapter.setOnMessageClickListener(new MessagesListAdapter.OnMessageClickListener<Message>() {
+//            @Override
+//            public void onMessageClick(Message message) {
+//                onPlay(true);
+//                start = !start;
+//            }
+//        });
 
         this.messagesList.setAdapter(messagesAdapter);
 
