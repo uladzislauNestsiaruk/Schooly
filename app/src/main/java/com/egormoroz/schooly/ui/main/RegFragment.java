@@ -191,13 +191,6 @@ public class RegFragment extends Fragment {
         database = FirebaseDatabase.getInstance(databaseUrl);
         reference = database.getReference("users");
     }
-    public boolean saveData(DatabaseReference ref, FirebaseUser user) {
-        String nick = String.valueOf(nickNameEditText.getText()).trim();
-        UserInformation res = new UserInformation(nick, "unknown", user.getUid(),
-                "AVA", "unknown", "Helicopter", 1000);
-        ref.child(nick).setValue(res);
-        return nick.isEmpty();
-    }
     /////////////////////// CHECK METHODS /////////////////////
     boolean isPhoneValid(String phone) {
         Intent phoneIntent = new Intent(getActivity(), PhoneCodeActivity.class);
@@ -244,9 +237,11 @@ public class RegFragment extends Fragment {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
-                            boolean isNickEmpty = saveData(reference, AuthenticationBase.getCurrentUser());
-                            if (isNickEmpty) RecentMethods.setCurrentFragment(NicknameFragment.newInstance(), getActivity());
-                            else RecentMethods.setCurrentFragment(MainFragment.newInstance(), getActivity());
+                            String nick = String.valueOf(nickNameEditText.getText()).trim();
+                            if(nick.isEmpty())
+                                RecentMethods.setCurrentFragment(NicknameFragment.newInstance(), getActivity());
+                            else
+                                 RecentMethods.setCurrentFragment(MainFragment.newInstance(), getActivity());
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());

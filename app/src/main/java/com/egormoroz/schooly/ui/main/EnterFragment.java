@@ -1,4 +1,5 @@
 package com.egormoroz.schooly.ui.main;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,12 +10,14 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
-import com.egormoroz.schooly.MainActivity;
+
+import com.egormoroz.schooly.CONST;
 import com.egormoroz.schooly.R;
+import com.egormoroz.schooly.RecentMethods;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -28,6 +31,9 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 public class EnterFragment extends Fragment {
     public static EnterFragment newInstance(){return new EnterFragment();}
     EditText phoneEditText;
@@ -82,7 +88,9 @@ public class EnterFragment extends Fragment {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = AuthenticationBase.getCurrentUser();
-                            setCurrentFragment(MainFragment.newInstance());
+                            DatabaseReference ref = FirebaseDatabase.getInstance(CONST.RealtimeDatabaseUrl).
+                                    getReference("users");
+                            RecentMethods.hasThisUser(ref, user, getActivity());
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
@@ -97,7 +105,7 @@ public class EnterFragment extends Fragment {
         gotostartreg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((MainActivity) getActivity()).setCurrentFragment(RegisrtationstartFragment.newInstance());
+                RecentMethods.setCurrentFragment(RegisrtationstartFragment.newInstance(), getActivity());
             }
         });
     }
@@ -115,19 +123,6 @@ public class EnterFragment extends Fragment {
                 .build();
         signInClient = GoogleSignIn.getClient(getActivity(), gso);
         AuthenticationBase = FirebaseAuth.getInstance();
-    }
-    ///////////////////////////// TOOLS /////////////////////////
-    String makeEmail(String phone){
-        String email = "schooly";
-        for(int i = 1; i < phone.length(); i++)
-            email += phone.toCharArray()[i];
-        email += "@gmail.com";
-        return email;
-    }
-    public void setCurrentFragment(Fragment fragment) {
-        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.frame, fragment);
-        ft.commit();
     }
     ///////////////////////////// AUTHORIZATION METHODS(GOOGLE) /
     public void GoogleAuthorizationClick(){
@@ -156,7 +151,7 @@ public class EnterFragment extends Fragment {
         String password = String.valueOf(passwordEditText.getText()).trim();
         if(phone.length() == 0 || password.length() == 0)
             return;
-        AuthenticationBase.signInWithEmailAndPassword(makeEmail(phone), password)
+        AuthenticationBase.signInWithEmailAndPassword(RecentMethods.makeEmail(phone), password)
                 .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
@@ -164,7 +159,7 @@ public class EnterFragment extends Fragment {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithEmail:success");
                             FirebaseUser user = AuthenticationBase.getCurrentUser();
-                            setCurrentFragment(MainFragment.newInstance());
+                            RecentMethods.setCurrentFragment(MainFragment.newInstance(), getActivity());
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithEmail:failure", task.getException());

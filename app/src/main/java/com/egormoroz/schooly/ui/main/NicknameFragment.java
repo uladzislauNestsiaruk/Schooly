@@ -5,16 +5,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
+
 import com.egormoroz.schooly.CONST;
 import com.egormoroz.schooly.R;
+import com.egormoroz.schooly.RecentMethods;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
 public class NicknameFragment extends Fragment {
     public static NicknameFragment newInstance() {
         return new NicknameFragment();
@@ -25,6 +29,7 @@ public class NicknameFragment extends Fragment {
     String userId;
     EditText nicknameEditText;
     ImageView continueButton;
+    TextView nicknameTextView;
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
@@ -36,12 +41,6 @@ public class NicknameFragment extends Fragment {
         saveNick();
         return root;
     }
-    ///////////////////////////// TOOLS ////////////////////////
-    public void setCurrentFragment(Fragment fragment) {
-        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.frame, fragment);
-        ft.commit();
-    }
     ///////////////////////////// INITIALIZATION //////////////
     public void initFirebase(){
         authenticationDatabase = FirebaseAuth.getInstance();
@@ -51,13 +50,9 @@ public class NicknameFragment extends Fragment {
         ref = ref.child("users");
     }
     public void initElements(View root){
+        nicknameTextView = root.findViewById(R.id.errornickname);
         nicknameEditText = root.findViewById(R.id.nickname);
         continueButton = root.findViewById(R.id.continueButton);
-    }
-    ///////////////////////////// CHECK METHODS ///////////////
-    boolean isNickCorrect(String nickname){
-        DatabaseReference reference = database.getReference().child("users");
-        return true;
     }
     ///////////////////////////// SAVE DATA //////////////////
     public void saveNick(){
@@ -65,9 +60,11 @@ public class NicknameFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 String nickname = String.valueOf(nicknameEditText.getText()).trim();
-                if(isNickCorrect(nickname)) {
-                    ref.child(nickname).setValue(nickname);
-                    setCurrentFragment(MainFragment.newInstance());
+                RecentMethods.isNickCorrect(nickname, ref, nicknameTextView);
+                String error = String.valueOf(nicknameTextView.getText()).trim();
+                if(error.isEmpty()) {
+                    RecentMethods.saveData(ref, authenticationDatabase.getCurrentUser(), nickname);
+                    RecentMethods.setCurrentFragment(MainFragment.newInstance(), getActivity());
                 }
             }
         });

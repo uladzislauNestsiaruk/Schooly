@@ -1,5 +1,10 @@
 package com.egormoroz.schooly;
 
 public interface FirebaseCallbacks {
-    void uniqueNicknameCallback(boolean isUnique);
+    default void uniqueNicknameCallback(boolean isUnique){
+        return;
+    };
+    default void hasGoogleUserCallback(boolean hasGoogleUser){
+        return;
+    }
 }
