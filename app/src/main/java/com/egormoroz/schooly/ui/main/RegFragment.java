@@ -103,7 +103,7 @@ public class RegFragment extends Fragment {
                 String password = String.valueOf(passwordEditText.getText()).trim();
                 String nick = String.valueOf(nickNameEditText.getText()).trim();
                 if (isPhoneValid)
-                    createNewEmailUser(makeEmail(phone), password, nick);
+                    createNewEmailUser(RecentMethods.makeEmail(phone), password, nick);
                 break;
         }
     }
@@ -114,7 +114,7 @@ public class RegFragment extends Fragment {
         gotostartregfromreg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((MainActivity) getActivity()).setCurrentFragment(RegisrtationstartFragment.newInstance());
+                RecentMethods.setCurrentFragment(RegisrtationstartFragment.newInstance(), getActivity());
             }
         });
     }
@@ -179,20 +179,6 @@ public class RegFragment extends Fragment {
     public void appBarInit() {
         BottomNavigationView bnv = getActivity().findViewById(R.id.bottomNavigationView);
         bnv.setVisibility(bnv.GONE);
-    }
-    /////////////////////// TOOLS /////////////////////////////
-    String makeEmail(String phone) {
-        String email = "schooly";
-        for (int i = 1; i < phone.length(); i++)
-            email += phone.toCharArray()[i];
-        email += "@gmail.com";
-        return email;
-    }
-    String getPhone(String email) {
-        String res = email;
-        res = res.replace("schooly", "");
-        res = res.replace("@gmail.com", "");
-        return "+" + res;
     }
     /////////////////////// FIREBASE METHODS //////////////////
     public void initFirebase() {
@@ -315,10 +301,10 @@ public class RegFragment extends Fragment {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "createUserWithEmail:success");
                             FirebaseUser user = AuthenticationBase.getCurrentUser();
-                            UserInformation res = new UserInformation(nick, getPhone(email), user.getUid(),
+                            UserInformation res = new UserInformation(nick, RecentMethods.getPhone(email), user.getUid(),
                                     "AVA", password, "Helicopter", 1000);
                             reference.child(nick).setValue(res);
-                            setCurrentFragment(MainFragment.newInstance());
+                            RecentMethods.setCurrentFragment(MainFragment.newInstance(), getActivity());
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());

@@ -78,4 +78,17 @@ public class RecentMethods {
             }
         });
     }
+    public static String makeEmail(String phone) {
+        String email = "schooly";
+        for (int i = 1; i < phone.length(); i++)
+            email += phone.toCharArray()[i];
+        email += "@gmail.com";
+        return email;
+    }
+    public static String getPhone(String email) {
+        String res = email;
+        res = res.replace("schooly", "");
+        res = res.replace("@gmail.com", "");
+        return "+" + res;
+    }
 }
