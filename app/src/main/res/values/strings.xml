@@ -23,6 +23,8 @@
 
     <string name="createnickname">Придумай никнейм</string>
 
+    <string name="searchfriends">Найди друзей!</string>
+
     <string name="add">Добавить</string>
     <string name="mes">Сообщение</string>
 
@@ -134,5 +136,19 @@
     <string name="num">318</string>
     <string name="newnew">Новое</string>
     <string name="searchitem">Поиск одежды</string>
+
+    <string name="mining">Майнинг</string>
+    <string name="myminersallcars">МОИ МАЙНЕРЫ</string>
+    <string name="myminers">Мои майнеры</string>
+    <string name="today">Сегодня:</string>
+    <string name="moremoney">Получать больше</string>
+    <string name="workingminers">Активные майнеры</string>
+    <string name="miners">Майнеры</string>
+    <string name="weak">Слабые</string>
+    <string name="buy">Купить</string>
+    <string name="noactiveminers">Нет активных майнеров</string>
+    <string name="use">Использовать</string>
+    <string name="upgrade">Улучшить</string>
+
 
 </resources>

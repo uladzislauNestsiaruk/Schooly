@@ -35,6 +35,7 @@ public class RecentMethods {
             }
         });
     }
+
     public static void showErrorMessage(ErrorList tag, TextView errorText) {
         switch (tag) {
             case NOT_ENOUGH_SYMBOL_ERROR:
@@ -98,7 +99,7 @@ public class RecentMethods {
     }
     public static boolean saveData(DatabaseReference ref, FirebaseUser user, String nick) {
         UserInformation res = new UserInformation(nick, "unknown", user.getUid(),
-                "AVA", "unknown", "Helicopter", 1000);
+                6, "unknown", "Helicopter", 1000,"Miners");
         ref.child(nick).setValue(res);
         return nick.isEmpty();
     }

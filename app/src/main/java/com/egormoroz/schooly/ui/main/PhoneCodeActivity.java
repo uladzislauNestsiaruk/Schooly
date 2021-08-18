@@ -1,4 +1,5 @@
 package com.egormoroz.schooly.ui.main;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.appbar.AppBarLayout;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -79,6 +81,7 @@ public class PhoneCodeActivity extends AppCompatActivity {
         timer = new CountDownTimer(PhoneSMSResend, Second) {
             @Override
             public void onTick(long l) {
+                timerText.setTextColor(getColor(R.color.app_grey));
                 timerText.setText("You can resend SMS after: " + l / Second);
             }
             @Override
@@ -139,7 +142,7 @@ public class PhoneCodeActivity extends AppCompatActivity {
                     continueButton.setEnabled(false);
                 else {
                     continueButton.setEnabled(true);
-                    continueButton.setBackgroundColor(getColor(R.color.app_color));
+                    continueButton.setBackground(getDrawable(R.drawable.corners25appcolor));
                 }
             }
         });
