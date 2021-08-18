@@ -1,14 +1,11 @@
 package com.egormoroz.schooly;
-
 import android.app.Activity;
 import android.util.Log;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
-
 import com.egormoroz.schooly.ui.main.MainFragment;
 import com.egormoroz.schooly.ui.main.NicknameFragment;
 import com.egormoroz.schooly.ui.main.UserInformation;
@@ -18,20 +15,34 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-
 public class RecentMethods {
     public static void isNickCorrect(String nickname, DatabaseReference reference, TextView errorTextnickname) {
+        Log.d("########", "Method: isNickCorrect");
+        Log.d("########", "Reference: " + String.valueOf(reference));
         if(nickname.length() < 4){
             showErrorMessage(ErrorList.ERROR_NICK_IS_TO_SHORT, errorTextnickname);
             return;
         }
-        isNickUniqueFun(nickname, reference, new FirebaseCallbacks() {
+        isNickUniqueFun(nickname, reference, new Callbacks.UniqueNick() {
             @Override
             public void uniqueNicknameCallback(boolean isUnique) {
+                Log.d("########", "Is nick unique: " + isUnique);
                 if(!isUnique)
                     showErrorMessage(ErrorList.NICK_IS_USED, errorTextnickname);
                 else
                     showErrorMessage(ErrorList.NOTHING, errorTextnickname);
+            }
+        });
+    }
+    public static void isNickUniqueFun(String nickname, DatabaseReference ref, final Callbacks.UniqueNick callback){
+        Query query = ref.orderByChild("nick").equalTo(nickname);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                callback.uniqueNicknameCallback(!snapshot.exists());
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
             }
         });
     }
@@ -71,18 +82,6 @@ public class RecentMethods {
         ft.replace(R.id.frame, fragment);
         ft.commit();
     }
-    public static void isNickUniqueFun(String nickname, DatabaseReference ref, final FirebaseCallbacks callback){
-        Query query = ref.orderByChild("nick").equalTo(nickname);
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                callback.uniqueNicknameCallback(!snapshot.exists());
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-            }
-        });
-    }
     public static String makeEmail(String phone) {
         String email = "schooly";
         for (int i = 1; i < phone.length(); i++)
@@ -102,7 +101,8 @@ public class RecentMethods {
         ref.child(nick).setValue(res);
         return nick.isEmpty();
     }
-    public static void hasThisUserFun(DatabaseReference ref, FirebaseUser user, FirebaseCallbacks callback){
+    public static void hasThisUserFun(DatabaseReference ref, FirebaseUser user,
+                                      Callbacks.hasGoogleUser callback){
         String id = user.getUid();
         Query query = ref.orderByChild("uid").equalTo(id);
         query.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -122,7 +122,7 @@ public class RecentMethods {
         });
     }
     public static void hasThisUser(DatabaseReference ref, FirebaseUser user, Activity activity){
-        hasThisUserFun(ref, user, new FirebaseCallbacks() {
+        hasThisUserFun(ref, user, new Callbacks.hasGoogleUser() {
             @Override
             public void hasGoogleUserCallback(boolean hasGoogleUser) {
                 if(!hasGoogleUser)
