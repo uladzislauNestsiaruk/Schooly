@@ -46,38 +46,39 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/codeissended"
-            android:layout_marginTop="35dp"
             android:layout_centerHorizontal="true"
-            android:text="@string/sendnewcode"
-            android:textSize="14sp"
-            android:textColor="@color/white"
+            android:layout_marginTop="35dp"
+            android:background="@drawable/cornersnewcode"
             android:fontFamily="@font/montserrat_bold"
-            android:padding="5dp"
-            android:background="@drawable/cornersnewcode"/>
+            android:padding="7dp"
+            android:text="@string/sendnewcode"
+            android:textColor="@color/white"
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/writecode"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/writecode"
-            android:textSize="18sp"
             android:layout_below="@+id/codeissended"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="100dp"
             android:fontFamily="@font/montserrat_extrabold"
-            android:textColor="@color/app_grey"/>
+            android:text="@string/writecode"
+            android:textColor="@color/app_grey"
+            android:textSize="18sp" />
 
         <EditText
             android:id="@+id/VerificationCode"
-            android:layout_width="match_parent"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_marginStart="100dp"
-            android:layout_marginEnd="100dp"
             android:layout_below="@+id/writecode"
+            android:layout_marginTop="16dp"
+            android:layout_centerHorizontal="true"
+            android:fontFamily="@font/montserrat_extrabold"
+            android:inputType="number"
             android:maxLength="6"
-            android:textSize="20sp"
-            android:inputType="number"/>
+            android:textColor="@color/app_color"
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/errorMessage"
@@ -92,13 +93,13 @@
             android:id="@+id/continueButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_arrow___right36dp"
-            android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
-            android:layout_marginBottom="24dp"
+            android:layout_alignParentBottom="true"
             android:layout_marginEnd="24dp"
+            android:layout_marginBottom="24dp"
+            android:background="@drawable/cornersgenderarrow"
             android:padding="18dp"
-            android:background="@drawable/cornersgenderarrow"/>
+            android:src="@drawable/ic_arrow___right36dp"/>
 
     </RelativeLayout>
 
