@@ -234,7 +234,7 @@ public class RegFragment extends Fragment {
                             if(nick.isEmpty())
                                 RecentMethods.setCurrentFragment(NicknameFragment.newInstance(), getActivity());
                             else
-                                 RecentMethods.setCurrentFragment(MainFragment.newInstance(), getActivity());
+                                RecentMethods.setCurrentFragment(MainFragment.newInstance(), getActivity());
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
@@ -290,7 +290,7 @@ public class RegFragment extends Fragment {
                             Log.d(TAG, "createUserWithEmail:success");
                             FirebaseUser user = AuthenticationBase.getCurrentUser();
                             UserInformation res = new UserInformation(nick, RecentMethods.getPhone(email), user.getUid(),
-                                    "AVA", password, "Helicopter", 1000);
+                                    6, password, "Helicopter", 1000, "Miners");
                             reference.child(nick).setValue(res);
                             RecentMethods.setCurrentFragment(MainFragment.newInstance(), getActivity());
                         } else {

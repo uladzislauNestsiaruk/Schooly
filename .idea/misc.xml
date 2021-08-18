@@ -3,6 +3,13 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/User/Downloads/Schooly_NEW/app/src/main/res/drawable/corners25appcolor.xml" value="0.2574074074074074" />
+        <entry key="..\:/Users/User/Downloads/Schooly_NEW/app/src/main/res/layout/fragment_mining.xml" value="0.1644021739130435" />
+        <entry key="..\:/Users/User/Downloads/Schooly_NEW/app/src/main/res/layout/fragment_myminers.xml" value="0.1644021739130435" />
+        <entry key="..\:/Users/User/Downloads/Schooly_NEW/app/src/main/res/layout/fragment_people.xml" value="0.1644021739130435" />
+        <entry key="..\:/Users/User/Downloads/Schooly_NEW/app/src/main/res/layout/horizontalrecyclerview_item.xml" value="0.1644021739130435" />
+        <entry key="..\:/Users/User/Downloads/Schooly_NEW/app/src/main/res/layout/myminers_item.xml" value="0.1644021739130435" />
+        <entry key="..\:/Users/User/Downloads/Schooly_NEW/app/src/main/res/layout/peoplerecyclerview_item.xml" value="0.1644021739130435" />
         <entry key="..\:/Users/Дима/Documents/GitHub/Schooly_NEW/app/src/main/res/drawable/ic_voicemessage.xml" value="0.13177083333333334" />
         <entry key="..\:/Users/Дима/Documents/GitHub/Schooly_NEW/app/src/main/res/layout/activity_default_dialogs.xml" value="0.12291666666666666" />
         <entry key="..\:/Users/Дима/Documents/GitHub/Schooly_NEW/app/src/main/res/layout/activity_default_messages.xml" value="0.1" />
