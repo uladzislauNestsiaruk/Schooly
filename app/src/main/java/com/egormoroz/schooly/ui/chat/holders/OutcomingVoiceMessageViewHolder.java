@@ -22,6 +22,7 @@ public class OutcomingVoiceMessageViewHolder
     private TextView tvDuration;
     private TextView tvTime;
     private String TAG = "TAP";
+    private boolean start = true;
 
     public OutcomingVoiceMessageViewHolder(View itemView, Object payload) {
         super(itemView, payload);
@@ -50,10 +51,13 @@ public class OutcomingVoiceMessageViewHolder
     public void onPlay(boolean start) {
         if (start) {
             startPlaying();
+            play.setImageResource(R.drawable.ic_stop);
         } else {
             stopPlaying();
+            play.setImageResource(R.drawable.ic_play);
         }
     }
+
     @Override
     public void onBind(Message message) {
         super.onBind(message);
@@ -63,11 +67,12 @@ public class OutcomingVoiceMessageViewHolder
         play.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                boolean start = true;
                 onPlay(start);
+                start = !start;
                 Log.d(TAG, "Tap");
             }
         });
+        play.setImageResource(R.drawable.ic_play);
         tvTime.setText(DateFormatter.format(message.getCreatedAt(), DateFormatter.Template.TIME));
     }
 }

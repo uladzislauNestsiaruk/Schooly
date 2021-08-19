@@ -43,22 +43,23 @@ public class ChatFragment extends Fragment implements DialogsListAdapter.OnDialo
     FirebaseAuth authDatabase;
     String userId;
     public static ChatFragment newInstance(){return new ChatFragment();}
-
+    public ChatFragment() {}
     @Override
     public void onViewCreated(@Nullable View view, @NonNull Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        ImageView baktomainfromchat = view.findViewById(R.id.backtomainfromchat);
-        baktomainfromchat.setOnClickListener(new View.OnClickListener() {
+        ImageView back = view.findViewById(R.id.backtomainfromchat);
+        back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((MainActivity) Objects.requireNonNull(getActivity())).setCurrentFragment(MainFragment.newInstance());
+                ((MainActivity) requireActivity()).setCurrentFragment(MainFragment.newInstance());
             }
         });
     }
     public void onDialogClick(Dialog dialog) {
         open(dialog);
     }
+
     public void open(Dialog dialog) {
         String dialogId = dialog.getId();
         Intent i = new Intent(getActivity(), MessageActivity.class);
@@ -75,16 +76,17 @@ public class ChatFragment extends Fragment implements DialogsListAdapter.OnDialo
         imageLoader = (imageView, url, payload) -> Picasso.get().load(url).into(imageView);
     }
 
+
     @Override
     public View onCreateView (@NonNull LayoutInflater inflater, @NonNull ViewGroup container,
                               @Nullable Bundle SavedInstanceState) {
         View root = inflater.inflate(R.layout.activity_default_dialogs, container, false);
         dialogsList = root.findViewById(R.id.dialogsList);
-        BottomNavigationView bnv = getActivity().findViewById(R.id.bottomNavigationView);
-        bnv.setVisibility(bnv.GONE);
         super.onCreate(SavedInstanceState);
         initFirebase();
         initAdapter();
+        BottomNavigationView bnv = getActivity().findViewById(R.id.bottomNavigationView);
+        bnv.setVisibility(bnv.GONE);
         return root;
     }
 

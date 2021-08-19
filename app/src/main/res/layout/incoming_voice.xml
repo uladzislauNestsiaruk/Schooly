@@ -28,44 +28,43 @@
 
         <ImageButton
             android:id="@+id/play"
+            android:checked="false"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@null"
-            android:src="@drawable/ic_play" />
+            />
 
         <TextView
             android:id="@+id/durationVoice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="4dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="4dp"
             android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginEnd="4dp"
+            android:layout_marginRight="4dp"
             android:textColor="@color/black"
             android:textSize="15sp" />
 
     </LinearLayout>
+
 <!--    <me.jagar.chatvoiceplayerlibrary.VoicePlayerView-->
-<!--        android:id="@+id/voicePlayerView"-->
+<!--        android:id="@+id/voice"-->
 <!--        android:layout_width="wrap_content"-->
 <!--        android:layout_height="wrap_content"-->
 <!--        app:enableVisualizer="true"-->
-<!--        app:visualizationPlayedColor="#ff7700"-->
-<!--        app:visualizationNotPlayedColor="#727171"-->
-<!--        app:playPauseBackgroundColor="#ff7700"-->
-<!--        app:timingBackgroundColor="#6AFF7700"-->
-<!--        app:seekBarProgressColor="#000"-->
-<!--        app:showShareButton="false"-->
-<!--        app:shareCornerRadius="100"-->
+<!--        app:playPauseBackgroundColor="@color/app_color"-->
 <!--        app:playPauseCornerRadius="100"-->
-<!--        app:showTiming="true"-->
-<!--        app:viewCornerRadius="100"-->
-<!--        app:viewBackground="#C6C4CF"-->
-<!--        app:progressTimeColor="#000"-->
+<!--        app:playProgressbarColor="@color/app_grey"-->
+<!--        app:progressTimeColor="@color/app_color2"-->
+<!--        app:seekBarProgressColor="#000"-->
 <!--        app:seekBarThumbColor="#FFC107"-->
-<!--        app:shareBackgroundColor="#ff7700"-->
-<!--        app:playProgressbarColor="#ff7700"-->
-<!--        app:shareText="SHARE ME"/>-->
+<!--        app:showShareButton="false"-->
+<!--        app:showTiming="true"-->
+<!--        app:timingBackgroundColor="#00F700FF"-->
+<!--        app:viewBackground="#C6C4CF"-->
+<!--        app:viewCornerRadius="100"-->
+<!--        app:visualizationNotPlayedColor="#E42EFA09"-->
+<!--        app:visualizationPlayedColor="@color/app_color2" />-->
 
     <TextView
         android:id="@+id/time"

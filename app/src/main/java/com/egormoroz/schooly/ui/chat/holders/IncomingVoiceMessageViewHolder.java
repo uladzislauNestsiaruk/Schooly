@@ -3,8 +3,11 @@ package com.egormoroz.schooly.ui.chat.holders;
 import android.media.MediaPlayer;
 import android.util.Log;
 import android.view.View;
+import android.widget.CompoundButton;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.ui.chat.Message;
@@ -18,10 +21,11 @@ public class IncomingVoiceMessageViewHolder
         extends MessageHolders.IncomingTextMessageViewHolder<Message> {
 
     private MediaPlayer player = null;
-    private ImageView play;
+    private ImageButton play;
     private TextView tvDuration;
     private TextView tvTime;
     private String TAG = "TAP";
+    private boolean start = true;
 
 
     public IncomingVoiceMessageViewHolder(View itemView, Object payload) {
@@ -29,9 +33,7 @@ public class IncomingVoiceMessageViewHolder
         tvDuration = itemView.findViewById(R.id.durationVoice);
         tvTime = itemView.findViewById(R.id.time);
         play = itemView.findViewById(R.id.play);
-    }
-
-
+        }
 
     public void startPlaying() {
         player = new MediaPlayer();
@@ -53,8 +55,10 @@ public class IncomingVoiceMessageViewHolder
     public void onPlay(boolean start) {
         if (start) {
             startPlaying();
+            play.setImageResource(R.drawable.ic_stop);
         } else {
             stopPlaying();
+            play.setImageResource(R.drawable.ic_play);
         }
     }
 
@@ -67,11 +71,12 @@ public class IncomingVoiceMessageViewHolder
         play.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                boolean start = true;
                 onPlay(start);
+                start = !start;
                 Log.d(TAG, "Tap");
             }
         });
+        play.setImageResource(R.drawable.ic_play);
         tvTime.setText(DateFormatter.format(message.getCreatedAt(), DateFormatter.Template.TIME));
     }
 }

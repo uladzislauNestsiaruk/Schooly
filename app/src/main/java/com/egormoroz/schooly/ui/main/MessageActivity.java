@@ -3,6 +3,7 @@ package com.egormoroz.schooly.ui.main;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.MediaMetadataRetriever;
@@ -14,21 +15,23 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.egormoroz.schooly.CONST;
 import com.egormoroz.schooly.R;
+import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.ui.chat.Message;
 import com.egormoroz.schooly.ui.chat.User;
 import com.egormoroz.schooly.ui.chat.holders.IncomingVoiceMessageViewHolder;
 import com.egormoroz.schooly.ui.chat.holders.OutcomingVoiceMessageViewHolder;
-import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -49,19 +52,13 @@ import java.util.Locale;
 import java.util.UUID;
 
 
-public class MessageActivity extends Activity
+public class MessageActivity extends FragmentActivity
         implements MessageInput.InputListener,
         MessagesListAdapter.SelectionListener,
         MessagesListAdapter.OnLoadMoreListener,
         MessageInput.AttachmentsListener,
         MessageHolders.ContentChecker<Message>,
         MessageInput.TypingListener{
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        messagesAdapter.addToStart(getTextMessage(), true);
-    }
 
     private static final int TOTAL_MESSAGES_COUNT = 100;
     private final String TAG = "##########";
@@ -72,22 +69,17 @@ public class MessageActivity extends Activity
     private Date lastLoadedDate;
     private DatabaseReference ref;
     private static final byte CONTENT_TYPE_VOICE = 1;
-    private String userId;
     private static final int REQUEST_RECORD_AUDIO_PERMISSION = 200;
     private MessagesList messagesList;
     private boolean permissionToRecordAccepted = false;
     private final String [] permissions = {Manifest.permission.RECORD_AUDIO};
     public static String fileName = null;
     private static final String LOG_TAG = "AudioRecordTest";
-    private Intent dialogIntent;
     private MediaRecorder recorder = null;
-    private MediaPlayer   player = null;
     private FirebaseAuth AuthenticationDatabase;
     private FirebaseDatabase database;
-    private final long time = 0;
     private int duration;
-    private boolean start = true;
-    ImageView play;
+    ChatFragment chat;
 
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -99,31 +91,16 @@ public class MessageActivity extends Activity
         if (!permissionToRecordAccepted ) finish();
     }
 
-    private void startPlaying() {
-        player = new MediaPlayer();
-        try {
-            fileName = getExternalCacheDir().getAbsolutePath();
-            fileName += "/audiorecordtest" + id + 1 + ".3gp";
-            player.setDataSource(fileName);
-            player.prepare();
-            player.start();
-        } catch (IOException e) {
-            Log.e(LOG_TAG, "prepare() failed");
-        }
+    public void setCurrentFragment(Fragment fragment, Activity activity) {
+        FragmentTransaction ft = ((FragmentActivity)activity).getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.myfragment, fragment);
+        ft.commit();
     }
 
-    private void stopPlaying() {
-        player.stop();
-        player.release();
-        player = null;
-    }
-
-    public void onPlay(boolean start) {
-        if (start) {
-            startPlaying();
-        } else {
-            stopPlaying();
-        }
+    @Override
+    protected void onStart() {
+        super.onStart();
+        messagesAdapter.addToStart(getTextMessage(), true);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -157,11 +134,9 @@ public class MessageActivity extends Activity
         else {
                duration = duration / 10;
                messagesAdapter.addToStart(getVoiceMessage(fileName, duration), true);
-
              }
         }
     }
-
     int id = 0;
     static SecureRandom rnd = new SecureRandom();
 
@@ -172,6 +147,15 @@ public class MessageActivity extends Activity
         ActivityCompat.requestPermissions(this, permissions, REQUEST_RECORD_AUDIO_PERMISSION);
         this.messagesList = findViewById(R.id.messagesList);
         initAdapter();
+        ImageView back = findViewById(R.id.backtoalldialogs);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+        TextView nickname = findViewById(R.id.mnick);
+        nickname.setText("Nickname");
         MessageInput input = findViewById(R.id.input);
         input.setInputListener(this);
         input.setTypingListener(this);
@@ -218,16 +202,6 @@ public class MessageActivity extends Activity
         });
     }
 
-    private void PlayAudio() {
-        play = findViewById(R.id.play);
-        play.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onPlay(start);
-            }
-        });
-    }
-
 
     @Override
     public boolean onSubmit(CharSequence input) {
@@ -264,14 +238,6 @@ public class MessageActivity extends Activity
         messagesAdapter = new MessagesListAdapter<>(senderId, holders, imageLoader);
         messagesAdapter.enableSelectionMode(this);
         messagesAdapter.setLoadMoreListener(this);
-//        messagesAdapter.setOnMessageClickListener(new MessagesListAdapter.OnMessageClickListener<Message>() {
-//            @Override
-//            public void onMessageClick(Message message) {
-//                onPlay(true);
-//                start = !start;
-//            }
-//        });
-
         this.messagesList.setAdapter(messagesAdapter);
 
     }
@@ -293,7 +259,7 @@ public class MessageActivity extends Activity
 
 
     public void getCurrentChatId(){
-        dialogIntent = getIntent();
+        Intent dialogIntent = getIntent();
         dialogId = dialogIntent.getStringExtra("dialogId");
     }
 
@@ -307,7 +273,7 @@ public class MessageActivity extends Activity
         AuthenticationDatabase = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance(CONST.RealtimeDatabaseUrl);
         ref = database.getReference();
-        userId = AuthenticationDatabase.getCurrentUser().getUid();
+        String userId = AuthenticationDatabase.getCurrentUser().getUid();
         ref = ref.child("users").child(userId).child("chats");
         ref = getParentReference(dialogId, ref);
         Log.d(TAG, dialogId +  " -> reference: " + ref.toString());

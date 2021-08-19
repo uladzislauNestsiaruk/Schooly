@@ -6,9 +6,11 @@
     android:background="@color/white">
 
     <LinearLayout
+        android:id="@+id/frames"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        tools:ignore="InvalidId">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -20,9 +22,9 @@
                 android:id="@+id/backtomainfromchat"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
                 android:layout_marginStart="24dp"
-                android:src="@drawable/left_arrow"/>
+                android:layout_marginTop="16dp"
+                android:src="@drawable/left_arrow" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -30,41 +32,41 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="11dp"
                 android:layout_toRightOf="@+id/backtomainfromchat"
+                android:fontFamily="@font/montserrat_bold"
                 android:text="@string/message"
                 android:textColor="@color/app_color"
-                android:textSize="22sp"
-                android:fontFamily="@font/montserrat_bold"/>
+                android:textSize="22sp" />
 
         </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginTop="20dp">
+            android:layout_marginTop="20dp"
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:background="@drawable/corners12_2dpstrokeappcolor"
-                android:paddingTop="13dp"
-                android:paddingBottom="13dp"
+                android:layout_marginStart="24dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="24dp"
-                android:layout_marginStart="24dp">
+                android:background="@drawable/corners12_2dpstrokeappcolor"
+                android:orientation="horizontal"
+                android:paddingTop="13dp"
+                android:paddingBottom="13dp">
 
                 <EditText
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="start|center"
+                    android:layout_marginStart="16dp"
+                    android:layout_weight="10"
+                    android:background="@null"
+                    android:fontFamily="@font/montserrat_bold"
                     android:hint="@string/search"
                     android:textColorHint="@color/greysearch"
-                    android:textSize="15sp"
-                    android:background="@null"
-                    android:layout_weight="10"
-                    android:layout_marginStart="16dp"
-                    android:layout_gravity="start|center"
-                    android:fontFamily="@font/montserrat_bold"/>
+                    android:textSize="15sp" />
 
             </LinearLayout>
 
@@ -73,16 +75,16 @@
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabschat"
+            style="@style/AppTabLayout"
             android:layout_width="match_parent"
             android:layout_height="52dp"
             android:layout_marginTop="24dp"
-            app:tabTextAppearance="@style/AppTabTextAppearance"
-            style="@style/AppTabLayout">
+            app:tabTextAppearance="@style/AppTabTextAppearance">
 
             <com.google.android.material.tabs.TabItem
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/privatemessages"/>
+                android:text="@string/privatemessages" />
 
             <com.google.android.material.tabs.TabItem
                 android:layout_width="wrap_content"
@@ -97,8 +99,8 @@
 
     <com.stfalcon.chatkit.dialogs.DialogsList
         android:id="@+id/dialogsList"
-        android:layout_marginTop="210dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:layout_marginTop="210dp" />
 
 </RelativeLayout>
