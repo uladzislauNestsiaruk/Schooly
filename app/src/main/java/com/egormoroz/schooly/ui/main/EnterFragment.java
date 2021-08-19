@@ -92,6 +92,7 @@ public class EnterFragment extends Fragment {
                                     getReference("users");
                             RecentMethods.hasThisUser(ref, user, getActivity());
                         } else {
+                            GoogleEnter.setEnabled(true);
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
                         }
@@ -129,6 +130,7 @@ public class EnterFragment extends Fragment {
         GoogleEnter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                GoogleEnter.setEnabled(false);
                 AuthorizationThrowGoogle();
             }
         });
