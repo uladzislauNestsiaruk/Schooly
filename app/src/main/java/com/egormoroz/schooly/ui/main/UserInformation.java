@@ -12,6 +12,7 @@ public class UserInformation {
     private String gender = "Helicopter";
     private int age = 404;
     private String miners="Start mining stupid dog!";
+    private int level=1;
     public UserInformation(){
 
     }
@@ -74,8 +75,16 @@ public class UserInformation {
         this.miners=miners;
     }
 
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level =level;
+    }
+
     public UserInformation(String nick, String phone, String uid, int Avatar, String password,
-                           String gender, int age,String miners) {
+                           String gender, int age,String miners,int level) {
         this.Nick = nick;
         this.uid = uid;
         this.phone = phone;
@@ -84,5 +93,6 @@ public class UserInformation {
         this.age = age;
         this.Avatar = Avatar;
         this.miners=miners;
+        this.level=level;
     }
 }

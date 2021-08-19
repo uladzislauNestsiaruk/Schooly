@@ -40,7 +40,7 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.ViewHolder
     public void onBindViewHolder(ViewHolder holder, int position) {
         UserInformation userInformation=listAdapterPeople.get(position);
         holder.usernickname.setText(userInformation.getNick());
-        holder.userAvatar.setImageResource(userInformation.getAvatar());
+        holder.userAvatar.setImageResource(getItemViewType(userInformation.getAvatar()));
     }
 
     @Override
@@ -50,7 +50,7 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.ViewHolder
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         final TextView usernickname,userLevel;
-        final ImageView userAvatar;
+        ImageView userAvatar;
         ViewHolder(View itemView) {
             super(itemView);
             usernickname=itemView.findViewById(R.id.usernickname);

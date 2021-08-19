@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         CoordinatorLayout fragmentContainer = findViewById(R.id.fragment_container);
+        AuthenticationBase = FirebaseAuth.getInstance();
 
         ///////////Authorization block
 
@@ -99,7 +100,7 @@ public class MainActivity extends AppCompatActivity implements
         setCurrentFragment(RegisrtationstartFragment.newInstance());
     }
     boolean IsEntered(){
-        return false;
+        return AuthenticationBase.getCurrentUser() != null;
     }
     @Override
     public void setDialogs(ArrayList<Dialog> dialogs) {

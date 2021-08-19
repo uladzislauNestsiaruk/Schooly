@@ -97,7 +97,7 @@ public class RecentMethods {
     }
     public static boolean saveData(DatabaseReference ref, FirebaseUser user, String nick) {
         UserInformation res = new UserInformation(nick, "unknown", user.getUid(),
-                6, "unknown", "Helicopter", 1000,"Miner");
+                6, "unknown", "Helicopter", 1000,"Miner",1);
         ref.child(nick).setValue(res);
         return nick.isEmpty();
     }
