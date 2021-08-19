@@ -27,6 +27,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -236,6 +237,7 @@ public class RegFragment extends Fragment {
                             else
                                 RecentMethods.setCurrentFragment(MainFragment.newInstance(), getActivity());
                         } else {
+                            GoogleEnter.setEnabled(true);
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
                         }
@@ -250,6 +252,7 @@ public class RegFragment extends Fragment {
         GoogleEnter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                GoogleEnter.setEnabled(false);
                 AuthorizationThrowGoogle();
             }
         });

@@ -1,5 +1,9 @@
 package com.egormoroz.schooly.ui.main;
+
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,9 +54,28 @@ public class NicknameFragment extends Fragment {
         ref = ref.child("users");
     }
     public void initElements(View root){
-        nicknameTextView = root.findViewById(R.id.errornickname);
+        nicknameTextView = root.findViewById(R.id.errornick);
         nicknameEditText = root.findViewById(R.id.nickname);
         continueButton = root.findViewById(R.id.continueButton);
+        nicknameEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                String nickname = String.valueOf(nicknameEditText.getText()).trim();
+                RecentMethods.isNickCorrect(nickname, ref, nicknameTextView);
+                String error = String.valueOf(nicknameTextView.getText()).trim();
+                Log.d("##########", "error: " + error);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
     }
     ///////////////////////////// SAVE DATA //////////////////
     public void saveNick(){
@@ -60,7 +83,6 @@ public class NicknameFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 String nickname = String.valueOf(nicknameEditText.getText()).trim();
-                RecentMethods.isNickCorrect(nickname, ref, nicknameTextView);
                 String error = String.valueOf(nicknameTextView.getText()).trim();
                 if(error.isEmpty()) {
                     RecentMethods.saveData(ref, authenticationDatabase.getCurrentUser(), nickname);
