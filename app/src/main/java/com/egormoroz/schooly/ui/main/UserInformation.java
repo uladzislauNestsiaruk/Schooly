@@ -7,10 +7,11 @@ public class UserInformation {
     private String Nick;
     private String phone;
     private String uid;
-    private String Avatar = "Seg";
+    private int Avatar = 6;
     private String password;
     private String gender = "Helicopter";
     private int age = 404;
+    private String miners="Start mining stupid dog!";
     public UserInformation(){
 
     }
@@ -35,9 +36,9 @@ public class UserInformation {
 
     public void setUid() {this.uid = uid; }
 
-    public String getAvatar() {return Avatar;}
+    public int getAvatar() {return Avatar;}
 
-    public void setAvatar(String Avatar){
+    public void setAvatar(int Avatar){
         this.Avatar = Avatar;
     }
 
@@ -65,8 +66,16 @@ public class UserInformation {
         this.age = age;
     }
 
-    public UserInformation(String nick, String phone, String uid, String Avatar, String password,
-                           String gender, int age) {
+    public String getMiners(){
+        return miners;
+    }
+
+    public void setMiners(String miners){
+        this.miners=miners;
+    }
+
+    public UserInformation(String nick, String phone, String uid, int Avatar, String password,
+                           String gender, int age,String miners) {
         this.Nick = nick;
         this.uid = uid;
         this.phone = phone;
@@ -74,5 +83,6 @@ public class UserInformation {
         this.gender = gender;
         this.age = age;
         this.Avatar = Avatar;
+        this.miners=miners;
     }
 }

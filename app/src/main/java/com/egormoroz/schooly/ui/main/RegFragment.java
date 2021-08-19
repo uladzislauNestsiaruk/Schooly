@@ -17,13 +17,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.egormoroz.schooly.CONST;
 import com.egormoroz.schooly.ErrorList;
-import com.egormoroz.schooly.FirebaseCallbacks;
-import com.egormoroz.schooly.MainActivity;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -39,12 +35,9 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 public class RegFragment extends Fragment {
@@ -191,13 +184,6 @@ public class RegFragment extends Fragment {
         database = FirebaseDatabase.getInstance(databaseUrl);
         reference = database.getReference("users");
     }
-    public boolean saveData(DatabaseReference ref, FirebaseUser user) {
-        String nick = String.valueOf(nickNameEditText.getText()).trim();
-        UserInformation res = new UserInformation(nick, "unknown", user.getUid(),
-                "AVA", "unknown", "Helicopter", 1000);
-        ref.child(nick).setValue(res);
-        return nick.isEmpty();
-    }
     /////////////////////// CHECK METHODS /////////////////////
     boolean isPhoneValid(String phone) {
         Intent phoneIntent = new Intent(getActivity(), PhoneCodeActivity.class);
@@ -244,9 +230,11 @@ public class RegFragment extends Fragment {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
-                            boolean isNickEmpty = saveData(reference, AuthenticationBase.getCurrentUser());
-                            if (isNickEmpty) RecentMethods.setCurrentFragment(NicknameFragment.newInstance(), getActivity());
-                            else RecentMethods.setCurrentFragment(MainFragment.newInstance(), getActivity());
+                            String nick = String.valueOf(nickNameEditText.getText()).trim();
+                            if(nick.isEmpty())
+                                RecentMethods.setCurrentFragment(NicknameFragment.newInstance(), getActivity());
+                            else
+                                RecentMethods.setCurrentFragment(MainFragment.newInstance(), getActivity());
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
@@ -302,7 +290,7 @@ public class RegFragment extends Fragment {
                             Log.d(TAG, "createUserWithEmail:success");
                             FirebaseUser user = AuthenticationBase.getCurrentUser();
                             UserInformation res = new UserInformation(nick, RecentMethods.getPhone(email), user.getUid(),
-                                    "AVA", password, "Helicopter", 1000);
+                                    6, password, "Helicopter", 1000, "Miners");
                             reference.child(nick).setValue(res);
                             RecentMethods.setCurrentFragment(MainFragment.newInstance(), getActivity());
                         } else {

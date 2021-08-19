@@ -9,12 +9,12 @@
         android:layout_height="match_parent">
 
         <ImageView
-            android:id="@+id/backfromphonecode"
+            android:id="@+id/backfromnick"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_arrow___left32dp"
             android:layout_marginStart="24dp"
-            android:layout_marginTop="16dp"/>
+            android:layout_marginTop="16dp"
+            android:src="@drawable/ic_arrow___left32dp" />
 
         <TextView
             android:id="@+id/createnickname"
@@ -31,17 +31,27 @@
             android:id="@+id/nickname"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:maxLines="1"
-            android:maxLength="24"
-            android:inputType="text"
             android:layout_below="@+id/createnickname"
-            android:layout_marginTop="20dp"
+            android:layout_centerHorizontal="true"
             android:layout_marginStart="40dp"
-            android:textColor="@color/app_grey"
-            android:textSize="20sp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="40dp"
             android:fontFamily="@font/montserrat_bold"
-            android:layout_marginEnd="40dp"/>
+            android:inputType="text"
+            android:maxLength="24"
+            android:maxLines="1"
+            android:textColor="@color/app_color"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/errornick"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/nickname"
+            android:layout_centerHorizontal="true"
+            android:textSize="12sp"
+            android:textColor="@color/app_grey"
+            android:layout_marginTop="100dp"/>
 
         <ImageView
             android:id="@+id/continueButton"

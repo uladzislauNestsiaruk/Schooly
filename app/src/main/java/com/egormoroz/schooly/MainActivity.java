@@ -15,25 +15,16 @@ import androidx.fragment.app.FragmentTransaction;
 import com.egormoroz.schooly.ui.chat.Dialog;
 import com.egormoroz.schooly.ui.main.ChatFragment;
 import com.egormoroz.schooly.ui.main.MainFragment;
-import com.egormoroz.schooly.ui.main.MainViewModel;
 import com.egormoroz.schooly.ui.main.RegisrtationstartFragment;
 import com.egormoroz.schooly.ui.news.NewsFragment;
 import com.egormoroz.schooly.ui.people.PeopleFragment;
 import com.egormoroz.schooly.ui.profile.ProfileFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.GenericTypeIndicator;
-import com.google.firebase.database.ValueEventListener;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements
         com.egormoroz.schooly.ui.main.sendDialogs{
@@ -120,26 +111,6 @@ public class MainActivity extends AppCompatActivity implements
             fragment.setDialogs(dialogs);
         }
     }
-//    public void getDialogs(){
-//        reference = database.getReference().child("users").
-//                child(AuthenticationBase.getCurrentUser().getUid()).child("chats");
-//        reference.addValueEventListener(new ValueEventListener() {
-////            @Override
-////            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
-////                GenericTypeIndicator<HashMap<String, Dialog>> indicator =
-////                        new GenericTypeIndicator<HashMap<String, Dialog>>(){};
-//////                HashMap<String, Dialog> mapka = snapshot.getValue(indicator);
-//////                Log.d("######", mapka.size() + " download");
-////                for(Map.Entry<String, Dialog> cur : mapka.entrySet())
-////                    dialogs.add(cur.getValue());
-////            }
-//
-//            @Override
-//            public void onCancelled(@NonNull @NotNull DatabaseError error) {
-//
-//            }
-//        });
-//    }
     public void initFirebase(){
         database = FirebaseDatabase.getInstance(CONST.RealtimeDatabaseUrl);
         AuthenticationBase = FirebaseAuth.getInstance();

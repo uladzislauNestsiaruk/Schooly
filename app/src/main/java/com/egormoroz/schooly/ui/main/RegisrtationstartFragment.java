@@ -9,6 +9,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import com.egormoroz.schooly.R;
+import com.egormoroz.schooly.RecentMethods;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 public class RegisrtationstartFragment extends Fragment {
@@ -22,7 +23,7 @@ public class RegisrtationstartFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_reg, container, false);
         BottomNavigationView bnv = getActivity().findViewById(R.id.bottomNavigationView);
         bnv.setVisibility(bnv.GONE);
-        AuthBase = AuthBase.getInstance();
+        AuthBase = FirebaseAuth.getInstance();
         RegistrationButton = root.findViewById(R.id.registr);
         EnterButton = root.findViewById(R.id.enter);
         ////////////Is user Logged in
@@ -30,24 +31,19 @@ public class RegisrtationstartFragment extends Fragment {
         RegistrationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                setCurrentFragment(RegFragment.newInstance());
+                RecentMethods.setCurrentFragment(RegFragment.newInstance(), getActivity());
             }
         });
         EnterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                setCurrentFragment(EnterFragment.newInstance());
+                RecentMethods.setCurrentFragment(EnterFragment.newInstance(), getActivity());
             }
         });
         return root;
     }
-    public void setCurrentFragment(Fragment fragment) {
-        FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.frame, fragment);
-        ft.commit();
-    }
     void isUserLoggedIn(){
         if(AuthBase.getCurrentUser() != null)
-            setCurrentFragment(MainFragment.newInstance());
+            RecentMethods.setCurrentFragment(MainFragment.newInstance(), getActivity());
     }
 }

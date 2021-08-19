@@ -1,4 +1,5 @@
 package com.egormoroz.schooly.ui.main;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,8 +15,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import com.egormoroz.schooly.ErrorList;
 import com.egormoroz.schooly.R;
+import com.egormoroz.schooly.RecentMethods;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.appbar.AppBarLayout;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -78,6 +81,7 @@ public class PhoneCodeActivity extends AppCompatActivity {
         timer = new CountDownTimer(PhoneSMSResend, Second) {
             @Override
             public void onTick(long l) {
+                timerText.setTextColor(getColor(R.color.app_grey));
                 timerText.setText("You can resend SMS after: " + l / Second);
             }
             @Override
@@ -89,25 +93,6 @@ public class PhoneCodeActivity extends AppCompatActivity {
             }
         };
         timer.start();
-    }
-    public void showErrorMessage(ErrorList tag){
-        switch (tag){
-            case SMS_LIMIT_ERROR:
-                errorText.setText("Sorry, you exceeded your SMS limit: 4 sms per hour");
-                break;
-            case TO_MANY_REQUESTS_ERROR:
-                errorText.setText("Sorry, our database has too many request, please retry later");
-                break;
-            case UNKNOWN_REGISTRATION_ERROR:
-                errorText.setText("Sorry, you have unknown error, please retry");
-                break;
-            case WRONG_SMS_CODE_ERROR:
-                errorText.setText("Wrong code, please check it out");
-                break;
-            case WRONG_PHONE_NUMBER_ERROR:
-                errorText.setText("Phone number is invalid, please check it out");
-                break;
-        }
     }
     /////////////////////// SMS CODE METHODS /////////////////
     public void sendSMS(){
@@ -157,7 +142,7 @@ public class PhoneCodeActivity extends AppCompatActivity {
                     continueButton.setEnabled(false);
                 else {
                     continueButton.setEnabled(true);
-                    continueButton.setBackgroundColor(getColor(R.color.app_color));
+                    continueButton.setBackground(getDrawable(R.drawable.corners25appcolor));
                 }
             }
         });
@@ -207,7 +192,7 @@ public class PhoneCodeActivity extends AppCompatActivity {
                             // Sign in failed, display a message and update the UI
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
                             if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
-                                showErrorMessage(ErrorList.WRONG_SMS_CODE_ERROR);
+                                RecentMethods.showErrorMessage(ErrorList.WRONG_SMS_CODE_ERROR, errorText);
                             }
                         }
                     }
