@@ -49,6 +49,7 @@ public class IncomingVoiceMessageViewHolder
     public void stopPlaying() {
         player.stop();
         player.release();
+        play.setImageResource(R.drawable.ic_play);
         player = null;
     }
 
@@ -73,7 +74,6 @@ public class IncomingVoiceMessageViewHolder
             public void onClick(View v) {
                 onPlay(start);
                 start = !start;
-                Log.d(TAG, "Tap");
             }
         });
         play.setImageResource(R.drawable.ic_play);

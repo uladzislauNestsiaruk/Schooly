@@ -79,7 +79,6 @@ public class MessageActivity extends FragmentActivity
     private FirebaseAuth AuthenticationDatabase;
     private FirebaseDatabase database;
     private int duration;
-    ChatFragment chat;
 
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -89,12 +88,6 @@ public class MessageActivity extends FragmentActivity
                 break;
         }
         if (!permissionToRecordAccepted ) finish();
-    }
-
-    public void setCurrentFragment(Fragment fragment, Activity activity) {
-        FragmentTransaction ft = ((FragmentActivity)activity).getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.myfragment, fragment);
-        ft.commit();
     }
 
     @Override
@@ -212,8 +205,10 @@ public class MessageActivity extends FragmentActivity
 
     @Override
     public void onAddAttachments() {
-        messagesAdapter.addToStart(
-              getImageMessage(), true);
+
+//        messagesAdapter.addToStart(
+//
+//              getImageMessage(), true);
     }
 
     @Override
@@ -256,7 +251,6 @@ public class MessageActivity extends FragmentActivity
     public void onSelectionChanged(int count) {
 
     }
-
 
     public void getCurrentChatId(){
         Intent dialogIntent = getIntent();
