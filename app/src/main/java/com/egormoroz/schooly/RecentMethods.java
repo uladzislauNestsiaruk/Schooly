@@ -2,12 +2,10 @@ package com.egormoroz.schooly;
 import android.app.Activity;
 import android.util.Log;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
-
 import com.egormoroz.schooly.ui.main.UserInformation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -19,6 +17,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import java.util.ArrayList;
 public class RecentMethods {
     public static void isNickCorrect(String nickname, DatabaseReference reference, TextView errorTextnickname) {
         Log.d("########", "Method: isNickCorrect");
@@ -107,6 +106,10 @@ public class RecentMethods {
     }
     public static void hasThisUserFun(FirebaseAuth AuthenticationBase, FirebaseUser user,
                                       Callbacks.hasGoogleUser callback){
+        if(user == null){
+            callback.hasGoogleUserCallback(false);
+            return;
+        }
         String email = String.valueOf(user.getEmail());
         AuthenticationBase.fetchSignInMethodsForEmail(email).
                 addOnCompleteListener(new OnCompleteListener<SignInMethodQueryResult>() {
@@ -125,5 +128,10 @@ public class RecentMethods {
                 callback.hasGoogleUserCallback(hasThisUser);
             }
         });
+    }
+    public static ArrayList<UserInformation> findUsers(String username){
+        ArrayList<UserInformation> result = new ArrayList<UserInformation>();
+
+        return result;
     }
 }

@@ -1,7 +1,6 @@
 package com.egormoroz.schooly.ui.main;
 import static java.lang.Character.isDigit;
 import static java.lang.Character.isLetter;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -15,11 +14,9 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-
 import com.egormoroz.schooly.CONST;
 import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.ErrorList;
@@ -40,7 +37,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 public class RegFragment extends Fragment {
