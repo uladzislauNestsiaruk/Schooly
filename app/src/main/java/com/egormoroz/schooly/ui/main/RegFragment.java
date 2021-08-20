@@ -1,6 +1,7 @@
 package com.egormoroz.schooly.ui.main;
 import static java.lang.Character.isDigit;
 import static java.lang.Character.isLetter;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -14,11 +15,13 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.egormoroz.schooly.CONST;
+import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.ErrorList;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
@@ -27,7 +30,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -108,7 +110,7 @@ public class RegFragment extends Fragment {
         gotostartregfromreg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(RegisrtationstartFragment.newInstance(), getActivity());
+                RecentMethods.setCurrentFragment(new RegisrtationstartFragment(), getActivity());
             }
         });
     }
@@ -253,7 +255,16 @@ public class RegFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 GoogleEnter.setEnabled(false);
-                AuthorizationThrowGoogle();
+                RecentMethods.hasThisUser(AuthenticationBase, AuthenticationBase.getCurrentUser(),
+                        getActivity(), RegFragment.newInstance(), new Callbacks.hasGoogleUser() {
+                            @Override
+                            public void hasGoogleUserCallback(boolean hasThisUser) {
+                                if(hasThisUser)
+                                    RecentMethods.setCurrentFragment(new EnterFragment(), getActivity());
+                                else
+                                    AuthorizationThrowGoogle();
+                            }
+                        });
             }
         });
     }

@@ -1,10 +1,10 @@
 package com.egormoroz.schooly;
 
 public class Callbacks {
-    interface UniqueNick{
+    public interface UniqueNick{
         void uniqueNicknameCallback(boolean isUnique);
     }
-    interface hasGoogleUser{
+    public interface hasGoogleUser{
         void hasGoogleUserCallback(boolean hasThisUser);
     }
 }

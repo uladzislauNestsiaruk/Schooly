@@ -2,14 +2,18 @@ package com.egormoroz.schooly;
 import android.app.Activity;
 import android.util.Log;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
-import com.egormoroz.schooly.ui.main.MainFragment;
-import com.egormoroz.schooly.ui.main.NicknameFragment;
+
 import com.egormoroz.schooly.ui.main.UserInformation;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.SignInMethodQueryResult;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -101,34 +105,24 @@ public class RecentMethods {
         ref.child(nick).setValue(res);
         return nick.isEmpty();
     }
-    public static void hasThisUserFun(DatabaseReference ref, FirebaseUser user,
+    public static void hasThisUserFun(FirebaseAuth AuthenticationBase, FirebaseUser user,
                                       Callbacks.hasGoogleUser callback){
-        String id = user.getUid();
-        Query query = ref.orderByChild("uid").equalTo(id);
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
+        String email = String.valueOf(user.getEmail());
+        AuthenticationBase.fetchSignInMethodsForEmail(email).
+                addOnCompleteListener(new OnCompleteListener<SignInMethodQueryResult>() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Log.d("#######", "is users exists: " + snapshot.exists());
-                if(snapshot.exists())
-                    callback.hasGoogleUserCallback(true);
-                else
-                    callback.hasGoogleUserCallback(false);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
+            public void onComplete(@NonNull Task<SignInMethodQueryResult> task) {
+                boolean has = !task.getResult().getSignInMethods().isEmpty();
+                callback.hasGoogleUserCallback(has);
             }
         });
     }
-    public static void hasThisUser(DatabaseReference ref, FirebaseUser user, Activity activity){
-        hasThisUserFun(ref, user, new Callbacks.hasGoogleUser() {
+    public static void hasThisUser(FirebaseAuth AuthenticationBase, FirebaseUser user, Activity activity,
+                                   Fragment fragment, Callbacks.hasGoogleUser callback){
+        hasThisUserFun(AuthenticationBase, user, new Callbacks.hasGoogleUser() {
             @Override
-            public void hasGoogleUserCallback(boolean hasGoogleUser) {
-                if(!hasGoogleUser)
-                    setCurrentFragment(NicknameFragment.newInstance(), activity);
-                else
-                    setCurrentFragment(MainFragment.newInstance(), activity);
+            public void hasGoogleUserCallback(boolean hasThisUser) {
+                callback.hasGoogleUserCallback(hasThisUser);
             }
         });
     }
