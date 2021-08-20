@@ -90,7 +90,7 @@ public class EnterFragment extends Fragment {
                             FirebaseUser user = AuthenticationBase.getCurrentUser();
                             DatabaseReference ref = FirebaseDatabase.getInstance(CONST.RealtimeDatabaseUrl).
                                     getReference("users");
-                            RecentMethods.hasThisUser(ref, user, getActivity());
+                            RecentMethods.setCurrentFragment(MainFragment.newInstance(), getActivity());
                         } else {
                             GoogleEnter.setEnabled(true);
                             // If sign in fails, display a message to the user.
