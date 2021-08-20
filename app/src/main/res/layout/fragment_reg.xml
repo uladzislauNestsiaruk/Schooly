@@ -91,7 +91,7 @@
         android:fontFamily="@font/montserratblack"
         android:textColor="@color/white"
         android:layout_below="@+id/regtext"
-        android:background="@drawable/corners10"
+        android:background="@drawable/corners18appcolor"
         android:gravity="center"/>
 
     <Button
@@ -108,7 +108,7 @@
         android:fontFamily="@font/montserratblack"
         android:textColor="@color/white"
         android:layout_below="@+id/registr"
-        android:background="@drawable/corners10"
+        android:background="@drawable/corners18appcolor"
         android:gravity="center"/>
 
         <TextView
