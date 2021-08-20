@@ -60,16 +60,17 @@
 
     </RelativeLayout>
 
+
     <com.stfalcon.chatkit.messages.MessageInput
         android:id="@+id/input"
-        android:theme="@style/CustomChipText"
         android:layout_width="match_parent"
         android:layout_height="64dp"
         android:layout_alignParentBottom="true"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="13dp"
         android:background="@drawable/corners22appcolor"
+        android:theme="@style/CustomChipText"
         app:inputButtonBackground="@drawable/corners18appcolor"
         app:inputButtonIcon="@drawable/ic_sendmessage"
         app:inputHint="@string/messages"
@@ -93,9 +94,8 @@
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:layout_marginEnd="50dp"
-            android:src="@drawable/ic_voicemessage"/>
+            android:src="@drawable/ic_voicemessage" />
     </com.stfalcon.chatkit.messages.MessageInput>
-
 
     <LinearLayout
         android:id="@+id/myfragment"

@@ -1,5 +1,7 @@
 package com.egormoroz.schooly.ui.chat;
 
+import android.net.Uri;
+
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.IgnoreExtraProperties;
 import com.stfalcon.chatkit.commons.models.IMessage;
