@@ -19,10 +19,10 @@ import java.util.ArrayList;
 import java.util.List;
 public class MiningAdapter extends RecyclerView.Adapter<MiningAdapter.ViewHolder> {
 
-    List<AdapterData> listAdapterMiner;
+    List<Miner> listAdapterMiner;
     private ItemClickListener clickListener;
 
-    public  MiningAdapter(ArrayList<AdapterData> listAdapter) {
+    public  MiningAdapter(ArrayList<Miner> listAdapter) {
         this.listAdapterMiner = listAdapter;
     }
 
@@ -38,8 +38,8 @@ public class MiningAdapter extends RecyclerView.Adapter<MiningAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        AdapterData adapterData=listAdapterMiner.get(position);
-        holder.minerinhour.setText(adapterData.getInHour());
+        Miner miner=listAdapterMiner.get(position);
+        holder.minerinhour.setText(String.valueOf(miner.getInHour()));
     }
 
     @Override
@@ -60,7 +60,7 @@ public class MiningAdapter extends RecyclerView.Adapter<MiningAdapter.ViewHolder
         }
     }
 
-    AdapterData getItem(int id) {
+    Miner getItem(int id) {
         return listAdapterMiner.get(id);
     }
 
