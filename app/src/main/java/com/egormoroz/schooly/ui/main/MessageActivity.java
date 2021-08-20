@@ -2,8 +2,7 @@ package com.egormoroz.schooly.ui.main;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.MediaMetadataRetriever;
@@ -29,15 +28,21 @@ import com.egormoroz.schooly.CONST;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.ui.chat.Message;
 import com.egormoroz.schooly.ui.chat.User;
+import com.egormoroz.schooly.ui.chat.holders.ImageHolder;
 import com.egormoroz.schooly.ui.chat.holders.IncomingVoiceMessageViewHolder;
 import com.egormoroz.schooly.ui.chat.holders.OutcomingVoiceMessageViewHolder;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
+import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 import com.stfalcon.chatkit.commons.ImageLoader;
 import com.stfalcon.chatkit.messages.MessageHolders;
 import com.stfalcon.chatkit.messages.MessageInput;
@@ -61,6 +66,7 @@ public class MessageActivity extends FragmentActivity
         MessageHolders.ContentChecker<Message>,
         MessageInput.TypingListener{
 
+    private ProgressDialog loadingBar;
     private static final int TOTAL_MESSAGES_COUNT = 100;
     private final String TAG = "##########";
     protected final String senderId = "0";
@@ -70,6 +76,7 @@ public class MessageActivity extends FragmentActivity
     private Date lastLoadedDate;
     private DatabaseReference ref;
     private static final byte CONTENT_TYPE_VOICE = 1;
+    private static final byte CONTENT_TYPE_IMAGE = 2;
     private static final int REQUEST_RECORD_AUDIO_PERMISSION = 200;
     private MessagesList messagesList;
     private boolean permissionToRecordAccepted = false;
@@ -83,6 +90,8 @@ public class MessageActivity extends FragmentActivity
     private String checker = "", myURL = "";
     private StorageTask uoloadTask;
     private Uri fileUri;
+    FirebaseStorage storage;
+    StorageReference storageReference;
 
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -144,6 +153,7 @@ public class MessageActivity extends FragmentActivity
         ActivityCompat.requestPermissions(this, permissions, REQUEST_RECORD_AUDIO_PERMISSION);
         this.messagesList = findViewById(R.id.messagesList);
         initAdapter();
+        imageLoader = (imageView, url, payload) -> Picasso.get().load(url).into(imageView);
         ImageView back = findViewById(R.id.backtoalldialogs);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -151,6 +161,9 @@ public class MessageActivity extends FragmentActivity
                 finish();
             }
         });
+        storage = FirebaseStorage.getInstance();
+        storageReference = storage.getReference();
+        loadingBar = new ProgressDialog(this);
         TextView nickname = findViewById(R.id.mnick);
         nickname.setText("Nickname");
         MessageInput input = findViewById(R.id.input);
@@ -209,41 +222,17 @@ public class MessageActivity extends FragmentActivity
     }
 
     public void Share() {
-ImageView image = findViewById(R.id.imameinput);
-image.setOnClickListener(new View.OnClickListener() {
-    @Override
-    public void onClick(View v) {
-        Log.d(TAG, "tap");
-        CharSequence options[] = new CharSequence[]
-                {
-                        "Image",
-                        "PDF file",
-                        "Word File"
-                };
-        AlertDialog.Builder build = new AlertDialog.Builder(MessageActivity.this);
-        build.setTitle("Select file type");
-        build.setItems(options, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                if (which == 0) {
-                    checker = "image";
+       ImageView image = findViewById(R.id.imameinput);
+       image.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View v) {
+               Intent intent = new Intent();
+               intent.setAction(Intent.ACTION_GET_CONTENT);
+               intent.setType("image/*");
+               startActivityForResult(Intent.createChooser(intent, "Select Image"), 438);
+           }
 
-                    Intent intent = new Intent();
-                    intent.setAction(Intent.ACTION_GET_CONTENT);
-                    intent.setType("image/*");
-                    startActivityForResult(Intent.createChooser(intent, "Select Image"), 438);
-                }
-                if (which == 1) {
-                    checker = "pdf";
-                }
-                if (which == 2) {
-                    checker = "doc";
-                }
-            }
-        });
-    }
-});
-
+       });
     }
 
     @Override
@@ -252,18 +241,19 @@ image.setOnClickListener(new View.OnClickListener() {
 
         if (requestCode == 438 && resultCode == RESULT_OK && data != null && data.getData() != null)
         {
+            loadingBar.setTitle("Send image");
+            loadingBar.setMessage("Updating...");
+            loadingBar.setCanceledOnTouchOutside(false);
+            loadingBar.show();
+
+
             fileUri = data.getData();
-
-            if (!checker.equals("image"))
-            {
-
-            }
-            else if (checker.equals("image"))
-            {
-                StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("Image Files");
-            }
-            else
-                Toast.makeText(this, "Nothing, error", Toast.LENGTH_SHORT).show();
+                Log.d(TAG,"Loading");
+                imageLoader = (imageView, url, payload) -> Picasso.get().load(fileUri).into(imageView);
+                fileName = fileUri.toString();
+                uploadImage();
+                messagesAdapter.addToStart(getImageMessage(), true);
+                loadingBar.dismiss();
         }
     }
 
@@ -285,7 +275,15 @@ image.setOnClickListener(new View.OnClickListener() {
                         R.layout.incoming_voice,
                         OutcomingVoiceMessageViewHolder.class,
                         R.layout.outcoming_voice,
-                         this);
+                         this)
+          .registerContentType(
+                CONTENT_TYPE_IMAGE,
+                ImageHolder.class,
+                R.layout.activity_image_viewer,
+                ImageHolder.class,
+                R.layout.activity_image_viewer,
+                this);
+
         messagesAdapter = new MessagesListAdapter<>(senderId, holders, imageLoader);
         messagesAdapter.enableSelectionMode(this);
         messagesAdapter.setLoadMoreListener(this);
@@ -485,7 +483,7 @@ image.setOnClickListener(new View.OnClickListener() {
     }
     public static Message getImageMessage() {
         Message message = new Message(getRandomId(), getUser(), null);
-        message.setImage(new Message.Image(getRandomImage()));
+        message.setImage(new Message.Image(fileName));
         return message;}
 
     //useful//
@@ -538,6 +536,77 @@ image.setOnClickListener(new View.OnClickListener() {
                 true);
     }
 
+    private void uploadImage()
+    {
+        if (fileUri != null) {
 
+            // Code for showing progressDialog while uploading
+            ProgressDialog progressDialog
+                    = new ProgressDialog(this);
+            progressDialog.setTitle("Uploading...");
+            progressDialog.show();
+
+            // Defining the child of storageReference
+            StorageReference ref
+                    = storageReference.child(
+                            "images/"
+                                    + UUID.randomUUID().toString());
+
+            // adding listeners on upload
+            // or failure of image
+            ref.putFile(fileUri)
+                    .addOnSuccessListener(
+                            new OnSuccessListener<UploadTask.TaskSnapshot>() {
+
+                                @Override
+                                public void onSuccess(
+                                        UploadTask.TaskSnapshot taskSnapshot)
+                                {
+
+                                    // Image uploaded successfully
+                                    // Dismiss dialog
+                                    progressDialog.dismiss();
+                                    Toast
+                                            .makeText(MessageActivity.this,
+                                                    "Image Uploaded!!",
+                                                    Toast.LENGTH_SHORT)
+                                            .show();
+                                }
+                            })
+
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e)
+                        {
+
+                            // Error, Image not uploaded
+                            progressDialog.dismiss();
+                            Toast
+                                    .makeText(MessageActivity.this,
+                                            "Failed " + e.getMessage(),
+                                            Toast.LENGTH_SHORT)
+                                    .show();
+                        }
+                    })
+                    .addOnProgressListener(
+                            new OnProgressListener<UploadTask.TaskSnapshot>() {
+
+                                // Progress Listener for loading
+                                // percentage on the dialog box
+                                @Override
+                                public void onProgress(
+                                        UploadTask.TaskSnapshot taskSnapshot)
+                                {
+                                    double progress
+                                            = (100.0
+                                            * taskSnapshot.getBytesTransferred()
+                                            / taskSnapshot.getTotalByteCount());
+                                    progressDialog.setMessage(
+                                            "Uploaded "
+                                                    + (int)progress + "%");
+                                }
+                            });
+        }
+    }
 
 }

@@ -26,7 +26,7 @@ import java.util.List;
 public class MyMinersFragment extends Fragment {
 
     private String TAG;
-    ArrayList<AdapterData> listAdapter=new ArrayList<AdapterData>();
+    ArrayList<Miner> listAdapter=new ArrayList<Miner>();
     public static MyMinersFragment newInstanse(){return new MyMinersFragment();}
     RecyclerView recyclerviewMining;
     TextView useMiner;
@@ -60,6 +60,6 @@ public class MyMinersFragment extends Fragment {
     }
 
     public void setData(){
-        listAdapter.add(new AdapterData("120S в час",1333));
+        listAdapter.add(new Miner(120,1333,50));
     }
 }

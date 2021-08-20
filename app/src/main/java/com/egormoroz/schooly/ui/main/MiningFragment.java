@@ -38,7 +38,7 @@ public class MiningFragment extends Fragment {
         return new MiningFragment();
     }
 
-    ArrayList<AdapterData> listAdapterMiner = new ArrayList<AdapterData>();
+    ArrayList<Miner> listAdapterMiner = new ArrayList<Miner>();
     FirebaseAuth authenticationDatabase;
     FirebaseDatabase database;
     DatabaseReference ref;
@@ -46,13 +46,15 @@ public class MiningFragment extends Fragment {
     int moneyaftermaining = 0;
     int prise = 50;
     private View imageworkingminers;
-    int viewminer;
+    ImageView viewminer;
     TextView minerprise, schoolycoin, myminers, upgrade, todaymining, morecoins;
     RelativeLayout noactiveminers;
     FirebaseAuth AuthenticationBase;
     RecyclerView minersrecyclerview;
     int minerMoney;
     private static final String TAG = "###########";
+
+    Miner adapterData=new Miner(120, 120, 50);
 
 
     @Override
@@ -95,9 +97,9 @@ public class MiningFragment extends Fragment {
         minersrecyclerview = view.findViewById(R.id.minersrecyclerview);
         MiningAdapter miningAdapter = new MiningAdapter(listAdapterMiner);
         minersrecyclerview.setAdapter(miningAdapter);
-        viewminer = requireViewById(R.id.viewmining);
+        viewminer = view.findViewById(R.id.viewmining);
         minerprise = view.findViewById(R.id.minerprise);
-        minerprise.setText(prise + "S");
+        minerprise.setText(String.valueOf(adapterData.getMinerPrice()));
         schoolycoin = view.findViewById(R.id.schoolycoin);
         schoolycoin.setText(String.valueOf(money));
         upgrade = view.findViewById(R.id.upgrade);
@@ -111,24 +113,19 @@ public class MiningFragment extends Fragment {
     }
 
     public void setMinerData() {
-        listAdapterMiner.add(new AdapterData("120S в час", 1333));
+        listAdapterMiner.add(new Miner(120, R.id.viewmining,50));
     }
 
     public void miningMoney() {
-        (new Thread(new Runnable()
-        {
-
+        (new Thread(new Runnable(){
             @Override
-            public void run()
-            {
+            public void run(){
                 while (!Thread.interrupted())
-                    try
-                    {
+                    try{
                         Thread.sleep(1000);
                         if(getActivity() == null)
                             return;
-                        getActivity().runOnUiThread(new Runnable()
-                        {
+                        getActivity().runOnUiThread(new Runnable(){
                             @Override
                             public void run()
                             { minerMoney++;
@@ -136,8 +133,7 @@ public class MiningFragment extends Fragment {
                             }
                         });
                     }
-                    catch (InterruptedException e)
-                    {
+                    catch (InterruptedException e){
                     }
             }
         })).start();
