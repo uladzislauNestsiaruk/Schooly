@@ -78,6 +78,15 @@
         app:showAttachmentButton="false">
 
         <ImageView
+            android:id="@+id/imameinput"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="80dp"
+            android:src="@drawable/ic_send" />
+
+        <ImageView
             android:id="@+id/voiceinput"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

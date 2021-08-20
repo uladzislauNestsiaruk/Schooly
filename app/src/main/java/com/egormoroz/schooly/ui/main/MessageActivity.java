@@ -2,13 +2,13 @@ package com.egormoroz.schooly.ui.main;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.app.FragmentManager;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.MediaMetadataRetriever;
-import android.media.MediaPlayer;
 import android.media.MediaRecorder;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -17,17 +17,16 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.egormoroz.schooly.CONST;
 import com.egormoroz.schooly.R;
-import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.ui.chat.Message;
 import com.egormoroz.schooly.ui.chat.User;
 import com.egormoroz.schooly.ui.chat.holders.IncomingVoiceMessageViewHolder;
@@ -36,6 +35,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.StorageTask;
 import com.stfalcon.chatkit.commons.ImageLoader;
 import com.stfalcon.chatkit.messages.MessageHolders;
 import com.stfalcon.chatkit.messages.MessageInput;
@@ -56,7 +58,6 @@ public class MessageActivity extends FragmentActivity
         implements MessageInput.InputListener,
         MessagesListAdapter.SelectionListener,
         MessagesListAdapter.OnLoadMoreListener,
-        MessageInput.AttachmentsListener,
         MessageHolders.ContentChecker<Message>,
         MessageInput.TypingListener{
 
@@ -79,6 +80,9 @@ public class MessageActivity extends FragmentActivity
     private FirebaseAuth AuthenticationDatabase;
     private FirebaseDatabase database;
     private int duration;
+    private String checker = "", myURL = "";
+    private StorageTask uoloadTask;
+    private Uri fileUri;
 
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -155,6 +159,7 @@ public class MessageActivity extends FragmentActivity
         getCurrentChatId();
         initFirebase();
         RecAudio();
+        Share();
     }
 
     public int getDuration(String mUri) {
@@ -203,12 +208,63 @@ public class MessageActivity extends FragmentActivity
         return true;
     }
 
+    public void Share() {
+ImageView image = findViewById(R.id.imameinput);
+image.setOnClickListener(new View.OnClickListener() {
     @Override
-    public void onAddAttachments() {
+    public void onClick(View v) {
+        Log.d(TAG, "tap");
+        CharSequence options[] = new CharSequence[]
+                {
+                        "Image",
+                        "PDF file",
+                        "Word File"
+                };
+        AlertDialog.Builder build = new AlertDialog.Builder(MessageActivity.this);
+        build.setTitle("Select file type");
+        build.setItems(options, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (which == 0) {
+                    checker = "image";
 
-//        messagesAdapter.addToStart(
-//
-//              getImageMessage(), true);
+                    Intent intent = new Intent();
+                    intent.setAction(Intent.ACTION_GET_CONTENT);
+                    intent.setType("image/*");
+                    startActivityForResult(Intent.createChooser(intent, "Select Image"), 438);
+                }
+                if (which == 1) {
+                    checker = "pdf";
+                }
+                if (which == 2) {
+                    checker = "doc";
+                }
+            }
+        });
+    }
+});
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 438 && resultCode == RESULT_OK && data != null && data.getData() != null)
+        {
+            fileUri = data.getData();
+
+            if (!checker.equals("image"))
+            {
+
+            }
+            else if (checker.equals("image"))
+            {
+                StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("Image Files");
+            }
+            else
+                Toast.makeText(this, "Nothing, error", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -481,4 +537,7 @@ public class MessageActivity extends FragmentActivity
                 even ? avatars.get(0) : avatars.get(1),
                 true);
     }
+
+
+
 }
