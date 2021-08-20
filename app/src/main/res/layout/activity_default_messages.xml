@@ -4,19 +4,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white">
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        />
 
     <com.stfalcon.chatkit.messages.MessagesList
         android:id="@+id/messagesList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/input"
-        android:layout_gravity="bottom"
         app:incomingAvatarHeight="56dp"
-        app:incomingAvatarWidth="56dp" />
+        app:incomingAvatarWidth="56dp"
+        style="@style/TextInput"
+        android:layout_marginBottom="8dp"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -29,7 +26,8 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginStart="110dp"
-            android:fontFamily="@font/montserrat_bold"/>
+            android:textColor="@color/white"
+            android:fontFamily="@font/montserrat_bold" />
 
         <ImageView
             android:id="@+id/backtoalldialogs"
@@ -64,19 +62,20 @@
 
     <com.stfalcon.chatkit.messages.MessageInput
         android:id="@+id/input"
+        android:theme="@style/CustomChipText"
         android:layout_width="match_parent"
         android:layout_height="64dp"
         android:layout_alignParentBottom="true"
-        android:background="@drawable/corners18appcolor"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        app:inputButtonIcon="@drawable/ic_sendmessage"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/corners22appcolor"
         app:inputButtonBackground="@drawable/corners18appcolor"
-        app:showAttachmentButton="false"
+        app:inputButtonIcon="@drawable/ic_sendmessage"
         app:inputHint="@string/messages"
         app:inputHintColor="@color/white"
-        app:inputTextColor="@color/white">
+        app:inputTextColor="@color/white"
+        app:showAttachmentButton="false">
 
         <ImageView
             android:id="@+id/voiceinput"
@@ -85,7 +84,7 @@
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:layout_marginEnd="50dp"
-            android:src="@drawable/ic_voicemessage" />
+            android:src="@drawable/ic_voicemessage"/>
     </com.stfalcon.chatkit.messages.MessageInput>
 
 
