@@ -75,12 +75,8 @@ public class ChatFragment extends Fragment implements DialogsListAdapter.OnDialo
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        ImageLoader imageLoader = new ImageLoader() {
-//            @Override
-//            public void loadImage(ImageView imageView, String url) {
-//                Picasso.get(DialogFragment.this).load(url).into(imageView);
-//            }
-//        };
+        imageLoader = (imageView, url, payload) -> Picasso.get().load(url).into(imageView);
+
 
     }
 

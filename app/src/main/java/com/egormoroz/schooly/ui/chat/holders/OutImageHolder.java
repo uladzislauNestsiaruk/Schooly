@@ -14,7 +14,7 @@ import com.stfalcon.chatkit.utils.DateFormatter;
 
 public class OutImageHolder extends MessageHolders.IncomingTextMessageViewHolder<Message>
 {
-    private ImageView imageView;
+    private ImageView image;
     private String imageUrl;
     private TextView tvTime;
     private String TAG = "Image";
@@ -22,13 +22,14 @@ public class OutImageHolder extends MessageHolders.IncomingTextMessageViewHolder
     public OutImageHolder(View itemView, Object payload) {
         super(itemView, payload);
         tvTime = itemView.findViewById(R.id.time);
-        imageView = itemView.findViewById(R.id.image_viewer);
+        image = itemView.findViewById(R.id.image_viewer);
         imageUrl = MessageActivity.fileName;
     }
     @Override
     public void onBind(Message message) {
+        image.setImageURI(MessageActivity.fileUri);
         tvTime.setText(DateFormatter.format(message.getCreatedAt(), DateFormatter.Template.TIME));
-        Picasso.get().load(imageUrl).into(imageView);
+        Picasso.get().load(imageUrl).into(image);
         Log.d(TAG,"SEND");
     }
 }

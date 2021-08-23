@@ -70,6 +70,7 @@ public class MessageActivity extends FragmentActivity
         MessageHolders.ContentChecker<Message>,
         MessageInput.TypingListener{
 
+    public static Uri fileUri;
     private ProgressDialog loadingBar;
     private static final int TOTAL_MESSAGES_COUNT = 100;
     private final String TAG = "##########";
@@ -93,7 +94,6 @@ public class MessageActivity extends FragmentActivity
     private int duration;
     private String checker = "", myURL = "";
     private StorageTask uoloadTask;
-    private Uri fileUri;
     FirebaseStorage storage;
     StorageReference storageReference;
 
@@ -105,12 +105,6 @@ public class MessageActivity extends FragmentActivity
                 break;
         }
         if (!permissionToRecordAccepted ) finish();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        messagesAdapter.addToStart(getTextMessage(), true);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -153,18 +147,13 @@ public class MessageActivity extends FragmentActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_default_messages);
         ActivityCompat.requestPermissions(this, permissions, REQUEST_RECORD_AUDIO_PERMISSION);
         this.messagesList = findViewById(R.id.messagesList);
         initAdapter();
         ImageView avatar = findViewById(R.id.avatar);
         Picasso.get().load(getRandomAvatar()).into(avatar);
-//        ImageLoader imageLoader = new ImageLoader() {
-//            @Override
-//            public void loadImage(ImageView imageView, String url) {
-//                Picasso.get(MessagesList.this).load(url).into(imageView);
-//            }
-//        };
         ImageView back = findViewById(R.id.backtoalldialogs);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -172,6 +161,7 @@ public class MessageActivity extends FragmentActivity
                 finish();
             }
         });
+        imageLoader = (imageView, url, payload) -> Picasso.get().load(url).into(imageView);
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
         loadingBar = new ProgressDialog(this);
@@ -252,21 +242,14 @@ public class MessageActivity extends FragmentActivity
 
         if (requestCode == 438 && resultCode == RESULT_OK && data != null && data.getData() != null)
         {
-
-            loadingBar.setTitle("Send image");
-            loadingBar.setMessage("Updating...");
-            loadingBar.setCanceledOnTouchOutside(false);
-            loadingBar.show();
-
-
             fileUri = data.getData();
                 Log.d(TAG,"Loading");
                 imageLoader = (imageView, url, payload) -> Picasso.get().load(fileUri).into(imageView);
                 fileName = fileUri.toString();
-
             messagesAdapter.addToStart(getImageMessage(), true);
-                uploadImage();
-                loadingBar.dismiss();
+
+              //  uploadImage();
+
 
         }
     }
@@ -286,7 +269,9 @@ public class MessageActivity extends FragmentActivity
     }
 
     private void initAdapter() {
+        imageLoader = (imageView, url, payload) -> Picasso.get().load(url).into(imageView);
         MessageHolders holders = new MessageHolders()
+
                 .registerContentType(
                         CONTENT_TYPE_VOICE,
                         IncomingVoiceMessageViewHolder.class,
@@ -294,13 +279,13 @@ public class MessageActivity extends FragmentActivity
                         OutcomingVoiceMessageViewHolder.class,
                         R.layout.outcoming_voice,
                          this)
-          .registerContentType(
-                CONTENT_TYPE_IMAGE,
-                InImageHolder.class,
-                R.layout.in_image,
-                  OutImageHolder.class,
-                  R.layout.out_image,
-                this);
+                .registerContentType(
+                        CONTENT_TYPE_IMAGE,
+                        InImageHolder.class,
+                        R.layout.in_image,
+                        OutImageHolder.class,
+                        R.layout.out_image,
+                        this);
 
         messagesAdapter = new MessagesListAdapter<>(senderId, holders, imageLoader);
         messagesAdapter.enableSelectionMode(this);
@@ -556,13 +541,11 @@ public class MessageActivity extends FragmentActivity
                     = storageReference.child(
                             "images/"
                                     + UUID.randomUUID().toString());
-
             // adding listeners on upload
             // or failure of image
             ref.putFile(fileUri)
                     .addOnSuccessListener(
                             new OnSuccessListener<UploadTask.TaskSnapshot>() {
-
                                 @Override
                                 public void onSuccess(
                                         UploadTask.TaskSnapshot taskSnapshot)
@@ -583,7 +566,6 @@ public class MessageActivity extends FragmentActivity
                         @Override
                         public void onFailure(@NonNull Exception e)
                         {
-
                             // Error, Image not uploaded
                             progressDialog.dismiss();
                             Toast
