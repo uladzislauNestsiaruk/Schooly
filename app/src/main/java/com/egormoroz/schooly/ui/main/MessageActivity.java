@@ -1,5 +1,7 @@
 package com.egormoroz.schooly.ui.main;
 
+import static android.app.PendingIntent.getActivity;
+
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
@@ -22,14 +24,16 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
 
 import com.egormoroz.schooly.CONST;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.ui.chat.Message;
 import com.egormoroz.schooly.ui.chat.User;
-import com.egormoroz.schooly.ui.chat.holders.ImageHolder;
+import com.egormoroz.schooly.ui.chat.holders.InImageHolder;
 import com.egormoroz.schooly.ui.chat.holders.IncomingVoiceMessageViewHolder;
+import com.egormoroz.schooly.ui.chat.holders.OutImageHolder;
 import com.egormoroz.schooly.ui.chat.holders.OutcomingVoiceMessageViewHolder;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -153,7 +157,14 @@ public class MessageActivity extends FragmentActivity
         ActivityCompat.requestPermissions(this, permissions, REQUEST_RECORD_AUDIO_PERMISSION);
         this.messagesList = findViewById(R.id.messagesList);
         initAdapter();
-        imageLoader = (imageView, url, payload) -> Picasso.get().load(url).into(imageView);
+        ImageView avatar = findViewById(R.id.avatar);
+        Picasso.get().load(getRandomAvatar()).into(avatar);
+//        ImageLoader imageLoader = new ImageLoader() {
+//            @Override
+//            public void loadImage(ImageView imageView, String url) {
+//                Picasso.get(MessagesList.this).load(url).into(imageView);
+//            }
+//        };
         ImageView back = findViewById(R.id.backtoalldialogs);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -241,6 +252,7 @@ public class MessageActivity extends FragmentActivity
 
         if (requestCode == 438 && resultCode == RESULT_OK && data != null && data.getData() != null)
         {
+
             loadingBar.setTitle("Send image");
             loadingBar.setMessage("Updating...");
             loadingBar.setCanceledOnTouchOutside(false);
@@ -251,9 +263,11 @@ public class MessageActivity extends FragmentActivity
                 Log.d(TAG,"Loading");
                 imageLoader = (imageView, url, payload) -> Picasso.get().load(fileUri).into(imageView);
                 fileName = fileUri.toString();
+
+            messagesAdapter.addToStart(getImageMessage(), true);
                 uploadImage();
-                messagesAdapter.addToStart(getImageMessage(), true);
                 loadingBar.dismiss();
+
         }
     }
 
@@ -263,6 +277,10 @@ public class MessageActivity extends FragmentActivity
             return message.getVoice() != null
                     && message.getVoice().getUrl() != null
                     && !message.getVoice().getUrl().isEmpty();
+        }
+        if (type == CONTENT_TYPE_IMAGE) {
+            return message.getImageUrl() != null
+                    && !message.getImageUrl().isEmpty();
         }
         return false;
     }
@@ -278,12 +296,11 @@ public class MessageActivity extends FragmentActivity
                          this)
           .registerContentType(
                 CONTENT_TYPE_IMAGE,
-                ImageHolder.class,
-                R.layout.activity_image_viewer,
-                ImageHolder.class,
-                R.layout.activity_image_viewer,
+                InImageHolder.class,
+                R.layout.in_image,
+                  OutImageHolder.class,
+                  R.layout.out_image,
                 this);
-
         messagesAdapter = new MessagesListAdapter<>(senderId, holders, imageLoader);
         messagesAdapter.enableSelectionMode(this);
         messagesAdapter.setLoadMoreListener(this);
@@ -409,13 +426,6 @@ public class MessageActivity extends FragmentActivity
         return avatars.get(rnd.nextInt(avatars.size()));
     }
 
-    static String getRandomGroupChatImage() {
-        return groupChatImages.get(rnd.nextInt(groupChatImages.size()));
-    }
-
-    static String getRandomGroupChatTitle() {
-        return groupChatTitles.get(rnd.nextInt(groupChatTitles.size()));
-    }
 
     static String getRandomName() {
         return names.get(rnd.nextInt(names.size()));
@@ -429,9 +439,6 @@ public class MessageActivity extends FragmentActivity
         return images.get(rnd.nextInt(images.size()));
     }
 
-    static boolean getRandomBoolean() {
-        return rnd.nextBoolean();
-    }
 
 
 
@@ -470,10 +477,7 @@ public class MessageActivity extends FragmentActivity
         };
     }
 
-//    private MessagesFixtures(DatabaseReference ref) {
-//        messagesRef = ref.child("messages");
-//        throw new AssertionError();
-//    }
+
     private static void uploadMessage(DatabaseReference ref, Message message){
         ref.push().setValue(message);
     }

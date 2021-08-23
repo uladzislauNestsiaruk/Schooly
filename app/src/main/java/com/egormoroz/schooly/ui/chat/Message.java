@@ -107,6 +107,7 @@ public class Message implements IMessage,
         public Voice(String url, int duration) {
             this.url = url;
             this.duration = duration;
+
         }
     }
 
