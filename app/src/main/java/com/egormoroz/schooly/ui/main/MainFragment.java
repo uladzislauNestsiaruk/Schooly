@@ -1,27 +1,29 @@
 package com.egormoroz.schooly.ui.main;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+
 import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.MainActivity;
 import com.egormoroz.schooly.R;
+import com.egormoroz.schooly.RecentMethods;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 import com.stfalcon.chatkit.commons.ImageLoader;
 import com.stfalcon.chatkit.commons.models.IDialog;
 import com.stfalcon.chatkit.dialogs.DialogsListAdapter;
+
+import java.util.ArrayList;
+
 public class MainFragment extends Fragment{
     protected DialogsListAdapter<IDialog> dialogsAdapter;
     protected ImageLoader imageLoader;
@@ -39,8 +41,8 @@ public class MainFragment extends Fragment{
 //        abl.setVisibility(abl.GONE);
         BottomNavigationView bnv = getActivity().findViewById(R.id.bottomNavigationView);
         bnv.setVisibility(View.VISIBLE);
-        firebaseModel.initAll();
-        LoadUserData();
+        ArrayList<UserInformation> users = RecentMethods.LoadUserDataByNick(firebaseModel, "vladcpp");
+        Log.d("#########", "Users found: " + users.size());
         return root;
     }
     @Override
@@ -51,7 +53,6 @@ public class MainFragment extends Fragment{
     @Override
     public void onViewCreated(@Nullable View view,@NonNull Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
-
         ImageView chat=view.findViewById(R.id.chat);
         chat.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,30 +82,6 @@ public class MainFragment extends Fragment{
             @Override
             public void onClick(View v) {
                 ((MainActivity)getActivity()).setCurrentFragment(MiningFragment.newInstanse());
-            }
-        });
-    }
-    public void LoadUserData(){
-        FirebaseUser user = firebaseModel.getUser();
-        Query query = firebaseModel.getUsersReference().
-                orderByChild("uid").equalTo(user.getUid());
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshotParent) {
-                for (DataSnapshot snapshot : snapshotParent.getChildren()) {
-                    //userData.setAge(snapshot.child("age").getValue(Integer.class));
-                    //userData.setAvatar(snapshot.child("avatar").getValue(Integer.class));
-                    userData.setGender(snapshot.child("gender").getValue(String.class));
-                    //////////////////userData.setMiners();
-                    userData.setNick(snapshot.child("nick").getValue(String.class));
-                    userData.setPassword(snapshot.child("password").getValue(String.class));
-                    userData.setPhone(snapshot.child("phone").getValue(String.class));
-                    userData.setUid(snapshot.child("uid").getValue(String.class));
-                }
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
             }
         });
     }

@@ -99,6 +99,7 @@ public class RecentMethods {
         return "+" + res;
     }
     public static boolean saveData(DatabaseReference ref, FirebaseUser user, String nick) {
+
         UserInformation res = new UserInformation(nick, "unknown", user.getUid(),
                 6, "unknown", "Helicopter", 1000,"Miner",1);
         ref.child(nick).setValue(res);
@@ -133,5 +134,45 @@ public class RecentMethods {
         ArrayList<UserInformation> result = new ArrayList<UserInformation>();
 
         return result;
+    }
+    public static ArrayList<UserInformation> LoadUserDataByNickFun(FirebaseModel model,
+                                           Callbacks.LoadUserDataInterface callback,
+                                                 String nick){
+        model.initAll();
+        Query query = model.getUsersReference().child("users").
+                orderByChild("nick").equalTo(nick);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshotParent) {
+                ArrayList<UserInformation> data = new ArrayList<>();
+                for (DataSnapshot snapshot : snapshotParent.getChildren()) {
+                    UserInformation userData = new UserInformation();
+                    //userData.setAge(snapshot.child("age").getValue(Integer.class));
+                    //userData.setAvatar(snapshot.child("avatar").getValue(Integer.class));
+                    userData.setGender(snapshot.child("gender").getValue(String.class));
+                    //////////////////userData.setMiners();
+                    userData.setNick(snapshot.child("nick").getValue(String.class));
+                    userData.setPassword(snapshot.child("password").getValue(String.class));
+                    userData.setPhone(snapshot.child("phone").getValue(String.class));
+                    userData.setUid(snapshot.child("uid").getValue(String.class));
+                    data.add(userData);
+                }
+                callback.LoadData(data);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        return null;
+    }
+    public static ArrayList<UserInformation> LoadUserDataByNick(FirebaseModel model,
+                                                         String nick){
+       return LoadUserDataByNickFun(model, new Callbacks.LoadUserDataInterface() {
+            @Override
+            public ArrayList<UserInformation> LoadData(ArrayList<UserInformation> data) {
+                return data;
+            }
+        }, nick);
     }
 }

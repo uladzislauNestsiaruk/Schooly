@@ -28,7 +28,6 @@ import com.egormoroz.schooly.CONST;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.ui.chat.Message;
 import com.egormoroz.schooly.ui.chat.User;
-import com.egormoroz.schooly.ui.chat.holders.ImageHolder;
 import com.egormoroz.schooly.ui.chat.holders.IncomingVoiceMessageViewHolder;
 import com.egormoroz.schooly.ui.chat.holders.OutcomingVoiceMessageViewHolder;
 import com.google.android.gms.tasks.OnFailureListener;
