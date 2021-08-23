@@ -15,6 +15,9 @@ public class Callbacks {
         void passUserData(UserInformation info);
     }
     public interface LoadUserDataInterface{
-        ArrayList<UserInformation> LoadData(ArrayList<UserInformation> data);
+        void LoadData(ArrayList<UserInformation> data);
+    }
+    public interface PassLoadUserDataInterface{
+        void PassData(ArrayList<UserInformation> data);
     }
 }

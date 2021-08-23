@@ -28,7 +28,9 @@ import com.egormoroz.schooly.CONST;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.ui.chat.Message;
 import com.egormoroz.schooly.ui.chat.User;
+import com.egormoroz.schooly.ui.chat.holders.InImageHolder;
 import com.egormoroz.schooly.ui.chat.holders.IncomingVoiceMessageViewHolder;
+import com.egormoroz.schooly.ui.chat.holders.OutImageHolder;
 import com.egormoroz.schooly.ui.chat.holders.OutcomingVoiceMessageViewHolder;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -65,6 +67,7 @@ public class MessageActivity extends FragmentActivity
         MessageHolders.ContentChecker<Message>,
         MessageInput.TypingListener{
 
+    public static Uri fileUri;
     private ProgressDialog loadingBar;
     private static final int TOTAL_MESSAGES_COUNT = 100;
     private final String TAG = "##########";
@@ -88,7 +91,6 @@ public class MessageActivity extends FragmentActivity
     private int duration;
     private String checker = "", myURL = "";
     private StorageTask uoloadTask;
-    private Uri fileUri;
     FirebaseStorage storage;
     StorageReference storageReference;
 
@@ -277,10 +279,10 @@ public class MessageActivity extends FragmentActivity
                          this)
           .registerContentType(
                 CONTENT_TYPE_IMAGE,
-                ImageHolder.class,
-                R.layout.activity_image_viewer,
-                ImageHolder.class,
-                R.layout.activity_image_viewer,
+                InImageHolder.class,
+                R.layout.in_image,
+                OutImageHolder.class,
+                R.layout.out_image,
                 this);
 
         messagesAdapter = new MessagesListAdapter<>(senderId, holders, imageLoader);

@@ -1,7 +1,6 @@
 package com.egormoroz.schooly.ui.main;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.MainActivity;
 import com.egormoroz.schooly.R;
@@ -41,8 +41,12 @@ public class MainFragment extends Fragment{
 //        abl.setVisibility(abl.GONE);
         BottomNavigationView bnv = getActivity().findViewById(R.id.bottomNavigationView);
         bnv.setVisibility(View.VISIBLE);
-        ArrayList<UserInformation> users = RecentMethods.LoadUserDataByNick(firebaseModel, "vladcpp");
-        Log.d("#########", "Users found: " + users.size());
+        RecentMethods.LoadUserDataByNick(firebaseModel, "vladcpp", new Callbacks.PassLoadUserDataInterface() {
+            @Override
+            public void PassData(ArrayList<UserInformation> data) {
+
+            }
+        });
         return root;
     }
     @Override

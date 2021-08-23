@@ -2,10 +2,12 @@ package com.egormoroz.schooly;
 import android.app.Activity;
 import android.util.Log;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
+
 import com.egormoroz.schooly.ui.main.UserInformation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -17,6 +19,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
 public class RecentMethods {
     public static void isNickCorrect(String nickname, DatabaseReference reference, TextView errorTextnickname) {
@@ -135,11 +138,11 @@ public class RecentMethods {
 
         return result;
     }
-    public static ArrayList<UserInformation> LoadUserDataByNickFun(FirebaseModel model,
+    public static void LoadUserDataByNickFun(FirebaseModel model,
                                            Callbacks.LoadUserDataInterface callback,
                                                  String nick){
         model.initAll();
-        Query query = model.getUsersReference().child("users").
+        Query query = model.getReference("users").
                 orderByChild("nick").equalTo(nick);
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -164,14 +167,14 @@ public class RecentMethods {
 
             }
         });
-        return null;
     }
-    public static ArrayList<UserInformation> LoadUserDataByNick(FirebaseModel model,
-                                                         String nick){
-       return LoadUserDataByNickFun(model, new Callbacks.LoadUserDataInterface() {
+    public static void LoadUserDataByNick(FirebaseModel model,
+                                                                String nick,
+                                                                Callbacks.PassLoadUserDataInterface passData){
+       LoadUserDataByNickFun(model, new Callbacks.LoadUserDataInterface() {
             @Override
-            public ArrayList<UserInformation> LoadData(ArrayList<UserInformation> data) {
-                return data;
+            public void LoadData(ArrayList<UserInformation> data) {
+                passData.PassData(data);
             }
         }, nick);
     }
