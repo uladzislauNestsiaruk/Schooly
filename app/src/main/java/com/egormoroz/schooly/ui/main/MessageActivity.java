@@ -301,6 +301,7 @@ public class MessageActivity extends FragmentActivity
                   OutImageHolder.class,
                   R.layout.out_image,
                 this);
+
         messagesAdapter = new MessagesListAdapter<>(senderId, holders, imageLoader);
         messagesAdapter.enableSelectionMode(this);
         messagesAdapter.setLoadMoreListener(this);
