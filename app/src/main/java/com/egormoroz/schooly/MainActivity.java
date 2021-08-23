@@ -37,8 +37,7 @@ public class MainActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         CoordinatorLayout fragmentContainer = findViewById(R.id.fragment_container);
-        AuthenticationBase = FirebaseAuth.getInstance();
-
+        initFirebase();
         ///////////Authorization block
 
         ///////////
@@ -81,7 +80,6 @@ public class MainActivity extends AppCompatActivity implements
                 return false;
             }
         });
-        initFirebase();
      //   getDialogs();
     }
 

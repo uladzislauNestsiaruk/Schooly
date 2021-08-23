@@ -106,7 +106,7 @@ public class EnterFragment extends Fragment {
         gotostartreg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(RegisrtationstartFragment.newInstance(), getActivity());
+                RecentMethods.setCurrentFragment(new RegisrtationstartFragment(), getActivity());
             }
         });
     }

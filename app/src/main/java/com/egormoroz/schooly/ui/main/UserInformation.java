@@ -35,7 +35,7 @@ public class UserInformation {
 
     public String getUid() { return uid;}
 
-    public void setUid() {this.uid = uid; }
+    public void setUid(String uid) {this.uid = uid; }
 
     public int getAvatar() {return Avatar;}
 
@@ -95,4 +95,5 @@ public class UserInformation {
         this.miners=miners;
         this.level=level;
     }
+
 }
