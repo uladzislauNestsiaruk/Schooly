@@ -65,7 +65,6 @@ public class MiningFragment extends Fragment {
         bnv.setVisibility(bnv.GONE);
         return root;
     }
-
     @Override
     public void onViewCreated(@Nullable View view, @NonNull Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -107,6 +106,7 @@ public class MiningFragment extends Fragment {
         morecoins = view.findViewById(R.id.morecoins);
         miningMoney();
     }
+
 
     private int requireViewById(int viewmining) {
         return viewmining;

@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
 import com.egormoroz.schooly.CONST;
@@ -28,6 +29,7 @@ import com.squareup.picasso.Picasso;
 import com.stfalcon.chatkit.commons.ImageLoader;
 import com.stfalcon.chatkit.dialogs.DialogsList;
 import com.stfalcon.chatkit.dialogs.DialogsListAdapter;
+import com.stfalcon.chatkit.messages.MessagesList;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;
@@ -74,6 +76,8 @@ public class ChatFragment extends Fragment implements DialogsListAdapter.OnDialo
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         imageLoader = (imageView, url, payload) -> Picasso.get().load(url).into(imageView);
+
+
     }
 
 
