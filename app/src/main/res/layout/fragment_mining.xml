@@ -188,54 +188,13 @@
             android:textColor="@color/app_grey"
             android:textSize="14sp"/>
 
-        <HorizontalScrollView
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/allminersrecyclerview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/weak"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="24dp">
-
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="24dp">
-
-                <ImageView
-                    android:id="@+id/viewmining"
-                    android:layout_width="184dp"
-                    android:layout_height="128dp"
-                    android:background="#EEEEEE" />
-
-
-                <TextView
-                    android:id="@+id/minerprise"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/app_color"
-                    android:layout_below="@+id/viewmining"
-                    android:layout_marginTop="16dp"
-                    android:fontFamily="@font/montserrat_extrabold"
-                    android:textSize="18sp"/>
-
-                <TextView
-                    android:id="@+id/buy"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/buy"
-                    android:layout_alignParentEnd="true"
-                    android:layout_below="@+id/viewmining"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginStart="94dp"
-                    android:background="@drawable/corners14appcolor"
-                    android:textColor="@color/white"
-                    android:textSize="12sp"
-                    android:fontFamily="@font/montserrat_extrabold"
-                    android:paddingEnd="20dp"
-                    android:paddingTop="10dp"
-                    android:paddingStart="20dp"
-                    android:paddingBottom="10dp"/>
-            </RelativeLayout>
-        </HorizontalScrollView>
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:orientation="horizontal"/>
 
     </RelativeLayout>
 

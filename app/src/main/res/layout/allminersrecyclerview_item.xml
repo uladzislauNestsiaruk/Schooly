@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/viewmining"
+        android:layout_width="184dp"
+        android:layout_height="128dp"
+        android:background="#EEEEEE"
+        android:layout_centerHorizontal="true"/>
+
+
+    <TextView
+        android:id="@+id/minerprise"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/app_color"
+        android:layout_below="@+id/viewmining"
+        android:layout_marginTop="16dp"
+        android:fontFamily="@font/montserrat_extrabold"
+        android:textSize="18sp"/>
+
+    <TextView
+        android:id="@+id/buy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/buy"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/viewmining"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="94dp"
+        android:background="@drawable/corners14appcolor"
+        android:textColor="@color/white"
+        android:textSize="12sp"
+        android:fontFamily="@font/montserrat_extrabold"
+        android:paddingEnd="20dp"
+        android:paddingTop="10dp"
+        android:paddingStart="20dp"
+        android:paddingBottom="10dp"/>
+
+</RelativeLayout>

@@ -1,10 +1,8 @@
-package com.egormoroz.schooly.ui.main;
+package com.egormoroz.schooly.ui.main.Mining;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -17,47 +15,41 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
-public class MyMinersAdapter extends RecyclerView.Adapter<MyMinersAdapter.ViewHolder> {
+public class MiningAdapter extends RecyclerView.Adapter<MiningAdapter.ViewHolder> {
 
-    List<Miner> listAdapter;
+    List<Miner> listAdapterMiner;
     private ItemClickListener clickListener;
 
-    public  MyMinersAdapter(ArrayList<Miner> listAdapter) {
-        this.listAdapter = listAdapter;
+    public  MiningAdapter(ArrayList<Miner> listAdapter) {
+        this.listAdapterMiner = listAdapter;
     }
 
 
     @NotNull
     @Override
-    public MyMinersAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
         RelativeLayout v = (RelativeLayout) LayoutInflater.from(viewGroup.getContext()).
-                inflate(R.layout.myminers_item, viewGroup, false);
+                inflate(R.layout.horizontalrecyclerview_item, viewGroup, false);
         ViewHolder viewHolder=new ViewHolder(v);
         return viewHolder;
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        Miner miner=listAdapter.get(position);
-        holder.recycleviewImageView.setImageResource
-                (getItemViewType(miner.getMinerImage()));
-        holder.inHour.setText(String.valueOf(miner.getInHour()));
+        Miner miner=listAdapterMiner.get(position);
+//        holder.minerinhour.setText(String.valueOf(miner.getInHour()));
     }
 
     @Override
     public int getItemCount() {
-        return listAdapter.size();
+        return listAdapterMiner.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        final TextView use;
-        final ImageView recycleviewImageView;
-        final TextView inHour;
+        final TextView minerinhour;
         ViewHolder(View itemView) {
             super(itemView);
-            use = itemView.findViewById(R.id.use);
-            inHour=itemView.findViewById(R.id.inhour);
-            recycleviewImageView=itemView.findViewById(R.id.viewrecycler);
+            minerinhour=itemView.findViewById(R.id.minerinhour);
         }
 
         @Override
@@ -67,7 +59,7 @@ public class MyMinersAdapter extends RecyclerView.Adapter<MyMinersAdapter.ViewHo
     }
 
     Miner getItem(int id) {
-        return listAdapter.get(id);
+        return listAdapterMiner.get(id);
     }
 
     void setClickListener(ItemClickListener itemClickListener) {
