@@ -10,7 +10,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FirebaseModel;
@@ -47,12 +46,14 @@ public class MainFragment extends Fragment{
 
             }
         });
+        /*RecentMethods.UserNickByUid(String.valueOf(firebaseModel.AuthenticationBase.getCurrentUser().getUid()),
+                firebaseModel, new Callbacks.GetUserNickByUid() {
+                    @Override
+                    public void PassUserNick(String nick) {
+                        Log.d("#######", "current user: " + nick);
+                    }
+                });*/
         return root;
-    }
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
     }
     @Override
     public void onViewCreated(@Nullable View view,@NonNull Bundle savedInstanceState){

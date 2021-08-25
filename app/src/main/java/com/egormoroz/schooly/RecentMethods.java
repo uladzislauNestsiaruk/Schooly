@@ -178,4 +178,20 @@ public class RecentMethods {
             }
         }, nick);
     }
+    public static void UserNickByUid(String uid, FirebaseModel model, Callbacks.GetUserNickByUid callback){
+        model.initAll();
+        Query query = model.getUsersReference().orderByChild("uid").equalTo(uid);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot snap : snapshot.getChildren())
+                    callback.PassUserNick(snap.child("nick").getValue(String.class));
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
 }
