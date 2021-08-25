@@ -1,10 +1,8 @@
-package com.egormoroz.schooly.ui.main;
+package com.egormoroz.schooly.ui.main.Mining;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -17,12 +15,12 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
-public class MiningAdapter extends RecyclerView.Adapter<MiningAdapter.ViewHolder> {
+public class AllMinersAdapter extends RecyclerView.Adapter<AllMinersAdapter.ViewHolder> {
 
     List<Miner> listAdapterMiner;
     private ItemClickListener clickListener;
 
-    public  MiningAdapter(ArrayList<Miner> listAdapter) {
+    public  AllMinersAdapter(ArrayList<Miner> listAdapter) {
         this.listAdapterMiner = listAdapter;
     }
 
@@ -31,7 +29,7 @@ public class MiningAdapter extends RecyclerView.Adapter<MiningAdapter.ViewHolder
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
         RelativeLayout v = (RelativeLayout) LayoutInflater.from(viewGroup.getContext()).
-                inflate(R.layout.horizontalrecyclerview_item, viewGroup, false);
+                inflate(R.layout.allminersrecyclerview_item, viewGroup, false);
         ViewHolder viewHolder=new ViewHolder(v);
         return viewHolder;
     }
@@ -39,7 +37,7 @@ public class MiningAdapter extends RecyclerView.Adapter<MiningAdapter.ViewHolder
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Miner miner=listAdapterMiner.get(position);
-        holder.minerinhour.setText(String.valueOf(miner.getInHour()));
+//        holder.minerPrise.setText(String.valueOf(miner.getMinerPrice()));
     }
 
     @Override
@@ -48,10 +46,10 @@ public class MiningAdapter extends RecyclerView.Adapter<MiningAdapter.ViewHolder
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        final TextView minerinhour;
+        final TextView minerPrise;
         ViewHolder(View itemView) {
             super(itemView);
-            minerinhour=itemView.findViewById(R.id.minerinhour);
+            minerPrise=itemView.findViewById(R.id.minerprise);
         }
 
         @Override

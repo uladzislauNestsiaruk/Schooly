@@ -16,6 +16,7 @@ import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.MainActivity;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
+import com.egormoroz.schooly.ui.main.Mining.MiningFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.stfalcon.chatkit.commons.ImageLoader;
 import com.stfalcon.chatkit.commons.models.IDialog;
@@ -29,6 +30,7 @@ public class MainFragment extends Fragment{
     private MainViewModel mainViewModel;
     private FirebaseModel firebaseModel = new FirebaseModel();
     private UserInformation userData = new UserInformation();
+
     public static MainFragment newInstance() {
         return new MainFragment();
     }
@@ -86,7 +88,7 @@ public class MainFragment extends Fragment{
         mining.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((MainActivity)getActivity()).setCurrentFragment(MiningFragment.newInstanse());
+                RecentMethods.setCurrentFragment(MiningFragment.newInstanse(), getActivity());
             }
         });
     }

@@ -1,4 +1,4 @@
-package com.egormoroz.schooly.ui.main;
+package com.egormoroz.schooly.ui.main.Mining;
 
 import java.util.ArrayList;
 
