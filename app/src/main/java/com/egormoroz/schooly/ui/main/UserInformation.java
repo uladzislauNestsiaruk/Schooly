@@ -7,12 +7,12 @@ public class UserInformation {
     private String Nick;
     private String phone;
     private String uid;
-    private int Avatar = 6;
+    private long Avatar = 6;
     private String password;
     private String gender = "Helicopter";
-    private int age = 404;
+    private long age = 404;
     private String miners="Start mining stupid dog!";
-    private int level=1;
+    private long level=1;
     public UserInformation(){
 
     }
@@ -37,9 +37,9 @@ public class UserInformation {
 
     public void setUid(String uid) {this.uid = uid; }
 
-    public int getAvatar() {return Avatar;}
+    public long getAvatar() {return Avatar;}
 
-    public void setAvatar(int Avatar){
+    public void setAvatar(long Avatar){
         this.Avatar = Avatar;
     }
 
@@ -59,11 +59,11 @@ public class UserInformation {
         this.gender = gender;
     }
 
-    public int getAge() {
+    public long getAge() {
         return age;
     }
 
-    public void setAge(int age) {
+    public void setAge(long age) {
         this.age = age;
     }
 
@@ -75,16 +75,16 @@ public class UserInformation {
         this.miners=miners;
     }
 
-    public int getLevel() {
+    public long getLevel() {
         return level;
     }
 
-    public void setLevel(int level) {
+    public void setLevel(long level) {
         this.level =level;
     }
 
-    public UserInformation(String nick, String phone, String uid, int Avatar, String password,
-                           String gender, int age,String miners,int level) {
+    public UserInformation(String nick, String phone, String uid, long Avatar, String password,
+                           String gender, long age,String miners,long level) {
         this.Nick = nick;
         this.uid = uid;
         this.phone = phone;

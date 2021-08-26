@@ -13,6 +13,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.egormoroz.schooly.Callbacks;
+import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.ui.main.UserInformation;
@@ -38,9 +40,7 @@ public class PeopleFragment extends Fragment {
     @Override
     public void onViewCreated(@Nullable View view,@NonNull Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        PeopleAdapter peopleAdapter= new PeopleAdapter(listAdapterPeople);
         peopleRecyclerView=view.findViewById(R.id.peoplerecycler);
-        peopleRecyclerView.setAdapter(peopleAdapter);
         searchUser=view.findViewById(R.id.searchuser);
         initUserEnter();
         setPeopleData();
@@ -60,7 +60,14 @@ public class PeopleFragment extends Fragment {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 String userName = String.valueOf(searchUser.getText()).trim();
-                ArrayList<UserInformation> users = RecentMethods.findUsers(userName);
+                RecentMethods.LoadUserDataByNick(new FirebaseModel(), userName,
+                        new Callbacks.PassLoadUserDataInterface() {
+                            @Override
+                            public void PassData(ArrayList<UserInformation> data) {
+                                PeopleAdapter peopleAdapter= new PeopleAdapter(data);
+                                peopleRecyclerView.setAdapter(peopleAdapter);
+                            }
+                        });
             }
 
             @Override

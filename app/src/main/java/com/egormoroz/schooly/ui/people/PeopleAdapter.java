@@ -1,6 +1,5 @@
 package com.egormoroz.schooly.ui.people;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,7 +39,7 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.ViewHolder
     public void onBindViewHolder(ViewHolder holder, int position) {
         UserInformation userInformation=listAdapterPeople.get(position);
         holder.usernickname.setText(userInformation.getNick());
-        holder.userAvatar.setImageResource(getItemViewType(userInformation.getAvatar()));
+        holder.userAvatar.setImageResource(getItemViewType((int) userInformation.getAvatar()));
     }
 
     @Override
