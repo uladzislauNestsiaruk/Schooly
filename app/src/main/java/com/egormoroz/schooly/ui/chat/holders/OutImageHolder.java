@@ -3,6 +3,7 @@ package com.egormoroz.schooly.ui.chat.holders;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.egormoroz.schooly.R;
@@ -18,6 +19,7 @@ public class OutImageHolder extends MessageHolders.IncomingTextMessageViewHolder
     private String imageUrl;
     private TextView tvTime;
     private String TAG = "Image";
+    private boolean isImageFitToScreen;
 
     public OutImageHolder(View itemView, Object payload) {
         super(itemView, payload);
@@ -27,9 +29,11 @@ public class OutImageHolder extends MessageHolders.IncomingTextMessageViewHolder
     }
     @Override
     public void onBind(Message message) {
+        super.onBind(message);
         image.setImageURI(MessageActivity.fileUri);
         tvTime.setText(DateFormatter.format(message.getCreatedAt(), DateFormatter.Template.TIME));
         Picasso.get().load(imageUrl).into(image);
         Log.d(TAG,"SEND");
     }
 }
+
