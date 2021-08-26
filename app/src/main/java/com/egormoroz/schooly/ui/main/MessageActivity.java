@@ -6,19 +6,23 @@ import static android.view.MotionEvent.ACTION_BUTTON_PRESS;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.inputmethodservice.Keyboard;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.ResultReceiver;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -154,6 +158,7 @@ public class MessageActivity extends FragmentActivity
     int id = 0;
     static SecureRandom rnd = new SecureRandom();
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -167,34 +172,36 @@ public class MessageActivity extends FragmentActivity
         avatar.setImageURI(fileUri);
         Picasso.get().load(fileUri).into(avatar);
         ImageView back = findViewById(R.id.backtoalldialogs);
-        ImageView pole = findViewById(R.id.pole);
+     //   ImageView pole = findViewById(R.id.pole);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
-        pole.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (voiceinput.equals(R.drawable.ic_voicemessage))
-                {
-                    voiceinput.setImageResource(R.drawable.ic_image);
-                    Share();
-                }
-                else
-                {
-                    voiceinput.setImageResource(R.drawable.ic_voicemessage);
-                    RecAudio();
-                }
+//        pole.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (voiceinput.equals(R.drawable.ic_voicemessage))
+//                {
+//                    voiceinput.setImageResource(R.drawable.ic_image);
+//                    Share();
+//                }
+//                else
+//                {
+//                    voiceinput.setImageResource(R.drawable.ic_voicemessage);
+//                    RecAudio();
+//                }
+//
+//            }
+//        });
 
-            }
-        });
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
         loadingBar = new ProgressDialog(this);
         TextView nickname = findViewById(R.id.mnick);
         nickname.setText("Nickname");
+        nickname.setVisibility(View.VISIBLE);
         image = findViewById(R.id.imageinput);
         voiceinput = findViewById(R.id.voiceinput);
         input = findViewById(R.id.input);
@@ -202,14 +209,14 @@ public class MessageActivity extends FragmentActivity
         delete = findViewById(R.id.action_delete);
         copy.setVisibility(View.GONE);
         delete.setVisibility(View.GONE);
-        if(input.isFocused()) {
-            voiceinput.setVisibility(View.VISIBLE);
-            image.setVisibility(View.VISIBLE);
-        }
-        else {
-            voiceinput.setVisibility(View.GONE);
-            image.setVisibility(View.GONE);
-        }
+//        if(input.isActivated()) {
+//            voiceinput.setVisibility(View.VISIBLE);
+//            image.setVisibility(View.VISIBLE);
+//        }
+//        else {
+//            voiceinput.setVisibility(View.GONE);
+//            image.setVisibility(View.GONE);
+//        }
 
         input.setInputListener(this);
         input.setTypingListener(this);
@@ -269,10 +276,9 @@ public class MessageActivity extends FragmentActivity
        image.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View v) {
-               Intent intent = new Intent();
-               intent.setAction(Intent.ACTION_GET_CONTENT);
-               intent.setType("image/*");
-               startActivityForResult(Intent.createChooser(intent, "Select Image"), 438);
+               Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+               pickIntent.setType("image/* video/*");
+               startActivityForResult(pickIntent, 438);
            }
 
        });
@@ -638,13 +644,7 @@ public class MessageActivity extends FragmentActivity
 
 
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        this.menu = menu;
-        getMenuInflater().inflate(R.menu.chat_actions_menu, menu);
-        onSelectionChanged(0);
-        return true;
-    }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

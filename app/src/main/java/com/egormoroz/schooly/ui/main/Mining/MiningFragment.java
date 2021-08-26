@@ -157,14 +157,14 @@ public class MiningFragment extends Fragment {
         reference.child("AllMiners").push().setValue(allminersarraylist.get(0));
     }
 
-    public void GetDataFromBase(){
-        RecentMethods.MinerByNick("minerPrice", firebaseModel, new Callbacks.GetMinerByMinerPrice() {
-            @Override
-            public void PassMiner(String miner) {
-                minersInBase=dataSnapshot.child("AllMiners").getValue(Miner.class);
-            }
-        });
-    }
+//    public void GetDataFromBase(){
+//        RecentMethods.MinerByNick("minerPrice", firebaseModel, new Callbacks.GetMinerByMinerPrice() {
+//            @Override
+//            public void PassMiner(String miner) {
+//                minersInBase=dataSnapshot.child("AllMiners").getValue(Miner.class);
+//            }
+//        });
+//    }
 
     public void miningMoney() {
         (new Thread(new Runnable(){

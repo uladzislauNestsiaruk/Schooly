@@ -30,6 +30,7 @@ import com.stfalcon.chatkit.commons.ImageLoader;
 import com.stfalcon.chatkit.dialogs.DialogsList;
 import com.stfalcon.chatkit.dialogs.DialogsListAdapter;
 import com.stfalcon.chatkit.messages.MessagesList;
+import com.stfalcon.chatkit.messages.MessagesListAdapter;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;
@@ -38,8 +39,8 @@ import java.util.Date;
 import java.util.Objects;
 import java.util.UUID;
 
-public class ChatFragment extends Fragment implements DialogsListAdapter.OnDialogClickListener<Dialog>,
-        DialogsListAdapter.OnDialogLongClickListener<Dialog>, sendDialogs {
+public class ChatFragment extends Fragment implements
+        sendDialogs {
     FirebaseDatabase database;
     DatabaseReference ref;
     FirebaseAuth authDatabase;
@@ -57,9 +58,6 @@ public class ChatFragment extends Fragment implements DialogsListAdapter.OnDialo
                 ((MainActivity) requireActivity()).setCurrentFragment(MainFragment.newInstance());
             }
         });
-    }
-    public void onDialogClick(Dialog dialog) {
-        open(dialog);
     }
 
     public void open(Dialog dialog) {
@@ -108,15 +106,13 @@ public class ChatFragment extends Fragment implements DialogsListAdapter.OnDialo
         dialogsAdapter.setOnDialogLongClickListener(new DialogsListAdapter.OnDialogLongClickListener<Dialog>() {
             @Override
             public void onDialogLongClick(Dialog dialog) {
+                dialogsAdapter.deleteById(dialog.getId());
                 Toast.makeText(getActivity(), dialog.getDialogName(), Toast.LENGTH_SHORT).show();
             }
         });
         dialogsList.setAdapter(dialogsAdapter);
     }
-    @Override
-    public void onDialogLongClick(Dialog dialog) {
-        //TODO:: CONTEXT MENU
-    }
+
     private  void initFirebase(){
         database  = FirebaseDatabase.getInstance(CONST.RealtimeDatabaseUrl);
         authDatabase = FirebaseAuth.getInstance();
@@ -309,4 +305,6 @@ static String TAG = "Dialogs";
     static boolean getRandomBoolean() {
         return rnd.nextBoolean();
     }
+
+
 }

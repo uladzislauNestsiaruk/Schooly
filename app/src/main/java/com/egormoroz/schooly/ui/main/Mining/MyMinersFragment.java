@@ -66,13 +66,13 @@ public class MyMinersFragment extends Fragment {
         listAdapter.add(myMiners);
     }
 
-    public void GetMinersFromBase(){
-        RecentMethods.MinerByUid(String.valueOf(firebaseModel.AuthenticationBase.getCurrentUser().getUid()),
-                firebaseModel, new Callbacks.GetMinerByUid() {
-                    @Override
-                    public void SetMinerInMyMiners(String miner) {
-                        myMiners=snapshot.child("Miners").getValue(Miner.class);
-                    }
-                });
-    }
+//    public void GetMinersFromBase(){
+//        RecentMethods.MinerByUid(String.valueOf(firebaseModel.AuthenticationBase.getCurrentUser().getUid()),
+//                firebaseModel, new Callbacks.GetMinerByUid() {
+//                    @Override
+//                    public void SetMinerInMyMiners(String miner) {
+//                        myMiners=snapshot.child("Miners").getValue(Miner.class);
+//                    }
+//                });
+//    }
 }
