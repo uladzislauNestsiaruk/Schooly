@@ -8,7 +8,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.egormoroz.schooly.ui.main.Mining.Miner;
 import com.egormoroz.schooly.ui.main.UserInformation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -26,7 +25,7 @@ public class RecentMethods {
     public static void isNickCorrect(String nickname, DatabaseReference reference, TextView errorTextnickname) {
         Log.d("########", "Method: isNickCorrect");
         Log.d("########", "Reference: " + String.valueOf(reference));
-        if(nickname.length() < 4){
+        if (nickname.length() < 4) {
             showErrorMessage(ErrorList.ERROR_NICK_IS_TO_SHORT, errorTextnickname);
             return;
         }
@@ -34,25 +33,28 @@ public class RecentMethods {
             @Override
             public void uniqueNicknameCallback(boolean isUnique) {
                 Log.d("########", "Is nick unique: " + isUnique);
-                if(!isUnique)
+                if (!isUnique)
                     showErrorMessage(ErrorList.NICK_IS_USED, errorTextnickname);
                 else
                     showErrorMessage(ErrorList.NOTHING, errorTextnickname);
             }
         });
     }
-    public static void isNickUniqueFun(String nickname, DatabaseReference ref, final Callbacks.UniqueNick callback){
+
+    public static void isNickUniqueFun(String nickname, DatabaseReference ref, final Callbacks.UniqueNick callback) {
         Query query = ref.orderByChild("nick").equalTo(nickname);
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 callback.uniqueNicknameCallback(!snapshot.exists());
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
             }
         });
     }
+
     public static void showErrorMessage(ErrorList tag, TextView errorText) {
         switch (tag) {
             case NOT_ENOUGH_SYMBOL_ERROR:
@@ -84,11 +86,13 @@ public class RecentMethods {
                 break;
         }
     }
+
     public static void setCurrentFragment(Fragment fragment, Activity activity) {
-        FragmentTransaction ft = ((FragmentActivity)activity).getSupportFragmentManager().beginTransaction();
+        FragmentTransaction ft = ((FragmentActivity) activity).getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.frame, fragment);
         ft.commit();
     }
+
     public static String makeEmail(String phone) {
         String email = "schooly";
         for (int i = 1; i < phone.length(); i++)
@@ -96,37 +100,41 @@ public class RecentMethods {
         email += "@gmail.com";
         return email;
     }
+
     public static String getPhone(String email) {
         String res = email;
         res = res.replace("schooly", "");
         res = res.replace("@gmail.com", "");
         return "+" + res;
     }
+
     public static boolean saveData(DatabaseReference ref, FirebaseUser user, String nick) {
 
         UserInformation res = new UserInformation(nick, "unknown", user.getUid(),
-                6, "unknown", "Helicopter", 1000,"Miner",1);
+                6, "unknown", "Helicopter", 1000, "Miner", 1);
         ref.child(nick).setValue(res);
         return nick.isEmpty();
     }
+
     public static void hasThisUserFun(FirebaseAuth AuthenticationBase, FirebaseUser user,
-                                      Callbacks.hasGoogleUser callback){
-        if(user == null){
+                                      Callbacks.hasGoogleUser callback) {
+        if (user == null) {
             callback.hasGoogleUserCallback(false);
             return;
         }
         String email = String.valueOf(user.getEmail());
         AuthenticationBase.fetchSignInMethodsForEmail(email).
                 addOnCompleteListener(new OnCompleteListener<SignInMethodQueryResult>() {
-            @Override
-            public void onComplete(@NonNull Task<SignInMethodQueryResult> task) {
-                boolean has = !task.getResult().getSignInMethods().isEmpty();
-                callback.hasGoogleUserCallback(has);
-            }
-        });
+                    @Override
+                    public void onComplete(@NonNull Task<SignInMethodQueryResult> task) {
+                        boolean has = !task.getResult().getSignInMethods().isEmpty();
+                        callback.hasGoogleUserCallback(has);
+                    }
+                });
     }
+
     public static void hasThisUser(FirebaseAuth AuthenticationBase, FirebaseUser user, Activity activity,
-                                   Fragment fragment, Callbacks.hasGoogleUser callback){
+                                   Fragment fragment, Callbacks.hasGoogleUser callback) {
         hasThisUserFun(AuthenticationBase, user, new Callbacks.hasGoogleUser() {
             @Override
             public void hasGoogleUserCallback(boolean hasThisUser) {
@@ -134,14 +142,16 @@ public class RecentMethods {
             }
         });
     }
-    public static ArrayList<UserInformation> findUsers(String username){
+
+    public static ArrayList<UserInformation> findUsers(String username) {
         ArrayList<UserInformation> result = new ArrayList<UserInformation>();
 
         return result;
     }
+
     public static void LoadUserDataByNickFun(FirebaseModel model,
-                                           Callbacks.LoadUserDataInterface callback,
-                                                 String nick){
+                                             Callbacks.LoadUserDataInterface callback,
+                                             String nick) {
         model.initAll();
         Query query = model.getReference("users").
                 orderByChild("nick").equalTo(nick);
@@ -151,8 +161,8 @@ public class RecentMethods {
                 ArrayList<UserInformation> data = new ArrayList<>();
                 for (DataSnapshot snapshot : snapshotParent.getChildren()) {
                     UserInformation userData = new UserInformation();
-                    //userData.setAge(snapshot.child("age").getValue(Integer.class));
-                    //userData.setAvatar(snapshot.child("avatar").getValue(Integer.class));
+                    userData.setAge(snapshot.child("age").getValue(Long.class));
+                    userData.setAvatar(snapshot.child("avatar").getValue(Long.class));
                     userData.setGender(snapshot.child("gender").getValue(String.class));
                     //////////////////userData.setMiners();
                     userData.setNick(snapshot.child("nick").getValue(String.class));
@@ -163,16 +173,18 @@ public class RecentMethods {
                 }
                 callback.LoadData(data);
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
         });
     }
+
     public static void LoadUserDataByNick(FirebaseModel model,
-                                                                String nick,
-                                                                Callbacks.PassLoadUserDataInterface passData){
-       LoadUserDataByNickFun(model, new Callbacks.LoadUserDataInterface() {
+                                          String nick,
+                                          Callbacks.PassLoadUserDataInterface passData) {
+        LoadUserDataByNickFun(model, new Callbacks.LoadUserDataInterface() {
             @Override
             public void LoadData(ArrayList<UserInformation> data) {
                 passData.PassData(data);
@@ -180,45 +192,19 @@ public class RecentMethods {
         }, nick);
     }
 
-    public static void UserNickByUid(String uid, FirebaseModel model, Callbacks.GetUserNickByUid callback){
+    public static void UserNickByUid(String uid, FirebaseModel model, Callbacks.GetUserNickByUid callback) {
         model.initAll();
         Query query = model.getUsersReference().orderByChild("uid").equalTo(uid);
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for(DataSnapshot snap : snapshot.getChildren())
+                for (DataSnapshot snap : snapshot.getChildren())
                     callback.PassUserNick(snap.child("nick").getValue(String.class));
             }
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-            }
-        });
-    }
 
-    public static void MinerByNick(String minerPrice,FirebaseModel model,Callbacks.GetMinerByMinerPrice callback){
-        model.initAll();
-        Query query=model.getUsersReference().orderByChild("minerPrice").equalTo(minerPrice);
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                callback.PassMiner(snapshot.child("Miners").getValue(String.class));
-            }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-            }
-        });
-    }
 
-    public static void MinerByUid(String uid,FirebaseModel model,Callbacks.GetMinerByUid callback){
-        model.initAll();
-        Query query=model.getUsersReference().orderByChild("uid").equalTo(uid);
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                callback.SetMinerInMyMiners(snapshot.child("Miners").getValue(String.class));
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
             }
         });
     }
