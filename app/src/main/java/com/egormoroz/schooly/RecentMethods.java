@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.egormoroz.schooly.ui.main.Mining.Miner;
 import com.egormoroz.schooly.ui.main.UserInformation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -178,7 +179,7 @@ public class RecentMethods {
             }
         }, nick);
     }
-    // suck dick
+
     public static void UserNickByUid(String uid, FirebaseModel model, Callbacks.GetUserNickByUid callback){
         model.initAll();
         Query query = model.getUsersReference().orderByChild("uid").equalTo(uid);
@@ -190,7 +191,34 @@ public class RecentMethods {
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
+    }
 
+    public static void MinerByNick(String minerPrice,FirebaseModel model,Callbacks.GetMinerByMinerPrice callback){
+        model.initAll();
+        Query query=model.getUsersReference().orderByChild("minerPrice").equalTo(minerPrice);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                callback.PassMiner(snapshot.child("Miners").getValue(String.class));
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
+    }
+
+    public static void MinerByUid(String uid,FirebaseModel model,Callbacks.GetMinerByUid callback){
+        model.initAll();
+        Query query=model.getUsersReference().orderByChild("uid").equalTo(uid);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                callback.SetMinerInMyMiners(snapshot.child("Miners").getValue(String.class));
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
             }
         });
     }
