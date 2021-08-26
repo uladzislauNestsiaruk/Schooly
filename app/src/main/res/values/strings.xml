@@ -9,6 +9,8 @@
     <string name="go2">Шаг 2</string>
     <string name="writephone">Укажи свой номер телефона</string>
     <string name="go3">Шаг 3</string>
+    <string name="copy">copy</string>
+    <string name="delete">delete</string>
     <string name="writepassword">Придумай пароль</string>
     <string name="writepasswordenter">Введи пароль</string>
     <string name="meetearly">Мы уже знакомы?</string>

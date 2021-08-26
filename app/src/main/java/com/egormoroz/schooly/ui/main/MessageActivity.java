@@ -99,6 +99,8 @@ public class MessageActivity extends FragmentActivity
     private StorageTask uoloadTask;
     private Menu menu;
     private int selectionCount;
+    ImageView delete;
+    ImageView copy;
     ImageView voiceinput;
     MessageInput input;
     ImageView image;
@@ -196,14 +198,18 @@ public class MessageActivity extends FragmentActivity
         image = findViewById(R.id.imageinput);
         voiceinput = findViewById(R.id.voiceinput);
         input = findViewById(R.id.input);
-//        if(input.isFocused()) {
-//            voiceinput.setVisibility(View.VISIBLE);
-//            image.setVisibility(View.VISIBLE);
-//        }
-//        else {
-//            voiceinput.setVisibility(View.GONE);
-//            image.setVisibility(View.GONE);
-//        }
+        copy = findViewById(R.id.action_copy);
+        delete = findViewById(R.id.action_delete);
+        copy.setVisibility(View.GONE);
+        delete.setVisibility(View.GONE);
+        if(input.isFocused()) {
+            voiceinput.setVisibility(View.VISIBLE);
+            image.setVisibility(View.VISIBLE);
+        }
+        else {
+            voiceinput.setVisibility(View.GONE);
+            image.setVisibility(View.GONE);
+        }
 
         input.setInputListener(this);
         input.setTypingListener(this);
@@ -662,11 +668,37 @@ public class MessageActivity extends FragmentActivity
         }
     }
 
+    public boolean onPrepareOptionsMenu(Menu menu) {
+
+        delete.setVisibility(View.VISIBLE);
+        copy.setVisibility(View.VISIBLE);
+
+        return true;
+    }
+
     @Override
     public void onSelectionChanged(int count) {
         this.selectionCount = count;
-        menu.findItem(R.id.action_delete).setVisible(count > 0);
-        menu.findItem(R.id.action_copy).setVisible(count > 0);
+        if (count > 0){
+        delete.setVisibility(View.VISIBLE);
+        delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                messagesAdapter.deleteSelectedMessages();
+            }
+        });
+        copy.setVisibility(View.VISIBLE);
+        copy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               Log.d(TAG, "TAp");
+            }
+        });}
+        else
+        {
+            delete.setVisibility(View.GONE);
+            copy.setVisibility(View.GONE);
+        }
     }
 
 }
