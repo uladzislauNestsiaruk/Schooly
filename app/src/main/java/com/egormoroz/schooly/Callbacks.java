@@ -20,4 +20,14 @@ public class Callbacks {
     public interface PassLoadUserDataInterface{
         void PassData(ArrayList<UserInformation> data);
     }
+    public interface GetUserNickByUid{
+        void PassUserNick(String nick);
+    }
+    public interface GetMinerByMinerPrice{
+        void PassMiner(String miner);
+    }
+
+    public interface GetMinerByUid{
+        void SetMinerInMyMiners(String miner);
+    }
 }

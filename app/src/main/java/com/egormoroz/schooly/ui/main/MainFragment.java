@@ -10,13 +10,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.MainActivity;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
+import com.egormoroz.schooly.ui.main.Mining.MiningFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.stfalcon.chatkit.commons.ImageLoader;
 import com.stfalcon.chatkit.commons.models.IDialog;
@@ -30,6 +30,7 @@ public class MainFragment extends Fragment{
     private MainViewModel mainViewModel;
     private FirebaseModel firebaseModel = new FirebaseModel();
     private UserInformation userData = new UserInformation();
+
     public static MainFragment newInstance() {
         return new MainFragment();
     }
@@ -48,11 +49,6 @@ public class MainFragment extends Fragment{
             }
         });
         return root;
-    }
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        mainViewModel = new ViewModelProvider(this).get(MainViewModel.class);
     }
     @Override
     public void onViewCreated(@Nullable View view,@NonNull Bundle savedInstanceState){
@@ -85,7 +81,7 @@ public class MainFragment extends Fragment{
         mining.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((MainActivity)getActivity()).setCurrentFragment(MiningFragment.newInstanse());
+                RecentMethods.setCurrentFragment(MiningFragment.newInstanse(), getActivity());
             }
         });
     }

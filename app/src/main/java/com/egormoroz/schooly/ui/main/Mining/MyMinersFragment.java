@@ -1,6 +1,5 @@
-package com.egormoroz.schooly.ui.main;
+package com.egormoroz.schooly.ui.main.Mining;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,24 +11,28 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.egormoroz.schooly.Callbacks;
+import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.MainActivity;
 import com.egormoroz.schooly.R;
-import com.egormoroz.schooly.ui.chat.Message;
+import com.egormoroz.schooly.RecentMethods;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.database.DataSnapshot;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class MyMinersFragment extends Fragment {
 
     private String TAG;
     ArrayList<Miner> listAdapter=new ArrayList<Miner>();
     public static MyMinersFragment newInstanse(){return new MyMinersFragment();}
+    private FirebaseModel firebaseModel = new FirebaseModel();
     RecyclerView recyclerviewMining;
     TextView useMiner;
+    Miner myMiners;
+    DataSnapshot snapshot;
 
 
     @Override
@@ -60,6 +63,16 @@ public class MyMinersFragment extends Fragment {
     }
 
     public void setData(){
-        listAdapter.add(new Miner(120,1333,50));
+        listAdapter.add(myMiners);
+    }
+
+    public void GetMinersFromBase(){
+        RecentMethods.MinerByUid(String.valueOf(firebaseModel.AuthenticationBase.getCurrentUser().getUid()),
+                firebaseModel, new Callbacks.GetMinerByUid() {
+                    @Override
+                    public void SetMinerInMyMiners(String miner) {
+                        myMiners=snapshot.child("Miners").getValue(Miner.class);
+                    }
+                });
     }
 }
