@@ -1,5 +1,8 @@
 package com.egormoroz.schooly.ui.main;
 
+import static android.app.PendingIntent.getActivity;
+import static android.view.MotionEvent.ACTION_BUTTON_PRESS;
+
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
@@ -12,6 +15,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -22,6 +27,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
 
 import com.egormoroz.schooly.CONST;
@@ -91,6 +97,11 @@ public class MessageActivity extends FragmentActivity
     private int duration;
     private String checker = "", myURL = "";
     private StorageTask uoloadTask;
+    private Menu menu;
+    private int selectionCount;
+    ImageView voiceinput;
+    MessageInput input;
+    ImageView image;
     FirebaseStorage storage;
     StorageReference storageReference;
 
@@ -102,12 +113,6 @@ public class MessageActivity extends FragmentActivity
                 break;
         }
         if (!permissionToRecordAccepted ) finish();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        messagesAdapter.addToStart(getTextMessage(), true);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -148,18 +153,39 @@ public class MessageActivity extends FragmentActivity
     static SecureRandom rnd = new SecureRandom();
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_default_messages);
         ActivityCompat.requestPermissions(this, permissions, REQUEST_RECORD_AUDIO_PERMISSION);
         this.messagesList = findViewById(R.id.messagesList);
         initAdapter();
-        imageLoader = (imageView, url, payload) -> Picasso.get().load(url).into(imageView);
+        ImageView avatar = findViewById(R.id.avatar);
+        fileUri = Uri.parse(getRandomAvatar());
+        avatar.setImageURI(fileUri);
+        Picasso.get().load(fileUri).into(avatar);
         ImageView back = findViewById(R.id.backtoalldialogs);
+        ImageView pole = findViewById(R.id.pole);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
+            }
+        });
+        pole.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (voiceinput.equals(R.drawable.ic_voicemessage))
+                {
+                    voiceinput.setImageResource(R.drawable.ic_image);
+                    Share();
+                }
+                else
+                {
+                    voiceinput.setImageResource(R.drawable.ic_voicemessage);
+                    RecAudio();
+                }
+
             }
         });
         storage = FirebaseStorage.getInstance();
@@ -167,7 +193,18 @@ public class MessageActivity extends FragmentActivity
         loadingBar = new ProgressDialog(this);
         TextView nickname = findViewById(R.id.mnick);
         nickname.setText("Nickname");
-        MessageInput input = findViewById(R.id.input);
+        image = findViewById(R.id.imageinput);
+        voiceinput = findViewById(R.id.voiceinput);
+        input = findViewById(R.id.input);
+//        if(input.isFocused()) {
+//            voiceinput.setVisibility(View.VISIBLE);
+//            image.setVisibility(View.VISIBLE);
+//        }
+//        else {
+//            voiceinput.setVisibility(View.GONE);
+//            image.setVisibility(View.GONE);
+//        }
+
         input.setInputListener(this);
         input.setTypingListener(this);
         getCurrentChatId();
@@ -175,6 +212,8 @@ public class MessageActivity extends FragmentActivity
         RecAudio();
         Share();
     }
+
+
 
     public int getDuration(String mUri) {
         int duration;
@@ -186,10 +225,8 @@ public class MessageActivity extends FragmentActivity
         return duration;
     }
 
-
     @SuppressLint("ClickableViewAccessibility")
     public void RecAudio(){
-        ImageView voiceinput = findViewById(R.id.voiceinput);
         voiceinput.setOnTouchListener(new View.OnTouchListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
@@ -223,7 +260,6 @@ public class MessageActivity extends FragmentActivity
     }
 
     public void Share() {
-       ImageView image = findViewById(R.id.imameinput);
        image.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View v) {
@@ -242,19 +278,15 @@ public class MessageActivity extends FragmentActivity
 
         if (requestCode == 438 && resultCode == RESULT_OK && data != null && data.getData() != null)
         {
-            loadingBar.setTitle("Send image");
-            loadingBar.setMessage("Updating...");
-            loadingBar.setCanceledOnTouchOutside(false);
-            loadingBar.show();
-
-
             fileUri = data.getData();
                 Log.d(TAG,"Loading");
                 imageLoader = (imageView, url, payload) -> Picasso.get().load(fileUri).into(imageView);
                 fileName = fileUri.toString();
-                uploadImage();
-                messagesAdapter.addToStart(getImageMessage(), true);
-                loadingBar.dismiss();
+            messagesAdapter.addToStart(getImageMessage(), true);
+
+               uploadImage();
+
+
         }
     }
 
@@ -265,11 +297,17 @@ public class MessageActivity extends FragmentActivity
                     && message.getVoice().getUrl() != null
                     && !message.getVoice().getUrl().isEmpty();
         }
+        if (type == CONTENT_TYPE_IMAGE) {
+            return message.getImageUrl() != null
+                    && !message.getImageUrl().isEmpty();
+        }
         return false;
     }
 
     private void initAdapter() {
+        imageLoader = (imageView, url, payload) -> Picasso.get().load(url).into(imageView);
         MessageHolders holders = new MessageHolders()
+
                 .registerContentType(
                         CONTENT_TYPE_VOICE,
                         IncomingVoiceMessageViewHolder.class,
@@ -277,13 +315,13 @@ public class MessageActivity extends FragmentActivity
                         OutcomingVoiceMessageViewHolder.class,
                         R.layout.outcoming_voice,
                          this)
-          .registerContentType(
-                CONTENT_TYPE_IMAGE,
-                InImageHolder.class,
-                R.layout.in_image,
-                OutImageHolder.class,
-                R.layout.out_image,
-                this);
+                .registerContentType(
+                        CONTENT_TYPE_IMAGE,
+                        InImageHolder.class,
+                        R.layout.in_image,
+                        OutImageHolder.class,
+                        R.layout.out_image,
+                        this);
 
         messagesAdapter = new MessagesListAdapter<>(senderId, holders, imageLoader);
         messagesAdapter.enableSelectionMode(this);
@@ -302,10 +340,6 @@ public class MessageActivity extends FragmentActivity
         Log.v("Typing listener", getString(R.string.stop_typing_status));
     }
 
-    @Override
-    public void onSelectionChanged(int count) {
-
-    }
 
     public void getCurrentChatId(){
         Intent dialogIntent = getIntent();
@@ -314,7 +348,7 @@ public class MessageActivity extends FragmentActivity
 
 
     public void sendId(DatabaseReference ref){
-//        database.getReference(ref);
+  //      database.getReference(String.valueOf(ref));
     }
 
 
@@ -410,13 +444,6 @@ public class MessageActivity extends FragmentActivity
         return avatars.get(rnd.nextInt(avatars.size()));
     }
 
-    static String getRandomGroupChatImage() {
-        return groupChatImages.get(rnd.nextInt(groupChatImages.size()));
-    }
-
-    static String getRandomGroupChatTitle() {
-        return groupChatTitles.get(rnd.nextInt(groupChatTitles.size()));
-    }
 
     static String getRandomName() {
         return names.get(rnd.nextInt(names.size()));
@@ -430,9 +457,6 @@ public class MessageActivity extends FragmentActivity
         return images.get(rnd.nextInt(images.size()));
     }
 
-    static boolean getRandomBoolean() {
-        return rnd.nextBoolean();
-    }
 
 
 
@@ -471,10 +495,7 @@ public class MessageActivity extends FragmentActivity
         };
     }
 
-//    private MessagesFixtures(DatabaseReference ref) {
-//        messagesRef = ref.child("messages");
-//        throw new AssertionError();
-//    }
+
     private static void uploadMessage(DatabaseReference ref, Message message){
         ref.push().setValue(message);
     }
@@ -552,13 +573,11 @@ public class MessageActivity extends FragmentActivity
                     = storageReference.child(
                             "images/"
                                     + UUID.randomUUID().toString());
-
             // adding listeners on upload
             // or failure of image
             ref.putFile(fileUri)
                     .addOnSuccessListener(
                             new OnSuccessListener<UploadTask.TaskSnapshot>() {
-
                                 @Override
                                 public void onSuccess(
                                         UploadTask.TaskSnapshot taskSnapshot)
@@ -579,7 +598,6 @@ public class MessageActivity extends FragmentActivity
                         @Override
                         public void onFailure(@NonNull Exception e)
                         {
-
                             // Error, Image not uploaded
                             progressDialog.dismiss();
                             Toast
@@ -608,6 +626,47 @@ public class MessageActivity extends FragmentActivity
                                 }
                             });
         }
+    }
+
+
+
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        this.menu = menu;
+        getMenuInflater().inflate(R.menu.chat_actions_menu, menu);
+        onSelectionChanged(0);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_delete:
+                messagesAdapter.deleteSelectedMessages();
+                break;
+            case R.id.action_copy:
+                messagesAdapter.copySelectedMessagesText(this, getMessageStringFormatter(), true);
+                break;
+        }
+        return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (selectionCount == 0) {
+            super.onBackPressed();
+        } else {
+            messagesAdapter.unselectAllItems();
+        }
+    }
+
+    @Override
+    public void onSelectionChanged(int count) {
+        this.selectionCount = count;
+        menu.findItem(R.id.action_delete).setVisible(count > 0);
+        menu.findItem(R.id.action_copy).setVisible(count > 0);
     }
 
 }

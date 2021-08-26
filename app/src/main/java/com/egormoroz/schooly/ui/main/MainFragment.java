@@ -48,13 +48,6 @@ public class MainFragment extends Fragment{
 
             }
         });
-        /*RecentMethods.UserNickByUid(String.valueOf(firebaseModel.AuthenticationBase.getCurrentUser().getUid()),
-                firebaseModel, new Callbacks.GetUserNickByUid() {
-                    @Override
-                    public void PassUserNick(String nick) {
-                        Log.d("#######", "current user: " + nick);
-                    }
-                });*/
         return root;
     }
     @Override

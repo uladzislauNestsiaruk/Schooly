@@ -38,9 +38,6 @@ public class MyMinersAdapter extends RecyclerView.Adapter<MyMinersAdapter.ViewHo
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Miner miner=listAdapter.get(position);
-        holder.recycleviewImageView.setImageResource
-                (getItemViewType(miner.getMinerImage()));
-        holder.inHour.setText(String.valueOf(miner.getInHour()));
     }
 
     @Override

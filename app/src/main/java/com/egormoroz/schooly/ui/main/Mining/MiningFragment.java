@@ -1,5 +1,6 @@
 package com.egormoroz.schooly.ui.main.Mining;
 
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,6 +17,8 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.egormoroz.schooly.CONST;
+import com.egormoroz.schooly.Callbacks;
+import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.MainActivity;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.R;
@@ -49,25 +52,26 @@ public class MiningFragment extends Fragment {
 
     ArrayList<Miner> listAdapterMiner = new ArrayList<Miner>();
     ArrayList<Miner> allminersarraylist = new ArrayList<Miner>();
+    private FirebaseModel firebaseModel = new FirebaseModel();
     FirebaseAuth authenticationDatabase;
     FirebaseDatabase database;
     final String databaseUrl = CONST.RealtimeDatabaseUrl;
-    DatabaseReference reference;
+    DatabaseReference reference,ref;
+    String nick;
     int money = 100;
     int moneyaftermaining = 0;
     int prise = 50;
     private View imageworkingminers;
     ImageView viewminer;
-    TextView minerprise, schoolycoin, myminers, upgrade, todaymining, morecoins;
+    TextView minerprise, schoolycoin, myminers, upgrade, todaymining, morecoins,buy;
     RelativeLayout noactiveminers;
     FirebaseAuth AuthenticationBase;
     RecyclerView minersrecyclerview,allminersrecyclerview;
     int minerMoney;
-    Miner minerr;
+    Miner minersInBase;
+    DataSnapshot dataSnapshot;
     private static final String TAG = "###########";
-
     Miner adapterData=new Miner(120, 120, 50);
-
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -76,6 +80,13 @@ public class MiningFragment extends Fragment {
         BottomNavigationView bnv = getActivity().findViewById(R.id.bottomNavigationView);
         bnv.setVisibility(bnv.GONE);
         initFirebase();
+        buy=root.findViewById(R.id.buy);
+//        buy.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                buyMiner();
+//            }
+//        });
         return root;
     }
     @Override
@@ -103,15 +114,20 @@ public class MiningFragment extends Fragment {
         allminersrecyclerview.setAdapter(allMinersAdapter);
         viewminer = view.findViewById(R.id.viewmining);
         minerprise = view.findViewById(R.id.minerprise);
-        minerprise.setText(minerr.getMinerPrice());
+//        minerprise.setText(minerr.getMinerPrice());
         schoolycoin = view.findViewById(R.id.schoolycoin);
         schoolycoin.setText(String.valueOf(money));
         upgrade = view.findViewById(R.id.upgrade);
         todaymining = view.findViewById(R.id.todaymining);
+        buy=view.findViewById(R.id.buy);
         morecoins = view.findViewById(R.id.morecoins);
-        AllMiners();
+        morecoins.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                buyMiner();
+            }
+        });
         SendDataInBase();
-        reference.addValueEventListener(postListener);
         setMinersData();
         miningMoney();
     }
@@ -120,6 +136,7 @@ public class MiningFragment extends Fragment {
         AuthenticationBase = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance(databaseUrl);
         reference = database.getReference("AppData");
+        ref = database.getReference("users");
     }
 
     public void AllMiners() {
@@ -132,24 +149,22 @@ public class MiningFragment extends Fragment {
     }
 
     public void setMinersData(){
-        listAdapterMiner.add(minerr);
+        listAdapterMiner.add(minersInBase);
     }
 
     public void SendDataInBase(){
         if(allminersarraylist!=null&&allminersarraylist.size()>=1)
-        reference.child("AppData").child("Miners").push().setValue(allminersarraylist.get(0));
+        reference.child("AllMiners").push().setValue(allminersarraylist.get(0));
     }
 
-    ValueEventListener postListener = new ValueEventListener() {
-        @Override
-        public void onDataChange(DataSnapshot dataSnapshot) {
-            minerr=dataSnapshot.child("AppData").child("Miner").getValue(Miner.class);
-        }
-
-        @Override
-        public void onCancelled(@NonNull DatabaseError error) {
-            Log.d(TAG,"LOL");
-        }};
+    public void GetDataFromBase(){
+        RecentMethods.MinerByNick("minerPrice", firebaseModel, new Callbacks.GetMinerByMinerPrice() {
+            @Override
+            public void PassMiner(String miner) {
+                minersInBase=dataSnapshot.child("AllMiners").getValue(Miner.class);
+            }
+        });
+    }
 
     public void miningMoney() {
         (new Thread(new Runnable(){
@@ -173,5 +188,20 @@ public class MiningFragment extends Fragment {
                     }
             }
         })).start();
+    }
+
+    public void buyMiner(){
+        buy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RecentMethods.UserNickByUid(String.valueOf(firebaseModel.AuthenticationBase.getCurrentUser().getUid()),
+                        firebaseModel, new Callbacks.GetUserNickByUid() {
+                            @Override
+                            public void PassUserNick(String nick) {
+                                ref.child(nick).child("Miners").push().setValue(minersInBase);
+                            }
+                        });
+            }
+        });
     }
 }
