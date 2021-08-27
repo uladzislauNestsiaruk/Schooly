@@ -27,13 +27,14 @@ public class OutImageHolder extends MessageHolders.IncomingTextMessageViewHolder
         image = itemView.findViewById(R.id.image_viewer);
         imageUrl = MessageActivity.fileName;
     }
+
     @Override
     public void onBind(Message message) {
         super.onBind(message);
         image.setImageURI(MessageActivity.fileUri);
         tvTime.setText(DateFormatter.format(message.getCreatedAt(), DateFormatter.Template.TIME));
         Picasso.get().load(imageUrl).into(image);
-        Log.d(TAG,"SEND");
+
     }
 }
 

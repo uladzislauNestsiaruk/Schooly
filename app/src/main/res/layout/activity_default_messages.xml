@@ -7,27 +7,32 @@
 
     <com.stfalcon.chatkit.messages.MessagesList
         android:id="@+id/messagesList"
+        style="@style/TextInput"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/input"
+        android:layout_marginBottom="8dp"
         app:incomingAvatarHeight="56dp"
-        app:incomingAvatarWidth="56dp"
-        style="@style/TextInput"
-        android:layout_marginBottom="8dp"/>
+        app:incomingAvatarWidth="56dp" />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/app_color">
 
-        <TextView
-            android:id="@+id/mnick"
+        <ImageView
+            android:id="@+id/action_delete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="110dp"
-            android:textColor="@color/white"
-            android:fontFamily="@font/montserrat_bold" />
+            android:layout_marginStart="350dp"
+            android:src="@drawable/ic_send" />
+
+        <ImageView
+            android:id="@+id/action_copy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="300dp"
+            android:src="@drawable/ic_chat" />
 
         <ImageView
             android:id="@+id/backtoalldialogs"
@@ -46,6 +51,14 @@
             android:layout_marginStart="16dp"
             android:layout_toRightOf="@id/backtoalldialogs"
             android:background="@drawable/corners14" />
+
+        <TextView
+            android:id="@+id/mnick"
+            android:layout_width="34dp"
+            android:layout_height="2dp"
+            android:layout_marginStart="110dp"
+            android:fontFamily="@font/montserrat_bold"
+            android:textColor="@color/white" />
     </RelativeLayout>
 
 
@@ -67,37 +80,30 @@
         app:showAttachmentButton="false">
 
         <ImageView
-            android:id="@+id/imageinput"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:layout_marginEnd="80dp"
-            android:src="@drawable/ic_image" />
-
-        <ImageView
             android:id="@+id/pole"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:src="@drawable/ic_chat" />
+
+
+        <ImageView
+            android:id="@+id/imageinput"
+            android:layout_width="36dp"
+            android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:layout_marginEnd="122dp"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="90dp"
             android:src="@drawable/ic_image" />
 
         <ImageView
             android:id="@+id/voiceinput"
-            android:layout_width="wrap_content"
+            android:layout_width="36dp"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:layout_marginEnd="50dp"
+            android:layout_marginEnd="44dp"
             android:src="@drawable/ic_voicemessage" />
     </com.stfalcon.chatkit.messages.MessageInput>
 
-    <LinearLayout
-        android:id="@+id/myfragment"
-        android:layout_width="0px"
-        android:layout_height="match_parent"
-        android:layout_weight="3"
-        android:orientation="horizontal" />
 
 </RelativeLayout>
