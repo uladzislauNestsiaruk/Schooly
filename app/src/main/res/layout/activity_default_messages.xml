@@ -80,22 +80,28 @@
         app:showAttachmentButton="false">
 
         <ImageView
-            android:id="@+id/imageinput"
+            android:id="@+id/pole"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:layout_marginEnd="80dp"
-            android:src="@drawable/ic_image" />
+            android:src="@drawable/ic_chat" />
 
 
         <ImageView
-            android:id="@+id/voiceinput"
-            android:layout_width="wrap_content"
+            android:id="@+id/imageinput"
+            android:layout_width="36dp"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:layout_marginEnd="50dp"
+            android:layout_marginEnd="90dp"
+            android:src="@drawable/ic_image" />
+
+        <ImageView
+            android:id="@+id/voiceinput"
+            android:layout_width="36dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="44dp"
             android:src="@drawable/ic_voicemessage" />
     </com.stfalcon.chatkit.messages.MessageInput>
 

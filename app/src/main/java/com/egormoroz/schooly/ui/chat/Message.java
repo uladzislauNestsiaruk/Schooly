@@ -20,6 +20,7 @@ public class Message implements IMessage,
     private User user;
     private Image image;
     private Voice voice;
+    private Video video;
 
     public Message(){
 
@@ -66,6 +67,9 @@ public class Message implements IMessage,
         this.createdAt = createdAt;
     }
 
+    public void setVideo(Video video) {
+        this.video = video;
+    }
     public void setImage(Image image) {
         this.image = image;
     }
@@ -88,7 +92,20 @@ public class Message implements IMessage,
             this.url = url;
         }
     }
+    public static class Video {
 
+        private String url;
+
+        public Video() {
+
+        }
+        public String getUrl(){
+            return url;
+        }
+        public Video(String url) {
+            this.url = url;
+        }
+    }
     public static class Voice {
 
         private String url;

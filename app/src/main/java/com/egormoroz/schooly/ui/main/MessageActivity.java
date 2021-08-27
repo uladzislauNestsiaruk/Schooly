@@ -9,6 +9,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.inputmethodservice.Keyboard;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaRecorder;
@@ -17,6 +18,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -39,8 +41,10 @@ import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.ui.chat.Message;
 import com.egormoroz.schooly.ui.chat.User;
 import com.egormoroz.schooly.ui.chat.holders.InImageHolder;
+import com.egormoroz.schooly.ui.chat.holders.InVidHold;
 import com.egormoroz.schooly.ui.chat.holders.IncomingVoiceMessageViewHolder;
 import com.egormoroz.schooly.ui.chat.holders.OutImageHolder;
+import com.egormoroz.schooly.ui.chat.holders.OutVidHold;
 import com.egormoroz.schooly.ui.chat.holders.OutcomingVoiceMessageViewHolder;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -89,6 +93,7 @@ public class MessageActivity extends FragmentActivity
     private DatabaseReference ref;
     private static final byte CONTENT_TYPE_VOICE = 1;
     private static final byte CONTENT_TYPE_IMAGE = 2;
+    private static final byte CONTENT_TYPE_VIDEO = 3;
     private static final int REQUEST_RECORD_AUDIO_PERMISSION = 200;
     private MessagesList messagesList;
     private boolean permissionToRecordAccepted = false;
@@ -103,6 +108,7 @@ public class MessageActivity extends FragmentActivity
     private StorageTask uoloadTask;
     private Menu menu;
     private int selectionCount;
+    boolean check = true;
     ImageView delete;
     ImageView copy;
     ImageView voiceinput;
@@ -172,7 +178,8 @@ public class MessageActivity extends FragmentActivity
         avatar.setImageURI(fileUri);
         Picasso.get().load(fileUri).into(avatar);
         ImageView back = findViewById(R.id.backtoalldialogs);
-     //   ImageView pole = findViewById(R.id.pole);
+        ImageView pole = findViewById(R.id.pole);
+        pole.setVisibility(View.GONE);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -182,20 +189,22 @@ public class MessageActivity extends FragmentActivity
 //        pole.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
-//                if (voiceinput.equals(R.drawable.ic_voicemessage))
+//                if (check)
 //                {
 //                    voiceinput.setImageResource(R.drawable.ic_image);
 //                    Share();
+//                    check = false;
 //                }
 //                else
 //                {
 //                    voiceinput.setImageResource(R.drawable.ic_voicemessage);
 //                    RecAudio();
+//                    check = true;
 //                }
 //
 //            }
 //        });
-
+        InputMethodManager mInputMethodManager  = (InputMethodManager)getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
         loadingBar = new ProgressDialog(this);
@@ -209,7 +218,10 @@ public class MessageActivity extends FragmentActivity
         delete = findViewById(R.id.action_delete);
         copy.setVisibility(View.GONE);
         delete.setVisibility(View.GONE);
-//        if(input.isActivated()) {
+      //  image.setVisibility(View.GONE);
+
+//        if(mInputMethodManager != null && mInputMethodManager.isActive() &&
+//                mInputMethodManager.isAcceptingText()) {
 //            voiceinput.setVisibility(View.VISIBLE);
 //            image.setVisibility(View.VISIBLE);
 //        }
@@ -240,28 +252,32 @@ public class MessageActivity extends FragmentActivity
 
     @SuppressLint("ClickableViewAccessibility")
     public void RecAudio(){
-        voiceinput.setOnTouchListener(new View.OnTouchListener() {
-            @RequiresApi(api = Build.VERSION_CODES.O)
-            @Override
-            public boolean onTouch(View view, MotionEvent event) {
-                switch (event.getAction() & MotionEvent.ACTION_MASK) {
 
-                    case MotionEvent.ACTION_DOWN:
-                        view.setPressed(true);
-                        id += 1;
-                        startRecording();
-                        Log.d(TAG, "Recording started");
-                        break;
+            voiceinput.setOnTouchListener(new View.OnTouchListener() {
 
-                    case MotionEvent.ACTION_UP:
-                        view.setPressed(false);
-                        stopRecording();
-                        Log.d(TAG, "Recording stop" + duration);
-                        break;
+                @RequiresApi(api = Build.VERSION_CODES.O)
+                @Override
+
+                public boolean onTouch(View view, MotionEvent event) {
+                    switch (event.getAction() & MotionEvent.ACTION_MASK) {
+
+                        case MotionEvent.ACTION_DOWN:
+                            view.setPressed(true);
+                            id += 1;
+                            startRecording();
+                            Log.d(TAG, "Recording started");
+                            break;
+
+                        case MotionEvent.ACTION_UP:
+                            view.setPressed(false);
+                            stopRecording();
+                            Log.d(TAG, "Recording stop" + duration);
+                            break;
+                    }
+                    return true;
                 }
-                return true;
-            }
-        });
+            });
+
     }
 
 
@@ -287,21 +303,38 @@ public class MessageActivity extends FragmentActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if( data != null) {
+            Uri selectedUri = data.getData();
+            String[] columns = { MediaStore.Images.Media.DATA,
+                    MediaStore.Images.Media.MIME_TYPE };
 
-        if (requestCode == 438 && resultCode == RESULT_OK && data != null && data.getData() != null)
-        {
-            fileUri = data.getData();
+            Cursor cursor = getContentResolver().query(selectedUri, columns, null, null, null);
+            cursor.moveToFirst();
+
+            int pathColumnIndex     = cursor.getColumnIndex( columns[0] );
+            int mimeTypeColumnIndex = cursor.getColumnIndex( columns[1] );
+
+            String contentPath = cursor.getString(pathColumnIndex);
+            String mimeType    = cursor.getString(mimeTypeColumnIndex);
+            cursor.close();
+
+            if(mimeType.startsWith("image")) {
+                fileUri = data.getData();
                 Log.d(TAG,"Loading");
                 imageLoader = (imageView, url, payload) -> Picasso.get().load(fileUri).into(imageView);
                 fileName = fileUri.toString();
             messagesAdapter.addToStart(getImageMessage(), true);
-
-               uploadImage();
-
-
+            }
+            else if(mimeType.startsWith("video")) {
+                fileUri = data.getData();
+                Log.d(TAG,"Loading");
+                imageLoader = (videoView, url, payload) -> Picasso.get().load(fileUri).into(videoView);
+                fileName = fileUri.toString();
+                messagesAdapter.addToStart(getVideoMessage(), true);
+            }
         }
     }
-
+//TODO: Video duration = 2 min
     @Override
     public boolean hasContentFor(Message message, byte type) {
         if (type == CONTENT_TYPE_VOICE) {
@@ -313,13 +346,23 @@ public class MessageActivity extends FragmentActivity
             return message.getImageUrl() != null
                     && !message.getImageUrl().isEmpty();
         }
+        if (type == CONTENT_TYPE_VIDEO) {
+            return message.getImageUrl() != null
+                    && !message.getImageUrl().isEmpty();
+        }
         return false;
     }
 
     private void initAdapter() {
         imageLoader = (imageView, url, payload) -> Picasso.get().load(url).into(imageView);
         MessageHolders holders = new MessageHolders()
-
+                .registerContentType(
+                        CONTENT_TYPE_VIDEO,
+                        InVidHold.class,
+                        R.layout.in_vid,
+                        OutVidHold.class,
+                        R.layout.out_vid,
+                        this)
                 .registerContentType(
                         CONTENT_TYPE_VOICE,
                         IncomingVoiceMessageViewHolder.class,
@@ -461,13 +504,6 @@ public class MessageActivity extends FragmentActivity
         return names.get(rnd.nextInt(names.size()));
     }
 
-    static String getRandomMessage() {
-        return messages.get(rnd.nextInt(messages.size()));
-    }
-
-    static String getRandomImage() {
-        return images.get(rnd.nextInt(images.size()));
-    }
 
 
 
@@ -514,6 +550,11 @@ public class MessageActivity extends FragmentActivity
     private static void uploadMessages(DatabaseReference ref, ArrayList<Message> messages){
         for(Message message : messages)
             uploadMessage(ref, message);
+    }
+    public static  Message getVideoMessage(){
+        Message message = new Message(getRandomId(), getUser(), null);
+        message.setVideo(new Message.Video(fileName));
+        return message;
     }
     public static Message getImageMessage() {
         Message message = new Message(getRandomId(), getUser(), null);

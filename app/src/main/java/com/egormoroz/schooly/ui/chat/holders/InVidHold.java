@@ -3,11 +3,10 @@ package com.egormoroz.schooly.ui.chat.holders;
 import android.media.MediaPlayer;
 import android.util.Log;
 import android.view.View;
-import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.ToggleButton;
+import android.widget.VideoView;
 
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.ui.chat.Message;
@@ -16,30 +15,32 @@ import com.squareup.picasso.Picasso;
 import com.stfalcon.chatkit.messages.MessageHolders;
 import com.stfalcon.chatkit.utils.DateFormatter;
 
-import java.io.IOException;
 
-public class InImageHolder
-        extends MessageHolders.IncomingTextMessageViewHolder<Message> {
+public class InVidHold extends MessageHolders.IncomingTextMessageViewHolder<Message> {
 
-    private ImageView image;
-    private String imageUrl;
+    private MediaPlayer player = null;
+    private ImageButton play;
+    private TextView tvDuration;
     private TextView tvTime;
+    private String TAG = "TAP";
+    private VideoView video;
+    private String Url;
+    private boolean start = true;
 
-
-
-    public InImageHolder(View itemView, Object payload) {
+    public InVidHold(View itemView, Object payload) {
         super(itemView, payload);
+        tvDuration = itemView.findViewById(R.id.durationVoice);
         tvTime = itemView.findViewById(R.id.time);
-        image = itemView.findViewById(R.id.image_viewer);
-        imageUrl = MessageActivity.fileName;
+        play = itemView.findViewById(R.id.play);
+        video = itemView.findViewById(R.id.video_viewer);
+        Url = MessageActivity.fileName;
     }
-
     @Override
     public void onBind(Message message) {
         super.onBind(message);
-        image.setImageURI(MessageActivity.fileUri);
         tvTime.setText(DateFormatter.format(message.getCreatedAt(), DateFormatter.Template.TIME));
-        Picasso.get().load(imageUrl).into(image);
 
+        video.setVideoPath(Url);
+        Log.d(TAG,"SEND");
     }
 }
