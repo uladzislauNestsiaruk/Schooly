@@ -30,4 +30,7 @@ public class Callbacks {
     public interface GetMinerByUid{
         void SetMinerInMyMiners(String miner);
     }
+    public interface HasUid{
+        void HasUidCallback(boolean HasUid);
+    }
 }

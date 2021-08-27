@@ -252,7 +252,7 @@ public class RegFragment extends Fragment {
             public void onClick(View view) {
                 GoogleEnter.setEnabled(false);
                 RecentMethods.hasThisUser(AuthenticationBase, AuthenticationBase.getCurrentUser(),
-                        getActivity(), RegFragment.newInstance(), new Callbacks.hasGoogleUser() {
+                        new Callbacks.hasGoogleUser() {
                             @Override
                             public void hasGoogleUserCallback(boolean hasThisUser) {
                                 if(hasThisUser)

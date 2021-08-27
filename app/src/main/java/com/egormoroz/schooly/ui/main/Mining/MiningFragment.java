@@ -1,8 +1,6 @@
 package com.egormoroz.schooly.ui.main.Mining;
 
-import android.nfc.Tag;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,36 +10,22 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.ComponentActivity;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.egormoroz.schooly.CONST;
 import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FirebaseModel;
-import com.egormoroz.schooly.MainActivity;
-import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.R;
+import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.ui.main.MainFragment;
-import com.egormoroz.schooly.ui.main.Mining.Miner;
-import com.egormoroz.schooly.ui.main.Mining.MiningAdapter;
-import com.egormoroz.schooly.ui.main.Mining.MyMinersFragment;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
-
 
 import java.util.ArrayList;
-import java.util.concurrent.Executor;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 
 public class MiningFragment extends Fragment {
@@ -157,14 +141,14 @@ public class MiningFragment extends Fragment {
         reference.child("AllMiners").push().setValue(allminersarraylist.get(0));
     }
 
-    public void GetDataFromBase(){
+   /* public void GetDataFromBase(){
         RecentMethods.MinerByNick("minerPrice", firebaseModel, new Callbacks.GetMinerByMinerPrice() {
             @Override
             public void PassMiner(String miner) {
                 minersInBase=dataSnapshot.child("AllMiners").getValue(Miner.class);
             }
         });
-    }
+    }*/
 
     public void miningMoney() {
         (new Thread(new Runnable(){

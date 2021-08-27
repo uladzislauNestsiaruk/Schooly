@@ -18,6 +18,7 @@ import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.ui.main.UserInformation;
+import com.egormoroz.schooly.ui.profile.ProfileFragment;
 
 import java.util.ArrayList;
 
@@ -65,6 +66,16 @@ public class PeopleFragment extends Fragment {
                             @Override
                             public void PassData(ArrayList<UserInformation> data) {
                                 PeopleAdapter peopleAdapter= new PeopleAdapter(data);
+                                PeopleAdapter.ItemClickListener clickListener =
+                                        new PeopleAdapter.ItemClickListener() {
+                                            @Override
+                                            public void onItemClick(View view, int position) {
+                                                UserInformation user = peopleAdapter.getItem(position);
+                                                RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", user),
+                                                        getActivity());
+                                            }
+                                        };
+                                peopleAdapter.setClickListener(clickListener);
                                 peopleRecyclerView.setAdapter(peopleAdapter);
                             }
                         });

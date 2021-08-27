@@ -1,5 +1,6 @@
 package com.egormoroz.schooly.ui.people;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,6 +41,12 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.ViewHolder
         UserInformation userInformation=listAdapterPeople.get(position);
         holder.usernickname.setText(userInformation.getNick());
         holder.userAvatar.setImageResource(getItemViewType((int) userInformation.getAvatar()));
+        holder.usernickname.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (clickListener != null) clickListener.onItemClick(view, position);
+            }
+        });
     }
 
     @Override
@@ -47,7 +54,7 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.ViewHolder
         return listAdapterPeople.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class ViewHolder extends RecyclerView.ViewHolder{
         final TextView usernickname,userLevel;
         ImageView userAvatar;
         ViewHolder(View itemView) {
@@ -55,11 +62,6 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.ViewHolder
             usernickname=itemView.findViewById(R.id.usernickname);
             userLevel=itemView.findViewById(R.id.userlevel);
             userAvatar=itemView.findViewById(R.id.useravatar);
-        }
-
-        @Override
-        public void onClick(View view) {
-            if (clickListener != null) clickListener.onItemClick(view, getAdapterPosition());
         }
     }
 

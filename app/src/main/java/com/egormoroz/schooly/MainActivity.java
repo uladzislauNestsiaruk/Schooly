@@ -16,11 +16,13 @@ import com.egormoroz.schooly.ui.chat.Dialog;
 import com.egormoroz.schooly.ui.main.ChatFragment;
 import com.egormoroz.schooly.ui.main.MainFragment;
 import com.egormoroz.schooly.ui.main.RegisrtationstartFragment;
+import com.egormoroz.schooly.ui.main.UserInformation;
 import com.egormoroz.schooly.ui.news.NewsFragment;
 import com.egormoroz.schooly.ui.people.PeopleFragment;
 import com.egormoroz.schooly.ui.profile.ProfileFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -39,12 +41,7 @@ public class MainActivity extends AppCompatActivity implements
         CoordinatorLayout fragmentContainer = findViewById(R.id.fragment_container);
         initFirebase();
         ///////////Authorization block
-
-        ///////////
-        if(IsEntered())
-            setCurrentFragment(MainFragment.newInstance());
-        else
-            RegistrationOrEnter();
+        IsEntered();
         ///////////
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -71,7 +68,7 @@ public class MainActivity extends AppCompatActivity implements
 //                        appBarLayout.setVisibility(View.VISIBLE);
                         return true;
                     case R.id.bottom_nav_profile:
-                        setCurrentFragment(ProfileFragment.newInstance());
+                        setCurrentFragment(ProfileFragment.newInstance("user", new UserInformation()));
 //                        appBarLayout.setVisibility(View.GONE);
                         CoordinatorLayout.LayoutParams coordinatorLayoutParams = (CoordinatorLayout.LayoutParams) fragmentContainer.getLayoutParams();
                         coordinatorLayoutParams.setBehavior(null);
@@ -97,8 +94,20 @@ public class MainActivity extends AppCompatActivity implements
     void RegistrationOrEnter(){
         setCurrentFragment(RegisrtationstartFragment.newInstance());
     }
-    boolean IsEntered(){
-        return AuthenticationBase.getCurrentUser() != null;
+    void IsEntered(){
+        FirebaseUser user = AuthenticationBase.getCurrentUser();
+        RecentMethods.hasThisUser(AuthenticationBase, user,
+                new Callbacks.hasGoogleUser() {
+                    @Override
+                    public void hasGoogleUserCallback(boolean hasThisUser) {
+                        if(hasThisUser) {
+                            Log.d("########", "current user: " + user.getEmail());
+                            setCurrentFragment(MainFragment.newInstance());
+                        }
+                        else
+                            RegistrationOrEnter();
+                    }
+                });
     }
     @Override
     public void setDialogs(ArrayList<Dialog> dialogs) {

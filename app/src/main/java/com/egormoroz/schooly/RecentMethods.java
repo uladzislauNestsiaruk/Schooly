@@ -40,7 +40,6 @@ public class RecentMethods {
             }
         });
     }
-
     public static void isNickUniqueFun(String nickname, DatabaseReference ref, final Callbacks.UniqueNick callback) {
         Query query = ref.orderByChild("nick").equalTo(nickname);
         query.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -54,7 +53,6 @@ public class RecentMethods {
             }
         });
     }
-
     public static void showErrorMessage(ErrorList tag, TextView errorText) {
         switch (tag) {
             case NOT_ENOUGH_SYMBOL_ERROR:
@@ -86,13 +84,11 @@ public class RecentMethods {
                 break;
         }
     }
-
     public static void setCurrentFragment(Fragment fragment, Activity activity) {
         FragmentTransaction ft = ((FragmentActivity) activity).getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.frame, fragment);
         ft.commit();
     }
-
     public static String makeEmail(String phone) {
         String email = "schooly";
         for (int i = 1; i < phone.length(); i++)
@@ -100,14 +96,12 @@ public class RecentMethods {
         email += "@gmail.com";
         return email;
     }
-
     public static String getPhone(String email) {
         String res = email;
         res = res.replace("schooly", "");
         res = res.replace("@gmail.com", "");
         return "+" + res;
     }
-
     public static boolean saveData(DatabaseReference ref, FirebaseUser user, String nick) {
 
         UserInformation res = new UserInformation(nick, "unknown", user.getUid(),
@@ -115,7 +109,6 @@ public class RecentMethods {
         ref.child(nick).setValue(res);
         return nick.isEmpty();
     }
-
     public static void hasThisUserFun(FirebaseAuth AuthenticationBase, FirebaseUser user,
                                       Callbacks.hasGoogleUser callback) {
         if (user == null) {
@@ -132,9 +125,8 @@ public class RecentMethods {
                     }
                 });
     }
-
-    public static void hasThisUser(FirebaseAuth AuthenticationBase, FirebaseUser user, Activity activity,
-                                   Fragment fragment, Callbacks.hasGoogleUser callback) {
+    public static void hasThisUser(FirebaseAuth AuthenticationBase, FirebaseUser user,
+                                    Callbacks.hasGoogleUser callback) {
         hasThisUserFun(AuthenticationBase, user, new Callbacks.hasGoogleUser() {
             @Override
             public void hasGoogleUserCallback(boolean hasThisUser) {
@@ -142,13 +134,11 @@ public class RecentMethods {
             }
         });
     }
-
     public static ArrayList<UserInformation> findUsers(String username) {
         ArrayList<UserInformation> result = new ArrayList<UserInformation>();
 
         return result;
     }
-
     public static void LoadUserDataByNickFun(FirebaseModel model,
                                              Callbacks.LoadUserDataInterface callback,
                                              String nick) {
@@ -180,7 +170,6 @@ public class RecentMethods {
             }
         });
     }
-
     public static void LoadUserDataByNick(FirebaseModel model,
                                           String nick,
                                           Callbacks.PassLoadUserDataInterface passData) {
@@ -191,7 +180,6 @@ public class RecentMethods {
             }
         }, nick);
     }
-
     public static void UserNickByUid(String uid, FirebaseModel model, Callbacks.GetUserNickByUid callback) {
         model.initAll();
         Query query = model.getUsersReference().orderByChild("uid").equalTo(uid);
@@ -208,5 +196,20 @@ public class RecentMethods {
             }
         });
     }
+    public static void hasUid(String uid, FirebaseModel model, Callbacks.HasUid callback){
+        model.initAll();
+        Query query = model.getReference("users")
+                .orderByChild("uid").equalTo(uid);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                callback.HasUidCallback(snapshot.exists());
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
 }

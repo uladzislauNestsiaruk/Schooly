@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment;
 
 import com.egormoroz.schooly.MainActivity;
 import com.egormoroz.schooly.R;
+import com.egormoroz.schooly.ui.main.UserInformation;
 import com.egormoroz.schooly.ui.profile.settingscomponents.AboutusFragment;
 import com.egormoroz.schooly.ui.profile.settingscomponents.NontificationsFragment;
 import com.egormoroz.schooly.ui.profile.settingscomponents.PersonaldataFragment;
@@ -85,7 +86,8 @@ public class SettingsFragment extends Fragment {
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((MainActivity)getActivity()).setCurrentFragment(ProfileFragment.newInstance());
+                ((MainActivity)getActivity()).setCurrentFragment(ProfileFragment.newInstance("user",
+                        new UserInformation()));
             }
         });
 

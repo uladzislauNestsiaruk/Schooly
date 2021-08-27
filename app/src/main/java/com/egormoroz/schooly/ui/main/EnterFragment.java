@@ -16,6 +16,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.egormoroz.schooly.CONST;
+import com.egormoroz.schooly.Callbacks;
+import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -79,25 +81,33 @@ public class EnterFragment extends Fragment {
         }
     }
     private void firebaseAuthWithGoogle(String idToken) {
-        AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
-        AuthenticationBase.signInWithCredential(credential)
-                .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "signInWithCredential:success");
-                            FirebaseUser user = AuthenticationBase.getCurrentUser();
-                            DatabaseReference ref = FirebaseDatabase.getInstance(CONST.RealtimeDatabaseUrl).
-                                    getReference("users");
-                            RecentMethods.setCurrentFragment(MainFragment.newInstance(), getActivity());
-                        } else {
-                            GoogleEnter.setEnabled(true);
-                            // If sign in fails, display a message to the user.
-                            Log.w(TAG, "signInWithCredential:failure", task.getException());
-                        }
-                    }
-                });
+        RecentMethods.hasUid(idToken, new FirebaseModel(), new Callbacks.HasUid() {
+            @Override
+            public void HasUidCallback(boolean HasUid) {
+                if(!HasUid)
+                    RecentMethods.setCurrentFragment(RegFragment.newInstance(), getActivity());
+                else{
+                    AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
+                    AuthenticationBase.signInWithCredential(credential)
+                            .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                    if (task.isSuccessful()) {
+                                        // Sign in success, update UI with the signed-in user's information
+                                        Log.d(TAG, "signInWithCredential:success");
+                                        FirebaseUser user = AuthenticationBase.getCurrentUser();
+                                        DatabaseReference ref = FirebaseDatabase.getInstance(CONST.RealtimeDatabaseUrl).
+                                                getReference("users");
+                                    } else {
+                                        GoogleEnter.setEnabled(true);
+                                        // If sign in fails, display a message to the user.
+                                        Log.w(TAG, "signInWithCredential:failure", task.getException());
+                                    }
+                                }
+                            });
+                }
+            }
+        });
     }
     @Override
     public void onViewCreated(@Nullable View view,@NonNull Bundle savedInstanceState) {

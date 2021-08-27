@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,11 +14,7 @@ import androidx.fragment.app.Fragment;
 import com.egormoroz.schooly.CONST;
 import com.egormoroz.schooly.MainActivity;
 import com.egormoroz.schooly.R;
-import com.egormoroz.schooly.ui.profile.settingscomponents.AboutusFragment;
-import com.egormoroz.schooly.ui.profile.settingscomponents.NontificationsFragment;
-import com.egormoroz.schooly.ui.profile.settingscomponents.PersonaldataFragment;
-import com.egormoroz.schooly.ui.profile.settingscomponents.PrivacypolicyFragment;
-import com.egormoroz.schooly.ui.profile.settingscomponents.SupportFragment;
+import com.egormoroz.schooly.ui.main.UserInformation;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -68,7 +63,8 @@ public class EditingFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-                ((MainActivity)getActivity()).setCurrentFragment(ProfileFragment.newInstance());
+                ((MainActivity)getActivity()).setCurrentFragment(ProfileFragment.newInstance("user",
+                        new UserInformation()));
             }
         });
     }

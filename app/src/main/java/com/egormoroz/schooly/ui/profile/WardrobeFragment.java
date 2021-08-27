@@ -12,8 +12,7 @@ import androidx.fragment.app.Fragment;
 
 import com.egormoroz.schooly.MainActivity;
 import com.egormoroz.schooly.R;
-import com.egormoroz.schooly.ui.profile.settingscomponents.PrivacypolicyFragment;
-import com.google.android.material.appbar.AppBarLayout;
+import com.egormoroz.schooly.ui.main.UserInformation;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class WardrobeFragment extends Fragment {
@@ -40,7 +39,8 @@ public class WardrobeFragment extends Fragment {
         backfromwardrobe.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((MainActivity)getActivity()).setCurrentFragment(ProfileFragment.newInstance());
+                ((MainActivity)getActivity()).setCurrentFragment(ProfileFragment.newInstance("user",
+                        new UserInformation()));
             }
         });
     }

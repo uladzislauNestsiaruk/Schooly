@@ -13,11 +13,9 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.MainActivity;
 import com.egormoroz.schooly.R;
-import com.egormoroz.schooly.RecentMethods;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.database.DataSnapshot;
 
@@ -66,7 +64,7 @@ public class MyMinersFragment extends Fragment {
         listAdapter.add(myMiners);
     }
 
-    public void GetMinersFromBase(){
+    /*public void GetMinersFromBase(){
         RecentMethods.MinerByUid(String.valueOf(firebaseModel.AuthenticationBase.getCurrentUser().getUid()),
                 firebaseModel, new Callbacks.GetMinerByUid() {
                     @Override
@@ -74,5 +72,5 @@ public class MyMinersFragment extends Fragment {
                         myMiners=snapshot.child("Miners").getValue(Miner.class);
                     }
                 });
-    }
+    }*/
 }

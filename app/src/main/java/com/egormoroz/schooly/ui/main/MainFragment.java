@@ -11,7 +11,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.MainActivity;
 import com.egormoroz.schooly.R;
@@ -21,8 +20,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.stfalcon.chatkit.commons.ImageLoader;
 import com.stfalcon.chatkit.commons.models.IDialog;
 import com.stfalcon.chatkit.dialogs.DialogsListAdapter;
-
-import java.util.ArrayList;
 
 public class MainFragment extends Fragment{
     protected DialogsListAdapter<IDialog> dialogsAdapter;
@@ -42,12 +39,6 @@ public class MainFragment extends Fragment{
 //        abl.setVisibility(abl.GONE);
         BottomNavigationView bnv = getActivity().findViewById(R.id.bottomNavigationView);
         bnv.setVisibility(View.VISIBLE);
-        RecentMethods.LoadUserDataByNick(firebaseModel, "vladcpp", new Callbacks.PassLoadUserDataInterface() {
-            @Override
-            public void PassData(ArrayList<UserInformation> data) {
-
-            }
-        });
         return root;
     }
     @Override
