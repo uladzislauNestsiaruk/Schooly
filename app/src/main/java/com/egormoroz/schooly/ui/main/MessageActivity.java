@@ -104,11 +104,8 @@ public class MessageActivity extends FragmentActivity
     private FirebaseAuth AuthenticationDatabase;
     private FirebaseDatabase database;
     private int duration;
-    private String checker = "", myURL = "";
     private StorageTask uoloadTask;
-    private Menu menu;
     private int selectionCount;
-    boolean check = true;
     ImageView delete;
     ImageView copy;
     ImageView voiceinput;
@@ -209,7 +206,7 @@ public class MessageActivity extends FragmentActivity
         storageReference = storage.getReference();
         loadingBar = new ProgressDialog(this);
         TextView nickname = findViewById(R.id.mnick);
-        nickname.setText("Nickname");
+        nickname.setText(getRandomName());
         nickname.setVisibility(View.VISIBLE);
         image = findViewById(R.id.imageinput);
         voiceinput = findViewById(R.id.voiceinput);
@@ -262,14 +259,12 @@ public class MessageActivity extends FragmentActivity
                     switch (event.getAction() & MotionEvent.ACTION_MASK) {
 
                         case MotionEvent.ACTION_DOWN:
-                            view.setPressed(true);
                             id += 1;
                             startRecording();
                             Log.d(TAG, "Recording started");
                             break;
 
                         case MotionEvent.ACTION_UP:
-                            view.setPressed(false);
                             stopRecording();
                             Log.d(TAG, "Recording stop" + duration);
                             break;
@@ -324,6 +319,7 @@ public class MessageActivity extends FragmentActivity
                 imageLoader = (imageView, url, payload) -> Picasso.get().load(fileUri).into(imageView);
                 fileName = fileUri.toString();
             messagesAdapter.addToStart(getImageMessage(), true);
+            uploadImage();
             }
             else if(mimeType.startsWith("video")) {
                 fileUri = data.getData();
@@ -416,6 +412,7 @@ public class MessageActivity extends FragmentActivity
         ref = getParentReference(dialogId, ref);
         Log.d(TAG, dialogId +  " -> reference: " + ref.toString());
         sendId(ref) ;
+
     }
 
 
@@ -436,21 +433,7 @@ public class MessageActivity extends FragmentActivity
         }
     };
 
-    static final ArrayList<String> groupChatImages = new ArrayList<String>() {
-        {
-            add("http://i.imgur.com/hRShCT3.png");
-            add("http://i.imgur.com/zgTUcL3.png");
-            add("http://i.imgur.com/mRqh5w1.png");
-        }
-    };
 
-    static final ArrayList<String> groupChatTitles = new ArrayList<String>() {
-        {
-            add("Samuel, Michelle");
-            add("Jordan, Jordan, Zoe");
-            add("Julia, Angel, Kyle, Jordan");
-        }
-    };
 
     static final ArrayList<String> names = new ArrayList<String>() {
         {
@@ -468,28 +451,7 @@ public class MessageActivity extends FragmentActivity
         }
     };
 
-    static final ArrayList<String> messages = new ArrayList<String>() {
-        {
-            add("Hello!");
-            add("This is my phone number - +1 (234) 567-89-01");
-            add("Here is my e-mail - myemail@example.com");
-            add("Hey! Check out this awesome link! www.github.com");
-            add("Hello! No problem. I can today at 2 pm. And after we can go to the office.");
-            add("At first, for some time, I was not able to answer him one word");
-            add("At length one of them called out in a clear, polite, smooth dialect, not unlike in sound to the Italian");
-            add("By the bye, Bob, said Hopkins");
-            add("He made his passenger captain of one, with four of the men; and himself, his mate, and five more, went in the other; and they contrived their business very well, for they came up to the ship about midnight.");
-            add("So saying he unbuckled his baldric with the bugle");
-            add("Just then her head struck against the roof of the hall: in fact she was now more than nine feet high, and she at once took up the little golden key and hurried off to the garden door.");
-        }
-    };
 
-    static final ArrayList<String> images = new ArrayList<String>() {
-        {
-            add("https://habrastorage.org/getpro/habr/post_images/e4b/067/b17/e4b067b17a3e414083f7420351db272b.jpg");
-            add("https://cdn.pixabay.com/photo/2017/12/25/17/48/waters-3038803_1280.jpg");
-        }
-    };
 
     public static String getRandomId() {
         return Long.toString(UUID.randomUUID().getLeastSignificantBits());
@@ -543,7 +505,6 @@ public class MessageActivity extends FragmentActivity
         };
     }
 
-
     private static void uploadMessage(DatabaseReference ref, Message message){
         ref.push().setValue(message);
     }
@@ -561,14 +522,13 @@ public class MessageActivity extends FragmentActivity
         message.setImage(new Message.Image(fileName));
         return message;}
 
-    //useful//
 
     public static Message getVoiceMessage(String FileName, int Duration) {
         Message message = new Message(getRandomId(), getUser(), null);
         message.setVoice(new Message.Voice(FileName, Duration));
         return message;
     }
-    //////////
+
     public static Message getTextMessage() {
         return getTextMessage(getRandomName());
     }
@@ -616,10 +576,10 @@ public class MessageActivity extends FragmentActivity
         if (fileUri != null) {
 
             // Code for showing progressDialog while uploading
-            ProgressDialog progressDialog
-                    = new ProgressDialog(this);
-            progressDialog.setTitle("Uploading...");
-            progressDialog.show();
+//            ProgressDialog progressDialog
+//                    = new ProgressDialog(this);
+//            progressDialog.setTitle("Uploading...");
+//            progressDialog.show();
 
             // Defining the child of storageReference
             StorageReference ref
@@ -638,46 +598,16 @@ public class MessageActivity extends FragmentActivity
 
                                     // Image uploaded successfully
                                     // Dismiss dialog
-                                    progressDialog.dismiss();
+                                  //  progressDialog.dismiss();
                                     Toast
                                             .makeText(MessageActivity.this,
                                                     "Image Uploaded!!",
                                                     Toast.LENGTH_SHORT)
                                             .show();
                                 }
-                            })
-
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e)
-                        {
-                            // Error, Image not uploaded
-                            progressDialog.dismiss();
-                            Toast
-                                    .makeText(MessageActivity.this,
-                                            "Failed " + e.getMessage(),
-                                            Toast.LENGTH_SHORT)
-                                    .show();
-                        }
-                    })
-                    .addOnProgressListener(
-                            new OnProgressListener<UploadTask.TaskSnapshot>() {
-
-                                // Progress Listener for loading
-                                // percentage on the dialog box
-                                @Override
-                                public void onProgress(
-                                        UploadTask.TaskSnapshot taskSnapshot)
-                                {
-                                    double progress
-                                            = (100.0
-                                            * taskSnapshot.getBytesTransferred()
-                                            / taskSnapshot.getTotalByteCount());
-                                    progressDialog.setMessage(
-                                            "Uploaded "
-                                                    + (int)progress + "%");
-                                }
                             });
+
+
         }
     }
 
