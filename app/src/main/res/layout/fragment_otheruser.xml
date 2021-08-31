@@ -59,6 +59,7 @@
                 android:paddingBottom="8dp"
                 android:textColor="@color/white"
                 android:textSize="14sp"
+                android:id="@+id/message"
                 android:fontFamily="@font/montserrat_extrabold"
                 android:background="@drawable/corners8shopmain"
                 android:text="@string/mes"/>

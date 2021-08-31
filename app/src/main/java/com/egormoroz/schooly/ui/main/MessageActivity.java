@@ -1,23 +1,21 @@
 package com.egormoroz.schooly.ui.main;
 
 import static android.app.PendingIntent.getActivity;
-import static android.view.MotionEvent.ACTION_BUTTON_PRESS;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.inputmethodservice.Keyboard;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.ResultReceiver;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
@@ -33,10 +31,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
 
 import com.egormoroz.schooly.CONST;
+import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.ui.chat.Message;
 import com.egormoroz.schooly.ui.chat.User;
@@ -46,14 +44,14 @@ import com.egormoroz.schooly.ui.chat.holders.IncomingVoiceMessageViewHolder;
 import com.egormoroz.schooly.ui.chat.holders.OutImageHolder;
 import com.egormoroz.schooly.ui.chat.holders.OutVidHold;
 import com.egormoroz.schooly.ui.chat.holders.OutcomingVoiceMessageViewHolder;
-import com.google.android.gms.tasks.OnFailureListener;
+import com.egormoroz.schooly.ui.profile.OnDataPass;
+import com.egormoroz.schooly.ui.profile.ProfileFragment;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
@@ -74,12 +72,13 @@ import java.util.Locale;
 import java.util.UUID;
 
 
-public class MessageActivity extends FragmentActivity
+public class MessageActivity extends Activity
         implements MessageInput.InputListener,
         MessagesListAdapter.SelectionListener,
         MessagesListAdapter.OnLoadMoreListener,
         MessageHolders.ContentChecker<Message>,
-        MessageInput.TypingListener{
+        MessageInput.TypingListener,
+        OnDataPass {
 
     public static Uri fileUri;
     private ProgressDialog loadingBar;
@@ -106,6 +105,8 @@ public class MessageActivity extends FragmentActivity
     private int duration;
     private StorageTask uoloadTask;
     private int selectionCount;
+    private String nick ;
+    FirebaseModel firebaseModel = new FirebaseModel();
     ImageView delete;
     ImageView copy;
     ImageView voiceinput;
@@ -171,9 +172,10 @@ public class MessageActivity extends FragmentActivity
         this.messagesList = findViewById(R.id.messagesList);
         initAdapter();
         ImageView avatar = findViewById(R.id.avatar);
-        fileUri = Uri.parse(getRandomAvatar());
-        avatar.setImageURI(fileUri);
+        fileName = getRandomAvatar();
+        fileUri = Uri.parse(fileName);
         Picasso.get().load(fileUri).into(avatar);
+        avatar.setImageURI(fileUri);
         ImageView back = findViewById(R.id.backtoalldialogs);
         ImageView pole = findViewById(R.id.pole);
         pole.setVisibility(View.GONE);
@@ -206,7 +208,13 @@ public class MessageActivity extends FragmentActivity
         storageReference = storage.getReference();
         loadingBar = new ProgressDialog(this);
         TextView nickname = findViewById(R.id.mnick);
-        nickname.setText(getRandomName());
+    //    nickname.setText(getRandomName());
+    //    if (ProfileFragment.nickother != null)
+        Bundle arguments = getIntent().getExtras();
+        if(arguments!=null){
+           nick = arguments.getString("nick");
+           nickname.setText(nick);
+        }
         nickname.setVisibility(View.VISIBLE);
         image = findViewById(R.id.imageinput);
         voiceinput = findViewById(R.id.voiceinput);
@@ -230,13 +238,18 @@ public class MessageActivity extends FragmentActivity
         input.setInputListener(this);
         input.setTypingListener(this);
         getCurrentChatId();
-        initFirebase();
+       // initFirebase();
         RecAudio();
         Share();
     }
 
 
 
+    public void onDataPass(String data) {
+        Log.d("LOG","привет, я строка из фрагмента: " + data);
+        TextView nickname = findViewById(R.id.mnick);
+        nickname.setText(data);
+    }
     public int getDuration(String mUri) {
         int duration;
         MediaMetadataRetriever mmr = new MediaMetadataRetriever();
