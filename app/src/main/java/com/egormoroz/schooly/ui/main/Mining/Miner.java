@@ -3,37 +3,39 @@ package com.egormoroz.schooly.ui.main.Mining;
 import java.util.ArrayList;
 
 public class Miner {
-    private int inHour;
-    private int minerImage;
-    private int minerPrice;
+    private long inHour=1;
+    private long minerImage=1;
+    private long minerPrice=1;
 
-    public Miner(int inHour, int minerImage, int minerPrice){
+    public Miner(long inHour, long minerImage, long minerPrice){
         this.inHour=inHour;
         this.minerImage=minerImage;
         this.minerPrice=minerPrice;
     }
+    public Miner(){
+    }
 
-    public int getInHour(){
+    public long getInHour(){
         return this.inHour;
     }
 
-    public void setInHour(int inHour){
+    public void setInHour(long inHour){
         this.inHour=inHour;
     }
 
-    public int getMinerImage(){
+    public long getMinerImage(){
         return this.minerImage;
     }
 
-    public void setMinerImage(int minerImage){
+    public void setMinerImage(long minerImage){
         this.minerImage=minerImage;
     }
 
-    public int getMinerPrice(){
+    public long getMinerPrice(){
         return this.minerPrice;
     }
 
-    public void setMinerPrice(int minerPrice){
+    public void setMinerPrice(long minerPrice){
         this.minerPrice=minerPrice;
     }
 }

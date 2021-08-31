@@ -1,6 +1,7 @@
 package com.egormoroz.schooly.ui.main.Mining;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,15 +48,14 @@ public class MiningFragment extends Fragment {
     int prise = 50;
     private View imageworkingminers;
     ImageView viewminer;
-    TextView minerprise, schoolycoin, myminers, upgrade, todaymining, morecoins,buy;
+    TextView minerprice, schoolycoin, myminers, upgrade, todaymining, morecoins,buy;
     RelativeLayout noactiveminers;
     FirebaseAuth AuthenticationBase;
     RecyclerView minersrecyclerview,allminersrecyclerview;
     int minerMoney;
-    Miner minersInBase;
+    ArrayList<Miner> minersInBase=new ArrayList<>();
     DataSnapshot dataSnapshot;
     private static final String TAG = "###########";
-    Miner adapterData=new Miner(120, 120, 50);
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -63,8 +63,6 @@ public class MiningFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_mining, container, false);
         BottomNavigationView bnv = getActivity().findViewById(R.id.bottomNavigationView);
         bnv.setVisibility(bnv.GONE);
-        initFirebase();
-        buy=root.findViewById(R.id.buy);
 //        buy.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
@@ -93,12 +91,8 @@ public class MiningFragment extends Fragment {
         minersrecyclerview = view.findViewById(R.id.minersrecyclerview);
         MiningAdapter miningAdapter = new MiningAdapter(listAdapterMiner);
         minersrecyclerview.setAdapter(miningAdapter);
-        allminersrecyclerview=view.findViewById(R.id.allminersrecyclerview);
-        AllMinersAdapter allMinersAdapter=new AllMinersAdapter(listAdapterMiner);
-        allminersrecyclerview.setAdapter(allMinersAdapter);
         viewminer = view.findViewById(R.id.viewmining);
-        minerprise = view.findViewById(R.id.minerprise);
-//        minerprise.setText(minerr.getMinerPrice());
+        minerprice = view.findViewById(R.id.minerprice);
         schoolycoin = view.findViewById(R.id.schoolycoin);
         schoolycoin.setText(String.valueOf(money));
         upgrade = view.findViewById(R.id.upgrade);
@@ -111,44 +105,24 @@ public class MiningFragment extends Fragment {
                 buyMiner();
             }
         });
-        SendDataInBase();
-        setMinersData();
+        GetDataFromBase();
+        allminersrecyclerview=view.findViewById(R.id.allminersrecyclerview);
         miningMoney();
     }
 
-    public void initFirebase() {
-        AuthenticationBase = FirebaseAuth.getInstance();
-        database = FirebaseDatabase.getInstance(databaseUrl);
-        reference = database.getReference("AppData");
-        ref = database.getReference("users");
-    }
 
-    public void AllMiners() {
-        allminersarraylist.add(new Miner(5, 0, 130));
-        allminersarraylist.add(new Miner(7, 0, 145));
-//        listAdapterMiner.add(new Miner(7, 0,135));
-//        listAdapterMiner.add(new Miner(9, 0,150));
-//        listAdapterMiner.add(new Miner(11, 0,175));
-//        listAdapterMiner.add(new Miner(15, 0,200));
-    }
-
-    public void setMinersData(){
-        listAdapterMiner.add(minersInBase);
-    }
-
-    public void SendDataInBase(){
-        if(allminersarraylist!=null&&allminersarraylist.size()>=1)
-        reference.child("AllMiners").push().setValue(allminersarraylist.get(0));
-    }
-
-   /* public void GetDataFromBase(){
-        RecentMethods.MinerByNick("minerPrice", firebaseModel, new Callbacks.GetMinerByMinerPrice() {
+    public void GetDataFromBase(){
+        RecentMethods.AllminersFromBase(firebaseModel, new Callbacks.GetMinerFromBase() {
             @Override
-            public void PassMiner(String miner) {
-                minersInBase=dataSnapshot.child("AllMiners").getValue(Miner.class);
+            public void GetMinerFromBase(ArrayList<Miner> minersFromBase) {
+                listAdapterMiner.addAll(minersFromBase);
+                AllMinersAdapter allMinersAdapter=new AllMinersAdapter(listAdapterMiner);
+                allminersrecyclerview.setAdapter(allMinersAdapter);
+                allminersrecyclerview.addItemDecoration(new AllMinersAdapter.SpaceItemDecoration());
+                Miner first=listAdapterMiner.get(0);
             }
         });
-    }*/
+    }
 
     public void miningMoney() {
         (new Thread(new Runnable(){

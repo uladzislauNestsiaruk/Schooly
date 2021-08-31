@@ -1,6 +1,8 @@
 package com.egormoroz.schooly;
 
+import com.egormoroz.schooly.ui.main.Mining.Miner;
 import com.egormoroz.schooly.ui.main.UserInformation;
+import com.google.firebase.database.DataSnapshot;
 
 import java.util.ArrayList;
 
@@ -23,8 +25,8 @@ public class Callbacks {
     public interface GetUserNickByUid{
         void PassUserNick(String nick);
     }
-    public interface GetMinerByMinerPrice{
-        void PassMiner(String miner);
+    public interface GetMinerFromBase{
+        void GetMinerFromBase(ArrayList<Miner> minersFromBase);
     }
 
     public interface GetMinerByUid{

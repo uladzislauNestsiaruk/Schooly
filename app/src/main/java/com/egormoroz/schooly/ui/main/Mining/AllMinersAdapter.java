@@ -1,5 +1,8 @@
 package com.egormoroz.schooly.ui.main.Mining;
 
+import android.graphics.Rect;
+import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 public class AllMinersAdapter extends RecyclerView.Adapter<AllMinersAdapter.ViewHolder> {
 
-    List<Miner> listAdapterMiner;
+    ArrayList<Miner> listAdapterMiner;
     private ItemClickListener clickListener;
 
     public  AllMinersAdapter(ArrayList<Miner> listAdapter) {
@@ -37,7 +40,7 @@ public class AllMinersAdapter extends RecyclerView.Adapter<AllMinersAdapter.View
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Miner miner=listAdapterMiner.get(position);
-//        holder.minerPrise.setText(String.valueOf(miner.getMinerPrice()));
+        holder.minerPrice.setText(String.valueOf(miner.getMinerPrice()));
     }
 
     @Override
@@ -46,10 +49,10 @@ public class AllMinersAdapter extends RecyclerView.Adapter<AllMinersAdapter.View
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        final TextView minerPrise;
+        final TextView minerPrice;
         ViewHolder(View itemView) {
             super(itemView);
-            minerPrise=itemView.findViewById(R.id.minerprise);
+            minerPrice=itemView.findViewById(R.id.minerprice);
         }
 
         @Override
@@ -68,5 +71,18 @@ public class AllMinersAdapter extends RecyclerView.Adapter<AllMinersAdapter.View
 
     public interface ItemClickListener {
         void onItemClick(View view, int position);
+    }
+
+    static class SpaceItemDecoration extends RecyclerView.ItemDecoration {
+
+        @Override
+        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+            int margin = 24;
+            int space = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, margin, view.getResources().getDisplayMetrics());
+            if(parent.getChildAdapterPosition(view) == 0){
+                outRect.left = space;
+                outRect.bottom = 0;
+            }
+        }
     }
 }

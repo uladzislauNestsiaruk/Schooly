@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.egormoroz.schooly.ui.main.Mining.Miner;
 import com.egormoroz.schooly.ui.main.UserInformation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -196,6 +197,30 @@ public class RecentMethods {
             }
         });
     }
+
+    public static void AllminersFromBase(FirebaseModel model, Callbacks.GetMinerFromBase callback) {
+        model.initAll();
+        Query query = model.getReference("AppData");
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                ArrayList<Miner> minersFromBase=new ArrayList<>();
+                for (DataSnapshot snap : snapshot.child("AllMiners").getChildren()) {
+                    Miner miner = new Miner();
+                    miner.setInHour(snap.child("inHour").getValue(Long.class));
+                    miner.setMinerPrice(snap.child("minerPrice").getValue(Long.class));
+                    miner.setMinerImage(snap.child("minerImage").getValue(Long.class));
+                    minersFromBase.add(miner);
+                }
+                callback.GetMinerFromBase(minersFromBase);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
     public static void hasUid(String uid, FirebaseModel model, Callbacks.HasUid callback){
         model.initAll();
         Query query = model.getReference("users")
