@@ -1,7 +1,5 @@
 package com.egormoroz.schooly.ui.main;
 
-import static android.app.PendingIntent.getActivity;
-
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -31,7 +29,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.FragmentActivity;
 
 import com.egormoroz.schooly.CONST;
 import com.egormoroz.schooly.FirebaseModel;
@@ -45,7 +42,6 @@ import com.egormoroz.schooly.ui.chat.holders.OutImageHolder;
 import com.egormoroz.schooly.ui.chat.holders.OutVidHold;
 import com.egormoroz.schooly.ui.chat.holders.OutcomingVoiceMessageViewHolder;
 import com.egormoroz.schooly.ui.profile.OnDataPass;
-import com.egormoroz.schooly.ui.profile.ProfileFragment;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
@@ -162,7 +158,6 @@ public class MessageActivity extends Activity
     int id = 0;
     static SecureRandom rnd = new SecureRandom();
 
-    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -223,22 +218,9 @@ public class MessageActivity extends Activity
         delete = findViewById(R.id.action_delete);
         copy.setVisibility(View.GONE);
         delete.setVisibility(View.GONE);
-      //  image.setVisibility(View.GONE);
-
-//        if(mInputMethodManager != null && mInputMethodManager.isActive() &&
-//                mInputMethodManager.isAcceptingText()) {
-//            voiceinput.setVisibility(View.VISIBLE);
-//            image.setVisibility(View.VISIBLE);
-//        }
-//        else {
-//            voiceinput.setVisibility(View.GONE);
-//            image.setVisibility(View.GONE);
-//        }
-
         input.setInputListener(this);
         input.setTypingListener(this);
         getCurrentChatId();
-       // initFirebase();
         RecAudio();
         Share();
     }
@@ -411,32 +393,6 @@ public class MessageActivity extends Activity
     }
 
 
-    public void sendId(DatabaseReference ref){
-  //      database.getReference(String.valueOf(ref));
-    }
-
-
-    private void initFirebase(){
-        AuthenticationDatabase = FirebaseAuth.getInstance();
-        database = FirebaseDatabase.getInstance(CONST.RealtimeDatabaseUrl);
-        ref = database.getReference();
-        String userId = AuthenticationDatabase.getCurrentUser().getUid();
-        ref = ref.child("users").child(userId).child("chats");
-        ref = getParentReference(dialogId, ref);
-        Log.d(TAG, dialogId +  " -> reference: " + ref.toString());
-        sendId(ref) ;
-
-    }
-
-
-    private DatabaseReference getParentReference(String id, DatabaseReference ref){
-        Query query = ref.orderByChild("id").equalTo(id);
-        return query.getRef().child(id);
-    }
-
-
-
-
     static ArrayList<String> avatars = new ArrayList<String>() {
         {
             add("http://i.imgur.com/pv1tBmT.png");
@@ -491,19 +447,19 @@ public class MessageActivity extends Activity
     public void onLoadMore(int page, int totalItemsCount) {
         Log.i("TAG", "onLoadMore: " + page + " " + totalItemsCount);
         if (totalItemsCount < TOTAL_MESSAGES_COUNT) {
-            loadMessages();
+            //loadMessages();
         }
     }
 
 
-    protected void loadMessages() {
-        //imitation of internet connection
-        new Handler().postDelayed(() -> {
-            ArrayList<Message> messages = MessageActivity.getMessages(lastLoadedDate, ref);
-            lastLoadedDate = messages.get(messages.size() - 1).getCreatedAt();
-            messagesAdapter.addToEnd(messages, false);
-        }, 1000);
-    }
+//    protected void loadMessages() {
+//        //imitation of internet connection
+//        new Handler().postDelayed(() -> {
+//            ArrayList<Message> messages = MessageActivity.getMessages(lastLoadedDate, ref);
+//            lastLoadedDate = messages.get(messages.size() - 1).getCreatedAt();
+//            messagesAdapter.addToEnd(messages, false);
+//        }, 1000);
+//    }
 
     private MessagesListAdapter.Formatter<Message> getMessageStringFormatter() {
         return message -> {
@@ -518,13 +474,13 @@ public class MessageActivity extends Activity
         };
     }
 
-    private static void uploadMessage(DatabaseReference ref, Message message){
-        ref.push().setValue(message);
-    }
-    private static void uploadMessages(DatabaseReference ref, ArrayList<Message> messages){
-        for(Message message : messages)
-            uploadMessage(ref, message);
-    }
+//    private static void uploadMessage(DatabaseReference ref, Message message){
+//        ref.push().setValue(message);
+//    }
+//    private static void uploadMessages(DatabaseReference ref, ArrayList<Message> messages){
+//        for(Message message : messages)
+//            uploadMessage(ref, message);
+//    }
     public static  Message getVideoMessage(){
         Message message = new Message(getRandomId(), getUser(), null);
         message.setVideo(new Message.Video(fileName));
@@ -571,7 +527,7 @@ public class MessageActivity extends Activity
                 messages.add(message);
             }
         }
-        uploadMessages(ref, messages);
+//        uploadMessages(ref, messages);
         return messages;
     }
 
