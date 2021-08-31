@@ -1,23 +1,19 @@
 package com.egormoroz.schooly.ui.main;
 
-import static android.app.PendingIntent.getActivity;
-import static android.view.MotionEvent.ACTION_BUTTON_PRESS;
-
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.inputmethodservice.Keyboard;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.ResultReceiver;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
@@ -33,10 +29,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.FragmentActivity;
 
 import com.egormoroz.schooly.CONST;
+import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.ui.chat.Message;
 import com.egormoroz.schooly.ui.chat.User;
@@ -46,14 +41,13 @@ import com.egormoroz.schooly.ui.chat.holders.IncomingVoiceMessageViewHolder;
 import com.egormoroz.schooly.ui.chat.holders.OutImageHolder;
 import com.egormoroz.schooly.ui.chat.holders.OutVidHold;
 import com.egormoroz.schooly.ui.chat.holders.OutcomingVoiceMessageViewHolder;
-import com.google.android.gms.tasks.OnFailureListener;
+import com.egormoroz.schooly.ui.profile.OnDataPass;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
@@ -74,12 +68,13 @@ import java.util.Locale;
 import java.util.UUID;
 
 
-public class MessageActivity extends FragmentActivity
+public class MessageActivity extends Activity
         implements MessageInput.InputListener,
         MessagesListAdapter.SelectionListener,
         MessagesListAdapter.OnLoadMoreListener,
         MessageHolders.ContentChecker<Message>,
-        MessageInput.TypingListener{
+        MessageInput.TypingListener,
+        OnDataPass {
 
     public static Uri fileUri;
     private ProgressDialog loadingBar;
@@ -104,11 +99,10 @@ public class MessageActivity extends FragmentActivity
     private FirebaseAuth AuthenticationDatabase;
     private FirebaseDatabase database;
     private int duration;
-    private String checker = "", myURL = "";
     private StorageTask uoloadTask;
-    private Menu menu;
     private int selectionCount;
-    boolean check = true;
+    private String nick ;
+    FirebaseModel firebaseModel = new FirebaseModel();
     ImageView delete;
     ImageView copy;
     ImageView voiceinput;
@@ -164,7 +158,6 @@ public class MessageActivity extends FragmentActivity
     int id = 0;
     static SecureRandom rnd = new SecureRandom();
 
-    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -174,9 +167,10 @@ public class MessageActivity extends FragmentActivity
         this.messagesList = findViewById(R.id.messagesList);
         initAdapter();
         ImageView avatar = findViewById(R.id.avatar);
-        fileUri = Uri.parse(getRandomAvatar());
-        avatar.setImageURI(fileUri);
+        fileName = getRandomAvatar();
+        fileUri = Uri.parse(fileName);
         Picasso.get().load(fileUri).into(avatar);
+        avatar.setImageURI(fileUri);
         ImageView back = findViewById(R.id.backtoalldialogs);
         ImageView pole = findViewById(R.id.pole);
         pole.setVisibility(View.GONE);
@@ -209,7 +203,13 @@ public class MessageActivity extends FragmentActivity
         storageReference = storage.getReference();
         loadingBar = new ProgressDialog(this);
         TextView nickname = findViewById(R.id.mnick);
-        nickname.setText("Nickname");
+    //    nickname.setText(getRandomName());
+    //    if (ProfileFragment.nickother != null)
+        Bundle arguments = getIntent().getExtras();
+        if(arguments!=null){
+           nick = arguments.getString("nick");
+           nickname.setText(nick);
+        }
         nickname.setVisibility(View.VISIBLE);
         image = findViewById(R.id.imageinput);
         voiceinput = findViewById(R.id.voiceinput);
@@ -218,28 +218,20 @@ public class MessageActivity extends FragmentActivity
         delete = findViewById(R.id.action_delete);
         copy.setVisibility(View.GONE);
         delete.setVisibility(View.GONE);
-      //  image.setVisibility(View.GONE);
-
-//        if(mInputMethodManager != null && mInputMethodManager.isActive() &&
-//                mInputMethodManager.isAcceptingText()) {
-//            voiceinput.setVisibility(View.VISIBLE);
-//            image.setVisibility(View.VISIBLE);
-//        }
-//        else {
-//            voiceinput.setVisibility(View.GONE);
-//            image.setVisibility(View.GONE);
-//        }
-
         input.setInputListener(this);
         input.setTypingListener(this);
         getCurrentChatId();
-        initFirebase();
         RecAudio();
         Share();
     }
 
 
 
+    public void onDataPass(String data) {
+        Log.d("LOG","привет, я строка из фрагмента: " + data);
+        TextView nickname = findViewById(R.id.mnick);
+        nickname.setText(data);
+    }
     public int getDuration(String mUri) {
         int duration;
         MediaMetadataRetriever mmr = new MediaMetadataRetriever();
@@ -262,14 +254,12 @@ public class MessageActivity extends FragmentActivity
                     switch (event.getAction() & MotionEvent.ACTION_MASK) {
 
                         case MotionEvent.ACTION_DOWN:
-                            view.setPressed(true);
                             id += 1;
                             startRecording();
                             Log.d(TAG, "Recording started");
                             break;
 
                         case MotionEvent.ACTION_UP:
-                            view.setPressed(false);
                             stopRecording();
                             Log.d(TAG, "Recording stop" + duration);
                             break;
@@ -324,6 +314,7 @@ public class MessageActivity extends FragmentActivity
                 imageLoader = (imageView, url, payload) -> Picasso.get().load(fileUri).into(imageView);
                 fileName = fileUri.toString();
             messagesAdapter.addToStart(getImageMessage(), true);
+            uploadImage();
             }
             else if(mimeType.startsWith("video")) {
                 fileUri = data.getData();
@@ -402,31 +393,6 @@ public class MessageActivity extends FragmentActivity
     }
 
 
-    public void sendId(DatabaseReference ref){
-  //      database.getReference(String.valueOf(ref));
-    }
-
-
-    private void initFirebase(){
-        AuthenticationDatabase = FirebaseAuth.getInstance();
-        database = FirebaseDatabase.getInstance(CONST.RealtimeDatabaseUrl);
-        ref = database.getReference();
-        String userId = AuthenticationDatabase.getCurrentUser().getUid();
-        ref = ref.child("users").child(userId).child("chats");
-        ref = getParentReference(dialogId, ref);
-        Log.d(TAG, dialogId +  " -> reference: " + ref.toString());
-        sendId(ref) ;
-    }
-
-
-    private DatabaseReference getParentReference(String id, DatabaseReference ref){
-        Query query = ref.orderByChild("id").equalTo(id);
-        return query.getRef().child(id);
-    }
-
-
-
-
     static ArrayList<String> avatars = new ArrayList<String>() {
         {
             add("http://i.imgur.com/pv1tBmT.png");
@@ -436,21 +402,7 @@ public class MessageActivity extends FragmentActivity
         }
     };
 
-    static final ArrayList<String> groupChatImages = new ArrayList<String>() {
-        {
-            add("http://i.imgur.com/hRShCT3.png");
-            add("http://i.imgur.com/zgTUcL3.png");
-            add("http://i.imgur.com/mRqh5w1.png");
-        }
-    };
 
-    static final ArrayList<String> groupChatTitles = new ArrayList<String>() {
-        {
-            add("Samuel, Michelle");
-            add("Jordan, Jordan, Zoe");
-            add("Julia, Angel, Kyle, Jordan");
-        }
-    };
 
     static final ArrayList<String> names = new ArrayList<String>() {
         {
@@ -468,28 +420,7 @@ public class MessageActivity extends FragmentActivity
         }
     };
 
-    static final ArrayList<String> messages = new ArrayList<String>() {
-        {
-            add("Hello!");
-            add("This is my phone number - +1 (234) 567-89-01");
-            add("Here is my e-mail - myemail@example.com");
-            add("Hey! Check out this awesome link! www.github.com");
-            add("Hello! No problem. I can today at 2 pm. And after we can go to the office.");
-            add("At first, for some time, I was not able to answer him one word");
-            add("At length one of them called out in a clear, polite, smooth dialect, not unlike in sound to the Italian");
-            add("By the bye, Bob, said Hopkins");
-            add("He made his passenger captain of one, with four of the men; and himself, his mate, and five more, went in the other; and they contrived their business very well, for they came up to the ship about midnight.");
-            add("So saying he unbuckled his baldric with the bugle");
-            add("Just then her head struck against the roof of the hall: in fact she was now more than nine feet high, and she at once took up the little golden key and hurried off to the garden door.");
-        }
-    };
 
-    static final ArrayList<String> images = new ArrayList<String>() {
-        {
-            add("https://habrastorage.org/getpro/habr/post_images/e4b/067/b17/e4b067b17a3e414083f7420351db272b.jpg");
-            add("https://cdn.pixabay.com/photo/2017/12/25/17/48/waters-3038803_1280.jpg");
-        }
-    };
 
     public static String getRandomId() {
         return Long.toString(UUID.randomUUID().getLeastSignificantBits());
@@ -516,19 +447,19 @@ public class MessageActivity extends FragmentActivity
     public void onLoadMore(int page, int totalItemsCount) {
         Log.i("TAG", "onLoadMore: " + page + " " + totalItemsCount);
         if (totalItemsCount < TOTAL_MESSAGES_COUNT) {
-            loadMessages();
+            //loadMessages();
         }
     }
 
 
-    protected void loadMessages() {
-        //imitation of internet connection
-        new Handler().postDelayed(() -> {
-            ArrayList<Message> messages = MessageActivity.getMessages(lastLoadedDate, ref);
-            lastLoadedDate = messages.get(messages.size() - 1).getCreatedAt();
-            messagesAdapter.addToEnd(messages, false);
-        }, 1000);
-    }
+//    protected void loadMessages() {
+//        //imitation of internet connection
+//        new Handler().postDelayed(() -> {
+//            ArrayList<Message> messages = MessageActivity.getMessages(lastLoadedDate, ref);
+//            lastLoadedDate = messages.get(messages.size() - 1).getCreatedAt();
+//            messagesAdapter.addToEnd(messages, false);
+//        }, 1000);
+//    }
 
     private MessagesListAdapter.Formatter<Message> getMessageStringFormatter() {
         return message -> {
@@ -543,14 +474,13 @@ public class MessageActivity extends FragmentActivity
         };
     }
 
-
-    private static void uploadMessage(DatabaseReference ref, Message message){
-        ref.push().setValue(message);
-    }
-    private static void uploadMessages(DatabaseReference ref, ArrayList<Message> messages){
-        for(Message message : messages)
-            uploadMessage(ref, message);
-    }
+//    private static void uploadMessage(DatabaseReference ref, Message message){
+//        ref.push().setValue(message);
+//    }
+//    private static void uploadMessages(DatabaseReference ref, ArrayList<Message> messages){
+//        for(Message message : messages)
+//            uploadMessage(ref, message);
+//    }
     public static  Message getVideoMessage(){
         Message message = new Message(getRandomId(), getUser(), null);
         message.setVideo(new Message.Video(fileName));
@@ -561,14 +491,13 @@ public class MessageActivity extends FragmentActivity
         message.setImage(new Message.Image(fileName));
         return message;}
 
-    //useful//
 
     public static Message getVoiceMessage(String FileName, int Duration) {
         Message message = new Message(getRandomId(), getUser(), null);
         message.setVoice(new Message.Voice(FileName, Duration));
         return message;
     }
-    //////////
+
     public static Message getTextMessage() {
         return getTextMessage(getRandomName());
     }
@@ -598,7 +527,7 @@ public class MessageActivity extends FragmentActivity
                 messages.add(message);
             }
         }
-        uploadMessages(ref, messages);
+//        uploadMessages(ref, messages);
         return messages;
     }
 
@@ -616,10 +545,10 @@ public class MessageActivity extends FragmentActivity
         if (fileUri != null) {
 
             // Code for showing progressDialog while uploading
-            ProgressDialog progressDialog
-                    = new ProgressDialog(this);
-            progressDialog.setTitle("Uploading...");
-            progressDialog.show();
+//            ProgressDialog progressDialog
+//                    = new ProgressDialog(this);
+//            progressDialog.setTitle("Uploading...");
+//            progressDialog.show();
 
             // Defining the child of storageReference
             StorageReference ref
@@ -638,46 +567,16 @@ public class MessageActivity extends FragmentActivity
 
                                     // Image uploaded successfully
                                     // Dismiss dialog
-                                    progressDialog.dismiss();
+                                  //  progressDialog.dismiss();
                                     Toast
                                             .makeText(MessageActivity.this,
                                                     "Image Uploaded!!",
                                                     Toast.LENGTH_SHORT)
                                             .show();
                                 }
-                            })
-
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e)
-                        {
-                            // Error, Image not uploaded
-                            progressDialog.dismiss();
-                            Toast
-                                    .makeText(MessageActivity.this,
-                                            "Failed " + e.getMessage(),
-                                            Toast.LENGTH_SHORT)
-                                    .show();
-                        }
-                    })
-                    .addOnProgressListener(
-                            new OnProgressListener<UploadTask.TaskSnapshot>() {
-
-                                // Progress Listener for loading
-                                // percentage on the dialog box
-                                @Override
-                                public void onProgress(
-                                        UploadTask.TaskSnapshot taskSnapshot)
-                                {
-                                    double progress
-                                            = (100.0
-                                            * taskSnapshot.getBytesTransferred()
-                                            / taskSnapshot.getTotalByteCount());
-                                    progressDialog.setMessage(
-                                            "Uploaded "
-                                                    + (int)progress + "%");
-                                }
                             });
+
+
         }
     }
 

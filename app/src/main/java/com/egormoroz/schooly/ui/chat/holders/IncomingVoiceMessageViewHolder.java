@@ -1,13 +1,12 @@
 package com.egormoroz.schooly.ui.chat.holders;
 
+import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.View;
-import android.widget.CompoundButton;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.ToggleButton;
 
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.ui.chat.Message;
@@ -20,20 +19,18 @@ import java.io.IOException;
 public class IncomingVoiceMessageViewHolder
         extends MessageHolders.IncomingTextMessageViewHolder<Message> {
 
-    private MediaPlayer player = null;
-    private ImageButton play;
-    private TextView tvDuration;
-    private TextView tvTime;
-    private String TAG = "TAP";
+    private MediaPlayer   player = null;
+    private final ImageView play;
+    private final TextView tvDuration;
+    private final TextView tvTime;
     private boolean start = true;
-
 
     public IncomingVoiceMessageViewHolder(View itemView, Object payload) {
         super(itemView, payload);
         tvDuration = itemView.findViewById(R.id.durationVoice);
         tvTime = itemView.findViewById(R.id.time);
         play = itemView.findViewById(R.id.play);
-        }
+    }
 
     public void startPlaying() {
         player = new MediaPlayer();
@@ -42,14 +39,24 @@ public class IncomingVoiceMessageViewHolder
             player.prepare();
             player.start();
         } catch (IOException e) {
+            String TAG = "TAP";
             Log.e(TAG, "prepare() failed");
         }
+    }
+
+    public int getDuration(String mUri) {
+        int duration;
+        MediaMetadataRetriever mmr = new MediaMetadataRetriever();
+        mmr.setDataSource(mUri);
+        String time = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+        duration = Integer.parseInt(time);
+        mmr.release();
+        return duration;
     }
 
     public void stopPlaying() {
         player.stop();
         player.release();
-        play.setImageResource(R.drawable.ic_play);
         player = null;
     }
 
@@ -69,12 +76,23 @@ public class IncomingVoiceMessageViewHolder
         tvDuration.setText(
                 FormatUtils.getDurationString(
                         message.getVoice().getDuration()));
-        play.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onPlay(start);
-                start = !start;
-            }
+        play.setOnClickListener(v -> {
+            onPlay(start);
+            start = !start;
+            new Thread(){
+                @Override
+                public void run() {
+                    long start = System.currentTimeMillis();
+                    while (true){
+                        SystemClock.sleep(100);
+                        long end = System.currentTimeMillis();
+                        if (end - start > getDuration(MessageActivity.fileName)){
+                            play.setImageResource(R.drawable.ic_play);
+                            break;
+                        }
+                    }
+                }
+            }.start();
         });
         play.setImageResource(R.drawable.ic_play);
         tvTime.setText(DateFormatter.format(message.getCreatedAt(), DateFormatter.Template.TIME));

@@ -190,7 +190,6 @@ public class RecentMethods {
                 for (DataSnapshot snap : snapshot.getChildren())
                     callback.PassUserNick(snap.child("nick").getValue(String.class));
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
