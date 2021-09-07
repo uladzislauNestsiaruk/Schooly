@@ -119,7 +119,6 @@ public class MiningFragment extends Fragment {
                 AllMinersAdapter allMinersAdapter=new AllMinersAdapter(listAdapterMiner);
                 allminersrecyclerview.setAdapter(allMinersAdapter);
                 allminersrecyclerview.addItemDecoration(new AllMinersAdapter.SpaceItemDecoration());
-                Miner first=listAdapterMiner.get(0);
             }
         });
     }

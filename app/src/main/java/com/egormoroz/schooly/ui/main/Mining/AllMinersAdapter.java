@@ -12,7 +12,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.egormoroz.schooly.Callbacks;
+import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
+import com.egormoroz.schooly.RecentMethods;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -22,6 +25,7 @@ public class AllMinersAdapter extends RecyclerView.Adapter<AllMinersAdapter.View
 
     ArrayList<Miner> listAdapterMiner;
     private ItemClickListener clickListener;
+    private FirebaseModel firebaseModel = new FirebaseModel();
 
     public  AllMinersAdapter(ArrayList<Miner> listAdapter) {
         this.listAdapterMiner = listAdapter;
@@ -39,8 +43,33 @@ public class AllMinersAdapter extends RecyclerView.Adapter<AllMinersAdapter.View
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
+        firebaseModel.initAll();
         Miner miner=listAdapterMiner.get(position);
         holder.minerPrice.setText(String.valueOf(miner.getMinerPrice()));
+        holder.buy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int pos=holder.getAdapterPosition();
+                RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(),
+                        firebaseModel, new Callbacks.GetUserNickByUid() {
+                            @Override
+                            public void PassUserNick(String nick) {
+                                RecentMethods.buyMiner(String.valueOf(pos), firebaseModel, new Callbacks.buyMiner() {
+                                    @Override
+                                    public void buyMiner(Miner miner) {
+                                        if(pos==0) {
+                                            firebaseModel.getReference("users").child(nick)
+                                                    .child("miners").child("0").setValue(miner);
+                                            Log.d("#########", "miner  " + miner);
+                                        }else
+                                            {Log.d("#########", "fuck");
+                                            }
+                                    }
+                                });
+                            }
+                        });
+            }
+        });
     }
 
     @Override
@@ -49,10 +78,11 @@ public class AllMinersAdapter extends RecyclerView.Adapter<AllMinersAdapter.View
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        final TextView minerPrice;
+        final TextView minerPrice,buy;
         ViewHolder(View itemView) {
             super(itemView);
             minerPrice=itemView.findViewById(R.id.minerprice);
+            buy=itemView.findViewById(R.id.buy);
         }
 
         @Override

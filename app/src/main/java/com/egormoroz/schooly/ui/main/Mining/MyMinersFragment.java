@@ -13,9 +13,11 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.MainActivity;
 import com.egormoroz.schooly.R;
+import com.egormoroz.schooly.RecentMethods;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.database.DataSnapshot;
 
@@ -52,16 +54,22 @@ public class MyMinersFragment extends Fragment {
                 ((MainActivity)getActivity()).setCurrentFragment(MiningFragment.newInstanse());
             }
         });
-        setData();
+        GetMyMinersFromBase();
         recyclerviewMining=view.findViewById(R.id.recyclerviewmyminers);
         useMiner=view.findViewById(R.id.use);
-        MyMinersAdapter myminersAdapter=new MyMinersAdapter(listAdapter);
-        recyclerviewMining.setAdapter(myminersAdapter);
         Log.d(TAG,"Изображение установлено");
     }
 
-    public void setData(){
-        listAdapter.add(myMiners);
+    public void GetMyMinersFromBase(){
+        RecentMethods.MyMinersFromBase(firebaseModel, new Callbacks.GetMyMinerFromBase() {
+            @Override
+            public void GetMyMinerFromBase(ArrayList<Miner> myMinersFromBase) {
+                listAdapter.addAll(myMinersFromBase);
+                Log.d("#######", "miner  "+myMinersFromBase);
+                MyMinersAdapter myminersAdapter=new MyMinersAdapter(listAdapter);
+                recyclerviewMining.setAdapter(myminersAdapter);
+            }
+        });
     }
 
     /*public void GetMinersFromBase(){

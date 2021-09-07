@@ -29,10 +29,13 @@ public class Callbacks {
         void GetMinerFromBase(ArrayList<Miner> minersFromBase);
     }
 
-    public interface GetMinerByUid{
-        void SetMinerInMyMiners(String miner);
+    public interface buyMiner{
+        void buyMiner(Miner miner);
     }
     public interface HasUid{
         void HasUidCallback(boolean HasUid);
+    }
+    public interface GetMyMinerFromBase{
+        void GetMyMinerFromBase(ArrayList<Miner> myMinersFromBase);
     }
 }

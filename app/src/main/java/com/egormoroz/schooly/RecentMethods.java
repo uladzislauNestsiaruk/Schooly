@@ -236,4 +236,47 @@ public class RecentMethods {
             }
         });
     }
+
+    public static void buyMiner(String currentMiner,FirebaseModel model,Callbacks.buyMiner callback){
+        model.initAll();
+        Query query=model.getReference("AppData/AllMiners")
+                .orderByChild(currentMiner);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Log.d("#########", "minerrr  "+currentMiner);
+                Miner miner=snapshot.child(currentMiner).getValue(Miner.class);
+                Log.d("#########", "minerrr  "+miner);
+                callback.buyMiner(miner);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    public static void MyMinersFromBase(FirebaseModel model, Callbacks.GetMyMinerFromBase callback) {
+        model.initAll();
+        Query query = model.getReference("miners");
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                ArrayList<Miner> myMinersFromBase=new ArrayList<>();
+                for (DataSnapshot snap : snapshot.getChildren()) {
+                    Miner miner = new Miner();
+                    miner.setInHour(snap.child("inHour").getValue(Long.class));
+                    miner.setMinerPrice(snap.child("minerPrice").getValue(Long.class));
+                    miner.setMinerImage(snap.child("minerImage").getValue(Long.class));
+                    myMinersFromBase.add(miner);
+                }
+                callback.GetMyMinerFromBase(myMinersFromBase);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
 }
