@@ -41,6 +41,7 @@ public class MyMinersFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_myminers, container, false);
         BottomNavigationView bnv = getActivity().findViewById(R.id.bottomNavigationView);
         bnv.setVisibility(bnv.GONE);
+        firebaseModel.initAll();
         return root;
     }
 
@@ -61,7 +62,8 @@ public class MyMinersFragment extends Fragment {
     }
 
     public void GetMyMinersFromBase(){
-        RecentMethods.MyMinersFromBase(firebaseModel, new Callbacks.GetMyMinerFromBase() {
+        RecentMethods.MyMinersFromBase(firebaseModel.getUser().getUid()
+                ,firebaseModel, new Callbacks.GetMyMinerFromBase() {
             @Override
             public void GetMyMinerFromBase(ArrayList<Miner> myMinersFromBase) {
                 listAdapter.addAll(myMinersFromBase);
@@ -71,14 +73,4 @@ public class MyMinersFragment extends Fragment {
             }
         });
     }
-
-    /*public void GetMinersFromBase(){
-        RecentMethods.MinerByUid(String.valueOf(firebaseModel.AuthenticationBase.getCurrentUser().getUid()),
-                firebaseModel, new Callbacks.GetMinerByUid() {
-                    @Override
-                    public void SetMinerInMyMiners(String miner) {
-                        myMiners=snapshot.child("Miners").getValue(Miner.class);
-                    }
-                });
-    }*/
 }

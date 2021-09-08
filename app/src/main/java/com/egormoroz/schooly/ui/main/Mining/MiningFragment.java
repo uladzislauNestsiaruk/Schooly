@@ -1,7 +1,6 @@
 package com.egormoroz.schooly.ui.main.Mining;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,6 +35,8 @@ public class MiningFragment extends Fragment {
     }
 
     ArrayList<Miner> listAdapterMiner = new ArrayList<Miner>();
+    ArrayList<Miner> listAdapterAverageMiner = new ArrayList<Miner>();
+    ArrayList<Miner> listAdapterStrongMiner = new ArrayList<Miner>();
     ArrayList<Miner> allminersarraylist = new ArrayList<Miner>();
     private FirebaseModel firebaseModel = new FirebaseModel();
     FirebaseAuth authenticationDatabase;
@@ -51,7 +52,7 @@ public class MiningFragment extends Fragment {
     TextView minerprice, schoolycoin, myminers, upgrade, todaymining, morecoins,buy;
     RelativeLayout noactiveminers;
     FirebaseAuth AuthenticationBase;
-    RecyclerView minersrecyclerview,allminersrecyclerview;
+    RecyclerView minersrecyclerview,weakminersrecyclerview,averageminersrecyclerview,strongminersrecyclerview;
     int minerMoney;
     ArrayList<Miner> minersInBase=new ArrayList<>();
     DataSnapshot dataSnapshot;
@@ -99,14 +100,10 @@ public class MiningFragment extends Fragment {
         todaymining = view.findViewById(R.id.todaymining);
         buy=view.findViewById(R.id.buy);
         morecoins = view.findViewById(R.id.morecoins);
-        morecoins.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                buyMiner();
-            }
-        });
         GetDataFromBase();
-        allminersrecyclerview=view.findViewById(R.id.allminersrecyclerview);
+        weakminersrecyclerview=view.findViewById(R.id.allminersrecyclerview);
+        averageminersrecyclerview=view.findViewById(R.id.averageminersrecyclerview);
+        strongminersrecyclerview=view.findViewById(R.id.strongminersrecyclerview);
         miningMoney();
     }
 
@@ -116,9 +113,27 @@ public class MiningFragment extends Fragment {
             @Override
             public void GetMinerFromBase(ArrayList<Miner> minersFromBase) {
                 listAdapterMiner.addAll(minersFromBase);
-                AllMinersAdapter allMinersAdapter=new AllMinersAdapter(listAdapterMiner);
-                allminersrecyclerview.setAdapter(allMinersAdapter);
-                allminersrecyclerview.addItemDecoration(new AllMinersAdapter.SpaceItemDecoration());
+                WeakMinersAdapter allMinersAdapter=new WeakMinersAdapter(listAdapterMiner);
+                weakminersrecyclerview.setAdapter(allMinersAdapter);
+                weakminersrecyclerview.addItemDecoration(new WeakMinersAdapter.SpaceItemDecoration());
+            }
+        });
+        RecentMethods.AverageMinersFromBase(firebaseModel, new Callbacks.GetMinerFromBase() {
+            @Override
+            public void GetMinerFromBase(ArrayList<Miner> minersFromBase) {
+                listAdapterAverageMiner.addAll(minersFromBase);
+                AverageMinersAdapter avarageMinersAdapter=new AverageMinersAdapter(listAdapterAverageMiner);
+                averageminersrecyclerview.setAdapter(avarageMinersAdapter);
+                averageminersrecyclerview.addItemDecoration(new AverageMinersAdapter.SpaceItemDecoration());
+            }
+        });
+        RecentMethods.StrongMinersFromBase(firebaseModel, new Callbacks.GetMinerFromBase() {
+            @Override
+            public void GetMinerFromBase(ArrayList<Miner> minersFromBase) {
+                listAdapterStrongMiner.addAll(minersFromBase);
+                StrongMinersAdapter strongMinersAdapter=new StrongMinersAdapter(listAdapterStrongMiner);
+                strongminersrecyclerview.setAdapter(strongMinersAdapter);
+                strongminersrecyclerview.addItemDecoration(new StrongMinersAdapter.SpaceItemDecoration());
             }
         });
     }
@@ -145,20 +160,5 @@ public class MiningFragment extends Fragment {
                     }
             }
         })).start();
-    }
-
-    public void buyMiner(){
-        buy.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                RecentMethods.UserNickByUid(String.valueOf(firebaseModel.AuthenticationBase.getCurrentUser().getUid()),
-                        firebaseModel, new Callbacks.GetUserNickByUid() {
-                            @Override
-                            public void PassUserNick(String nick) {
-                                ref.child(nick).child("Miners").push().setValue(minersInBase);
-                            }
-                        });
-            }
-        });
     }
 }

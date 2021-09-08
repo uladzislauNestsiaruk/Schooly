@@ -20,15 +20,15 @@ import com.egormoroz.schooly.RecentMethods;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.List;
-public class AllMinersAdapter extends RecyclerView.Adapter<AllMinersAdapter.ViewHolder> {
 
-    ArrayList<Miner> listAdapterMiner;
+public class StrongMinersAdapter extends RecyclerView.Adapter<StrongMinersAdapter.ViewHolder>{
+
+    ArrayList<Miner> listAdapterStrongMiner;
     private ItemClickListener clickListener;
     private FirebaseModel firebaseModel = new FirebaseModel();
 
-    public  AllMinersAdapter(ArrayList<Miner> listAdapter) {
-        this.listAdapterMiner = listAdapter;
+    public StrongMinersAdapter(ArrayList<Miner> listAdapter) {
+        this.listAdapterStrongMiner = listAdapter;
     }
 
 
@@ -44,7 +44,7 @@ public class AllMinersAdapter extends RecyclerView.Adapter<AllMinersAdapter.View
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         firebaseModel.initAll();
-        Miner miner=listAdapterMiner.get(position);
+        Miner miner=listAdapterStrongMiner.get(position);
         holder.minerPrice.setText(String.valueOf(miner.getMinerPrice()));
         holder.buy.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -54,16 +54,16 @@ public class AllMinersAdapter extends RecyclerView.Adapter<AllMinersAdapter.View
                         firebaseModel, new Callbacks.GetUserNickByUid() {
                             @Override
                             public void PassUserNick(String nick) {
-                                RecentMethods.buyMiner(String.valueOf(pos), firebaseModel, new Callbacks.buyMiner() {
+                                RecentMethods.buyStrongMiner(String.valueOf(pos), firebaseModel, new Callbacks.buyMiner() {
                                     @Override
                                     public void buyMiner(Miner miner) {
                                         if(pos==0) {
                                             firebaseModel.getReference("users").child(nick)
-                                                    .child("miners").child("0").setValue(miner);
+                                                    .child("miners").child("0strong").setValue(miner);
                                             Log.d("#########", "miner  " + miner);
                                         }else
-                                            {Log.d("#########", "fuck");
-                                            }
+                                        {Log.d("#########", "fuck");
+                                        }
                                     }
                                 });
                             }
@@ -74,7 +74,7 @@ public class AllMinersAdapter extends RecyclerView.Adapter<AllMinersAdapter.View
 
     @Override
     public int getItemCount() {
-        return listAdapterMiner.size();
+        return listAdapterStrongMiner.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -92,7 +92,7 @@ public class AllMinersAdapter extends RecyclerView.Adapter<AllMinersAdapter.View
     }
 
     Miner getItem(int id) {
-        return listAdapterMiner.get(id);
+        return listAdapterStrongMiner.get(id);
     }
 
     void setClickListener(ItemClickListener itemClickListener) {
@@ -107,7 +107,7 @@ public class AllMinersAdapter extends RecyclerView.Adapter<AllMinersAdapter.View
 
         @Override
         public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-            int margin = 24;
+            int margin = 16;
             int space = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, margin, view.getResources().getDisplayMetrics());
             if(parent.getChildAdapterPosition(view) == 0){
                 outRect.left = space;

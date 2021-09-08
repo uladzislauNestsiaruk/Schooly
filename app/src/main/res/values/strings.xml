@@ -151,6 +151,8 @@
     <string name="noactiveminers">Нет активных майнеров</string>
     <string name="use">Использовать</string>
     <string name="upgrade">Улучшить</string>
+    <string name="average">Средние</string>
+    <string name="strong">Сильные</string>
 
 
 </resources>

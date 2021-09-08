@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:scrollbars="none">
+    android:scrollbars="none"
+    android:paddingBottom="24dp">
 
     <RelativeLayout
         android:layout_width="wrap_content"
@@ -194,8 +195,52 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/weak"
             android:orientation="horizontal"
+            android:layout_marginTop="16dp"
             android:scrollbars="none"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+        <TextView
+            android:id="@+id/average"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/allminersrecyclerview"
+            android:text="@string/average"
+            android:textColor="@color/app_grey"
+            android:fontFamily="@font/montserrat_extrabold"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="24dp"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/averageminersrecyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/average"
+            android:orientation="horizontal"
+            android:layout_marginTop="16dp"
+            android:scrollbars="none"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+        <TextView
+            android:id="@+id/strong"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/averageminersrecyclerview"
+            android:text="@string/strong"
+            android:textColor="@color/app_grey"
+            android:fontFamily="@font/montserrat_extrabold"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="24dp"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/strongminersrecyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/strong"
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal"
+            android:scrollbars="none"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
 
     </RelativeLayout>
 

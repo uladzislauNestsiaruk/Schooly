@@ -199,12 +199,58 @@ public class RecentMethods {
 
     public static void AllminersFromBase(FirebaseModel model, Callbacks.GetMinerFromBase callback) {
         model.initAll();
-        Query query = model.getReference("AppData");
+        Query query = model.getReference("AppData/AllMiners");
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 ArrayList<Miner> minersFromBase=new ArrayList<>();
-                for (DataSnapshot snap : snapshot.child("AllMiners").getChildren()) {
+                for (DataSnapshot snap : snapshot.child("Weak").getChildren()) {
+                    Miner miner = new Miner();
+                    miner.setInHour(snap.child("inHour").getValue(Long.class));
+                    miner.setMinerPrice(snap.child("minerPrice").getValue(Long.class));
+                    miner.setMinerImage(snap.child("minerImage").getValue(Long.class));
+                    minersFromBase.add(miner);
+                }
+                callback.GetMinerFromBase(minersFromBase);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    public static void AverageMinersFromBase(FirebaseModel model, Callbacks.GetMinerFromBase callback) {
+        model.initAll();
+        Query query = model.getReference("AppData/AllMiners");
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                ArrayList<Miner> minersFromBase=new ArrayList<>();
+                for (DataSnapshot snap : snapshot.child("Average").getChildren()) {
+                    Miner miner = new Miner();
+                    miner.setInHour(snap.child("inHour").getValue(Long.class));
+                    miner.setMinerPrice(snap.child("minerPrice").getValue(Long.class));
+                    miner.setMinerImage(snap.child("minerImage").getValue(Long.class));
+                    minersFromBase.add(miner);
+                }
+                callback.GetMinerFromBase(minersFromBase);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    public static void StrongMinersFromBase(FirebaseModel model, Callbacks.GetMinerFromBase callback) {
+        model.initAll();
+        Query query = model.getReference("AppData/AllMiners");
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                ArrayList<Miner> minersFromBase=new ArrayList<>();
+                for (DataSnapshot snap : snapshot.child("Strong").getChildren()) {
                     Miner miner = new Miner();
                     miner.setInHour(snap.child("inHour").getValue(Long.class));
                     miner.setMinerPrice(snap.child("minerPrice").getValue(Long.class));
@@ -237,9 +283,9 @@ public class RecentMethods {
         });
     }
 
-    public static void buyMiner(String currentMiner,FirebaseModel model,Callbacks.buyMiner callback){
+    public static void buyWeakMiner(String currentMiner,FirebaseModel model,Callbacks.buyMiner callback){
         model.initAll();
-        Query query=model.getReference("AppData/AllMiners")
+        Query query=model.getReference("AppData/AllMiners/Weak")
                 .orderByChild(currentMiner);
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -257,9 +303,50 @@ public class RecentMethods {
         });
     }
 
-    public static void MyMinersFromBase(FirebaseModel model, Callbacks.GetMyMinerFromBase callback) {
+    public static void buyAverageMiner(String currentMiner,FirebaseModel model,Callbacks.buyMiner callback){
         model.initAll();
-        Query query = model.getReference("miners");
+        Query query=model.getReference("AppData/AllMiners/Average")
+                .orderByChild(currentMiner);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Log.d("#########", "minerrr  "+currentMiner);
+                Miner miner=snapshot.child(currentMiner).getValue(Miner.class);
+                Log.d("#########", "minerrr  "+miner);
+                callback.buyMiner(miner);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    public static void buyStrongMiner(String currentMiner,FirebaseModel model,Callbacks.buyMiner callback){
+        model.initAll();
+        Query query=model.getReference("AppData/AllMiners/Weak")
+                .orderByChild(currentMiner);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Log.d("#########", "minerrr  "+currentMiner);
+                Miner miner=snapshot.child(currentMiner).getValue(Miner.class);
+                Log.d("#########", "minerrr  "+miner);
+                callback.buyMiner(miner);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    public static void MyMinersFromBase(String uid,FirebaseModel model, Callbacks.GetMyMinerFromBase callback) {
+        model.initAll();
+        Query query = model.getUsersReference().child("uid")
+                .child(uid);
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
