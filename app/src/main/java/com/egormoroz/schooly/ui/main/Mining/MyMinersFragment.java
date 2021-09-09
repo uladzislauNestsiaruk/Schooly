@@ -62,14 +62,18 @@ public class MyMinersFragment extends Fragment {
     }
 
     public void GetMyMinersFromBase(){
-        RecentMethods.MyMinersFromBase(firebaseModel.getUser().getUid()
-                ,firebaseModel, new Callbacks.GetMyMinerFromBase() {
+        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @Override
-            public void GetMyMinerFromBase(ArrayList<Miner> myMinersFromBase) {
-                listAdapter.addAll(myMinersFromBase);
-                Log.d("#######", "miner  "+myMinersFromBase);
-                MyMinersAdapter myminersAdapter=new MyMinersAdapter(listAdapter);
-                recyclerviewMining.setAdapter(myminersAdapter);
+            public void PassUserNick(String nick) {
+                RecentMethods.MyMinersFromBase(nick,firebaseModel, new Callbacks.GetMyMinerFromBase(){
+                            @Override
+                            public void GetMyMinerFromBase(ArrayList<Miner> myMinersFromBase) {
+                                listAdapter.addAll(myMinersFromBase);
+                                Log.d("#######", "miner  "+myMinersFromBase);
+                                MyMinersAdapter myminersAdapter=new MyMinersAdapter(listAdapter);
+                                recyclerviewMining.setAdapter(myminersAdapter);
+                            }
+                        });
             }
         });
     }

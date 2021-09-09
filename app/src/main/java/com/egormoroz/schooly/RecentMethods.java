@@ -343,10 +343,10 @@ public class RecentMethods {
         });
     }
 
-    public static void MyMinersFromBase(String uid,FirebaseModel model, Callbacks.GetMyMinerFromBase callback) {
+    public static void MyMinersFromBase(String nick,FirebaseModel model, Callbacks.GetMyMinerFromBase callback) {
         model.initAll();
-        Query query = model.getUsersReference().child("uid")
-                .child(uid);
+        Query query = model.getUsersReference().child(nick)
+                .child("miners");
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
