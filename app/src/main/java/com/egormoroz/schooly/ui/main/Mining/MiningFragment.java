@@ -37,6 +37,7 @@ public class MiningFragment extends Fragment {
     ArrayList<Miner> listAdapterMiner = new ArrayList<Miner>();
     ArrayList<Miner> listAdapterAverageMiner = new ArrayList<Miner>();
     ArrayList<Miner> listAdapterStrongMiner = new ArrayList<Miner>();
+    ArrayList<Miner> listAdapterActiveMiner = new ArrayList<Miner>();
     ArrayList<Miner> allminersarraylist = new ArrayList<Miner>();
     private FirebaseModel firebaseModel = new FirebaseModel();
     FirebaseAuth authenticationDatabase;
@@ -52,7 +53,7 @@ public class MiningFragment extends Fragment {
     TextView minerprice, schoolycoin, myminers, upgrade, todaymining, morecoins,buy;
     RelativeLayout noactiveminers;
     FirebaseAuth AuthenticationBase;
-    RecyclerView minersrecyclerview,weakminersrecyclerview,averageminersrecyclerview,strongminersrecyclerview;
+    RecyclerView activeminersrecyclerview,weakminersrecyclerview,averageminersrecyclerview,strongminersrecyclerview;
     int minerMoney;
     ArrayList<Miner> minersInBase=new ArrayList<>();
     DataSnapshot dataSnapshot;
@@ -89,9 +90,7 @@ public class MiningFragment extends Fragment {
                 RecentMethods.setCurrentFragment(MainFragment.newInstance(), getActivity());
             }
         });
-        minersrecyclerview = view.findViewById(R.id.minersrecyclerview);
-        MiningAdapter miningAdapter = new MiningAdapter(listAdapterMiner);
-        minersrecyclerview.setAdapter(miningAdapter);
+        activeminersrecyclerview = view.findViewById(R.id.activeminersrecyclerview);
         viewminer = view.findViewById(R.id.viewmining);
         minerprice = view.findViewById(R.id.minerprice);
         schoolycoin = view.findViewById(R.id.schoolycoin);
@@ -160,5 +159,17 @@ public class MiningFragment extends Fragment {
                     }
             }
         })).start();
+    }
+
+    public void getActiveMinersFromBase(){
+        RecentMethods.GetActiveMiner(firebaseModel.getUser().getUid(), firebaseModel,
+                new Callbacks.GetActiveMiners() {
+                    @Override
+                    public void GetActiveMiners(ArrayList<Miner> activeMinersFromBase) {
+                        listAdapterActiveMiner.addAll(activeMinersFromBase);
+                        ActiveMinersAdapter activeMinersAdapter=new ActiveMinersAdapter(listAdapterActiveMiner);
+                        activeminersrecyclerview.setAdapter(activeMinersAdapter);
+                    }
+                });
     }
 }

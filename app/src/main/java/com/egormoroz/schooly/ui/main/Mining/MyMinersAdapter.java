@@ -1,5 +1,6 @@
 package com.egormoroz.schooly.ui.main.Mining;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,9 +11,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.egormoroz.schooly.Callbacks;
+import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
 
 import org.jetbrains.annotations.NotNull;
+import com.egormoroz.schooly.RecentMethods;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +24,7 @@ public class MyMinersAdapter extends RecyclerView.Adapter<MyMinersAdapter.ViewHo
 
     List<Miner> listAdapter;
     private ItemClickListener clickListener;
+    private FirebaseModel firebaseModel = new FirebaseModel();
 
     public  MyMinersAdapter(ArrayList<Miner> listAdapter) {
         this.listAdapter = listAdapter;
@@ -32,6 +37,8 @@ public class MyMinersAdapter extends RecyclerView.Adapter<MyMinersAdapter.ViewHo
         RelativeLayout v = (RelativeLayout) LayoutInflater.from(viewGroup.getContext()).
                 inflate(R.layout.myminers_item, viewGroup, false);
         ViewHolder viewHolder=new ViewHolder(v);
+        Log.d("#####","list  "+listAdapter);
+        firebaseModel.initAll();
         return viewHolder;
     }
 
@@ -39,6 +46,21 @@ public class MyMinersAdapter extends RecyclerView.Adapter<MyMinersAdapter.ViewHo
     public void onBindViewHolder(ViewHolder holder, int position) {
         Miner miner=listAdapter.get(position);
         holder.inHour.setText(String.valueOf(miner.getInHour()));
+        holder.use.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int pos=holder.getAdapterPosition();
+                RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel
+                        , new Callbacks.GetUserNickByUid() {
+                            @Override
+                            public void PassUserNick(String nick) {
+                                firebaseModel.getUsersReference().child(nick)
+                                        .child("miners").child("activeMiners")
+                                        .child(String.valueOf(pos)).setValue(listAdapter.get(pos));
+                            }
+                        });
+            }
+        });
     }
 
     @Override

@@ -38,4 +38,5 @@ public class Miner {
     public void setMinerPrice(long minerPrice){
         this.minerPrice=minerPrice;
     }
+
 }

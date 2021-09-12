@@ -38,4 +38,7 @@ public class Callbacks {
     public interface GetMyMinerFromBase{
         void GetMyMinerFromBase(ArrayList<Miner> myMinersFromBase);
     }
+    public interface GetActiveMiners{
+        void GetActiveMiners(ArrayList<Miner> activeMinersFromBase);
+    }
 }
