@@ -1,6 +1,7 @@
 package com.egormoroz.schooly.ui.main.Mining;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,12 +66,7 @@ public class MiningFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_mining, container, false);
         BottomNavigationView bnv = getActivity().findViewById(R.id.bottomNavigationView);
         bnv.setVisibility(bnv.GONE);
-//        buy.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                buyMiner();
-//            }
-//        });
+        firebaseModel.initAll();
         return root;
     }
     @Override
@@ -100,10 +96,10 @@ public class MiningFragment extends Fragment {
         buy=view.findViewById(R.id.buy);
         morecoins = view.findViewById(R.id.morecoins);
         GetDataFromBase();
+        getActiveMinersFromBase();
         weakminersrecyclerview=view.findViewById(R.id.allminersrecyclerview);
         averageminersrecyclerview=view.findViewById(R.id.averageminersrecyclerview);
         strongminersrecyclerview=view.findViewById(R.id.strongminersrecyclerview);
-        miningMoney();
     }
 
 
@@ -162,14 +158,21 @@ public class MiningFragment extends Fragment {
     }
 
     public void getActiveMinersFromBase(){
-        RecentMethods.GetActiveMiner(firebaseModel.getUser().getUid(), firebaseModel,
-                new Callbacks.GetActiveMiners() {
-                    @Override
-                    public void GetActiveMiners(ArrayList<Miner> activeMinersFromBase) {
-                        listAdapterActiveMiner.addAll(activeMinersFromBase);
-                        ActiveMinersAdapter activeMinersAdapter=new ActiveMinersAdapter(listAdapterActiveMiner);
-                        activeminersrecyclerview.setAdapter(activeMinersAdapter);
-                    }
-                });
+        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+            @Override
+            public void PassUserNick(String nick) {
+                RecentMethods.GetActiveMiner(nick, firebaseModel,
+                        new Callbacks.GetActiveMiners() {
+                            @Override
+                            public void GetActiveMiners(ArrayList<Miner> activeMinersFromBase) {
+                                listAdapterActiveMiner.addAll(activeMinersFromBase);
+                                Log.d("#########","list  "+activeMinersFromBase);
+                                ActiveMinersAdapter activeMinersAdapter=new ActiveMinersAdapter(listAdapterActiveMiner);
+                                activeminersrecyclerview.setAdapter(activeMinersAdapter);
+                            }
+                        });
+            }
+        });
+        miningMoney();
     }
 }

@@ -23,12 +23,12 @@ import java.util.ArrayList;
 
 public class ActiveMinersAdapter extends RecyclerView.Adapter<ActiveMinersAdapter.ViewHolder> {
 
-    ArrayList<Miner> listAdapterAverageMiner;
+    ArrayList<Miner> listAdapterActivaMiner;
     private ItemClickListener clickListener;
     private FirebaseModel firebaseModel = new FirebaseModel();
 
     public ActiveMinersAdapter(ArrayList<Miner> listAdapter) {
-        this.listAdapterAverageMiner = listAdapter;
+        this.listAdapterActivaMiner = listAdapter;
     }
 
 
@@ -36,7 +36,7 @@ public class ActiveMinersAdapter extends RecyclerView.Adapter<ActiveMinersAdapte
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
         RelativeLayout v = (RelativeLayout) LayoutInflater.from(viewGroup.getContext()).
-                inflate(R.layout.allminersrecyclerview_item, viewGroup, false);
+                inflate(R.layout.horizontalrecyclerview_item, viewGroup, false);
         ViewHolder viewHolder=new ViewHolder(v);
         return viewHolder;
     }
@@ -44,21 +44,20 @@ public class ActiveMinersAdapter extends RecyclerView.Adapter<ActiveMinersAdapte
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         firebaseModel.initAll();
-        Miner miner=listAdapterAverageMiner.get(position);
-        holder.minerPrice.setText(String.valueOf(miner.getMinerPrice()));
+        Miner miner=listAdapterActivaMiner.get(position);
+        holder.inHour.setText(String.valueOf(miner.getInHour()));
     }
 
     @Override
     public int getItemCount() {
-        return listAdapterAverageMiner.size();
+        return listAdapterActivaMiner.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        final TextView minerPrice,buy;
+        final TextView inHour;
         ViewHolder(View itemView) {
             super(itemView);
-            minerPrice=itemView.findViewById(R.id.minerprice);
-            buy=itemView.findViewById(R.id.buy);
+            inHour=itemView.findViewById(R.id.minerinhour);
         }
 
         @Override
@@ -68,7 +67,7 @@ public class ActiveMinersAdapter extends RecyclerView.Adapter<ActiveMinersAdapte
     }
 
     Miner getItem(int id) {
-        return listAdapterAverageMiner.get(id);
+        return listAdapterActivaMiner.get(id);
     }
 
     void setClickListener(ItemClickListener itemClickListener) {

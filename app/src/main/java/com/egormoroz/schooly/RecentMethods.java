@@ -369,8 +369,7 @@ public class RecentMethods {
 
     public static void GetActiveMiner(String nick,FirebaseModel model, Callbacks.GetActiveMiners callback) {
         model.initAll();
-        Query query = model.getUsersReference().child(nick)
-                .child("miners").child("activeMiners");
+        Query query = model.getUsersReference().child(nick).child("activeMiners");
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {

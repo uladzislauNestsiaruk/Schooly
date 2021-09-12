@@ -9,6 +9,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.egormoroz.schooly.Callbacks;
@@ -55,7 +56,7 @@ public class MyMinersAdapter extends RecyclerView.Adapter<MyMinersAdapter.ViewHo
                             @Override
                             public void PassUserNick(String nick) {
                                 firebaseModel.getUsersReference().child(nick)
-                                        .child("miners").child("activeMiners")
+                                        .child("activeMiners")
                                         .child(String.valueOf(pos)).setValue(listAdapter.get(pos));
                             }
                         });
