@@ -51,7 +51,7 @@ public class MiningFragment extends Fragment {
     int prise = 50;
     private View imageworkingminers;
     ImageView viewminer;
-    TextView minerprice, schoolycoin, myminers, upgrade, todaymining, morecoins,buy;
+    TextView minerprice, schoolycoinminer, myminers, upgrade, todaymining, morecoins,buy;
     RelativeLayout noactiveminers;
     FirebaseAuth AuthenticationBase;
     RecyclerView activeminersrecyclerview,weakminersrecyclerview,averageminersrecyclerview,strongminersrecyclerview;
@@ -89,14 +89,14 @@ public class MiningFragment extends Fragment {
         activeminersrecyclerview = view.findViewById(R.id.activeminersrecyclerview);
         viewminer = view.findViewById(R.id.viewmining);
         minerprice = view.findViewById(R.id.minerprice);
-        schoolycoin = view.findViewById(R.id.schoolycoin);
-        schoolycoin.setText(String.valueOf(money));
+        schoolycoinminer = view.findViewById(R.id.schoolycoin);
         upgrade = view.findViewById(R.id.upgrade);
         todaymining = view.findViewById(R.id.todaymining);
         buy=view.findViewById(R.id.buy);
         morecoins = view.findViewById(R.id.morecoins);
         GetDataFromBase();
         getActiveMinersFromBase();
+        SetSchoolyCoin();
         weakminersrecyclerview=view.findViewById(R.id.allminersrecyclerview);
         averageminersrecyclerview=view.findViewById(R.id.averageminersrecyclerview);
         strongminersrecyclerview=view.findViewById(R.id.strongminersrecyclerview);
@@ -174,5 +174,20 @@ public class MiningFragment extends Fragment {
             }
         });
         miningMoney();
+    }
+
+    public void SetSchoolyCoin(){
+        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+            @Override
+            public void PassUserNick(String nick) {
+                RecentMethods.GetMoneyFromBase(nick, firebaseModel, new Callbacks.MoneyFromBase() {
+                    @Override
+                    public void GetMoneyFromBase(long money) {
+                        schoolycoinminer.setText(String.valueOf(money));
+
+                    }
+                });
+            }
+        });
     }
 }

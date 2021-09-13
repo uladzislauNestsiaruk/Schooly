@@ -41,4 +41,7 @@ public class Callbacks {
     public interface GetActiveMiners{
         void GetActiveMiners(ArrayList<Miner> activeMinersFromBase);
     }
+    public interface MoneyFromBase{
+        void GetMoneyFromBase(long money);
+    }
 }

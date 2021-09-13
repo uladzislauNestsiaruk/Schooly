@@ -13,8 +13,8 @@ public class UserInformation {
     private long age = 404;
     private String miners="Start mining stupid dog!";
     private long level=1;
+    private long money=100;
     public UserInformation(){
-
     }
 
     public String getNick() {
@@ -83,8 +83,14 @@ public class UserInformation {
         this.level =level;
     }
 
+    public long getmoney() {return money;}
+
+    public void setmoney(long money){
+        this.money = money;
+    }
+
     public UserInformation(String nick, String phone, String uid, long Avatar, String password,
-                           String gender, long age,String miners,long level) {
+                           String gender, long age,String miners,long level,long money) {
         this.Nick = nick;
         this.uid = uid;
         this.phone = phone;
@@ -94,6 +100,7 @@ public class UserInformation {
         this.Avatar = Avatar;
         this.miners=miners;
         this.level=level;
+        this.money=money;
     }
 
 }

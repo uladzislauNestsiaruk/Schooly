@@ -12,33 +12,46 @@
         android:background="#EEEEEE"
         android:layout_centerHorizontal="true"/>
 
-
-    <TextView
-        android:id="@+id/minerprice"
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/app_color"
         android:layout_below="@+id/viewmining"
-        android:layout_marginTop="16dp"
-        android:fontFamily="@font/montserrat_extrabold"
-        android:textSize="18sp"/>
+        android:layout_marginTop="16dp">
 
-    <TextView
-        android:id="@+id/buy"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/buy"
-        android:layout_alignParentEnd="true"
-        android:layout_below="@+id/viewmining"
-        android:layout_marginTop="8dp"
-        android:layout_marginStart="94dp"
-        android:background="@drawable/corners14appcolor"
-        android:textColor="@color/white"
-        android:textSize="12sp"
-        android:fontFamily="@font/montserrat_extrabold"
-        android:paddingEnd="20dp"
-        android:paddingTop="10dp"
-        android:paddingStart="20dp"
-        android:paddingBottom="10dp"/>
+        <TextView
+            android:id="@+id/minerprice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/app_color"
+            android:fontFamily="@font/montserrat_extrabold"
+            android:textSize="18sp"
+            android:layout_centerVertical="true"/>
+
+        <ImageView
+            android:id="@+id/schoolycoin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/minerprice"
+            android:src="@drawable/ic_schoolycoin"
+            android:layout_marginStart="2dp"
+            android:layout_centerVertical="true"/>
+
+        <TextView
+            android:id="@+id/buy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="94dp"
+            android:background="@drawable/corners14appcolor"
+            android:fontFamily="@font/montserrat_extrabold"
+            android:paddingStart="20dp"
+            android:paddingTop="10dp"
+            android:paddingEnd="20dp"
+            android:paddingBottom="10dp"
+            android:text="@string/buy"
+            android:textColor="@color/white"
+            android:textSize="12sp" />
+
+    </RelativeLayout>
 
 </RelativeLayout>

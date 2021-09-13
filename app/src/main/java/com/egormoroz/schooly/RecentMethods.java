@@ -106,7 +106,7 @@ public class RecentMethods {
     public static boolean saveData(DatabaseReference ref, FirebaseUser user, String nick) {
 
         UserInformation res = new UserInformation(nick, "unknown", user.getUid(),
-                6, "unknown", "Helicopter", 1000, "Miner", 1);
+                6, "unknown", "Helicopter", 1000, "Miner", 1,100);
         ref.child(nick).setValue(res);
         return nick.isEmpty();
     }
@@ -383,6 +383,23 @@ public class RecentMethods {
                 }
                 callback.GetActiveMiners(activeMinersFromBase);
             }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    public static void GetMoneyFromBase(String nick,FirebaseModel firebaseModel,Callbacks.MoneyFromBase callback){
+        firebaseModel.initAll();
+        Query query=firebaseModel.getUsersReference().child(nick)
+                .child("money");
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                callback.GetMoneyFromBase(snapshot.getValue(Long.class));
+            }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
