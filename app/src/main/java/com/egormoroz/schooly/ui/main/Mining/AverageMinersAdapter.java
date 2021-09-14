@@ -46,28 +46,39 @@ public class AverageMinersAdapter extends RecyclerView.Adapter<AverageMinersAdap
         firebaseModel.initAll();
         Miner miner=listAdapterAverageMiner.get(position);
         holder.minerPrice.setText(String.valueOf(miner.getMinerPrice()));
-        holder.buy.setOnClickListener(new View.OnClickListener() {
+        String minerPriceText= (String) holder.minerPrice.getText();
+        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @Override
-            public void onClick(View v) {
-                int pos=holder.getAdapterPosition();
-                RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(),
-                        firebaseModel, new Callbacks.GetUserNickByUid() {
-                            @Override
-                            public void PassUserNick(String nick) {
-                                RecentMethods.buyAverageMiner(String.valueOf(pos), firebaseModel, new Callbacks.buyMiner() {
-                                    @Override
-                                    public void buyMiner(Miner miner) {
-                                        if(pos==0) {
-                                            firebaseModel.getReference("users").child(nick)
-                                                    .child("miners").child("0average").setValue(miner);
-                                            Log.d("#########", "miner  " + miner);
-                                        }else
-                                        {Log.d("#########", "fuck");
+            public void PassUserNick(String nick) {
+                RecentMethods.GetMoneyFromBase(nick, firebaseModel, new Callbacks.MoneyFromBase() {
+                    @Override
+                    public void GetMoneyFromBase(long money) {
+                        if (money<Long.valueOf(minerPriceText)){
+                            holder.buy.setBackgroundResource(R.drawable.corners14grey);
+                        }else {
+                            holder.buy.setBackgroundResource(R.drawable.corners14appcolor);
+                            holder.buy.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    int pos=holder.getAdapterPosition();
+                                    RecentMethods.GetMoneyFromBase(nick, firebaseModel, new Callbacks.MoneyFromBase() {
+                                        @Override
+                                        public void GetMoneyFromBase(long money) {
+                                            RecentMethods.buyWeakMiner(String.valueOf(pos), firebaseModel, new Callbacks.buyMiner() {
+                                                @Override
+                                                public void buyMiner(Miner miner) {
+                                                    firebaseModel.getReference("users").child(nick)
+                                                            .child("miners").child(String.valueOf(pos)+"medium").setValue(miner);
+                                                    Log.d("#########", "miner  " + miner);
+                                                }
+                                            });
                                         }
-                                    }
-                                });
-                            }
-                        });
+                                    });
+                                }
+                            });
+                        }
+                    }
+                });
             }
         });
     }

@@ -52,7 +52,7 @@ public class MiningFragment extends Fragment {
     private View imageworkingminers;
     ImageView viewminer;
     TextView minerprice, schoolycoinminer, myminers, upgrade, todaymining, morecoins,buy;
-    RelativeLayout noactiveminers;
+    RelativeLayout noactiveminers,buyminerdialog;
     FirebaseAuth AuthenticationBase;
     RecyclerView activeminersrecyclerview,weakminersrecyclerview,averageminersrecyclerview,strongminersrecyclerview;
     int minerMoney;
