@@ -44,4 +44,7 @@ public class Callbacks {
     public interface MoneyFromBase{
         void GetMoneyFromBase(long money);
     }
+    public interface GetTodayMining{
+        void GetTodayMining(double todayMining);
+    }
 }

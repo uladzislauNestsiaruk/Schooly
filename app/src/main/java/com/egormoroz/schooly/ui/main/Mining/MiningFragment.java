@@ -45,7 +45,6 @@ public class MiningFragment extends Fragment {
     FirebaseDatabase database;
     final String databaseUrl = CONST.RealtimeDatabaseUrl;
     DatabaseReference reference,ref;
-    String nick;
     int money = 100;
     int moneyaftermaining = 0;
     int prise = 50;
@@ -133,21 +132,28 @@ public class MiningFragment extends Fragment {
         });
     }
 
-    public void miningMoney() {
+    public void miningMoney(int minerInHour,String nick) {
         (new Thread(new Runnable(){
             @Override
             public void run(){
                 while (!Thread.interrupted())
                     try{
-                        Thread.sleep(1000);
-
+                        Thread.sleep(1000000);
                         if(getActivity() == null)
                             return;
                         getActivity().runOnUiThread(new Runnable(){
                             @Override
                             public void run()
-                            { minerMoney++;
-                                todaymining.setText(String.valueOf(minerMoney));
+                            { double minerInSecond=minerInHour/3600;
+                                todaymining.setText(String.valueOf(minerInSecond));
+                                firebaseModel.getUsersReference().child(nick).child("todayMining")
+                                        .setValue(minerInSecond);
+                                RecentMethods.GetTodayMining(nick, firebaseModel, new Callbacks.GetTodayMining() {
+                                    @Override
+                                    public void GetTodayMining(double todayMining) {
+                                        todaymining.setText(String.valueOf(todayMining));
+                                    }
+                                });
                             }
                         });
                     }
@@ -173,7 +179,6 @@ public class MiningFragment extends Fragment {
                         });
             }
         });
-        miningMoney();
     }
 
     public void SetSchoolyCoin(){

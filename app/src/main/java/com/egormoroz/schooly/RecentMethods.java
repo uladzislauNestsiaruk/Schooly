@@ -406,4 +406,21 @@ public class RecentMethods {
             }
         });
     }
+
+    public static void GetTodayMining(String nick,FirebaseModel model,Callbacks.GetTodayMining callback){
+        model.initAll();
+        Query query=model.getUsersReference().child(nick)
+                .child("todayMining");
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+               callback.GetTodayMining(dataSnapshot.getValue(Double.class));
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
 }
