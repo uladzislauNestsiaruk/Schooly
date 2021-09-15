@@ -41,22 +41,13 @@ public class MiningFragment extends Fragment {
     ArrayList<Miner> listAdapterActiveMiner = new ArrayList<Miner>();
     ArrayList<Miner> allminersarraylist = new ArrayList<Miner>();
     private FirebaseModel firebaseModel = new FirebaseModel();
-    FirebaseAuth authenticationDatabase;
-    FirebaseDatabase database;
-    final String databaseUrl = CONST.RealtimeDatabaseUrl;
-    DatabaseReference reference,ref;
-    int money = 100;
-    int moneyaftermaining = 0;
-    int prise = 50;
     private View imageworkingminers;
     ImageView viewminer;
-    TextView minerprice, schoolycoinminer, myminers, upgrade, todaymining, morecoins,buy;
+    long todayMining;
+    TextView minerprice, schoolycoinminer, myminers, upgrade, todayminingText, morecoins,buy;
     RelativeLayout noactiveminers,buyminerdialog;
     FirebaseAuth AuthenticationBase;
     RecyclerView activeminersrecyclerview,weakminersrecyclerview,averageminersrecyclerview,strongminersrecyclerview;
-    int minerMoney;
-    ArrayList<Miner> minersInBase=new ArrayList<>();
-    DataSnapshot dataSnapshot;
     private static final String TAG = "###########";
 
     @Override
@@ -66,6 +57,7 @@ public class MiningFragment extends Fragment {
         BottomNavigationView bnv = getActivity().findViewById(R.id.bottomNavigationView);
         bnv.setVisibility(bnv.GONE);
         firebaseModel.initAll();
+        miningMoney(10);
         return root;
     }
     @Override
@@ -90,12 +82,13 @@ public class MiningFragment extends Fragment {
         minerprice = view.findViewById(R.id.minerprice);
         schoolycoinminer = view.findViewById(R.id.schoolycoin);
         upgrade = view.findViewById(R.id.upgrade);
-        todaymining = view.findViewById(R.id.todaymining);
+        todayminingText = view.findViewById(R.id.todaymining);
         buy=view.findViewById(R.id.buy);
         morecoins = view.findViewById(R.id.morecoins);
         GetDataFromBase();
         getActiveMinersFromBase();
         SetSchoolyCoin();
+        todayminingText.setText(String.valueOf(0));
         weakminersrecyclerview=view.findViewById(R.id.allminersrecyclerview);
         averageminersrecyclerview=view.findViewById(R.id.averageminersrecyclerview);
         strongminersrecyclerview=view.findViewById(R.id.strongminersrecyclerview);
@@ -132,28 +125,22 @@ public class MiningFragment extends Fragment {
         });
     }
 
-    public void miningMoney(int minerInHour,String nick) {
+    public void miningMoney(long minerInHour) {
         (new Thread(new Runnable(){
             @Override
             public void run(){
                 while (!Thread.interrupted())
                     try{
-                        Thread.sleep(1000000);
+                        Thread.sleep(1000);
                         if(getActivity() == null)
                             return;
                         getActivity().runOnUiThread(new Runnable(){
                             @Override
-                            public void run()
-                            { double minerInSecond=minerInHour/3600;
-                                todaymining.setText(String.valueOf(minerInSecond));
-                                firebaseModel.getUsersReference().child(nick).child("todayMining")
-                                        .setValue(minerInSecond);
-                                RecentMethods.GetTodayMining(nick, firebaseModel, new Callbacks.GetTodayMining() {
-                                    @Override
-                                    public void GetTodayMining(double todayMining) {
-                                        todaymining.setText(String.valueOf(todayMining));
-                                    }
-                                });
+                            public void run() {
+                                long todayMiningget=Long.valueOf((String) todayminingText.getText());
+                                todayMining=todayMiningget+minerInHour;
+                                todayminingText.setText(String.valueOf(todayMining));
+                                Log.d("########", "gffg  "+todayminingText);
                             }
                         });
                     }
