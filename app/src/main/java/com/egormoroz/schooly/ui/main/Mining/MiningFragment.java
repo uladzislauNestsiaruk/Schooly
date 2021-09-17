@@ -43,7 +43,8 @@ public class MiningFragment extends Fragment {
     private FirebaseModel firebaseModel = new FirebaseModel();
     private View imageworkingminers;
     ImageView viewminer;
-    long todayMining;
+    long todayMiningGet;
+    double todayMining;
     TextView minerprice, schoolycoinminer, myminers, upgrade, todayminingText, morecoins,buy;
     RelativeLayout noactiveminers,buyminerdialog;
     FirebaseAuth AuthenticationBase;
@@ -57,7 +58,6 @@ public class MiningFragment extends Fragment {
         BottomNavigationView bnv = getActivity().findViewById(R.id.bottomNavigationView);
         bnv.setVisibility(bnv.GONE);
         firebaseModel.initAll();
-        miningMoney(10);
         return root;
     }
     @Override
@@ -125,22 +125,39 @@ public class MiningFragment extends Fragment {
         });
     }
 
-    public void miningMoney(long minerInHour) {
+    public void miningMoney() {
         (new Thread(new Runnable(){
             @Override
             public void run(){
                 while (!Thread.interrupted())
                     try{
-                        Thread.sleep(1000);
+                        Thread.sleep(10000);
                         if(getActivity() == null)
                             return;
                         getActivity().runOnUiThread(new Runnable(){
                             @Override
                             public void run() {
-                                long todayMiningget=Long.valueOf((String) todayminingText.getText());
-                                todayMining=todayMiningget+minerInHour;
-                                todayminingText.setText(String.valueOf(todayMining));
-                                Log.d("########", "gffg  "+todayminingText);
+                                RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+                                    @Override
+                                    public void PassUserNick(String nick) {
+                                        RecentMethods.GetTodayMining(nick, firebaseModel, new Callbacks.GetTodayMining() {
+                                            @Override
+                                            public void GetTodayMining(double todayMiningFromBase) {
+                                                RecentMethods.GetActiveMiner(nick, firebaseModel, new Callbacks.GetActiveMiners() {
+                                                    @Override
+                                                    public void GetActiveMiners(ArrayList<Miner> activeMinersFromBase) {
+                                                        Miner rgktk =activeMinersFromBase.get(0);
+                                                        double bbbb=Double.valueOf(String.valueOf(rgktk.getInHour()));
+                                                        todayMining= todayMiningFromBase+bbbb;
+                                                        firebaseModel.getUsersReference().child(nick).child("todayMining").setValue(todayMining);
+                                                        todayminingText.setText(String.valueOf(todayMining));
+                                                        Log.d("######", "fgtg  "+todayMining);
+                                                    }
+                                                });
+                                            }
+                                        });
+                                    }
+                                });
                             }
                         });
                     }
@@ -176,7 +193,6 @@ public class MiningFragment extends Fragment {
                     @Override
                     public void GetMoneyFromBase(long money) {
                         schoolycoinminer.setText(String.valueOf(money));
-
                     }
                 });
             }

@@ -126,5 +126,6 @@ public class WeakMinersAdapter extends RecyclerView.Adapter<WeakMinersAdapter.Vi
                 outRect.bottom = 0;
             }
         }
+
     }
 }

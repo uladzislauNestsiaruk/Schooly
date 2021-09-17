@@ -15,6 +15,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.egormoroz.schooly.ui.chat.Dialog;
 import com.egormoroz.schooly.ui.main.ChatFragment;
 import com.egormoroz.schooly.ui.main.MainFragment;
+import com.egormoroz.schooly.ui.main.Mining.MiningFragment;
 import com.egormoroz.schooly.ui.main.RegisrtationstartFragment;
 import com.egormoroz.schooly.ui.main.UserInformation;
 import com.egormoroz.schooly.ui.news.NewsFragment;
