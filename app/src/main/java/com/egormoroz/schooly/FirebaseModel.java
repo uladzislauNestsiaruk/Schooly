@@ -1,8 +1,14 @@
 package com.egormoroz.schooly;
+import static java.text.DateFormat.getDateTimeInstance;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import java.text.DateFormat;
+import java.util.Date;
+
 public class FirebaseModel {
     public FirebaseAuth AuthenticationBase;
     public FirebaseDatabase Database;

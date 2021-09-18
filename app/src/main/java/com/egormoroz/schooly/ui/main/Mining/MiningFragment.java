@@ -1,6 +1,7 @@
 package com.egormoroz.schooly.ui.main.Mining;
 
 import android.os.Bundle;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,8 +26,11 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Map;
 
 
 public class MiningFragment extends Fragment {
@@ -41,13 +45,10 @@ public class MiningFragment extends Fragment {
     ArrayList<Miner> listAdapterActiveMiner = new ArrayList<Miner>();
     ArrayList<Miner> allminersarraylist = new ArrayList<Miner>();
     private FirebaseModel firebaseModel = new FirebaseModel();
-    private View imageworkingminers;
     ImageView viewminer;
-    long todayMiningGet;
     double todayMining;
+    Map<String,String> timeStamp;
     TextView minerprice, schoolycoinminer, myminers, upgrade, todayminingText, morecoins,buy;
-    RelativeLayout noactiveminers,buyminerdialog;
-    FirebaseAuth AuthenticationBase;
     RecyclerView activeminersrecyclerview,weakminersrecyclerview,averageminersrecyclerview,strongminersrecyclerview;
     private static final String TAG = "###########";
 
@@ -60,6 +61,7 @@ public class MiningFragment extends Fragment {
         firebaseModel.initAll();
         return root;
     }
+
     @Override
     public void onViewCreated(@Nullable View view, @NonNull Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -88,6 +90,7 @@ public class MiningFragment extends Fragment {
         GetDataFromBase();
         getActiveMinersFromBase();
         SetSchoolyCoin();
+        miningMoney();
         todayminingText.setText(String.valueOf(0));
         weakminersrecyclerview=view.findViewById(R.id.allminersrecyclerview);
         averageminersrecyclerview=view.findViewById(R.id.averageminersrecyclerview);
@@ -131,7 +134,7 @@ public class MiningFragment extends Fragment {
             public void run(){
                 while (!Thread.interrupted())
                     try{
-                        Thread.sleep(10000);
+                        Thread.sleep(1000);
                         if(getActivity() == null)
                             return;
                         getActivity().runOnUiThread(new Runnable(){
@@ -149,13 +152,16 @@ public class MiningFragment extends Fragment {
                                                         Miner rgktk =activeMinersFromBase.get(0);
                                                         double bbbb=Double.valueOf(String.valueOf(rgktk.getInHour()));
                                                         todayMining= todayMiningFromBase+bbbb;
-                                                        firebaseModel.getUsersReference().child(nick).child("todayMining").setValue(todayMining);
-                                                        todayminingText.setText(String.valueOf(todayMining));
-                                                        Log.d("######", "fgtg  "+todayMining);
+                                                        Log.d("######", "ggggtg  "+todayMiningFromBase);
                                                     }
                                                 });
                                             }
                                         });
+                                        todayminingText.setText(String.valueOf(todayMining));
+                                        firebaseModel.getUsersReference().child(nick)
+                                                .child("todayMining").setValue(todayMining);
+
+                                        Log.d("######", "fgtg  "+todayMining);
                                     }
                                 });
                             }

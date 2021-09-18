@@ -14,6 +14,7 @@ public class UserInformation {
     private String miners="Start mining stupid dog!";
     private long level=1;
     private long money=100;
+    private double todayMining=0;
     public UserInformation(){
     }
 
@@ -89,8 +90,14 @@ public class UserInformation {
         this.money = money;
     }
 
+    public double getTodayMining() {return todayMining;}
+
+    public void setTodayMining(double todayMining){
+        this.todayMining = todayMining;
+    }
+
     public UserInformation(String nick, String phone, String uid, long Avatar, String password,
-                           String gender, long age,String miners,long level,long money) {
+                           String gender, long age,String miners,long level,long money,double todayMining) {
         this.Nick = nick;
         this.uid = uid;
         this.phone = phone;
@@ -101,6 +108,7 @@ public class UserInformation {
         this.miners=miners;
         this.level=level;
         this.money=money;
+        this.todayMining=todayMining;
     }
 
 }
