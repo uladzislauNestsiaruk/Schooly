@@ -2,6 +2,7 @@ package com.egormoroz.schooly;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -28,7 +29,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements
         com.egormoroz.schooly.ui.main.sendDialogs{
@@ -36,6 +41,7 @@ public class MainActivity extends AppCompatActivity implements
     private FirebaseDatabase database;
     private DatabaseReference reference;
     private FirebaseAuth AuthenticationBase;
+    long time;
     FirebaseModel firebaseModel=new FirebaseModel();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,9 +135,34 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d("########", "timeeeeeergnfn  "+ServerValue.TIMESTAMP);
+        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+            @Override
+            public void PassUserNick(String nick) {
+                RecentMethods.GetTimesTamp(nick, firebaseModel, new Callbacks.GetTimesTamp() {
+                    @Override
+                    public void GetTimesTamp(long timesTamp) {
+                        SimpleDateFormat dateFormat=new SimpleDateFormat("HH:mm:ss");
+                        String time=dateFormat.format(timesTamp);
+                        Log.d("########", "timeeeeee  "+time);
+                    }
+                });
+            }
+        });
+    }
+
+    public interface GetTimeStamp{
+        public void GetTimeStamp(long timestamp);
+    }
+    public void Time(GetTimeStamp getTimeStamp){
+        getTimeStamp.GetTimeStamp(time);
+    }
+
+    @Override
     protected void onStop() {
         super.onStop();
-
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @Override
             public void PassUserNick(String nick) {

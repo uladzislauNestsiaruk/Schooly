@@ -423,4 +423,19 @@ public class RecentMethods {
             }
         });
     }
+    public static void GetTimesTamp(String nick, FirebaseModel firebaseModel,Callbacks.GetTimesTamp callback){
+        firebaseModel.initAll();
+        Query query =firebaseModel.getUsersReference().child(nick).child("timesTamp");
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                callback.GetTimesTamp(snapshot.getValue(Long.class));
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
 }

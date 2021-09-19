@@ -32,6 +32,7 @@ import androidx.core.app.ActivityCompat;
 
 import com.egormoroz.schooly.CONST;
 import com.egormoroz.schooly.FirebaseModel;
+import com.egormoroz.schooly.MainActivity;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.ui.chat.Message;
 import com.egormoroz.schooly.ui.chat.User;

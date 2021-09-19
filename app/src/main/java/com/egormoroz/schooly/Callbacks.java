@@ -47,4 +47,7 @@ public class Callbacks {
     public interface GetTodayMining{
         void GetTodayMining(double todayMiningFromBase);
     }
+    public interface GetTimesTamp{
+        void GetTimesTamp(long timesTamp);
+    }
 }
