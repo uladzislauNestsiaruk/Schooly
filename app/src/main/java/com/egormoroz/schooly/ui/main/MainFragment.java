@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.MainActivity;
 import com.egormoroz.schooly.R;
@@ -21,10 +22,13 @@ import com.stfalcon.chatkit.commons.ImageLoader;
 import com.stfalcon.chatkit.commons.models.IDialog;
 import com.stfalcon.chatkit.dialogs.DialogsListAdapter;
 
+import java.text.DecimalFormat;
+
 public class MainFragment extends Fragment{
     protected DialogsListAdapter<IDialog> dialogsAdapter;
     protected ImageLoader imageLoader;
     private MainViewModel mainViewModel;
+    TextView todayMiningMain;
     private FirebaseModel firebaseModel = new FirebaseModel();
     private UserInformation userData = new UserInformation();
 
@@ -39,6 +43,7 @@ public class MainFragment extends Fragment{
 //        abl.setVisibility(abl.GONE);
         BottomNavigationView bnv = getActivity().findViewById(R.id.bottomNavigationView);
         bnv.setVisibility(View.VISIBLE);
+        firebaseModel.initAll();
         return root;
     }
     @Override
@@ -75,6 +80,20 @@ public class MainFragment extends Fragment{
                 RecentMethods.setCurrentFragment(MiningFragment.newInstanse(), getActivity());
             }
         });
+        todayMiningMain=view.findViewById(R.id.todayminingmain);
+        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+            @Override
+            public void PassUserNick(String nick) {
+                RecentMethods.GetTodayMining(nick, firebaseModel, new Callbacks.GetTodayMining() {
+                    @Override
+                    public void GetTodayMining(double todayMiningFromBase) {
+                        String todayMiningFormatted = new DecimalFormat("#0.00").format(todayMiningFromBase);
+                        todayMiningMain.setText(todayMiningFormatted);
+                    }
+                });
+            }
+        });
     }
+
 
 }

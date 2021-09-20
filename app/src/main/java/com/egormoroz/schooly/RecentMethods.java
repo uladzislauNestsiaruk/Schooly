@@ -438,4 +438,20 @@ public class RecentMethods {
             }
         });
     }
+
+    public static void GetTimeStampNow(String nick, FirebaseModel firebaseModel,Callbacks.GetTimesTamp callback){
+        firebaseModel.initAll();
+        Query query =firebaseModel.getUsersReference().child(nick).child("serverTimeNow");
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                callback.GetTimesTamp(snapshot.getValue(Long.class));
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
 }

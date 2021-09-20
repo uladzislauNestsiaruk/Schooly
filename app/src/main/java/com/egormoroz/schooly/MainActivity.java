@@ -16,6 +16,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.egormoroz.schooly.ui.chat.Dialog;
 import com.egormoroz.schooly.ui.main.ChatFragment;
 import com.egormoroz.schooly.ui.main.MainFragment;
+import com.egormoroz.schooly.ui.main.Mining.Miner;
 import com.egormoroz.schooly.ui.main.Mining.MiningFragment;
 import com.egormoroz.schooly.ui.main.RegisrtationstartFragment;
 import com.egormoroz.schooly.ui.main.UserInformation;
@@ -41,7 +42,9 @@ public class MainActivity extends AppCompatActivity implements
     private FirebaseDatabase database;
     private DatabaseReference reference;
     private FirebaseAuth AuthenticationBase;
-    long time;
+    String time,timeNow;
+    long a,d,min;
+    double minInGap;
     FirebaseModel firebaseModel=new FirebaseModel();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,16 +140,69 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     protected void onStart() {
         super.onStart();
-        Log.d("########", "timeeeeeergnfn  "+ServerValue.TIMESTAMP);
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @Override
             public void PassUserNick(String nick) {
-                RecentMethods.GetTimesTamp(nick, firebaseModel, new Callbacks.GetTimesTamp() {
+                RecentMethods.GetActiveMiner(nick, firebaseModel, new Callbacks.GetActiveMiners() {
                     @Override
-                    public void GetTimesTamp(long timesTamp) {
-                        SimpleDateFormat dateFormat=new SimpleDateFormat("HH:mm:ss");
-                        String time=dateFormat.format(timesTamp);
-                        Log.d("########", "timeeeeee  "+time);
+                    public void GetActiveMiners(ArrayList<Miner> activeMinersFromBase) {
+                        ArrayList<Miner> getActiveMinersArrayList=new ArrayList<>();
+                        getActiveMinersArrayList=activeMinersFromBase;
+                        if(getActiveMinersArrayList.size()>0) {
+                            firebaseModel.getUsersReference().child(nick).child("serverTimeNow")
+                                    .setValue(ServerValue.TIMESTAMP);
+                            RecentMethods.GetTimeStampNow(nick, firebaseModel, new Callbacks.GetTimesTamp() {
+                                @Override
+                                public void GetTimesTamp(long timesTamp) {
+                                    a = timesTamp;
+                                }
+                            });
+                            RecentMethods.GetTimesTamp(nick, firebaseModel, new Callbacks.GetTimesTamp() {
+                                @Override
+                                public void GetTimesTamp(long timesTamp) {
+                                    d = timesTamp;
+                                    long timeGap = a - d;
+                                    long days = (timeGap / (1000 * 60 * 60 * 24));
+                                    long hours = ((timeGap - (1000 * 60 * 60 * 24 * days)) / (1000 * 60 * 60));
+                                    min = (timeGap - (1000 * 60 * 60 * 24 * days) - (1000 * 60 * 60 * hours)) / (1000 * 60);
+                                    Log.d("#######", "min  " + min);
+                                    minInGap=Double.valueOf(String.valueOf(min));
+                                    MiningMoneyGap();
+                                }
+                            });
+                        }else {
+                        }
+                    }
+                });
+            }
+        });
+
+    }
+    public void MiningMoneyGap(){
+        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+            @Override
+            public void PassUserNick(String nick) {
+                RecentMethods.GetActiveMiner(nick, firebaseModel, new Callbacks.GetActiveMiners() {
+                    @Override
+                    public void GetActiveMiners(ArrayList<Miner> activeMinersFromBase) {
+                        ArrayList<Miner> getActiveMinersArrayList=new ArrayList<>();
+                        getActiveMinersArrayList=activeMinersFromBase;
+                        if(getActiveMinersArrayList.size()==1) {
+                            Miner getFirstActiveMiner = getActiveMinersArrayList.get(0);
+                            long getInHourMiner = getFirstActiveMiner.getInHour();
+                            double getFirstMinerInHour = Double.valueOf(String.valueOf(getInHourMiner));
+                            Log.d("#######", "ddd  " + minInGap);
+                            Log.d("#######", "a  " + getFirstMinerInHour);
+                            double miningMoneyInGap = minInGap * (getFirstMinerInHour / 60);
+                            RecentMethods.GetTodayMining(nick, firebaseModel, new Callbacks.GetTodayMining() {
+                                @Override
+                                public void GetTodayMining(double todayMiningFromBase) {
+                                    firebaseModel.getUsersReference().child(nick)
+                                            .child("todayMining").setValue(miningMoneyInGap);
+                                    Log.d("#######", "dd  " + miningMoneyInGap+todayMiningFromBase);
+                                }
+                            });
+                        }
                     }
                 });
             }
@@ -155,9 +211,6 @@ public class MainActivity extends AppCompatActivity implements
 
     public interface GetTimeStamp{
         public void GetTimeStamp(long timestamp);
-    }
-    public void Time(GetTimeStamp getTimeStamp){
-        getTimeStamp.GetTimeStamp(time);
     }
 
     @Override
