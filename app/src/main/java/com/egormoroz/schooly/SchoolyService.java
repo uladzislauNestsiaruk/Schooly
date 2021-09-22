@@ -18,7 +18,7 @@ import java.util.Map;
 
 public class SchoolyService extends Service {
     FirebaseModel firebaseModel=new FirebaseModel();
-    double todayMining,minInGap;
+    double todayMining,minInGap,miningMoneyInGap;
     long a,d,min;
     @Nullable
     @Override
@@ -58,8 +58,7 @@ public class SchoolyService extends Service {
                                     long days = (timeGap / (1000 * 60 * 60 * 24));
                                     long hours = ((timeGap - (1000 * 60 * 60 * 24 * days)) / (1000 * 60 * 60));
                                     min = (timeGap - (1000 * 60 * 60 * 24 * days) - (1000 * 60 * 60 * hours)) / (1000 * 60);
-                                    Log.d("#######", "min  " + min);
-                                    minInGap=Double.valueOf(String.valueOf(min));
+                                    minInGap=Double.valueOf(String.valueOf(min+hours*60+days*24*60));
                                     MiningMoneyGap();
                                 }
                             });
@@ -72,28 +71,7 @@ public class SchoolyService extends Service {
         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
             @Override
             public void run() {
-                RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-                    @Override
-                    public void PassUserNick(String nick) {
-                        RecentMethods.GetTodayMining(nick, firebaseModel, new Callbacks.GetTodayMining() {
-                            @Override
-                            public void GetTodayMining(double todayMiningFromBase) {
-                                RecentMethods.GetActiveMiner(nick, firebaseModel, new Callbacks.GetActiveMiners() {
-                                    @Override
-                                    public void GetActiveMiners(ArrayList<Miner> activeMinersFromBase) {
-                                        Miner rgktk =activeMinersFromBase.get(0);
-                                        double bbbb=Double.valueOf(String.valueOf(rgktk.getInHour()));
-                                        todayMining= todayMiningFromBase+bbbb;
-                                        Log.d("######", "ggggtg  "+todayMiningFromBase);
-                                    }
-                                });
-                            }
-                        });
-                        firebaseModel.getUsersReference().child(nick)
-                                .child("todayMining").setValue(todayMining);
-                        Log.d("######", "fgtg  "+todayMining);
-                    }
-                });
+                miningMoneyFun();
             }
         }, 1000);
         return super.onStartCommand(intent, flags, startId);
@@ -112,23 +90,44 @@ public class SchoolyService extends Service {
                             Miner getFirstActiveMiner = getActiveMinersArrayList.get(0);
                             long getInHourMiner = getFirstActiveMiner.getInHour();
                             double getFirstMinerInHour = Double.valueOf(String.valueOf(getInHourMiner));
-                            Log.d("#######", "ddd  " + minInGap);
-                            Log.d("#######", "a  " + getFirstMinerInHour);
-                            double miningMoneyInGap = minInGap * (getFirstMinerInHour / 60);
-                            RecentMethods.GetTodayMining(nick, firebaseModel, new Callbacks.GetTodayMining() {
-                                @Override
-                                public void GetTodayMining(double todayMiningFromBase) {
-                                    firebaseModel.getUsersReference().child(nick)
-                                            .child("todayMining").setValue(miningMoneyInGap);
-                                    Log.d("#######", "dd  " + miningMoneyInGap+todayMiningFromBase);
-                                }
-                            });
+                            miningMoneyInGap = minInGap * (getFirstMinerInHour / 60);
+                            firebaseModel.getUsersReference().child(nick)
+                                    .child("todayMining").setValue(miningMoneyInGap);
+                            Log.d("##########","gaaap  "+miningMoneyInGap);
                         }
                     }
                 });
             }
         });
     }
+
+    public void miningMoneyFun(){
+                RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+                    @Override
+                    public void PassUserNick(String nick) {
+                        RecentMethods.GetTodayMining(nick, firebaseModel, new Callbacks.GetTodayMining() {
+                            @Override
+                            public void GetTodayMining(double todayMiningFromBase) {
+                                RecentMethods.GetActiveMiner(nick, firebaseModel, new Callbacks.GetActiveMiners() {
+                                    @Override
+                                    public void GetActiveMiners(ArrayList<Miner> activeMinersFromBase) {
+                                        Miner firstMiner =activeMinersFromBase.get(0);
+                                        double minerInHour=Double.valueOf(String.valueOf(firstMiner.getInHour()));
+                                        double firstMinerInHour=minerInHour/60;
+                                        todayMining= todayMiningFromBase+firstMinerInHour;
+                                        Log.d("######", "todayminingbase  "+todayMiningFromBase);
+                                        Log.d("######", "t  "+todayMining);
+                                    }
+                                });
+                            }
+                        });
+                        firebaseModel.getUsersReference().child(nick)
+                                .child("todayMining").setValue(todayMining);
+                        Log.d("##########","today  "+todayMining);
+                    }
+                });
+    }
+
 
     @Override
     public void onDestroy() {

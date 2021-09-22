@@ -91,7 +91,6 @@ public class MiningFragment extends Fragment {
         GetDataFromBase();
         getActiveMinersFromBase();
         SetSchoolyCoin();
-        miningMoney();
         todayminingText.setText(String.valueOf(0));
         weakminersrecyclerview=view.findViewById(R.id.allminersrecyclerview);
         averageminersrecyclerview=view.findViewById(R.id.averageminersrecyclerview);
@@ -147,22 +146,10 @@ public class MiningFragment extends Fragment {
                                         RecentMethods.GetTodayMining(nick, firebaseModel, new Callbacks.GetTodayMining() {
                                             @Override
                                             public void GetTodayMining(double todayMiningFromBase) {
-                                                RecentMethods.GetActiveMiner(nick, firebaseModel, new Callbacks.GetActiveMiners() {
-                                                    @Override
-                                                    public void GetActiveMiners(ArrayList<Miner> activeMinersFromBase) {
-                                                        Miner rgktk =activeMinersFromBase.get(0);
-                                                        double bbbb=Double.valueOf(String.valueOf(rgktk.getInHour()));
-                                                        todayMining= todayMiningFromBase+bbbb;
-                                                        Log.d("######", "ggggtg  "+todayMiningFromBase);
-                                                    }
-                                                });
+                                               todayminingText.setText(String.valueOf(todayMiningFromBase));
                                             }
                                         });
-                                        todayminingText.setText(String.valueOf(todayMining));
-                                        firebaseModel.getUsersReference().child(nick)
-                                                .child("todayMining").setValue(todayMining);
 
-                                        Log.d("######", "fgtg  "+todayMining);
                                     }
                                 });
                             }
