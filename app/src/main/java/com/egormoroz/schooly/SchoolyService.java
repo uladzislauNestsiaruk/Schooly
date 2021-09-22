@@ -6,7 +6,6 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.util.Log;
-import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
@@ -14,12 +13,12 @@ import com.egormoroz.schooly.ui.main.Mining.Miner;
 import com.google.firebase.database.ServerValue;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 public class SchoolyService extends Service {
     FirebaseModel firebaseModel=new FirebaseModel();
     double todayMining,minInGap,miningMoneyInGap;
     long a,d,min;
+    int aee=8;
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -60,6 +59,7 @@ public class SchoolyService extends Service {
                                     min = (timeGap - (1000 * 60 * 60 * 24 * days) - (1000 * 60 * 60 * hours)) / (1000 * 60);
                                     minInGap=Double.valueOf(String.valueOf(min+hours*60+days*24*60));
                                     MiningMoneyGap();
+                                    Log.d("########", "vv  "+minInGap);
                                 }
                             });
                         }else {
@@ -68,12 +68,21 @@ public class SchoolyService extends Service {
                 });
             }
         });
-        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+        Thread thread = new Thread()
+        {
             @Override
             public void run() {
-                miningMoneyFun();
+                try {
+                    while(true) {
+                        Thread.sleep(1000);
+                        miningMoneyFun();
+                    }
+                } catch (InterruptedException e) {
+                }
             }
-        }, 1000);
+        };
+
+        thread.start();
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -115,8 +124,7 @@ public class SchoolyService extends Service {
                                         double minerInHour=Double.valueOf(String.valueOf(firstMiner.getInHour()));
                                         double firstMinerInHour=minerInHour/60;
                                         todayMining= todayMiningFromBase+firstMinerInHour;
-                                        Log.d("######", "todayminingbase  "+todayMiningFromBase);
-                                        Log.d("######", "t  "+todayMining);
+                                        Log.d("#####","base  "+todayMiningFromBase);
                                     }
                                 });
                             }
@@ -133,4 +141,5 @@ public class SchoolyService extends Service {
     public void onDestroy() {
         super.onDestroy();
     }
+
 }
