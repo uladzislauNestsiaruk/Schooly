@@ -16,7 +16,7 @@ import java.util.ArrayList;
 
 public class SchoolyService extends Service {
     FirebaseModel firebaseModel=new FirebaseModel();
-    double todayMining,minInGap,miningMoneyInGap;
+    double todayMining,minInGap,miningMoneyInGap,todayMiningBase;
     long a,d,min;
     int aee=8;
     @Nullable
@@ -59,7 +59,6 @@ public class SchoolyService extends Service {
                                     min = (timeGap - (1000 * 60 * 60 * 24 * days) - (1000 * 60 * 60 * hours)) / (1000 * 60);
                                     minInGap=Double.valueOf(String.valueOf(min+hours*60+days*24*60));
                                     MiningMoneyGap();
-                                    Log.d("########", "vv  "+minInGap);
                                 }
                             });
                         }else {
@@ -75,6 +74,7 @@ public class SchoolyService extends Service {
                 try {
                     while(true) {
                         Thread.sleep(1000);
+                        fgfhf();
                         miningMoneyFun();
                     }
                 } catch (InterruptedException e) {
@@ -117,16 +117,17 @@ public class SchoolyService extends Service {
                         RecentMethods.GetTodayMining(nick, firebaseModel, new Callbacks.GetTodayMining() {
                             @Override
                             public void GetTodayMining(double todayMiningFromBase) {
-                                RecentMethods.GetActiveMiner(nick, firebaseModel, new Callbacks.GetActiveMiners() {
-                                    @Override
-                                    public void GetActiveMiners(ArrayList<Miner> activeMinersFromBase) {
-                                        Miner firstMiner =activeMinersFromBase.get(0);
-                                        double minerInHour=Double.valueOf(String.valueOf(firstMiner.getInHour()));
-                                        double firstMinerInHour=minerInHour/60;
-                                        todayMining= todayMiningFromBase+firstMinerInHour;
-                                        Log.d("#####","base  "+todayMiningFromBase);
-                                    }
-                                });
+                                todayMiningBase=todayMiningFromBase;
+                            }
+                        });
+                        RecentMethods.GetActiveMiner(nick, firebaseModel, new Callbacks.GetActiveMiners() {
+                            @Override
+                            public void GetActiveMiners(ArrayList<Miner> activeMinersFromBase) {
+                                Miner firstMiner =activeMinersFromBase.get(0);
+                                double minerInHour=Double.valueOf(String.valueOf(firstMiner.getInHour()));
+                                double firstMinerInHour=minerInHour/3600;
+                                todayMining= todayMiningBase+firstMinerInHour;
+                                Log.d("#####","base  "+todayMiningBase);
                             }
                         });
                         firebaseModel.getUsersReference().child(nick)
