@@ -74,7 +74,6 @@ public class SchoolyService extends Service {
                 try {
                     while(true) {
                         Thread.sleep(1000);
-                        fgfhf();
                         miningMoneyFun();
                     }
                 } catch (InterruptedException e) {
