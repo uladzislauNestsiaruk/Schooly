@@ -16,7 +16,7 @@ import java.util.ArrayList;
 
 public class SchoolyService extends Service {
     FirebaseModel firebaseModel=new FirebaseModel();
-    double todayMining,minInGap,miningMoneyInGap,todayMiningBase;
+    double todayMining,minInGap,miningMoneyInGap,todayMiningBase,t;
     long a,d,min;
     int aee=8;
     @Nullable
@@ -28,6 +28,17 @@ public class SchoolyService extends Service {
     public void onCreate() {
         super.onCreate();
         firebaseModel.initAll();
+        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+            @Override
+            public void PassUserNick(String nick) {
+                RecentMethods.GetTodayMining(nick, firebaseModel, new Callbacks.GetTodayMining() {
+                    @Override
+                    public void GetTodayMining(double todayMiningFromBase) {
+                        t=todayMiningFromBase;
+                    }
+                });
+            }
+        });
     }
 
     @Override
@@ -72,6 +83,17 @@ public class SchoolyService extends Service {
             @Override
             public void run() {
                 try {
+                    RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+                        @Override
+                        public void PassUserNick(String nick) {
+                            RecentMethods.GetTodayMining(nick, firebaseModel, new Callbacks.GetTodayMining() {
+                                @Override
+                                public void GetTodayMining(double todayMiningFromBase) {
+                                    todayMiningBase=todayMiningFromBase;
+                                }
+                            });
+                        }
+                    });
                     while(true) {
                         Thread.sleep(1000);
                         miningMoneyFun();
@@ -100,7 +122,7 @@ public class SchoolyService extends Service {
                             double getFirstMinerInHour = Double.valueOf(String.valueOf(getInHourMiner));
                             miningMoneyInGap = minInGap * (getFirstMinerInHour / 60);
                             firebaseModel.getUsersReference().child(nick)
-                                    .child("todayMining").setValue(miningMoneyInGap);
+                                    .child("todayMining").setValue(miningMoneyInGap+t);
                             Log.d("##########","gaaap  "+miningMoneyInGap);
                         }
                     }
@@ -113,12 +135,6 @@ public class SchoolyService extends Service {
                 RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
                     @Override
                     public void PassUserNick(String nick) {
-                        RecentMethods.GetTodayMining(nick, firebaseModel, new Callbacks.GetTodayMining() {
-                            @Override
-                            public void GetTodayMining(double todayMiningFromBase) {
-                                todayMiningBase=todayMiningFromBase;
-                            }
-                        });
                         RecentMethods.GetActiveMiner(nick, firebaseModel, new Callbacks.GetActiveMiners() {
                             @Override
                             public void GetActiveMiners(ArrayList<Miner> activeMinersFromBase) {
@@ -127,11 +143,11 @@ public class SchoolyService extends Service {
                                 double firstMinerInHour=minerInHour/3600;
                                 todayMining= todayMiningBase+firstMinerInHour;
                                 Log.d("#####","base  "+todayMiningBase);
+                                firebaseModel.getUsersReference().child(nick)
+                                        .child("todayMining").setValue(todayMining);
+                                Log.d("##########","today  "+todayMining);
                             }
                         });
-                        firebaseModel.getUsersReference().child(nick)
-                                .child("todayMining").setValue(todayMining);
-                        Log.d("##########","today  "+todayMining);
                     }
                 });
     }
