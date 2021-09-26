@@ -124,6 +124,10 @@ public class AverageMinersAdapter extends RecyclerView.Adapter<AverageMinersAdap
                 outRect.left = space;
                 outRect.bottom = 0;
             }
+            if(parent.getChildAdapterPosition(view) == 4){
+                outRect.right = space;
+                outRect.bottom = 0;
+            }
         }
     }
 }

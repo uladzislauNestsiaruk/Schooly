@@ -39,12 +39,10 @@ public class ProfileFragment extends Fragment {
     public static ProfileFragment newInstance(String type, UserInformation info) {
         return new ProfileFragment(type, info);
     }
-    private OnDataPass mDataPasser;
 
 
     public void onAttach(FragmentActivity activity) {
         super.onAttach(activity);
-        mDataPasser = (OnDataPass) activity;
     }
     public void open() {
         Dialog dialog = new Dialog();
@@ -97,7 +95,6 @@ public class ProfileFragment extends Fragment {
                         public void PassUserNick(String nick) {
                             nickname.setText(nick);
                             nickother = nick;
-                            mDataPasser.onDataPass(nick);
                         }
                     });
             //////////////////////////////////////////////////

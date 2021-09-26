@@ -125,6 +125,10 @@ public class WeakMinersAdapter extends RecyclerView.Adapter<WeakMinersAdapter.Vi
                 outRect.left = space;
                 outRect.bottom = 0;
             }
+            if(parent.getChildAdapterPosition(view) == 4){
+                outRect.right = space;
+                outRect.bottom = 0;
+            }
         }
 
     }

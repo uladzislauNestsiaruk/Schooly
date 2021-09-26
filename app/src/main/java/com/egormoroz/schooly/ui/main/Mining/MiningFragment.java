@@ -29,6 +29,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
@@ -60,6 +61,7 @@ public class MiningFragment extends Fragment {
         BottomNavigationView bnv = getActivity().findViewById(R.id.bottomNavigationView);
         bnv.setVisibility(bnv.GONE);
         firebaseModel.initAll();
+        getSchoolyCoin();
         return root;
     }
 
@@ -128,38 +130,6 @@ public class MiningFragment extends Fragment {
         });
     }
 
-    public void miningMoney() {
-        (new Thread(new Runnable(){
-            @Override
-            public void run(){
-                while (!Thread.interrupted())
-                    try{
-                        Thread.sleep(1000);
-                        if(getActivity() == null)
-                            return;
-                        getActivity().runOnUiThread(new Runnable(){
-                            @Override
-                            public void run() {
-                                RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-                                    @Override
-                                    public void PassUserNick(String nick) {
-                                        RecentMethods.GetTodayMining(nick, firebaseModel, new Callbacks.GetTodayMining() {
-                                            @Override
-                                            public void GetTodayMining(double todayMiningFromBase) {
-                                               todayminingText.setText(String.valueOf(todayMiningFromBase));
-                                            }
-                                        });
-
-                                    }
-                                });
-                            }
-                        });
-                    }
-                    catch (InterruptedException e){
-                    }
-            }
-        })).start();
-    }
 
     public void getActiveMinersFromBase(){
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
@@ -187,6 +157,21 @@ public class MiningFragment extends Fragment {
                     @Override
                     public void GetMoneyFromBase(long money) {
                         schoolycoinminer.setText(String.valueOf(money));
+                    }
+                });
+            }
+        });
+    }
+
+    public void getSchoolyCoin(){
+        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+            @Override
+            public void PassUserNick(String nick) {
+                RecentMethods.GetTodayMining(nick, firebaseModel, new Callbacks.GetTodayMining() {
+                    @Override
+                    public void GetTodayMining(double todayMiningFromBase) {
+                        String todayMiningFormatted = new DecimalFormat("#0.00").format(todayMiningFromBase);
+                        todayminingText.setText(todayMiningFormatted);
                     }
                 });
             }
