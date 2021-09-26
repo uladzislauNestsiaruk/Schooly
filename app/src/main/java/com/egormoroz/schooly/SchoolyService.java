@@ -78,32 +78,44 @@ public class SchoolyService extends Service {
                 });
             }
         });
-        Thread thread = new Thread()
-        {
+        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @Override
-            public void run() {
-                try {
-                    RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-                        @Override
-                        public void PassUserNick(String nick) {
-                            RecentMethods.GetTodayMining(nick, firebaseModel, new Callbacks.GetTodayMining() {
+            public void PassUserNick(String nick) {
+                RecentMethods.GetActiveMiner(nick, firebaseModel, new Callbacks.GetActiveMiners() {
+                    @Override
+                    public void GetActiveMiners(ArrayList<Miner> activeMinersFromBase) {
+                        if(activeMinersFromBase.size()>=1){
+                            Thread thread = new Thread()
+                            {
                                 @Override
-                                public void GetTodayMining(double todayMiningFromBase) {
-                                    todayMiningBase=todayMiningFromBase;
+                                public void run() {
+                                    try {
+                                        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+                                            @Override
+                                            public void PassUserNick(String nick) {
+                                                RecentMethods.GetTodayMining(nick, firebaseModel, new Callbacks.GetTodayMining() {
+                                                    @Override
+                                                    public void GetTodayMining(double todayMiningFromBase) {
+                                                        todayMiningBase=todayMiningFromBase;
+                                                    }
+                                                });
+                                            }
+                                        });
+                                        while(true) {
+                                            Thread.sleep(1000);
+                                            miningMoneyFun();
+                                        }
+                                    } catch (InterruptedException e) {
+                                    }
                                 }
-                            });
-                        }
-                    });
-                    while(true) {
-                        Thread.sleep(1000);
-                        miningMoneyFun();
-                    }
-                } catch (InterruptedException e) {
-                }
-            }
-        };
+                            };
 
-        thread.start();
+                            thread.start();
+                        }
+                    }
+                });
+            }
+        });
         return super.onStartCommand(intent, flags, startId);
     }
 
