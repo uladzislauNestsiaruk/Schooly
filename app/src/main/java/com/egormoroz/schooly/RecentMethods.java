@@ -414,6 +414,7 @@ public class RecentMethods {
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getValue(Double.class) != null)
                callback.GetTodayMining(dataSnapshot.getValue(Double.class));
             }
 

@@ -14,7 +14,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.egormoroz.schooly.ui.chat.Dialog;
-import com.egormoroz.schooly.ui.main.ChatFragment;
+
 import com.egormoroz.schooly.ui.main.MainFragment;
 import com.egormoroz.schooly.ui.main.Mining.Miner;
 import com.egormoroz.schooly.ui.main.Mining.MiningFragment;
@@ -124,13 +124,13 @@ public class MainActivity extends AppCompatActivity implements
     }
     @Override
     public void setDialogs(ArrayList<Dialog> dialogs) {
-        Fragment currentFragment = getSupportFragmentManager().
-                findFragmentById(R.id.frame);
-        Log.d("#######", dialogs.size() + " Transaction");
-        if(currentFragment instanceof ChatFragment) {
-            ChatFragment fragment = (ChatFragment) currentFragment;
-            fragment.setDialogs(dialogs);
-        }
+//        Fragment currentFragment = getSupportFragmentManager().
+//                findFragmentById(R.id.frame);
+//        Log.d("#######", dialogs.size() + " Transaction");
+//        if(currentFragment instanceof ChatFragment) {
+//            ChatFragment fragment = (ChatFragment) currentFragment;
+//            fragment.setDialogs(dialogs);
+//        }
     }
     public void initFirebase(){
         database = FirebaseDatabase.getInstance(CONST.RealtimeDatabaseUrl);

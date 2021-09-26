@@ -5,13 +5,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.chat.holders.OutImageHolder">
+    tools:context=".ui.chat.holders.ImageViewerActivity">
 
     <ImageView
         android:id = "@+id/image_viewer"
-        android:scaleType="fitXY"
-        android:adjustViewBounds="true"
         android:layout_width = "match_parent"
         android:layout_height = "match_parent"
+        android:src = "@drawable/crop_image_menu_flip"
         />
 </RelativeLayout>

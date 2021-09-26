@@ -21,51 +21,34 @@
         <entry key="..\:/Users/User/Downloads/Schooly_NEW/app/src/main/res/layout/horizontalrecyclerview_item.xml" value="0.1644021739130435" />
         <entry key="..\:/Users/User/Downloads/Schooly_NEW/app/src/main/res/layout/myminers_item.xml" value="0.1644021739130435" />
         <entry key="..\:/Users/User/Downloads/Schooly_NEW/app/src/main/res/layout/peoplerecyclerview_item.xml" value="0.1644021739130435" />
-        <entry key="..\:/Users/User/Downloads/Schooly_NEW6/app/src/main/res/drawable/corners.xml" value="0.2703125" />
-        <entry key="..\:/Users/User/Downloads/Schooly_NEW6/app/src/main/res/drawable/corners1.xml" value="0.2703125" />
-        <entry key="..\:/Users/User/Downloads/Schooly_NEW6/app/src/main/res/drawable/corners14.xml" value="0.2703125" />
-        <entry key="..\:/Users/User/Downloads/Schooly_NEW6/app/src/main/res/drawable/corners14appcolor.xml" value="0.2703125" />
-        <entry key="..\:/Users/User/Downloads/Schooly_NEW6/app/src/main/res/drawable/corners14grey.xml" value="0.2703125" />
-        <entry key="..\:/Users/User/Downloads/Schooly_NEW6/app/src/main/res/drawable/corners15dpwhite.xml" value="0.2703125" />
-        <entry key="..\:/Users/User/Downloads/Schooly_NEW6/app/src/main/res/drawable/cornersgender.xml" value="0.2703125" />
-        <entry key="..\:/Users/User/Downloads/Schooly_NEW6/app/src/main/res/drawable/cornersgenderarrow.xml" value="0.2703125" />
-        <entry key="..\:/Users/User/Downloads/Schooly_NEW6/app/src/main/res/drawable/cornersgoogleplay.xml" value="0.2703125" />
-        <entry key="..\:/Users/User/Downloads/Schooly_NEW6/app/src/main/res/drawable/cornersnewcode.xml" value="0.2703125" />
-        <entry key="..\:/Users/User/Downloads/Schooly_NEW6/app/src/main/res/drawable/cornersnontifications.xml" value="0.2703125" />
-        <entry key="..\:/Users/User/Downloads/Schooly_NEW6/app/src/main/res/drawable/cornersnontsred.xml" value="0.2703125" />
-        <entry key="..\:/Users/User/Downloads/Schooly_NEW6/app/src/main/res/drawable/cornerstextmessagesfromme.xml" value="0.2703125" />
-        <entry key="..\:/Users/User/Downloads/Schooly_NEW6/app/src/main/res/layout/allminersrecyclerview_item.xml" value="0.24365942028985507" />
-        <entry key="..\:/Users/User/Downloads/Schooly_NEW6/app/src/main/res/layout/buy_miner_dialog.xml" value="0.23958333333333334" />
-        <entry key="..\:/Users/User/Downloads/Schooly_NEW6/app/src/main/res/layout/fragment_main.xml" value="0.24365942028985507" />
-        <entry key="..\:/Users/User/Downloads/Schooly_NEW6/app/src/main/res/layout/fragment_mining.xml" value="0.12360688956433637" />
-        <entry key="..\:/Users/User/Downloads/Schooly_NEW6/app/src/main/res/layout/horizontalrecyclerview_item.xml" value="0.16259057971014493" />
-        <entry key="..\:/Users/User/Downloads/Schooly_NEWWW/app/src/main/res/layout/fragment_main.xml" value="0.2223731884057971" />
-        <entry key="..\:/Users/User/Downloads/Schooly_NEWWW/app/src/main/res/layout/fragment_mining.xml" value="0.14990942028985507" />
-        <entry key="..\:/Users/User/Downloads/Schooly_NEWWW/app/src/main/res/layout/myminers_item.xml" value="0.25416666666666665" />
-        <entry key="..\:/Users/User/Downloads/Schooly_NEW_TYOMAA/app/src/main/res/layout/allminersrecyclerview_item.xml" value="0.2391304347826087" />
-        <entry key="..\:/Users/User/Downloads/Schooly_NEW_TYOMAA/app/src/main/res/layout/fragment_mining.xml" value="0.2391304347826087" />
-        <entry key="..\:/Users/User/Downloads/Schooly_NEWt/app/src/main/res/layout/allminersrecyclerview_item.xml" value="0.16893115942028986" />
-        <entry key="..\:/Users/User/Downloads/Schooly_NEWt/app/src/main/res/layout/fragment_mining.xml" value="0.16893115942028986" />
-        <entry key="..\:/Users/User/Downloads/Schooly_NEWtyomaa6/app/src/main/res/layout/allminersrecyclerview_item.xml" value="0.1265625" />
-        <entry key="..\:/Users/User/Downloads/Schooly_NEWtyomaa6/app/src/main/res/layout/fragment_mining.xml" value="0.12360688956433637" />
-        <entry key="..\:/Users/User/Downloads/Schooly_NEWtyomaa6/app/src/main/res/layout/fragment_myminers.xml" value="0.24094202898550723" />
+        <entry key="..\:/Users/Дима/Documents/GitHub/Schooly_NEW/app/src/main/res/drawable/buttons.xml" value="0.14739583333333334" />
         <entry key="..\:/Users/Дима/Documents/GitHub/Schooly_NEW/app/src/main/res/drawable/ic_image.xml" value="0.10092592592592593" />
         <entry key="..\:/Users/Дима/Documents/GitHub/Schooly_NEW/app/src/main/res/drawable/ic_sendmessage.xml" value="0.10092592592592593" />
         <entry key="..\:/Users/Дима/Documents/GitHub/Schooly_NEW/app/src/main/res/drawable/ic_voicemessage.xml" value="0.13177083333333334" />
+        <entry key="..\:/Users/Дима/Documents/GitHub/Schooly_NEW/app/src/main/res/drawable/inputs.xml" value="0.14739583333333334" />
+        <entry key="..\:/Users/Дима/Documents/GitHub/Schooly_NEW/app/src/main/res/layout/activity_chat.xml" value="0.24645892351274787" />
         <entry key="..\:/Users/Дима/Documents/GitHub/Schooly_NEW/app/src/main/res/layout/activity_default_dialogs.xml" value="0.12291666666666666" />
         <entry key="..\:/Users/Дима/Documents/GitHub/Schooly_NEW/app/src/main/res/layout/activity_default_messages.xml" value="0.23450586264656617" />
         <entry key="..\:/Users/Дима/Documents/GitHub/Schooly_NEW/app/src/main/res/layout/activity_image_viewer.xml" value="0.1" />
+        <entry key="..\:/Users/Дима/Documents/GitHub/Schooly_NEW/app/src/main/res/layout/custom_chat_bar.xml" value="0.13125" />
+        <entry key="..\:/Users/Дима/Documents/GitHub/Schooly_NEW/app/src/main/res/layout/custom_messages_layout.xml" value="0.14791666666666667" />
+        <entry key="..\:/Users/Дима/Documents/GitHub/Schooly_NEW/app/src/main/res/layout/fragment_chats.xml" value="0.1" />
+        <entry key="..\:/Users/Дима/Documents/GitHub/Schooly_NEW/app/src/main/res/layout/fragment_editing.xml" value="0.10729166666666666" />
         <entry key="..\:/Users/Дима/Documents/GitHub/Schooly_NEW/app/src/main/res/layout/fragment_mining.xml" value="0.1" />
+        <entry key="..\:/Users/Дима/Documents/GitHub/Schooly_NEW/app/src/main/res/layout/fragment_nickname.xml" value="0.1" />
         <entry key="..\:/Users/Дима/Documents/GitHub/Schooly_NEW/app/src/main/res/layout/fragment_otheruser.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/Дима/Documents/GitHub/Schooly_NEW/app/src/main/res/layout/fragment_people.xml" value="0.1" />
+        <entry key="..\:/Users/Дима/Documents/GitHub/Schooly_NEW/app/src/main/res/layout/fragment_personaldata.xml" value="0.1" />
         <entry key="..\:/Users/Дима/Documents/GitHub/Schooly_NEW/app/src/main/res/layout/fragment_wardrobe.xml" value="0.10733695652173914" />
         <entry key="..\:/Users/Дима/Documents/GitHub/Schooly_NEW/app/src/main/res/layout/in_image.xml" value="0.1" />
         <entry key="..\:/Users/Дима/Documents/GitHub/Schooly_NEW/app/src/main/res/layout/in_vid.xml" value="0.17346014492753623" />
         <entry key="..\:/Users/Дима/Documents/GitHub/Schooly_NEW/app/src/main/res/layout/incoming_voice.xml" value="0.2" />
-        <entry key="..\:/Users/Дима/Documents/GitHub/Schooly_NEW/app/src/main/res/layout/messages_visual.xml" value="0.10733695652173914" />
+        <entry key="..\:/Users/Дима/Documents/GitHub/Schooly_NEW/app/src/main/res/layout/messages_visual.xml" value="0.152" />
         <entry key="..\:/Users/Дима/Documents/GitHub/Schooly_NEW/app/src/main/res/layout/out_image.xml" value="0.1" />
         <entry key="..\:/Users/Дима/Documents/GitHub/Schooly_NEW/app/src/main/res/layout/out_vid.xml" value="0.17346014492753623" />
         <entry key="..\:/Users/Дима/Documents/GitHub/Schooly_NEW/app/src/main/res/layout/outcoming_voice.xml" value="0.1" />
         <entry key="..\:/Users/Дима/Documents/GitHub/Schooly_NEW/app/src/main/res/layout/toolbar_single_messages.xml" value="0.10733695652173914" />
+        <entry key="..\:/Users/Дима/Documents/GitHub/Schooly_NEW/app/src/main/res/layout/user_display_layout.xml" value="0.1" />
         <entry key="..\:/Users/Дима/Documents/GitHub/Schooly_NEW/app/src/main/res/layout/voice_player.xml" value="0.1" />
         <entry key="..\:/Users/Дима/Documents/GitHub/Schooly_NEW/app/src/main/res/layout/voiceplayer.xml" value="0.115625" />
         <entry key="..\:/Users/Дима/Documents/GitHub/Schooly_NEW/app/src/main/res/menu/chat_actions_menu.xml" value="0.264" />

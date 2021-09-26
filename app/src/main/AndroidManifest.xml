@@ -12,7 +12,7 @@
         android:theme="@style/Theme.Schooly">
 
 
-        <activity android:name=".ui.main.MessageActivity"></activity>
+        <activity android:name=".ui.main.ChatActivity"></activity>
         <activity android:name=".ui.main.PhoneCodeActivity"></activity>
         <service
             android:name=".SchoolyService"

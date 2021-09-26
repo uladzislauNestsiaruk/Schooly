@@ -1,97 +1,54 @@
 package com.egormoroz.schooly.ui.chat;
 
-import android.net.Uri;
-
-import com.google.firebase.database.Exclude;
-import com.google.firebase.database.IgnoreExtraProperties;
 import com.stfalcon.chatkit.commons.models.IMessage;
-import com.stfalcon.chatkit.commons.models.MessageContentType;
+import com.stfalcon.chatkit.commons.models.IUser;
 
 import java.util.Date;
 
-@IgnoreExtraProperties
-public class Message implements IMessage,
-        MessageContentType.Image,
-        MessageContentType  {
+public class Message implements IMessage {
+    private String from, message, type, to, messageID, time, date, name;
 
-    private String id;
-    private String text;
-    private Date createdAt;
-    private User user;
-    private Image image;
-    private Voice voice;
-    private Video video;
-
-    public Message(){
+    public Message(String randomId, User user, String randomMessage, Date date)
+    {
 
     }
 
+    public Message(String from, String message, String type, String to, String messageID, String time, String date, String name) {
+        this.from = from;
+        this.message = message;
+        this.type = type;
+        this.to = to;
+        this.messageID = messageID;
+        this.time = time;
+        this.date = date;
+        this.name = name;
+    }
+
+    public  Message()
+    {
+
+    }
     @Override
     public String getId() {
-        return id;
+        return messageID;
     }
 
     @Override
     public String getText() {
-        return text;
+        return null;
+    }
+
+    @Override
+    public IUser getUser() {
+        return null;
     }
 
     @Override
     public Date getCreatedAt() {
-        return createdAt;
-    }
-    @Exclude
-    @Override
-    public User getUser() {
-        return this.user;
+        return null;
     }
 
-    @Override
-    public String getImageUrl() {
-        return image == null ? null : image.url;
-    }
 
-    public Voice getVoice() {
-        return voice;
-    }
-
-    public String getStatus() {
-        return "Sent";
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
-
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public void setVideo(Video video) {
-        this.video = video;
-    }
-    public void setImage(Image image) {
-        this.image = image;
-    }
-
-    public void setVoice(Voice voice) {
-        this.voice = voice;
-    }
-
-    public static class Image {
-
-        private String url;
-
-        public Image() {
-
-        }
-        public String getUrl(){
-            return url;
-        }
-        public Image(String url) {
-            this.url = url;
-        }
-    }
     public static class Video {
 
         private String url;
@@ -110,7 +67,8 @@ public class Message implements IMessage,
 
         private String url;
         private int duration;
-        public Voice(){
+
+        public Voice() {
 
         }
 
@@ -121,22 +79,75 @@ public class Message implements IMessage,
         public int getDuration() {
             return duration;
         }
+
         public Voice(String url, int duration) {
             this.url = url;
             this.duration = duration;
 
         }
     }
-
-    public Message(String id, User user, String text) {
-        this(id, user, text, new Date());
+    public String getFrom() {
+        return from;
     }
 
-    public Message(String id, User user, String text, Date createdAt) {
-        this.id = id;
-        this.text = text;
-        this.user = user;
-        this.createdAt = createdAt;
+    public void setFrom(String from) {
+        this.from = from;
     }
 
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getTo() {
+        return to;
+    }
+
+    public void setTo(String to) {
+        this.to = to;
+    }
+
+    public String getMessageID() {
+        return messageID;
+    }
+
+    public void setMessageID(String messageID) {
+        this.messageID = messageID;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }
+

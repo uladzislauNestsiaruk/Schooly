@@ -8,7 +8,7 @@ import com.stfalcon.chatkit.commons.models.IDialog;
 import java.util.ArrayList;
 
 @IgnoreExtraProperties
-public class Dialog implements IDialog<Message> {
+public abstract class Dialog implements IDialog<Message> {
 
     private String id;
     private String dialogPhoto;
