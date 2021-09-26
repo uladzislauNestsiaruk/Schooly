@@ -130,9 +130,17 @@ public class ProfileFragment extends Fragment {
 
                 break;
             case "other":
+                RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(),
+                        firebaseModel,
+                        new Callbacks.GetUserNickByUid() {
+                            @Override
+                            public void PassUserNick(String nick) {
+                                nickname.setText(nick);
+                            }
+                        });
+                senderUserID = nickname.getText().toString();
                 nickname.setText(info.getNick());
                 receiverUserID = info.getNick();
-                senderUserID = firebaseModel.getUser().getDisplayName();
                 Log.d("One", receiverUserID);
                 Log.d("One", senderUserID);
                 if (message != null) {
@@ -151,14 +159,14 @@ public class ProfileFragment extends Fragment {
 
     private void AcceptChatRequest()
     {
-                    firebaseModel.getUsersReference().child(receiverUserID).child(senderUserID).child("Chat")
+                    firebaseModel.getUsersReference().child(senderUserID).child(receiverUserID).child("Chat")
                             .setValue("Saved").addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task)
                         {
                                                 if (task.isSuccessful())
                                                 {
-                                                    firebaseModel.getUsersReference().child(receiverUserID).child(senderUserID).child(receiverUserID)
+                                                    firebaseModel.getUsersReference().child(senderUserID).child(receiverUserID).child("Chat")
                                                             .removeValue()
                                                             .addOnCompleteListener(new OnCompleteListener<Void>() {
                                                                 @Override

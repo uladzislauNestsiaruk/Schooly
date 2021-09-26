@@ -27,6 +27,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.ui.chat.Message;
 import com.egormoroz.schooly.ui.chat.MessageAdapter;
@@ -67,7 +68,6 @@ public class ChatActivity extends Activity
     private CircleImageView userImage;
 
     ImageView back;
-    private Toolbar ChatToolBar;
     private FirebaseAuth mAuth;
     private DatabaseReference RootRef;
 
@@ -80,21 +80,20 @@ public class ChatActivity extends Activity
     private RecyclerView userMessagesList;
 
     private ProgressDialog loadingBar;
-
-
-   // private String saveCurrentTime, saveCurrentDate;
     private String checker = "",myUrl="";
     private Uri fileUri;
     private StorageTask uploadTask;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+        FirebaseModel firebaseModel = new FirebaseModel();
+        firebaseModel.initAll();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
         mAuth = FirebaseAuth.getInstance();
         messageSenderID = mAuth.getCurrentUser().getUid();
-        RootRef = FirebaseDatabase.getInstance().getReference();
+        RootRef = firebaseModel.getUsersReference();
 
 
         messageReceiverID = getIntent().getExtras().get("visit_user_id").toString();
