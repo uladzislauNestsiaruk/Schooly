@@ -116,17 +116,17 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/nick"
+                    android:layout_marginStart="25dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="90dp"
                     android:background="@drawable/corners5nickreg"
-                    android:textSize="14sp"
-                    android:textColor="@color/app_grey"
-                    android:padding="4dp"
+                    android:digits="abcdefghijklmnopqrstuvwxyz012345678ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                    android:fontFamily="@font/montserrat_bold"
                     android:inputType="text"
                     android:maxLength="24"
-                    android:digits="abcdefghijklmnopqrstuvwxyz012345678ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-                    android:layout_marginStart="25dp"
-                    android:layout_marginEnd="90dp"
-                    android:layout_marginTop="10dp"
-                    android:fontFamily="@font/montserrat_bold"/>
+                    android:padding="4dp"
+                    android:textColor="@color/app_grey"
+                    android:textSize="14sp" />
 
                 <TextView
                     android:id="@+id/errornickname"
@@ -183,16 +183,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/phone"
-                    android:background="@drawable/corners5nickreg"
-                    android:textSize="14sp"
-                    android:textColor="@color/app_grey"
-                    android:padding="4dp"
-                    android:maxLength="20"
-                    android:inputType="phone"
                     android:layout_marginStart="25dp"
-                    android:layout_marginEnd="90dp"
                     android:layout_marginTop="10dp"
-                    android:fontFamily="@font/montserrat_bold"/>
+                    android:layout_marginEnd="90dp"
+                    android:background="@drawable/corners5nickreg"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:inputType="phone"
+                    android:maxLength="20"
+                    android:padding="4dp"
+                    android:textColor="@color/app_grey"
+                    android:textSize="14sp" />
 
                 <TextView
                     android:id="@+id/errorphone"

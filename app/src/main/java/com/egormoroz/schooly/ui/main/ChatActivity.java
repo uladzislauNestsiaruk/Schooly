@@ -16,6 +16,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+
+import com.egormoroz.schooly.Callbacks;
+import com.egormoroz.schooly.RecentMethods;
 import android.os.Bundle;
 import android.provider.DocumentsContract;
 import android.text.TextUtils;
@@ -59,13 +62,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import de.hdodenhof.circleimageview.CircleImageView;
-
 public class ChatActivity extends Activity
 {  private String messageReceiverID, messageReceiverName, messageReceiverImage, messageSenderID;
 
     private TextView userName, userLastSeen;
-    private CircleImageView userImage;
+    private ImageView userImage;
+    FirebaseModel firebaseModel=new FirebaseModel();
 
     ImageView back;
     private FirebaseAuth mAuth;
@@ -119,14 +121,14 @@ public class ChatActivity extends Activity
             @Override
             public void onClick(View view) {
 
-                            checker = "image";
-                            Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                            intent.setAction(Intent.ACTION_GET_CONTENT);
-                            intent.setType("image/*");
-                            startActivityForResult(intent,443);
-        };
-    });
-}
+                checker = "image";
+                Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                intent.setType("image/*");
+                startActivityForResult(intent,443);
+            };
+        });
+    }
 
 
 
@@ -164,7 +166,7 @@ public class ChatActivity extends Activity
         if(requestCode == 443 && resultCode == RESULT_OK && data != null && data.getData() != null)
         {
             fileUri = data.getData();
-           if(checker.equals("image"))
+            if(checker.equals("image"))
             {
                 StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("Images");
                 final String messageSenderRef = "Messages/" + messageSenderID + "/" + messageReceiverID;
@@ -356,4 +358,28 @@ public class ChatActivity extends Activity
             });
         }
     }
+
+    public void sendMessage(){
+        //по нажатию на отправить
+        SendMessageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+                    @Override
+                    public void PassUserNick(String nick) {
+                        //получили наш ник в интерфейсе
+                        //оптравляем себе в ветку
+                        firebaseModel.getUsersReference().child(nick).child("chats")
+                                .child("сюда ник чела с которым переписка").setValue("сюда само сообщение ");
+                        //оптравляем челу в ветку
+                        firebaseModel.getUsersReference().child("сюда ник чела с которым переписка").child("chats")
+                                .child(nick).setValue("сюда само сообщение ");
+                        //это метод ждя отправления
+                    }
+                });
+            }
+        });
+    }
+
+
 }
