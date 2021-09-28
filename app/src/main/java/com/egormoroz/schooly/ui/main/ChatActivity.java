@@ -88,7 +88,6 @@ public class ChatActivity extends Activity
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        FirebaseModel firebaseModel = new FirebaseModel();
         firebaseModel.initAll();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
@@ -372,7 +371,7 @@ public class ChatActivity extends Activity
                         firebaseModel.getUsersReference().child(nick).child("chats")
                                 .child("сюда ник чела с которым переписка").setValue("сюда само сообщение ");
                         //оптравляем челу в ветку
-                        firebaseModel.getUsersReference().child("сюда ник чела с которым переписка").child("chats")
+                        firebaseModel.getUsersReference().child(messageReceiverName).child("chats")
                                 .child(nick).setValue("сюда само сообщение ");
                         //это метод ждя отправления
                     }

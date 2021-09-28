@@ -16,8 +16,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
+import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.ui.chat.Contacts;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -36,7 +38,7 @@ public class ChatsFragment extends Fragment
 {
     private View PrivateChatsView;
     private RecyclerView chatsList;
-
+    FirebaseModel firebaseModel = new FirebaseModel();
     private DatabaseReference ChatsRef, UsersRef;
     private FirebaseAuth mAuth;
     private String currentUserID="";
@@ -52,11 +54,10 @@ public class ChatsFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         PrivateChatsView = inflater.inflate(R.layout.fragment_chats, container, false);
-        FirebaseModel firebaseModel = new FirebaseModel();
         firebaseModel.initAll();
         mAuth = FirebaseAuth.getInstance();
         currentUserID = mAuth.getCurrentUser().getUid();
-        ChatsRef = firebaseModel.getUsersReference().child("Contacts").child(currentUserID);
+        ChatsRef = firebaseModel.getUsersReference().child("Chats").child(currentUserID);
         UsersRef = firebaseModel.getUsersReference().child("Users");
 
         chatsList = (RecyclerView) PrivateChatsView.findViewById(R.id.chats_list);

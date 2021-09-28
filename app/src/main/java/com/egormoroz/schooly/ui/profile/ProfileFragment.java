@@ -33,7 +33,6 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class ProfileFragment extends Fragment {
     FirebaseModel firebaseModel = new FirebaseModel();
-    //   private DatabaseReference ChatRequestRef, UsersRef, ContactsRef;
     private FirebaseAuth mAuth;
     private String receiverUserID, senderUserID;
     String type;
@@ -53,6 +52,7 @@ public class ProfileFragment extends Fragment {
 
     public void open() {
         Intent i = new Intent(getActivity(), ChatActivity.class);
+
         AcceptChatRequest();
         i.putExtra("name", info.getNick());
         i.putExtra("visit_user_id", info.getUid());
@@ -130,17 +130,9 @@ public class ProfileFragment extends Fragment {
 
                 break;
             case "other":
-                RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(),
-                        firebaseModel,
-                        new Callbacks.GetUserNickByUid() {
-                            @Override
-                            public void PassUserNick(String nick) {
-                                nickname.setText(nick);
-                            }
-                        });
-                senderUserID = nickname.getText().toString();
                 nickname.setText(info.getNick());
-                receiverUserID = info.getNick();
+                receiverUserID = info.getUid();
+                senderUserID = MainActivity.currentUserID;
                 Log.d("One", receiverUserID);
                 Log.d("One", senderUserID);
                 if (message != null) {
@@ -157,29 +149,32 @@ public class ProfileFragment extends Fragment {
     }
 
 
-    private void AcceptChatRequest()
-    {
-                    firebaseModel.getUsersReference().child(senderUserID).child(receiverUserID).child("Chat")
+    private void AcceptChatRequest() {
+        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+            @Override
+            public void PassUserNick(String nick) {
+                {
+                    firebaseModel.getUsersReference().child(nick).child("Chats").child(nick).child(info.getNick())
                             .setValue("Saved").addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
-                        public void onComplete(@NonNull Task<Void> task)
-                        {
-                                                if (task.isSuccessful())
-                                                {
-                                                    firebaseModel.getUsersReference().child(senderUserID).child(receiverUserID).child("Chat")
-                                                            .removeValue()
-                                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                                @Override
-                                                                public void onComplete(@NonNull Task<Void> task)
-                                                                {
-                                                                    if (task.isSuccessful())
-                                                                    {
-                                                                        Toast.makeText(getContext(), "New Contact Saved", Toast.LENGTH_SHORT).show();
-                                                                    }
-                                                                }
-                                                            });
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                firebaseModel.getUsersReference().child("Chats").child(info.getNick()).child(nick).child("Chat")
+                                        .setValue("Saved")
+                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if (task.isSuccessful()) {
+                                                    Toast.makeText(getContext(), "New Contact Saved", Toast.LENGTH_SHORT).show();
                                                 }
                                             }
                                         });
                             }
                         }
+                    });
+                }
+
+            }
+        });
+    }
+}

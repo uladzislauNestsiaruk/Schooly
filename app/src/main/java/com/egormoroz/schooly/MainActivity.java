@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity implements
     private FirebaseDatabase database;
     private DatabaseReference reference;
     private FirebaseAuth AuthenticationBase;
+    public static String currentUserID;
     String time,timeNow;
     long a,d,min;
     double minInGap;
@@ -55,6 +56,7 @@ public class MainActivity extends AppCompatActivity implements
         firebaseModel.initAll();
         ///////////Authorization block
         IsEntered();
+        currentUserID = AuthenticationBase.getCurrentUser().getUid();
         ///////////
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
