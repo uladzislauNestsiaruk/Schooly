@@ -154,13 +154,12 @@ public class ProfileFragment extends Fragment {
             @Override
             public void PassUserNick(String nick) {
                 {
-                    firebaseModel.getUsersReference().child(nick).child("Chats").child(nick).child(info.getNick())
+                    firebaseModel.getUsersReference().child(nick).child("Chats").child(info.getNick())
                             .setValue("Saved").addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
-                                firebaseModel.getUsersReference().child("Chats").child(info.getNick()).child(nick).child("Chat")
-                                        .setValue("Saved")
+                                firebaseModel.getUsersReference().child(info.getNick()).child("Chats").child(nick).setValue("Saved")
                                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
