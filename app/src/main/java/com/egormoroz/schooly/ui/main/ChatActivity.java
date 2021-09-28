@@ -22,6 +22,7 @@ import com.egormoroz.schooly.RecentMethods;
 import android.os.Bundle;
 import android.provider.DocumentsContract;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -162,74 +163,69 @@ public class ChatActivity extends Activity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == 443 && resultCode == RESULT_OK && data != null && data.getData() != null)
-        {
-            fileUri = data.getData();
-            if(checker.equals("image"))
-            {
-                StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("Images");
-                final String messageSenderRef = "Messages/" + messageSenderID + "/" + messageReceiverID;
-                final String messageReceiverRef = "Messages/" + messageReceiverID + "/" + messageSenderID;
-
-                DatabaseReference userMessageKeyRef = RootRef.child("Messages")
-                        .child(messageSenderID).child(messageReceiverID).push();
-
-                final String messagePushID = userMessageKeyRef.getKey();
-
-                final StorageReference filePath = storageReference.child(messagePushID + "." + "jpg");
-
-                uploadTask = filePath.putFile(fileUri);
-                uploadTask.continueWithTask(new Continuation() {
-                    @Override
-                    public Object then(@NonNull Task task) throws Exception {
-                        if(!task.isSuccessful())
-                        {
-                            throw task.getException();
-                        }
-                        return filePath.getDownloadUrl();
-                    }
-                }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Uri> task) {
-                        Uri downloadUrl = task.getResult();
-                        myUrl = downloadUrl.toString();
-
-                        Map messageTextBody = new HashMap();
-                        messageTextBody.put("message", myUrl);
-                        messageTextBody.put("name",fileUri.getLastPathSegment());
-                        messageTextBody.put("type", checker);
-                        messageTextBody.put("from", messageSenderID);
-                        messageTextBody.put("to", messageReceiverID);
-                        messageTextBody.put("messageID", messagePushID);
+        if (requestCode == 443 && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+                @Override
+                public void PassUserNick(String nick) {
+                    fileUri = data.getData();
+                    if (checker.equals("image")) {
+                        StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("Images");
+                        final String messageSenderRef = messageReceiverName + "/Chats/" + nick + "/Messages";
+                        final String messageReceiverRef = nick + "/Chats/" + messageReceiverName + "/Messages";
 
 
-                        Map messageBodyDetails = new HashMap();
-                        messageBodyDetails.put(messageSenderRef + "/" + messagePushID, messageTextBody);
-                        messageBodyDetails.put( messageReceiverRef + "/" + messagePushID, messageTextBody);
+                        DatabaseReference   userMessageKeyRef =   firebaseModel.getUsersReference().child(nick).child("Chats").child(messageReceiverName).child("Messages").push();
+                        final String messagePushID = userMessageKeyRef.getKey();
 
-                        RootRef.updateChildren(messageBodyDetails).addOnCompleteListener(new OnCompleteListener() {
+                        final StorageReference filePath = storageReference.child(messagePushID + "." + "jpg");
+
+                        uploadTask = filePath.putFile(fileUri);
+                        uploadTask.continueWithTask(new Continuation() {
                             @Override
-                            public void onComplete(@NonNull Task task)
-                            {
-                                if (task.isSuccessful())
-                                {
-                                    Toast.makeText(ChatActivity.this, "Message Sent Successfully...", Toast.LENGTH_SHORT).show();
+                            public Object then(@NonNull Task task) throws Exception {
+                                if (!task.isSuccessful()) {
+                                    throw task.getException();
                                 }
-                                else
-                                {
-                                    Toast.makeText(ChatActivity.this, "Error", Toast.LENGTH_SHORT).show();
-                                }
-                                MessageInputText.setText("");
+                                return filePath.getDownloadUrl();
+                            }
+                        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Uri> task) {
+                                Uri downloadUrl = task.getResult();
+                                myUrl = downloadUrl.toString();
+
+                                Map messageTextBody = new HashMap();
+                                messageTextBody.put("message", myUrl);
+                                messageTextBody.put("name", fileUri.getLastPathSegment());
+                                messageTextBody.put("type", checker);
+                                messageTextBody.put("from", messageSenderID);
+                                messageTextBody.put("to", messageReceiverID);
+                                messageTextBody.put("messageID", messagePushID);
+
+
+                                Map messageBodyDetails = new HashMap();
+                                messageBodyDetails.put(messageSenderRef + "/" + messagePushID, messageTextBody);
+                                messageBodyDetails.put(messageReceiverRef + "/" + messagePushID, messageTextBody);
+
+                                RootRef.updateChildren(messageBodyDetails).addOnCompleteListener(new OnCompleteListener() {
+                                    @Override
+                                    public void onComplete(@NonNull Task task) {
+                                        if (task.isSuccessful()) {
+                                            Toast.makeText(ChatActivity.this, "Message Sent Successfully...", Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            Toast.makeText(ChatActivity.this, "Error", Toast.LENGTH_SHORT).show();
+                                        }
+                                        MessageInputText.setText("");
+                                    }
+                                });
                             }
                         });
-                    }
-                });
 
-            }
-            else
-            {
-                Toast.makeText(this,"nothing selected,error",Toast.LENGTH_SHORT).show();
-            }
+                    } else {
+                        Log.d("Chat","wrong");
+                    }
+                }
+            });
         }
     }
 
@@ -272,112 +268,89 @@ public class ChatActivity extends Activity
     @Override
     protected void onStart()
     {
+
         super.onStart();
-        RootRef.child("Messages").child(messageSenderID).child(messageReceiverID)
-                .addChildEventListener(new ChildEventListener() {
-                    @Override
-                    public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s)
-                    {
-                        Message messages = dataSnapshot.getValue(Message.class);
-                        messagesList.add(messages);
-                        messageAdapter.notifyDataSetChanged();
-                        userMessagesList.smoothScrollToPosition(userMessagesList.getAdapter().getItemCount());
-                    }
+        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+            @Override
+            public void PassUserNick(String nick) {
+                firebaseModel.getUsersReference().child(nick).child("Chats").child(messageReceiverName).child("Messages")
+                        .addChildEventListener(new ChildEventListener() {
+                            @Override
+                            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                                Message messages = dataSnapshot.getValue(Message.class);
+                                messagesList.add(messages);
+                                messageAdapter.notifyDataSetChanged();
+                                userMessagesList.smoothScrollToPosition(userMessagesList.getAdapter().getItemCount());
+                            }
 
-                    @Override
-                    public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s)
-                    {
+                            @Override
+                            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
-                    }
+                            }
 
-                    @Override
-                    public void onChildRemoved(@NonNull DataSnapshot dataSnapshot)
-                    {
+                            @Override
+                            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
 
-                    }
+                            }
 
-                    @Override
-                    public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s)
-                    {
+                            @Override
+                            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
-                    }
+                            }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError)
-                    {
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                    }
-                });
+                            }
+                        });
+            }
+        });
     }
 
-    private void SendMessage()
-    {
+    private void SendMessage() {
+
         String messageText = MessageInputText.getText().toString();
 
-        if (TextUtils.isEmpty(messageText))
-        {
+        if (TextUtils.isEmpty(messageText)) {
             Toast.makeText(this, "first write your message...", Toast.LENGTH_SHORT).show();
-        }
-        else
-        {
-            String messageSenderRef = "Messages/" + messageSenderID + "/" + messageReceiverID;
-            String messageReceiverRef = "Messages/" + messageReceiverID + "/" + messageSenderID;
-
-            DatabaseReference userMessageKeyRef = RootRef.child("Messages")
-                    .child(messageSenderID).child(messageReceiverID).push();
-
-            String messagePushID = userMessageKeyRef.getKey();
-
-            Map messageTextBody = new HashMap();
-            messageTextBody.put("message", messageText);
-            messageTextBody.put("type", "text");
-            messageTextBody.put("from", messageSenderID);
-            messageTextBody.put("to", messageReceiverID);
-            messageTextBody.put("messageID", messagePushID);
-
-
-            Map messageBodyDetails = new HashMap();
-            messageBodyDetails.put(messageSenderRef + "/" + messagePushID, messageTextBody);
-            messageBodyDetails.put( messageReceiverRef + "/" + messagePushID, messageTextBody);
-
-            RootRef.updateChildren(messageBodyDetails).addOnCompleteListener(new OnCompleteListener() {
+        } else {
+            RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
                 @Override
-                public void onComplete(@NonNull Task task)
-                {
-                    if (task.isSuccessful())
-                    {
-                        Toast.makeText(ChatActivity.this, "Message Sent Successfully...", Toast.LENGTH_SHORT).show();
-                    }
-                    else
-                    {
-                        Toast.makeText(ChatActivity.this, "Error", Toast.LENGTH_SHORT).show();
-                    }
-                    MessageInputText.setText("");
+                public void PassUserNick(String nick) {
+                    String messageSenderRef = messageReceiverName + "/Chats/" + nick + "/Messages";
+                    String messageReceiverRef = nick + "/Chats/" + messageReceiverName + "/Messages";
+
+
+                    DatabaseReference userMessageKeyRef = firebaseModel.getUsersReference().child(nick).child("Chats").child(messageReceiverName).child("Messages").push();
+                    String messagePushID = userMessageKeyRef.getKey();
+
+
+                    Map messageTextBody = new HashMap();
+                    messageTextBody.put("message", messageText);
+                    messageTextBody.put("type", "text");
+                    messageTextBody.put("from", messageSenderID);
+                    messageTextBody.put("to", messageReceiverID);
+                    messageTextBody.put("messageID", messagePushID);
+
+
+                    Map messageBodyDetails = new HashMap();
+                    messageBodyDetails.put(messageSenderRef + "/" + messagePushID, messageTextBody);
+                    messageBodyDetails.put(messageReceiverRef + "/" + messagePushID, messageTextBody);
+
+                    RootRef.updateChildren(messageBodyDetails).addOnCompleteListener(new OnCompleteListener() {
+                        @Override
+                        public void onComplete(@NonNull Task task) {
+                            if (task.isSuccessful()) {
+                                Toast.makeText(ChatActivity.this, "Message Sent Successfully...", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(ChatActivity.this, "Error", Toast.LENGTH_SHORT).show();
+                            }
+                            MessageInputText.setText("");
+                        }
+                    });
                 }
             });
         }
-    }
-
-    public void sendMessage(){
-        //по нажатию на отправить
-        SendMessageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-                    @Override
-                    public void PassUserNick(String nick) {
-                        //получили наш ник в интерфейсе
-                        //оптравляем себе в ветку
-                        firebaseModel.getUsersReference().child(nick).child("chats")
-                                .child("сюда ник чела с которым переписка").setValue("сюда само сообщение ");
-                        //оптравляем челу в ветку
-                        firebaseModel.getUsersReference().child(messageReceiverName).child("chats")
-                                .child(nick).setValue("сюда само сообщение ");
-                        //это метод ждя отправления
-                    }
-                });
-            }
-        });
     }
 
 

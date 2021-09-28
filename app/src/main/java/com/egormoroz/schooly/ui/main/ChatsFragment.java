@@ -53,13 +53,23 @@ public class ChatsFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         PrivateChatsView = inflater.inflate(R.layout.fragment_chats, container, false);
         firebaseModel.initAll();
         mAuth = FirebaseAuth.getInstance();
         currentUserID = mAuth.getCurrentUser().getUid();
-        ChatsRef = firebaseModel.getUsersReference().child("Chats").child(currentUserID);
-        UsersRef = firebaseModel.getUsersReference().child("Users");
 
+
+
+        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+            @Override
+            public void PassUserNick(String nick) {
+                ChatsRef = firebaseModel.getUsersReference().child(nick).child("Chats");
+                UsersRef = firebaseModel.getUsersReference().child("Users");
+            }
+        });
+        UsersRef = firebaseModel.getUsersReference().child("users");
+        ChatsRef = firebaseModel.getUsersReference().child("spaccacrani").child("Chats");
         chatsList = (RecyclerView) PrivateChatsView.findViewById(R.id.chats_list);
         chatsList.setLayoutManager(new LinearLayoutManager(getContext()));
 
@@ -91,13 +101,13 @@ public class ChatsFragment extends Fragment
                             {
                                 if (dataSnapshot.exists())
                                 {
-                                    if (dataSnapshot.hasChild("image"))
+                                    if (dataSnapshot.hasChild("avatar"))
                                     {
                                         retImage[0] = dataSnapshot.child("image").getValue().toString();
                                         Picasso.get().load(retImage[0]).into(holder.profileImage);
                                     }
 
-                                    final String retName = dataSnapshot.child("name").getValue().toString();
+                                    final String retName = dataSnapshot.child("nick").getValue().toString();
                                     final String retStatus = dataSnapshot.child("status").getValue().toString();
 
                                     holder.userName.setText(retName);

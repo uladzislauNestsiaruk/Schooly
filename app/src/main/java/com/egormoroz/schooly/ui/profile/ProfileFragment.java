@@ -28,8 +28,11 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class ProfileFragment extends Fragment {
     FirebaseModel firebaseModel = new FirebaseModel();
@@ -39,6 +42,7 @@ public class ProfileFragment extends Fragment {
     UserInformation info;
     TextView nickname;
     TextView message;
+    DatabaseReference user;
 
     public ProfileFragment(String type, UserInformation info) {
         this.type = type;
@@ -52,8 +56,26 @@ public class ProfileFragment extends Fragment {
 
     public void open() {
         Intent i = new Intent(getActivity(), ChatActivity.class);
+        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+                    @Override
+                    public void PassUserNick(String nick) {
+                        {
+                            user.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot snapshot) {
+                                    if (snapshot.child(nick).exists()) {
+                                        AcceptChatRequest();
+                                    }
+                                }
 
-        AcceptChatRequest();
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
+                        }
+                    }
+                });
         i.putExtra("name", info.getNick());
         i.putExtra("visit_user_id", info.getUid());
         i.putExtra("visit_image", ChatActivity.class);
@@ -133,8 +155,7 @@ public class ProfileFragment extends Fragment {
                 nickname.setText(info.getNick());
                 receiverUserID = info.getUid();
                 senderUserID = MainActivity.currentUserID;
-                Log.d("One", receiverUserID);
-                Log.d("One", senderUserID);
+                user =  firebaseModel.getUsersReference().child(info.getNick());
                 if (message != null) {
                     message.setOnClickListener(new View.OnClickListener() {
                         @Override
