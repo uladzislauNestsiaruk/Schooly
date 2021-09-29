@@ -45,9 +45,9 @@
             android:id="@+id/send_files_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/app_color"
-            android:layout_marginStart="8dp"
             android:layout_centerVertical="true"
+            android:layout_marginStart="8dp"
+            android:background="@color/app_color"
             android:src="@drawable/ic_image" />
 
 
@@ -55,7 +55,7 @@
             android:id="@+id/input_message"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="4dp"
+            android:layout_marginEnd="8dp"
             android:layout_toStartOf="@+id/send_message_btn"
             android:layout_toLeftOf="@id/voiceinput"
             android:layout_toEndOf="@+id/send_files_btn"
@@ -85,6 +85,7 @@
             android:layout_width="36dp"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
+            android:layout_marginEnd="4dp"
             android:layout_toLeftOf="@id/send_message_btn"
             android:src="@drawable/ic_voicemessage" />
     </RelativeLayout>
