@@ -35,7 +35,7 @@
         android:layout_toEndOf="@+id/custom_profile_image"
         android:fontFamily="@font/montserrat_bold"
         android:textColor="@color/white"
-        android:textSize="20sp"/>
+        android:textSize="18sp"/>
 
 
     <TextView
