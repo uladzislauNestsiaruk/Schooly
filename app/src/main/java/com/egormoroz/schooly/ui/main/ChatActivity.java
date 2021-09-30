@@ -210,11 +210,6 @@ public class ChatActivity extends Activity
                                 RootRef.updateChildren(messageBodyDetails).addOnCompleteListener(new OnCompleteListener() {
                                     @Override
                                     public void onComplete(@NonNull Task task) {
-                                        if (task.isSuccessful()) {
-                                            Toast.makeText(ChatActivity.this, "Message Sent Successfully...", Toast.LENGTH_SHORT).show();
-                                        } else {
-                                            Toast.makeText(ChatActivity.this, "Error", Toast.LENGTH_SHORT).show();
-                                        }
                                         MessageInputText.setText("");
                                     }
                                 });
@@ -340,11 +335,6 @@ public class ChatActivity extends Activity
                     RootRef.updateChildren(messageBodyDetails).addOnCompleteListener(new OnCompleteListener() {
                         @Override
                         public void onComplete(@NonNull Task task) {
-                            if (task.isSuccessful()) {
-                                Toast.makeText(ChatActivity.this, "Message Sent Successfully...", Toast.LENGTH_SHORT).show();
-                            } else {
-                                Toast.makeText(ChatActivity.this, "Error", Toast.LENGTH_SHORT).show();
-                            }
                             MessageInputText.setText("");
                         }
                     });

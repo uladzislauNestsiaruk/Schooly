@@ -397,6 +397,7 @@ public class RecentMethods {
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists())
                 callback.GetMoneyFromBase(snapshot.getValue(Long.class));
             }
 

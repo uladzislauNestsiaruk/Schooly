@@ -185,6 +185,8 @@ public class ProfileFragment extends Fragment {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
                                                 if (task.isSuccessful()) {
+                                                    firebaseModel.getUsersReference().child(info.getNick()).child("Chats").child(nick).child("nick").setValue(nick);
+                                                    firebaseModel.getUsersReference().child(nick).child("Chats").child(info.getNick()).child("nick").setValue(nick);
                                                     Toast.makeText(getContext(), "New Contact Saved", Toast.LENGTH_SHORT).show();
                                                 }
                                             }
