@@ -60,7 +60,7 @@ public class ChatsFragment extends Fragment
         currentUserID = mAuth.getCurrentUser().getUid();
 
 
-
+        //failed use of interface
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @Override
             public void PassUserNick(String nick) {
@@ -68,7 +68,8 @@ public class ChatsFragment extends Fragment
                 UsersRef = firebaseModel.getUsersReference().child("Users");
             }
         });
-        UsersRef = firebaseModel.getUsersReference().child("users");
+        //Ref to user information, my is a sample
+
         ChatsRef = firebaseModel.getUsersReference().child("spaccacrani").child("Chats");
         chatsList = (RecyclerView) PrivateChatsView.findViewById(R.id.chats_list);
         chatsList.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -86,16 +87,18 @@ public class ChatsFragment extends Fragment
                         .setQuery(ChatsRef, Contacts.class)
                         .build();
 
-
+        //getting list of user/ problem is here
         FirebaseRecyclerAdapter<Contacts, ChatsViewHolder> adapter =
                 new FirebaseRecyclerAdapter<Contacts, ChatsViewHolder>(options) {
                     @Override
                     protected void onBindViewHolder(@NonNull final ChatsViewHolder holder, int position, @NonNull Contacts model)
                     {
+                        //get nick and image, it unnecessary for us
+
                         final String usersIDs = getRef(position).getKey();
                         final String[] retImage = {"default_image"};
 
-                        UsersRef.child(usersIDs).addValueEventListener(new ValueEventListener() {
+                        ChatsRef.child(usersIDs).addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot)
                             {
@@ -106,9 +109,9 @@ public class ChatsFragment extends Fragment
                                         retImage[0] = dataSnapshot.child("image").getValue().toString();
                                         Picasso.get().load(retImage[0]).into(holder.profileImage);
                                     }
-
+                                    //cannot get usernick
                                     final String retName = dataSnapshot.child("nick").getValue().toString();
-                                    final String retStatus = dataSnapshot.child("status").getValue().toString();
+//                                    final String retStatus = dataSnapshot.child("status").getValue().toString();
 
                                     holder.userName.setText(retName);
 
@@ -134,9 +137,11 @@ public class ChatsFragment extends Fragment
                                     }
 
                                     holder.itemView.setOnClickListener(new View.OnClickListener() {
+                                        //onClick doesn't work cause of wrong ways in database?? It will work when we get the information about user
                                         @Override
                                         public void onClick(View view)
                                         {
+                                            //need to add get user avatar from database
                                             Intent chatIntent = new Intent(getContext(), ChatActivity.class);
                                             chatIntent.putExtra("visit_user_id", usersIDs);
                                             chatIntent.putExtra("visit_user_name", retName);

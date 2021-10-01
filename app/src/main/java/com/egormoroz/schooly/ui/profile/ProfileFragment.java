@@ -76,6 +76,7 @@ public class ProfileFragment extends Fragment {
                         }
                     }
                 });
+        //Getting information about user(friend)
         i.putExtra("name", info.getNick());
         i.putExtra("visit_user_id", info.getUid());
         i.putExtra("visit_image", ChatActivity.class);

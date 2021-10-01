@@ -2,28 +2,37 @@ package com.egormoroz.schooly.ui.main;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.media.MediaMetadataRetriever;
+import android.media.MediaRecorder;
 import android.net.Uri;
 
 import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.RecentMethods;
+
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.DocumentsContract;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -56,6 +65,7 @@ import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -73,6 +83,12 @@ public class ChatActivity extends Activity
     ImageView back;
     private FirebaseAuth mAuth;
     private DatabaseReference RootRef;
+
+    private MediaRecorder recorder = null;
+    private int duration;
+    private boolean permissionToRecordAccepted = false;
+    private final String [] permissions = {Manifest.permission.RECORD_AUDIO};
+    private static final int REQUEST_RECORD_AUDIO_PERMISSION = 200;
 
     private ImageButton SendMessageButton, SendFilesButton;
     private EditText MessageInputText;
@@ -97,12 +113,12 @@ public class ChatActivity extends Activity
         messageSenderID = mAuth.getCurrentUser().getUid();
         RootRef = firebaseModel.getUsersReference();
 
-
+        ActivityCompat.requestPermissions(this, permissions, REQUEST_RECORD_AUDIO_PERMISSION);
         messageReceiverID = getIntent().getExtras().get("visit_user_id").toString();
         messageReceiverName = getIntent().getExtras().get("name").toString();
         messageReceiverImage = getIntent().getExtras().get("visit_image").toString();
 
-
+        IntializeVoice();
         IntializeControllers();
 
 
@@ -344,4 +360,85 @@ public class ChatActivity extends Activity
     }
 
 
+    private void IntializeVoice()
+    {
+        ImageView voice = findViewById(R.id.voiceinput);
+
+        voice.setOnTouchListener(new View.OnTouchListener() {
+
+            @SuppressLint("ClickableViewAccessibility")
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            public boolean onTouch(View view, MotionEvent event) {
+                switch (event.getAction() & MotionEvent.ACTION_MASK) {
+
+                    case MotionEvent.ACTION_DOWN:
+                        try {
+                            startRecording();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                        break;
+
+                    case MotionEvent.ACTION_UP:
+                        stopRecording();
+                        break;
+                }
+                return true;
+            }
+        });
+    }
+
+
+    private void startRecording() throws IOException {
+        myUrl = getExternalCacheDir().getAbsolutePath() + "/audiorecordtest.3gp";
+
+        recorder = new MediaRecorder();
+        recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+        recorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+        recorder.setOutputFile(myUrl);
+        recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+        recorder.prepare();
+        recorder.start();
+        Log.d("Voice", "Recording started");
+    }
+    private void stopRecording() {
+        if (recorder != null) {
+            recorder.reset();
+            recorder.release();
+            recorder = null;
+            Log.d("voice", "Recording stop" + duration);
+
+            try {
+                duration = getDuration(myUrl);}
+            catch (Exception e){
+                e.printStackTrace();
+            }
+            if (duration <= 9) Log.d("Voice", "Voice too small");
+            else {
+                duration = duration / 10;
+
+            }
+        }
+    }
+
+    public int getDuration(String mUri) {
+        int duration;
+        MediaMetadataRetriever mmr = new MediaMetadataRetriever();
+        mmr.setDataSource(mUri);
+        String time = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+        duration = Integer.parseInt(time)/100;
+        mmr.release();
+        return duration;
+    }
+
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode){
+            case REQUEST_RECORD_AUDIO_PERMISSION:
+                permissionToRecordAccepted  = grantResults[0] == PackageManager.PERMISSION_GRANTED;
+                break;
+        }
+        if (!permissionToRecordAccepted ) finish();
+    }
 }
