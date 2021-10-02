@@ -22,6 +22,8 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.StringJoiner;
+
 public class RecentMethods {
     public static void isNickCorrect(String nickname, DatabaseReference reference, TextView errorTextnickname) {
         Log.d("########", "Method: isNickCorrect");
@@ -455,5 +457,26 @@ public class RecentMethods {
 
             }
         });
+    }
+
+    public static void GetUsersNicks(String nick,FirebaseModel firebaseModel,Callbacks.GetUserNicks callback){
+        firebaseModel.initAll();
+        Query query=firebaseModel.getUsersReference().child(nick).child("Chats");
+        query.addValueEventListener(new ValueEventListener() {
+            @java.lang.Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                ArrayList<String> usersNicksArrayList=new ArrayList<>();
+                for (DataSnapshot snap : snapshot.getChildren()) {
+                    String userNicks=snap.getValue(String.class);
+                    usersNicksArrayList.add(userNicks);
+                }
+                callback.GetUsersNicks(usersNicksArrayList);
+            }
+
+            @java.lang.Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        })
     }
 }

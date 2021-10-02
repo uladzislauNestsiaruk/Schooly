@@ -50,4 +50,7 @@ public class Callbacks {
     public interface GetTimesTamp{
         void GetTimesTamp(long timesTamp);
     }
+    public interface GetUserNicks{
+        void GetUsersNicks(ArrayList<String> userNicks);
+    }
 }
