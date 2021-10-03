@@ -466,7 +466,7 @@ public class RecentMethods {
             @java.lang.Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 ArrayList<String> usersNicksArrayList=new ArrayList<>();
-                for (DataSnapshot snap : snapshot.getChildren()) {
+                for (DataSnapshot snap : dataSnapshot.getChildren()) {
                     String userNicks=snap.getValue(String.class);
                     usersNicksArrayList.add(userNicks);
                 }
@@ -477,6 +477,6 @@ public class RecentMethods {
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-        })
+        });
     }
 }

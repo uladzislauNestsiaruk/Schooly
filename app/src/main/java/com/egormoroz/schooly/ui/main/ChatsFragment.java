@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.provider.ContactsContract;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -80,22 +81,11 @@ public class ChatsFragment extends Fragment
         return PrivateChatsView;
     }
     @Override
-    public void onStart()
-    {
+    public void onStart() {
         super.onStart();
-        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-            @java.lang.Override
-            public void PassUserNick(String nick) {
-                RecentMethods.GetUsersNicks(nick, firebaseModel, new Callbacks.GetUserNicks() {
-                    @java.lang.Override
-                    public void GetUsersNicks(ArrayList<String> userNicks) {
-                        usersNicks.addAll(userNicks);
-
-                        chatsList.setAdapter(usersNicks);
-                    }
-                });
-            }
-        });
+        DialogsAdapter dialogsAdapter=new DialogsAdapter(usersNicks);
+        chatsList.setAdapter(dialogsAdapter);
+        Log.d("#######", "vvvvv  "+usersNicks);
 
 
 //        FirebaseRecyclerOptions<Contacts> options =
