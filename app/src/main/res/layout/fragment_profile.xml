@@ -53,14 +53,14 @@
                 android:id="@+id/redact"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/redact"
-                android:fontFamily="@font/montserrat_extrabold"
-                android:textColor="@color/app_grey"
+                android:layout_below="@id/biography"
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="16dp"
                 android:background="@drawable/corners2dpstrokeappcolor"
+                android:fontFamily="@font/montserrat_extrabold"
                 android:padding="6dp"
-                android:layout_below="@id/biography"/>
+                android:text="@string/redact"
+                android:textColor="@color/app_grey" />
 
             <TextView
                 android:id="@+id/friends"
@@ -100,14 +100,14 @@
                 android:layout_marginStart="48dp"
                 android:layout_below="@+id/redact"/>
 
-            <View
+            <com.google.ar.sceneform.SceneView
                 android:id="@+id/mainlookview"
                 android:layout_width="match_parent"
                 android:layout_height="384dp"
-                android:layout_marginEnd="24dp"
-                android:layout_marginStart="24dp"
                 android:layout_below="@+id/friends"
+                android:layout_marginStart="24dp"
                 android:layout_marginTop="30dp"
+                android:layout_marginEnd="24dp"
                 android:background="@drawable/co30mainlook" />
 
             <TextView

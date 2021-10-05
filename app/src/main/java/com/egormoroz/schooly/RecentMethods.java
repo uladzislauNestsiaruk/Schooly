@@ -471,6 +471,7 @@ public class RecentMethods {
                     usersNicksArrayList.add(userNicks);
                 }
                 callback.GetUsersNicks(usersNicksArrayList);
+                Log.d("#######", "aa  "+usersNicksArrayList);
             }
 
             @java.lang.Override

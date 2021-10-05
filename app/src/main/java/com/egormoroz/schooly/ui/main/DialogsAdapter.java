@@ -1,5 +1,6 @@
 package com.egormoroz.schooly.ui.main;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -50,7 +51,8 @@ public class DialogsAdapter extends RecyclerView.Adapter<DialogsAdapter.ChatsVie
                 });
             }
         });
-        holder.userName.setText(usersNicks);
+        holder.userName.setText("usersNicks");
+        Log.d("###############", "array "+usersNicks);
     }
 
     @java.lang.Override
@@ -61,7 +63,7 @@ public class DialogsAdapter extends RecyclerView.Adapter<DialogsAdapter.ChatsVie
     public class ChatsViewHolder extends RecyclerView.ViewHolder{
         ImageView profileImage;
         TextView userStatus, userName;
-        ChatsViewHolder(View itemView) {
+        ChatsViewHolder(RelativeLayout itemView) {
             super(itemView);
             profileImage = itemView.findViewById(R.id.image_viewer);
             //   userStatus = itemView.findViewById(R.id.user_status);

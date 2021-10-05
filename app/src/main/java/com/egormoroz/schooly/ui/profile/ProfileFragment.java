@@ -27,6 +27,7 @@ import com.egormoroz.schooly.ui.main.UserInformation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.ar.sceneform.SceneView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -150,6 +151,7 @@ public class ProfileFragment extends Fragment {
                         ((MainActivity) getActivity()).setCurrentFragment(WardrobeFragment.newInstance());
                     }
                 });
+                SceneView sceneView =new SceneView(getActvity());
 
                 break;
             case "other":

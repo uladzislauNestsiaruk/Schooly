@@ -58,7 +58,7 @@ public class ChatsFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        PrivateChatsView = inflater.inflate(R.layout.fragment_chats, container, false);
+        View root = inflater.inflate(R.layout.fragment_chats, container, false);
         firebaseModel.initAll();
         mAuth = FirebaseAuth.getInstance();
         currentUserID = mAuth.getCurrentUser().getUid();
@@ -75,18 +75,19 @@ public class ChatsFragment extends Fragment
         //Ref to user information, my is a sample
 
         ChatsRef = firebaseModel.getUsersReference().child("spaccacrani").child("Chats");
-        chatsList = (RecyclerView) PrivateChatsView.findViewById(R.id.chats_list);
+        chatsList = root.findViewById(R.id.chats_list);
         chatsList.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        DialogsAdapter dialogsAdapter=new DialogsAdapter(usersNicks);
+        chatsList.setAdapter(dialogsAdapter);
+        Log.d("#######", "vvvvv  "+usersNicks);
+
 
         return PrivateChatsView;
     }
     @Override
     public void onStart() {
         super.onStart();
-        DialogsAdapter dialogsAdapter=new DialogsAdapter(usersNicks);
-        chatsList.setAdapter(dialogsAdapter);
-        Log.d("#######", "vvvvv  "+usersNicks);
-
 
 //        FirebaseRecyclerOptions<Contacts> options =
 //                new FirebaseRecyclerOptions.Builder<Contacts>()
@@ -178,23 +179,5 @@ public class ChatsFragment extends Fragment
 //
 //        chatsList.setAdapter(adapter);
 //        adapter.startListening();
-    }
-
-
-
-
-    public static class  ChatsViewHolder extends RecyclerView.ViewHolder
-    {
-        CircleImageView profileImage;
-        TextView userStatus, userName;
-
-        public ChatsViewHolder(@NonNull View itemView)
-        {
-            super(itemView);
-
-            profileImage = itemView.findViewById(R.id.image_viewer);
-         //   userStatus = itemView.findViewById(R.id.user_status);
-            userName = itemView.findViewById(R.id.otherusernick);
-        }
     }
 }
