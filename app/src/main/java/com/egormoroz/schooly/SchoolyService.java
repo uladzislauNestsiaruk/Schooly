@@ -16,8 +16,9 @@ import java.util.ArrayList;
 
 public class SchoolyService extends Service {
     FirebaseModel firebaseModel=new FirebaseModel();
-    double todayMining,minInGap,miningMoneyInGap,todayMiningBase,t;
-    long a,d,min;
+    double todayMining,minInGap,miningMoneyInGap,todayMiningBase,t,getFirstMinerInHour,getSecondMinerInHour,getThirdMinerInHour,getFourthMinerInHour,getFifthMinerInHour;
+    long a,d,min,getInHourMinerFirst,getInHourMinerSecond,getInHourMinerThird,getInHourMinerFourth,getInHourMinerFifth;
+    Miner getFirstActiveMiner, getSecondActiveMiner,getThirdActiveMiner,getFourthActiveMiner,getFifthActiveMiner;
     int aee=8;
     @Nullable
     @Override
@@ -129,10 +130,42 @@ public class SchoolyService extends Service {
                         ArrayList<Miner> getActiveMinersArrayList=new ArrayList<>();
                         getActiveMinersArrayList=activeMinersFromBase;
                         if(getActiveMinersArrayList.size()==1) {
-                            Miner getFirstActiveMiner = getActiveMinersArrayList.get(0);
-                            long getInHourMiner = getFirstActiveMiner.getInHour();
-                            double getFirstMinerInHour = Double.valueOf(String.valueOf(getInHourMiner));
+                            getFirstActiveMiner = getActiveMinersArrayList.get(0);
+                            getInHourMinerFirst = getFirstActiveMiner.getInHour();
+                            getFirstMinerInHour = Double.valueOf(String.valueOf(getInHourMinerFirst));
                             miningMoneyInGap = minInGap * (getFirstMinerInHour / 60);
+                            firebaseModel.getUsersReference().child(nick)
+                                    .child("todayMining").setValue(miningMoneyInGap+t);
+                            Log.d("##########","gaaap  "+miningMoneyInGap);
+                        }else if (getActiveMinersArrayList.size()==3){
+                            getSecondActiveMiner=getActiveMinersArrayList.get(1);
+                            getInHourMinerSecond= getSecondActiveMiner.getInHour();
+                            getSecondMinerInHour = Double.valueOf(String.valueOf(getInHourMinerSecond));
+                            miningMoneyInGap = minInGap * ((getFirstMinerInHour+getSecondMinerInHour) / 60);
+                            firebaseModel.getUsersReference().child(nick)
+                                    .child("todayMining").setValue(miningMoneyInGap+t);
+                            Log.d("##########","gaaap  "+miningMoneyInGap);
+                        }else if (getActiveMinersArrayList.size()==3){
+                            getThirdActiveMiner=getActiveMinersArrayList.get(2);
+                            getInHourMinerThird= getThirdActiveMiner.getInHour();
+                            getThirdMinerInHour = Double.valueOf(String.valueOf(getInHourMinerThird));
+                            miningMoneyInGap = minInGap * ((getFirstMinerInHour+getSecondMinerInHour+getThirdMinerInHour) / 60);
+                            firebaseModel.getUsersReference().child(nick)
+                                    .child("todayMining").setValue(miningMoneyInGap+t);
+                            Log.d("##########","gaaap  "+miningMoneyInGap);
+                        }else if (getActiveMinersArrayList.size()==4){
+                            getFourthActiveMiner=getActiveMinersArrayList.get(3);
+                            getInHourMinerFourth= getFourthActiveMiner.getInHour();
+                            getFourthMinerInHour = Double.valueOf(String.valueOf(getInHourMinerFourth));
+                            miningMoneyInGap = minInGap * ((getFirstMinerInHour+getSecondMinerInHour+getThirdMinerInHour+getFourthMinerInHour) / 60);
+                            firebaseModel.getUsersReference().child(nick)
+                                    .child("todayMining").setValue(miningMoneyInGap+t);
+                            Log.d("##########","gaaap  "+miningMoneyInGap);
+                        }else if (getActiveMinersArrayList.size()==5){
+                            getFifthActiveMiner=getActiveMinersArrayList.get(4);
+                            getInHourMinerFifth= getFifthActiveMiner.getInHour();
+                            getFifthMinerInHour = Double.valueOf(String.valueOf(getInHourMinerFifth));
+                            miningMoneyInGap = minInGap * ((getFirstMinerInHour+getSecondMinerInHour+getThirdMinerInHour+getFourthMinerInHour+getFifthMinerInHour) / 60);
                             firebaseModel.getUsersReference().child(nick)
                                     .child("todayMining").setValue(miningMoneyInGap+t);
                             Log.d("##########","gaaap  "+miningMoneyInGap);

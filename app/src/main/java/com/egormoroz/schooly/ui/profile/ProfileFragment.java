@@ -2,7 +2,9 @@ package com.egormoroz.schooly.ui.profile;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,29 +23,51 @@ import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.MainActivity;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
-import com.egormoroz.schooly.ui.chat.Dialog;
 import com.egormoroz.schooly.ui.main.ChatActivity;
 import com.egormoroz.schooly.ui.main.UserInformation;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.ar.sceneform.Node;
+import com.google.ar.sceneform.Scene;
 import com.google.ar.sceneform.SceneView;
+import com.google.ar.sceneform.assets.RenderableSource;
+import com.google.ar.sceneform.math.Vector3;
+import com.google.ar.sceneform.rendering.ModelRenderable;
+import com.google.ar.sceneform.rendering.Renderable;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
+import java.io.File;
+import java.io.IOException;
 
 public class ProfileFragment extends Fragment {
     FirebaseModel firebaseModel = new FirebaseModel();
     private FirebaseAuth mAuth;
     private String receiverUserID, senderUserID;
+    Context profileContext;
     String type;
     UserInformation info;
     TextView nickname;
     TextView message;
+    Scene mScene;
+    File file;
+    String link;
     DatabaseReference user;
+    SceneView mSceneView;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        profileContext=context;
+    }
 
     public ProfileFragment(String type, UserInformation info) {
         this.type = type;
@@ -58,25 +82,25 @@ public class ProfileFragment extends Fragment {
     public void open() {
         Intent i = new Intent(getActivity(), ChatActivity.class);
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-                    @Override
-                    public void PassUserNick(String nick) {
-                        {
-                            user.addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot snapshot) {
-                                    if (snapshot.child(nick).exists()) {
-                                        AcceptChatRequest();
-                                    }
-                                }
-
-                                @Override
-                                public void onCancelled(DatabaseError databaseError) {
-
-                                }
-                            });
+            @Override
+            public void PassUserNick(String nick) {
+                {
+                    user.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot snapshot) {
+                            if (snapshot.child(nick).exists()) {
+                                AcceptChatRequest();
+                            }
                         }
-                    }
-                });
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+                }
+            }
+        });
         //Getting information about user(friend)
         i.putExtra("name", info.getNick());
         i.putExtra("visit_user_id", info.getUid());
@@ -99,8 +123,27 @@ public class ProfileFragment extends Fragment {
                 root.findViewById(R.id.otherusernick);
         message = type.equals("user") ? null :
                 root.findViewById(R.id.message);
+        FirebaseStorage firebaseStorage=FirebaseStorage.getInstance();
+        StorageReference storageReference=firebaseStorage.getReference().child("3d models").child("untitled.glb");
+        try {
+            file= File.createTempFile("untitled","glb");
+            Log.d("#######", "bbb  "+file);
+//            storageReference.getFile(file).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+//                @java.lang.Override
+//                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+//                    createScene();
+//                }
+//
+//            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        mSceneView=root.findViewById(R.id.mainlookview);
+        createScene();
         return root;
     }
+
+
 
     @SuppressLint("ResourceType")
     @Override
@@ -151,7 +194,6 @@ public class ProfileFragment extends Fragment {
                         ((MainActivity) getActivity()).setCurrentFragment(WardrobeFragment.newInstance());
                     }
                 });
-                SceneView sceneView =new SceneView(getActvity());
 
                 break;
             case "other":
@@ -170,6 +212,36 @@ public class ProfileFragment extends Fragment {
                 }
                 break;
         }
+    }
+
+    private void createScene() {
+        mScene=mSceneView.getScene();
+        link="https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Funtitled.glb?alt=media&token=657b45d7-a84b-4f2a-89f4-a699029401f7";
+
+        RenderableSource renderableSource = RenderableSource
+                .builder()
+                .setSource(profileContext, Uri.parse(link), RenderableSource.SourceType.GLB)
+                .setRecenterMode(RenderableSource.RecenterMode.ROOT)
+                .build();
+        Log.d("Sceneform", "model");
+
+        ModelRenderable.builder()
+                .setSource(profileContext, renderableSource)
+                .build()
+                .thenAccept(renderable->onRenderableLoaded(renderable))
+                .exceptionally(throwable -> {
+                    Log.d("Sceneform", "failed to load model");
+                    return null;
+                });
+    }
+
+    private void onRenderableLoaded(Renderable renderable) {
+        Node cakeNode = new Node();
+        cakeNode.setRenderable(renderable);
+        cakeNode.setParent(mScene);
+        cakeNode.setLocalPosition(new Vector3(0f, 0f, -1f));
+        mScene.addChild(cakeNode);
+        Log.d("Sceneform", "model");
     }
 
 

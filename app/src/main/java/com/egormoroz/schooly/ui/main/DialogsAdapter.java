@@ -40,17 +40,6 @@ public class DialogsAdapter extends RecyclerView.Adapter<DialogsAdapter.ChatsVie
     @java.lang.Override
     public void onBindViewHolder(@NonNull DialogsAdapter.ChatsViewHolder holder, int position) {
         firebaseModel.initAll();
-        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-            @java.lang.Override
-            public void PassUserNick(String nick) {
-                RecentMethods.GetUsersNicks(nick, firebaseModel, new Callbacks.GetUserNicks() {
-                    @java.lang.Override
-                    public void GetUsersNicks(ArrayList<String> userNicks) {
-                        usersNicks.addAll(userNicks);
-                    }
-                });
-            }
-        });
         holder.userName.setText("usersNicks");
         Log.d("###############", "array "+usersNicks);
     }

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,6 +16,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.egormoroz.schooly.Callbacks;
@@ -22,8 +24,10 @@ import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.ui.chat.Contacts;
+import com.egormoroz.schooly.ui.main.Mining.MyMinersFragment;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -46,138 +50,40 @@ public class ChatsFragment extends Fragment
     private FirebaseAuth mAuth;
     private String currentUserID="";
     ArrayList<String> usersNicks=new ArrayList<String>();
-    public static ChatsFragment newInstance(){return new ChatsFragment();}
-
-    public ChatsFragment()
-    {
-
+    public static ChatsFragment newInstance() {
+        return new ChatsFragment();
     }
-
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_chats, container, false);
         firebaseModel.initAll();
-        mAuth = FirebaseAuth.getInstance();
-        currentUserID = mAuth.getCurrentUser().getUid();
+        chatsList = root.findViewById(R.id.chats_list);
+        allDialogsFromBase();
+        return root;
+    }
 
+    @Override
+    public void onViewCreated(@Nullable View view, @NonNull Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+    }
 
-        //failed use of interface
+    public  void allDialogsFromBase(){
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-            @Override
+            @java.lang.Override
             public void PassUserNick(String nick) {
-                ChatsRef = firebaseModel.getUsersReference().child(nick).child("Chats");
-                UsersRef = firebaseModel.getUsersReference().child("Users");
+                RecentMethods.GetUsersNicks(nick, firebaseModel, new Callbacks.GetUserNicks() {
+                    @java.lang.Override
+                    public void GetUsersNicks(ArrayList<String> userNicks) {
+                        userNicks.addAll(userNicks);
+                        DialogsAdapter dialogsAdapter=new DialogsAdapter(usersNicks);
+                        chatsList.setAdapter(dialogsAdapter);
+                        Log.d("c", "chats  "+userNicks);
+                    }
+                });
             }
         });
-        //Ref to user information, my is a sample
-
-        ChatsRef = firebaseModel.getUsersReference().child("spaccacrani").child("Chats");
-        chatsList = root.findViewById(R.id.chats_list);
-        chatsList.setLayoutManager(new LinearLayoutManager(getContext()));
-
-        DialogsAdapter dialogsAdapter=new DialogsAdapter(usersNicks);
-        chatsList.setAdapter(dialogsAdapter);
-        Log.d("#######", "vvvvv  "+usersNicks);
-
-
-        return PrivateChatsView;
     }
-    @Override
-    public void onStart() {
-        super.onStart();
 
-//        FirebaseRecyclerOptions<Contacts> options =
-//                new FirebaseRecyclerOptions.Builder<Contacts>()
-//                        .setQuery(ChatsRef, Contacts.class)
-//                        .build();
-//
-//        //getting list of user/ problem is here
-//        FirebaseRecyclerAdapter<Contacts, ChatsViewHolder> adapter =
-//                new FirebaseRecyclerAdapter<Contacts, ChatsViewHolder>(options) {
-//                    @Override
-//                    protected void onBindViewHolder(@NonNull final ChatsViewHolder holder, int position, @NonNull Contacts model)
-//                    {
-//                        //преждечем получатб нам нужно разобраться куда мы будем
-//                        //это выводить. Поэтому диалоги мы будем пихать в лист.
-//
-//
-//                        final String usersIDs = getRef(position).getKey();
-//                        final String[] retImage = {"default_image"};
-//
-//                        ChatsRef.child(usersIDs).addValueEventListener(new ValueEventListener() {
-//                            @Override
-//                            public void onDataChange(DataSnapshot dataSnapshot)
-//                            {
-//                                if (dataSnapshot.exists())
-//                                {
-//                                    if (dataSnapshot.hasChild("avatar"))
-//                                    {
-//                                        retImage[0] = dataSnapshot.child("image").getValue().toString();
-//                                        Picasso.get().load(retImage[0]).into(holder.profileImage);
-//                                    }
-//                                    //cannot get usernick
-//                                    final String retName = dataSnapshot.child("nick").getValue().toString();
-////                                    final String retStatus = dataSnapshot.child("status").getValue().toString();
-//
-//                                    holder.userName.setText(retName);
-//
-//
-//                                    if (dataSnapshot.child("userState").hasChild("state"))
-//                                    {=
-////                                        String state  dataSnapshot.child("userState").child("state").getValue().toString();
-//                                        String date = dataSnapshot.child("userState").child("date").getValue().toString();
-//                                        String time = dataSnapshot.child("userState").child("time").getValue().toString();
-//
-//                                        if (state.equals("online"))
-//                                        {
-//                                            holder.userStatus.setText("online");
-//                                        }
-//                                        else if (state.equals("offline"))
-//                                        {
-//                                            holder.userStatus.setText("Last Seen: " + date + " " + time);
-//                                        }
-//                                    }
-//                                    else
-//                                    {
-//                                        holder.userStatus.setText("offline");
-//                                    }
-//
-//                                    holder.itemView.setOnClickListener(new View.OnClickListener() {
-//                                        //onClick doesn't work cause of wrong ways in database?? It will work when we get the information about user
-//                                        @Override
-//                                        public void onClick(View view)
-//                                        {
-//                                            //need to add get user avatar from database
-//                                            Intent chatIntent = new Intent(getContext(), ChatActivity.class);
-//                                            chatIntent.putExtra("visit_user_id", usersIDs);
-//                                            chatIntent.putExtra("visit_user_name", retName);
-//                                            chatIntent.putExtra("visit_image", retImage[0]);
-//                                            startActivity(chatIntent);
-//                                        }
-//                                    });
-//                                }
-//                            }
-//
-//                            @Override
-//                            public void onCancelled(DatabaseError databaseError) {
-//
-//                            }
-//                        });
-//                    }
-//
-//                    @NonNull
-//                    @Override
-//                    public ChatsViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i)
-//                    {
-//                        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.user_display_layout, viewGroup, false);
-//                        return new ChatsViewHolder(view);
-//                    }
-//                };
-//
-//        chatsList.setAdapter(adapter);
-//        adapter.startListening();
-    }
+
 }
