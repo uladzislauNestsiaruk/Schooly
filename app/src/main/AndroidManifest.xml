@@ -12,9 +12,10 @@
         android:name=".SchoolyApplication"
         android:theme="@style/Theme.Schooly">
 
-        <activity android:name=".ui.chat.holders.ImageViewerActivity"></activity>
-        <activity android:name=".ui.main.ChatActivity"></activity>
-        <activity android:name=".ui.main.PhoneCodeActivity"></activity>
+        <activity android:name=".ui.chat.holders.ImageViewerActivity" />
+        <activity android:name=".ui.main.ChatActivity" />
+        <activity android:name=".ui.main.PhoneCodeActivity" />
+        <activity android:name=".ui.main.GroupChatActivity" />
         <service
             android:name=".SchoolyService"
             android:enabled="true"

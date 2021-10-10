@@ -462,7 +462,7 @@ public class RecentMethods {
 
     public static void GetUsersNicks(String nick,FirebaseModel firebaseModel,Callbacks.GetUserNicks callback){
         firebaseModel.initAll();
-        Query query=firebaseModel.getUsersReference().child(nick).child("Chats");
+        Query query=firebaseModel.getUsersReference().child(nick).child("Chats").child("nick");
         query.addValueEventListener(new ValueEventListener() {
             @java.lang.Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

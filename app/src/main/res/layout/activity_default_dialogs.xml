@@ -82,11 +82,13 @@
             app:tabTextAppearance="@style/AppTabTextAppearance">
 
             <com.google.android.material.tabs.TabItem
+                android:id="@+id/chats"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/privatemessages" />
 
             <com.google.android.material.tabs.TabItem
+                android:id="@+id/groups"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/groupmessages" />

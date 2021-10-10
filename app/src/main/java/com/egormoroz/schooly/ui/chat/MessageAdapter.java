@@ -148,7 +148,13 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                         messageViewHolder.itemView.getContext().startActivity(intent);
                     }
                 });
-            } else {
+            } else if (fromMessageType.equals("voice")){
+                if (fromUserID.equals(messageSenderId)){
+
+                }
+            }
+
+            else {
                 messageViewHolder.receiverProfileImage.setVisibility(View.VISIBLE);
                 messageViewHolder.messageReceiverPicture.setVisibility(View.VISIBLE);
                // messageViewHolder.messageReceiverPicture.setBackground(boolea);

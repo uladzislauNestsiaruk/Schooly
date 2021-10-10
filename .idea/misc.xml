@@ -4,7 +4,6 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/User/Downloads/Schooly/app/src/main/res/layout/fragment_chats.xml" value="0.1644021739130435" />
-        <entry key="..\:/Users/User/Downloads/Schooly/app/src/main/res/layout/fragment_profile.xml" value="0.23369565217391305" />
         <entry key="..\:/Users/User/Downloads/Schooly/app/src/main/res/layout/user_display_layout.xml" value="0.2" />
         <entry key="..\:/Users/User/Downloads/Schooly_NEW/app/src/main/res/drawable/corners14appcolor.xml" value="0.24814814814814815" />
         <entry key="..\:/Users/User/Downloads/Schooly_NEW/app/src/main/res/drawable/corners15dpwhite.xml" value="0.14322916666666666" />
@@ -39,7 +38,6 @@
         <entry key="..\:/Users/User/Downloads/Schooly_NEWtyomaa/app/src/main/res/layout/custom_messages_layout.xml" value="0.1644021739130435" />
         <entry key="..\:/Users/User/Downloads/Schooly_NEWtyomaa/app/src/main/res/layout/toolbar_single_messages.xml" value="0.1644021739130435" />
         <entry key="..\:/Users/User/Downloads/Schooly_NEWtyomaa/app/src/main/res/layout/user_display_layout.xml" value="0.1644021739130435" />
-        <entry key="..\:/Users/User/Downloads/Schoolynew/app/src/main/res/layout/fragment_chats.xml" value="0.1644021739130435" />
         <entry key="..\:/Users/Дима/Documents/GitHub/Schooly_NEW/app/src/main/res/drawable/buttons.xml" value="0.14739583333333334" />
         <entry key="..\:/Users/Дима/Documents/GitHub/Schooly_NEW/app/src/main/res/drawable/ic_image.xml" value="0.10092592592592593" />
         <entry key="..\:/Users/Дима/Documents/GitHub/Schooly_NEW/app/src/main/res/drawable/ic_sendmessage.xml" value="0.10092592592592593" />
@@ -48,11 +46,15 @@
         <entry key="..\:/Users/Дима/Documents/GitHub/Schooly_NEW/app/src/main/res/layout/activity_chat.xml" value="0.24645892351274787" />
         <entry key="..\:/Users/Дима/Documents/GitHub/Schooly_NEW/app/src/main/res/layout/activity_default_dialogs.xml" value="0.12291666666666666" />
         <entry key="..\:/Users/Дима/Documents/GitHub/Schooly_NEW/app/src/main/res/layout/activity_default_messages.xml" value="0.23450586264656617" />
+        <entry key="..\:/Users/Дима/Documents/GitHub/Schooly_NEW/app/src/main/res/layout/activity_group_chat.xml" value="0.12" />
         <entry key="..\:/Users/Дима/Documents/GitHub/Schooly_NEW/app/src/main/res/layout/activity_image_viewer.xml" value="0.1" />
+        <entry key="..\:/Users/Дима/Documents/GitHub/Schooly_NEW/app/src/main/res/layout/app_bar_layout.xml" value="0.1" />
         <entry key="..\:/Users/Дима/Documents/GitHub/Schooly_NEW/app/src/main/res/layout/custom_chat_bar.xml" value="0.13125" />
         <entry key="..\:/Users/Дима/Documents/GitHub/Schooly_NEW/app/src/main/res/layout/custom_messages_layout.xml" value="0.14791666666666667" />
         <entry key="..\:/Users/Дима/Documents/GitHub/Schooly_NEW/app/src/main/res/layout/fragment_chats.xml" value="0.1" />
         <entry key="..\:/Users/Дима/Documents/GitHub/Schooly_NEW/app/src/main/res/layout/fragment_editing.xml" value="0.10729166666666666" />
+        <entry key="..\:/Users/Дима/Documents/GitHub/Schooly_NEW/app/src/main/res/layout/fragment_groups.xml" value="0.1" />
+        <entry key="..\:/Users/Дима/Documents/GitHub/Schooly_NEW/app/src/main/res/layout/fragment_main.xml" value="0.16394927536231885" />
         <entry key="..\:/Users/Дима/Documents/GitHub/Schooly_NEW/app/src/main/res/layout/fragment_mining.xml" value="0.1" />
         <entry key="..\:/Users/Дима/Documents/GitHub/Schooly_NEW/app/src/main/res/layout/fragment_nickname.xml" value="0.1" />
         <entry key="..\:/Users/Дима/Documents/GitHub/Schooly_NEW/app/src/main/res/layout/fragment_otheruser.xml" value="0.25416666666666665" />

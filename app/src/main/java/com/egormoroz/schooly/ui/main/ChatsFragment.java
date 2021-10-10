@@ -10,6 +10,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
 
 import android.provider.ContactsContract;
 import android.util.Log;
@@ -24,10 +25,12 @@ import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.ui.chat.Contacts;
+import com.egormoroz.schooly.ui.chat.TabsAccessorAdapter;
 import com.egormoroz.schooly.ui.main.Mining.MyMinersFragment;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -50,6 +53,10 @@ public class ChatsFragment extends Fragment
     private FirebaseAuth mAuth;
     private String currentUserID="";
     ArrayList<String> usersNicks=new ArrayList<String>();
+
+    private ViewPager myViewPager;
+    private TabLayout myTabLayout;
+    private TabsAccessorAdapter myTabsAccessorAdapter;
     public static ChatsFragment newInstance() {
         return new ChatsFragment();
     }
@@ -60,6 +67,7 @@ public class ChatsFragment extends Fragment
         firebaseModel.initAll();
         chatsList = root.findViewById(R.id.chats_list);
         allDialogsFromBase();
+
         return root;
     }
 
