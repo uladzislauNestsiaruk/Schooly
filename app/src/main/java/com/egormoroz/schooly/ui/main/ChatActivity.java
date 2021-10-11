@@ -232,8 +232,6 @@ public class ChatActivity extends Activity
                             }
                         });
 
-                    } else {
-                        Log.d("Chat","wrong");
                     }
                 }
             });
@@ -450,14 +448,14 @@ public class ChatActivity extends Activity
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 if (!snapshot.child(otherUser).exists()) {
-                    firebaseModel.getUsersReference().child(currUser).child("Dialogs").child(otherUser).setValue("Saved");
-                    firebaseModel.getUsersReference().child(otherUser).child("Dialogs").child(currUser).setValue("Saved");
+                    firebaseModel.getUsersReference().child(currUser).child("Dialogs").child(otherUser).setValue(otherUser);
+                    firebaseModel.getUsersReference().child(otherUser).child("Dialogs").child(currUser).setValue(currUser);
                 }
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-               Log.d("ONE","Lox");
+
             }
         });
     }
