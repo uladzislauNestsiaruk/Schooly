@@ -450,8 +450,8 @@ public class ChatActivity extends Activity
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 if (!snapshot.child(otherUser).exists()) {
-                    firebaseModel.getUsersReference().child(currUser).child("Dialogs").setValue(otherUser);
-                    firebaseModel.getUsersReference().child(otherUser).child("Dialogs").setValue(currUser);
+                    firebaseModel.getUsersReference().child(currUser).child("Dialogs").child(otherUser).setValue("Saved");
+                    firebaseModel.getUsersReference().child(otherUser).child("Dialogs").child(currUser).setValue("Saved");
                 }
             }
 
