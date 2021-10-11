@@ -189,7 +189,7 @@ public class ChatActivity extends Activity
                         final String messageSenderRef = messageReceiverName + "/Chats/" + nick + "/Messages";
                         final String messageReceiverRef = nick + "/Chats/" + messageReceiverName + "/Messages";
 
-
+                        sendDialog(nick,messageReceiverName);
                         DatabaseReference   userMessageKeyRef =   firebaseModel.getUsersReference().child(nick).child("Chats").child(messageReceiverName).child("Messages").push();
                         final String messagePushID = userMessageKeyRef.getKey();
 
@@ -289,6 +289,7 @@ public class ChatActivity extends Activity
                             @Override
                             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                                 Message messages = dataSnapshot.getValue(Message.class);
+                                sendDialog(nick, messageReceiverName);
                                 messagesList.add(messages);
                                 messageAdapter.notifyDataSetChanged();
                                 userMessagesList.smoothScrollToPosition(userMessagesList.getAdapter().getItemCount());
@@ -335,7 +336,7 @@ public class ChatActivity extends Activity
                     DatabaseReference userMessageKeyRef = firebaseModel.getUsersReference().child(nick).child("Chats").child(messageReceiverName).child("Messages").push();
                     String messagePushID = userMessageKeyRef.getKey();
 
-
+                    sendDialog(nick, messageReceiverName);
                     Map messageTextBody = new HashMap();
                     messageTextBody.put("message", messageText);
                     messageTextBody.put("type", "text");
@@ -440,5 +441,24 @@ public class ChatActivity extends Activity
                 break;
         }
         if (!permissionToRecordAccepted ) finish();
+    }
+
+
+    private void sendDialog(String currUser, String otherUser){
+        firebaseModel.initAll();
+        firebaseModel.getUsersReference().child(currUser).child("Dialogs").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                if (!snapshot.child(otherUser).exists()) {
+                    firebaseModel.getUsersReference().child(currUser).child("Dialogs").setValue(otherUser);
+                    firebaseModel.getUsersReference().child(otherUser).child("Dialogs").setValue(currUser);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+               Log.d("ONE","Lox");
+            }
+        });
     }
 }

@@ -468,8 +468,8 @@ public class RecentMethods {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 ArrayList<String> usersNicksArrayList=new ArrayList<>();
                 for (DataSnapshot snap : dataSnapshot.getChildren()) {
-                    snap.child("Nessages").getValue(String.class);
-                    snap.child("nick").getValue(String.class);
+//                    snap.child("Nessages").getValue(String.class);
+//                    snap.child("nick").getValue(String.class);
                     String userNicks=snap.getValue(String.class);
                     usersNicksArrayList.add(userNicks);
                 }

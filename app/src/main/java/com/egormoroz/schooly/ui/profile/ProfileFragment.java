@@ -24,18 +24,12 @@ import com.egormoroz.schooly.MainActivity;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.ui.main.ChatActivity;
+import com.egormoroz.schooly.ui.main.GroupChatActivity;
 import com.egormoroz.schooly.ui.main.UserInformation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.ar.sceneform.Node;
-import com.google.ar.sceneform.Scene;
-import com.google.ar.sceneform.SceneView;
-import com.google.ar.sceneform.assets.RenderableSource;
-import com.google.ar.sceneform.math.Vector3;
-import com.google.ar.sceneform.rendering.ModelRenderable;
-import com.google.ar.sceneform.rendering.Renderable;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -57,16 +51,14 @@ public class ProfileFragment extends Fragment {
     UserInformation info;
     TextView nickname;
     TextView message;
-    Scene mScene;
     File file;
     String link;
     DatabaseReference user;
-    SceneView mSceneView;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        profileContext=context;
+        profileContext = context;
     }
 
     public ProfileFragment(String type, UserInformation info) {
@@ -103,6 +95,7 @@ public class ProfileFragment extends Fragment {
         });
         //Getting information about user(friend)
         i.putExtra("name", info.getNick());
+        i.putExtra("groupName", "one");
         i.putExtra("visit_user_id", info.getUid());
         i.putExtra("visit_image", ChatActivity.class);
         startActivity(i);
@@ -123,11 +116,11 @@ public class ProfileFragment extends Fragment {
                 root.findViewById(R.id.otherusernick);
         message = type.equals("user") ? null :
                 root.findViewById(R.id.message);
-        FirebaseStorage firebaseStorage=FirebaseStorage.getInstance();
-        StorageReference storageReference=firebaseStorage.getReference().child("3d models").child("untitled.glb");
+        FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
+        StorageReference storageReference = firebaseStorage.getReference().child("3d models").child("untitled.glb");
         try {
-            file= File.createTempFile("untitled","glb");
-            Log.d("#######", "bbb  "+file);
+            file = File.createTempFile("untitled", "glb");
+            Log.d("#######", "bbb  " + file);
 //            storageReference.getFile(file).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
 //                @java.lang.Override
 //                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
@@ -138,11 +131,10 @@ public class ProfileFragment extends Fragment {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        mSceneView=root.findViewById(R.id.mainlookview);
-        createScene();
+
+
         return root;
     }
-
 
 
     @SuppressLint("ResourceType")
@@ -200,7 +192,7 @@ public class ProfileFragment extends Fragment {
                 nickname.setText(info.getNick());
                 receiverUserID = info.getUid();
                 senderUserID = MainActivity.currentUserID;
-                user =  firebaseModel.getUsersReference().child(info.getNick());
+                user = firebaseModel.getUsersReference().child(info.getNick());
                 if (message != null) {
                     message.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -214,64 +206,17 @@ public class ProfileFragment extends Fragment {
         }
     }
 
-    private void createScene() {
-        mScene=mSceneView.getScene();
-        link="https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Funtitled.glb?alt=media&token=657b45d7-a84b-4f2a-89f4-a699029401f7";
-
-        RenderableSource renderableSource = RenderableSource
-                .builder()
-                .setSource(profileContext, Uri.parse(link), RenderableSource.SourceType.GLB)
-                .setRecenterMode(RenderableSource.RecenterMode.ROOT)
-                .build();
-        Log.d("Sceneform", "model");
-
-        ModelRenderable.builder()
-                .setSource(profileContext, renderableSource)
-                .build()
-                .thenAccept(renderable->onRenderableLoaded(renderable))
-                .exceptionally(throwable -> {
-                    Log.d("Sceneform", "failed to load model");
-                    return null;
-                });
-    }
-
-    private void onRenderableLoaded(Renderable renderable) {
-        Node cakeNode = new Node();
-        cakeNode.setRenderable(renderable);
-        cakeNode.setParent(mScene);
-        cakeNode.setLocalPosition(new Vector3(0f, 0f, -1f));
-        mScene.addChild(cakeNode);
-        Log.d("Sceneform", "model");
-    }
-
 
     private void AcceptChatRequest() {
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @Override
             public void PassUserNick(String nick) {
                 {
-                    firebaseModel.getUsersReference().child(nick).child("Chats").child(info.getNick())
-                            .setValue("Saved").addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if (task.isSuccessful()) {
-                                firebaseModel.getUsersReference().child(info.getNick()).child("Chats").child(nick).setValue("Saved")
-                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<Void> task) {
-                                                if (task.isSuccessful()) {
-                                                    firebaseModel.getUsersReference().child(info.getNick()).child("Chats").child(nick).child("nick").setValue(nick);
-                                                    firebaseModel.getUsersReference().child(nick).child("Chats").child(info.getNick()).child("nick").setValue(nick);
-                                                    Toast.makeText(getContext(), "New Contact Saved", Toast.LENGTH_SHORT).show();
-                                                }
-                                            }
-                                        });
-                            }
-                        }
-                    });
+                    firebaseModel.getUsersReference().child(info.getNick()).child("Chats").child(nick).child("nick").setValue(nick);
+                    firebaseModel.getUsersReference().child(nick).child("Chats").child(info.getNick()).child("nick").setValue(nick);
                 }
-
             }
         });
     }
 }
+

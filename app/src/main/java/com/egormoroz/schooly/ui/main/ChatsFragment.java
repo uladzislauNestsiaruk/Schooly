@@ -66,17 +66,21 @@ public class ChatsFragment extends Fragment
         View root = inflater.inflate(R.layout.fragment_chats, container, false);
         firebaseModel.initAll();
         chatsList = root.findViewById(R.id.chats_list);
+        DialogsAdapter dialogsAdapter = new DialogsAdapter(usersNicks);
+        Log.d("one", String.valueOf(usersNicks));
+        chatsList.setAdapter(dialogsAdapter);
         allDialogsFromBase();
-
         return root;
     }
 
     @Override
     public void onViewCreated(@Nullable View view, @NonNull Bundle savedInstanceState) {
+
         super.onViewCreated(view, savedInstanceState);
     }
 
     public  void allDialogsFromBase(){
+
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @java.lang.Override
             public void PassUserNick(String nick) {
@@ -85,7 +89,7 @@ public class ChatsFragment extends Fragment
                     public void GetUsersNicks(ArrayList<String> userNicks) {
                         userNicks.addAll(userNicks);
                         DialogsAdapter dialogsAdapter=new DialogsAdapter(usersNicks);
-                        chatsList.setAdapter(dialogsAdapter);
+                        //chatsList.notifyDataSetChanged();
                         Log.d("c", "chats  "+userNicks);
                     }
                 });

@@ -53,7 +53,7 @@ public class MainFragment extends Fragment{
         chat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((MainActivity)getActivity()).setCurrentFragment(GroupsFragment.newInstance());
+                ((MainActivity)getActivity()).setCurrentFragment(ChatsFragment.newInstance());
 //                Intent intent = new Intent(getActivity(), ChatActivity.class);
 //                startActivity(intent);
             }
