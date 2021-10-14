@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,8 +19,11 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.egormoroz.schooly.Callbacks;
+import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.MainActivity;
 import com.egormoroz.schooly.R;
+import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.ui.chat.holders.ImageViewerActivity;
 import com.egormoroz.schooly.ui.main.ChatActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -40,7 +44,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     private List<Message> userMessagesList;
     private FirebaseAuth mAuth;
     private DatabaseReference usersRef;
-
+    private FirebaseModel firebaseModel;
+    private String messageSenderId = "";
 
     public MessageAdapter(List<Message> userMessagesList) {
         this.userMessagesList = userMessagesList;
@@ -70,7 +75,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     public MessageViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext())
                 .inflate(R.layout.custom_messages_layout, viewGroup, false);
-
+        Intent in = new Intent();
+        messageSenderId = in.getStringExtra("cname");
         mAuth = FirebaseAuth.getInstance();
 
         return new MessageViewHolder(view);
@@ -79,7 +85,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
     @Override
     public void onBindViewHolder(@NonNull final MessageViewHolder messageViewHolder, @SuppressLint("RecyclerView") final int position) {
-        String messageSenderId = mAuth.getCurrentUser().getUid();
+
         Message messages = userMessagesList.get(position);
 
         String fromUserID = messages.getFrom();
@@ -112,7 +118,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
 
         if (fromMessageType.equals("text")) {
-            if (fromUserID.equals(messageSenderId)) {
+            if (!fromUserID.equals(messageSenderId)) {
                 messageViewHolder.senderMessageText.setVisibility(View.VISIBLE);
 
                 messageViewHolder.senderMessageText.setBackgroundResource(R.drawable.cornerstextmessagesfromme);
@@ -139,7 +145,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         } else if (fromMessageType.equals("pdf") || fromMessageType.equals("docx")) {
             if (fromUserID.equals(messageSenderId)) {
                 messageViewHolder.messageSenderPicture.setVisibility(View.VISIBLE);
-               // messageViewHolder.messageSenderPicture.setBackground(R.drawable.cornerstextmessagesfromme);
+                messageViewHolder.messageSenderPicture.setBackgroundResource(R.drawable.cornerstextmessagesfromme);
 
                 messageViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -148,16 +154,14 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                         messageViewHolder.itemView.getContext().startActivity(intent);
                     }
                 });
-            } else if (fromMessageType.equals("voice")){
-                if (fromUserID.equals(messageSenderId)){
+            } else if (fromMessageType.equals("voice")) {
+                if (fromUserID.equals(messageSenderId)) {
 
                 }
-            }
-
-            else {
+            } else {
                 messageViewHolder.receiverProfileImage.setVisibility(View.VISIBLE);
                 messageViewHolder.messageReceiverPicture.setVisibility(View.VISIBLE);
-               // messageViewHolder.messageReceiverPicture.setBackground(boolea);
+                // messageViewHolder.messageReceiverPicture.setBackground(boolea);
             }
         }
         if (fromUserID.equals(messageSenderId)) {
@@ -179,7 +183,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                             @Override
                             public void onClick(DialogInterface dialogInterface, int position) {
                                 if (position == 0) {
-                                    deleteSentMessage(position,messageViewHolder);
+                                    deleteSentMessage(position, messageViewHolder);
                                     Intent intent = new Intent(messageViewHolder.itemView.getContext(), ChatActivity.class);
                                     messageViewHolder.itemView.getContext().startActivity(intent);
 
@@ -187,7 +191,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                                     Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(userMessagesList.get(position).getMessage()));
                                     messageViewHolder.itemView.getContext().startActivity(intent);
                                 } else if (position == 3) {
-                                    deleteMessageForEveryOne(position,messageViewHolder);
+                                    deleteMessageForEveryOne(position, messageViewHolder);
                                 }
                             }
                         });
@@ -206,12 +210,12 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                             @Override
                             public void onClick(DialogInterface dialogInterface, int position) {
                                 if (position == 0) {
-                                    deleteSentMessage(position,messageViewHolder);
-                                    Intent intent = new Intent(messageViewHolder.itemView.getContext(),ChatActivity.class);
+                                    deleteSentMessage(position, messageViewHolder);
+                                    Intent intent = new Intent(messageViewHolder.itemView.getContext(), ChatActivity.class);
                                     messageViewHolder.itemView.getContext().startActivity(intent);
 
-                                }else if (position == 2) {
-                                    deleteMessageForEveryOne(position,messageViewHolder);
+                                } else if (position == 2) {
+                                    deleteMessageForEveryOne(position, messageViewHolder);
                                 }
                             }
                         });
@@ -231,16 +235,16 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                             @Override
                             public void onClick(DialogInterface dialogInterface, int position) {
                                 if (position == 0) {
-                                    deleteSentMessage(position,messageViewHolder);
-                                    Intent intent = new Intent(messageViewHolder.itemView.getContext(),ChatActivity.class);
+                                    deleteSentMessage(position, messageViewHolder);
+                                    Intent intent = new Intent(messageViewHolder.itemView.getContext(), ChatActivity.class);
                                     messageViewHolder.itemView.getContext().startActivity(intent);
 
                                 } else if (position == 1) {
                                     Intent intent = new Intent(messageViewHolder.itemView.getContext(), ImageViewerActivity.class);
-                                    intent.putExtra("url",userMessagesList.get(position).getMessage());
+                                    intent.putExtra("url", userMessagesList.get(position).getMessage());
                                     messageViewHolder.itemView.getContext().startActivity(intent);
                                 } else if (position == 3) {
-                                    deleteMessageForEveryOne(position,messageViewHolder);
+                                    deleteMessageForEveryOne(position, messageViewHolder);
                                 }
                             }
                         });
@@ -266,8 +270,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                             @Override
                             public void onClick(DialogInterface dialogInterface, int position) {
                                 if (position == 0) {
-                                    deleteReceiverMessage(position,messageViewHolder);
-                                    Intent intent = new Intent(messageViewHolder.itemView.getContext(),ChatActivity.class);
+                                    deleteReceiverMessage(position, messageViewHolder);
+                                    Intent intent = new Intent(messageViewHolder.itemView.getContext(), ChatActivity.class);
                                     messageViewHolder.itemView.getContext().startActivity(intent);
 
                                 } else if (position == 1) {
@@ -290,8 +294,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                             @Override
                             public void onClick(DialogInterface dialogInterface, int position) {
                                 if (position == 0) {
-                                    deleteReceiverMessage(position,messageViewHolder);
-                                    Intent intent = new Intent(messageViewHolder.itemView.getContext(),ChatActivity.class);
+                                    deleteReceiverMessage(position, messageViewHolder);
+                                    Intent intent = new Intent(messageViewHolder.itemView.getContext(), ChatActivity.class);
                                     messageViewHolder.itemView.getContext().startActivity(intent);
                                 }
                             }
@@ -311,13 +315,13 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                             @Override
                             public void onClick(DialogInterface dialogInterface, int position) {
                                 if (position == 0) {
-                                    deleteReceiverMessage(position,messageViewHolder);
-                                    Intent intent = new Intent(messageViewHolder.itemView.getContext(),ChatActivity.class);
+                                    deleteReceiverMessage(position, messageViewHolder);
+                                    Intent intent = new Intent(messageViewHolder.itemView.getContext(), ChatActivity.class);
                                     messageViewHolder.itemView.getContext().startActivity(intent);
 
                                 } else if (position == 1) {
-                                    Intent intent = new Intent(messageViewHolder.itemView.getContext(),ImageViewerActivity.class);
-                                    intent.putExtra("url",userMessagesList.get(position).getMessage());
+                                    Intent intent = new Intent(messageViewHolder.itemView.getContext(), ImageViewerActivity.class);
+                                    intent.putExtra("url", userMessagesList.get(position).getMessage());
                                     messageViewHolder.itemView.getContext().startActivity(intent);
                                 }
                             }
@@ -326,9 +330,9 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                     }
                 }
             });
-
         }
     }
+
 
 
     @Override

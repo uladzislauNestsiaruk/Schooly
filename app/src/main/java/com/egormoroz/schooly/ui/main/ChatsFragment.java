@@ -17,7 +17,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.egormoroz.schooly.Callbacks;
@@ -40,6 +43,9 @@ import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -47,13 +53,13 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class ChatsFragment extends Fragment
 {
     private View PrivateChatsView;
-    private RecyclerView chatsList;
-    FirebaseModel firebaseModel = new FirebaseModel();
+    private ArrayAdapter<String> arrayAdapter;
+    private FirebaseModel firebaseModel = new FirebaseModel();
     private DatabaseReference ChatsRef, UsersRef;
     private FirebaseAuth mAuth;
     private String currentUserID="";
-    ArrayList<String> usersNicks=new ArrayList<String>();
-
+    private ArrayList<String> list_of_groups=new ArrayList<String>();
+    private ListView list_view;
     private ViewPager myViewPager;
     private TabLayout myTabLayout;
     private TabsAccessorAdapter myTabsAccessorAdapter;
@@ -65,11 +71,21 @@ public class ChatsFragment extends Fragment
                              @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_chats, container, false);
         firebaseModel.initAll();
-        chatsList = root.findViewById(R.id.chats_list);
-        DialogsAdapter dialogsAdapter = new DialogsAdapter(usersNicks);
-        Log.d("one", String.valueOf(usersNicks));
-        chatsList.setAdapter(dialogsAdapter);
-        allDialogsFromBase();
+        arrayAdapter = new ArrayAdapter<String>(getContext(),android.R.layout.simple_list_item_1, list_of_groups);
+//        DialogsAdapter dialogsAdapter = new DialogsAdapter(usersNicks);
+//        Log.d("one", String.valueOf(usersNicks));
+        RetrieveAndDisplayGroups();
+        list_view = root.findViewById(R.id.list_view);
+        list_view.setAdapter(arrayAdapter);
+        list_view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                String name = adapterView.getItemAtPosition(position).toString();
+                Intent groupChatIntent = new Intent(getContext(), ChatActivity.class);
+                groupChatIntent.putExtra("name" , name);
+                startActivity(groupChatIntent);
+            }
+        });
         return root;
     }
 
@@ -79,23 +95,56 @@ public class ChatsFragment extends Fragment
         super.onViewCreated(view, savedInstanceState);
     }
 
-    public  void allDialogsFromBase(){
+//    public  void allDialogsFromBase(){
+//
+//        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+//            @java.lang.Override
+//            public void PassUserNick(String nick) {
+//                RecentMethods.GetUsersNicks(nick, firebaseModel, new Callbacks.GetUserNicks() {
+//                    @java.lang.Override
+//                    public void GetUsersNicks(ArrayList<String> userNicks) {
+//                        userNicks.clear();
+//                        userNicks.addAll(userNicks);
+//                        DialogsAdapter dialogsAdapter=new DialogsAdapter(usersNicks);
+//                        chatsList.notifyDataSetChanged();
+//                        Log.d("c", "chats  "+userNicks);
+//                    }
+//                });
+//            }
+//        });
+//    }
 
+    private void RetrieveAndDisplayGroups()
+    {
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-            @java.lang.Override
+            @Override
             public void PassUserNick(String nick) {
-                RecentMethods.GetUsersNicks(nick, firebaseModel, new Callbacks.GetUserNicks() {
-                    @java.lang.Override
-                    public void GetUsersNicks(ArrayList<String> userNicks) {
-                        userNicks.addAll(userNicks);
-                        DialogsAdapter dialogsAdapter=new DialogsAdapter(usersNicks);
-                        //chatsList.notifyDataSetChanged();
-                        Log.d("c", "chats  "+userNicks);
+                Intent i = new Intent(getActivity(), ChatActivity.class);
+                i.putExtra("cname", nick);
+                firebaseModel.getUsersReference().child(nick).child("Chats").addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        Set<String> set = new HashSet<>();
+                        Iterator iterator = dataSnapshot.getChildren().iterator();
+                        while (iterator.hasNext())
+                        {
+                            set.add(((DataSnapshot)iterator.next()).getKey());
+                            Log.d("Chat", String.valueOf(set));
+                        }
+
+                        list_of_groups.clear();
+                        list_of_groups.addAll(set);
+                        arrayAdapter.notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
                     }
                 });
             }
         });
-    }
 
+    }
 
 }

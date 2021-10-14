@@ -114,9 +114,9 @@ public class ChatActivity extends Activity
         RootRef = firebaseModel.getUsersReference();
 
         ActivityCompat.requestPermissions(this, permissions, REQUEST_RECORD_AUDIO_PERMISSION);
-        messageReceiverID = getIntent().getExtras().get("visit_user_id").toString();
+   //     messageReceiverID = getIntent().getExtras().get("visit_user_id").toString();
         messageReceiverName = getIntent().getExtras().get("name").toString();
-        messageReceiverImage = getIntent().getExtras().get("visit_image").toString();
+   //     messageReceiverImage = getIntent().getExtras().get("visit_image").toString();
 
         IntializeVoice();
         IntializeControllers();
@@ -132,7 +132,7 @@ public class ChatActivity extends Activity
                 MessageInputText.getText().clear();
             }
         });
-        DisplayLastSeen();
+     //   DisplayLastSeen();
         SendFilesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -214,8 +214,8 @@ public class ChatActivity extends Activity
                                 messageTextBody.put("message", myUrl);
                                 messageTextBody.put("name", fileUri.getLastPathSegment());
                                 messageTextBody.put("type", checker);
-                                messageTextBody.put("from", messageSenderID);
-                                messageTextBody.put("to", messageReceiverID);
+                                messageTextBody.put("from", nick);
+                                messageTextBody.put("to", messageReceiverName);
                                 messageTextBody.put("messageID", messagePushID);
 
 
@@ -338,8 +338,8 @@ public class ChatActivity extends Activity
                     Map messageTextBody = new HashMap();
                     messageTextBody.put("message", messageText);
                     messageTextBody.put("type", "text");
-                    messageTextBody.put("from", messageSenderID);
-                    messageTextBody.put("to", messageReceiverID);
+                    messageTextBody.put("from", nick);
+                    messageTextBody.put("to", messageReceiverName);
                     messageTextBody.put("messageID", messagePushID);
 
 
@@ -358,6 +358,66 @@ public class ChatActivity extends Activity
         }
     }
 
+
+    private void SendVoice() {
+
+
+        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+            @Override
+            public void PassUserNick(String nick) {
+                StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("Voice");
+
+
+                sendDialog(nick, messageReceiverName);
+                DatabaseReference userMessageKeyRef = firebaseModel.getUsersReference().child(nick).child("Chats").child(messageReceiverName).child("Messages").push();
+                final String messagePushID = userMessageKeyRef.getKey();
+                final StorageReference filePath = storageReference.child(messagePushID + "." + "3gp");
+
+                uploadTask = filePath.putFile(Uri.parse(myUrl));
+                uploadTask.continueWithTask(new Continuation() {
+                    @Override
+                    public Object then(@NonNull Task task) throws Exception {
+                        if (!task.isSuccessful()) {
+                            throw task.getException();
+                        }
+                        return filePath.getDownloadUrl();
+                    }
+                }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Uri> task) {
+                        Uri downloadUrl = task.getResult();
+                        myUrl = downloadUrl.toString();
+                        String messageSenderRef = messageReceiverName + "/Chats/" + nick + "/Messages";
+                        String messageReceiverRef = nick + "/Chats/" + messageReceiverName + "/Messages";
+
+
+                        DatabaseReference userMessageKeyRef = firebaseModel.getUsersReference().child(nick).child("Chats").child(messageReceiverName).child("Messages").push();
+                        String messagePushID = userMessageKeyRef.getKey();
+
+                        sendDialog(nick, messageReceiverName);
+                        Map messageTextBody = new HashMap();
+                        messageTextBody.put("message", myUrl);
+                        messageTextBody.put("type", "voice");
+                        messageTextBody.put("from", nick);
+                        messageTextBody.put("to", messageReceiverName);
+                        messageTextBody.put("messageID", messagePushID);
+
+
+                        Map messageBodyDetails = new HashMap();
+                        messageBodyDetails.put(messageSenderRef + "/" + messagePushID, messageTextBody);
+                        messageBodyDetails.put(messageReceiverRef + "/" + messagePushID, messageTextBody);
+
+                        RootRef.updateChildren(messageBodyDetails).addOnCompleteListener(new OnCompleteListener() {
+                            @Override
+                            public void onComplete(@NonNull Task task) {
+
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    }
 
     private void IntializeVoice()
     {
@@ -416,7 +476,7 @@ public class ChatActivity extends Activity
             if (duration <= 9) Log.d("Voice", "Voice too small");
             else {
                 duration = duration / 10;
-
+                SendVoice();
             }
         }
     }
