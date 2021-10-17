@@ -46,6 +46,7 @@ public class ProfileFragment extends Fragment {
     FirebaseModel firebaseModel = new FirebaseModel();
     private FirebaseAuth mAuth;
     private String receiverUserID, senderUserID;
+    public static String currentUserName;
     Context profileContext;
     String type;
     UserInformation info;
@@ -212,6 +213,7 @@ public class ProfileFragment extends Fragment {
             @Override
             public void PassUserNick(String nick) {
                 {
+                    currentUserName = nick;
                     firebaseModel.getUsersReference().child(info.getNick()).child("Chats").child(nick).child("nick").setValue(nick);
                     firebaseModel.getUsersReference().child(nick).child("Chats").child(info.getNick()).child("nick").setValue(nick);
                 }

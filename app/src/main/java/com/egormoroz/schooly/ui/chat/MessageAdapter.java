@@ -26,6 +26,8 @@ import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.ui.chat.holders.ImageViewerActivity;
 import com.egormoroz.schooly.ui.main.ChatActivity;
+import com.egormoroz.schooly.ui.main.ChatsFragment;
+import com.egormoroz.schooly.ui.profile.ProfileFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -75,8 +77,10 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     public MessageViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext())
                 .inflate(R.layout.custom_messages_layout, viewGroup, false);
-        Intent in = new Intent();
-        messageSenderId = in.getStringExtra("cname");
+        if (ChatsFragment.currentUserName != null)
+            messageSenderId = ChatsFragment.currentUserName;
+        else
+            messageSenderId = ProfileFragment.currentUserName;
         mAuth = FirebaseAuth.getInstance();
 
         return new MessageViewHolder(view);
@@ -118,7 +122,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
 
         if (fromMessageType.equals("text")) {
-            if (!fromUserID.equals(messageSenderId)) {
+            if (fromUserID.equals(messageSenderId)) {
                 messageViewHolder.senderMessageText.setVisibility(View.VISIBLE);
 
                 messageViewHolder.senderMessageText.setBackgroundResource(R.drawable.cornerstextmessagesfromme);

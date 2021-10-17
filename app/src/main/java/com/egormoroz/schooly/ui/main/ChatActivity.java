@@ -466,13 +466,13 @@ public class ChatActivity extends Activity
             recorder.reset();
             recorder.release();
             recorder = null;
-            Log.d("voice", "Recording stop" + duration);
 
             try {
                 duration = getDuration(myUrl);}
             catch (Exception e){
                 e.printStackTrace();
             }
+            Log.d("voice", "Recording stop" + duration);
             if (duration <= 9) Log.d("Voice", "Voice too small");
             else {
                 duration = duration / 10;

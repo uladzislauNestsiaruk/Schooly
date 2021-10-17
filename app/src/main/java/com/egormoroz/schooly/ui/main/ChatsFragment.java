@@ -57,7 +57,7 @@ public class ChatsFragment extends Fragment
     private FirebaseModel firebaseModel = new FirebaseModel();
     private DatabaseReference ChatsRef, UsersRef;
     private FirebaseAuth mAuth;
-    private String currentUserID="";
+    public static String currentUserName="";
     private ArrayList<String> list_of_groups=new ArrayList<String>();
     private ListView list_view;
     private ViewPager myViewPager;
@@ -95,32 +95,12 @@ public class ChatsFragment extends Fragment
         super.onViewCreated(view, savedInstanceState);
     }
 
-//    public  void allDialogsFromBase(){
-//
-//        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-//            @java.lang.Override
-//            public void PassUserNick(String nick) {
-//                RecentMethods.GetUsersNicks(nick, firebaseModel, new Callbacks.GetUserNicks() {
-//                    @java.lang.Override
-//                    public void GetUsersNicks(ArrayList<String> userNicks) {
-//                        userNicks.clear();
-//                        userNicks.addAll(userNicks);
-//                        DialogsAdapter dialogsAdapter=new DialogsAdapter(usersNicks);
-//                        chatsList.notifyDataSetChanged();
-//                        Log.d("c", "chats  "+userNicks);
-//                    }
-//                });
-//            }
-//        });
-//    }
-
     private void RetrieveAndDisplayGroups()
     {
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @Override
             public void PassUserNick(String nick) {
-                Intent i = new Intent(getActivity(), ChatActivity.class);
-                i.putExtra("cname", nick);
+                currentUserName = nick;
                 firebaseModel.getUsersReference().child(nick).child("Chats").addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -135,6 +115,7 @@ public class ChatsFragment extends Fragment
                         list_of_groups.clear();
                         list_of_groups.addAll(set);
                         arrayAdapter.notifyDataSetChanged();
+                        Log.d("Chat", currentUserName);
                     }
 
                     @Override
