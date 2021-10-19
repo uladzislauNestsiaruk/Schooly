@@ -69,7 +69,6 @@ public class MyMinersFragment extends Fragment {
                             @Override
                             public void GetMyMinerFromBase(ArrayList<Miner> myMinersFromBase) {
                                 listAdapter.addAll(myMinersFromBase);
-                                Log.d("#######", "miner  "+myMinersFromBase);
                                 MyMinersAdapter myminersAdapter=new MyMinersAdapter(listAdapter);
                                 recyclerviewMining.setAdapter(myminersAdapter);
                             }

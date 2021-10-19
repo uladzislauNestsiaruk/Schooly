@@ -69,7 +69,6 @@ public class StrongMinersAdapter extends RecyclerView.Adapter<StrongMinersAdapte
                                                 public void buyMiner(Miner miner) {
                                                     firebaseModel.getReference("users").child(nick)
                                                             .child("miners").child(String.valueOf(pos)+"strong").setValue(miner);
-                                                    Log.d("#########", "miner  " + miner);
                                                 }
                                             });
                                         }

@@ -45,8 +45,7 @@ import java.io.IOException;
 public class ProfileFragment extends Fragment {
     FirebaseModel firebaseModel = new FirebaseModel();
     private FirebaseAuth mAuth;
-    private String receiverUserID, senderUserID;
-    public static String currentUserName;
+    public static String currentUserName, receiverUserName;
     Context profileContext;
     String type;
     UserInformation info;
@@ -95,6 +94,7 @@ public class ProfileFragment extends Fragment {
             }
         });
         //Getting information about user(friend)
+        receiverUserName = info.getNick();
         i.putExtra("name", info.getNick());
         i.putExtra("groupName", "one");
         i.putExtra("visit_user_id", info.getUid());
@@ -191,8 +191,6 @@ public class ProfileFragment extends Fragment {
                 break;
             case "other":
                 nickname.setText(info.getNick());
-                receiverUserID = info.getUid();
-                senderUserID = MainActivity.currentUserID;
                 user = firebaseModel.getUsersReference().child(info.getNick());
                 if (message != null) {
                     message.setOnClickListener(new View.OnClickListener() {

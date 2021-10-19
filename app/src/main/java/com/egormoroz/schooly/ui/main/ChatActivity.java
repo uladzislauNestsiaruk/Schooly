@@ -114,8 +114,14 @@ public class ChatActivity extends Activity
         RootRef = firebaseModel.getUsersReference();
 
         ActivityCompat.requestPermissions(this, permissions, REQUEST_RECORD_AUDIO_PERMISSION);
-   //     messageReceiverID = getIntent().getExtras().get("visit_user_id").toString();
-        messageReceiverName = getIntent().getExtras().get("name").toString();
+        Intent intentReceived = getIntent();
+        Bundle data = intentReceived.getExtras();
+        if(data != null){
+            messageReceiverName = data.getString("name");
+        }else{
+            messageReceiverName = ChatsFragment.receiverUserName;
+        }
+
    //     messageReceiverImage = getIntent().getExtras().get("visit_image").toString();
 
         IntializeVoice();

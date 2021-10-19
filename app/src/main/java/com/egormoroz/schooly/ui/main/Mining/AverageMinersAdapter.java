@@ -69,7 +69,6 @@ public class AverageMinersAdapter extends RecyclerView.Adapter<AverageMinersAdap
                                                 public void buyMiner(Miner miner) {
                                                     firebaseModel.getReference("users").child(nick)
                                                             .child("miners").child(String.valueOf(pos)+"medium").setValue(miner);
-                                                    Log.d("#########", "miner  " + miner);
                                                 }
                                             });
                                         }

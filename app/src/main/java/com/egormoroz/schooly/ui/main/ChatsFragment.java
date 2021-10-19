@@ -52,17 +52,11 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ChatsFragment extends Fragment
 {
-    private View PrivateChatsView;
     private ArrayAdapter<String> arrayAdapter;
     private FirebaseModel firebaseModel = new FirebaseModel();
-    private DatabaseReference ChatsRef, UsersRef;
-    private FirebaseAuth mAuth;
-    public static String currentUserName="";
+    public static String currentUserName="", receiverUserName;
     private ArrayList<String> list_of_groups=new ArrayList<String>();
     private ListView list_view;
-    private ViewPager myViewPager;
-    private TabLayout myTabLayout;
-    private TabsAccessorAdapter myTabsAccessorAdapter;
     public static ChatsFragment newInstance() {
         return new ChatsFragment();
     }
@@ -72,8 +66,6 @@ public class ChatsFragment extends Fragment
         View root = inflater.inflate(R.layout.fragment_chats, container, false);
         firebaseModel.initAll();
         arrayAdapter = new ArrayAdapter<String>(getContext(),android.R.layout.simple_list_item_1, list_of_groups);
-//        DialogsAdapter dialogsAdapter = new DialogsAdapter(usersNicks);
-//        Log.d("one", String.valueOf(usersNicks));
         RetrieveAndDisplayGroups();
         list_view = root.findViewById(R.id.list_view);
         list_view.setAdapter(arrayAdapter);
@@ -81,9 +73,12 @@ public class ChatsFragment extends Fragment
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 String name = adapterView.getItemAtPosition(position).toString();
-                Intent groupChatIntent = new Intent(getContext(), ChatActivity.class);
-                groupChatIntent.putExtra("name" , name);
-                startActivity(groupChatIntent);
+                receiverUserName = name;
+                Bundle nick = new Bundle();
+                Intent ChatIntent = new Intent(getContext(), ChatActivity.class);
+                nick.putString("name",name);
+                ChatIntent.putExtras(nick);
+                startActivity(ChatIntent);
             }
         });
         return root;

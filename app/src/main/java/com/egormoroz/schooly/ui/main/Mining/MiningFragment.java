@@ -140,7 +140,6 @@ public class MiningFragment extends Fragment {
                             @Override
                             public void GetActiveMiners(ArrayList<Miner> activeMinersFromBase) {
                                 listAdapterActiveMiner.addAll(activeMinersFromBase);
-                                Log.d("#########","list  "+activeMinersFromBase);
                                 ActiveMinersAdapter activeMinersAdapter=new ActiveMinersAdapter(listAdapterActiveMiner);
                                 activeminersrecyclerview.setAdapter(activeMinersAdapter);
                             }

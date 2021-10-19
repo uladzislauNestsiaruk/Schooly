@@ -70,7 +70,6 @@ public class WeakMinersAdapter extends RecyclerView.Adapter<WeakMinersAdapter.Vi
                                                     public void buyMiner(Miner miner) {
                                                         firebaseModel.getReference("users").child(nick)
                                                                                 .child("miners").child(String.valueOf(pos)+"weak").setValue(miner);
-                                                        Log.d("#########", "miner  " + miner);
                                                     }
                                                 });
                                         }

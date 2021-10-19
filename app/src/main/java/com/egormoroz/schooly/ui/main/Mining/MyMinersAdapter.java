@@ -38,7 +38,6 @@ public class MyMinersAdapter extends RecyclerView.Adapter<MyMinersAdapter.ViewHo
         RelativeLayout v = (RelativeLayout) LayoutInflater.from(viewGroup.getContext()).
                 inflate(R.layout.myminers_item, viewGroup, false);
         ViewHolder viewHolder=new ViewHolder(v);
-        Log.d("#####","list  "+listAdapter);
         firebaseModel.initAll();
         return viewHolder;
     }

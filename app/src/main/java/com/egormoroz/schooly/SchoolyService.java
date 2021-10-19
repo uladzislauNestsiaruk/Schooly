@@ -139,7 +139,6 @@ public class SchoolyService extends Service {
                             miningMoneyInGap = minInGap * (getFirstMinerInHour / 60);
                             firebaseModel.getUsersReference().child(nick)
                                     .child("todayMining").setValue(miningMoneyInGap+t);
-                            Log.d("##########","gaaap  "+miningMoneyInGap);
                         }else if (getActiveMinersArrayList.size()==3){
                             getSecondActiveMiner=getActiveMinersArrayList.get(1);
                             getInHourMinerSecond= getSecondActiveMiner.getInHour();
@@ -147,7 +146,6 @@ public class SchoolyService extends Service {
                             miningMoneyInGap = minInGap * ((getFirstMinerInHour+getSecondMinerInHour) / 60);
                             firebaseModel.getUsersReference().child(nick)
                                     .child("todayMining").setValue(miningMoneyInGap+t);
-                            Log.d("##########","gaaap  "+miningMoneyInGap);
                         }else if (getActiveMinersArrayList.size()==3){
                             getThirdActiveMiner=getActiveMinersArrayList.get(2);
                             getInHourMinerThird= getThirdActiveMiner.getInHour();
@@ -155,7 +153,6 @@ public class SchoolyService extends Service {
                             miningMoneyInGap = minInGap * ((getFirstMinerInHour+getSecondMinerInHour+getThirdMinerInHour) / 60);
                             firebaseModel.getUsersReference().child(nick)
                                     .child("todayMining").setValue(miningMoneyInGap+t);
-                            Log.d("##########","gaaap  "+miningMoneyInGap);
                         }else if (getActiveMinersArrayList.size()==4){
                             getFourthActiveMiner=getActiveMinersArrayList.get(3);
                             getInHourMinerFourth= getFourthActiveMiner.getInHour();
@@ -163,7 +160,6 @@ public class SchoolyService extends Service {
                             miningMoneyInGap = minInGap * ((getFirstMinerInHour+getSecondMinerInHour+getThirdMinerInHour+getFourthMinerInHour) / 60);
                             firebaseModel.getUsersReference().child(nick)
                                     .child("todayMining").setValue(miningMoneyInGap+t);
-                            Log.d("##########","gaaap  "+miningMoneyInGap);
                         }else if (getActiveMinersArrayList.size()==5){
                             getFifthActiveMiner=getActiveMinersArrayList.get(4);
                             getInHourMinerFifth= getFifthActiveMiner.getInHour();
@@ -171,7 +167,6 @@ public class SchoolyService extends Service {
                             miningMoneyInGap = minInGap * ((getFirstMinerInHour+getSecondMinerInHour+getThirdMinerInHour+getFourthMinerInHour+getFifthMinerInHour) / 60);
                             firebaseModel.getUsersReference().child(nick)
                                     .child("todayMining").setValue(miningMoneyInGap+t);
-                            Log.d("##########","gaaap  "+miningMoneyInGap);
                         }
                     }
                 });
@@ -191,47 +186,37 @@ public class SchoolyService extends Service {
                                     firstMinerHour = Double.valueOf(String.valueOf(firstMiner.getInHour()));
                                     firstMinerInHour = firstMinerHour / 3600;
                                     todayMining = todayMiningBase + firstMinerInHour;
-                                    Log.d("#####", "base  " + todayMiningBase);
                                     firebaseModel.getUsersReference().child(nick)
                                             .child("todayMining").setValue(todayMining);
-                                    Log.d("##########", "today  " + todayMining);
                                 }else if (activeMinersFromBase.size()==2){
                                     secondMiner = activeMinersFromBase.get(1);
                                     secondMinerHour = Double.valueOf(String.valueOf(secondMiner.getInHour()));
                                     secondMinerInHour = secondMinerHour / 3600;
                                     todayMining = todayMiningBase + firstMinerInHour+secondMinerInHour;
-                                    Log.d("#####", "base  " + todayMiningBase);
                                     firebaseModel.getUsersReference().child(nick)
                                             .child("todayMining").setValue(todayMining);
-                                    Log.d("##########", "today  " + todayMining);
                                 }else if (activeMinersFromBase.size()==3){
                                     thirdMiner = activeMinersFromBase.get(2);
                                     thirdMinerHour = Double.valueOf(String.valueOf(thirdMiner.getInHour()));
                                     thirdMinerInHour = thirdMinerHour / 3600;
                                     todayMining = todayMiningBase + firstMinerInHour+secondMinerInHour+thirdMinerInHour;
-                                    Log.d("#####", "base  " + todayMiningBase);
                                     firebaseModel.getUsersReference().child(nick)
                                             .child("todayMining").setValue(todayMining);
-                                    Log.d("##########", "today  " + todayMining);
                                 }
                                 else if (activeMinersFromBase.size()==4){
                                     fourthMiner = activeMinersFromBase.get(3);
                                     fourthMinerHour = Double.valueOf(String.valueOf(fourthMiner.getInHour()));
                                     fourthMinerInHour = fourthMinerHour / 3600;
                                     todayMining = todayMiningBase + firstMinerInHour+secondMinerInHour+thirdMinerInHour+fourthMinerInHour;
-                                    Log.d("#####", "base  " + todayMiningBase);
                                     firebaseModel.getUsersReference().child(nick)
                                             .child("todayMining").setValue(todayMining);
-                                    Log.d("##########", "today  " + todayMining);
                                 }else if (activeMinersFromBase.size()==5){
                                     fifthMiner = activeMinersFromBase.get(4);
                                     fifthMinerHour = Double.valueOf(String.valueOf(fifthMiner.getInHour()));
                                     fifthMinerInHour = fifthMinerHour / 3600;
                                     todayMining = todayMiningBase + firstMinerInHour+secondMinerInHour+thirdMinerInHour+fourthMinerInHour+fifthMinerInHour;
-                                    Log.d("#####", "base  " + todayMiningBase);
                                     firebaseModel.getUsersReference().child(nick)
                                             .child("todayMining").setValue(todayMining);
-                                    Log.d("##########", "today  " + todayMining);
                                 }
                             }
                         });
