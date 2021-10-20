@@ -64,7 +64,7 @@ public class AverageMinersAdapter extends RecyclerView.Adapter<AverageMinersAdap
                                     RecentMethods.GetMoneyFromBase(nick, firebaseModel, new Callbacks.MoneyFromBase() {
                                         @Override
                                         public void GetMoneyFromBase(long money) {
-                                            RecentMethods.buyWeakMiner(String.valueOf(pos), firebaseModel, new Callbacks.buyMiner() {
+                                            RecentMethods.buyAverageMiner(String.valueOf(pos), firebaseModel, new Callbacks.buyMiner() {
                                                 @Override
                                                 public void buyMiner(Miner miner) {
                                                     firebaseModel.getReference("users").child(nick)

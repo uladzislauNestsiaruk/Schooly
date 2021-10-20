@@ -1,6 +1,7 @@
 package com.egormoroz.schooly;
 
 import com.egormoroz.schooly.ui.main.Mining.Miner;
+import com.egormoroz.schooly.ui.main.Shop.Clothes;
 import com.egormoroz.schooly.ui.main.UserInformation;
 import com.google.firebase.database.DataSnapshot;
 
@@ -52,5 +53,9 @@ public class Callbacks {
     }
     public interface GetUserNicks{
         void GetUsersNicks(ArrayList<String> userNicks);
+    }
+    public interface GetClothes{
+        default void getClothes(ArrayList<Clothes> allClothes) {
+        }
     }
 }

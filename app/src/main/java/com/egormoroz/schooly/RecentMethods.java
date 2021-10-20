@@ -9,6 +9,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.egormoroz.schooly.ui.main.Mining.Miner;
+import com.egormoroz.schooly.ui.main.Shop.Clothes;
 import com.egormoroz.schooly.ui.main.UserInformation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -199,6 +200,25 @@ public class RecentMethods {
         });
     }
 
+    public static void hasUid(String uid, FirebaseModel model, Callbacks.HasUid callback){
+        model.initAll();
+        Query query = model.getReference("users")
+                .orderByChild("uid").equalTo(uid);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                callback.HasUidCallback(snapshot.exists());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    ///////////////////////MINING///////////////////////////////
+
     public static void AllminersFromBase(FirebaseModel model, Callbacks.GetMinerFromBase callback) {
         model.initAll();
         Query query = model.getReference("AppData/AllMiners");
@@ -261,23 +281,6 @@ public class RecentMethods {
                 }
                 callback.GetMinerFromBase(minersFromBase);
             }
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-    }
-
-    public static void hasUid(String uid, FirebaseModel model, Callbacks.HasUid callback){
-        model.initAll();
-        Query query = model.getReference("users")
-                .orderByChild("uid").equalTo(uid);
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                callback.HasUidCallback(snapshot.exists());
-            }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
@@ -460,27 +463,32 @@ public class RecentMethods {
         });
     }
 
-    public static void GetUsersNicks(String nick,FirebaseModel firebaseModel,Callbacks.GetUserNicks callback){
+    //////////////////////////////////////////////////////////////
+    ////////////////////SHOP//////////////////////////////////////
+
+    public static void getClothes(String nick,FirebaseModel firebaseModel,Callbacks.GetClothes callback){
         firebaseModel.initAll();
-        Query query=firebaseModel.getUsersReference().child(nick).child("Chats").child("nick");
+        Query query=firebaseModel.getReference("AppData/Clothes");
         query.addValueEventListener(new ValueEventListener() {
-            @java.lang.Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                ArrayList<String> usersNicksArrayList=new ArrayList<>();
-                for (DataSnapshot snap : dataSnapshot.getChildren()) {
-//                    snap.child("Nessages").getValue(String.class);
-//                    snap.child("nick").getValue(String.class);
-                    String userNicks=snap.getValue(String.class);
-                    usersNicksArrayList.add(userNicks);
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                ArrayList<Clothes> clothesFromBase=new ArrayList<>();
+                for (DataSnapshot snap : snapshot.getChildren()) {
+                    Clothes clothes = new Clothes();
+                    clothes.setClothesImage(snap.child("clothesImage").getValue(String.class));
+                    clothes.setClothesPrice(snap.child("clothesPrice").getValue(Long.class));
+                    clothes.setClothesType(snap.child("clothesType").getValue(String.class));
+                    clothesFromBase.add(clothes);
                 }
-                callback.GetUsersNicks(usersNicksArrayList);
-                Log.d("#######", "aa  "+usersNicksArrayList);
+                callback.getClothes(clothesFromBase);
             }
 
-            @java.lang.Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
 
             }
         });
     }
+
+
 }

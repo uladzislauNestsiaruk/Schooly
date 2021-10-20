@@ -23,6 +23,8 @@
     <string name="reg">регистрация</string>
     <string name="redact">Редактировать</string>
 
+    <string name="main">Главная</string>
+
     <string name="createnickname">Придумай никнейм</string>
 
     <string name="searchfriends">Найди друзей!</string>
@@ -156,6 +158,8 @@
     <string name="getminer">Приобрести майнер</string>
     <string name="yes">Да</string>
     <string name="no">Нет</string>
+
+    <string name="price">Цена:</string>
 
 
 </resources>

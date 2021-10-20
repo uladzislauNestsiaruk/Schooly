@@ -17,6 +17,7 @@ import com.egormoroz.schooly.MainActivity;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.ui.main.Mining.MiningFragment;
+import com.egormoroz.schooly.ui.main.Shop.ShopFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.stfalcon.chatkit.commons.ImageLoader;
 import com.stfalcon.chatkit.commons.models.IDialog;
@@ -78,6 +79,24 @@ public class MainFragment extends Fragment{
             @Override
             public void onClick(View v) {
                 RecentMethods.setCurrentFragment(MiningFragment.newInstanse(), getActivity());
+            }
+        });
+
+        TextView schoolycoins=view.findViewById(R.id.schoolycoins);
+        schoolycoins.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+                    @Override
+                    public void PassUserNick(String nick) {
+                        RecentMethods.GetMoneyFromBase(nick, firebaseModel, new Callbacks.MoneyFromBase() {
+                            @Override
+                            public void GetMoneyFromBase(long money) {
+                                schoolycoins.setText(String.valueOf(money));
+                            }
+                        });
+                    }
+                });
             }
         });
         todayMiningMain=view.findViewById(R.id.todayminingmain);
