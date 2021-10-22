@@ -62,7 +62,7 @@ public class ShopFragment extends Fragment {
     }
 
     public void loadModelInBase(){
-        Clothes clothes=new Clothes("shoes", "jordan.jpg", 100);
+        Clothes clothes=new Clothes("shoes", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500", 100);
         ArrayList<Clothes> allClothes=new ArrayList<>();
         allClothes.add(clothes);
         firebaseModel.getReference().child("AppData").child("Clothes").setValue(allClothes);

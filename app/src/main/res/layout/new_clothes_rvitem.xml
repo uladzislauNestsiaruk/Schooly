@@ -3,7 +3,9 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:padding="16dp"
-    android:elevation="7dp">
+    android:background="@drawable/corners"
+    android:layout_margin="8dp"
+    android:elevation="6dp">
 
     <TextView
         android:id="@+id/price"
@@ -19,14 +21,20 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/price"
-        android:textSize="16sp"
+        android:textSize="18sp"
         android:textColor="@color/app_color"
+        android:fontFamily="@font/montserrat_extrabold"
         />
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_schoolycoinpurple"
+        android:layout_below="@+id/price"/>
 
      <ImageView
          android:id="@+id/clothesImage"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
+         android:layout_width="150dp"
+         android:layout_height="150dp"
          android:layout_toRightOf="@+id/price"
          android:layout_marginStart="16dp"/>
 
