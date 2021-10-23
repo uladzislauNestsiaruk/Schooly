@@ -66,14 +66,13 @@ public class NewClothesAdapter extends RecyclerView.Adapter<NewClothesAdapter.Vi
     public void onBindViewHolder(ViewHolder holder, int position) {
         firebaseModel.initAll();
         Clothes clothes=clothesArrayList.get(position);
+        holder.clothesTitle.setText(clothes.getClothesTitle());
+        Log.d("#####", "ggxadwd  "+holder.clothesImage);
         holder.clothesPrise.setText(String.valueOf(clothes.getClothesPrice()));
         File file=new File(clothes.getClothesImage());
-        Log.d("#####", "gg  "+clothes.getClothesPrice());
         storageReference.child("clothes").getFile(file);
         Intent intent=new Intent();
         holder.clothesImage.setVisibility(View.VISIBLE);
-        Log.d("#####", "ggxadwd  "+storageReference.child("clothes").child("jardan.jpg"));
-        Log.d("#####", "ggxadwd  "+holder.clothesImage);
         Picasso.get().load(clothes.getClothesImage()).into(holder.clothesImage);
     }
 
@@ -84,12 +83,13 @@ public class NewClothesAdapter extends RecyclerView.Adapter<NewClothesAdapter.Vi
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView clothesPrise;
+        TextView clothesPrise,clothesTitle;
         ImageView clothesImage;
         ViewHolder(View itemView) {
             super(itemView);
             clothesPrise=itemView.findViewById(R.id.clothesPrice);
             clothesImage=itemView.findViewById(R.id.clothesImage);
+            clothesTitle=itemView.findViewById(R.id.clothesTitle);
         }
 
         @Override

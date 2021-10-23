@@ -56,10 +56,10 @@
 
 
                 <TextView
+                    android:id="@+id/schoolycoinshopfrag"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/montserratblack"
-                    android:text="318"
                     android:paddingEnd="12dp"
                     android:layout_gravity="center_vertical"
                     android:textColor="@color/white"
@@ -90,6 +90,7 @@
                     android:background="@null"
                     android:fontFamily="@font/montserrat_bold"
                     android:hint="@string/searchitem"
+                    android:textColor="@color/greysearch"
                     android:textColorHint="@color/greysearch"
                     android:textSize="13sp" />
             </LinearLayout>

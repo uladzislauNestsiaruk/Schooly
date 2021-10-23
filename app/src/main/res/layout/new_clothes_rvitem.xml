@@ -1,17 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="170dp"
+    android:layout_height="230dp"
     android:padding="16dp"
     android:background="@drawable/corners"
-    android:layout_margin="8dp"
+    android:layout_margin="10dp"
     android:elevation="6dp">
+
+    <TextView
+        android:id="@+id/clothesTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/montserrat_extrabold"
+        android:textSize="20sp"
+        android:textColor="@color/app_color"
+        />
 
     <TextView
         android:id="@+id/price"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/price"
+        android:layout_below="@+id/clothesTitle"
         android:fontFamily="@font/montserrat_bold"
         android:textColor="@color/app_grey"
         />
@@ -22,20 +32,26 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/price"
         android:textSize="18sp"
+        android:layout_marginStart="2dp"
+        android:layout_toRightOf="@+id/coinsImage"
         android:textColor="@color/app_color"
         android:fontFamily="@font/montserrat_extrabold"
         />
+
     <ImageView
+        android:id="@+id/coinsImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_schoolycoinpurple"
-        android:layout_below="@+id/price"/>
+        android:layout_below="@+id/price"
+        android:layout_marginTop="6dp"
+        android:src="@drawable/ic_schoolycoinpurple" />
 
-     <ImageView
-         android:id="@+id/clothesImage"
-         android:layout_width="150dp"
-         android:layout_height="150dp"
-         android:layout_toRightOf="@+id/price"
-         android:layout_marginStart="16dp"/>
+    <ImageView
+        android:id="@+id/clothesImage"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_below="@+id/coinsImage"
+        />
+
 
 </RelativeLayout>

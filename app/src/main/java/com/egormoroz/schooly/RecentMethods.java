@@ -478,6 +478,7 @@ public class RecentMethods {
                     clothes.setClothesImage(snap.child("clothesImage").getValue(String.class));
                     clothes.setClothesPrice(snap.child("clothesPrice").getValue(Long.class));
                     clothes.setClothesType(snap.child("clothesType").getValue(String.class));
+                    clothes.setClothesTitle(snap.child("clothesTitle").getValue(String.class));
                     clothesFromBase.add(clothes);
                 }
                 callback.getClothes(clothesFromBase);
