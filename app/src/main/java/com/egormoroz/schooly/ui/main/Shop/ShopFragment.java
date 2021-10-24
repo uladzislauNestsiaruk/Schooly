@@ -34,6 +34,7 @@ public class ShopFragment extends Fragment {
     ArrayList<Clothes> clothesArrayList=new ArrayList<Clothes>();
     RecyclerView clothes;
     TextView coinsshop;
+    NewClothesAdapter.ItemClickListener itemClickListener;
 
 
     @Override
@@ -74,6 +75,13 @@ public class ShopFragment extends Fragment {
                 });
             }
         });
+
+         itemClickListener=new NewClothesAdapter.ItemClickListener() {
+            @Override
+            public void onItemClick(Clothes clothes, int position) {
+                ((MainActivity)getActivity()).setCurrentFragment(ViewingClothes.newInstance());
+            }
+        };
     }
 
     public void loadModelInBase(){
@@ -93,7 +101,7 @@ public class ShopFragment extends Fragment {
                     @Override
                     public void getClothes(ArrayList<Clothes> allClothes) {
                         clothesArrayList.addAll(allClothes);
-                        NewClothesAdapter newClothesAdapter=new NewClothesAdapter(clothesArrayList);
+                        NewClothesAdapter newClothesAdapter=new NewClothesAdapter(clothesArrayList,itemClickListener);
                         clothes.setAdapter(newClothesAdapter);
                         Log.d("#####", "ggvppp  "+clothesArrayList);
                     }

@@ -26,7 +26,7 @@ public class ViewingClothes extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_gender, container, false);
+        View root = inflater.inflate(R.layout.fragment_viewingclothes, container, false);
         BottomNavigationView bnv = getActivity().findViewById(R.id.bottomNavigationView);
         bnv.setVisibility(bnv.GONE);
         return root;
@@ -35,13 +35,6 @@ public class ViewingClothes extends Fragment {
     @Override
     public void onViewCreated(@Nullable View view,@NonNull Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
-        NewClothesAdapter.setClickListener(new NewClothesAdapter.ItemClickListener() {
-            @Override
-            public void onItemClick(Clothes clothes) {
-                a=clothes.getClothesTitle();
-                Log.d("#####", "dd  "+a);
-            }
-        });
     }
 
 }
