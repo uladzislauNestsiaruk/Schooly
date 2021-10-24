@@ -29,6 +29,8 @@ import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.MainActivity;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
+import com.egormoroz.schooly.ui.main.ChatsFragment;
+import com.egormoroz.schooly.ui.main.RegisrtationstartFragment;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
@@ -46,7 +48,7 @@ public class NewClothesAdapter extends RecyclerView.Adapter<NewClothesAdapter.Vi
     private FirebaseModel firebaseModel = new FirebaseModel();
     FirebaseStorage storage = FirebaseStorage.getInstance();
     StorageReference storageReference=storage.getReference();
-    Context context;
+    static Clothes clothes;
 
     public NewClothesAdapter(ArrayList<Clothes> clothesArrayList) {
         this.clothesArrayList= clothesArrayList;
@@ -65,7 +67,7 @@ public class NewClothesAdapter extends RecyclerView.Adapter<NewClothesAdapter.Vi
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         firebaseModel.initAll();
-        Clothes clothes=clothesArrayList.get(position);
+        clothes=clothesArrayList.get(position);
         holder.clothesTitle.setText(clothes.getClothesTitle());
         Log.d("#####", "ggxadwd  "+holder.clothesImage);
         holder.clothesPrise.setText(String.valueOf(clothes.getClothesPrice()));
@@ -94,16 +96,16 @@ public class NewClothesAdapter extends RecyclerView.Adapter<NewClothesAdapter.Vi
 
         @Override
         public void onClick(View view) {
-            if (clickListener != null) clickListener.onItemClick(view, getAdapterPosition());
+            if (clickListener != null) clickListener.onItemClick( clothes);
         }
     }
 
-    void setClickListener(ItemClickListener itemClickListener) {
-        this.clickListener = itemClickListener;
+    public static void setClickListener(ItemClickListener itemClickListener) {
+        itemClickListener.onItemClick( clothes);
     }
 
     public interface ItemClickListener {
-        void onItemClick(View view, int position);
+        void onItemClick( Clothes clothes);
     }
 
     static class SpaceItemDecoration extends RecyclerView.ItemDecoration {
