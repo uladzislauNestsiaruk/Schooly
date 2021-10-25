@@ -50,6 +50,7 @@ public class NewClothesAdapter extends RecyclerView.Adapter<NewClothesAdapter.Vi
     StorageReference storageReference=storage.getReference();
     static Clothes clothes;
     ItemClickListener onClothesClick;
+    static int pos;
 
     public NewClothesAdapter(ArrayList<Clothes> clothesArrayList,ItemClickListener onClothesClick) {
         this.clothesArrayList= clothesArrayList;
@@ -69,6 +70,7 @@ public class NewClothesAdapter extends RecyclerView.Adapter<NewClothesAdapter.Vi
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         firebaseModel.initAll();
+        pos=position;
         clothes=clothesArrayList.get(position);
         holder.clothesTitle.setText(clothes.getClothesTitle());
         Log.d("#####", "ggxadwd  "+holder.clothesImage);
@@ -104,6 +106,10 @@ public class NewClothesAdapter extends RecyclerView.Adapter<NewClothesAdapter.Vi
         }
 
 
+    }
+
+    public static void singeClothesInfo(ItemClickListener itemClickListener){
+        itemClickListener.onItemClick(clothes, pos);
     }
 
 
