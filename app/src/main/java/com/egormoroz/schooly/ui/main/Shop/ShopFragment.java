@@ -1,11 +1,13 @@
 package com.egormoroz.schooly.ui.main.Shop;
 
+import android.media.TimedText;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -31,6 +33,8 @@ public class ShopFragment extends Fragment {
     FirebaseModel firebaseModel=new FirebaseModel();
     ArrayList<Clothes> clothesArrayList=new ArrayList<Clothes>();
     RecyclerView clothes;
+    TextView coinsshop;
+    NewClothesAdapter.ItemClickListener itemClickListener;
 
 
     @Override
@@ -43,6 +47,7 @@ public class ShopFragment extends Fragment {
         loadModelInBase();
         clothes=root.findViewById(R.id.newchlothesinshop);
         loadClothesFromBase();
+        coinsshop=root.findViewById(R.id.schoolycoinshopfrag);
 //        AppBarLayout abl = getActivity().findViewById(R.id.AppBarLayout);
 //        abl.setVisibility(abl.GONE);
         return root;
@@ -59,10 +64,29 @@ public class ShopFragment extends Fragment {
                 ((MainActivity)getActivity()).setCurrentFragment(MainFragment.newInstance());
             }
         });
+        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+            @Override
+            public void PassUserNick(String nick) {
+                RecentMethods.GetMoneyFromBase(nick, firebaseModel, new Callbacks.MoneyFromBase() {
+                    @Override
+                    public void GetMoneyFromBase(long money) {
+                        coinsshop.setText(String.valueOf(money));
+                    }
+                });
+            }
+        });
+
+         itemClickListener=new NewClothesAdapter.ItemClickListener() {
+            @Override
+            public void onItemClick(Clothes clothes, int position) {
+                ((MainActivity)getActivity()).setCurrentFragment(ViewingClothes.newInstance());
+            }
+        };
     }
 
     public void loadModelInBase(){
-        Clothes clothes=new Clothes("shoes", "jordan.jpg", 100);
+        Clothes clothes=new Clothes("shoes", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
+                , 100,"Jordan 1");
         ArrayList<Clothes> allClothes=new ArrayList<>();
         allClothes.add(clothes);
         firebaseModel.getReference().child("AppData").child("Clothes").setValue(allClothes);
@@ -77,7 +101,7 @@ public class ShopFragment extends Fragment {
                     @Override
                     public void getClothes(ArrayList<Clothes> allClothes) {
                         clothesArrayList.addAll(allClothes);
-                        NewClothesAdapter newClothesAdapter=new NewClothesAdapter(clothesArrayList);
+                        NewClothesAdapter newClothesAdapter=new NewClothesAdapter(clothesArrayList,itemClickListener);
                         clothes.setAdapter(newClothesAdapter);
                         Log.d("#####", "ggvppp  "+clothesArrayList);
                     }
