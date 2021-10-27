@@ -195,7 +195,6 @@ public class ChatActivity extends Activity
                         final String messageSenderRef = messageReceiverName + "/Chats/" + nick + "/Messages";
                         final String messageReceiverRef = nick + "/Chats/" + messageReceiverName + "/Messages";
 
-                        sendDialog(nick,messageReceiverName);
                         DatabaseReference   userMessageKeyRef =   firebaseModel.getUsersReference().child(nick).child("Chats").child(messageReceiverName).child("Messages").push();
                         final String messagePushID = userMessageKeyRef.getKey();
 
@@ -222,6 +221,7 @@ public class ChatActivity extends Activity
                                 messageTextBody.put("type", checker);
                                 messageTextBody.put("from", nick);
                                 messageTextBody.put("to", messageReceiverName);
+                                messageTextBody.put("time", getCurrentTime());
                                 messageTextBody.put("messageID", messagePushID);
 
 
@@ -340,12 +340,12 @@ public class ChatActivity extends Activity
                     DatabaseReference userMessageKeyRef = firebaseModel.getUsersReference().child(nick).child("Chats").child(messageReceiverName).child("Messages").push();
                     String messagePushID = userMessageKeyRef.getKey();
 
-                    sendDialog(nick, messageReceiverName);
                     Map messageTextBody = new HashMap();
                     messageTextBody.put("message", messageText);
                     messageTextBody.put("type", "text");
                     messageTextBody.put("from", nick);
                     messageTextBody.put("to", messageReceiverName);
+                    messageTextBody.put("time", getCurrentTime());
                     messageTextBody.put("messageID", messagePushID);
 
 
@@ -400,13 +400,14 @@ public class ChatActivity extends Activity
                         DatabaseReference userMessageKeyRef = firebaseModel.getUsersReference().child(nick).child("Chats").child(messageReceiverName).child("Messages").push();
                         String messagePushID = userMessageKeyRef.getKey();
 
-                        sendDialog(nick, messageReceiverName);
                         Map messageTextBody = new HashMap();
                         messageTextBody.put("message", myUrl);
                         messageTextBody.put("type", "voice");
                         messageTextBody.put("from", nick);
                         messageTextBody.put("to", messageReceiverName);
+                        messageTextBody.put("time", getCurrentTime());
                         messageTextBody.put("messageID", messagePushID);
+
 
 
                         Map messageBodyDetails = new HashMap();
@@ -525,4 +526,15 @@ public class ChatActivity extends Activity
             }
         });
     }
+
+
+    private String getCurrentTime(){
+        String time;
+        final Calendar c = Calendar.getInstance();
+        int hours = c.get(Calendar.HOUR_OF_DAY);
+        int minutes = c.get(Calendar.MINUTE);
+        time = hours + ":" + minutes;
+        return  time;
+    }
 }
+
