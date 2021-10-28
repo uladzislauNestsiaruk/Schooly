@@ -23,7 +23,6 @@
         android:textSize="22sp" />
 
     <LinearLayout
-        android:id="@+id/schoolycoincv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
@@ -55,14 +54,15 @@
     </LinearLayout>
 
     <RelativeLayout
+        android:id="@+id/recyclerClothesImage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/back_toshop"
-        android:layout_marginTop="32dp"
         android:layout_marginStart="32dp"
+        android:layout_marginTop="32dp"
         android:layout_marginEnd="32dp"
-        android:elevation="6dp"
-        android:background="@drawable/corners30dp">
+        android:background="@drawable/corners30dp"
+        android:elevation="16dp">
 
         <ImageView
             android:id="@+id/clothesImagecv"
@@ -72,56 +72,73 @@
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp" />
 
-        <TextView
-            android:id="@+id/clothesTitlecv"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/clothesImagecv"
-            android:layout_marginStart="16dp"
-            android:layout_marginBottom="16dp"
-            android:layout_marginTop="16dp"
-            android:textColor="@color/app_color"
-            android:textSize="24dp"
-            android:fontFamily="@font/montserratblack"
-            />
-
-        <LinearLayout
-            android:id="@+id/clothesPriceLayout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:orientation="horizontal"
-            android:layout_below="@+id/clothesImagecv"
-            android:layout_marginEnd="16dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="16dp"
-            android:background="@drawable/corners8shopmain">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingStart="6dp"
-                android:paddingTop="5dp"
-                android:paddingBottom="5dp"
-                android:paddingEnd="14dp"
-                android:src="@drawable/ic_schoolycoin"/>
-
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp">
 
             <TextView
-                android:id="@+id/clothesPricecv"
+                android:id="@+id/clothesTitlecv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="16dp"
                 android:fontFamily="@font/montserratblack"
-                android:paddingEnd="12dp"
-                android:layout_gravity="center_vertical"
-                android:textColor="@color/white"
-                android:textSize="20sp" />
+                android:textColor="@color/app_color"
+                android:textSize="24dp" />
 
-        </LinearLayout>
+            <LinearLayout
+                android:id="@+id/clothesPriceLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/corners8shopmain"
+                android:orientation="horizontal">
 
-        
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="6dp"
+                    android:paddingTop="5dp"
+                    android:paddingEnd="14dp"
+                    android:paddingBottom="5dp"
+                    android:src="@drawable/ic_schoolycoin" />
+
+
+                <TextView
+                    android:id="@+id/clothesPricecv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:fontFamily="@font/montserratblack"
+                    android:paddingEnd="12dp"
+                    android:textColor="@color/white"
+                    android:textSize="20sp" />
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+
     </RelativeLayout>
-    
-    
+
+    <TextView
+        android:id="@+id/buyClothesBottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/buy"
+        android:layout_below="@+id/recyclerClothesImage"
+        android:fontFamily="@font/montserratblack"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="140dp"
+        android:background="@drawable/corners8shopmain"
+        android:padding="16dp"
+        android:textColor="@color/white"/>
+
+
 
 </RelativeLayout>

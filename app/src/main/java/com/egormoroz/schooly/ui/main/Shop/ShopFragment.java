@@ -44,7 +44,6 @@ public class ShopFragment extends Fragment {
         BottomNavigationView bnv = getActivity().findViewById(R.id.bottomNavigationView);
         bnv.setVisibility(bnv.GONE);
         firebaseModel.initAll();
-        loadModelInBase();
         clothes=root.findViewById(R.id.newchlothesinshop);
         loadClothesFromBase();
         coinsshop=root.findViewById(R.id.schoolycoinshopfrag);
@@ -76,7 +75,7 @@ public class ShopFragment extends Fragment {
             }
         });
 
-         itemClickListener=new NewClothesAdapter.ItemClickListener() {
+        itemClickListener=new NewClothesAdapter.ItemClickListener() {
             @Override
             public void onItemClick(Clothes clothes, int position) {
                 ((MainActivity)getActivity()).setCurrentFragment(ViewingClothes.newInstance());

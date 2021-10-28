@@ -87,9 +87,6 @@ public class MainFragment extends Fragment{
         });
 
         TextView schoolycoins=view.findViewById(R.id.schoolycoins);
-        schoolycoins.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
                 RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
                     @Override
                     public void PassUserNick(String nick) {
@@ -101,8 +98,6 @@ public class MainFragment extends Fragment{
                         });
                     }
                 });
-            }
-        });
         todayMiningMain=view.findViewById(R.id.todayminingmain);
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @Override
