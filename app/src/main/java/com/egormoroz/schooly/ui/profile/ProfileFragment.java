@@ -212,6 +212,7 @@ public class ProfileFragment extends Fragment {
             public void PassUserNick(String nick) {
                 {
                     currentUserName = nick;
+                    Log.d("One", currentUserName);
                     firebaseModel.getUsersReference().child(info.getNick()).child("Chats").child(nick).child("nick").setValue(nick);
                     firebaseModel.getUsersReference().child(nick).child("Chats").child(info.getNick()).child("nick").setValue(nick);
                 }

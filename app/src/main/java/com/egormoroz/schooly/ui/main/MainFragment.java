@@ -1,5 +1,7 @@
 package com.egormoroz.schooly.ui.main;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,7 +31,7 @@ public class MainFragment extends Fragment{
     protected DialogsListAdapter<IDialog> dialogsAdapter;
     protected ImageLoader imageLoader;
     private MainViewModel mainViewModel;
-    TextView todayMiningMain;
+    private TextView todayMiningMain;
     private FirebaseModel firebaseModel = new FirebaseModel();
     private UserInformation userData = new UserInformation();
 
@@ -54,7 +56,9 @@ public class MainFragment extends Fragment{
         chat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((MainActivity)getActivity()).setCurrentFragment(ChatsFragment.newInstance());
+                Intent i = new Intent(getActivity(), DialogsActivity.class);
+                startActivity(i);
+                ((Activity) getActivity()).overridePendingTransition(0, 0);
 //                Intent intent = new Intent(getActivity(), ChatActivity.class);
 //                startActivity(intent);
             }

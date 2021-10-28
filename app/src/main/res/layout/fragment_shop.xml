@@ -108,9 +108,9 @@
                 style="@style/AppTabLayoutShop"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:tabMode="scrollable"
-                android:layout_marginTop="8dp"
                 android:layout_below="@+id/searchclothes"
+                android:layout_marginTop="8dp"
+                app:tabMode="scrollable"
                 app:tabTextAppearance="@style/AppTabTextAppearanceShop">
 
                 <com.google.android.material.tabs.TabItem

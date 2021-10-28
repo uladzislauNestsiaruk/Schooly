@@ -44,10 +44,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageViewHolder> {
     private List<Message> userMessagesList;
-    private FirebaseAuth mAuth;
     private DatabaseReference usersRef;
-    private FirebaseModel firebaseModel;
-    private FirebaseDatabase Database;
     private String messageSenderId = "", messageReceiverId = "";
     private MediaPlayer player;
     private String fromUserID;
@@ -251,8 +248,25 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                             @Override
                             public void onClick(DialogInterface dialogInterface, int pos) {
                                 if (pos == 0) {
-                                    messageID = userMessagesList.get(position).getMessageID();
-                                    deleteSentMessage(position);
+
+                                   // messageID = userMessagesList.get(position).getMessageID();
+                                    usersRef.child("Messages")
+                                            .child(userMessagesList.get(position).getMessageID())
+                                            .removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task)
+                                        {
+                                            if(task.isSuccessful())
+                                            {
+                                                delete(position);
+                                            }
+                                            else
+                                            {
+                                                delete(position);
+                                            }
+                                        }
+                                    });
+                                    //deleteSentMessage(position);
 
                                 } else if (pos == 2) {
                                     messageID = userMessagesList.get(position).getMessageID();
@@ -386,10 +400,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     }
 
     private void deleteSentMessage(final int position) {
-        DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference().child("users").child(messageSenderId).child("Chats").child(messageReceiverId);
-        rootRef.child("Messages")
-                .child(userMessagesList.get(position).getFrom())
-                .child(userMessagesList.get(position).getTo())
+        usersRef.child("Messages")
                 .child(userMessagesList.get(position).getMessageID())
                 .removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override

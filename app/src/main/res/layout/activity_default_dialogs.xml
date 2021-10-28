@@ -99,8 +99,8 @@
 
     </LinearLayout>
 
-    <com.stfalcon.chatkit.dialogs.DialogsList
-        android:id="@+id/dialogsList"
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/frcont"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="210dp" />
