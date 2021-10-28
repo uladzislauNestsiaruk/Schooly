@@ -12,6 +12,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.egormoroz.schooly.Callbacks;
+import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.MainActivity;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
@@ -19,6 +21,7 @@ import com.egormoroz.schooly.ui.main.ChatsFragment;
 import com.egormoroz.schooly.ui.main.EnterFragment;
 import com.egormoroz.schooly.ui.main.MainFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.storage.FirebaseStorage;
 import com.squareup.picasso.Picasso;
 
 public class ViewingClothes extends Fragment {
@@ -28,8 +31,11 @@ public class ViewingClothes extends Fragment {
     }
 
     NewClothesAdapter.ItemClickListener itemClickListener;
-    TextView clothesPriceCV,clothesTitleCV;
+    TextView clothesPriceCV,clothesTitleCV,schoolyCoinCV,buyClothesBottom;
     ImageView clothesImageCV,backToShop;
+    long schoolyCoins,clothesPrise;
+    Clothes clothesA;
+    private FirebaseModel firebaseModel = new FirebaseModel();
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -37,6 +43,7 @@ public class ViewingClothes extends Fragment {
         View root = inflater.inflate(R.layout.fragment_viewingclothes, container, false);
         BottomNavigationView bnv = getActivity().findViewById(R.id.bottomNavigationView);
         bnv.setVisibility(bnv.GONE);
+        firebaseModel.initAll();
         return root;
 
     }
@@ -44,10 +51,13 @@ public class ViewingClothes extends Fragment {
     @Override
     public void onViewCreated(@Nullable View view,@NonNull Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
+        getCoins();
+        schoolyCoinCV=view.findViewById(R.id.schoolycoincvfrag);
         clothesImageCV=view.findViewById(R.id.clothesImagecv);
         clothesTitleCV=view.findViewById(R.id.clothesTitlecv);
         clothesPriceCV=view.findViewById(R.id.clothesPricecv);
         backToShop=view.findViewById(R.id.back_toshop);
+        buyClothesBottom=view.findViewById(R.id.buyClothesBottom);
         backToShop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -57,9 +67,47 @@ public class ViewingClothes extends Fragment {
         NewClothesAdapter.singeClothesInfo(new NewClothesAdapter.ItemClickListener() {
             @Override
             public void onItemClick(Clothes clothes, int position) {
+                clothesA=clothes;
                 clothesPriceCV.setText(String.valueOf(clothes.getClothesPrice()));
                 clothesTitleCV.setText(clothes.getClothesTitle());
+                clothesPrise=clothes.getClothesPrice();
                 Picasso.get().load(clothes.getClothesImage()).into(clothesImageCV);
+            }
+        });
+        buyClothes();
+    }
+
+    public void getCoins(){
+        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+            @Override
+            public void PassUserNick(String nick) {
+                RecentMethods.GetMoneyFromBase(nick, firebaseModel, new Callbacks.MoneyFromBase() {
+                    @Override
+                    public void GetMoneyFromBase(long money) {
+                        schoolyCoins=money;
+                        schoolyCoinCV.setText(String.valueOf(money));
+                    }
+                });
+            }
+        });
+    }
+
+    public void buyClothes(){
+        buyClothesBottom.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(schoolyCoins>clothesPrise){
+                    RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+                        @Override
+                        public void PassUserNick(String nick) {
+                            firebaseModel.getUsersReference().child(nick).child("clothes").child("0").setValue(clothesA);
+                            Log.d("######", "good  "+clothesA);
+                            Log.d("######", "good  "+clothesPrise);
+                        }
+                    });
+                }else{
+                    Log.d("######", "fuck  ");
+                }
             }
         });
     }
