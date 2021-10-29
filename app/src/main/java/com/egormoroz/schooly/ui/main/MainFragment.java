@@ -3,6 +3,7 @@ package com.egormoroz.schooly.ui.main;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FirebaseModel;
@@ -19,13 +21,17 @@ import com.egormoroz.schooly.MainActivity;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.ui.main.Mining.MiningFragment;
+import com.egormoroz.schooly.ui.main.Shop.Clothes;
+import com.egormoroz.schooly.ui.main.Shop.NewClothesAdapter;
 import com.egormoroz.schooly.ui.main.Shop.ShopFragment;
+import com.egormoroz.schooly.ui.main.Shop.ViewingClothes;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.stfalcon.chatkit.commons.ImageLoader;
 import com.stfalcon.chatkit.commons.models.IDialog;
 import com.stfalcon.chatkit.dialogs.DialogsListAdapter;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 
 public class MainFragment extends Fragment{
     protected DialogsListAdapter<IDialog> dialogsAdapter;
@@ -33,7 +39,11 @@ public class MainFragment extends Fragment{
     private MainViewModel mainViewModel;
     private TextView todayMiningMain;
     private FirebaseModel firebaseModel = new FirebaseModel();
+    ArrayList<Clothes> clothesArrayList=new ArrayList<Clothes>();
     private UserInformation userData = new UserInformation();
+    RecyclerView clothesRecyclerMain;
+    NewClothesAdapter.ItemClickListener itemClickListener;
+
 
     public static MainFragment newInstance() {
         return new MainFragment();
@@ -107,6 +117,31 @@ public class MainFragment extends Fragment{
                     public void GetTodayMining(double todayMiningFromBase) {
                         String todayMiningFormatted = new DecimalFormat("#0.00").format(todayMiningFromBase);
                         todayMiningMain.setText(todayMiningFormatted);
+                    }
+                });
+            }
+        });
+        clothesRecyclerMain=view.findViewById(R.id.newchlothesinshop);
+        loadClothesFromBase();
+        itemClickListener=new NewClothesAdapter.ItemClickListener() {
+            @Override
+            public void onItemClick(Clothes clothes, int position) {
+                ((MainActivity)getActivity()).setCurrentFragment(ViewingClothes.newInstance());
+            }
+        };
+    }
+
+    public void loadClothesFromBase(){
+        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+            @Override
+            public void PassUserNick(String nick) {
+                RecentMethods.getClothes(nick, firebaseModel, new Callbacks.GetClothes() {
+                    @Override
+                    public void getClothes(ArrayList<Clothes> allClothes) {
+                        clothesArrayList.addAll(allClothes);
+                        NewClothesAdapter newClothesAdapter=new NewClothesAdapter(clothesArrayList,itemClickListener);
+                        clothesRecyclerMain.setAdapter(newClothesAdapter);
+                        Log.d("#####", "ggvppp  "+clothesArrayList);
                     }
                 });
             }

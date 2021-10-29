@@ -62,7 +62,7 @@
         android:layout_marginTop="32dp"
         android:layout_marginEnd="32dp"
         android:background="@drawable/corners30dp"
-        android:elevation="16dp">
+        android:elevation="25dp">
 
         <ImageView
             android:id="@+id/clothesImagecv"
@@ -96,17 +96,17 @@
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="16dp"
-                android:background="@drawable/corners8shopmain"
+                android:background="@drawable/corners14appcolor"
                 android:orientation="horizontal">
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingStart="6dp"
-                    android:paddingTop="5dp"
-                    android:paddingEnd="14dp"
-                    android:paddingBottom="5dp"
-                    android:src="@drawable/ic_schoolycoin" />
+                    android:paddingStart="16dp"
+                    android:paddingTop="12dp"
+                    android:paddingEnd="2dp"
+                    android:paddingBottom="12dp"
+                    android:src="@drawable/ic_schoolycoinsmall" />
 
 
                 <TextView
@@ -115,7 +115,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:fontFamily="@font/montserratblack"
-                    android:paddingEnd="12dp"
+                    android:paddingEnd="16dp"
                     android:textColor="@color/white"
                     android:textSize="20sp" />
 
@@ -130,14 +130,20 @@
         android:id="@+id/buyClothesBottom"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/buy"
-        android:layout_below="@+id/recyclerClothesImage"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp"
+        android:background="@drawable/corners14green"
         android:fontFamily="@font/montserratblack"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="140dp"
-        android:background="@drawable/corners8shopmain"
-        android:padding="16dp"
-        android:textColor="@color/white"/>
+        android:textSize="18dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="40dp"
+        android:layout_marginEnd="32dp"
+        android:elevation="25dp"
+        android:text="@string/buy"
+        android:textColor="@color/white" />
 
 
 

@@ -1,6 +1,8 @@
 package com.egormoroz.schooly.ui.profile;
 
+import android.content.Intent;
 import android.graphics.Rect;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,15 +18,24 @@ import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
 import com.egormoroz.schooly.ui.main.Shop.NewClothesAdapter;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
 import java.util.ArrayList;
 
 class WardrobeClothesAdapter extends RecyclerView.Adapter<WardrobeClothesAdapter.ViewHolder>  {
     private NewClothesAdapter.ItemClickListener clickListener;
     ArrayList<Clothes> clothesArrayListWardrobe;
     private FirebaseModel firebaseModel = new FirebaseModel();
+    FirebaseStorage storage = FirebaseStorage.getInstance();
+    StorageReference storageReference=storage.getReference();
+    static Clothes clothes;
+    NewClothesAdapter.ItemClickListener onClothesClick;
+    static int pos;
 
     public WardrobeClothesAdapter(ArrayList<Clothes> clothesArrayListWardrobe) {
         this.clothesArrayListWardrobe= clothesArrayListWardrobe;
@@ -43,6 +54,23 @@ class WardrobeClothesAdapter extends RecyclerView.Adapter<WardrobeClothesAdapter
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         firebaseModel.initAll();
+        pos=position;
+        clothes=clothesArrayListWardrobe.get(position);
+        holder.clothesTitle.setText(clothes.getClothesTitle());
+        Log.d("#####", "ggxadwd  "+holder.clothesImage);
+        holder.clothesPrise.setText(String.valueOf(clothes.getClothesPrice()));
+        File file=new File(clothes.getClothesImage());
+        storageReference.child("clothes").getFile(file);
+        Intent intent=new Intent();
+        holder.clothesImage.setVisibility(View.VISIBLE);
+        Picasso.get().load(clothes.getClothesImage()).into(holder.clothesImage);
+        holder.itemView.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v)
+            {
+                onClothesClick.onItemClick(clothes,position);
+            }
+        });
     }
 
 
