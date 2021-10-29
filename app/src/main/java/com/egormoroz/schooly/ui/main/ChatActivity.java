@@ -179,7 +179,7 @@ public class ChatActivity extends Activity
                 finish();
             }
         });
-
+//
     }
 
     @Override

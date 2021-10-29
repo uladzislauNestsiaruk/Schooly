@@ -101,7 +101,7 @@ public class DialogsActivity extends FragmentActivity {
             }
             return fragment;
         }
-
+//
         @Override
         public int getCount() {
 

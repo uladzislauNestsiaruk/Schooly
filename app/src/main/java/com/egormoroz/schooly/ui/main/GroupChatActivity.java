@@ -97,7 +97,7 @@ public class GroupChatActivity extends Activity
     private LinearLayoutManager linearLayoutManager;
     private MessageAdapter messageAdapter;
     private RecyclerView userMessagesList;
-
+//
     private ProgressDialog loadingBar;
     private String checker = "",myUrl="";
     private Uri fileUri;

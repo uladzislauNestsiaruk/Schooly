@@ -49,7 +49,7 @@ import java.util.Set;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-
+//
 public class ChatsFragment extends Fragment
 {
     private ArrayAdapter<String> arrayAdapter;
