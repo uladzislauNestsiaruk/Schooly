@@ -108,39 +108,15 @@
                 android:layout_below="@+id/searchclothes"
                 android:layout_marginTop="8dp"
                 app:tabMode="scrollable"
-                app:tabTextAppearance="@style/AppTabTextAppearanceShop">
+                app:tabTextAppearance="@style/AppTabTextAppearanceShop"/>
 
-                <com.google.android.material.tabs.TabItem
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/main" />
 
-                <com.google.android.material.tabs.TabItem
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/shoes" />
-
-                <com.google.android.material.tabs.TabItem
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/clothes" />
-
-                <com.google.android.material.tabs.TabItem
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/hats" />
-
-                <com.google.android.material.tabs.TabItem
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/accessories" />
-            </com.google.android.material.tabs.TabLayout>
-
-            <androidx.viewpager.widget.ViewPager
+            <androidx.viewpager2.widget.ViewPager2
                 android:id="@+id/frcontshop"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="210dp" />
+                android:layout_below="@+id/tabLayoutShop"
+                android:layout_marginTop="8dp" />
         </RelativeLayout>
 </ScrollView>
 

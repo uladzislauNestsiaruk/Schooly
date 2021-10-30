@@ -20,9 +20,9 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
 
-public class ShoesFargment extends Fragment {
-    public static ShoesFargment newInstance() {
-        return new ShoesFargment();
+public class ClothesFragment extends Fragment {
+    public static ClothesFragment newInstance() {
+        return new ClothesFragment();
     }
     FirebaseModel firebaseModel=new FirebaseModel();
     ArrayList<Clothes> clothesArrayList=new ArrayList<Clothes>();

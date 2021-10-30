@@ -20,10 +20,11 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
 
-public class ShoesFargment extends Fragment {
-    public static ShoesFargment newInstance() {
-        return new ShoesFargment();
+public class AccessoriesFragment extends Fragment {
+    public static AccessoriesFragment newInstance() {
+        return new AccessoriesFragment();
     }
+
     FirebaseModel firebaseModel=new FirebaseModel();
     ArrayList<Clothes> clothesArrayList=new ArrayList<Clothes>();
     RecyclerView clothes;

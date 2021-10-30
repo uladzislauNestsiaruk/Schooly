@@ -20,7 +20,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
 
-public class ShoesFargment extends Fragment {
+public class HatsFragment extends Fragment {
     public static ShoesFargment newInstance() {
         return new ShoesFargment();
     }

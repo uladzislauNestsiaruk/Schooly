@@ -14,8 +14,11 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.lifecycle.Lifecycle;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.RecentMethods;
@@ -31,6 +34,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ShopFragment extends Fragment {
     public static ShopFragment newInstance() {
@@ -42,10 +46,9 @@ public class ShopFragment extends Fragment {
     RecyclerView clothes;
     TextView coinsshop;
     NewClothesAdapter.ItemClickListener itemClickListener;
-    private SectionsPagerAdapter mSectionsPagerAdapterShop;
     FragmentManager fragmentManager;
-    private ViewPager mViewPager;
-
+    private ViewPager2 viewPager;
+    FragmentAdapter fragmentAdapter;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -82,14 +85,44 @@ public class ShopFragment extends Fragment {
                 });
             }
         });
-        mSectionsPagerAdapterShop= new ShopFragment.SectionsPagerAdapter(fragmentManager);
-
-        // Set up the ViewPager with the sections adapter.
-        mViewPager = view.findViewById(R.id.frcontshop);
-        mViewPager.setAdapter(mSectionsPagerAdapterShop);
-
         TabLayout tabLayout = view.findViewById(R.id.tabLayoutShop);
-        tabLayout.setupWithViewPager(mViewPager);
+        viewPager=view.findViewById(R.id.frcontshop);
+        FragmentManager fm = getChildFragmentManager();
+        fragmentAdapter = new FragmentAdapter(fm, getLifecycle());
+        viewPager.setAdapter(fragmentAdapter);
+
+        tabLayout.addTab(tabLayout.newTab().setText("Главная"));
+        tabLayout.addTab(tabLayout.newTab().setText("Обувь"));
+        tabLayout.addTab(tabLayout.newTab().setText("Одежда"));
+        tabLayout.addTab(tabLayout.newTab().setText("Головные уборы"));
+        tabLayout.addTab(tabLayout.newTab().setText("Акскссуары"));
+
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+
+
+        viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageSelected(int position) {
+                tabLayout.selectTab(tabLayout.getTabAt(position));
+            }
+        });
+
+
     }
 
     public void loadModelInBase(){
@@ -101,76 +134,37 @@ public class ShopFragment extends Fragment {
         Log.d("#####", "ggvp  ");
     }
 
-    public static class PlaceholderFragment extends Fragment {
-        /**
-         * The fragment argument representing the section number for this
-         * fragment.
-         */
-        private static final String ARG_SECTION_NUMBER = "section_number";
 
-        public PlaceholderFragment() {
+
+
+    public class FragmentAdapter extends FragmentStateAdapter {
+        public FragmentAdapter(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle) {
+            super(fragmentManager, lifecycle);
         }
 
-        /**
-         * Returns a new instance of this fragment for the given section
-         * number.
-         */
-        public static ShopFragment.PlaceholderFragment newInstance(int sectionNumber) {
-            PlaceholderFragment fragment =new  PlaceholderFragment();
-            Bundle args = new Bundle();
-            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-            fragment.setArguments(args);
-            return fragment;
+        @NonNull
+        @Override
+        public Fragment createFragment(int position) {
+
+            switch (position)
+            {
+                case 1 :
+                    return new ShoesFargment();
+                case 2 :
+                    return new ClothesFragment();
+                case 3 :
+                    return new HatsFragment();
+                case 4 :
+                    return new AccessoriesFragment();
+            }
+
+            return new PopularFragment();
         }
 
         @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.layoutwiewpagershop, container, false);
-            return rootView;
+        public int getItemCount() {
+            return 5;
         }
     }
 
-    /**
-     * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
-     * one of the sections/tabs/pages.
-     */
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
-
-        public SectionsPagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            Fragment fragment = null;
-            switch (position) {
-                case 0:
-                    fragment = new PopularFragment();
-                    break;
-                case 1:
-                    fragment = new ShoesFargment();
-                    break;
-
-            }
-            return fragment;
-        }
-        //
-        @Override
-        public int getCount() {
-
-            return 2;
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            switch (position) {
-                case 0:
-                    return "Главная";
-                case 1:
-                    return "Обувь";
-            }
-            return null;
-        }
-    }
 }
