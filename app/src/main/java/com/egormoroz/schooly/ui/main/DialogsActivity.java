@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
@@ -12,13 +13,16 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import com.egormoroz.schooly.MainActivity;
 import com.egormoroz.schooly.R;
+import com.egormoroz.schooly.RecentMethods;
 import com.google.android.material.tabs.TabLayout;
 
 public class DialogsActivity extends FragmentActivity {
 
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
+    ImageView backToMainFromChat;
 
     private ViewPager mViewPager;
     public static DialogsActivity newInstance() {
@@ -39,6 +43,14 @@ public class DialogsActivity extends FragmentActivity {
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabschat);
         tabLayout.setupWithViewPager(mViewPager);
+
+        backToMainFromChat=(ImageView) findViewById(R.id.backtomainfromchat);
+        backToMainFromChat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
 
     }

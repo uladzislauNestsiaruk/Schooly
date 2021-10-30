@@ -5,10 +5,6 @@
     android:scrollbars="none"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -105,6 +101,7 @@
                 android:layout_marginEnd="24dp"/>
 
             <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tabLayoutShop"
                 style="@style/AppTabLayoutShop"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -139,51 +136,12 @@
                     android:text="@string/accessories" />
             </com.google.android.material.tabs.TabLayout>
 
-            <TextView
-                android:id="@+id/newnew"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/searchclothes"
-                android:layout_marginStart="24dp"
-                android:layout_marginTop="56dp"
-                android:fontFamily="@font/montserrat_bold"
-                android:text="@string/newnew"
-                android:textColor="@color/app_grey"
-                android:textSize="18dp" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/newchlothesinshop"
+            <androidx.viewpager.widget.ViewPager
+                android:id="@+id/frcontshop"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/newnew"
-                android:layout_marginTop="12dp"
-                android:orientation="horizontal"
-                android:scrollbars="none"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
-
-            <TextView
-                android:id="@+id/popular"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/newnew"
-                android:layout_marginStart="24dp"
-                android:layout_marginTop="278dp"
-                android:fontFamily="@font/montserrat_bold"
-                android:text="@string/popular"
-                android:textColor="@color/app_grey"
-                android:textSize="18dp" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/popularchlothesinshop"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/popular"
-                android:layout_marginTop="16dp"
-                android:orientation="horizontal"
-                android:scrollbars="none"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+                android:layout_height="match_parent"
+                android:layout_marginTop="210dp" />
         </RelativeLayout>
-    </LinearLayout>
 </ScrollView>
 
 

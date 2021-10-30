@@ -12,7 +12,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
 
 import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.RecentMethods;
@@ -20,8 +23,12 @@ import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.MainActivity;
 import com.egormoroz.schooly.R;
+import com.egormoroz.schooly.ui.main.ChatsFragment;
+import com.egormoroz.schooly.ui.main.DialogsActivity;
+import com.egormoroz.schooly.ui.main.GroupsFragment;
 import com.egormoroz.schooly.ui.main.MainFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
 
@@ -35,6 +42,9 @@ public class ShopFragment extends Fragment {
     RecyclerView clothes;
     TextView coinsshop;
     NewClothesAdapter.ItemClickListener itemClickListener;
+    private SectionsPagerAdapter mSectionsPagerAdapterShop;
+    FragmentManager fragmentManager;
+    private ViewPager mViewPager;
 
 
     @Override
@@ -44,8 +54,6 @@ public class ShopFragment extends Fragment {
         BottomNavigationView bnv = getActivity().findViewById(R.id.bottomNavigationView);
         bnv.setVisibility(bnv.GONE);
         firebaseModel.initAll();
-        clothes=root.findViewById(R.id.newchlothesinshop);
-        loadClothesFromBase();
         coinsshop=root.findViewById(R.id.schoolycoinshopfrag);
 //        AppBarLayout abl = getActivity().findViewById(R.id.AppBarLayout);
 //        abl.setVisibility(abl.GONE);
@@ -74,13 +82,14 @@ public class ShopFragment extends Fragment {
                 });
             }
         });
+        mSectionsPagerAdapterShop= new ShopFragment.SectionsPagerAdapter(fragmentManager);
 
-        itemClickListener=new NewClothesAdapter.ItemClickListener() {
-            @Override
-            public void onItemClick(Clothes clothes, int position) {
-                ((MainActivity)getActivity()).setCurrentFragment(ViewingClothes.newInstance());
-            }
-        };
+        // Set up the ViewPager with the sections adapter.
+        mViewPager = view.findViewById(R.id.frcontshop);
+        mViewPager.setAdapter(mSectionsPagerAdapterShop);
+
+        TabLayout tabLayout = view.findViewById(R.id.tabLayoutShop);
+        tabLayout.setupWithViewPager(mViewPager);
     }
 
     public void loadModelInBase(){
@@ -92,20 +101,76 @@ public class ShopFragment extends Fragment {
         Log.d("#####", "ggvp  ");
     }
 
-    public void loadClothesFromBase(){
-        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-            @Override
-            public void PassUserNick(String nick) {
-                RecentMethods.getClothes(nick, firebaseModel, new Callbacks.GetClothes() {
-                    @Override
-                    public void getClothes(ArrayList<Clothes> allClothes) {
-                        clothesArrayList.addAll(allClothes);
-                        NewClothesAdapter newClothesAdapter=new NewClothesAdapter(clothesArrayList,itemClickListener);
-                        clothes.setAdapter(newClothesAdapter);
-                        Log.d("#####", "ggvppp  "+clothesArrayList);
-                    }
-                });
+    public static class PlaceholderFragment extends Fragment {
+        /**
+         * The fragment argument representing the section number for this
+         * fragment.
+         */
+        private static final String ARG_SECTION_NUMBER = "section_number";
+
+        public PlaceholderFragment() {
+        }
+
+        /**
+         * Returns a new instance of this fragment for the given section
+         * number.
+         */
+        public static ShopFragment.PlaceholderFragment newInstance(int sectionNumber) {
+            PlaceholderFragment fragment =new  PlaceholderFragment();
+            Bundle args = new Bundle();
+            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
+            fragment.setArguments(args);
+            return fragment;
+        }
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                                 Bundle savedInstanceState) {
+            View rootView = inflater.inflate(R.layout.layoutwiewpagershop, container, false);
+            return rootView;
+        }
+    }
+
+    /**
+     * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
+     * one of the sections/tabs/pages.
+     */
+    public class SectionsPagerAdapter extends FragmentPagerAdapter {
+
+        public SectionsPagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            Fragment fragment = null;
+            switch (position) {
+                case 0:
+                    fragment = new PopularFragment();
+                    break;
+                case 1:
+                    fragment = new ShoesFargment();
+                    break;
+
             }
-        });
+            return fragment;
+        }
+        //
+        @Override
+        public int getCount() {
+
+            return 2;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            switch (position) {
+                case 0:
+                    return "Главная";
+                case 1:
+                    return "Обувь";
+            }
+            return null;
+        }
     }
 }
