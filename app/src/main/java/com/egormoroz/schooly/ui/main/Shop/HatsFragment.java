@@ -60,7 +60,7 @@ public class HatsFragment extends Fragment {
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @Override
             public void PassUserNick(String nick) {
-                RecentMethods.getClothes(nick, firebaseModel, new Callbacks.GetClothes() {
+                RecentMethods.getShoes(nick, firebaseModel, new Callbacks.GetClothes() {
                     @Override
                     public void getClothes(ArrayList<Clothes> allClothes) {
                         clothesArrayList.addAll(allClothes);

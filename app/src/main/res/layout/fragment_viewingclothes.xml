@@ -54,7 +54,7 @@
     </LinearLayout>
 
     <RelativeLayout
-        android:id="@+id/recyclerClothesImage"
+        android:id="@+id/relativeClothesImage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/back_toshop"
@@ -126,24 +126,63 @@
 
     </RelativeLayout>
 
-    <TextView
-        android:id="@+id/buyClothesBottom"
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/relativeClothesImage"
+        />
+
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingStart="20dp"
-        android:paddingEnd="20dp"
-        android:paddingTop="12dp"
-        android:paddingBottom="12dp"
-        android:background="@drawable/corners14green"
-        android:fontFamily="@font/montserratblack"
-        android:textSize="18dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="40dp"
+        android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
-        android:elevation="25dp"
-        android:text="@string/buy"
-        android:textColor="@color/white" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="24dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/corners30dp"
+        android:elevation="25dp">
+
+        <TextView
+            android:id="@+id/buyClothesBottom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/inBasketClothes"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/corners14green"
+            android:fontFamily="@font/montserratblack"
+            android:paddingStart="20dp"
+            android:paddingTop="12dp"
+            android:paddingEnd="20dp"
+            android:paddingBottom="12dp"
+            android:text="@string/buy"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/inBasketClothes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/corners14grey"
+            android:fontFamily="@font/montserratblack"
+            android:paddingStart="20dp"
+            android:paddingTop="12dp"
+            android:paddingEnd="20dp"
+            android:paddingBottom="12dp"
+            android:text="@string/inbasket"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+
+
+    </RelativeLayout>
+
+
 
 
 

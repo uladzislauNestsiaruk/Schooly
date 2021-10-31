@@ -31,10 +31,10 @@ public class ViewingClothes extends Fragment {
     }
 
     NewClothesAdapter.ItemClickListener itemClickListener;
-    TextView clothesPriceCV,clothesTitleCV,schoolyCoinCV,buyClothesBottom;
+    TextView clothesPriceCV,clothesTitleCV,schoolyCoinCV,buyClothesBottom,inBasket;
     ImageView clothesImageCV,backToShop;
     long schoolyCoins,clothesPrise;
-    Clothes clothesA;
+    Clothes clothesViewing;
     private FirebaseModel firebaseModel = new FirebaseModel();
 
     @Override
@@ -54,6 +54,7 @@ public class ViewingClothes extends Fragment {
         getCoins();
         schoolyCoinCV=view.findViewById(R.id.schoolycoincvfrag);
         clothesImageCV=view.findViewById(R.id.clothesImagecv);
+        inBasket=view.findViewById(R.id.inBasketClothes);
         clothesTitleCV=view.findViewById(R.id.clothesTitlecv);
         clothesPriceCV=view.findViewById(R.id.clothesPricecv);
         backToShop=view.findViewById(R.id.back_toshop);
@@ -67,7 +68,7 @@ public class ViewingClothes extends Fragment {
         NewClothesAdapter.singeClothesInfo(new NewClothesAdapter.ItemClickListener() {
             @Override
             public void onItemClick(Clothes clothes, int position) {
-                clothesA=clothes;
+                clothesViewing=clothes;
                 clothesPriceCV.setText(String.valueOf(clothes.getClothesPrice()));
                 clothesTitleCV.setText(clothes.getClothesTitle());
                 clothesPrise=clothes.getClothesPrice();
@@ -75,6 +76,7 @@ public class ViewingClothes extends Fragment {
             }
         });
         buyClothes();
+        putInBasket();
     }
 
     public void getCoins(){
@@ -100,14 +102,28 @@ public class ViewingClothes extends Fragment {
                     RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
                         @Override
                         public void PassUserNick(String nick) {
-                            firebaseModel.getUsersReference().child(nick).child("clothes").child("0").setValue(clothesA);
-                            Log.d("######", "good  "+clothesA);
+                            firebaseModel.getUsersReference().child(nick).child("clothes").child("0").setValue(clothesViewing);
+                            Log.d("######", "good  "+clothesViewing);
                             Log.d("######", "good  "+clothesPrise);
                         }
                     });
                 }else{
                     Log.d("######", "fuck  ");
                 }
+            }
+        });
+    }
+
+    public void putInBasket(){
+        inBasket.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+                    @Override
+                    public void PassUserNick(String nick) {
+                        firebaseModel.getUsersReference().child(nick).child("basket").child(clothesViewing.getClothesTitle()).setValue(clothesViewing);
+                    }
+                });
             }
         });
     }

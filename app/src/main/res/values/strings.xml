@@ -57,6 +57,7 @@
     <string name="shoes">Обувь</string>
     <string name="hats">Головные уборы</string>
     <string name="accessories">Аксессуары</string>
+    <string name="inbasket">В корзину</string>
 
     <string name="toolbar_news">Новости</string>
     <string name="toolbar_people">Люди</string>
