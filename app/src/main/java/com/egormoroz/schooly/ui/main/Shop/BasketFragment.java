@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -29,6 +30,7 @@ public class BasketFragment extends Fragment {
 
     FirebaseModel firebaseModel=new FirebaseModel();
     TextView numberOfClothes,schoolyCoin;
+    ImageView backtoshop;
     RecyclerView basketRecycler;
     ArrayList<Clothes> clothesArrayList=new ArrayList<Clothes>();
     BasketAdapter.ItemClickListener onItemClick;
@@ -46,6 +48,13 @@ public class BasketFragment extends Fragment {
     @Override
     public void onViewCreated(@Nullable View view,@NonNull Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
+        backtoshop=view.findViewById(R.id.back_toshopfrombasket);
+        backtoshop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RecentMethods.setCurrentFragment(ShopFragment.newInstance(), getActivity());
+            }
+        });
         schoolyCoin=view.findViewById(R.id.schoolycoinbasketfrag);
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @Override
