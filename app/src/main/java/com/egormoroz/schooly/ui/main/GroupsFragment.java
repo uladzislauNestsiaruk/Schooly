@@ -12,8 +12,10 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
+import com.egormoroz.schooly.RecentMethods;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -53,16 +55,22 @@ public class GroupsFragment extends Fragment
 
         RetrieveAndDisplayGroups();
 
-        list_view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                String currentGroupName = adapterView.getItemAtPosition(position).toString();
-                Intent groupChatIntent = new Intent(getContext(), GroupChatActivity.class);
-                groupChatIntent.putExtra("groupName" , currentGroupName);
-                startActivity(groupChatIntent);
+            public void PassUserNick(String nick) {
+                list_view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                        String currentGroupName = adapterView.getItemAtPosition(position).toString();
+                        Intent groupChatIntent = new Intent(getContext(), GroupChatActivity.class);
+                        groupChatIntent.putExtra("groupName", currentGroupName);
+                        groupChatIntent.putExtra("curUser", nick);
+                        startActivity(groupChatIntent);
+                    }
+                });
+
             }
         });
-
         return groupFragmentView;
     }
 

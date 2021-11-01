@@ -28,6 +28,7 @@ import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.ui.chat.Contacts;
+import com.egormoroz.schooly.ui.chat.MessageAdapter;
 import com.egormoroz.schooly.ui.chat.TabsAccessorAdapter;
 import com.egormoroz.schooly.ui.main.Mining.MyMinersFragment;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -73,10 +74,10 @@ public class ChatsFragment extends Fragment
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 String name = adapterView.getItemAtPosition(position).toString();
-                receiverUserName = name;
                 Bundle nick = new Bundle();
                 Intent ChatIntent = new Intent(getContext(), ChatActivity.class);
-                nick.putString("name",name);
+                nick.putString("othUser",name);
+                nick.putString("curUser",currentUserName);
                 ChatIntent.putExtras(nick);
                 startActivity(ChatIntent);
             }
@@ -95,7 +96,6 @@ public class ChatsFragment extends Fragment
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @Override
             public void PassUserNick(String nick) {
-                currentUserName = nick;
                 firebaseModel.getUsersReference().child(nick).child("Chats").addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -106,7 +106,7 @@ public class ChatsFragment extends Fragment
                             set.add(((DataSnapshot)iterator.next()).getKey());
                             Log.d("Chat", String.valueOf(set));
                         }
-
+                        currentUserName = nick;
                         list_of_groups.clear();
                         list_of_groups.addAll(set);
                         arrayAdapter.notifyDataSetChanged();

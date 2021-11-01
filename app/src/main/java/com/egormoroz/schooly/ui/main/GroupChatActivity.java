@@ -74,7 +74,7 @@ import java.util.List;
 import java.util.Map;
 
 public class GroupChatActivity extends Activity
-{  private String messageReceiverID, messageReceiverName, messageReceiverImage, messageSenderID;
+{  private String messageReceiverName, messageReceiverImage, messageSenderName;
 
     private TextView userName, userLastSeen;
     private ImageView userImage;
@@ -110,14 +110,16 @@ public class GroupChatActivity extends Activity
         setContentView(R.layout.activity_chat);
 
         mAuth = FirebaseAuth.getInstance();
-        messageSenderID = mAuth.getCurrentUser().getUid();
+
         RootRef = firebaseModel.getUsersReference();
 
         ActivityCompat.requestPermissions(this, permissions, REQUEST_RECORD_AUDIO_PERMISSION);
         Intent intentReceived = getIntent();
         Bundle data = intentReceived.getExtras();
-        messageReceiverName = data.getString("groupName");
-
+        if(!data.isEmpty()) {
+            messageReceiverName = data.getString("groupName");
+            messageSenderName = data.getString("curUser");
+        }
         //     messageReceiverImage = getIntent().getExtras().get("visit_image").toString();
 
         IntializeVoice();
@@ -164,7 +166,7 @@ public class GroupChatActivity extends Activity
         SendFilesButton = findViewById(R.id.send_files_btn);
         MessageInputText = findViewById(R.id.input_message);
 
-        messageAdapter = new MessageAdapter(messagesList);
+        messageAdapter = new MessageAdapter(messagesList, messageSenderName);
         userMessagesList = (RecyclerView) findViewById(R.id.private_messages_list_of_users);
         linearLayoutManager = new LinearLayoutManager(this);
         userMessagesList.setLayoutManager(linearLayoutManager);
@@ -240,7 +242,7 @@ public class GroupChatActivity extends Activity
 
     private void DisplayLastSeen()
     {
-        RootRef.child("Users").child(messageReceiverID)
+        RootRef.child("Users").child(messageReceiverName)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot)
@@ -282,7 +284,7 @@ public class GroupChatActivity extends Activity
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @Override
             public void PassUserNick(String nick) {
-                firebaseModel.getUsersReference().child(nick).child("Chats").child(messageReceiverName).child("Messages")
+                firebaseModel.getUsersReference().child("Groups").child(messageReceiverName)
                         .addChildEventListener(new ChildEventListener() {
                             @Override
                             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {

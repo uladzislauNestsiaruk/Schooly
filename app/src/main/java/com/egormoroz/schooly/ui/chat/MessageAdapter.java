@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +26,7 @@ import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.ui.chat.holders.ImageViewerActivity;
 import com.egormoroz.schooly.ui.main.ChatActivity;
 import com.egormoroz.schooly.ui.main.ChatsFragment;
+import com.egormoroz.schooly.ui.main.GroupChatActivity;
 import com.egormoroz.schooly.ui.profile.ProfileFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -51,8 +53,15 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     private String messageID;
     private DatabaseReference ref;
 
-    public MessageAdapter(List<Message> userMessagesList) {
+    public MessageAdapter(List<Message> userMessagesList, String messageSenderId, String messageReceiverId ) {
         this.userMessagesList = userMessagesList;
+        this.messageSenderId = messageSenderId;
+        this.messageReceiverId = messageReceiverId;
+    }
+
+    public MessageAdapter(List<Message> userMessagesList, String messageSenderId) {
+        this.userMessagesList = userMessagesList;
+        this.messageSenderId = messageSenderId;
     }
 
 
@@ -86,14 +95,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     public MessageViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext())
                 .inflate(R.layout.custom_messages_layout, viewGroup, false);
-        if (ChatsFragment.currentUserName != null) {
-            messageSenderId = ChatsFragment.currentUserName;
-            messageReceiverId = ChatsFragment.receiverUserName;
-        }
-        else{
-            messageSenderId = ProfileFragment.currentUserName;
-            messageReceiverId = ProfileFragment.receiverUserName;
-        }
         ref = FirebaseDatabase.getInstance().getReference().child("users");
 
         return new MessageViewHolder(view);

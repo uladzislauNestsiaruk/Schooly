@@ -44,8 +44,6 @@ import java.io.IOException;
 
 public class ProfileFragment extends Fragment {
     FirebaseModel firebaseModel = new FirebaseModel();
-    private FirebaseAuth mAuth;
-    public static String currentUserName, receiverUserName;
     Context profileContext;
     String type;
     UserInformation info;
@@ -72,7 +70,6 @@ public class ProfileFragment extends Fragment {
 
 
     public void open() {
-        Intent i = new Intent(getActivity(), ChatActivity.class);
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @Override
             public void PassUserNick(String nick) {
@@ -91,15 +88,16 @@ public class ProfileFragment extends Fragment {
                         }
                     });
                 }
+                Intent i = new Intent(getActivity(), ChatActivity.class);
+                //Getting information about user(friend)
+                i.putExtra("othUser", info.getNick());
+                i.putExtra("curUser", nick);
+                i.putExtra("groupName", "one");
+                i.putExtra("visit_user_id", info.getUid());
+                i.putExtra("visit_image", ChatActivity.class);
+                startActivity(i);
             }
         });
-        //Getting information about user(friend)
-        receiverUserName = info.getNick();
-        i.putExtra("name", info.getNick());
-        i.putExtra("groupName", "one");
-        i.putExtra("visit_user_id", info.getUid());
-        i.putExtra("visit_image", ChatActivity.class);
-        startActivity(i);
         ((Activity) getActivity()).overridePendingTransition(0, 0);
     }
 
@@ -211,8 +209,6 @@ public class ProfileFragment extends Fragment {
             @Override
             public void PassUserNick(String nick) {
                 {
-                    currentUserName = nick;
-                    Log.d("One", currentUserName);
                     firebaseModel.getUsersReference().child(info.getNick()).child("Chats").child(nick).child("nick").setValue(nick);
                     firebaseModel.getUsersReference().child(nick).child("Chats").child(info.getNick()).child("nick").setValue(nick);
                 }

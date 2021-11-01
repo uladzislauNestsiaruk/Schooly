@@ -74,7 +74,7 @@ import java.util.List;
 import java.util.Map;
 
 public class ChatActivity extends Activity
-{  private String messageReceiverID, messageReceiverName, messageReceiverImage, messageSenderID;
+{  private String messageReceiverID, messageReceiverName, messageReceiverImage, messageSenderID, messageSenderName;
 
     private TextView userName, userLastSeen;
     private ImageView userImage;
@@ -117,10 +117,10 @@ public class ChatActivity extends Activity
         Intent intentReceived = getIntent();
         Bundle data = intentReceived.getExtras();
         if(data != null){
-            messageReceiverName = data.getString("name");
-        }else{
-            messageReceiverName = ChatsFragment.receiverUserName;
+            messageSenderName = data.getString("curUser");
+            messageReceiverName = data.getString("othUser");
         }
+        Log.d("One", messageSenderName);
 
    //     messageReceiverImage = getIntent().getExtras().get("visit_image").toString();
 
@@ -168,7 +168,7 @@ public class ChatActivity extends Activity
         SendFilesButton = findViewById(R.id.send_files_btn);
         MessageInputText = findViewById(R.id.input_message);
 
-        messageAdapter = new MessageAdapter(messagesList);
+        messageAdapter = new MessageAdapter(messagesList, messageSenderName, messageReceiverName);
         userMessagesList = (RecyclerView) findViewById(R.id.private_messages_list_of_users);
         linearLayoutManager = new LinearLayoutManager(this);
         userMessagesList.setLayoutManager(linearLayoutManager);
