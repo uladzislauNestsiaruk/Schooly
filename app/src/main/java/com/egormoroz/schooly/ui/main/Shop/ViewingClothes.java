@@ -92,6 +92,14 @@ public class ViewingClothes extends Fragment {
                 });
             }
         });
+        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+            @Override
+            public void PassUserNick(String nick) {
+                if(firebaseModel.getUsersReference().child(nick).child("basket").child(clothesViewing.getClothesTitle()).equals(clothesViewing.getClothesTitle())){
+                    inBasket.setText("В корзине");
+                }
+            }
+        });
     }
 
     public void buyClothes(){
@@ -103,8 +111,6 @@ public class ViewingClothes extends Fragment {
                         @Override
                         public void PassUserNick(String nick) {
                             firebaseModel.getUsersReference().child(nick).child("clothes").child("0").setValue(clothesViewing);
-                            Log.d("######", "good  "+clothesViewing);
-                            Log.d("######", "good  "+clothesPrise);
                         }
                     });
                 }else{

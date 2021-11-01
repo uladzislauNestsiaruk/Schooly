@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ImageView
+        android:id="@+id/back_toshopfrombasket"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="24dp"
+        android:src="@drawable/left_arrow"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="11dp"
+        android:layout_toRightOf="@+id/back_toshopfrombasket"
+        android:fontFamily="@font/montserrat_bold"
+        android:text="@string/shop"
+        android:textColor="@color/app_color"
+        android:textSize="22sp" />
+
+    <LinearLayout
+        android:id="@+id/schoolycoinshop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:orientation="horizontal"
+        android:layout_marginEnd="24dp"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/corners8shopmain">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="6dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:paddingEnd="14dp"
+            android:src="@drawable/ic_schoolycoin"/>
+
+
+        <TextView
+            android:id="@+id/schoolycoinbasketfrag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserratblack"
+            android:paddingEnd="12dp"
+            android:layout_gravity="center_vertical"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/numberofclothes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/back_toshopfrombasket"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="16dp"
+        android:textSize="16sp"
+        android:textColor="@color/app_grey"
+        android:fontFamily="@font/montserrat_bold"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/basketrecycler"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/numberofclothes"
+        android:layout_marginTop="8dp"
+        android:orientation="vertical"
+        android:scrollbars="none"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"/>
+
+</RelativeLayout>

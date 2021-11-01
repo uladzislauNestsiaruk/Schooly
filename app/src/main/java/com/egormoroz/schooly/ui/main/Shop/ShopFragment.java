@@ -49,6 +49,7 @@ public class ShopFragment extends Fragment {
     FragmentManager fragmentManager;
     private ViewPager2 viewPager;
     FragmentAdapter fragmentAdapter;
+    ImageView basket;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -122,6 +123,13 @@ public class ShopFragment extends Fragment {
             }
         });
 
+        basket=view.findViewById(R.id.basket);
+        basket.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RecentMethods.setCurrentFragment(BasketFragment.newInstance(), getActivity());
+            }
+        });
 
     }
 
