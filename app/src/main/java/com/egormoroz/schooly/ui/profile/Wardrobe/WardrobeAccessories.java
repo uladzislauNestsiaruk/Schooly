@@ -1,11 +1,10 @@
-package com.egormoroz.schooly.ui.profile;
+package com.egormoroz.schooly.ui.profile.Wardrobe;
 
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,51 +13,48 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FirebaseModel;
-import com.egormoroz.schooly.MainActivity;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
-import com.egormoroz.schooly.ui.main.Shop.NewClothesAdapter;
-import com.egormoroz.schooly.ui.main.UserInformation;
+import com.egormoroz.schooly.ui.main.Shop.ViewingClothes;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
 
-public class WardrobeFragment extends Fragment {
-    public static WardrobeFragment newInstance() {
-        return new WardrobeFragment();
+public class WardrobeAccessories extends Fragment {
+    public static WardrobeAccessories newInstance() {
+        return new WardrobeAccessories();
     }
-    RecyclerView wardrobeRecyclerView;
-    ArrayList<Clothes> clothesArrayListWardrobe=new ArrayList<Clothes>();
     FirebaseModel firebaseModel=new FirebaseModel();
+    ArrayList<Clothes> clothesArrayListWardrobe=new ArrayList<Clothes>();
+    RecyclerView wardrobeRecyclerView;
+    WardrobeClothesAdapter.ItemClickListener itemClickListener;
+
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState){
-        View root =inflater.inflate(R.layout.fragment_wardrobe,container,false);
+                             @Nullable Bundle savedInstanceState) {
+        View root = inflater.inflate(R.layout.viewpagerwardrobe, container, false);
         BottomNavigationView bnv = getActivity().findViewById(R.id.bottomNavigationView);
         bnv.setVisibility(bnv.GONE);
         firebaseModel.initAll();
+        wardrobeRecyclerView=root.findViewById(R.id.recyclerwardrobe);
+        loadClothesInWardrobe();
+        Log.d("######", "dd");
         return root;
     }
 
     @Override
-    public void onViewCreated(@Nullable View view, @NonNull Bundle savedInstanceState){
+    public void onViewCreated(@Nullable View view,@NonNull Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
-
-        wardrobeRecyclerView=view.findViewById(R.id.recyclerWardrode);
-
-        ImageView backfromwardrobe=view.findViewById(R.id.back_toprofile);
-        backfromwardrobe.setOnClickListener(new View.OnClickListener() {
+        itemClickListener=new WardrobeClothesAdapter.ItemClickListener() {
             @Override
-            public void onClick(View v) {
-                ((MainActivity)getActivity()).setCurrentFragment(ProfileFragment.newInstance("user",
-                        new UserInformation()));
+            public void onItemClick(Clothes clothes, int position) {
+                RecentMethods.setCurrentFragment(ViewingClothesWardrobe.newInstance(), getActivity());
             }
-        });
-
-        loadClothesInWardrobe();
+        };
     }
+
 
     public void loadClothesInWardrobe(){
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
@@ -68,7 +64,7 @@ public class WardrobeFragment extends Fragment {
                     @Override
                     public void getClothes(ArrayList<Clothes> allClothes) {
                         clothesArrayListWardrobe.addAll(allClothes);
-                        WardrobeClothesAdapter newClothesAdapter=new WardrobeClothesAdapter(clothesArrayListWardrobe);
+                        WardrobeClothesAdapter newClothesAdapter=new WardrobeClothesAdapter(clothesArrayListWardrobe,itemClickListener);
                         wardrobeRecyclerView.setAdapter(newClothesAdapter);
                         Log.d("#####", "ggvppp  "+clothesArrayListWardrobe);
                     }

@@ -1,4 +1,4 @@
-package com.egormoroz.schooly.ui.main.Shop;
+package com.egormoroz.schooly.ui.profile.Wardrobe;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -20,17 +20,19 @@ import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.ui.main.ChatsFragment;
 import com.egormoroz.schooly.ui.main.EnterFragment;
 import com.egormoroz.schooly.ui.main.MainFragment;
+import com.egormoroz.schooly.ui.main.Shop.Clothes;
+import com.egormoroz.schooly.ui.main.Shop.NewClothesAdapter;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.storage.FirebaseStorage;
 import com.squareup.picasso.Picasso;
 
-public class ViewingClothes extends Fragment {
-    public static com.egormoroz.schooly.ui.main.Shop.ViewingClothes newInstance() {
-        return new com.egormoroz.schooly.ui.main.Shop.ViewingClothes();
+public class ViewingClothesWardrobe extends Fragment {
+    public static ViewingClothesWardrobe newInstance() {
+        return new ViewingClothesWardrobe();
 
     }
 
-    NewClothesAdapter.ItemClickListener itemClickListener;
+    WardrobeClothesAdapter.ItemClickListener itemClickListener;
     TextView clothesPriceCV,clothesTitleCV,schoolyCoinCV,buyClothesBottom,inBasket;
     ImageView clothesImageCV,backToShop;
     long schoolyCoins,clothesPrise;
@@ -62,10 +64,11 @@ public class ViewingClothes extends Fragment {
         backToShop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(ShopFragment.newInstance(), getActivity());
+                RecentMethods.setCurrentFragment(WardrobeFragment.newInstance(), getActivity());
             }
         });
-        NewClothesAdapter.singeClothesInfo(new NewClothesAdapter.ItemClickListener() {
+
+        WardrobeClothesAdapter.singeClothesInfo(new WardrobeClothesAdapter.ItemClickListener() {
             @Override
             public void onItemClick(Clothes clothes, int position) {
                 clothesViewing=clothes;
@@ -110,9 +113,7 @@ public class ViewingClothes extends Fragment {
                     RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
                         @Override
                         public void PassUserNick(String nick) {
-                            if (clothesViewing.getClothesType().equals("shoes")) {
-                                firebaseModel.getUsersReference().child(nick).child("clothes").child("shoes").child("0").setValue(clothesViewing);
-                            }
+                            firebaseModel.getUsersReference().child(nick).child("clothes").child("0").setValue(clothesViewing);
                         }
                     });
                 }else{

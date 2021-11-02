@@ -42,11 +42,7 @@ public class ShopFragment extends Fragment {
     }
 
     FirebaseModel firebaseModel=new FirebaseModel();
-    ArrayList<Clothes> clothesArrayList=new ArrayList<Clothes>();
-    RecyclerView clothes;
     TextView coinsshop;
-    NewClothesAdapter.ItemClickListener itemClickListener;
-    FragmentManager fragmentManager;
     private ViewPager2 viewPager;
     FragmentAdapter fragmentAdapter;
     ImageView basket;

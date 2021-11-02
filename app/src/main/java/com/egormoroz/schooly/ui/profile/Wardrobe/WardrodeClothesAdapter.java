@@ -1,4 +1,4 @@
-package com.egormoroz.schooly.ui.profile;
+package com.egormoroz.schooly.ui.profile.Wardrobe;
 
 import android.content.Intent;
 import android.graphics.Rect;
@@ -34,12 +34,15 @@ class WardrobeClothesAdapter extends RecyclerView.Adapter<WardrobeClothesAdapter
     FirebaseStorage storage = FirebaseStorage.getInstance();
     StorageReference storageReference=storage.getReference();
     static Clothes clothes;
-    NewClothesAdapter.ItemClickListener onClothesClick;
+    ItemClickListener onClothesClick;
     static int pos;
 
-    public WardrobeClothesAdapter(ArrayList<Clothes> clothesArrayListWardrobe) {
+    public WardrobeClothesAdapter(ArrayList<Clothes> clothesArrayListWardrobe, ItemClickListener onClothesClick) {
         this.clothesArrayListWardrobe= clothesArrayListWardrobe;
+        this.onClothesClick=onClothesClick;
     }
+
+
 
 
     @NotNull
@@ -92,7 +95,9 @@ class WardrobeClothesAdapter extends RecyclerView.Adapter<WardrobeClothesAdapter
 
 
     }
-
+    public static void singeClothesInfo(ItemClickListener itemClickListener){
+        itemClickListener.onItemClick(clothes, pos);
+    }
 
     public interface ItemClickListener {
         void onItemClick( Clothes clothes,int position);
