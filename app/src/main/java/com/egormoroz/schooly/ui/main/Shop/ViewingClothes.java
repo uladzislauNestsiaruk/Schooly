@@ -21,6 +21,10 @@ import com.egormoroz.schooly.ui.main.ChatsFragment;
 import com.egormoroz.schooly.ui.main.EnterFragment;
 import com.egormoroz.schooly.ui.main.MainFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.squareup.picasso.Picasso;
 
@@ -52,6 +56,8 @@ public class ViewingClothes extends Fragment {
     public void onViewCreated(@Nullable View view,@NonNull Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
         getCoins();
+        checkClothes();
+        checkClothesOnBuy();
         schoolyCoinCV=view.findViewById(R.id.schoolycoincvfrag);
         clothesImageCV=view.findViewById(R.id.clothesImagecv);
         inBasket=view.findViewById(R.id.inBasketClothes);
@@ -111,7 +117,24 @@ public class ViewingClothes extends Fragment {
                         @Override
                         public void PassUserNick(String nick) {
                             if (clothesViewing.getClothesType().equals("shoes")) {
-                                firebaseModel.getUsersReference().child(nick).child("clothes").child("shoes").child("0").setValue(clothesViewing);
+                                firebaseModel.getUsersReference().child(nick).child("clothes")
+                                        .child("shoes").child(clothesViewing.getClothesTitle()).setValue(clothesViewing);
+                                Query query=firebaseModel.getUsersReference().child(nick).child("basket").
+                                        child(String.valueOf(clothesViewing.getClothesTitle()));
+                                query.addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        if(snapshot.exists()){
+                                            firebaseModel.getUsersReference().child(nick).child("basket")
+                                                    .child(clothesViewing.getClothesTitle()).removeValue();
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                    }
+                                });
                             }
                         }
                     });
@@ -129,7 +152,62 @@ public class ViewingClothes extends Fragment {
                 RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
                     @Override
                     public void PassUserNick(String nick) {
-                        firebaseModel.getUsersReference().child(nick).child("basket").child(clothesViewing.getClothesTitle()).setValue(clothesViewing);
+                        firebaseModel.getUsersReference().child(nick).child("basket")
+                                .child(clothesViewing.getClothesTitle()).setValue(clothesViewing);
+                    }
+                });
+            }
+        });
+    }
+
+    public void checkClothes(){
+        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+            @Override
+            public void PassUserNick(String nick) {
+                Query query=firebaseModel.getUsersReference().child(nick).child("basket").
+                        child(String.valueOf(clothesViewing.getClothesTitle()));
+                query.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if(snapshot.exists()){
+                            inBasket.setText("В корзине");
+                            inBasket.setBackgroundResource(R.drawable.corners14appcolor);
+                        }else {
+                            inBasket.setText("В корзину");
+                            inBasket.setBackgroundResource(R.drawable.corners14appcolor);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+            }
+        });
+    }
+
+    public void checkClothesOnBuy(){
+        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+            @Override
+            public void PassUserNick(String nick) {
+                Query query=firebaseModel.getUsersReference().child(nick).child("clothes").
+                        child("shoes").child(String.valueOf(clothesViewing.getClothesTitle()));
+                query.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if(snapshot.exists()){
+                            buyClothesBottom.setText("Куплено");
+                            buyClothesBottom.setBackgroundResource(R.drawable.corners14grey);
+                            inBasket.setBackgroundResource(R.drawable.corners14grey);
+                        }else {
+                            buyClothesBottom.setText("Купить");
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
                     }
                 });
             }

@@ -49,7 +49,7 @@ class WardrobeClothesAdapter extends RecyclerView.Adapter<WardrobeClothesAdapter
     @Override
     public WardrobeClothesAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
         RelativeLayout v = (RelativeLayout) LayoutInflater.from(viewGroup.getContext()).
-                inflate(R.layout.new_clothes_rvitem, viewGroup, false);
+                inflate(R.layout.rvitemwardrobe, viewGroup, false);
         WardrobeClothesAdapter.ViewHolder viewHolder=new WardrobeClothesAdapter.ViewHolder(v);
         return viewHolder;
     }
