@@ -490,9 +490,34 @@ public class RecentMethods {
             }
         });
     }
-    public static void getPopularClothes(String nick,FirebaseModel firebaseModel,Callbacks.GetClothes callback){
+
+    public static void getPopular(String nick,FirebaseModel firebaseModel,Callbacks.GetClothes callback){
         firebaseModel.initAll();
         Query query=firebaseModel.getReference("AppData/Clothes/Popular");
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                ArrayList<Clothes> clothesFromBase=new ArrayList<>();
+                for (DataSnapshot snap : snapshot.getChildren()) {
+                    Clothes clothes = new Clothes();
+                    clothes.setClothesImage(snap.child("clothesImage").getValue(String.class));
+                    clothes.setClothesPrice(snap.child("clothesPrice").getValue(Long.class));
+                    clothes.setClothesType(snap.child("clothesType").getValue(String.class));
+                    clothes.setClothesTitle(snap.child("clothesTitle").getValue(String.class));
+                    clothesFromBase.add(clothes);
+                }
+                callback.getClothes(clothesFromBase);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+    public static void getNewClothes(String nick,FirebaseModel firebaseModel,Callbacks.GetClothes callback){
+        firebaseModel.initAll();
+        Query query=firebaseModel.getReference("AppData/Clothes/AllNew");
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -538,7 +563,7 @@ public class RecentMethods {
             }
         });
     }
-    public static void getClothesFronBase(String nick,FirebaseModel firebaseModel,Callbacks.GetClothes callback){
+    public static void getClothesFromBase(String nick,FirebaseModel firebaseModel,Callbacks.GetClothes callback){
         firebaseModel.initAll();
         Query query=firebaseModel.getReference("AppData/Clothes/Clothes");
         query.addValueEventListener(new ValueEventListener() {

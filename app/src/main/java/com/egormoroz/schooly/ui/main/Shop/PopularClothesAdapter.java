@@ -41,7 +41,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
 
-public class NewClothesAdapter extends RecyclerView.Adapter<NewClothesAdapter.ViewHolder> {
+public class PopularClothesAdapter extends RecyclerView.Adapter<PopularClothesAdapter.ViewHolder> {
 
     private ItemClickListener clickListener;
     ArrayList<Clothes> clothesArrayList;
@@ -52,7 +52,7 @@ public class NewClothesAdapter extends RecyclerView.Adapter<NewClothesAdapter.Vi
     ItemClickListener onClothesClick;
     static int pos;
 
-    public NewClothesAdapter(ArrayList<Clothes> clothesArrayList,ItemClickListener onClothesClick) {
+    public PopularClothesAdapter(ArrayList<Clothes> clothesArrayList,ItemClickListener onClothesClick) {
         this.clothesArrayList= clothesArrayList;
         this.onClothesClick= onClothesClick;
     }
@@ -62,7 +62,7 @@ public class NewClothesAdapter extends RecyclerView.Adapter<NewClothesAdapter.Vi
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
         RelativeLayout v = (RelativeLayout) LayoutInflater.from(viewGroup.getContext()).
-                inflate(R.layout.new_clothes_rvitem, viewGroup, false);
+                inflate(R.layout.rvitempopular, viewGroup, false);
         ViewHolder viewHolder=new ViewHolder(v);
         return viewHolder;
     }
@@ -74,7 +74,6 @@ public class NewClothesAdapter extends RecyclerView.Adapter<NewClothesAdapter.Vi
         clothes=clothesArrayList.get(position);
         holder.clothesTitle.setText(clothes.getClothesTitle());
         Log.d("#####", "ggxadwd  "+holder.clothesImage);
-        holder.clothesPrise.setText(String.valueOf(clothes.getClothesPrice()));
         File file=new File(clothes.getClothesImage());
         storageReference.child("clothes").getFile(file);
         holder.clothesImage.setVisibility(View.VISIBLE);
@@ -95,11 +94,10 @@ public class NewClothesAdapter extends RecyclerView.Adapter<NewClothesAdapter.Vi
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView clothesPrise,clothesTitle;
+        TextView clothesTitle;
         ImageView clothesImage;
         ViewHolder(View itemView) {
             super(itemView);
-            clothesPrise=itemView.findViewById(R.id.clothesPrice);
             clothesImage=itemView.findViewById(R.id.clothesImage);
             clothesTitle=itemView.findViewById(R.id.clothesTitle);
         }

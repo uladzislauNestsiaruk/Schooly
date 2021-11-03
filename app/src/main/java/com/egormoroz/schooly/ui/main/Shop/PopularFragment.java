@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.egormoroz.schooly.Callbacks;
@@ -30,8 +31,10 @@ public class PopularFragment extends Fragment {
 
     FirebaseModel firebaseModel=new FirebaseModel();
     ArrayList<Clothes> clothesArrayList=new ArrayList<Clothes>();
-    RecyclerView clothes;
+    ArrayList<Clothes> popularClothesArrayList=new ArrayList<Clothes>();
+    RecyclerView clothes,popularClothes;
     NewClothesAdapter.ItemClickListener itemClickListener;
+    PopularClothesAdapter.ItemClickListener itemClickListenerPopular;
 
 
     @Override
@@ -42,6 +45,7 @@ public class PopularFragment extends Fragment {
         bnv.setVisibility(bnv.GONE);
         firebaseModel.initAll();
         clothes=root.findViewById(R.id.newchlothesinshop);
+        popularClothes=root.findViewById(R.id.popularchlothesinshop);
         loadClothesFromBase();
         return root;
     }
@@ -63,12 +67,27 @@ public class PopularFragment extends Fragment {
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @Override
             public void PassUserNick(String nick) {
-                RecentMethods.getShoes(nick, firebaseModel, new Callbacks.GetClothes() {
+                RecentMethods.getNewClothes(nick, firebaseModel, new Callbacks.GetClothes() {
                     @Override
                     public void getClothes(ArrayList<Clothes> allClothes) {
                         clothesArrayList.addAll(allClothes);
                         NewClothesAdapter newClothesAdapter=new NewClothesAdapter(clothesArrayList,itemClickListener);
                         clothes.setAdapter(newClothesAdapter);
+                        Log.d("#####", "ggvppp  "+clothesArrayList);
+                    }
+                });
+            }
+        });
+        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+            @Override
+            public void PassUserNick(String nick) {
+                RecentMethods.getPopular(nick, firebaseModel, new Callbacks.GetClothes() {
+                    @Override
+                    public void getClothes(ArrayList<Clothes> allClothes) {
+                        popularClothesArrayList.addAll(allClothes);
+                        PopularClothesAdapter newClothesAdapter=new PopularClothesAdapter(clothesArrayList,itemClickListenerPopular);
+                        popularClothes.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+                        popularClothes.setAdapter(newClothesAdapter);
                         Log.d("#####", "ggvppp  "+clothesArrayList);
                     }
                 });
