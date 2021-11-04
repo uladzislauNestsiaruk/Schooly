@@ -230,7 +230,7 @@ public class RecentMethods {
                     Miner miner = new Miner();
                     miner.setInHour(snap.child("inHour").getValue(Long.class));
                     miner.setMinerPrice(snap.child("minerPrice").getValue(Long.class));
-                    miner.setMinerImage(snap.child("minerImage").getValue(Long.class));
+                    miner.setMinerImage(snap.child("minerImage").getValue(String.class));
                     minersFromBase.add(miner);
                 }
                 callback.GetMinerFromBase(minersFromBase);
@@ -253,7 +253,7 @@ public class RecentMethods {
                     Miner miner = new Miner();
                     miner.setInHour(snap.child("inHour").getValue(Long.class));
                     miner.setMinerPrice(snap.child("minerPrice").getValue(Long.class));
-                    miner.setMinerImage(snap.child("minerImage").getValue(Long.class));
+                    miner.setMinerImage(snap.child("minerImage").getValue(String.class));
                     minersFromBase.add(miner);
                 }
                 callback.GetMinerFromBase(minersFromBase);
@@ -276,7 +276,7 @@ public class RecentMethods {
                     Miner miner = new Miner();
                     miner.setInHour(snap.child("inHour").getValue(Long.class));
                     miner.setMinerPrice(snap.child("minerPrice").getValue(Long.class));
-                    miner.setMinerImage(snap.child("minerImage").getValue(Long.class));
+                    miner.setMinerImage(snap.child("minerImage").getValue(String.class));
                     minersFromBase.add(miner);
                 }
                 callback.GetMinerFromBase(minersFromBase);
@@ -360,7 +360,7 @@ public class RecentMethods {
                     Miner miner = new Miner();
                     miner.setInHour(snap.child("inHour").getValue(Long.class));
                     miner.setMinerPrice(snap.child("minerPrice").getValue(Long.class));
-                    miner.setMinerImage(snap.child("minerImage").getValue(Long.class));
+                    miner.setMinerImage(snap.child("minerImage").getValue(String.class));
                     myMinersFromBase.add(miner);
                 }
                 callback.GetMyMinerFromBase(myMinersFromBase);
@@ -383,7 +383,7 @@ public class RecentMethods {
                     Miner miner = new Miner();
                     miner.setInHour(snap.child("inHour").getValue(Long.class));
                     miner.setMinerPrice(snap.child("minerPrice").getValue(Long.class));
-                    miner.setMinerImage(snap.child("minerImage").getValue(Long.class));
+                    miner.setMinerImage(snap.child("minerImage").getValue(String.class));
                     activeMinersFromBase.add(miner);
                     long d=miner.getInHour();
                 }

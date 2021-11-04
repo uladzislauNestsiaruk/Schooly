@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements
                 return false;
             }
         });
-     //   getDialogs();
+        //   getDialogs();
     }
 
     @Override
