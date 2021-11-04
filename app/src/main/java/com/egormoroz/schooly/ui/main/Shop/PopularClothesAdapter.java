@@ -72,6 +72,7 @@ public class PopularClothesAdapter extends RecyclerView.Adapter<PopularClothesAd
         firebaseModel.initAll();
         clothes=clothesArrayList.get(position);
         holder.clothesTitle.setText(clothes.getClothesTitle());
+        holder.clothesPrice.setText(String.valueOf(clothes.getClothesPrice()));
         File file=new File(clothes.getClothesImage());
         storageReference.child("clothes").getFile(file);
         holder.clothesImage.setVisibility(View.VISIBLE);
@@ -93,19 +94,20 @@ public class PopularClothesAdapter extends RecyclerView.Adapter<PopularClothesAd
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView clothesTitle;
+        TextView clothesTitle,clothesPrice;
         ImageView clothesImage;
         ViewHolder(View itemView) {
             super(itemView);
             clothesImage=itemView.findViewById(R.id.clothesImage);
             clothesTitle=itemView.findViewById(R.id.clothesTitle);
+            clothesPrice=itemView.findViewById(R.id.clothesPrice);
         }
 
 
     }
 
     public static void singeClothesInfo(ItemClickListener itemClickListener){
-        itemClickListener.onItemClick(clothes);
+        itemClickListener.onItemClick(trueClothes);
     }
 
 

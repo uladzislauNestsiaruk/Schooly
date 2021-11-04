@@ -4,45 +4,45 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <TextView
-        android:id="@+id/newnew"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:fontFamily="@font/montserrat_bold"
-        android:text="@string/newnew"
-        android:textColor="@color/app_grey"
-        android:textSize="18dp" />
+  <TextView
+      android:id="@+id/newnew"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="24dp"
+      android:fontFamily="@font/montserrat_bold"
+      android:text="@string/newnew"
+      android:textColor="@color/app_grey"
+      android:textSize="18dp" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/newchlothesinshop"
-        android:layout_width="match_parent"
-        android:layout_height="260dp"
-        android:layout_below="@+id/newnew"
-        android:layout_marginTop="12dp"
-        android:orientation="horizontal"
-        android:scrollbars="none"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+  <androidx.recyclerview.widget.RecyclerView
+      android:id="@+id/newchlothesinshop"
+      android:layout_width="match_parent"
+      android:layout_height="260dp"
+      android:layout_below="@+id/newnew"
+      android:layout_marginTop="12dp"
+      android:orientation="horizontal"
+      android:scrollbars="none"
+      app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
-    <TextView
-        android:id="@+id/popular"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/newnew"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="278dp"
-        android:fontFamily="@font/montserrat_bold"
-        android:text="@string/popular"
-        android:textColor="@color/app_grey"
-        android:textSize="18dp" />
+  <TextView
+      android:id="@+id/popular"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_below="@+id/newnew"
+      android:layout_marginStart="24dp"
+      android:layout_marginTop="278dp"
+      android:fontFamily="@font/montserrat_bold"
+      android:text="@string/popular"
+      android:textColor="@color/app_grey"
+      android:textSize="18dp" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/popularchlothesinshop"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/popular"
-        android:layout_marginTop="16dp"
-        android:orientation="vertical"
-        android:scrollbars="none" />
+  <androidx.recyclerview.widget.RecyclerView
+      android:id="@+id/popularchlothesinshop"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_below="@+id/popular"
+      android:layout_marginTop="16dp"
+      android:orientation="vertical"
+      android:scrollbars="none" />
 
 </RelativeLayout>

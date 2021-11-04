@@ -59,6 +59,7 @@ class WardrobeClothesAdapter extends RecyclerView.Adapter<WardrobeClothesAdapter
   public void onBindViewHolder(ViewHolder holder, int position) {
     firebaseModel.initAll();
     clothes=clothesArrayListWardrobe.get(position);
+    holder.clothesPrise.setText(String.valueOf(clothes.getClothesPrice()));
     holder.clothesTitle.setText(clothes.getClothesTitle());
     File file=new File(clothes.getClothesImage());
     storageReference.child("clothes").getFile(file);

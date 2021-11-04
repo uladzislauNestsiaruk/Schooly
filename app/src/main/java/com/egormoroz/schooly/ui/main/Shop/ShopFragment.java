@@ -145,8 +145,8 @@ public class ShopFragment extends Fragment {
                 .child("AllNew").child(clothes.getClothesTitle()).setValue(clothes);
 //        firebaseModel.getReference().child("AppData").child("Clothes")
 //                .child("AllClothes").child(clothes2.getClothesTitle()).setValue(clothes2);
-//        firebaseModel.getReference().child("AppData").child("Clothes")
-//                .child("Popular").child(clothes2.getClothesTitle()).setValue(clothes2);
+        firebaseModel.getReference().child("AppData").child("Clothes")
+                .child("Popular").child(clothes2.getClothesTitle()).setValue(clothes2);
         firebaseModel.getReference().child("AppData").child("Clothes")
                 .child("AllNew").child(clothes2.getClothesTitle()).setValue(clothes2);
         firebaseModel.getReference().child("AppData").child("Clothes")

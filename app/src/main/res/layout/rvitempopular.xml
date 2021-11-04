@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:elevation="5dp"
+    android:background="@drawable/corners"
+    android:layout_marginStart="8dp"
+    android:layout_marginEnd="8dp"
+    android:layout_marginBottom="16dp">
 
     <TextView
         android:id="@+id/clothesTitle"
@@ -10,6 +15,8 @@
         android:fontFamily="@font/montserrat_extrabold"
         android:textSize="20sp"
         android:textColor="@color/app_color"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="16dp"
         />
 
 
@@ -17,7 +24,8 @@
         android:id="@+id/clothesImage"
         android:layout_width="150dp"
         android:layout_height="150dp"
-        android:layout_below="@+id/clothesTitle" />
+        android:layout_below="@+id/clothesTitle"
+        android:layout_centerHorizontal="true"/>
 
     <TextView
         android:id="@+id/clothesPrice"
@@ -29,6 +37,8 @@
         android:layout_alignParentEnd="true"
         android:textColor="@color/app_color"
         android:fontFamily="@font/montserrat_extrabold"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="16dp"
         />
 
 </RelativeLayout>

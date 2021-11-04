@@ -92,7 +92,7 @@ public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.ViewHolder
     }
 
     public static void singeClothesInfo(ItemClickListener itemClickListener){
-        itemClickListener.onItemClick(clothes);
+        itemClickListener.onItemClick(trueClothes);
     }
 
 
