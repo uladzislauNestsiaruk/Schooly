@@ -53,7 +53,7 @@ public class WardrobeShoes extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         itemClickListener=new WardrobeClothesAdapter.ItemClickListener() {
             @Override
-            public void onItemClick(Clothes clothes, int position) {
+            public void onItemClick(Clothes clothes) {
                 RecentMethods.setCurrentFragment(ViewingClothesWardrobe.newInstance(), getActivity());
             }
         };

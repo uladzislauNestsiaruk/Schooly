@@ -96,7 +96,7 @@ public class BasketFragment extends Fragment {
     public void inViewingFrag(){
         onItemClick=new BasketAdapter.ItemClickListener() {
             @Override
-            public void onItemClick(Clothes clothes, int position) {
+            public void onItemClick(Clothes clothes) {
                 ((MainActivity)getActivity()).setCurrentFragment(ViewingClothesBasket.newInstance());
             }
         };

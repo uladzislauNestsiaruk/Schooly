@@ -48,7 +48,7 @@ public class PopularClothesAdapter extends RecyclerView.Adapter<PopularClothesAd
     private FirebaseModel firebaseModel = new FirebaseModel();
     FirebaseStorage storage = FirebaseStorage.getInstance();
     StorageReference storageReference=storage.getReference();
-    static Clothes clothes;
+    static Clothes clothes,trueClothes;
     ItemClickListener onClothesClick;
     static int pos;
 
@@ -70,10 +70,8 @@ public class PopularClothesAdapter extends RecyclerView.Adapter<PopularClothesAd
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         firebaseModel.initAll();
-        pos=position;
         clothes=clothesArrayList.get(position);
         holder.clothesTitle.setText(clothes.getClothesTitle());
-        Log.d("#####", "ggxadwd  "+holder.clothesImage);
         File file=new File(clothes.getClothesImage());
         storageReference.child("clothes").getFile(file);
         holder.clothesImage.setVisibility(View.VISIBLE);
@@ -82,7 +80,8 @@ public class PopularClothesAdapter extends RecyclerView.Adapter<PopularClothesAd
             @Override
             public void onClick(View v)
             {
-                onClothesClick.onItemClick(clothes,position);
+                onClothesClick.onItemClick(clothesArrayList.get(holder.getAdapterPosition()));
+                trueClothes=clothesArrayList.get(holder.getAdapterPosition());
             }
         });
     }
@@ -106,12 +105,12 @@ public class PopularClothesAdapter extends RecyclerView.Adapter<PopularClothesAd
     }
 
     public static void singeClothesInfo(ItemClickListener itemClickListener){
-        itemClickListener.onItemClick(clothes, pos);
+        itemClickListener.onItemClick(clothes);
     }
 
 
     public interface ItemClickListener {
-        void onItemClick( Clothes clothes,int position);
+        void onItemClick( Clothes clothes);
     }
 
     static class SpaceItemDecoration extends RecyclerView.ItemDecoration {

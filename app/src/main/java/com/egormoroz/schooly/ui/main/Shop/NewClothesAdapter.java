@@ -43,19 +43,29 @@ import java.util.ArrayList;
 
 public class NewClothesAdapter extends RecyclerView.Adapter<NewClothesAdapter.ViewHolder> {
 
-    private ItemClickListener clickListener;
+    public interface ItemClickListener {
+        void onItemClick( Clothes clothes);
+    }
+
     ArrayList<Clothes> clothesArrayList;
     private FirebaseModel firebaseModel = new FirebaseModel();
     FirebaseStorage storage = FirebaseStorage.getInstance();
     StorageReference storageReference=storage.getReference();
-    static Clothes clothes;
-    ItemClickListener onClothesClick;
+    static Clothes clothes,trueClothes;
+    ItemClickListener itemClickListener;
     static int pos;
 
-    public NewClothesAdapter(ArrayList<Clothes> clothesArrayList,ItemClickListener onClothesClick) {
+
+    public NewClothesAdapter(ArrayList<Clothes> clothesArrayList,ItemClickListener itemClickListener) {
         this.clothesArrayList= clothesArrayList;
-        this.onClothesClick= onClothesClick;
+        this.itemClickListener= itemClickListener;
     }
+
+    public static void singeClothesInfo(ItemClickListener itemClickListener){
+        itemClickListener.onItemClick(trueClothes);
+    }
+
+
 
 
     @NotNull
@@ -70,10 +80,8 @@ public class NewClothesAdapter extends RecyclerView.Adapter<NewClothesAdapter.Vi
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         firebaseModel.initAll();
-        pos=position;
         clothes=clothesArrayList.get(position);
         holder.clothesTitle.setText(clothes.getClothesTitle());
-        Log.d("#####", "ggxadwd  "+holder.clothesImage);
         holder.clothesPrise.setText(String.valueOf(clothes.getClothesPrice()));
         File file=new File(clothes.getClothesImage());
         storageReference.child("clothes").getFile(file);
@@ -83,7 +91,10 @@ public class NewClothesAdapter extends RecyclerView.Adapter<NewClothesAdapter.Vi
             @Override
             public void onClick(View v)
             {
-                onClothesClick.onItemClick(clothes,position);
+                Log.d("#####", "title  "+itemClickListener);
+                itemClickListener.onItemClick(clothesArrayList.get(holder.getAdapterPosition()));
+                trueClothes=clothesArrayList.get(holder.getAdapterPosition());
+                Log.d("#####", "title  "+holder.getAdapterPosition());
             }
         });
     }
@@ -105,15 +116,6 @@ public class NewClothesAdapter extends RecyclerView.Adapter<NewClothesAdapter.Vi
         }
 
 
-    }
-
-    public static void singeClothesInfo(ItemClickListener itemClickListener){
-        itemClickListener.onItemClick(clothes, pos);
-    }
-
-
-    public interface ItemClickListener {
-        void onItemClick( Clothes clothes,int position);
     }
 
     static class SpaceItemDecoration extends RecyclerView.ItemDecoration {

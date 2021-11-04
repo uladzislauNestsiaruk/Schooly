@@ -23,13 +23,13 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
-public class ViewingClothesBasket extends Fragment {
-    public static ViewingClothesBasket newInstance() {
-        return new ViewingClothesBasket();
+public class ViewingClothesPopular extends Fragment {
+    public static ViewingClothesPopular newInstance() {
+        return new ViewingClothesPopular();
 
     }
 
-    NewClothesAdapter.ItemClickListener itemClickListener;
+    PopularClothesAdapter.ItemClickListener itemClickListener;
     TextView clothesPriceCV,clothesTitleCV,schoolyCoinCV,buyClothesBottom,inBasket;
     ImageView clothesImageCV,backToShop;
     long schoolyCoins,clothesPrise;
@@ -51,6 +51,7 @@ public class ViewingClothesBasket extends Fragment {
     public void onViewCreated(@Nullable View view,@NonNull Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
         getCoins();
+        checkClothes();
         checkClothesOnBuy();
         schoolyCoinCV=view.findViewById(R.id.schoolycoincvfrag);
         clothesImageCV=view.findViewById(R.id.clothesImagecv);
@@ -62,10 +63,10 @@ public class ViewingClothesBasket extends Fragment {
         backToShop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(BasketFragment.newInstance(), getActivity());
+                RecentMethods.setCurrentFragment(ShopFragment.newInstance(), getActivity());
             }
         });
-        BasketAdapter.singeClothesInfo(new BasketAdapter.ItemClickListener() {
+        PopularClothesAdapter.singeClothesInfo(new PopularClothesAdapter.ItemClickListener() {
             @Override
             public void onItemClick(Clothes clothes) {
                 clothesViewing=clothes;
@@ -76,7 +77,7 @@ public class ViewingClothesBasket extends Fragment {
             }
         });
         buyClothes();
-        checkClothes();
+        putInBasket();
     }
 
     public void getCoins(){
@@ -133,38 +134,76 @@ public class ViewingClothesBasket extends Fragment {
         });
     }
 
-
-    public void checkClothes(){
-        inBasket.setText("Убрать");
+    public void putInBasket(){
         inBasket.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
                     @Override
                     public void PassUserNick(String nick) {
-                        firebaseModel.getUsersReference().child(nick).child("basket")
-                                .child(clothesViewing.getClothesTitle()).removeValue();
-                        inBasket.setText("Убрано");
+                        Query query=firebaseModel.getUsersReference().child(nick).child("clothes").
+                                child(clothesViewing.getClothesType()).child(String.valueOf(clothesViewing.getClothesTitle()));
+                        query.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                if(snapshot.exists()){
+                                    Log.d("######", "fuck  ");
+                                }else {firebaseModel.getUsersReference().child(nick).child("basket")
+                                        .child(clothesViewing.getClothesTitle()).setValue(clothesViewing);}
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
                     }
                 });
             }
         });
     }
 
-    public void checkClothesOnBuy(){
+    public void checkClothes(){
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @Override
             public void PassUserNick(String nick) {
-                Query query=firebaseModel.getUsersReference().child(nick).child("clothes").
-                        child("shoes").child(String.valueOf(clothesViewing.getClothesTitle()));
+                Query query=firebaseModel.getUsersReference().child(nick).child("basket").
+                        child(String.valueOf(clothesViewing.getClothesTitle()));
                 query.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         if(snapshot.exists()){
+                            inBasket.setText("В корзине");
+                            inBasket.setBackgroundResource(R.drawable.corners14appcolor);
+                        }else {
+                            inBasket.setText("В корзину");
+                            inBasket.setBackgroundResource(R.drawable.corners14appcolor);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+            }
+        });
+    }
+
+    public void checkClothesOnBuy() {
+        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+            @Override
+            public void PassUserNick(String nick) {
+                Query query = firebaseModel.getUsersReference().child(nick).child("clothes").
+                        child("shoes").child(String.valueOf(clothesViewing.getClothesTitle()));
+                query.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if (snapshot.exists()) {
                             buyClothesBottom.setText("Куплено");
                             buyClothesBottom.setBackgroundResource(R.drawable.corners14grey);
                             inBasket.setBackgroundResource(R.drawable.corners14grey);
-                        }else {
+                        } else {
                             buyClothesBottom.setText("Купить");
                         }
                     }

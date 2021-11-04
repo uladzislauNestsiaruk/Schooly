@@ -491,7 +491,7 @@ public class RecentMethods {
         });
     }
 
-    public static void getPopular(String nick,FirebaseModel firebaseModel,Callbacks.GetClothes callback){
+    public static void getPopular(FirebaseModel firebaseModel,Callbacks.GetClothes callback){
         firebaseModel.initAll();
         Query query=firebaseModel.getReference("AppData/Clothes/Popular");
         query.addValueEventListener(new ValueEventListener() {
@@ -515,7 +515,7 @@ public class RecentMethods {
             }
         });
     }
-    public static void getNewClothes(String nick,FirebaseModel firebaseModel,Callbacks.GetClothes callback){
+    public static void getNewClothes(FirebaseModel firebaseModel,Callbacks.GetClothes callback){
         firebaseModel.initAll();
         Query query=firebaseModel.getReference("AppData/Clothes/AllNew");
         query.addValueEventListener(new ValueEventListener() {

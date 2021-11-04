@@ -49,7 +49,7 @@ public class HatsFragment extends Fragment {
 
         itemClickListener=new NewClothesAdapter.ItemClickListener() {
             @Override
-            public void onItemClick(Clothes clothes, int position) {
+            public void onItemClick(Clothes clothes) {
                 ((MainActivity)getActivity()).setCurrentFragment(ViewingClothes.newInstance());
             }
         };

@@ -40,7 +40,6 @@ public class AccessoriesFragment extends Fragment {
         firebaseModel.initAll();
         clothes=root.findViewById(R.id.newchlothesinshop);
         loadClothesFromBase();
-        Log.d("######", "dd");
         return root;
     }
 
@@ -50,7 +49,7 @@ public class AccessoriesFragment extends Fragment {
 
         itemClickListener=new NewClothesAdapter.ItemClickListener() {
             @Override
-            public void onItemClick(Clothes clothes, int position) {
+            public void onItemClick(Clothes clothes) {
                 ((MainActivity)getActivity()).setCurrentFragment(ViewingClothes.newInstance());
             }
         };

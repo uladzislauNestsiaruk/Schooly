@@ -56,42 +56,39 @@ public class PopularFragment extends Fragment {
 
         itemClickListener=new NewClothesAdapter.ItemClickListener() {
             @Override
-            public void onItemClick(Clothes clothes, int position) {
+            public void onItemClick(Clothes clothes) {
                 ((MainActivity)getActivity()).setCurrentFragment(ViewingClothes.newInstance());
+                Log.d("######","ccc  "+clothes.getClothesTitle());
+            }
+        };
+        itemClickListenerPopular=new PopularClothesAdapter.ItemClickListener() {
+            @Override
+            public void onItemClick(Clothes clothes) {
+                ((MainActivity)getActivity()).setCurrentFragment(ViewingClothesPopular.newInstance());
             }
         };
     }
 
 
     public void loadClothesFromBase(){
-        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-            @Override
-            public void PassUserNick(String nick) {
-                RecentMethods.getNewClothes(nick, firebaseModel, new Callbacks.GetClothes() {
+                RecentMethods.getNewClothes( firebaseModel, new Callbacks.GetClothes() {
                     @Override
                     public void getClothes(ArrayList<Clothes> allClothes) {
                         clothesArrayList.addAll(allClothes);
                         NewClothesAdapter newClothesAdapter=new NewClothesAdapter(clothesArrayList,itemClickListener);
                         clothes.setAdapter(newClothesAdapter);
-                        Log.d("#####", "ggvppp  "+clothesArrayList);
                     }
                 });
-            }
-        });
-        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-            @Override
-            public void PassUserNick(String nick) {
-                RecentMethods.getPopular(nick, firebaseModel, new Callbacks.GetClothes() {
+
+                RecentMethods.getPopular( firebaseModel, new Callbacks.GetClothes() {
                     @Override
                     public void getClothes(ArrayList<Clothes> allClothes) {
                         popularClothesArrayList.addAll(allClothes);
-                        PopularClothesAdapter newClothesAdapter=new PopularClothesAdapter(clothesArrayList,itemClickListenerPopular);
+                        PopularClothesAdapter popularClothesAdapter=new PopularClothesAdapter(popularClothesArrayList,itemClickListenerPopular);
                         popularClothes.setLayoutManager(new GridLayoutManager(getActivity(), 2));
-                        popularClothes.setAdapter(newClothesAdapter);
-                        Log.d("#####", "ggvppp  "+clothesArrayList);
+                        popularClothes.setAdapter(popularClothesAdapter);
+                        Log.d("#####", "g  "+popularClothesArrayList);
                     }
                 });
-            }
-        });
     }
 }

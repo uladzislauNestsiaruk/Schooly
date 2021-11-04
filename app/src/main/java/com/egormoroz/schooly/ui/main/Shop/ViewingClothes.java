@@ -34,12 +34,13 @@ public class ViewingClothes extends Fragment {
 
     }
 
-    NewClothesAdapter.ItemClickListener itemClickListener;
+
     TextView clothesPriceCV,clothesTitleCV,schoolyCoinCV,buyClothesBottom,inBasket;
     ImageView clothesImageCV,backToShop;
     long schoolyCoins,clothesPrise;
     Clothes clothesViewing;
     private FirebaseModel firebaseModel = new FirebaseModel();
+    NewClothesAdapter.ViewHolder viewHolder;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -56,8 +57,6 @@ public class ViewingClothes extends Fragment {
     public void onViewCreated(@Nullable View view,@NonNull Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
         getCoins();
-        checkClothes();
-        checkClothesOnBuy();
         schoolyCoinCV=view.findViewById(R.id.schoolycoincvfrag);
         clothesImageCV=view.findViewById(R.id.clothesImagecv);
         inBasket=view.findViewById(R.id.inBasketClothes);
@@ -71,18 +70,23 @@ public class ViewingClothes extends Fragment {
                 RecentMethods.setCurrentFragment(ShopFragment.newInstance(), getActivity());
             }
         });
-        NewClothesAdapter.singeClothesInfo(new NewClothesAdapter.ItemClickListener() {
-            @Override
-            public void onItemClick(Clothes clothes, int position) {
-                clothesViewing=clothes;
-                clothesPriceCV.setText(String.valueOf(clothes.getClothesPrice()));
-                clothesTitleCV.setText(clothes.getClothesTitle());
-                clothesPrise=clothes.getClothesPrice();
-                Picasso.get().load(clothes.getClothesImage()).into(clothesImageCV);
-            }
-        });
+
+      NewClothesAdapter.singeClothesInfo(new NewClothesAdapter.ItemClickListener() {
+          @Override
+          public void onItemClick(Clothes clothes) {
+              clothesViewing=clothes;
+              Log.d("#####", "title2def  "+clothes);
+              clothesPriceCV.setText(String.valueOf(clothes.getClothesPrice()));
+              clothesTitleCV.setText(clothes.getClothesTitle());
+              Log.d("#####", "title2  "+clothes.getClothesTitle());
+              clothesPrise=clothes.getClothesPrice();
+              Picasso.get().load(clothes.getClothesImage()).into(clothesImageCV);
+          }
+      });
         buyClothes();
         putInBasket();
+        checkClothes();
+        checkClothesOnBuy();
     }
 
     public void getCoins(){
