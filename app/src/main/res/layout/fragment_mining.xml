@@ -106,13 +106,25 @@
             android:id="@+id/workingminerstext"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/workingminers"
             android:layout_below="@+id/relativetoday"
             android:layout_marginStart="24dp"
             android:layout_marginTop="24dp"
             android:fontFamily="@font/montserrat_extrabold"
+            android:text="@string/workingminers"
             android:textColor="@color/app_grey"
-            android:textSize="16sp"/>
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/numbersactiveminers"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/relativetoday"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="24dp"
+            android:layout_marginTop="24dp"
+            android:fontFamily="@font/montserrat_extrabold"
+            android:textColor="@color/app_grey"
+            android:textSize="16sp" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/activeminersrecyclerview"

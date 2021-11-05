@@ -129,6 +129,8 @@
     <string name="miners">Майнеры</string>
     <string name="weak">Слабые</string>
     <string name="buy">Купить</string>
+    <string name="putaway">Убрать</string>
+    <string name="inhour">в час</string>
     <string name="noactiveminers">Нет активных майнеров</string>
     <string name="use">Использовать</string>
     <string name="upgrade">Улучшить</string>

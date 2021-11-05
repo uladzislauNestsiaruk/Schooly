@@ -130,7 +130,7 @@ public class RecentMethods {
                 });
     }
     public static void hasThisUser(FirebaseAuth AuthenticationBase, FirebaseUser user,
-                                    Callbacks.hasGoogleUser callback) {
+                                   Callbacks.hasGoogleUser callback) {
         hasThisUserFun(AuthenticationBase, user, new Callbacks.hasGoogleUser() {
             @Override
             public void hasGoogleUserCallback(boolean hasThisUser) {
@@ -230,7 +230,7 @@ public class RecentMethods {
                     Miner miner = new Miner();
                     miner.setInHour(snap.child("inHour").getValue(Long.class));
                     miner.setMinerPrice(snap.child("minerPrice").getValue(Long.class));
-                    miner.setMinerImage(snap.child("minerImage").getValue(String.class));
+                    miner.setMinerImage(snap.child("minerImage").getValue(Long.class));
                     minersFromBase.add(miner);
                 }
                 callback.GetMinerFromBase(minersFromBase);
@@ -253,7 +253,7 @@ public class RecentMethods {
                     Miner miner = new Miner();
                     miner.setInHour(snap.child("inHour").getValue(Long.class));
                     miner.setMinerPrice(snap.child("minerPrice").getValue(Long.class));
-                    miner.setMinerImage(snap.child("minerImage").getValue(String.class));
+                    miner.setMinerImage(snap.child("minerImage").getValue(Long.class));
                     minersFromBase.add(miner);
                 }
                 callback.GetMinerFromBase(minersFromBase);
@@ -276,7 +276,7 @@ public class RecentMethods {
                     Miner miner = new Miner();
                     miner.setInHour(snap.child("inHour").getValue(Long.class));
                     miner.setMinerPrice(snap.child("minerPrice").getValue(Long.class));
-                    miner.setMinerImage(snap.child("minerImage").getValue(String.class));
+                    miner.setMinerImage(snap.child("minerImage").getValue(Long.class));
                     minersFromBase.add(miner);
                 }
                 callback.GetMinerFromBase(minersFromBase);
@@ -330,7 +330,7 @@ public class RecentMethods {
 
     public static void buyStrongMiner(String currentMiner,FirebaseModel model,Callbacks.buyMiner callback){
         model.initAll();
-        Query query=model.getReference("AppData/AllMiners/Weak")
+        Query query=model.getReference("AppData/AllMiners/Strong")
                 .orderByChild(currentMiner);
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -360,7 +360,7 @@ public class RecentMethods {
                     Miner miner = new Miner();
                     miner.setInHour(snap.child("inHour").getValue(Long.class));
                     miner.setMinerPrice(snap.child("minerPrice").getValue(Long.class));
-                    miner.setMinerImage(snap.child("minerImage").getValue(String.class));
+                    miner.setMinerImage(snap.child("minerImage").getValue(Long.class));
                     myMinersFromBase.add(miner);
                 }
                 callback.GetMyMinerFromBase(myMinersFromBase);
@@ -383,7 +383,7 @@ public class RecentMethods {
                     Miner miner = new Miner();
                     miner.setInHour(snap.child("inHour").getValue(Long.class));
                     miner.setMinerPrice(snap.child("minerPrice").getValue(Long.class));
-                    miner.setMinerImage(snap.child("minerImage").getValue(String.class));
+                    miner.setMinerImage(snap.child("minerImage").getValue(Long.class));
                     activeMinersFromBase.add(miner);
                     long d=miner.getInHour();
                 }
@@ -404,7 +404,7 @@ public class RecentMethods {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists())
-                callback.GetMoneyFromBase(snapshot.getValue(Long.class));
+                    callback.GetMoneyFromBase(snapshot.getValue(Long.class));
             }
 
             @Override
@@ -422,7 +422,7 @@ public class RecentMethods {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getValue(Double.class) != null)
-               callback.GetTodayMining(dataSnapshot.getValue(Double.class));
+                    callback.GetTodayMining(dataSnapshot.getValue(Double.class));
             }
 
             @Override

@@ -1,8 +1,6 @@
 package com.egormoroz.schooly.ui.main.Mining;
 
 import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;

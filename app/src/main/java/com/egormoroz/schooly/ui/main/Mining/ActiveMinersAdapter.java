@@ -1,7 +1,6 @@
 package com.egormoroz.schooly.ui.main.Mining;
 
 import android.graphics.Rect;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,8 +43,20 @@ public class ActiveMinersAdapter extends RecyclerView.Adapter<ActiveMinersAdapte
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         firebaseModel.initAll();
-        Miner miner=listAdapterActivaMiner.get(position);
+        Miner miner=listAdapterActivaMiner.get(holder.getAdapterPosition());
         holder.inHour.setText(String.valueOf(miner.getInHour()));
+        holder.putAway.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+                    @Override
+                    public void PassUserNick(String nick) {
+                        firebaseModel.getUsersReference().child(nick)
+                                .child("activeMiners").child(String.valueOf(miner.getMinerPrice())).removeValue();
+                    }
+                });
+            }
+        });
     }
 
     @Override
@@ -54,10 +65,11 @@ public class ActiveMinersAdapter extends RecyclerView.Adapter<ActiveMinersAdapte
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        final TextView inHour;
+        final TextView inHour,putAway;
         ViewHolder(View itemView) {
             super(itemView);
             inHour=itemView.findViewById(R.id.minerinhour);
+            putAway=itemView.findViewById(R.id.putaway);
         }
 
         @Override

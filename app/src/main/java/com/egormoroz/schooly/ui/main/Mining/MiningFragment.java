@@ -1,13 +1,10 @@
 package com.egormoroz.schooly.ui.main.Mining;
 
 import android.os.Bundle;
-import android.text.format.DateFormat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -15,23 +12,15 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.egormoroz.schooly.CONST;
 import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FirebaseModel;
-import com.egormoroz.schooly.MainActivity;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.ui.main.MainFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ServerValue;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Map;
 
 
@@ -50,7 +39,7 @@ public class MiningFragment extends Fragment {
     ImageView viewminer;
     double todayMining;
     Map<String,String> timeStamp;
-    TextView minerprice, schoolycoinminer, myminers, upgrade, todayminingText, morecoins,buy;
+    TextView minerprice, schoolycoinminer, myminers, upgrade, todayminingText, morecoins,buy,numderOfActiveMiners;
     RecyclerView activeminersrecyclerview,weakminersrecyclerview,averageminersrecyclerview,strongminersrecyclerview;
     private static final String TAG = "###########";
 
@@ -86,8 +75,8 @@ public class MiningFragment extends Fragment {
         viewminer = view.findViewById(R.id.viewmining);
         minerprice = view.findViewById(R.id.minerprice);
         schoolycoinminer = view.findViewById(R.id.schoolycoin);
-        upgrade = view.findViewById(R.id.upgrade);
         todayminingText = view.findViewById(R.id.todaymining);
+        numderOfActiveMiners=view.findViewById(R.id.numbersactiveminers);
         buy=view.findViewById(R.id.buy);
         morecoins = view.findViewById(R.id.morecoins);
         GetDataFromBase();
@@ -139,6 +128,7 @@ public class MiningFragment extends Fragment {
                         new Callbacks.GetActiveMiners() {
                             @Override
                             public void GetActiveMiners(ArrayList<Miner> activeMinersFromBase) {
+                                numderOfActiveMiners.setText(String.valueOf(activeMinersFromBase.size())+"/5");
                                 listAdapterActiveMiner.addAll(activeMinersFromBase);
                                 ActiveMinersAdapter activeMinersAdapter=new ActiveMinersAdapter(listAdapterActiveMiner);
                                 activeminersrecyclerview.setAdapter(activeMinersAdapter);
