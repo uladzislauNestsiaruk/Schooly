@@ -230,7 +230,7 @@ public class RecentMethods {
                     Miner miner = new Miner();
                     miner.setInHour(snap.child("inHour").getValue(Long.class));
                     miner.setMinerPrice(snap.child("minerPrice").getValue(Long.class));
-                    miner.setMinerImage(snap.child("minerImage").getValue(Long.class));
+                    miner.setMinerImage(snap.child("minerImage").getValue(String.class));
                     minersFromBase.add(miner);
                 }
                 callback.GetMinerFromBase(minersFromBase);
@@ -253,7 +253,7 @@ public class RecentMethods {
                     Miner miner = new Miner();
                     miner.setInHour(snap.child("inHour").getValue(Long.class));
                     miner.setMinerPrice(snap.child("minerPrice").getValue(Long.class));
-                    miner.setMinerImage(snap.child("minerImage").getValue(Long.class));
+                    miner.setMinerImage(snap.child("minerImage").getValue(String.class));
                     minersFromBase.add(miner);
                 }
                 callback.GetMinerFromBase(minersFromBase);
@@ -276,7 +276,7 @@ public class RecentMethods {
                     Miner miner = new Miner();
                     miner.setInHour(snap.child("inHour").getValue(Long.class));
                     miner.setMinerPrice(snap.child("minerPrice").getValue(Long.class));
-                    miner.setMinerImage(snap.child("minerImage").getValue(Long.class));
+                    miner.setMinerImage(snap.child("minerImage").getValue(String.class));
                     minersFromBase.add(miner);
                 }
                 callback.GetMinerFromBase(minersFromBase);
@@ -360,7 +360,7 @@ public class RecentMethods {
                     Miner miner = new Miner();
                     miner.setInHour(snap.child("inHour").getValue(Long.class));
                     miner.setMinerPrice(snap.child("minerPrice").getValue(Long.class));
-                    miner.setMinerImage(snap.child("minerImage").getValue(Long.class));
+                    miner.setMinerImage(snap.child("minerImage").getValue(String.class));
                     myMinersFromBase.add(miner);
                 }
                 callback.GetMyMinerFromBase(myMinersFromBase);
@@ -383,7 +383,7 @@ public class RecentMethods {
                     Miner miner = new Miner();
                     miner.setInHour(snap.child("inHour").getValue(Long.class));
                     miner.setMinerPrice(snap.child("minerPrice").getValue(Long.class));
-                    miner.setMinerImage(snap.child("minerImage").getValue(Long.class));
+                    miner.setMinerImage(snap.child("minerImage").getValue(String.class));
                     activeMinersFromBase.add(miner);
                     long d=miner.getInHour();
                 }
@@ -490,9 +490,34 @@ public class RecentMethods {
             }
         });
     }
-    public static void getPopularClothes(String nick,FirebaseModel firebaseModel,Callbacks.GetClothes callback){
+
+    public static void getPopular(FirebaseModel firebaseModel,Callbacks.GetClothes callback){
         firebaseModel.initAll();
         Query query=firebaseModel.getReference("AppData/Clothes/Popular");
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                ArrayList<Clothes> clothesFromBase=new ArrayList<>();
+                for (DataSnapshot snap : snapshot.getChildren()) {
+                    Clothes clothes = new Clothes();
+                    clothes.setClothesImage(snap.child("clothesImage").getValue(String.class));
+                    clothes.setClothesPrice(snap.child("clothesPrice").getValue(Long.class));
+                    clothes.setClothesType(snap.child("clothesType").getValue(String.class));
+                    clothes.setClothesTitle(snap.child("clothesTitle").getValue(String.class));
+                    clothesFromBase.add(clothes);
+                }
+                callback.getClothes(clothesFromBase);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+    public static void getNewClothes(FirebaseModel firebaseModel,Callbacks.GetClothes callback){
+        firebaseModel.initAll();
+        Query query=firebaseModel.getReference("AppData/Clothes/AllNew");
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -538,7 +563,7 @@ public class RecentMethods {
             }
         });
     }
-    public static void getClothesFronBase(String nick,FirebaseModel firebaseModel,Callbacks.GetClothes callback){
+    public static void getClothesFromBase(String nick,FirebaseModel firebaseModel,Callbacks.GetClothes callback){
         firebaseModel.initAll();
         Query query=firebaseModel.getReference("AppData/Clothes/Clothes");
         query.addValueEventListener(new ValueEventListener() {
@@ -613,11 +638,114 @@ public class RecentMethods {
         });
     }
 
+    public static void getClothesInBasket(String nick,FirebaseModel firebaseModel,Callbacks.GetClothes callback){
+        firebaseModel.initAll();
+        Query query=firebaseModel.getUsersReference().child(nick).child("basket");
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                ArrayList<Clothes> clothesFromBase=new ArrayList<>();
+                for (DataSnapshot snap : snapshot.getChildren()) {
+                    Clothes clothes = new Clothes();
+                    clothes.setClothesImage(snap.child("clothesImage").getValue(String.class));
+                    clothes.setClothesPrice(snap.child("clothesPrice").getValue(Long.class));
+                    clothes.setClothesType(snap.child("clothesType").getValue(String.class));
+                    clothes.setClothesTitle(snap.child("clothesTitle").getValue(String.class));
+                    clothesFromBase.add(clothes);
+                }
+                callback.getClothes(clothesFromBase);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
     /////////////////////////Wardrobe////////////////////////
     public static void getClothesInWardrobe(String nick,FirebaseModel firebaseModel,Callbacks.GetClothes callback){
         firebaseModel.initAll();
         Query query=firebaseModel.getUsersReference().child(nick)
-                .child("clothes");
+                .child("clothes").child("clothes");
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                ArrayList<Clothes> clothesFromBase=new ArrayList<>();
+                for (DataSnapshot snap : snapshot.getChildren()) {
+                    Clothes clothes = new Clothes();
+                    clothes.setClothesImage(snap.child("clothesImage").getValue(String.class));
+                    clothes.setClothesPrice(snap.child("clothesPrice").getValue(Long.class));
+                    clothes.setClothesType(snap.child("clothesType").getValue(String.class));
+                    clothes.setClothesTitle(snap.child("clothesTitle").getValue(String.class));
+                    clothesFromBase.add(clothes);
+                }
+                callback.getClothes(clothesFromBase);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    public static void getShoesInWardrobe(String nick,FirebaseModel firebaseModel,Callbacks.GetClothes callback){
+        firebaseModel.initAll();
+        Query query=firebaseModel.getUsersReference().child(nick)
+                .child("clothes").child("shoes");
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                ArrayList<Clothes> clothesFromBase=new ArrayList<>();
+                for (DataSnapshot snap : snapshot.getChildren()) {
+                    Clothes clothes = new Clothes();
+                    clothes.setClothesImage(snap.child("clothesImage").getValue(String.class));
+                    clothes.setClothesPrice(snap.child("clothesPrice").getValue(Long.class));
+                    clothes.setClothesType(snap.child("clothesType").getValue(String.class));
+                    clothes.setClothesTitle(snap.child("clothesTitle").getValue(String.class));
+                    clothesFromBase.add(clothes);
+                }
+                callback.getClothes(clothesFromBase);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    public static void getHatsInWardrobe(String nick,FirebaseModel firebaseModel,Callbacks.GetClothes callback){
+        firebaseModel.initAll();
+        Query query=firebaseModel.getUsersReference().child(nick)
+                .child("clothes").child("hats");
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                ArrayList<Clothes> clothesFromBase=new ArrayList<>();
+                for (DataSnapshot snap : snapshot.getChildren()) {
+                    Clothes clothes = new Clothes();
+                    clothes.setClothesImage(snap.child("clothesImage").getValue(String.class));
+                    clothes.setClothesPrice(snap.child("clothesPrice").getValue(Long.class));
+                    clothes.setClothesType(snap.child("clothesType").getValue(String.class));
+                    clothes.setClothesTitle(snap.child("clothesTitle").getValue(String.class));
+                    clothesFromBase.add(clothes);
+                }
+                callback.getClothes(clothesFromBase);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    public static void getAccessoriesInWardrobe(String nick,FirebaseModel firebaseModel,Callbacks.GetClothes callback){
+        firebaseModel.initAll();
+        Query query=firebaseModel.getUsersReference().child(nick)
+                .child("clothes").child("accessories");
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {

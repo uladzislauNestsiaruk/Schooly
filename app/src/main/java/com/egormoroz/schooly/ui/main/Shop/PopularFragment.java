@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.egormoroz.schooly.Callbacks;
@@ -30,8 +31,10 @@ public class PopularFragment extends Fragment {
 
     FirebaseModel firebaseModel=new FirebaseModel();
     ArrayList<Clothes> clothesArrayList=new ArrayList<Clothes>();
-    RecyclerView clothes;
+    ArrayList<Clothes> popularClothesArrayList=new ArrayList<Clothes>();
+    RecyclerView clothes,popularClothes;
     NewClothesAdapter.ItemClickListener itemClickListener;
+    PopularClothesAdapter.ItemClickListener itemClickListenerPopular;
 
 
     @Override
@@ -42,6 +45,7 @@ public class PopularFragment extends Fragment {
         bnv.setVisibility(bnv.GONE);
         firebaseModel.initAll();
         clothes=root.findViewById(R.id.newchlothesinshop);
+        popularClothes=root.findViewById(R.id.popularchlothesinshop);
         loadClothesFromBase();
         return root;
     }
@@ -52,27 +56,39 @@ public class PopularFragment extends Fragment {
 
         itemClickListener=new NewClothesAdapter.ItemClickListener() {
             @Override
-            public void onItemClick(Clothes clothes, int position) {
+            public void onItemClick(Clothes clothes) {
                 ((MainActivity)getActivity()).setCurrentFragment(ViewingClothes.newInstance());
+                Log.d("######","ccc  "+clothes.getClothesTitle());
+            }
+        };
+        itemClickListenerPopular=new PopularClothesAdapter.ItemClickListener() {
+            @Override
+            public void onItemClick(Clothes clothes) {
+                ((MainActivity)getActivity()).setCurrentFragment(ViewingClothesPopular.newInstance());
             }
         };
     }
 
 
     public void loadClothesFromBase(){
-        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-            @Override
-            public void PassUserNick(String nick) {
-                RecentMethods.getShoes(nick, firebaseModel, new Callbacks.GetClothes() {
+                RecentMethods.getNewClothes( firebaseModel, new Callbacks.GetClothes() {
                     @Override
                     public void getClothes(ArrayList<Clothes> allClothes) {
                         clothesArrayList.addAll(allClothes);
                         NewClothesAdapter newClothesAdapter=new NewClothesAdapter(clothesArrayList,itemClickListener);
                         clothes.setAdapter(newClothesAdapter);
-                        Log.d("#####", "ggvppp  "+clothesArrayList);
                     }
                 });
-            }
-        });
+
+                RecentMethods.getPopular( firebaseModel, new Callbacks.GetClothes() {
+                    @Override
+                    public void getClothes(ArrayList<Clothes> allClothes) {
+                        popularClothesArrayList.addAll(allClothes);
+                        PopularClothesAdapter popularClothesAdapter=new PopularClothesAdapter(popularClothesArrayList,itemClickListenerPopular);
+                        popularClothes.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+                        popularClothes.setAdapter(popularClothesAdapter);
+                        Log.d("#####", "g  "+popularClothesArrayList);
+                    }
+                });
     }
 }

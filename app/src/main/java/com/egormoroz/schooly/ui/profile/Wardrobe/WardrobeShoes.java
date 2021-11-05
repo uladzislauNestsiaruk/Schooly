@@ -1,4 +1,4 @@
-package com.egormoroz.schooly.ui.main.Shop;
+package com.egormoroz.schooly.ui.profile.Wardrobe;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -16,29 +16,34 @@ import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.MainActivity;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
+import com.egormoroz.schooly.ui.main.Shop.BasketFragment;
+import com.egormoroz.schooly.ui.main.Shop.Clothes;
+import com.egormoroz.schooly.ui.main.Shop.NewClothesAdapter;
+import com.egormoroz.schooly.ui.main.Shop.ShoesFargment;
+import com.egormoroz.schooly.ui.main.Shop.ViewingClothes;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
 
-public class ClothesFragment extends Fragment {
-    public static ClothesFragment newInstance() {
-        return new ClothesFragment();
+public class WardrobeShoes extends Fragment {
+    public static WardrobeFragment newInstance() {
+        return new WardrobeFragment();
     }
     FirebaseModel firebaseModel=new FirebaseModel();
-    ArrayList<Clothes> clothesArrayList=new ArrayList<Clothes>();
-    RecyclerView clothes;
-    NewClothesAdapter.ItemClickListener itemClickListener;
+    ArrayList<Clothes> clothesArrayListWardrobe=new ArrayList<Clothes>();
+    RecyclerView wardrobeRecyclerView;
+    WardrobeClothesAdapter.ItemClickListener itemClickListener;
 
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.layoutwiewpagershop, container, false);
+        View root = inflater.inflate(R.layout.viewpagerwardrobe, container, false);
         BottomNavigationView bnv = getActivity().findViewById(R.id.bottomNavigationView);
         bnv.setVisibility(bnv.GONE);
         firebaseModel.initAll();
-        clothes=root.findViewById(R.id.newchlothesinshop);
-        loadClothesFromBase();
+        wardrobeRecyclerView=root.findViewById(R.id.recyclerwardrobe);
+        loadClothesInWardrobe();
         Log.d("######", "dd");
         return root;
     }
@@ -46,27 +51,26 @@ public class ClothesFragment extends Fragment {
     @Override
     public void onViewCreated(@Nullable View view,@NonNull Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
-
-        itemClickListener=new NewClothesAdapter.ItemClickListener() {
+        itemClickListener=new WardrobeClothesAdapter.ItemClickListener() {
             @Override
             public void onItemClick(Clothes clothes) {
-                ((MainActivity)getActivity()).setCurrentFragment(ViewingClothes.newInstance());
+                RecentMethods.setCurrentFragment(ViewingClothesWardrobe.newInstance(), getActivity());
             }
         };
     }
 
 
-    public void loadClothesFromBase(){
+    public void loadClothesInWardrobe(){
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @Override
             public void PassUserNick(String nick) {
-                RecentMethods.getClothesFromBase(nick, firebaseModel, new Callbacks.GetClothes() {
+                RecentMethods.getShoesInWardrobe(nick, firebaseModel, new Callbacks.GetClothes() {
                     @Override
                     public void getClothes(ArrayList<Clothes> allClothes) {
-                        clothesArrayList.addAll(allClothes);
-                        NewClothesAdapter newClothesAdapter=new NewClothesAdapter(clothesArrayList,itemClickListener);
-                        clothes.setAdapter(newClothesAdapter);
-                        Log.d("#####", "ggvppp  "+clothesArrayList);
+                        clothesArrayListWardrobe.addAll(allClothes);
+                        WardrobeClothesAdapter newClothesAdapter=new WardrobeClothesAdapter(clothesArrayListWardrobe,itemClickListener);
+                        wardrobeRecyclerView.setAdapter(newClothesAdapter);
+                        Log.d("#####", "ggvppp  "+clothesArrayListWardrobe);
                     }
                 });
             }

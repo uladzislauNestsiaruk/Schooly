@@ -25,14 +25,11 @@ import java.util.ArrayList;
 
 public class MyMinersFragment extends Fragment {
 
-    private String TAG;
     ArrayList<Miner> listAdapter=new ArrayList<Miner>();
     public static MyMinersFragment newInstanse(){return new MyMinersFragment();}
     private FirebaseModel firebaseModel = new FirebaseModel();
     RecyclerView recyclerviewMining;
     TextView useMiner;
-    Miner myMiners;
-    DataSnapshot snapshot;
 
 
     @Override
@@ -58,7 +55,7 @@ public class MyMinersFragment extends Fragment {
         GetMyMinersFromBase();
         recyclerviewMining=view.findViewById(R.id.recyclerviewmyminers);
         useMiner=view.findViewById(R.id.use);
-        Log.d(TAG,"Изображение установлено");
+        Log.d("#####","Изображение установлено");
     }
 
     public void GetMyMinersFromBase(){

@@ -125,7 +125,7 @@ public class MainFragment extends Fragment{
         loadClothesFromBase();
         itemClickListener=new NewClothesAdapter.ItemClickListener() {
             @Override
-            public void onItemClick(Clothes clothes, int position) {
+            public void onItemClick(Clothes clothes) {
                 ((MainActivity)getActivity()).setCurrentFragment(ViewingClothes.newInstance());
             }
         };
@@ -141,7 +141,6 @@ public class MainFragment extends Fragment{
                         clothesArrayList.addAll(allClothes);
                         NewClothesAdapter newClothesAdapter=new NewClothesAdapter(clothesArrayList,itemClickListener);
                         clothesRecyclerMain.setAdapter(newClothesAdapter);
-                        Log.d("#####", "ggvppp  "+clothesArrayList);
                     }
                 });
             }

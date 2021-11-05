@@ -17,6 +17,10 @@ import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -54,6 +58,22 @@ public class WeakMinersAdapter extends RecyclerView.Adapter<WeakMinersAdapter.Vi
                 RecentMethods.GetMoneyFromBase(nick, firebaseModel, new Callbacks.MoneyFromBase() {
                     @Override
                     public void GetMoneyFromBase(long money) {
+                        Query query=firebaseModel.getUsersReference().child(nick).child("miners")
+                                .child(String.valueOf(holder.getAdapterPosition())+"weak");
+                        query.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                if(snapshot.exists()){
+                                    holder.buy.setText("Куплено");
+                                    holder.buy.setBackgroundResource(R.drawable.corners14grey);
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
                         if (money<Long.valueOf(minerPriceText)){
                             holder.buy.setBackgroundResource(R.drawable.corners14grey);
                         }else {

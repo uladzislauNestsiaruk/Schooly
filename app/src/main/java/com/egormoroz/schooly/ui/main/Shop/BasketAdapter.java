@@ -1,4 +1,4 @@
-package com.egormoroz.schooly.ui.profile;
+package com.egormoroz.schooly.ui.main.Shop;
 
 import android.content.Intent;
 import android.graphics.Rect;
@@ -16,8 +16,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
-import com.egormoroz.schooly.ui.main.Shop.Clothes;
-import com.egormoroz.schooly.ui.main.Shop.NewClothesAdapter;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
@@ -27,48 +25,48 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.util.ArrayList;
 
-class WardrobeClothesAdapter extends RecyclerView.Adapter<WardrobeClothesAdapter.ViewHolder>  {
+public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.ViewHolder>{
+
     private NewClothesAdapter.ItemClickListener clickListener;
-    ArrayList<Clothes> clothesArrayListWardrobe;
+    ArrayList<Clothes> clothesArrayList;
     private FirebaseModel firebaseModel = new FirebaseModel();
     FirebaseStorage storage = FirebaseStorage.getInstance();
     StorageReference storageReference=storage.getReference();
-    static Clothes clothes;
-    NewClothesAdapter.ItemClickListener onClothesClick;
+    static Clothes clothes,trueClothes;
+    ItemClickListener onClothesClick;
     static int pos;
 
-    public WardrobeClothesAdapter(ArrayList<Clothes> clothesArrayListWardrobe) {
-        this.clothesArrayListWardrobe= clothesArrayListWardrobe;
+    public BasketAdapter(ArrayList<Clothes> clothesArrayList, ItemClickListener onClothesClick) {
+        this.clothesArrayList= clothesArrayList;
+        this.onClothesClick= onClothesClick;
     }
 
 
     @NotNull
     @Override
-    public WardrobeClothesAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
         RelativeLayout v = (RelativeLayout) LayoutInflater.from(viewGroup.getContext()).
                 inflate(R.layout.new_clothes_rvitem, viewGroup, false);
-        WardrobeClothesAdapter.ViewHolder viewHolder=new WardrobeClothesAdapter.ViewHolder(v);
+        ViewHolder viewHolder=new ViewHolder(v);
         return viewHolder;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(ViewHolder holder, int position) {
         firebaseModel.initAll();
-        pos=position;
-        clothes=clothesArrayListWardrobe.get(position);
+        clothes=clothesArrayList.get(position);
         holder.clothesTitle.setText(clothes.getClothesTitle());
-        Log.d("#####", "ggxadwd  "+holder.clothesImage);
         holder.clothesPrise.setText(String.valueOf(clothes.getClothesPrice()));
         File file=new File(clothes.getClothesImage());
         storageReference.child("clothes").getFile(file);
-        Intent intent=new Intent();
         holder.clothesImage.setVisibility(View.VISIBLE);
         Picasso.get().load(clothes.getClothesImage()).into(holder.clothesImage);
         holder.itemView.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v)
             {
-                onClothesClick.onItemClick(clothes,position);
+                onClothesClick.onItemClick(clothesArrayList.get(holder.getAdapterPosition()));
+                trueClothes=clothesArrayList.get(holder.getAdapterPosition());
             }
         });
     }
@@ -77,7 +75,7 @@ class WardrobeClothesAdapter extends RecyclerView.Adapter<WardrobeClothesAdapter
 
     @Override
     public int getItemCount() {
-        return clothesArrayListWardrobe.size();
+        return clothesArrayList.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -93,9 +91,13 @@ class WardrobeClothesAdapter extends RecyclerView.Adapter<WardrobeClothesAdapter
 
     }
 
+    public static void singeClothesInfo(ItemClickListener itemClickListener){
+        itemClickListener.onItemClick(trueClothes);
+    }
+
 
     public interface ItemClickListener {
-        void onItemClick( Clothes clothes,int position);
+        void onItemClick( Clothes clothes);
     }
 
     static class SpaceItemDecoration extends RecyclerView.ItemDecoration {

@@ -4,10 +4,10 @@ import java.util.ArrayList;
 
 public class Miner {
     private long inHour=1;
-    private long minerImage=1;
+    private String minerImage;
     private long minerPrice=1;
 
-    public Miner(long inHour, long minerImage, long minerPrice){
+    public Miner(long inHour, String minerImage, long minerPrice){
         this.inHour=inHour;
         this.minerImage=minerImage;
         this.minerPrice=minerPrice;
@@ -23,11 +23,11 @@ public class Miner {
         this.inHour=inHour;
     }
 
-    public long getMinerImage(){
+    public String getMinerImage(){
         return this.minerImage;
     }
 
-    public void setMinerImage(long minerImage){
+    public void setMinerImage(String minerImage){
         this.minerImage=minerImage;
     }
 

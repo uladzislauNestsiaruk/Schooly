@@ -49,7 +49,7 @@ public class HatsFragment extends Fragment {
 
         itemClickListener=new NewClothesAdapter.ItemClickListener() {
             @Override
-            public void onItemClick(Clothes clothes, int position) {
+            public void onItemClick(Clothes clothes) {
                 ((MainActivity)getActivity()).setCurrentFragment(ViewingClothes.newInstance());
             }
         };
@@ -60,7 +60,7 @@ public class HatsFragment extends Fragment {
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @Override
             public void PassUserNick(String nick) {
-                RecentMethods.getShoes(nick, firebaseModel, new Callbacks.GetClothes() {
+                RecentMethods.getHats(nick, firebaseModel, new Callbacks.GetClothes() {
                     @Override
                     public void getClothes(ArrayList<Clothes> allClothes) {
                         clothesArrayList.addAll(allClothes);

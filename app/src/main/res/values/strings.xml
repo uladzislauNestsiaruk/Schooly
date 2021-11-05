@@ -101,28 +101,6 @@
     <string name="groupmessages">Беседы</string>
 
 
-    <string name="subjects">Предметы</string>
-    <string name="russian">Русский язык</string>
-    <string name="myrina">Мурина Л. А.</string>
-    <string name="algebra">Алгебра</string>
-    <string name="arefyeva">Арефьева И.Г.</string>
-    <string name="geometry">Геометрия</string>
-    <string name="kazakow">Казаков В. В.</string>
-    <string name="english">Английский язык</string>
-    <string name="lapitskaya">Лапицкая Л. М.</string>
-    <string name="fizika">Физика</string>
-    <string name="isach">Исаченкова Л. А.</string>
-    <string name="geography">География</string>
-    <string name="bril">Брилевский М. Н.</string>
-    <string name="bel">Белорусский язык</string>
-    <string name="valochka">Валочка Г. М.</string>
-    <string name="bellit">Белорусская литература</string>
-    <string name="praskalovich">Праскалович В. У.</string>
-
-    <string name="searchbook">Поиск книг</string>
-    <string name="mybooks">Мои книги</string>
-    <string name="friendbooks">Книги друзей</string>
-
     <string name="start_typing_status">Пишет</string>
     <string name="stop_typing_status">...</string>
 
@@ -161,6 +139,7 @@
     <string name="no">Нет</string>
 
     <string name="price">Цена:</string>
+    <string name="measure">Примерить</string>
 
 
 </resources>

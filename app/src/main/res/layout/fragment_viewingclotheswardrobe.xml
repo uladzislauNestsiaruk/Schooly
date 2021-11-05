@@ -18,40 +18,10 @@
         android:layout_marginTop="11dp"
         android:layout_toRightOf="@+id/back_toshop"
         android:fontFamily="@font/montserrat_bold"
-        android:text="@string/shop"
+        android:text="@string/wardrobe"
         android:textColor="@color/app_color"
         android:textSize="22sp" />
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:orientation="horizontal"
-        android:layout_marginEnd="24dp"
-        android:layout_marginTop="12dp"
-        android:background="@drawable/corners8shopmain">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingStart="6dp"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp"
-            android:paddingEnd="14dp"
-            android:src="@drawable/ic_schoolycoin"/>
-
-
-        <TextView
-            android:id="@+id/schoolycoincvfrag"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/montserratblack"
-            android:paddingEnd="12dp"
-            android:layout_gravity="center_vertical"
-            android:textColor="@color/white"
-            android:textSize="16sp" />
-
-    </LinearLayout>
 
     <RelativeLayout
         android:id="@+id/relativeClothesImage"
@@ -89,37 +59,6 @@
                 android:textColor="@color/app_color"
                 android:textSize="24dp" />
 
-            <LinearLayout
-                android:id="@+id/clothesPriceLayout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:layout_marginEnd="16dp"
-                android:background="@drawable/corners14appcolor"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingStart="16dp"
-                    android:paddingTop="12dp"
-                    android:paddingEnd="2dp"
-                    android:paddingBottom="12dp"
-                    android:src="@drawable/ic_schoolycoinsmall" />
-
-
-                <TextView
-                    android:id="@+id/clothesPricecv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:fontFamily="@font/montserratblack"
-                    android:paddingEnd="16dp"
-                    android:textColor="@color/white"
-                    android:textSize="20sp" />
-
-            </LinearLayout>
 
         </RelativeLayout>
 
@@ -146,35 +85,21 @@
             android:id="@+id/buyClothesBottom"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/inBasketClothes"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp"
-            android:background="@drawable/corners14green"
+            android:background="@drawable/corners14appcolor"
             android:fontFamily="@font/montserratblack"
             android:paddingStart="20dp"
             android:paddingTop="12dp"
             android:paddingEnd="20dp"
             android:paddingBottom="12dp"
+            android:text="@string/measure"
             android:textColor="@color/white"
             android:textSize="18sp" />
 
-        <TextView
-            android:id="@+id/inBasketClothes"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="16dp"
-            android:background="@drawable/corners14grey"
-            android:fontFamily="@font/montserratblack"
-            android:paddingStart="20dp"
-            android:paddingTop="12dp"
-            android:paddingEnd="20dp"
-            android:paddingBottom="12dp"
-            android:textColor="@color/white"
-            android:textSize="18sp" />
+
 
 
     </RelativeLayout>

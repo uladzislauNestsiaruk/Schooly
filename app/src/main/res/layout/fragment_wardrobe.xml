@@ -5,11 +5,6 @@
     android:scrollbars="none"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -30,84 +25,28 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="11dp"
                 android:layout_toRightOf="@+id/back_toprofile"
+                android:fontFamily="@font/montserrat_bold"
                 android:text="@string/wardrobe"
                 android:textColor="@color/app_color"
-                android:textSize="22sp"
-                android:fontFamily="@font/montserrat_bold"/>
+                android:textSize="22sp" />
 
-        </RelativeLayout>
 
-        <HorizontalScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="374dp"
-            android:scrollbars="none">
-
-            <com.google.android.material.chip.ChipGroup
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tabLayoutWardrobe"
+                style="@style/AppTabLayoutShop"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:singleLine="true"
-                app:singleSelection="true"
-                app:chipSpacingHorizontal="16dp">
+                android:layout_marginTop="374dp"
+                app:tabMode="scrollable"
+                app:tabTextAppearance="@style/AppTabTextAppearanceShop" />
 
-                <com.google.android.material.chip.Chip
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/clothes"
-                    app:chipStartPadding="10dp"
-                    app:chipEndPadding="10dp"
-                    app:chipCornerRadius="8dp"
-                    app:chipBackgroundColor="@color/app_color"
-                    android:textColor="@color/white"
-                    android:layout_marginStart="24dp"
-                    android:textAppearance="@style/CustomChipText"/>
-
-                <com.google.android.material.chip.Chip
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:chipStartPadding="10dp"
-                    app:chipEndPadding="10dp"
-                    app:chipCornerRadius="8dp"
-                    app:chipBackgroundColor="@color/app_color"
-                    android:textColor="@color/white"
-                    android:text="@string/shoes"
-                    android:textAppearance="@style/CustomChipText"/>
-
-                <com.google.android.material.chip.Chip
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:chipStartPadding="10dp"
-                    app:chipEndPadding="10dp"
-                    app:chipCornerRadius="8dp"
-                    app:chipBackgroundColor="@color/app_color"
-                    android:textColor="@color/white"
-                    android:text="@string/hats"
-                    android:textAppearance="@style/CustomChipText"/>
-
-                <com.google.android.material.chip.Chip
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:chipStartPadding="10dp"
-                    app:chipEndPadding="10dp"
-                    app:chipCornerRadius="8dp"
-                    app:chipBackgroundColor="@color/app_color"
-                    android:textColor="@color/white"
-                    android:text="@string/accessories"
-                    android:textAppearance="@style/CustomChipText"
-                    android:layout_marginEnd="24dp"/>
-
-
-            </com.google.android.material.chip.ChipGroup>
-        </HorizontalScrollView>
 
         <LinearLayout
+            android:id="@+id/linearsearch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:layout_below="@id/tabLayoutWardrobe"
             android:background="@drawable/corners12_2dpstrokeappcolor"
             android:paddingTop="13dp"
             android:paddingBottom="13dp"
@@ -130,14 +69,15 @@
 
         </LinearLayout>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerWardrode"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="8dp"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 
-    </LinearLayout>
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/frcontwardrobe"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/linearsearch"
+            android:layout_marginTop="8dp"/>
+
+        </RelativeLayout>
+
 
 </ScrollView>

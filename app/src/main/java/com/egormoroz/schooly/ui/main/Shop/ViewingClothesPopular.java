@@ -14,33 +14,27 @@ import androidx.fragment.app.Fragment;
 
 import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FirebaseModel;
-import com.egormoroz.schooly.MainActivity;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
-import com.egormoroz.schooly.ui.main.ChatsFragment;
-import com.egormoroz.schooly.ui.main.EnterFragment;
-import com.egormoroz.schooly.ui.main.MainFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
 import com.squareup.picasso.Picasso;
 
-public class ViewingClothes extends Fragment {
-    public static com.egormoroz.schooly.ui.main.Shop.ViewingClothes newInstance() {
-        return new com.egormoroz.schooly.ui.main.Shop.ViewingClothes();
+public class ViewingClothesPopular extends Fragment {
+    public static ViewingClothesPopular newInstance() {
+        return new ViewingClothesPopular();
 
     }
 
-
+    PopularClothesAdapter.ItemClickListener itemClickListener;
     TextView clothesPriceCV,clothesTitleCV,schoolyCoinCV,buyClothesBottom,inBasket;
     ImageView clothesImageCV,backToShop;
     long schoolyCoins,clothesPrise;
     Clothes clothesViewing;
     private FirebaseModel firebaseModel = new FirebaseModel();
-    NewClothesAdapter.ViewHolder viewHolder;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -57,6 +51,8 @@ public class ViewingClothes extends Fragment {
     public void onViewCreated(@Nullable View view,@NonNull Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
         getCoins();
+        checkClothes();
+        checkClothesOnBuy();
         schoolyCoinCV=view.findViewById(R.id.schoolycoincvfrag);
         clothesImageCV=view.findViewById(R.id.clothesImagecv);
         inBasket=view.findViewById(R.id.inBasketClothes);
@@ -70,23 +66,18 @@ public class ViewingClothes extends Fragment {
                 RecentMethods.setCurrentFragment(ShopFragment.newInstance(), getActivity());
             }
         });
-
-      NewClothesAdapter.singeClothesInfo(new NewClothesAdapter.ItemClickListener() {
-          @Override
-          public void onItemClick(Clothes clothes) {
-              clothesViewing=clothes;
-              Log.d("#####", "title2def  "+clothes);
-              clothesPriceCV.setText(String.valueOf(clothes.getClothesPrice()));
-              clothesTitleCV.setText(clothes.getClothesTitle());
-              Log.d("#####", "title2  "+clothes.getClothesTitle());
-              clothesPrise=clothes.getClothesPrice();
-              Picasso.get().load(clothes.getClothesImage()).into(clothesImageCV);
-          }
-      });
+        PopularClothesAdapter.singeClothesInfo(new PopularClothesAdapter.ItemClickListener() {
+            @Override
+            public void onItemClick(Clothes clothes) {
+                clothesViewing=clothes;
+                clothesPriceCV.setText(String.valueOf(clothes.getClothesPrice()));
+                clothesTitleCV.setText(clothes.getClothesTitle());
+                clothesPrise=clothes.getClothesPrice();
+                Picasso.get().load(clothes.getClothesImage()).into(clothesImageCV);
+            }
+        });
         buyClothes();
         putInBasket();
-        checkClothes();
-        checkClothesOnBuy();
     }
 
     public void getCoins(){
@@ -112,26 +103,26 @@ public class ViewingClothes extends Fragment {
                     RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
                         @Override
                         public void PassUserNick(String nick) {
-                                firebaseModel.getUsersReference().child(nick).child("clothes")
-                                        .child(clothesViewing.getClothesType()).child(clothesViewing.getClothesTitle()).setValue(clothesViewing);
-                                Query query=firebaseModel.getUsersReference().child(nick).child("basket").
-                                        child(String.valueOf(clothesViewing.getClothesTitle()));
-                                query.addValueEventListener(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                        if(snapshot.exists()){
-                                            firebaseModel.getUsersReference().child(nick).child("basket")
-                                                    .child(clothesViewing.getClothesTitle()).removeValue();
-                                        }else{
-                                            Log.d("######", "fuck  ");
-                                        }
+                            firebaseModel.getUsersReference().child(nick).child("clothes")
+                                    .child(clothesViewing.getClothesType()).child(clothesViewing.getClothesTitle()).setValue(clothesViewing);
+                            Query query=firebaseModel.getUsersReference().child(nick).child("basket").
+                                    child(String.valueOf(clothesViewing.getClothesTitle()));
+                            query.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    if(snapshot.exists()){
+                                        firebaseModel.getUsersReference().child(nick).child("basket")
+                                                .child(clothesViewing.getClothesTitle()).removeValue();
+                                    }else{
+                                        Log.d("######", "fuck  ");
                                     }
+                                }
 
-                                    @Override
-                                    public void onCancelled(@NonNull DatabaseError error) {
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
 
-                                    }
-                                });
+                                }
+                            });
                             schoolyCoins=schoolyCoins-clothesPrise;
                             firebaseModel.getUsersReference().child(nick).child("money").setValue(schoolyCoins);
                         }
@@ -199,20 +190,20 @@ public class ViewingClothes extends Fragment {
         });
     }
 
-    public void checkClothesOnBuy(){
+    public void checkClothesOnBuy() {
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @Override
             public void PassUserNick(String nick) {
-                Query query=firebaseModel.getUsersReference().child(nick).child("clothes").
+                Query query = firebaseModel.getUsersReference().child(nick).child("clothes").
                         child("shoes").child(String.valueOf(clothesViewing.getClothesTitle()));
                 query.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if(snapshot.exists()){
+                        if (snapshot.exists()) {
                             buyClothesBottom.setText("Куплено");
                             buyClothesBottom.setBackgroundResource(R.drawable.corners14grey);
                             inBasket.setBackgroundResource(R.drawable.corners14grey);
-                        }else {
+                        } else {
                             buyClothesBottom.setText("Купить");
                         }
                     }
@@ -225,5 +216,4 @@ public class ViewingClothes extends Fragment {
             }
         });
     }
-
 }
