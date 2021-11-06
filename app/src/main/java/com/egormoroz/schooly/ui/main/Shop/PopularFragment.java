@@ -71,24 +71,24 @@ public class PopularFragment extends Fragment {
 
 
     public void loadClothesFromBase(){
-                RecentMethods.getNewClothes( firebaseModel, new Callbacks.GetClothes() {
-                    @Override
-                    public void getClothes(ArrayList<Clothes> allClothes) {
-                        clothesArrayList.addAll(allClothes);
-                        NewClothesAdapter newClothesAdapter=new NewClothesAdapter(clothesArrayList,itemClickListener);
-                        clothes.setAdapter(newClothesAdapter);
-                    }
-                });
+        RecentMethods.getNewClothes( firebaseModel, new Callbacks.GetClothes() {
+            @Override
+            public void getClothes(ArrayList<Clothes> allClothes) {
+                clothesArrayList.addAll(allClothes);
+                NewClothesAdapter newClothesAdapter=new NewClothesAdapter(clothesArrayList,itemClickListener);
+                clothes.setAdapter(newClothesAdapter);
+            }
+        });
 
-                RecentMethods.getPopular( firebaseModel, new Callbacks.GetClothes() {
-                    @Override
-                    public void getClothes(ArrayList<Clothes> allClothes) {
-                        popularClothesArrayList.addAll(allClothes);
-                        PopularClothesAdapter popularClothesAdapter=new PopularClothesAdapter(popularClothesArrayList,itemClickListenerPopular);
-                        popularClothes.setLayoutManager(new GridLayoutManager(getActivity(), 2));
-                        popularClothes.setAdapter(popularClothesAdapter);
-                        Log.d("#####", "g  "+popularClothesArrayList);
-                    }
-                });
+        RecentMethods.getPopular( firebaseModel, new Callbacks.GetClothes() {
+            @Override
+            public void getClothes(ArrayList<Clothes> allClothes) {
+                popularClothesArrayList.addAll(allClothes);
+                PopularClothesAdapter popularClothesAdapter=new PopularClothesAdapter(popularClothesArrayList,itemClickListenerPopular);
+                popularClothes.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+                popularClothes.setAdapter(popularClothesAdapter);
+                Log.d("#####", "g  "+popularClothesArrayList);
+            }
+        });
     }
 }

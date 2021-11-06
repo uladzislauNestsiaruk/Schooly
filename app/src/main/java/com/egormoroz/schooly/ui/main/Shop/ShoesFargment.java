@@ -21,54 +21,54 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import java.util.ArrayList;
 
 public class ShoesFargment extends Fragment {
-    public static ShoesFargment newInstance() {
-        return new ShoesFargment();
-    }
-    FirebaseModel firebaseModel=new FirebaseModel();
-    ArrayList<Clothes> clothesArrayList=new ArrayList<Clothes>();
-    RecyclerView clothes;
-    NewClothesAdapter.ItemClickListener itemClickListener;
+  public static ShoesFargment newInstance() {
+    return new ShoesFargment();
+  }
+  FirebaseModel firebaseModel=new FirebaseModel();
+  ArrayList<Clothes> clothesArrayList=new ArrayList<Clothes>();
+  RecyclerView clothes;
+  NewClothesAdapter.ItemClickListener itemClickListener;
 
 
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.layoutwiewpagershop, container, false);
-        BottomNavigationView bnv = getActivity().findViewById(R.id.bottomNavigationView);
-        bnv.setVisibility(bnv.GONE);
-        firebaseModel.initAll();
-        clothes=root.findViewById(R.id.newchlothesinshop);
-        loadClothesFromBase();
-        return root;
-    }
+  @Override
+  public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                           @Nullable Bundle savedInstanceState) {
+    View root = inflater.inflate(R.layout.layoutwiewpagershop, container, false);
+    BottomNavigationView bnv = getActivity().findViewById(R.id.bottomNavigationView);
+    bnv.setVisibility(bnv.GONE);
+    firebaseModel.initAll();
+    clothes=root.findViewById(R.id.newchlothesinshop);
+    loadClothesFromBase();
+    return root;
+  }
 
-    @Override
-    public void onViewCreated(@Nullable View view,@NonNull Bundle savedInstanceState){
-        super.onViewCreated(view, savedInstanceState);
+  @Override
+  public void onViewCreated(@Nullable View view,@NonNull Bundle savedInstanceState){
+    super.onViewCreated(view, savedInstanceState);
 
-        itemClickListener=new NewClothesAdapter.ItemClickListener() {
-            @Override
-            public void onItemClick(Clothes clothes) {
-                ((MainActivity)getActivity()).setCurrentFragment(ViewingClothes.newInstance());
-            }
-        };
-    }
+    itemClickListener=new NewClothesAdapter.ItemClickListener() {
+      @Override
+      public void onItemClick(Clothes clothes) {
+        ((MainActivity)getActivity()).setCurrentFragment(ViewingClothes.newInstance());
+      }
+    };
+  }
 
 
-    public void loadClothesFromBase(){
-        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-            @Override
-            public void PassUserNick(String nick) {
-                RecentMethods.getShoes(nick, firebaseModel, new Callbacks.GetClothes() {
-                    @Override
-                    public void getClothes(ArrayList<Clothes> allClothes) {
-                        clothesArrayList.addAll(allClothes);
-                        NewClothesAdapter newClothesAdapter=new NewClothesAdapter(clothesArrayList,itemClickListener);
-                        clothes.setAdapter(newClothesAdapter);
-                        Log.d("#####", "ggvppp  "+clothesArrayList);
-                    }
-                });
-            }
+  public void loadClothesFromBase(){
+    RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+      @Override
+      public void PassUserNick(String nick) {
+        RecentMethods.getShoes(nick, firebaseModel, new Callbacks.GetClothes() {
+          @Override
+          public void getClothes(ArrayList<Clothes> allClothes) {
+            clothesArrayList.addAll(allClothes);
+            NewClothesAdapter newClothesAdapter=new NewClothesAdapter(clothesArrayList,itemClickListener);
+            clothes.setAdapter(newClothesAdapter);
+            Log.d("#####", "ggvppp  "+clothesArrayList);
+          }
         });
-    }
+      }
+    });
+  }
 }

@@ -71,18 +71,18 @@ public class ViewingClothes extends Fragment {
             }
         });
 
-      NewClothesAdapter.singeClothesInfo(new NewClothesAdapter.ItemClickListener() {
-          @Override
-          public void onItemClick(Clothes clothes) {
-              clothesViewing=clothes;
-              Log.d("#####", "title2def  "+clothes);
-              clothesPriceCV.setText(String.valueOf(clothes.getClothesPrice()));
-              clothesTitleCV.setText(clothes.getClothesTitle());
-              Log.d("#####", "title2  "+clothes.getClothesTitle());
-              clothesPrise=clothes.getClothesPrice();
-              Picasso.get().load(clothes.getClothesImage()).into(clothesImageCV);
-          }
-      });
+        NewClothesAdapter.singeClothesInfo(new NewClothesAdapter.ItemClickListener() {
+            @Override
+            public void onItemClick(Clothes clothes) {
+                clothesViewing=clothes;
+                Log.d("#####", "title2def  "+clothes);
+                clothesPriceCV.setText(String.valueOf(clothes.getClothesPrice()));
+                clothesTitleCV.setText(clothes.getClothesTitle());
+                Log.d("#####", "title2  "+clothes.getClothesTitle());
+                clothesPrise=clothes.getClothesPrice();
+                Picasso.get().load(clothes.getClothesImage()).into(clothesImageCV);
+            }
+        });
         buyClothes();
         putInBasket();
         checkClothes();
@@ -112,26 +112,26 @@ public class ViewingClothes extends Fragment {
                     RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
                         @Override
                         public void PassUserNick(String nick) {
-                                firebaseModel.getUsersReference().child(nick).child("clothes")
-                                        .child(clothesViewing.getClothesType()).child(clothesViewing.getClothesTitle()).setValue(clothesViewing);
-                                Query query=firebaseModel.getUsersReference().child(nick).child("basket").
-                                        child(String.valueOf(clothesViewing.getClothesTitle()));
-                                query.addValueEventListener(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                        if(snapshot.exists()){
-                                            firebaseModel.getUsersReference().child(nick).child("basket")
-                                                    .child(clothesViewing.getClothesTitle()).removeValue();
-                                        }else{
-                                            Log.d("######", "fuck  ");
-                                        }
+                            firebaseModel.getUsersReference().child(nick).child("clothes")
+                                    .child(clothesViewing.getClothesType()).child(clothesViewing.getClothesTitle()).setValue(clothesViewing);
+                            Query query=firebaseModel.getUsersReference().child(nick).child("basket").
+                                    child(String.valueOf(clothesViewing.getClothesTitle()));
+                            query.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    if(snapshot.exists()){
+                                        firebaseModel.getUsersReference().child(nick).child("basket")
+                                                .child(clothesViewing.getClothesTitle()).removeValue();
+                                    }else{
+                                        Log.d("######", "fuck  ");
                                     }
+                                }
 
-                                    @Override
-                                    public void onCancelled(@NonNull DatabaseError error) {
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
 
-                                    }
-                                });
+                                }
+                            });
                             schoolyCoins=schoolyCoins-clothesPrise;
                             firebaseModel.getUsersReference().child(nick).child("money").setValue(schoolyCoins);
                         }

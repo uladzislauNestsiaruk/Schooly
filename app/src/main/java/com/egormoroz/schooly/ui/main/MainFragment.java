@@ -97,17 +97,17 @@ public class MainFragment extends Fragment{
         });
 
         TextView schoolycoins=view.findViewById(R.id.schoolycoins);
-                RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+            @Override
+            public void PassUserNick(String nick) {
+                RecentMethods.GetMoneyFromBase(nick, firebaseModel, new Callbacks.MoneyFromBase() {
                     @Override
-                    public void PassUserNick(String nick) {
-                        RecentMethods.GetMoneyFromBase(nick, firebaseModel, new Callbacks.MoneyFromBase() {
-                            @Override
-                            public void GetMoneyFromBase(long money) {
-                                schoolycoins.setText(String.valueOf(money));
-                            }
-                        });
+                    public void GetMoneyFromBase(long money) {
+                        schoolycoins.setText(String.valueOf(money));
                     }
                 });
+            }
+        });
         todayMiningMain=view.findViewById(R.id.todayminingmain);
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @Override

@@ -24,157 +24,157 @@ import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 public class ViewingClothesBasket extends Fragment {
-    public static ViewingClothesBasket newInstance() {
-        return new ViewingClothesBasket();
+  public static ViewingClothesBasket newInstance() {
+    return new ViewingClothesBasket();
 
-    }
+  }
 
-    NewClothesAdapter.ItemClickListener itemClickListener;
-    TextView clothesPriceCV,clothesTitleCV,schoolyCoinCV,buyClothesBottom,inBasket;
-    ImageView clothesImageCV,backToShop;
-    long schoolyCoins,clothesPrise;
-    Clothes clothesViewing;
-    private FirebaseModel firebaseModel = new FirebaseModel();
+  NewClothesAdapter.ItemClickListener itemClickListener;
+  TextView clothesPriceCV,clothesTitleCV,schoolyCoinCV,buyClothesBottom,inBasket;
+  ImageView clothesImageCV,backToShop;
+  long schoolyCoins,clothesPrise;
+  Clothes clothesViewing;
+  private FirebaseModel firebaseModel = new FirebaseModel();
 
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_viewingclothes, container, false);
-        BottomNavigationView bnv = getActivity().findViewById(R.id.bottomNavigationView);
-        bnv.setVisibility(bnv.GONE);
-        firebaseModel.initAll();
-        return root;
+  @Override
+  public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                           @Nullable Bundle savedInstanceState) {
+    View root = inflater.inflate(R.layout.fragment_viewingclothes, container, false);
+    BottomNavigationView bnv = getActivity().findViewById(R.id.bottomNavigationView);
+    bnv.setVisibility(bnv.GONE);
+    firebaseModel.initAll();
+    return root;
 
-    }
+  }
 
-    @Override
-    public void onViewCreated(@Nullable View view,@NonNull Bundle savedInstanceState){
-        super.onViewCreated(view, savedInstanceState);
-        getCoins();
-        checkClothesOnBuy();
-        schoolyCoinCV=view.findViewById(R.id.schoolycoincvfrag);
-        clothesImageCV=view.findViewById(R.id.clothesImagecv);
-        inBasket=view.findViewById(R.id.inBasketClothes);
-        clothesTitleCV=view.findViewById(R.id.clothesTitlecv);
-        clothesPriceCV=view.findViewById(R.id.clothesPricecv);
-        backToShop=view.findViewById(R.id.back_toshop);
-        buyClothesBottom=view.findViewById(R.id.buyClothesBottom);
-        backToShop.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                RecentMethods.setCurrentFragment(BasketFragment.newInstance(), getActivity());
-            }
+  @Override
+  public void onViewCreated(@Nullable View view,@NonNull Bundle savedInstanceState){
+    super.onViewCreated(view, savedInstanceState);
+    getCoins();
+    checkClothesOnBuy();
+    schoolyCoinCV=view.findViewById(R.id.schoolycoincvfrag);
+    clothesImageCV=view.findViewById(R.id.clothesImagecv);
+    inBasket=view.findViewById(R.id.inBasketClothes);
+    clothesTitleCV=view.findViewById(R.id.clothesTitlecv);
+    clothesPriceCV=view.findViewById(R.id.clothesPricecv);
+    backToShop=view.findViewById(R.id.back_toshop);
+    buyClothesBottom=view.findViewById(R.id.buyClothesBottom);
+    backToShop.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        RecentMethods.setCurrentFragment(BasketFragment.newInstance(), getActivity());
+      }
+    });
+    BasketAdapter.singeClothesInfo(new BasketAdapter.ItemClickListener() {
+      @Override
+      public void onItemClick(Clothes clothes) {
+        clothesViewing=clothes;
+        clothesPriceCV.setText(String.valueOf(clothes.getClothesPrice()));
+        clothesTitleCV.setText(clothes.getClothesTitle());
+        clothesPrise=clothes.getClothesPrice();
+        Picasso.get().load(clothes.getClothesImage()).into(clothesImageCV);
+      }
+    });
+    buyClothes();
+    checkClothes();
+  }
+
+  public void getCoins(){
+    RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+      @Override
+      public void PassUserNick(String nick) {
+        RecentMethods.GetMoneyFromBase(nick, firebaseModel, new Callbacks.MoneyFromBase() {
+          @Override
+          public void GetMoneyFromBase(long money) {
+            schoolyCoins=money;
+            schoolyCoinCV.setText(String.valueOf(money));
+          }
         });
-        BasketAdapter.singeClothesInfo(new BasketAdapter.ItemClickListener() {
-            @Override
-            public void onItemClick(Clothes clothes) {
-                clothesViewing=clothes;
-                clothesPriceCV.setText(String.valueOf(clothes.getClothesPrice()));
-                clothesTitleCV.setText(clothes.getClothesTitle());
-                clothesPrise=clothes.getClothesPrice();
-                Picasso.get().load(clothes.getClothesImage()).into(clothesImageCV);
-            }
-        });
-        buyClothes();
-        checkClothes();
-    }
+      }
+    });
+  }
 
-    public void getCoins(){
-        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+  public void buyClothes(){
+    buyClothesBottom.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        if(schoolyCoins>clothesPrise){
+          RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @Override
             public void PassUserNick(String nick) {
-                RecentMethods.GetMoneyFromBase(nick, firebaseModel, new Callbacks.MoneyFromBase() {
-                    @Override
-                    public void GetMoneyFromBase(long money) {
-                        schoolyCoins=money;
-                        schoolyCoinCV.setText(String.valueOf(money));
-                    }
-                });
-            }
-        });
-    }
-
-    public void buyClothes(){
-        buyClothesBottom.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(schoolyCoins>clothesPrise){
-                    RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-                        @Override
-                        public void PassUserNick(String nick) {
-                            firebaseModel.getUsersReference().child(nick).child("clothes")
-                                    .child(clothesViewing.getClothesType()).child(clothesViewing.getClothesTitle()).setValue(clothesViewing);
-                            Query query=firebaseModel.getUsersReference().child(nick).child("basket").
-                                    child(String.valueOf(clothesViewing.getClothesTitle()));
-                            query.addValueEventListener(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                    if(snapshot.exists()){
-                                        firebaseModel.getUsersReference().child(nick).child("basket")
-                                                .child(clothesViewing.getClothesTitle()).removeValue();
-                                    }else{
-                                        Log.d("######", "fuck  ");
-                                    }
-                                }
-
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError error) {
-
-                                }
-                            });
-                            schoolyCoins=schoolyCoins-clothesPrise;
-                            firebaseModel.getUsersReference().child(nick).child("money").setValue(schoolyCoins);
-                        }
-                    });
-                }else{
+              firebaseModel.getUsersReference().child(nick).child("clothes")
+                      .child(clothesViewing.getClothesType()).child(clothesViewing.getClothesTitle()).setValue(clothesViewing);
+              Query query=firebaseModel.getUsersReference().child(nick).child("basket").
+                      child(String.valueOf(clothesViewing.getClothesTitle()));
+              query.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                  if(snapshot.exists()){
+                    firebaseModel.getUsersReference().child(nick).child("basket")
+                            .child(clothesViewing.getClothesTitle()).removeValue();
+                  }else{
                     Log.d("######", "fuck  ");
+                  }
                 }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+              });
+              schoolyCoins=schoolyCoins-clothesPrise;
+              firebaseModel.getUsersReference().child(nick).child("money").setValue(schoolyCoins);
             }
-        });
-    }
+          });
+        }else{
+          Log.d("######", "fuck  ");
+        }
+      }
+    });
+  }
 
 
-    public void checkClothes(){
-        inBasket.setText("Убрать");
-        inBasket.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-                    @Override
-                    public void PassUserNick(String nick) {
-                        firebaseModel.getUsersReference().child(nick).child("basket")
-                                .child(clothesViewing.getClothesTitle()).removeValue();
-                        inBasket.setText("Убрано");
-                    }
-                });
-            }
-        });
-    }
-
-    public void checkClothesOnBuy(){
+  public void checkClothes(){
+    inBasket.setText("Убрать");
+    inBasket.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-            @Override
-            public void PassUserNick(String nick) {
-                Query query=firebaseModel.getUsersReference().child(nick).child("clothes").
-                        child("shoes").child(String.valueOf(clothesViewing.getClothesTitle()));
-                query.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if(snapshot.exists()){
-                            buyClothesBottom.setText("Куплено");
-                            buyClothesBottom.setBackgroundResource(R.drawable.corners14grey);
-                            inBasket.setBackgroundResource(R.drawable.corners14grey);
-                        }else {
-                            buyClothesBottom.setText("Купить");
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-            }
+          @Override
+          public void PassUserNick(String nick) {
+            firebaseModel.getUsersReference().child(nick).child("basket")
+                    .child(clothesViewing.getClothesTitle()).removeValue();
+            inBasket.setText("Убрано");
+          }
         });
-    }
+      }
+    });
+  }
+
+  public void checkClothesOnBuy(){
+    RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+      @Override
+      public void PassUserNick(String nick) {
+        Query query=firebaseModel.getUsersReference().child(nick).child("clothes").
+                child("shoes").child(String.valueOf(clothesViewing.getClothesTitle()));
+        query.addValueEventListener(new ValueEventListener() {
+          @Override
+          public void onDataChange(@NonNull DataSnapshot snapshot) {
+            if(snapshot.exists()){
+              buyClothesBottom.setText("Куплено");
+              buyClothesBottom.setBackgroundResource(R.drawable.corners14grey);
+              inBasket.setBackgroundResource(R.drawable.corners14grey);
+            }else {
+              buyClothesBottom.setText("Купить");
+            }
+          }
+
+          @Override
+          public void onCancelled(@NonNull DatabaseError error) {
+
+          }
+        });
+      }
+    });
+  }
 }

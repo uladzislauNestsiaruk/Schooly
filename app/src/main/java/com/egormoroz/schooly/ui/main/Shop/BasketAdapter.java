@@ -27,94 +27,94 @@ import java.util.ArrayList;
 
 public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.ViewHolder>{
 
-    private NewClothesAdapter.ItemClickListener clickListener;
-    ArrayList<Clothes> clothesArrayList;
-    private FirebaseModel firebaseModel = new FirebaseModel();
-    FirebaseStorage storage = FirebaseStorage.getInstance();
-    StorageReference storageReference=storage.getReference();
-    static Clothes clothes,trueClothes;
-    ItemClickListener onClothesClick;
-    static int pos;
+  private NewClothesAdapter.ItemClickListener clickListener;
+  ArrayList<Clothes> clothesArrayList;
+  private FirebaseModel firebaseModel = new FirebaseModel();
+  FirebaseStorage storage = FirebaseStorage.getInstance();
+  StorageReference storageReference=storage.getReference();
+  static Clothes clothes,trueClothes;
+  ItemClickListener onClothesClick;
+  static int pos;
 
-    public BasketAdapter(ArrayList<Clothes> clothesArrayList, ItemClickListener onClothesClick) {
-        this.clothesArrayList= clothesArrayList;
-        this.onClothesClick= onClothesClick;
+  public BasketAdapter(ArrayList<Clothes> clothesArrayList, ItemClickListener onClothesClick) {
+    this.clothesArrayList= clothesArrayList;
+    this.onClothesClick= onClothesClick;
+  }
+
+
+  @NotNull
+  @Override
+  public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
+    RelativeLayout v = (RelativeLayout) LayoutInflater.from(viewGroup.getContext()).
+            inflate(R.layout.new_clothes_rvitem, viewGroup, false);
+    ViewHolder viewHolder=new ViewHolder(v);
+    return viewHolder;
+  }
+
+  @Override
+  public void onBindViewHolder(ViewHolder holder, int position) {
+    firebaseModel.initAll();
+    clothes=clothesArrayList.get(position);
+    holder.clothesTitle.setText(clothes.getClothesTitle());
+    holder.clothesPrise.setText(String.valueOf(clothes.getClothesPrice()));
+    File file=new File(clothes.getClothesImage());
+    storageReference.child("clothes").getFile(file);
+    holder.clothesImage.setVisibility(View.VISIBLE);
+    Picasso.get().load(clothes.getClothesImage()).into(holder.clothesImage);
+    holder.itemView.setOnClickListener(new View.OnClickListener(){
+      @Override
+      public void onClick(View v)
+      {
+        onClothesClick.onItemClick(clothesArrayList.get(holder.getAdapterPosition()));
+        trueClothes=clothesArrayList.get(holder.getAdapterPosition());
+      }
+    });
+  }
+
+
+
+  @Override
+  public int getItemCount() {
+    return clothesArrayList.size();
+  }
+
+  public class ViewHolder extends RecyclerView.ViewHolder {
+    TextView clothesPrise,clothesTitle;
+    ImageView clothesImage;
+    ViewHolder(View itemView) {
+      super(itemView);
+      clothesPrise=itemView.findViewById(R.id.clothesPrice);
+      clothesImage=itemView.findViewById(R.id.clothesImage);
+      clothesTitle=itemView.findViewById(R.id.clothesTitle);
     }
 
 
-    @NotNull
+  }
+
+  public static void singeClothesInfo(ItemClickListener itemClickListener){
+    itemClickListener.onItemClick(trueClothes);
+  }
+
+
+  public interface ItemClickListener {
+    void onItemClick( Clothes clothes);
+  }
+
+  static class SpaceItemDecoration extends RecyclerView.ItemDecoration {
+
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
-        RelativeLayout v = (RelativeLayout) LayoutInflater.from(viewGroup.getContext()).
-                inflate(R.layout.new_clothes_rvitem, viewGroup, false);
-        ViewHolder viewHolder=new ViewHolder(v);
-        return viewHolder;
+    public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+      int margin = 16;
+      int space = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, margin, view.getResources().getDisplayMetrics());
+      if(parent.getChildAdapterPosition(view) == 0){
+        outRect.left = space;
+        outRect.bottom = 0;
+      }
+      if(parent.getChildAdapterPosition(view) == 4){
+        outRect.right = space;
+        outRect.bottom = 0;
+      }
     }
 
-    @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        firebaseModel.initAll();
-        clothes=clothesArrayList.get(position);
-        holder.clothesTitle.setText(clothes.getClothesTitle());
-        holder.clothesPrise.setText(String.valueOf(clothes.getClothesPrice()));
-        File file=new File(clothes.getClothesImage());
-        storageReference.child("clothes").getFile(file);
-        holder.clothesImage.setVisibility(View.VISIBLE);
-        Picasso.get().load(clothes.getClothesImage()).into(holder.clothesImage);
-        holder.itemView.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v)
-            {
-                onClothesClick.onItemClick(clothesArrayList.get(holder.getAdapterPosition()));
-                trueClothes=clothesArrayList.get(holder.getAdapterPosition());
-            }
-        });
-    }
-
-
-
-    @Override
-    public int getItemCount() {
-        return clothesArrayList.size();
-    }
-
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView clothesPrise,clothesTitle;
-        ImageView clothesImage;
-        ViewHolder(View itemView) {
-            super(itemView);
-            clothesPrise=itemView.findViewById(R.id.clothesPrice);
-            clothesImage=itemView.findViewById(R.id.clothesImage);
-            clothesTitle=itemView.findViewById(R.id.clothesTitle);
-        }
-
-
-    }
-
-    public static void singeClothesInfo(ItemClickListener itemClickListener){
-        itemClickListener.onItemClick(trueClothes);
-    }
-
-
-    public interface ItemClickListener {
-        void onItemClick( Clothes clothes);
-    }
-
-    static class SpaceItemDecoration extends RecyclerView.ItemDecoration {
-
-        @Override
-        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-            int margin = 16;
-            int space = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, margin, view.getResources().getDisplayMetrics());
-            if(parent.getChildAdapterPosition(view) == 0){
-                outRect.left = space;
-                outRect.bottom = 0;
-            }
-            if(parent.getChildAdapterPosition(view) == 4){
-                outRect.right = space;
-                outRect.bottom = 0;
-            }
-        }
-
-    }
+  }
 }

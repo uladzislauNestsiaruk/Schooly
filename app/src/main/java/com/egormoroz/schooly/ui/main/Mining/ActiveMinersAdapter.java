@@ -5,6 +5,7 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -15,6 +16,7 @@ import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
+import com.squareup.picasso.Picasso;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -45,6 +47,8 @@ public class ActiveMinersAdapter extends RecyclerView.Adapter<ActiveMinersAdapte
         firebaseModel.initAll();
         Miner miner=listAdapterActivaMiner.get(holder.getAdapterPosition());
         holder.inHour.setText(String.valueOf(miner.getInHour()));
+        holder.minerImage.setVisibility(View.VISIBLE);
+        Picasso.get().load(miner.getMinerImage()).into(holder.minerImage);
         holder.putAway.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -66,10 +70,12 @@ public class ActiveMinersAdapter extends RecyclerView.Adapter<ActiveMinersAdapte
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         final TextView inHour,putAway;
+        ImageView minerImage;
         ViewHolder(View itemView) {
             super(itemView);
             inHour=itemView.findViewById(R.id.minerinhour);
             putAway=itemView.findViewById(R.id.putaway);
+            minerImage=itemView.findViewById(R.id.activeminerimage);
         }
 
         @Override

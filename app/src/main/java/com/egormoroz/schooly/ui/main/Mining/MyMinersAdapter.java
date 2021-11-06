@@ -19,6 +19,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -50,6 +51,8 @@ public class MyMinersAdapter extends RecyclerView.Adapter<MyMinersAdapter.ViewHo
     public void onBindViewHolder(ViewHolder holder, int position) {
         Miner miner=listAdapter.get(position);
         holder.inHour.setText(String.valueOf(miner.getInHour()));
+        holder.minerImage.setVisibility(View.VISIBLE);
+        Picasso.get().load(miner.getMinerImage()).into(holder.minerImage);
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @Override
             public void PassUserNick(String nick) {
@@ -118,13 +121,13 @@ public class MyMinersAdapter extends RecyclerView.Adapter<MyMinersAdapter.ViewHo
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         final TextView use;
-        final ImageView recycleviewImageView;
+        final ImageView minerImage;
         final TextView inHour;
         ViewHolder(View itemView) {
             super(itemView);
             use = itemView.findViewById(R.id.use);
             inHour=itemView.findViewById(R.id.inhour);
-            recycleviewImageView=itemView.findViewById(R.id.viewrecycler);
+            minerImage=itemView.findViewById(R.id.viewrecycler);
         }
 
         @Override

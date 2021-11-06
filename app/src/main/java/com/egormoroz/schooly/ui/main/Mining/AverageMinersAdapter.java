@@ -5,6 +5,7 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -19,6 +20,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -50,6 +52,8 @@ public class AverageMinersAdapter extends RecyclerView.Adapter<AverageMinersAdap
         Miner miner=listAdapterAverageMiner.get(position);
         holder.minerPrice.setText(String.valueOf(miner.getMinerPrice()));
         String minerPriceText= (String) holder.minerPrice.getText();
+        holder.minerImage.setVisibility(View.VISIBLE);
+        Picasso.get().load(miner.getMinerImage()).into(holder.minerImage);
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @Override
             public void PassUserNick(String nick) {
@@ -108,10 +112,12 @@ public class AverageMinersAdapter extends RecyclerView.Adapter<AverageMinersAdap
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         final TextView minerPrice,buy;
+        ImageView minerImage;
         ViewHolder(View itemView) {
             super(itemView);
             minerPrice=itemView.findViewById(R.id.minerprice);
             buy=itemView.findViewById(R.id.buy);
+            minerImage=itemView.findViewById(R.id.minerImage);
         }
 
         @Override
