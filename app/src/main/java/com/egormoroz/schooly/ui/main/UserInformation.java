@@ -15,6 +15,9 @@ public class UserInformation {
     private long level=1;
     private long money=100;
     private double todayMining=0;
+    private String friends;
+    private String subscribers;
+    private String queue;
     public UserInformation(){
     }
 
@@ -96,8 +99,30 @@ public class UserInformation {
         this.todayMining = todayMining;
     }
 
+    public String getFriends(){
+        return friends;
+    }
+
+    public void setFriends(String friends){
+        this.friends = friends;
+    }
+
+    public String getSubscribers(){
+        return subscribers;
+    }
+
+    public void setSubscribers(String subscribers){
+        this.subscribers = subscribers;
+    }
+    public String getQueue(){
+        return this.queue;
+    }
+    public void setQueue(String queue){
+        this.queue = queue;
+    }
     public UserInformation(String nick, String phone, String uid, long Avatar, String password,
-                           String gender, long age,String miners,long level,long money,double todayMining) {
+                           String gender, long age,String miners,long level,long money,double todayMining,
+                           String friends, String subscribers, String queue) {
         this.Nick = nick;
         this.uid = uid;
         this.phone = phone;
@@ -109,6 +134,9 @@ public class UserInformation {
         this.level=level;
         this.money=money;
         this.todayMining=todayMining;
+        this.friends = friends;
+        this.subscribers = subscribers;
+        this.queue = queue;
     }
 
 }

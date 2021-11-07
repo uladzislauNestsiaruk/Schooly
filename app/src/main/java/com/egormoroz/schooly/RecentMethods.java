@@ -16,14 +16,10 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.SignInMethodQueryResult;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.*;
 
 import java.util.ArrayList;
-import java.util.StringJoiner;
+import java.util.Queue;
 
 public class RecentMethods {
     public static void isNickCorrect(String nickname, DatabaseReference reference, TextView errorTextnickname) {
@@ -109,7 +105,7 @@ public class RecentMethods {
     public static boolean saveData(DatabaseReference ref, FirebaseUser user, String nick) {
 
         UserInformation res = new UserInformation(nick, "unknown", user.getUid(),
-                6, "unknown", "Helicopter", 1000, "Miner", 1,100,0);
+                6, "unknown", "Helicopter", 1000, "Miner", 1,100,0, "", "", "");
         ref.child(nick).setValue(res);
         return nick.isEmpty();
     }
@@ -163,6 +159,9 @@ public class RecentMethods {
                     userData.setPassword(snapshot.child("password").getValue(String.class));
                     userData.setPhone(snapshot.child("phone").getValue(String.class));
                     userData.setUid(snapshot.child("uid").getValue(String.class));
+                    userData.setQueue(snapshot.child("queue").getValue(String.class));
+                    userData.setSubscribers(snapshot.child("subscribers").getValue(String.class));
+                    userData.setFriends(snapshot.child("friends").getValue(String.class));
                     data.add(userData);
                 }
                 callback.LoadData(data);
@@ -768,6 +767,159 @@ public class RecentMethods {
         });
     }
 
+    ////////////////////////// Friends System /////////////////////
+    public static void getFriendsList(String nickName, FirebaseModel model, Callbacks.getFriendsList callback){
+        model.initAll();
+        Query query = model.getUsersReference().orderByChild("nick").equalTo(nickName);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                ArrayList<String> friendsList = new ArrayList<>();
+                for(DataSnapshot snap : snapshot.getChildren()){
+                    String[] friends = (snap.child("friends").getValue(String.class)).split("#");
+                    for(String friend : friends)
+                        friendsList.add(friend);
+                }
+                callback.getFriendsList(friendsList);
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
 
+            }
+        });
+    }
+    public static void FriendQueryAccapted(String userName1, String userName2, FirebaseModel model){
+        model.initAll();
+        Query query = model.getUsersReference().child("nick").equalTo(userName1);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot snap : snapshot.getChildren()){
+                    String friends = snap.child("friends").getValue(String.class) + "#" + userName2;
+                    String subscribers = snap.child("subscribers").getValue(String.class);
+                    String queue = snap.child("queue").getValue(String.class);
+                    queue = queue.replace("#" + userName2, "");
+                    subscribers = subscribers.replace("#" + userName2, "");
+                    model.getUsersReference().child(userName1).child("friends").setValue(friends);
+                    model.getUsersReference().child(userName1).child("subscribers").setValue(subscribers);
+                    model.getUsersReference().child(userName1).child("queue").setValue(queue);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        query = model.getUsersReference().child("nick").equalTo(userName2);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot snap : snapshot.getChildren()){
+                    String friends = snap.child("friends").getValue(String.class) + "#" + userName1;
+                    model.getUsersReference().child(userName2).child("friends").setValue(friends);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+    public void getAmountOfFriends(String uid, FirebaseModel model, Callbacks.getAmountOfFriends callback){
+        model.initAll();
+        Query query = model.getUsersReference().child("uid").equalTo(uid);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot snap : snapshot.getChildren()){
+                    int cnt = 0;
+                    String friendsList = snap.child("friends").getValue(String.class);
+                    if(friendsList.isEmpty()) {
+                        callback.getAmountOfFriends(0);
+                        break;
+                    }
+                    for(char c : friendsList.toCharArray())
+                        if(c == '#')
+                            cnt++;
+                    callback.getAmountOfFriends(cnt);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+    ////////////////////////// Subscribers System /////////////////
+    public static void getSubscribersList(String nickName, FirebaseModel model, Callbacks.getSubscribersList callback){
+        model.initAll();
+        Query query = model.getUsersReference().child("nick").equalTo(nickName);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                ArrayList<String> subscribersList = new ArrayList<>();
+                for(DataSnapshot snap : snapshot.getChildren()){
+                    String[] subscribers = (snap.child("subscribers").getValue(String.class)).split("#");
+                    for(String subscriber : subscribers)
+                        subscribersList.add(subscriber);
+                }
+                callback.getSubscribersList(subscribersList);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+    public static void friendQuery(String userName1, String userName2, FirebaseModel model){
+        model.initAll();
+        Query query = model.getUsersReference().child("nick").equalTo(userName1);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot snap : snapshot.getChildren()){
+                    String subscribers = snap.child("subscribers").getValue(String.class) + "#" + userName2;
+                    String queue = snap.child("queue").getValue(String.class) + "#" + userName2;
+                    model.getUsersReference().child(userName1).child("subscribers").setValue(subscribers);
+                    model.getUsersReference().child(userName1).child("queue").setValue(queue);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+    public static void getAmountOfSubscribers(String uid, FirebaseModel model, Callbacks.getAmountOfSubscribers callback){
+        model.initAll();
+        Query query = model.getUsersReference().child("uid").equalTo(uid);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot snap : snapshot.getChildren()){
+                    int cnt = 0;
+                    String subscribersList = snap.child("subscribers").getValue(String.class);
+                    if(subscribersList.isEmpty()) {
+                        callback.getAmountOfSubscribers(0);
+                        break;
+                    }
+                    for(char c : subscribersList.toCharArray())
+                        if(c == '#')
+                            cnt++;
+                    callback.getAmountOfSubscribers(cnt);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
 }

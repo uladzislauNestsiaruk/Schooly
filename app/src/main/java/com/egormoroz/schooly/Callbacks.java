@@ -3,7 +3,6 @@ package com.egormoroz.schooly;
 import com.egormoroz.schooly.ui.main.Mining.Miner;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
 import com.egormoroz.schooly.ui.main.UserInformation;
-import com.google.firebase.database.DataSnapshot;
 
 import java.util.ArrayList;
 
@@ -57,5 +56,20 @@ public class Callbacks {
     public interface GetClothes{
         default void getClothes(ArrayList<Clothes> allClothes) {
         }
+    }
+    public interface getFriendsList{
+        default void getFriendsList(ArrayList<String> friends){}
+    }
+    public interface getAmountOfFriends{
+        default void getAmountOfFriends(int amount){}
+    }
+    public interface getSubscribersList{
+        default void getSubscribersList(ArrayList<String> subscribers){}
+    }
+    public interface getAmountOfSubscribers{
+        default void getAmountOfSubscribers(int amount){}
+    }
+    public interface friendQuery{
+        default void friendQuery(){}
     }
 }
