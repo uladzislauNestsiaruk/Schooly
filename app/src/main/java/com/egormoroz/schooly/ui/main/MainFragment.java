@@ -1,6 +1,7 @@
 package com.egormoroz.schooly.ui.main;
 
 import android.app.Activity;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,6 +13,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -35,14 +38,15 @@ import java.util.ArrayList;
 
 public class MainFragment extends Fragment{
     protected DialogsListAdapter<IDialog> dialogsAdapter;
-    protected ImageLoader imageLoader;
-    private MainViewModel mainViewModel;
-    private TextView todayMiningMain;
+    TextView todayMiningMain;
     private FirebaseModel firebaseModel = new FirebaseModel();
     ArrayList<Clothes> clothesArrayList=new ArrayList<Clothes>();
     private UserInformation userData = new UserInformation();
     RecyclerView clothesRecyclerMain;
     NewClothesAdapter.ItemClickListener itemClickListener;
+    private static final int NOTIFY_ID = 101;
+
+    private static final String CHANNEL_ID = "Cat channel";
 
 
     public static MainFragment newInstance() {
@@ -93,6 +97,7 @@ public class MainFragment extends Fragment{
             @Override
             public void onClick(View v) {
                 RecentMethods.setCurrentFragment(MiningFragment.newInstanse(), getActivity());
+
             }
         });
 
@@ -129,6 +134,28 @@ public class MainFragment extends Fragment{
                 ((MainActivity)getActivity()).setCurrentFragment(ViewingClothes.newInstance());
             }
         };
+        TextView appName=view.findViewById(R.id.appname);
+        appName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                Intent notificationIntent = new Intent(getActivity(), MainActivity.class);
+//                PendingIntent contentIntent = PendingIntent.getActivity(getActivity(),
+//                        0, notificationIntent,
+//                        PendingIntent.FLAG_CANCEL_CURRENT);
+
+                NotificationCompat.Builder builder =
+                        new NotificationCompat.Builder(getActivity(), CHANNEL_ID)
+                                .setSmallIcon(R.drawable.ic_schoolycoin)
+                                .setContentTitle("Напоминание")
+                                .setContentText("Скоро все будет)")
+                                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
+                NotificationManagerCompat notificationManager =
+                        NotificationManagerCompat.from(getActivity());
+                notificationManager.notify(NOTIFY_ID, builder.build());
+                Log.d("######", "good");
+            }
+        });
     }
 
     public void loadClothesFromBase(){
@@ -146,6 +173,7 @@ public class MainFragment extends Fragment{
             }
         });
     }
+
 
 
 }

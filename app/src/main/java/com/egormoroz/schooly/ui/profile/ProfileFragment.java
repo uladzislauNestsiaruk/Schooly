@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -46,6 +47,7 @@ public class ProfileFragment extends Fragment {
     File file;
     String link;
     DatabaseReference user;
+    GLSurfaceView glSurfaceView;
 
     @Override
     public void onAttach(Context context) {
@@ -126,6 +128,7 @@ public class ProfileFragment extends Fragment {
         }
 
 
+
         return root;
     }
 
@@ -179,6 +182,7 @@ public class ProfileFragment extends Fragment {
                         ((MainActivity) getActivity()).setCurrentFragment(WardrobeFragment.newInstance());
                     }
                 });
+                glSurfaceView=view.findViewById(R.id.mainlookview);
 
                 break;
             case "other":
