@@ -16,12 +16,16 @@ import androidx.core.app.NotificationManagerCompat;
 
 import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FirebaseModel;
+import com.egormoroz.schooly.MainActivity;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
+import com.egormoroz.schooly.ui.main.Mining.Miner;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.Query;
+
+import java.util.ArrayList;
 
 public class NontificationService extends Service {
     @Nullable
@@ -30,26 +34,34 @@ public class NontificationService extends Service {
         return null;
     }
     FirebaseModel firebaseModel=new FirebaseModel();
-    private static final int NOTIFY_ID = 101;
+    private static final int NOTIFY_ID = 102;
     private static final String CHANNEL_ID = "Tyomaa channel";
+    ArrayList<String> listOfNontifications = new ArrayList<String>();
+    ArrayList<String> list = new ArrayList<String>();
+    String otherUserNickNonts;
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        firebaseModel.initAll();
+        getChangesInSubscribers();
         createNotificationChannel();
         nontifcations();
         return super.onStartCommand(intent, flags, startId);
     }
 
+
+
     public void nontifcations() {
-        Intent intent = new Intent(this, MainFragment.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+        Intent notificationIntent = new Intent(this, MainActivity.class);
+        PendingIntent contentIntent = PendingIntent.getActivity(this,
+                0, notificationIntent,
+                PendingIntent.FLAG_CANCEL_CURRENT);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_schoolycoin)
-                .setContentTitle("tyomaa")
-                .setContentText("hello")
-                .setContentIntent(pendingIntent)
+                .setContentTitle(otherUserNickNonts)
+                .setContentText("хочет добавить вас в друзья")
+                .setContentIntent(contentIntent)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
         NotificationManagerCompat notificationManager =
@@ -85,6 +97,13 @@ public class NontificationService extends Service {
                 query.addChildEventListener(new ChildEventListener() {
                     @Override
                     public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                        for (DataSnapshot snap:snapshot.getChildren()){
+                            String nontsName=snap.getValue(String.class);
+                            Log.d("###", "name"+nontsName);
+                            listOfNontifications.add(nontsName);
+                        }
+                        Log.d("###", "ddefrg"+listOfNontifications);
+                       otherUserNickNonts=listOfNontifications.get(listOfNontifications.size());
 
                     }
 
@@ -111,5 +130,5 @@ public class NontificationService extends Service {
             }
         });
     }
-    //
+
 }

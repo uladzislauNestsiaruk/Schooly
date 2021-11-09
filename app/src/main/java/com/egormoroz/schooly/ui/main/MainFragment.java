@@ -95,6 +95,13 @@ public class MainFragment extends Fragment{
                 ((MainActivity)getActivity()).setCurrentFragment((ShopFragment.newInstance()));
             }
         });
+        TextView tests=view.findViewById(R.id.tests);
+        tests.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                firebaseModel.getUsersReference().child("tyomaa").child("subscribers").setValue("katysha");
+            }
+        });
         TextView mining=view.findViewById(R.id.mining);
         mining.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -142,15 +149,16 @@ public class MainFragment extends Fragment{
         appName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent notificationIntent = new Intent(getActivity(), MainActivity.class);
-//                PendingIntent contentIntent = PendingIntent.getActivity(getActivity(),
-//                        0, notificationIntent,
-//                        PendingIntent.FLAG_CANCEL_CURRENT);
+                Intent notificationIntent = new Intent(getActivity(), MainActivity.class);
+                PendingIntent contentIntent = PendingIntent.getActivity(getActivity(),
+                        0, notificationIntent,
+                        PendingIntent.FLAG_CANCEL_CURRENT);
 
                 NotificationCompat.Builder builder = new NotificationCompat.Builder(getActivity(), CHANNEL_ID)
                         .setSmallIcon(R.drawable.ic_schoolycoin)
                         .setContentTitle("tyomaa")
                         .setContentText("hello")
+                        .setContentIntent(contentIntent)
                         .setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
                 NotificationManagerCompat notificationManager =
