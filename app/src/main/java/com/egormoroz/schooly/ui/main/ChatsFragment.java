@@ -70,16 +70,21 @@ public class ChatsFragment extends Fragment
         RetrieveAndDisplayGroups();
         list_view = root.findViewById(R.id.list_view);
         list_view.setAdapter(arrayAdapter);
-        list_view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                String name = adapterView.getItemAtPosition(position).toString();
-                Bundle nick = new Bundle();
-                Intent ChatIntent = new Intent(getContext(), ChatActivity.class);
-                nick.putString("othUser",name);
-                nick.putString("curUser",currentUserName);
-                ChatIntent.putExtras(nick);
-                startActivity(ChatIntent);
+            public void PassUserNick(String nick) {
+                list_view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                        String name = adapterView.getItemAtPosition(position).toString();
+                        Bundle nicknames = new Bundle();
+                        Intent ChatIntent = new Intent(getContext(), ChatActivity.class);
+                        nicknames.putString("othUser", name);
+                        nicknames.putString("curUser", nick);
+                        ChatIntent.putExtras(nicknames);
+                        startActivity(ChatIntent);
+                    }
+                });
             }
         });
         return root;
@@ -106,7 +111,6 @@ public class ChatsFragment extends Fragment
                             set.add(((DataSnapshot)iterator.next()).getKey());
                             Log.d("Chat", String.valueOf(set));
                         }
-                        currentUserName = nick;
                         list_of_groups.clear();
                         list_of_groups.addAll(set);
                         arrayAdapter.notifyDataSetChanged();

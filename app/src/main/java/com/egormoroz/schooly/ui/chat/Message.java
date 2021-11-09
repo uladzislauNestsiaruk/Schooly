@@ -1,11 +1,8 @@
 package com.egormoroz.schooly.ui.chat;
 
-import com.stfalcon.chatkit.commons.models.IMessage;
-import com.stfalcon.chatkit.commons.models.IUser;
-
 import java.util.Date;
 
-public class Message implements IMessage {
+public class Message {
     private String from, message, type, to, messageID, time, date, name;
 
     public Message(String randomId, User user, String randomMessage, Date date)
@@ -28,22 +25,17 @@ public class Message implements IMessage {
     {
 
     }
-    @Override
+
     public String getId() {
         return messageID;
     }
 
-    @Override
     public String getText() {
         return null;
     }
 
-    @Override
-    public IUser getUser() {
-        return null;
-    }
 
-    @Override
+
     public Date getCreatedAt() {
         return null;
     }

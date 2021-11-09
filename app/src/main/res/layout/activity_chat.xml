@@ -77,7 +77,7 @@
             android:layout_centerVertical="true"
             android:layout_marginEnd="8dp"
             android:background="@color/app_color"
-            android:src="@drawable/ic_sendmessage" />
+            android:src="@drawable/ic_send" />
 
 
         <ImageView

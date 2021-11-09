@@ -2,7 +2,6 @@ package com.egormoroz.schooly;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,11 +12,7 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.egormoroz.schooly.ui.chat.Dialog;
-
 import com.egormoroz.schooly.ui.main.MainFragment;
-import com.egormoroz.schooly.ui.main.Mining.Miner;
-import com.egormoroz.schooly.ui.main.Mining.MiningFragment;
 import com.egormoroz.schooly.ui.main.RegisrtationstartFragment;
 import com.egormoroz.schooly.ui.main.UserInformation;
 import com.egormoroz.schooly.ui.news.NewsFragment;
@@ -30,15 +25,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Map;
 
-public class MainActivity extends AppCompatActivity implements
-        com.egormoroz.schooly.ui.main.sendDialogs{
-    private ArrayList<Dialog> dialogs = new ArrayList<>();
+public class MainActivity extends AppCompatActivity {
+
     private FirebaseDatabase database;
     private DatabaseReference reference;
     private FirebaseAuth AuthenticationBase;
@@ -124,16 +114,7 @@ public class MainActivity extends AppCompatActivity implements
                     }
                 });
     }
-    @Override
-    public void setDialogs(ArrayList<Dialog> dialogs) {
-//        Fragment currentFragment = getSupportFragmentManager().
-//                findFragmentById(R.id.frame);
-//        Log.d("#######", dialogs.size() + " Transaction");
-//        if(currentFragment instanceof ChatFragment) {
-//            ChatFragment fragment = (ChatFragment) currentFragment;
-//            fragment.setDialogs(dialogs);
-//        }
-    }
+
     public void initFirebase(){
         database = FirebaseDatabase.getInstance(CONST.RealtimeDatabaseUrl);
         AuthenticationBase = FirebaseAuth.getInstance();

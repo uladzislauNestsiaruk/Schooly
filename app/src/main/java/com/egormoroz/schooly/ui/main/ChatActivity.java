@@ -56,6 +56,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
@@ -65,6 +66,7 @@ import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
 
+import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -339,6 +341,7 @@ public class ChatActivity extends Activity
 
                     DatabaseReference userMessageKeyRef = firebaseModel.getUsersReference().child(nick).child("Chats").child(messageReceiverName).child("Messages").push();
                     String messagePushID = userMessageKeyRef.getKey();
+                    DatabaseReference userChatRef = firebaseModel.getUsersReference().child(nick).child("Chats").child(messageReceiverName);
 
                     Map messageTextBody = new HashMap();
                     messageTextBody.put("message", messageText);
@@ -372,14 +375,13 @@ public class ChatActivity extends Activity
             @Override
             public void PassUserNick(String nick) {
                 StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("Voice");
-
-
                 sendDialog(nick, messageReceiverName);
                 DatabaseReference userMessageKeyRef = firebaseModel.getUsersReference().child(nick).child("Chats").child(messageReceiverName).child("Messages").push();
                 final String messagePushID = userMessageKeyRef.getKey();
                 final StorageReference filePath = storageReference.child(messagePushID + "." + "3gp");
-
-                uploadTask = filePath.putFile(Uri.parse(myUrl));
+                myUrl = getExternalCacheDir().getAbsolutePath() + "/voice.3gp";
+                Uri file = Uri.fromFile(new File(myUrl));
+                uploadTask = filePath.putFile(file);
                 uploadTask.continueWithTask(new Continuation() {
                     @Override
                     public Object then(@NonNull Task task) throws Exception {
@@ -457,7 +459,7 @@ public class ChatActivity extends Activity
 
 
     private void startRecording() throws IOException {
-        myUrl = getExternalCacheDir().getAbsolutePath() + "/audiorecordtest.3gp";
+        myUrl = getExternalCacheDir().getAbsolutePath() + "/voice.3gp";
 
         recorder = new MediaRecorder();
         recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
