@@ -35,15 +35,12 @@ import com.egormoroz.schooly.ui.main.Shop.NewClothesAdapter;
 import com.egormoroz.schooly.ui.main.Shop.ShopFragment;
 import com.egormoroz.schooly.ui.main.Shop.ViewingClothes;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.stfalcon.chatkit.commons.ImageLoader;
-import com.stfalcon.chatkit.commons.models.IDialog;
-import com.stfalcon.chatkit.dialogs.DialogsListAdapter;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class MainFragment extends Fragment{
-    protected DialogsListAdapter<IDialog> dialogsAdapter;
+
     TextView todayMiningMain;
     private FirebaseModel firebaseModel = new FirebaseModel();
     ArrayList<Clothes> clothesArrayList=new ArrayList<Clothes>();

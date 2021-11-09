@@ -30,7 +30,7 @@ android {
 }
 
 dependencies {
-    implementation 'com.github.stfalcon-studio:Chatkit:0.4.1'
+
     implementation "com.squareup.picasso:picasso:2.71828"
     implementation 'com.google.firebase:firebase-analytics'
     implementation platform('com.google.firebase:firebase-bom:28.3.0')
@@ -63,4 +63,5 @@ dependencies {
     implementation 'com.google.firebase:firebase-messaging:22.0.0'
     implementation 'com.firebaseui:firebase-ui-database:3.2.2'
     implementation 'de.hdodenhof:circleimageview:2.2.0'
+    implementation "com.github.JagarYousef:ChatVoicePlayer:1.1.0"
 }

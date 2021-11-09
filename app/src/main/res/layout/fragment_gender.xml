@@ -53,7 +53,7 @@
                 android:layout_marginStart="88dp"
                 android:layout_marginEnd="88dp"
                 android:textSize="18sp"
-                android:button="@color/transparent"
+                android:button="@color/app_color"
                 android:background="@drawable/radio_selector"
                 android:textColor="@drawable/radio_botton_text"
                 android:fontFamily="@font/montserrat_extrabold"/>
@@ -67,7 +67,7 @@
                 android:layout_marginEnd="88dp"
                 android:textSize="18sp"
                 android:layout_marginTop="20dp"
-                android:button="@color/transparent"
+                android:button="@color/app_color2"
                 android:background="@drawable/radio_selector"
                 android:textColor="@drawable/radio_botton_text"
                 android:fontFamily="@font/montserrat_extrabold"/>

@@ -1,16 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-   <de.hdodenhof.circleimageview.CircleImageView
-       android:id="@+id/message_profile_image"
-       android:layout_width="40dp"
-       android:layout_height="40dp"
-       android:layout_marginTop="10dp"
-       android:src="@drawable/ic_image"
-       />
 
     <TextView
         android:id="@+id/receiver_message_text"
@@ -19,7 +12,6 @@
         android:layout_alignParentTop = "true"
         android:layout_marginTop = "10dp"
         android:layout_marginLeft = "3dp"
-        android:layout_toEndOf = "@+id/message_profile_image"
         android:background = "@drawable/ic_arrow___left"
         android:text = "receiver messages here"
         android:padding = "10dp"
@@ -62,25 +54,29 @@
         android:layout_marginBottom="5dp"
         android:scaleType="centerCrop" />
 
-    <ImageView
-        android:id="@+id/sender_voice"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="50dp"
-        android:layout_marginTop="13dp"
-        android:src="@drawable/ic_play"
-        android:scaleType="centerCrop"/>
 
-    <ImageView
-        android:id="@+id/receiver_voice"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="50dp"
-        android:layout_marginTop="13dp"
-        android:src="@drawable/ic_play"
-        android:scaleType="centerCrop"/>
+    <me.jagar.chatvoiceplayerlibrary.VoicePlayerView
+        android:id="@+id/voicePlayerView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginBottom="5dp"
+        app:enableVisualizer="false"
+        app:playPauseBackgroundColor="@color/app_color2"
+        app:playPauseCornerRadius="100"
+        app:playProgressbarColor="@color/app_color"
+        app:seekBarThumbColor="@color/app_color"
+        app:shareCornerRadius="100"
+        app:showShareButton="false"
+        app:showTiming="true"
+        app:timingBackgroundColor="@color/app_grey"
+        app:viewBackground="@color/app_grey"
+        app:viewCornerRadius="100"
+        app:visualizationNotPlayedColor="@color/app_color"
+        app:visualizationPlayedColor="@color/app_color2" />
 
     <ImageView
         android:id="@+id/message_receiver_image_view"
@@ -90,6 +86,27 @@
         android:layout_marginStart="50dp"
         android:layout_marginTop="13dp"
         android:scaleType="centerCrop" />
+
+    <me.jagar.chatvoiceplayerlibrary.VoicePlayerView
+        android:id="@+id/voicePlayerViewReceiver"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="13dp"
+        app:enableVisualizer="false"
+        app:playPauseBackgroundColor="@color/app_color2"
+        app:playPauseCornerRadius="100"
+        app:playProgressbarColor="@color/app_color"
+        app:seekBarThumbColor="@color/app_color"
+        app:shareCornerRadius="100"
+        app:showShareButton="false"
+        app:showTiming="true"
+        app:timingBackgroundColor="@color/app_grey"
+        app:viewBackground="@color/app_grey"
+        app:viewCornerRadius="100"
+        app:visualizationNotPlayedColor="@color/app_color"
+        app:visualizationPlayedColor="@color/app_color2" />
 
     <TextView
         android:id = "@+id/sender_message_text"

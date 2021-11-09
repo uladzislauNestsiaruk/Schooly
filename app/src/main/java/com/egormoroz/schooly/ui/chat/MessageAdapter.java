@@ -43,6 +43,7 @@ import java.io.IOException;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import me.jagar.chatvoiceplayerlibrary.VoicePlayerView;
 
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageViewHolder> {
     private List<Message> userMessagesList;
@@ -51,7 +52,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     private MediaPlayer player;
     private String fromUserID;
     private String messageID;
-    private DatabaseReference ref;
+
+
 
     public MessageAdapter(List<Message> userMessagesList, String messageSenderId, String messageReceiverId ) {
         this.userMessagesList = userMessagesList;
@@ -70,22 +72,21 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         public CircleImageView receiverProfileImage;
         public ImageView messageSenderPicture;
         public ImageView messageReceiverPicture;
-        public static ImageView messageSenderPlay;
-        public static ImageView messageReceiverPlay;
-
+        public static VoicePlayerView voicePlayerView;
+        public static VoicePlayerView voicePlayerViewReceiver;
 
         public MessageViewHolder(@NonNull View itemView) {
             super(itemView);
 
             receiverMessageTime = itemView.findViewById(R.id.receiver_time);
             senderMessageTime = itemView.findViewById(R.id.sender_time);
-            messageReceiverPlay = itemView.findViewById(R.id.sender_voice);
-            messageSenderPlay = itemView.findViewById(R.id.receiver_voice);
             senderMessageText = (TextView) itemView.findViewById(R.id.sender_message_text);
             receiverMessageText = (TextView) itemView.findViewById(R.id.receiver_message_text);
-            receiverProfileImage = (CircleImageView) itemView.findViewById(R.id.message_profile_image);
+         //   receiverProfileImage = (CircleImageView) itemView.findViewById(R.id.message_profile_image);
             messageReceiverPicture = itemView.findViewById(R.id.message_receiver_image_view);
             messageSenderPicture = itemView.findViewById(R.id.message_sender_image_view);
+            voicePlayerView = itemView.findViewById(R.id.voicePlayerView);
+            voicePlayerViewReceiver = itemView.findViewById(R.id.voicePlayerViewReceiver);
         }
     }
 
@@ -95,7 +96,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     public MessageViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext())
                 .inflate(R.layout.custom_messages_layout, viewGroup, false);
-        ref = FirebaseDatabase.getInstance().getReference().child("users");
+
 
         return new MessageViewHolder(view);
     }
@@ -104,8 +105,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     @Override
     public void onBindViewHolder(@NonNull final MessageViewHolder messageViewHolder, @SuppressLint("RecyclerView") final int position) {
 
-        Message messages = userMessagesList.get(position);
 
+        Message messages = userMessagesList.get(position);
         boolean Start = true;
         fromUserID = messages.getFrom();
         String fromMessageType = messages.getType();
@@ -130,12 +131,12 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 //
 
         messageViewHolder.receiverMessageText.setVisibility(View.GONE);
-        messageViewHolder.receiverProfileImage.setVisibility(View.GONE);
+//        messageViewHolder.receiverProfileImage.setVisibility(View.GONE);
         messageViewHolder.senderMessageText.setVisibility(View.GONE);
         messageViewHolder.messageSenderPicture.setVisibility(View.GONE);
         messageViewHolder.messageReceiverPicture.setVisibility(View.GONE);
-        messageViewHolder.messageSenderPlay.setVisibility(View.GONE);
-        messageViewHolder.messageReceiverPlay.setVisibility(View.GONE);
+        messageViewHolder.voicePlayerView.setVisibility(View.GONE);
+        messageViewHolder.voicePlayerViewReceiver.setVisibility(View.GONE);
 
         if (fromMessageType.equals("text")) {
             if (fromUserID.equals(messageSenderId)) {
@@ -146,7 +147,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                 messageViewHolder.senderMessageText.setText(messages.getMessage());
                 messageViewHolder.senderMessageTime.setText(messages.getTime());
             } else {
-                messageViewHolder.receiverProfileImage.setVisibility(View.VISIBLE);
+//                messageViewHolder.receiverProfileImage.setVisibility(View.VISIBLE);
                 messageViewHolder.receiverMessageText.setVisibility(View.VISIBLE);
 
                 messageViewHolder.receiverMessageText.setBackgroundResource(R.drawable.cornerstextmessagesfromother);
@@ -160,7 +161,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                 Picasso.get().load(messages.getMessage()).into(messageViewHolder.messageSenderPicture);
 
             } else {
-                messageViewHolder.receiverProfileImage.setVisibility(View.VISIBLE);
+//                messageViewHolder.receiverProfileImage.setVisibility(View.VISIBLE);
                 messageViewHolder.messageReceiverPicture.setVisibility(View.VISIBLE);
                 Picasso.get().load(messages.getMessage()).into(messageViewHolder.messageReceiverPicture);
             }
@@ -183,22 +184,17 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             }
         } else if (fromMessageType.equals("voice")) {
             if (fromUserID.equals(messageSenderId)) {
-                MessageViewHolder.messageSenderPlay.setVisibility(View.VISIBLE);
-                MessageViewHolder.messageSenderPlay.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        onPlay(Start);
-                    }
-                });
+
+                MessageViewHolder.voicePlayerView.setAudio(messages.getMessage());
+                MessageViewHolder.voicePlayerView.setVisibility(View.VISIBLE);
+                MessageViewHolder.voicePlayerView.refreshPlayer(messages.getMessage());
+                MessageViewHolder.voicePlayerView.refreshVisualizer();
             }
         } else {
-            MessageViewHolder.messageReceiverPlay.setVisibility(View.VISIBLE);
-            MessageViewHolder.messageReceiverPlay.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onPlay(Start);
-                }
-            });
+            MessageViewHolder.voicePlayerViewReceiver.setAudio(messages.getMessage());
+            MessageViewHolder.voicePlayerViewReceiver.setVisibility(View.VISIBLE);
+            MessageViewHolder.voicePlayerViewReceiver.refreshPlayer(messages.getMessage());
+            MessageViewHolder.voicePlayerViewReceiver.refreshVisualizer();
 
         }
 
@@ -222,7 +218,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                             public void onClick(DialogInterface dialogInterface, int pos) {
                                 if (pos == 0) {
                                     messageID = userMessagesList.get(position).getMessageID();
-                                    deleteSentMessage(position);
+                                    deleteSentMessage(position, messageSenderId, messageReceiverId, messageID);
 
                                 } else if (pos == 1) {
                                     Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(userMessagesList.get(position).getMessage()));
@@ -250,26 +246,10 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                             public void onClick(DialogInterface dialogInterface, int pos) {
                                 if (pos == 0) {
 
-                                   // messageID = userMessagesList.get(position).getMessageID();
-                                    usersRef.child("Messages")
-                                            .child(userMessagesList.get(position).getMessageID())
-                                            .removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<Void> task)
-                                        {
-                                            if(task.isSuccessful())
-                                            {
-                                                delete(position);
-                                            }
-                                            else
-                                            {
-                                                delete(position);
-                                            }
-                                        }
-                                    });
-                                    //deleteSentMessage(position);
+                                    messageID = userMessagesList.get(position).getMessageID();
+                                    deleteSentMessage(position, messageSenderId, messageReceiverId, messageID);
 
-                                } else if (pos == 2) {
+                                } else if (pos == 1) {
                                     messageID = userMessagesList.get(position).getMessageID();
                                     deleteMessageForEveryOne(position, messageViewHolder);
                                     delete(position);
@@ -293,7 +273,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                             public void onClick(DialogInterface dialogInterface, int pos) {
                                 if (pos == 0) {
                                     messageID = userMessagesList.get(position).getMessageID();
-                                    deleteSentMessage(position);
+                                    deleteSentMessage(position, messageSenderId, messageReceiverId, messageID);
                                     delete(position);
 
                                 } else if (pos == 1) {
@@ -400,39 +380,40 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         return userMessagesList.size();
     }
 
-    private void deleteSentMessage(final int position) {
-        usersRef.child("Messages")
-                .child(userMessagesList.get(position).getMessageID())
-                .removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+    private void deleteSentMessage(final int position, String messageID, String messageSenderId, String messageReceiverId) {
+//        usersRef.child("Messages")
+//                .child(userMessagesList.get(position).getMessageID())
+//                .removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+//            @Override
+//            public void onComplete(@NonNull Task<Void> task)
+//            {
+//                if(task.isSuccessful())
+//                {
+//                    delete(position);
+//                }
+//                else
+//                {
+//                    delete(position);
+//                }
+//            }
+//        });
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("users").child(messageSenderId).child(messageReceiverId);
+        Query userQuery = ref.child(messageID);
+
+        userQuery.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onComplete(@NonNull Task<Void> task)
-            {
-                if(task.isSuccessful())
-                {
-                    delete(position);
-                }
-                else
-                {
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot Snapshot: dataSnapshot.getChildren()) {
+                    Snapshot.getRef().removeValue();
                     delete(position);
                 }
             }
-        });
 
-//        Query userQuery = ref.child(messageSenderId).orderByChild(messageReceiverId).equalTo(messageID);
-//
-//        userQuery.addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                for (DataSnapshot appleSnapshot: dataSnapshot.getChildren()) {
-//                    appleSnapshot.getRef().removeValue();
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//
-//            }
-//        });
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void deleteReceiverMessage(final int position, final MessageViewHolder holder) {
@@ -485,7 +466,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     public void startPlaying() {
         player = new MediaPlayer();
         try {
-            player.setDataSource("one");
+
             player.prepare();
             player.start();
         } catch (IOException e) {
@@ -494,39 +475,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         }
     }
 
-    public int getDuration(String mUri) {
-        int duration;
-        MediaMetadataRetriever mmr = new MediaMetadataRetriever();
-        mmr.setDataSource(mUri);
-        String time = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-        duration = Integer.parseInt(time);
-        mmr.release();
-        return duration;
-    }
-
-    public void stopPlaying() {
-        player.stop();
-        player.release();
-        player = null;
-    }
-
-    public void onPlay(boolean start) {
-        if (start) {
-            startPlaying();
-            if (fromUserID.equals(messageSenderId)) {
-                MessageViewHolder.messageSenderPlay.setImageResource(R.drawable.ic_stop);
-            } else {
-                MessageViewHolder.messageReceiverPlay.setImageResource(R.drawable.ic_stop);
-            }
-        } else {
-            stopPlaying();
-            if (fromUserID.equals(messageSenderId)) {
-                MessageViewHolder.messageSenderPlay.setImageResource(R.drawable.ic_play);
-            } else {
-                MessageViewHolder.messageReceiverPlay.setImageResource(R.drawable.ic_play);
-            }
-        }
-    }
 
     public void delete(int position){
         userMessagesList.remove(position);
