@@ -17,6 +17,7 @@ import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
+import com.egormoroz.schooly.Subscriber;
 import com.egormoroz.schooly.ui.main.UserInformation;
 import com.egormoroz.schooly.ui.profile.ProfileFragment;
 
@@ -31,6 +32,7 @@ public class PeopleFragment extends Fragment {
     public static PeopleFragment newInstance() {
         return new PeopleFragment();
     }
+    FirebaseModel firebaseModel=new FirebaseModel();
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -43,8 +45,23 @@ public class PeopleFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         peopleRecyclerView=view.findViewById(R.id.peoplerecycler);
         searchUser=view.findViewById(R.id.searchuser);
+        firebaseModel.initAll();
         initUserEnter();
         setPeopleData();
+        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+            @Override
+            public void PassUserNick(String nick) {
+                RecentMethods.getSubscribersList(nick, firebaseModel
+                        , new Callbacks.getSubscribersList() {
+                            @Override
+                            public void getSubscribersList(ArrayList<Subscriber> subscribers) {
+                                subscribers.add(new Subscriber("katysha"));
+                                firebaseModel.getUsersReference().child(nick).child("subscribers")
+                                        .setValue(subscribers);
+                            }
+                        });
+            }
+        });
     }
 
     public void setPeopleData(){

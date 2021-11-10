@@ -19,6 +19,7 @@ import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.MainActivity;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
+import com.egormoroz.schooly.Subscriber;
 import com.egormoroz.schooly.ui.main.Mining.Miner;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -38,37 +39,19 @@ public class NontificationService extends Service {
     private static final String CHANNEL_ID = "Tyomaa channel";
     ArrayList<String> listOfNontifications = new ArrayList<String>();
     ArrayList<String> list = new ArrayList<String>();
-    String otherUserNickNonts;
+    Subscriber otherUserNickNonts;
+    String name;
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         firebaseModel.initAll();
         getChangesInSubscribers();
         createNotificationChannel();
-        nontifcations();
         return super.onStartCommand(intent, flags, startId);
     }
 
 
 
-    public void nontifcations() {
-        Intent notificationIntent = new Intent(this, MainActivity.class);
-        PendingIntent contentIntent = PendingIntent.getActivity(this,
-                0, notificationIntent,
-                PendingIntent.FLAG_CANCEL_CURRENT);
-
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_schoolycoin)
-                .setContentTitle(otherUserNickNonts)
-                .setContentText("хочет добавить вас в друзья")
-                .setContentIntent(contentIntent)
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-
-        NotificationManagerCompat notificationManager =
-                NotificationManagerCompat.from(this);
-        notificationManager.notify(NOTIFY_ID, builder.build());
-        Log.d("######", "good");
-    }
 
     private void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -86,49 +69,87 @@ public class NontificationService extends Service {
     public void onDestroy() {
         super.onDestroy();
         createNotificationChannel();
-        nontifcations();
+        getChangesInSubscribers();
     }
 
     public void getChangesInSubscribers(){
+//        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+//            @Override
+//            public void PassUserNick(String nick) {
+//                RecentMethods.checkSubscribers(nick, firebaseModel, new Callbacks.getSubscribersList() {
+//                    @Override
+//                    public void getSubscribersList(ArrayList<Subscriber> subscribers) {
+//                        if(subscribers.size()!=0){
+//                        int lastIndex=subscribers.size()-1;
+//                        otherUserNickNonts=subscribers.get(lastIndex);
+//                        name=otherUserNickNonts.getSub();
+//                    }
+//                    }
+//                });
+//            }
+//        });
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @Override
             public void PassUserNick(String nick) {
                 Query query=firebaseModel.getUsersReference().child(nick).child("subscribers");
                 query.addChildEventListener(new ChildEventListener() {
                     @Override
-                    public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                        for (DataSnapshot snap:snapshot.getChildren()){
-                            String nontsName=snap.getValue(String.class);
-                            Log.d("###", "name"+nontsName);
-                            listOfNontifications.add(nontsName);
-                        }
-                        Log.d("###", "ddefrg"+listOfNontifications);
-                       otherUserNickNonts=listOfNontifications.get(listOfNontifications.size());
+                    public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                        RecentMethods.getSubscribersList(nick, firebaseModel, new Callbacks.getSubscribersList() {
+                            @Override
+                            public void getSubscribersList(ArrayList<Subscriber> subscribers) {
+                                int lastIndex=subscribers.size()-1;
+                                otherUserNickNonts=subscribers.get(lastIndex);
+                                Log.d("###", "dsaddf"+subscribers.size());
+                                Log.d("###", "dsad"+lastIndex);
+                                name=otherUserNickNonts.getSub();
+                                Log.d("###", "d"+name);
+                                nontification();
+                            }
+                        });
 
                     }
 
                     @Override
-                    public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                    public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
                     }
 
                     @Override
-                    public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+                    public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
 
                     }
 
                     @Override
-                    public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                    public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
                     }
 
                     @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
 
                     }
                 });
             }
         });
+    }
+    public void nontification(){
+        Intent notificationIntent = new Intent(this, MainActivity.class);
+        PendingIntent contentIntent = PendingIntent.getActivity(this,
+                0, notificationIntent,
+                PendingIntent.FLAG_CANCEL_CURRENT);
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_schoolycoin)
+                .setContentTitle(name)
+                .setContentText("хочет добавить вас в друзья")
+                .setContentIntent(contentIntent)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
+        NotificationManagerCompat notificationManager =
+                NotificationManagerCompat.from(this);
+        notificationManager.notify(NOTIFY_ID, builder.build());
+        Log.d("######", "good");
     }
 
 }

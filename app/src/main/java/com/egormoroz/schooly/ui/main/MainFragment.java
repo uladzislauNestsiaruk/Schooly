@@ -99,7 +99,7 @@ public class MainFragment extends Fragment{
         tests.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                firebaseModel.getUsersReference().child("tyomaa").child("subscribers").setValue("katysha");
+
             }
         });
         TextView mining=view.findViewById(R.id.mining);

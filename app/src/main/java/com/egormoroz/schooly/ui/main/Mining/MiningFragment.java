@@ -51,10 +51,6 @@ public class MiningFragment extends Fragment {
         bnv.setVisibility(bnv.GONE);
         firebaseModel.initAll();
         getSchoolyCoin();
-        addWeakMiners();
-        addAverageMiners();
-        addStrongMiners();
-        puyInBase();
         return root;
     }
 
@@ -169,49 +165,49 @@ public class MiningFragment extends Fragment {
         });
     }
 
-    public void addWeakMiners(){
-        listAdapterMiner.add(new Miner(5,"https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
-                ,100));
-        listAdapterMiner.add(new Miner(7,"https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
-                ,150));
-        listAdapterMiner.add(new Miner(13,"https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
-                ,200));
-        listAdapterMiner.add(new Miner(17,"https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
-                ,240));
-        listAdapterMiner.add(new Miner(20,"https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
-                ,270));
-    }
-
-    public void addAverageMiners(){
-        listAdapterAverageMiner.add(new Miner(24,"https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
-                ,300));
-        listAdapterAverageMiner.add(new Miner(28,"https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
-                ,340));
-        listAdapterAverageMiner.add(new Miner(32,"https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
-                ,380));
-        listAdapterAverageMiner.add(new Miner(35,"https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
-                ,420));
-        listAdapterAverageMiner.add(new Miner(38,"https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
-                ,450));
-    }
-
-    public void addStrongMiners(){
-        listAdapterStrongMiner.add(new Miner(42,"https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
-                ,480));
-        listAdapterStrongMiner.add(new Miner(45,"https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
-                ,520));
-        listAdapterStrongMiner.add(new Miner(48,"https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
-                ,560));
-        listAdapterStrongMiner.add(new Miner(52,"https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
-                ,600));
-        listAdapterStrongMiner.add(new Miner(56,"https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
-                ,640));
-    }
-
-    public void puyInBase(){
-        firebaseModel.getReference().child("AppData").child("AllMiners").child("Weak").setValue(listAdapterMiner);
-        firebaseModel.getReference().child("AppData").child("AllMiners").child("Average").setValue(listAdapterAverageMiner);
-        firebaseModel.getReference().child("AppData").child("AllMiners").child("Strong").setValue(listAdapterStrongMiner);
-    }
+//    public void addWeakMiners(){
+//        listAdapterMiner.add(new Miner(5,"https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
+//                ,100));
+//        listAdapterMiner.add(new Miner(7,"https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
+//                ,150));
+//        listAdapterMiner.add(new Miner(13,"https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
+//                ,200));
+//        listAdapterMiner.add(new Miner(17,"https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
+//                ,240));
+//        listAdapterMiner.add(new Miner(20,"https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
+//                ,270));
+//    }
+//
+//    public void addAverageMiners(){
+//        listAdapterAverageMiner.add(new Miner(24,"https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
+//                ,300));
+//        listAdapterAverageMiner.add(new Miner(28,"https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
+//                ,340));
+//        listAdapterAverageMiner.add(new Miner(32,"https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
+//                ,380));
+//        listAdapterAverageMiner.add(new Miner(35,"https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
+//                ,420));
+//        listAdapterAverageMiner.add(new Miner(38,"https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
+//                ,450));
+//    }
+//
+//    public void addStrongMiners(){
+//        listAdapterStrongMiner.add(new Miner(42,"https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
+//                ,480));
+//        listAdapterStrongMiner.add(new Miner(45,"https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
+//                ,520));
+//        listAdapterStrongMiner.add(new Miner(48,"https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
+//                ,560));
+//        listAdapterStrongMiner.add(new Miner(52,"https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
+//                ,600));
+//        listAdapterStrongMiner.add(new Miner(56,"https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
+//                ,640));
+//    }
+//
+//    public void puyInBase(){
+//        firebaseModel.getReference().child("AppData").child("AllMiners").child("Weak").setValue(listAdapterMiner);
+//        firebaseModel.getReference().child("AppData").child("AllMiners").child("Average").setValue(listAdapterAverageMiner);
+//        firebaseModel.getReference().child("AppData").child("AllMiners").child("Strong").setValue(listAdapterStrongMiner);
+//    }
 
 }
