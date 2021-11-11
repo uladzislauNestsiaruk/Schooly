@@ -114,7 +114,6 @@ public class ChatsFragment extends Fragment
                         list_of_groups.clear();
                         list_of_groups.addAll(set);
                         arrayAdapter.notifyDataSetChanged();
-                        Log.d("Chat", currentUserName);
                     }
 
                     @Override
