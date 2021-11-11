@@ -30,6 +30,7 @@ import com.egormoroz.schooly.MainActivity;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.ui.main.Mining.MiningFragment;
+import com.egormoroz.schooly.ui.main.Nontifications.NontificationFragment;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
 import com.egormoroz.schooly.ui.main.Shop.NewClothesAdapter;
 import com.egormoroz.schooly.ui.main.Shop.ShopFragment;
@@ -84,7 +85,7 @@ public class MainFragment extends Fragment{
         nontifications.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((MainActivity)getActivity()).setCurrentFragment(GenderFragment.newInstance());
+                ((MainActivity)getActivity()).setCurrentFragment(NontificationFragment.newInstance());
 //
             }
         });
@@ -93,6 +94,13 @@ public class MainFragment extends Fragment{
             @Override
             public void onClick(View v) {
                 ((MainActivity)getActivity()).setCurrentFragment((ShopFragment.newInstance()));
+            }
+        });
+        TextView tests=view.findViewById(R.id.tests);
+        tests.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
             }
         });
         TextView mining=view.findViewById(R.id.mining);
@@ -142,15 +150,16 @@ public class MainFragment extends Fragment{
         appName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent notificationIntent = new Intent(getActivity(), MainActivity.class);
-//                PendingIntent contentIntent = PendingIntent.getActivity(getActivity(),
-//                        0, notificationIntent,
-//                        PendingIntent.FLAG_CANCEL_CURRENT);
+                Intent notificationIntent = new Intent(getActivity(), MainActivity.class);
+                PendingIntent contentIntent = PendingIntent.getActivity(getActivity(),
+                        0, notificationIntent,
+                        PendingIntent.FLAG_CANCEL_CURRENT);
 
                 NotificationCompat.Builder builder = new NotificationCompat.Builder(getActivity(), CHANNEL_ID)
                         .setSmallIcon(R.drawable.ic_schoolycoin)
                         .setContentTitle("tyomaa")
                         .setContentText("hello")
+                        .setContentIntent(contentIntent)
                         .setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
                 NotificationManagerCompat notificationManager =

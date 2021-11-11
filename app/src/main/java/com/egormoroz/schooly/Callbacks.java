@@ -64,7 +64,7 @@ public class Callbacks {
         default void getAmountOfFriends(int amount){}
     }
     public interface getSubscribersList{
-        default void getSubscribersList(ArrayList<String> subscribers){}
+        default void getSubscribersList(ArrayList<Subscriber> subscribers){}
     }
     public interface getAmountOfSubscribers{
         default void getAmountOfSubscribers(int amount){}

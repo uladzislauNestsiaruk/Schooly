@@ -22,6 +22,7 @@ import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.MainActivity;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
+import com.egormoroz.schooly.Subscriber;
 import com.egormoroz.schooly.ui.main.ChatActivity;
 import com.egormoroz.schooly.ui.main.UserInformation;
 import com.egormoroz.schooly.ui.profile.Wardrobe.WardrobeFragment;
@@ -36,6 +37,7 @@ import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class ProfileFragment extends Fragment {
     FirebaseModel firebaseModel = new FirebaseModel();
@@ -44,8 +46,6 @@ public class ProfileFragment extends Fragment {
     UserInformation info;
     TextView nickname;
     TextView message;
-    File file;
-    String link;
     DatabaseReference user;
     GLSurfaceView glSurfaceView;
 
@@ -113,19 +113,6 @@ public class ProfileFragment extends Fragment {
                 root.findViewById(R.id.message);
         FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
         StorageReference storageReference = firebaseStorage.getReference().child("3d models").child("untitled.glb");
-        try {
-            file = File.createTempFile("untitled", "glb");
-            Log.d("#######", "bbb  " + file);
-//            storageReference.getFile(file).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-//                @java.lang.Override
-//                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-//                    createScene();
-//                }
-//
-//            });
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
 
 
@@ -197,6 +184,31 @@ public class ProfileFragment extends Fragment {
                         }
                     });
                 }
+                TextView addFriend;
+
+                addFriend=view.findViewById(R.id.addFriend);
+                addFriend.setOnClickListener(new View.OnClickListener() { @Override public void onClick(View v) {
+                    RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+                        @Override
+                        public void PassUserNick(String nick) {
+                            RecentMethods.getSubscribersList(nick, firebaseModel
+                                    , new Callbacks.getSubscribersList() {
+                                        @Override
+                                        public void getSubscribersList(ArrayList<Subscriber> subscribers) {
+                                            subscribers.add(new Subscriber(nick));
+                                            firebaseModel.getReference().child("users")
+                                                    .child(info.getNick()).child("subscribers")
+                                                    .setValue(subscribers);
+                                            firebaseModel.getReference().child("users")
+                                                    .child(info.getNick()).child("nontifications")
+                                                    .setValue(subscribers);
+                                            addFriend.setBackgroundResource(R.drawable.corners14dpappcolor2dpstroke);
+                                            addFriend.setText("Отписаться");
+                                        }
+                                    });
+                        }
+                    });
+                } });
                 break;
         }
     }
@@ -214,4 +226,3 @@ public class ProfileFragment extends Fragment {
         });
     }
 }
-

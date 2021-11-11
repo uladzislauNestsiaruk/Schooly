@@ -145,5 +145,7 @@
     <string name="price">Цена:</string>
     <string name="measure">Примерить</string>
 
+    <string name="addFr">Добавить </string>
+    <string name="rejectFriend">Отказать</string>
 
 </resources>

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.egormoroz.schooly">
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-feature android:glEsVersion="0x00030000" android:required="true" />
     <application
@@ -19,6 +20,11 @@
         <activity android:name=".ui.main.GroupChatActivity" />
         <service
             android:name=".SchoolyService"
+            android:enabled="true"
+            android:exported="true" >
+        </service>
+        <service
+            android:name=".ui.main.NontificationService"
             android:enabled="true"
             android:exported="true" >
         </service>
