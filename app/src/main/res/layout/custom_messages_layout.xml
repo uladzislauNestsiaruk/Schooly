@@ -12,21 +12,21 @@
         android:layout_alignParentTop = "true"
         android:layout_marginTop = "10dp"
         android:layout_marginLeft = "3dp"
-        android:background = "@drawable/ic_arrow___left"
-        android:text = "receiver messages here"
         android:padding = "10dp"
         android:textSize = "14sp"
         android:textStyle = "bold"
         android:textColor = "@android:color/black"
         />
 
-     <TextView
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textSize="10sp"
+        android:fontFamily="@font/montserrat_bold"
         android:id="@+id/sender_time"
         android:layout_alignParentTop = "true"
-        android:layout_marginTop = "10dp"
-        android:layout_marginLeft = "3dp"
+        android:layout_marginTop = "30dp"
+        android:layout_marginRight = "5dp"
         android:layout_toLeftOf="@+id/sender_message_text"
         android:textColor="@color/white"
         />
@@ -34,10 +34,12 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textSize="10sp"
+        android:fontFamily="@font/montserrat_bold"
         android:id="@+id/receiver_time"
         android:layout_alignParentTop = "true"
-        android:layout_marginTop = "5dp"
-        android:layout_marginLeft = "10dp"
+        android:layout_marginTop = "30dp"
+        android:layout_marginLeft = "5dp"
         android:layout_toRightOf="@+id/receiver_message_text"
         android:textColor="@color/white"
         />
@@ -57,12 +59,11 @@
 
     <me.jagar.chatvoiceplayerlibrary.VoicePlayerView
         android:id="@+id/voicePlayerView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="5dp"
+        android:layout_width = "wrap_content"
+        android:layout_height = "wrap_content"
+        android:layout_alignParentEnd = "true"
+        android:layout_marginTop = "10dp"
+        android:layout_alignParentTop="@+id/receiver_message_text"
         android:layout_marginBottom="5dp"
         app:enableVisualizer="false"
         app:playPauseBackgroundColor="@color/app_color2"
@@ -115,11 +116,9 @@
         android:layout_alignParentEnd = "true"
         android:layout_marginTop = "10dp"
         android:layout_alignParentTop="@+id/receiver_message_text"
-        android:background="@drawable/ic_arrow___left"
         android:textSize="14sp"
         android:padding="10dp"
         android:textStyle="bold"
-        android:textColor="@android:color/black"
         />
 
 </RelativeLayout>

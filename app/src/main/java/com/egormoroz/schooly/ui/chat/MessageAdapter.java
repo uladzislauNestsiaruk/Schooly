@@ -1,6 +1,8 @@
 package com.egormoroz.schooly.ui.chat;
 
 
+import static com.google.android.material.transition.MaterialSharedAxis.X;
+
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -21,8 +23,10 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.egormoroz.schooly.CONST;
+import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
+import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.ui.chat.holders.ImageViewerActivity;
 import com.egormoroz.schooly.ui.main.ChatActivity;
 import com.egormoroz.schooly.ui.main.ChatsFragment;
@@ -75,9 +79,16 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         public static VoicePlayerView voicePlayerView;
         public static VoicePlayerView voicePlayerViewReceiver;
 
+        private void handleShowView(View view) {
+            if (getAdapterPosition() > X - 1) {
+                view.setVisibility(View.GONE);
+                return;
+            }
+            view.setVisibility(View.VISIBLE);
+        }
         public MessageViewHolder(@NonNull View itemView) {
             super(itemView);
-
+            handleShowView(itemView);
             receiverMessageTime = itemView.findViewById(R.id.receiver_time);
             senderMessageTime = itemView.findViewById(R.id.sender_time);
             senderMessageText = (TextView) itemView.findViewById(R.id.sender_message_text);
@@ -397,16 +408,16 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 //                }
 //            }
 //        });
+        delete(position);
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("users").child(messageSenderId).child(messageReceiverId);
         Query userQuery = ref.child(messageID);
 
         userQuery.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot Snapshot: dataSnapshot.getChildren()) {
-                    Snapshot.getRef().removeValue();
-                    delete(position);
-                }
+
+                    dataSnapshot.getRef().removeValue();
+
             }
 
             @Override
@@ -480,4 +491,5 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         userMessagesList.remove(position);
         notifyItemRemoved(position);
     }
+
 }

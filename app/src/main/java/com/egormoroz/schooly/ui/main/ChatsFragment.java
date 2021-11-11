@@ -101,7 +101,7 @@ public class ChatsFragment extends Fragment
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @Override
             public void PassUserNick(String nick) {
-                firebaseModel.getUsersReference().child(nick).child("Chats").addValueEventListener(new ValueEventListener() {
+                firebaseModel.getUsersReference().child(nick).child("Chats").orderByChild("LastTime").addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         Set<String> set = new HashSet<>();
