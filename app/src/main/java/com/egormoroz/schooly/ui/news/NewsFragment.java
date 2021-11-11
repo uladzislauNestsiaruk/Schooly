@@ -37,40 +37,6 @@ public class NewsFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_news, container, false);
         firebaseModel.initAll();
-        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-            @Override
-            public void PassUserNick(String nick) {
-                RecentMethods.getSubscribersList(nick, firebaseModel
-                        , new Callbacks.getSubscribersList() {
-                            @Override
-                            public void getSubscribersList(ArrayList<Subscriber> subscribers) {
-                                Log.d("###", "a"+subscribers);
-                                subscribers.add(new Subscriber("katysha"));
-                                firebaseModel.getUsersReference().child(nick).child("subscribers")
-                                        .setValue(subscribers);
-                            }
-                        });
-            }
-        });
-        TextView news=root.findViewById(R.id.newsText);
-        news.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-                    @Override
-                    public void PassUserNick(String nick) {
-                        RecentMethods.getSubscribersList(nick, firebaseModel
-                                , new Callbacks.getSubscribersList() {
-                                    @Override
-                                    public void getSubscribersList(ArrayList<Subscriber> subscribers) {
-                                        subscribers.add(new Subscriber("katyshenka"));
-                                        firebaseModel.getUsersReference().child(nick).child("subscribers").setValue(subscribers);
-                                    }
-                                });
-                    }
-                });
-            }
-        });
         return root;
     }
 

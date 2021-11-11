@@ -30,6 +30,7 @@ import com.egormoroz.schooly.MainActivity;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.ui.main.Mining.MiningFragment;
+import com.egormoroz.schooly.ui.main.Nontifications.NontificationFragment;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
 import com.egormoroz.schooly.ui.main.Shop.NewClothesAdapter;
 import com.egormoroz.schooly.ui.main.Shop.ShopFragment;
@@ -84,7 +85,7 @@ public class MainFragment extends Fragment{
         nontifications.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((MainActivity)getActivity()).setCurrentFragment(GenderFragment.newInstance());
+                ((MainActivity)getActivity()).setCurrentFragment(NontificationFragment.newInstance());
 //
             }
         });
