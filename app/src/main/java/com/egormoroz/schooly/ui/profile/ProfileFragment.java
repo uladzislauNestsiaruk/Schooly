@@ -191,21 +191,17 @@ public class ProfileFragment extends Fragment {
                     RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
                         @Override
                         public void PassUserNick(String nick) {
-                            RecentMethods.getSubscribersList(nick, firebaseModel
-                                    , new Callbacks.getSubscribersList() {
-                                        @Override
-                                        public void getSubscribersList(ArrayList<Subscriber> subscribers) {
-                                            subscribers.add(new Subscriber(nick));
-                                            firebaseModel.getReference().child("users")
-                                                    .child(info.getNick()).child("subscribers")
-                                                    .setValue(subscribers);
-                                            firebaseModel.getReference().child("users")
-                                                    .child(info.getNick()).child("nontifications")
-                                                    .setValue(subscribers);
-                                            addFriend.setBackgroundResource(R.drawable.corners14dpappcolor2dpstroke);
-                                            addFriend.setText("Отписаться");
-                                        }
-                                    });
+                            firebaseModel.getReference().child("users")
+                                    .child(info.getNick()).child("subscribers")
+                                    .child(nick).setValue(nick);
+                            firebaseModel.getReference().child("users")
+                                    .child(info.getNick()).child("nontifications")
+                                    .child(nick).setValue(nick);
+                            firebaseModel.getReference().child("users")
+                                    .child(nick).child("nontifications")
+                                    .child(info.getNick()).setValue(info.getNick());
+                            addFriend.setBackgroundResource(R.drawable.corners14dpappcolor2dpstroke);
+                            addFriend.setText("Отписаться");
                         }
                     });
                 } });
