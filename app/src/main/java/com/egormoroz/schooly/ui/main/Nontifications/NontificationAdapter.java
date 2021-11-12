@@ -1,5 +1,6 @@
 package com.egormoroz.schooly.ui.main.Nontifications;
 
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,25 +46,22 @@ public class NontificationAdapter extends RecyclerView.Adapter<NontificationAdap
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Subscriber subscriber=listAdapter.get(position);
         Log.d("####", "suuck"+listAdapter);
-        holder.otherUserNick.setText(subscriber.getSub()+" хочет добавить тебя в друзья");
+        holder.otherUserNick.setText(subscriber.getSub());
         holder.addFriend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
                     @Override
                     public void PassUserNick(String nick) {
-                        RecentMethods.getFriendssList(nick, firebaseModel, new Callbacks.getSubscribersList() {
-                            @Override
-                            public void getSubscribersList(ArrayList<Subscriber> subscribers) {
-                                subscribers.add(new Subscriber(subscriber.getSub()));
-                                firebaseModel.getReference().child("users").child(nick).child("subscribers").child(subscriber.getSub()).removeValue();
-                                firebaseModel.getReference().child("users")
-                                        .child(nick).child("friends")
-                                        .setValue(subscribers);
-                                holder.addFriend.setBackgroundResource(R.drawable.corners14dpappcolor2dpstroke);
-                                holder.addFriend.setText("Добавлен");
-                            }
-                        });
+                        Log.d("####", "daa"+subscriber.getSub());
+                        firebaseModel.getReference().child("users").child(nick).child("nontifications")
+                                .child(subscriber.getSub()).removeValue();
+                        firebaseModel.getReference().child("users").child(nick).child("subscribers")
+                                .child(subscriber.getSub()).removeValue();
+                        firebaseModel.getReference().child("users")
+                                .child(nick).child("friends")
+                                .child(subscriber.getSub()).setValue(subscriber.getSub());
+                        holder.addFriend.setText("Добавлен");
                     }
                 });
             }
@@ -74,11 +72,11 @@ public class NontificationAdapter extends RecyclerView.Adapter<NontificationAdap
                 RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
                     @Override
                     public void PassUserNick(String nick) {
-                        holder.addFriend.setText("Отклонен");
-                        firebaseModel.getReference().child("users").child(nick).child("subscribers").child(subscriber.getSub()).removeValue();
-                        firebaseModel.getReference().child("users")
-                                .child(nick).child("subscriders").child(subscriber.getSub()).removeValue();
+                        firebaseModel.getReference().child("users").child(nick).child("nontifications")
+                                .child(subscriber.getSub()).removeValue();
                         holder.rejectFriend.setText("Отклонен");
+                        holder.addFriend.setBackgroundResource(R.drawable.corners14grey);
+                        holder.rejectFriend.setTextColor(Color.parseColor("#FFFFFF"));
                     }
                 });
             }

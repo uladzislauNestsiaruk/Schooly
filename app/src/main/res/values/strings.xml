@@ -147,5 +147,6 @@
 
     <string name="addFr">Добавить </string>
     <string name="rejectFriend">Отказать</string>
+    <string name="wantadd">хочет добавить тебя в друзья</string>
 
 </resources>

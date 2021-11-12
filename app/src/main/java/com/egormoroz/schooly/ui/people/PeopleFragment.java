@@ -48,20 +48,6 @@ public class PeopleFragment extends Fragment {
         firebaseModel.initAll();
         initUserEnter();
         setPeopleData();
-        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-            @Override
-            public void PassUserNick(String nick) {
-                RecentMethods.getSubscribersList(nick, firebaseModel
-                        , new Callbacks.getSubscribersList() {
-                            @Override
-                            public void getSubscribersList(ArrayList<Subscriber> subscribers) {
-                                subscribers.add(new Subscriber("katysha"));
-                                firebaseModel.getUsersReference().child(nick).child("subscribers")
-                                        .setValue(subscribers);
-                            }
-                        });
-            }
-        });
     }
 
     public void setPeopleData(){
