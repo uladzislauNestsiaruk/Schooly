@@ -11,11 +11,12 @@
         android:layout_height = "wrap_content"
         android:layout_alignParentTop = "true"
         android:layout_marginTop = "10dp"
+        android:background="@drawable/cornerstextmessagesfromother"
         android:layout_marginLeft = "3dp"
         android:padding = "10dp"
         android:textSize = "14sp"
         android:textStyle = "bold"
-        android:textColor = "@android:color/black"
+        android:textColor = "@android:color/white"
         />
 
     <TextView
@@ -49,6 +50,7 @@
         android:id="@+id/message_sender_image_view"
         android:layout_width="150dp"
         android:layout_height="150dp"
+        android:background="@drawable/cornerstextmessagesfromme"
         android:layout_alignParentEnd="true"
         android:layout_marginStart="5dp"
         android:layout_marginTop="5dp"
@@ -83,6 +85,7 @@
         android:id="@+id/message_receiver_image_view"
         android:layout_width="150dp"
         android:layout_height="150dp"
+        android:background="@drawable/cornerstextmessagesfromother"
         android:layout_alignParentStart="true"
         android:layout_marginStart="50dp"
         android:layout_marginTop="13dp"
@@ -115,10 +118,14 @@
         android:layout_height = "wrap_content"
         android:layout_alignParentEnd = "true"
         android:layout_marginTop = "10dp"
+        android:textColor="@color/white"
+        android:background="@drawable/cornerstextmessagesfromme"
         android:layout_alignParentTop="@+id/receiver_message_text"
         android:textSize="14sp"
         android:padding="10dp"
         android:textStyle="bold"
         />
+
+
 
 </RelativeLayout>

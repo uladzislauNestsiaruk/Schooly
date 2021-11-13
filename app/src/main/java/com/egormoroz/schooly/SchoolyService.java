@@ -40,7 +40,9 @@ public class SchoolyService extends Service {
                     public void GetTodayMining(double todayMiningFromBase) {
                         t=todayMiningFromBase;
                     }
+
                 });
+                RecentMethods.setState("Online", nick, firebaseModel);
             }
         });
     }
@@ -228,6 +230,12 @@ public class SchoolyService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        firebaseModel.initAll();
+        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+            @Override
+            public void PassUserNick(String nick) {
+                RecentMethods.setState("Offline", nick, firebaseModel);
+            }
+        });
     }
-
 }

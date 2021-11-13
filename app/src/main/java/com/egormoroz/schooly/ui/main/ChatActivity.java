@@ -50,6 +50,7 @@ import com.google.android.gms.tasks.OnCanceledListener;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseError;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -115,7 +116,19 @@ public class ChatActivity extends Activity {
         mAuth = FirebaseAuth.getInstance();
         messageSenderID = mAuth.getCurrentUser().getUid();
         RootRef = firebaseModel.getUsersReference();
+        DatabaseReference ref = firebaseModel.getUsersReference().child(messageSenderName).child("Chats").child(messageReceiverName).child("Unread");
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    dataSnapshot.getRef().setValue(0);
+                }
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
         ActivityCompat.requestPermissions(this, permissions, REQUEST_RECORD_AUDIO_PERMISSION);
         Intent intentReceived = getIntent();
         Bundle data = intentReceived.getExtras();
@@ -130,7 +143,7 @@ public class ChatActivity extends Activity {
         IntializeVoice();
         IntializeControllers();
 
-
+        userMessagesList.scrollToPosition(userMessagesList.getAdapter().getItemCount());
         userName.setText(messageReceiverName);
         Picasso.get().load(messageReceiverImage).placeholder(R.drawable.corners14).into(userImage);
 
@@ -153,7 +166,7 @@ public class ChatActivity extends Activity {
                 startActivityForResult(intent, 443);
             }
 
-            ;
+
         });
     }
 
@@ -286,6 +299,7 @@ public class ChatActivity extends Activity {
                                 messagesList.add(messages);
                                 messageAdapter.notifyDataSetChanged();
                                 userMessagesList.smoothScrollToPosition(userMessagesList.getAdapter().getItemCount());
+                                addUnread();
                             }
 
                             @Override
@@ -553,5 +567,27 @@ public class ChatActivity extends Activity {
        firebaseModel.getUsersReference().child(messageSenderName).child("Chats").child(messageReceiverName).child("LastTime").setValue(timeStamp);
        firebaseModel.getUsersReference().child(messageReceiverName).child("Chats").child(messageSenderName).child("LastTime").setValue(timeStamp);
    }
+
+    public void addUnread() {
+        final long[] value = new long[1];
+        DatabaseReference ref = firebaseModel.getUsersReference().child(messageReceiverName).child("Chats").child(messageSenderName).child("Unread");
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()){
+                value[0] = (long) dataSnapshot.getValue();
+                value[0] = value[0] + 1;
+                dataSnapshot.getRef().setValue(value[0]);}
+                else dataSnapshot.getRef().setValue(0);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+
+
+        });
+    }
 }
 

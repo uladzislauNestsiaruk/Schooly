@@ -1036,4 +1036,27 @@ public class RecentMethods {
 
 
     }
+
+
+
+
+    public static void setState (String state, String nick, FirebaseModel firebaseModel){
+        firebaseModel.initAll();
+        final long[] time = new long[1];
+
+        if (state == "Online"){
+            firebaseModel.getUsersReference().child(nick).child("Status").setValue(state);
+            firebaseModel.getUsersReference().child(nick).child("Last Seen").setValue(state);
+        }
+        else {
+            firebaseModel.getUsersReference().child(nick).child("Status").setValue(state);
+            GetTimeStampNow(nick, firebaseModel, new Callbacks.GetTimesTamp() {
+                @Override
+                public void GetTimesTamp(long timesTamp) {
+                    time[0] = timesTamp;
+                }
+            });
+            firebaseModel.getUsersReference().child(nick).child("Status").setValue(time[0]);
+        }
+    }
 }

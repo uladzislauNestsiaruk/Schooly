@@ -17,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
@@ -53,7 +54,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     private List<Message> userMessagesList;
     private DatabaseReference usersRef;
     private String messageSenderId = "", messageReceiverId = "";
-    private MediaPlayer player;
     private String fromUserID;
     private String messageID;
 
@@ -86,6 +86,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             }
             view.setVisibility(View.VISIBLE);
         }
+
         public MessageViewHolder(@NonNull View itemView) {
             super(itemView);
             handleShowView(itemView);
@@ -118,7 +119,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
 
         Message messages = userMessagesList.get(position);
-        boolean Start = true;
         fromUserID = messages.getFrom();
         String fromMessageType = messages.getType();
 
@@ -152,17 +152,11 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         if (fromMessageType.equals("text")) {
             if (fromUserID.equals(messageSenderId)) {
                 messageViewHolder.senderMessageText.setVisibility(View.VISIBLE);
-
-                messageViewHolder.senderMessageText.setBackgroundResource(R.drawable.cornerstextmessagesfromme);
-                messageViewHolder.senderMessageText.setTextColor(Color.WHITE);
                 messageViewHolder.senderMessageText.setText(messages.getMessage());
                 messageViewHolder.senderMessageTime.setText(messages.getTime());
             } else {
 //                messageViewHolder.receiverProfileImage.setVisibility(View.VISIBLE);
                 messageViewHolder.receiverMessageText.setVisibility(View.VISIBLE);
-
-                messageViewHolder.receiverMessageText.setBackgroundResource(R.drawable.cornerstextmessagesfromother);
-                messageViewHolder.receiverMessageText.setTextColor(Color.WHITE);
                 messageViewHolder.receiverMessageText.setText(messages.getMessage());
                 messageViewHolder.receiverMessageTime.setText(messages.getTime());
             }
@@ -179,7 +173,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         } else if (fromMessageType.equals("pdf") || fromMessageType.equals("docx")) {
             if (fromUserID.equals(messageSenderId)) {
                 messageViewHolder.messageSenderPicture.setVisibility(View.VISIBLE);
-                messageViewHolder.messageSenderPicture.setBackgroundResource(R.drawable.cornerstextmessagesfromme);
                 messageViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -191,22 +184,18 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             } else {
                 messageViewHolder.receiverProfileImage.setVisibility(View.VISIBLE);
                 messageViewHolder.messageReceiverPicture.setVisibility(View.VISIBLE);
-                messageViewHolder.messageSenderPicture.setBackgroundResource(R.drawable.cornerstextmessagesfromother);
             }
         } else if (fromMessageType.equals("voice")) {
             if (fromUserID.equals(messageSenderId)) {
 
-                MessageViewHolder.voicePlayerView.setAudio(messages.getMessage());
-                MessageViewHolder.voicePlayerView.setVisibility(View.VISIBLE);
-                MessageViewHolder.voicePlayerView.refreshPlayer(messages.getMessage());
-                MessageViewHolder.voicePlayerView.refreshVisualizer();
+
+//                MessageViewHolder.voicePlayerView.setAudio(messages.getMessage());
+//                MessageViewHolder.voicePlayerView.setVisibility(View.VISIBLE);
             }
         } else {
-            MessageViewHolder.voicePlayerViewReceiver.setAudio(messages.getMessage());
-            MessageViewHolder.voicePlayerViewReceiver.setVisibility(View.VISIBLE);
-            MessageViewHolder.voicePlayerViewReceiver.refreshPlayer(messages.getMessage());
-            MessageViewHolder.voicePlayerViewReceiver.refreshVisualizer();
 
+//            MessageViewHolder.voicePlayerViewReceiver.setAudio(messages.getMessage());
+//            MessageViewHolder.voicePlayerViewReceiver.setVisibility(View.VISIBLE);
         }
 
         if (fromUserID.equals(messageSenderId)) {
@@ -472,18 +461,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             }
         });
 
-    }
-
-    public void startPlaying() {
-        player = new MediaPlayer();
-        try {
-
-            player.prepare();
-            player.start();
-        } catch (IOException e) {
-            String TAG = "TAP";
-            Log.e(TAG, "prepare() failed");
-        }
     }
 
 
