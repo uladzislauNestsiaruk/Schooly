@@ -116,6 +116,17 @@ public class ChatActivity extends Activity {
         mAuth = FirebaseAuth.getInstance();
         messageSenderID = mAuth.getCurrentUser().getUid();
         RootRef = firebaseModel.getUsersReference();
+
+        ActivityCompat.requestPermissions(this, permissions, REQUEST_RECORD_AUDIO_PERMISSION);
+        Intent intentReceived = getIntent();
+        Bundle data = intentReceived.getExtras();
+        if (data != null) {
+            messageSenderName = data.getString("curUser");
+            messageReceiverName = data.getString("othUser");
+        }
+        Log.d("One", messageSenderName);
+
+        //     messageReceiverImage = getIntent().getExtras().get("visit_image").toString();
         DatabaseReference ref = firebaseModel.getUsersReference().child(messageSenderName).child("Chats").child(messageReceiverName).child("Unread");
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override public void onDataChange(DataSnapshot dataSnapshot) {
@@ -129,17 +140,6 @@ public class ChatActivity extends Activity {
 
             }
         });
-        ActivityCompat.requestPermissions(this, permissions, REQUEST_RECORD_AUDIO_PERMISSION);
-        Intent intentReceived = getIntent();
-        Bundle data = intentReceived.getExtras();
-        if (data != null) {
-            messageSenderName = data.getString("curUser");
-            messageReceiverName = data.getString("othUser");
-        }
-        Log.d("One", messageSenderName);
-
-        //     messageReceiverImage = getIntent().getExtras().get("visit_image").toString();
-
         IntializeVoice();
         IntializeControllers();
 
@@ -154,7 +154,7 @@ public class ChatActivity extends Activity {
                 MessageInputText.getText().clear();
             }
         });
-        //   DisplayLastSeen();
+        DisplayLastSeen();
         SendFilesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -256,19 +256,18 @@ public class ChatActivity extends Activity {
     }
 
     private void DisplayLastSeen() {
-        RootRef.child("Users").child(messageReceiverID)
+        RootRef.child(messageSenderName)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        if (dataSnapshot.child("userState").hasChild("state")) {
-                            String state = dataSnapshot.child("userState").child("state").getValue().toString();
-                            String date = dataSnapshot.child("userState").child("date").getValue().toString();
-                            String time = dataSnapshot.child("userState").child("time").getValue().toString();
+                        if (dataSnapshot.hasChild("State")) {
+                            String state = dataSnapshot.child("State").getValue().toString();
+                            String time = dataSnapshot.child("LastSeen").getValue().toString();
 
                             if (state.equals("online")) {
                                 userLastSeen.setText("online");
                             } else if (state.equals("offline")) {
-                                userLastSeen.setText("Last Seen: " + date + " " + time);
+                                userLastSeen.setText("Last Seen:" + time);
                             }
                         } else {
                             userLastSeen.setText("offline");
