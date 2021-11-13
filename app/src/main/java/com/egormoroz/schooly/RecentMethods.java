@@ -161,7 +161,7 @@ public class RecentMethods {
                     userData.setPhone(snapshot.child("phone").getValue(String.class));
                     userData.setUid(snapshot.child("uid").getValue(String.class));
                     userData.setQueue(snapshot.child("queue").getValue(String.class));
-                    userData.setSubscribers(snapshot.child("subscribers").getValue(String.class));
+//                    userData.setSubscribers(snapshot.child("subscribers").getValue(String.class));
                     userData.setFriends(snapshot.child("friends").getValue(String.class));
                     data.add(userData);
                 }
@@ -770,27 +770,27 @@ public class RecentMethods {
     }
 
     ////////////////////////// Friends System /////////////////////
-    public static void getFriendsList(String nickName, FirebaseModel model, Callbacks.getFriendsList callback){
-        model.initAll();
-        Query query = model.getUsersReference().orderByChild("nick").equalTo(nickName);
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                ArrayList<String> friendsList = new ArrayList<>();
-                for(DataSnapshot snap : snapshot.getChildren()){
-                    String[] friends = (snap.child("friends").getValue(String.class)).split("#");
-                    for(String friend : friends)
-                        friendsList.add(friend);
-                }
-                callback.getFriendsList(friendsList);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-    }
+//    public static void getFriendsList(String nickName, FirebaseModel model, Callbacks.getFriendsList callback){
+//        model.initAll();
+//        Query query = model.getUsersReference().orderByChild("nick").equalTo(nickName);
+//        query.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                ArrayList<String> friendsList = new ArrayList<>();
+//                for(DataSnapshot snap : snapshot.getChildren()){
+//                    String[] friends = (snap.child("friends").getValue(String.class)).split("#");
+//                    for(String friend : friends)
+//                        friendsList.add(friend);
+//                }
+//                callback.getFriendsList(friendsList);
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//
+//            }
+//        });
+//    }
     public static void FriendQueryAccapted(String userName1, String userName2, FirebaseModel model){
         model.initAll();
         Query query = model.getUsersReference().child("nick").equalTo(userName1);
@@ -972,7 +972,7 @@ public class RecentMethods {
                 ArrayList<Subscriber> subscribersList = new ArrayList<>();
                 for (DataSnapshot snap:snapshot.getChildren()){
                     Subscriber subscriber=new Subscriber();
-                    subscriber.setSub(snap.child("sub").getValue(String.class));
+                    subscriber.setSub(snap.getValue(String.class));
                     subscribersList.add(subscriber);
                 }
                 Log.d("###", "name2"+subscribersList);
@@ -997,7 +997,7 @@ public class RecentMethods {
                 ArrayList<Subscriber> subscribersList = new ArrayList<>();
                 for (DataSnapshot snap:snapshot.getChildren()){
                     Subscriber subscriber=new Subscriber();
-                    subscriber.setSub(snap.child("sub").getValue(String.class));
+                    subscriber.setSub(snap.getValue(String.class));
                     subscribersList.add(subscriber);
                 }
                 Log.d("###", "name2"+subscribersList);
@@ -1012,7 +1012,7 @@ public class RecentMethods {
 
 
     }
-    public static void getFriendssList(String nickName, FirebaseModel model, Callbacks.getSubscribersList callback){
+    public static void getFriendssList(String nickName, FirebaseModel model, Callbacks.getFriendsList callback){
         model.initAll();
         Query query=model.getUsersReference().child(nickName).child("friends");
         query.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -1021,11 +1021,11 @@ public class RecentMethods {
                 ArrayList<Subscriber> subscribersList = new ArrayList<>();
                 for (DataSnapshot snap:snapshot.getChildren()){
                     Subscriber subscriber=new Subscriber();
-                    subscriber.setSub(snap.child("sub").getValue(String.class));
+                    subscriber.setSub(snap.getValue(String.class));
                     subscribersList.add(subscriber);
                 }
                 Log.d("###", "name2"+subscribersList);
-                callback.getSubscribersList(subscribersList);
+                callback.getFriendsList(subscribersList);
             }
 
             @Override
