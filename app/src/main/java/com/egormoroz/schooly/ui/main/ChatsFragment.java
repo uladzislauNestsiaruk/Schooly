@@ -1,40 +1,29 @@
 package com.egormoroz.schooly.ui.main;
 
 
-
 import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager.widget.ViewPager;
 
-import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
-import com.egormoroz.schooly.ui.chat.Contacts;
-import com.egormoroz.schooly.ui.chat.MessageAdapter;
-import com.egormoroz.schooly.ui.chat.TabsAccessorAdapter;
-import com.egormoroz.schooly.ui.main.Mining.MyMinersFragment;
+import com.egormoroz.schooly.ui.chat.Chat;
+import com.egormoroz.schooly.ui.main.ChatActivity;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -43,87 +32,119 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
-
 import de.hdodenhof.circleimageview.CircleImageView;
 
-//
+
 public class ChatsFragment extends Fragment
 {
-    private ArrayAdapter<String> arrayAdapter;
+    private View PrivateChatsView;
+    private RecyclerView chatsList;
+
     private FirebaseModel firebaseModel = new FirebaseModel();
-    public static String currentUserName="", receiverUserName;
-    private ArrayList<String> list_of_groups=new ArrayList<String>();
-    private ListView list_view;
-    public static ChatsFragment newInstance() {
-        return new ChatsFragment();
-    }
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_chats, container, false);
-        firebaseModel.initAll();
-        arrayAdapter = new ArrayAdapter<String>(getContext(),android.R.layout.simple_list_item_1, list_of_groups);
-        RetrieveAndDisplayGroups();
-        list_view = root.findViewById(R.id.list_view);
-        list_view.setAdapter(arrayAdapter);
-        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-            @Override
-            public void PassUserNick(String nick) {
-                list_view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                        String name = adapterView.getItemAtPosition(position).toString();
-                        Bundle nicknames = new Bundle();
-                        Intent ChatIntent = new Intent(getContext(), ChatActivity.class);
-                        nicknames.putString("othUser", name);
-                        nicknames.putString("curUser", nick);
-                        ChatIntent.putExtras(nicknames);
-                        startActivity(ChatIntent);
-                    }
-                });
-            }
-        });
-        return root;
-    }
+    private DatabaseReference ChatsRef, UsersRef;
+    private FirebaseAuth mAuth;
+    private String currentUserName = "";
 
-    @Override
-    public void onViewCreated(@Nullable View view, @NonNull Bundle savedInstanceState) {
-
-        super.onViewCreated(view, savedInstanceState);
-    }
-
-    private void RetrieveAndDisplayGroups()
+    public ChatsFragment()
     {
-        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-            @Override
-            public void PassUserNick(String nick) {
-                firebaseModel.getUsersReference().child(nick).child("Chats").orderByChild("LastTime").addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        Set<String> set = new HashSet<>();
-                        Iterator iterator = dataSnapshot.getChildren().iterator();
-                        while (iterator.hasNext())
-                        {
-                            set.add(((DataSnapshot)iterator.next()).getKey());
-                            Log.d("Chat", String.valueOf(set));
-                        }
-                        list_of_groups.clear();
-                        list_of_groups.addAll(set);
-                        arrayAdapter.notifyDataSetChanged();
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
-            }
-        });
 
     }
 
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        PrivateChatsView = inflater.inflate(R.layout.fragment_chats, container, false);
+
+        firebaseModel.initAll();
+        mAuth = FirebaseAuth.getInstance();
+
+        chatsList = (RecyclerView) PrivateChatsView.findViewById(R.id.chats_list);
+        chatsList.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        return PrivateChatsView;
+    }
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+            @Override
+            public void PassUserNick(String nick) {
+                FirebaseRecyclerOptions<Chat> options =
+                        new FirebaseRecyclerOptions.Builder<Chat>()
+                                .setQuery(firebaseModel.getUsersReference().child(nick).child("Chats").orderByChild("LastTime"), Chat.class)
+                                .build();
+
+
+                FirebaseRecyclerAdapter<Chat, ChatsViewHolder> adapter =
+                        new FirebaseRecyclerAdapter<Chat, ChatsViewHolder>(options) {
+                            @Override
+                            protected void onBindViewHolder(@NonNull final ChatsViewHolder holder, int position, @NonNull Chat model) {
+                                final String usersIDs = getRef(position).getKey();
+                                final String[] message = new String[1];
+                                final String[] retImage = {"default_image"};
+                                firebaseModel.getUsersReference().child(nick).child("Chats").child(usersIDs).addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        if (dataSnapshot.exists()) {
+                                            if (dataSnapshot.hasChild("LastMessage"))
+
+                                            holder.lastMeassage.setText(model.getLastMessage());
+                                            holder.userName.setText(usersIDs);
+                                            holder.lastTime.setText(model.getLastTime());
+                                            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View view) {
+                                                    Intent chatIntent = new Intent(getContext(), ChatActivity.class);
+                                                    chatIntent.putExtra("curUser", nick);
+                                                    chatIntent.putExtra("othUser", usersIDs);
+                                                    chatIntent.putExtra("visit_image", retImage[0]);
+                                                    startActivity(chatIntent);
+                                                }
+                                            });
+                                        }
+                                    }
+
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
+                                    }
+                                });
+                            }
+
+
+                            @NonNull
+                            @Override
+                            public ChatsViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+                                View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.dialog_item_layout, viewGroup, false);
+                                return new ChatsViewHolder(view);
+                            }
+                        };
+
+                chatsList.setAdapter(adapter);
+                adapter.startListening();
+            }
+        });
+    }
+
+
+
+
+    public static class  ChatsViewHolder extends RecyclerView.ViewHolder
+    {
+        ImageView profileImage;
+        TextView lastTime, userName, lastMeassage;
+
+        public ChatsViewHolder(@NonNull View itemView)
+        {
+            super(itemView);
+
+            profileImage = itemView.findViewById(R.id.otheUserImage);
+            lastTime = itemView.findViewById(R.id.time);
+            userName = itemView.findViewById(R.id.otherUserNick);
+            lastMeassage = itemView.findViewById(R.id.lastMessage);
+        }
+    }
 }

@@ -536,17 +536,6 @@ public class ChatActivity extends Activity {
     }
 
    private void addLastMessage(String type, String Message){
-       RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-           @Override
-           public void PassUserNick(String nick) {
-               RecentMethods.GetTimeStampNow(nick, firebaseModel, new Callbacks.GetTimesTamp() {
-                   @Override
-                   public void GetTimesTamp(long timesTamp) {
-                       timeStamp = timesTamp;
-                   }
-               });
-           }
-       });
 
        switch (type) {
            case "text":
@@ -554,22 +543,22 @@ public class ChatActivity extends Activity {
                firebaseModel.getUsersReference().child(messageReceiverName).child("Chats").child(messageSenderName).child("LastMessage").setValue(Message);
                break;
            case "voice":
-               firebaseModel.getUsersReference().child(messageSenderName).child("Chats").child(messageReceiverName).child("LastMessage").setValue("Голосовое сообщение");
-               firebaseModel.getUsersReference().child(messageReceiverName).child("Chats").child(messageSenderName).child("LastMessage").setValue("Голосовое сообщение");
+               firebaseModel.getUsersReference().child(messageSenderName).child("Dialogs").child(messageReceiverName).child("LastMessage").setValue("Голосовое сообщение");
+               firebaseModel.getUsersReference().child(messageReceiverName).child("Dialogs").child(messageSenderName).child("LastMessage").setValue("Голосовое сообщение");
                break;
            case "image":
-               firebaseModel.getUsersReference().child(messageSenderName).child("Chats").child(messageReceiverName).child("LastMessage").setValue("Фотография");
-               firebaseModel.getUsersReference().child(messageReceiverName).child("Chats").child(messageSenderName).child("LastMessage").setValue("Фотография");
+               firebaseModel.getUsersReference().child(messageSenderName).child("Dialogs").child(messageReceiverName).child("LastMessage").setValue("Фотография");
+               firebaseModel.getUsersReference().child(messageReceiverName).child("Dialogs").child(messageSenderName).child("LastMessage").setValue("Фотография");
 
                break;
        }
-       firebaseModel.getUsersReference().child(messageSenderName).child("Chats").child(messageReceiverName).child("LastTime").setValue(timeStamp);
-       firebaseModel.getUsersReference().child(messageReceiverName).child("Chats").child(messageSenderName).child("LastTime").setValue(timeStamp);
+       firebaseModel.getUsersReference().child(messageSenderName).child("Chats").child(messageReceiverName).child("LastTime").setValue(getCurrentTime());
+       firebaseModel.getUsersReference().child(messageReceiverName).child("Chats").child(messageSenderName).child("LastTime").setValue(getCurrentTime());
    }
 
     public void addUnread() {
         final long[] value = new long[1];
-        DatabaseReference ref = firebaseModel.getUsersReference().child(messageReceiverName).child("Chats").child(messageSenderName).child("Unread");
+        DatabaseReference ref = firebaseModel.getUsersReference().child(messageReceiverName).child("Dialogs").child(messageSenderName).child("Unread");
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

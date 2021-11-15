@@ -5,10 +5,6 @@ import java.util.Date;
 public class Message {
     private String from, message, type, to, messageID, time, date, name;
 
-    public Message(String randomId, User user, String randomMessage, Date date)
-    {
-
-    }
 
     public Message(String from, String message, String type, String to, String messageID, String time, String date, String name) {
         this.from = from;
