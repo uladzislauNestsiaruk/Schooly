@@ -552,8 +552,11 @@ public class ChatActivity extends Activity {
 
                break;
        }
+       Calendar calendar = Calendar.getInstance();
        firebaseModel.getUsersReference().child(messageSenderName).child("Chats").child(messageReceiverName).child("LastTime").setValue(getCurrentTime());
        firebaseModel.getUsersReference().child(messageReceiverName).child("Chats").child(messageSenderName).child("LastTime").setValue(getCurrentTime());
+       firebaseModel.getUsersReference().child(messageSenderName).child("Chats").child(messageReceiverName).child("TimeMill").setValue(calendar.getTimeInMillis() * -1);
+       firebaseModel.getUsersReference().child(messageReceiverName).child("Chats").child(messageSenderName).child("TimeMill").setValue(calendar.getTimeInMillis() * -1);
    }
 
     public void addUnread() {

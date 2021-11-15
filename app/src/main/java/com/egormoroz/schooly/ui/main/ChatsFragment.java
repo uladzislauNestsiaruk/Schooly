@@ -73,7 +73,7 @@ public class ChatsFragment extends Fragment
             public void PassUserNick(String nick) {
                 FirebaseRecyclerOptions<Chat> options =
                         new FirebaseRecyclerOptions.Builder<Chat>()
-                                .setQuery(firebaseModel.getUsersReference().child(nick).child("Chats").orderByChild("LastTime"), Chat.class)
+                                .setQuery(firebaseModel.getUsersReference().child(nick).child("Chats").orderByChild("TimeMill"), Chat.class)
                                 .build();
 
 
@@ -82,7 +82,6 @@ public class ChatsFragment extends Fragment
                             @Override
                             protected void onBindViewHolder(@NonNull final ChatsViewHolder holder, int position, @NonNull Chat model) {
                                 final String usersIDs = getRef(position).getKey();
-                                final String[] message = new String[1];
                                 final String[] retImage = {"default_image"};
                                 firebaseModel.getUsersReference().child(nick).child("Chats").child(usersIDs).addValueEventListener(new ValueEventListener() {
                                     @Override
