@@ -106,7 +106,8 @@ public class RecentMethods {
     public static boolean saveData(DatabaseReference ref, FirebaseUser user, String nick) {
 
         UserInformation res = new UserInformation(nick, "unknown", user.getUid(),
-                6, "unknown", "Helicopter", 1000, "Miner", 1,100,0, "", "", "");
+                6, "unknown", "Helicopter", 1000
+                , "Miner", 1,100,0, "", "", "","");
         ref.child(nick).setValue(res);
         return nick.isEmpty();
     }
@@ -208,6 +209,22 @@ public class RecentMethods {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 callback.HasUidCallback(snapshot.exists());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    public static void getBio(String nick, FirebaseModel model, Callbacks.GetBio callback){
+        model.initAll();
+        Query query =model.getUsersReference().child(nick).child("bio");
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                callback.GetBiography(snapshot.getValue(String.class));
             }
 
             @Override
@@ -1037,9 +1054,6 @@ public class RecentMethods {
 
     }
 
-
-
-
     public static void setState (String state, String nick, FirebaseModel firebaseModel){
         firebaseModel.initAll();
         final long[] time = new long[1];
@@ -1060,3 +1074,4 @@ public class RecentMethods {
         }
     }
 }
+

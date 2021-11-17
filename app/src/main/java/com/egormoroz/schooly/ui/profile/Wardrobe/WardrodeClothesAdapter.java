@@ -1,8 +1,6 @@
 package com.egormoroz.schooly.ui.profile.Wardrobe;
 
-import android.content.Intent;
 import android.graphics.Rect;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,7 +16,6 @@ import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
 import com.egormoroz.schooly.ui.main.Shop.NewClothesAdapter;
-import com.egormoroz.schooly.ui.main.Shop.PopularClothesAdapter;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
@@ -48,10 +45,10 @@ class WardrobeClothesAdapter extends RecyclerView.Adapter<WardrobeClothesAdapter
 
   @NotNull
   @Override
-  public WardrobeClothesAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
+  public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
     RelativeLayout v = (RelativeLayout) LayoutInflater.from(viewGroup.getContext()).
             inflate(R.layout.rvitemwardrobe, viewGroup, false);
-    WardrobeClothesAdapter.ViewHolder viewHolder=new WardrobeClothesAdapter.ViewHolder(v);
+    ViewHolder viewHolder=new ViewHolder(v);
     return viewHolder;
   }
 

@@ -53,6 +53,10 @@ public class Callbacks {
     public interface GetUserNicks{
         void GetUsersNicks(ArrayList<String> userNicks);
     }
+
+    public interface GetBio{
+        void GetBiography(String bio);
+    }
     public interface GetClothes{
         default void getClothes(ArrayList<Clothes> allClothes) {
         }

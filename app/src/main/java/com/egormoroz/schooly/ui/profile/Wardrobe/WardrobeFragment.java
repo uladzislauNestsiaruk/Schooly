@@ -1,7 +1,6 @@
 package com.egormoroz.schooly.ui.profile.Wardrobe;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,25 +11,15 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Lifecycle;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.MainActivity;
 import com.egormoroz.schooly.R;
-import com.egormoroz.schooly.RecentMethods;
-import com.egormoroz.schooly.ui.main.Shop.AccessoriesFragment;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
-import com.egormoroz.schooly.ui.main.Shop.ClothesFragment;
-import com.egormoroz.schooly.ui.main.Shop.HatsFragment;
-import com.egormoroz.schooly.ui.main.Shop.PopularFragment;
-import com.egormoroz.schooly.ui.main.Shop.ShoesFargment;
-import com.egormoroz.schooly.ui.main.Shop.ShopFragment;
 import com.egormoroz.schooly.ui.main.UserInformation;
 import com.egormoroz.schooly.ui.profile.ProfileFragment;
-import com.egormoroz.schooly.ui.profile.Wardrobe.WardrobeClothesAdapter;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.tabs.TabLayout;
 
@@ -43,7 +32,7 @@ public class WardrobeFragment extends Fragment {
     ArrayList<Clothes> clothesArrayListWardrobe=new ArrayList<Clothes>();
     FirebaseModel firebaseModel=new FirebaseModel();
     private ViewPager2 viewPager;
-    WardrobeFragment.FragmentAdapter fragmentAdapter;
+    FragmentAdapter fragmentAdapter;
 
 
     @Override
