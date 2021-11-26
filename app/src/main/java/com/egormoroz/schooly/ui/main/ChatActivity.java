@@ -3,10 +3,6 @@ package com.egormoroz.schooly.ui.main;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,9 +10,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.MediaMetadataRetriever;
@@ -28,10 +21,8 @@ import com.egormoroz.schooly.RecentMethods;
 
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.DocumentsContract;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
@@ -44,32 +35,23 @@ import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.ui.chat.Message;
 import com.egormoroz.schooly.ui.chat.MessageAdapter;
-import com.google.android.gms.auth.api.signin.internal.Storage;
 import com.google.android.gms.tasks.Continuation;
-import com.google.android.gms.tasks.OnCanceledListener;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.FirebaseError;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
-import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
 
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -77,7 +59,7 @@ import java.util.List;
 import java.util.Map;
 
 public class ChatActivity extends Activity {
-    private String messageReceiverID, messageReceiverName, messageReceiverImage, messageSenderID, messageSenderName;
+    private String messageReceiverName, messageReceiverImage, messageSenderName;
 
     private TextView userName, userLastSeen;
     private ImageView userImage;
@@ -97,15 +79,12 @@ public class ChatActivity extends Activity {
     private EditText MessageInputText;
 
     private final List<Message> messagesList = new ArrayList<>();
-    private LinearLayoutManager linearLayoutManager;
     private MessageAdapter messageAdapter;
     private RecyclerView userMessagesList;
 
-    private ProgressDialog loadingBar;
     private String checker = "", myUrl = "";
     private Uri fileUri;
     private StorageTask uploadTask;
-    private long timeStamp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,7 +93,6 @@ public class ChatActivity extends Activity {
         setContentView(R.layout.activity_chat);
 
         mAuth = FirebaseAuth.getInstance();
-        messageSenderID = mAuth.getCurrentUser().getUid();
         RootRef = firebaseModel.getUsersReference();
 
         ActivityCompat.requestPermissions(this, permissions, REQUEST_RECORD_AUDIO_PERMISSION);
@@ -156,6 +134,7 @@ public class ChatActivity extends Activity {
         });
         DisplayLastSeen();
         SendFilesButton.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("IntentReset")
             @Override
             public void onClick(View view) {
 
@@ -175,8 +154,6 @@ public class ChatActivity extends Activity {
 
         back = findViewById(R.id.backtoalldialogs);
 
-        loadingBar = new ProgressDialog(this);
-
         userName = findViewById(R.id.custom_profile_name);
         userImage = findViewById(R.id.custom_profile_image);
         userLastSeen = findViewById(R.id.custom_user_last_seen);
@@ -186,8 +163,8 @@ public class ChatActivity extends Activity {
         MessageInputText = findViewById(R.id.input_message);
 
         messageAdapter = new MessageAdapter(messagesList, messageSenderName, messageReceiverName);
-        userMessagesList = (RecyclerView) findViewById(R.id.private_messages_list_of_users);
-        linearLayoutManager = new LinearLayoutManager(this);
+        userMessagesList = findViewById(R.id.private_messages_list_of_users);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         userMessagesList.setLayoutManager(linearLayoutManager);
         userMessagesList.setAdapter(messageAdapter);
         back.setOnClickListener(new View.OnClickListener() {
@@ -196,7 +173,6 @@ public class ChatActivity extends Activity {
                 finish();
             }
         });
-//
     }
 
     @Override
@@ -229,7 +205,7 @@ public class ChatActivity extends Activity {
                         Uri downloadUrl = task.getResult();
                         myUrl = downloadUrl.toString();
 
-                        Map messageTextBody = new HashMap();
+                        Map<String, String> messageTextBody = new HashMap<>();
                         messageTextBody.put("message", myUrl);
                         messageTextBody.put("name", fileUri.getLastPathSegment());
                         messageTextBody.put("type", checker);
@@ -239,7 +215,7 @@ public class ChatActivity extends Activity {
                         messageTextBody.put("messageID", messagePushID);
 
 
-                        Map messageBodyDetails = new HashMap();
+                        Map<String, Object> messageBodyDetails = new HashMap<>();
                         messageBodyDetails.put(messageSenderRef + "/" + messagePushID, messageTextBody);
                         messageBodyDetails.put(messageReceiverRef + "/" + messagePushID, messageTextBody);
                         RootRef.updateChildren(messageBodyDetails).addOnCompleteListener(new OnCompleteListener() {
@@ -259,7 +235,7 @@ public class ChatActivity extends Activity {
         RootRef.child(messageSenderName)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         if (dataSnapshot.hasChild("State")) {
                             String state = dataSnapshot.child("State").getValue().toString();
                             String time = dataSnapshot.child("LastSeen").getValue().toString();
@@ -339,7 +315,7 @@ public class ChatActivity extends Activity {
             DatabaseReference userMessageKeyRef = firebaseModel.getUsersReference().child(messageSenderName).child("Chats").child(messageReceiverName).child("Messages").push();
             String messagePushID = userMessageKeyRef.getKey();
 
-            Map messageTextBody = new HashMap();
+            Map<String, String> messageTextBody = new HashMap<>();
             messageTextBody.put("message", messageText);
             messageTextBody.put("type", "text");
             messageTextBody.put("from", messageSenderName);
@@ -348,7 +324,7 @@ public class ChatActivity extends Activity {
             messageTextBody.put("messageID", messagePushID);
             addLastMessage("text", messageText);
 
-            Map messageBodyDetails = new HashMap();
+            Map<String, Object> messageBodyDetails = new HashMap<String, Object>();
             messageBodyDetails.put(messageSenderRef + "/" + messagePushID, messageTextBody);
             messageBodyDetails.put(messageReceiverRef + "/" + messagePushID, messageTextBody);
             RootRef.updateChildren(messageBodyDetails).addOnCompleteListener(new OnCompleteListener() {
@@ -366,7 +342,6 @@ public class ChatActivity extends Activity {
 
 
         StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("Voice");
-        sendDialog(messageSenderName, messageReceiverName);
         DatabaseReference userMessageKeyRef = firebaseModel.getUsersReference().child(messageSenderName).child("Chats").child(messageReceiverName).child("Messages").push();
         final String messagePushID = userMessageKeyRef.getKey();
         final StorageReference filePath = storageReference.child(messagePushID + "." + "3gp");
@@ -393,7 +368,7 @@ public class ChatActivity extends Activity {
                 DatabaseReference userMessageKeyRef = firebaseModel.getUsersReference().child(messageSenderName).child("Chats").child(messageReceiverName).child("Messages").push();
                 String messagePushID = userMessageKeyRef.getKey();
 
-                Map messageTextBody = new HashMap();
+                Map<String, String> messageTextBody = new HashMap<String, String>();
                 messageTextBody.put("message", myUrl);
                 messageTextBody.put("type", "voice");
                 messageTextBody.put("from", messageSenderName);
@@ -402,7 +377,7 @@ public class ChatActivity extends Activity {
                 messageTextBody.put("messageID", messagePushID);
                 addLastMessage("voice", myUrl);
 
-                Map messageBodyDetails = new HashMap();
+                Map<String, Object> messageBodyDetails = new HashMap<>();
                 messageBodyDetails.put(messageSenderRef + "/" + messagePushID, messageTextBody);
                 messageBodyDetails.put(messageReceiverRef + "/" + messagePushID, messageTextBody);
                 RootRef.updateChildren(messageBodyDetails).addOnCompleteListener(new OnCompleteListener() {

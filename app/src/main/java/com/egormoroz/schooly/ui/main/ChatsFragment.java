@@ -37,13 +37,10 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ChatsFragment extends Fragment
 {
-    private View PrivateChatsView;
+    private View ChatsView;
     private RecyclerView chatsList;
 
     private FirebaseModel firebaseModel = new FirebaseModel();
-    private DatabaseReference ChatsRef, UsersRef;
-    private FirebaseAuth mAuth;
-    private String currentUserName = "";
 
     public ChatsFragment()
     {
@@ -54,15 +51,14 @@ public class ChatsFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        PrivateChatsView = inflater.inflate(R.layout.fragment_chats, container, false);
+        ChatsView = inflater.inflate(R.layout.fragment_chats, container, false);
 
         firebaseModel.initAll();
-        mAuth = FirebaseAuth.getInstance();
 
-        chatsList = (RecyclerView) PrivateChatsView.findViewById(R.id.chats_list);
+        chatsList = (RecyclerView) ChatsView.findViewById(R.id.chats_list);
         chatsList.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        return PrivateChatsView;
+        return ChatsView;
     }
     @Override
     public void onStart() {

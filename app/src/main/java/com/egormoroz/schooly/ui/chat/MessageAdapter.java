@@ -7,32 +7,19 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
-import android.media.MediaMetadataRetriever;
-import android.media.MediaPlayer;
 import android.net.Uri;
-import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.egormoroz.schooly.CONST;
-import com.egormoroz.schooly.Callbacks;
-import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
-import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.ui.chat.holders.ImageViewerActivity;
+import com.egormoroz.schooly.ui.chat.holders.VoicePlayer;
 import com.egormoroz.schooly.ui.main.ChatActivity;
-import com.egormoroz.schooly.ui.main.ChatsFragment;
-import com.egormoroz.schooly.ui.main.GroupChatActivity;
-import com.egormoroz.schooly.ui.profile.ProfileFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -97,8 +84,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
          //   receiverProfileImage = (CircleImageView) itemView.findViewById(R.id.message_profile_image);
             messageReceiverPicture = itemView.findViewById(R.id.message_receiver_image_view);
             messageSenderPicture = itemView.findViewById(R.id.message_sender_image_view);
-            voicePlayerView = itemView.findViewById(R.id.voicePlayerView);
             voicePlayerViewReceiver = itemView.findViewById(R.id.voicePlayerViewReceiver);
+
         }
     }
 
@@ -187,15 +174,14 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             }
         } else if (fromMessageType.equals("voice")) {
             if (fromUserID.equals(messageSenderId)) {
+                VoicePlayer.getInstance(ChatActivity.class).init(messages.getMessage(),);
 
-
-//                MessageViewHolder.voicePlayerView.setAudio(messages.getMessage());
-//                MessageViewHolder.voicePlayerView.setVisibility(View.VISIBLE);
+                MessageViewHolder.voicePlayerView.setAudio(messages.getMessage());
+                MessageViewHolder.voicePlayerView.setVisibility(View.VISIBLE);
             }
         } else {
-
-//            MessageViewHolder.voicePlayerViewReceiver.setAudio(messages.getMessage());
-//            MessageViewHolder.voicePlayerViewReceiver.setVisibility(View.VISIBLE);
+            MessageViewHolder.voicePlayerViewReceiver.setAudio(messages.getMessage());
+            MessageViewHolder.voicePlayerViewReceiver.setVisibility(View.VISIBLE);
         }
 
         if (fromUserID.equals(messageSenderId)) {
@@ -397,7 +383,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 //                }
 //            }
 //        });
-        delete(position);
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("users").child(messageSenderId).child(messageReceiverId);
         Query userQuery = ref.child(messageID);
 
@@ -406,7 +391,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                     dataSnapshot.getRef().removeValue();
-
+                    delete(position);
             }
 
             @Override
@@ -417,7 +402,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     }
 
     private void deleteReceiverMessage(final int position, final MessageViewHolder holder) {
-        usersRef.child(messageReceiverId).child("Chats").child(messageSenderId).child("Messages").child(messageID)
+        usersRef.child(messageReceiverId).child("Chats").child(messageSenderId).child("Messages").child(userMessagesList.get(position).getMessageID())
                 .child(userMessagesList.get(position).getTo())
                 .child(userMessagesList.get(position).getFrom())
                 .child(userMessagesList.get(position).getMessageID())
@@ -425,7 +410,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
-
+                        delete(position);
                 } else {
 
                 }

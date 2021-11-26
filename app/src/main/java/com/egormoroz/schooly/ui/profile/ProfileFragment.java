@@ -161,7 +161,7 @@ public class ProfileFragment extends Fragment {
                         RecentMethods.getBio(nick, firebaseModel, new Callbacks.GetBio() {
                             @Override
                             public void GetBiography(String bio) {
-                                if(bio.length()==0){
+                                if(bio.equals(null)){
                                     editing.setText("Добавить описание");
                                 }
                             }
