@@ -23,6 +23,7 @@ public class SchoolyService extends Service {
     Miner firstMiner,secondMiner,thirdMiner,fourthMiner,fifthMiner;
     double firstMinerHour,secondMinerHour,thirdMinerHour,fourthMinerHour,fifthMinerHour;
     double firstMinerInHour,secondMinerInHour,thirdMinerInHour,fourthMinerInHour,fifthMinerInHour;
+    static int aaa=1;
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -90,7 +91,7 @@ public class SchoolyService extends Service {
                 RecentMethods.GetActiveMiner(nick, firebaseModel, new Callbacks.GetActiveMiners() {
                     @Override
                     public void GetActiveMiners(ArrayList<Miner> activeMinersFromBase) {
-                        if(activeMinersFromBase.size()>=1){
+                        if(activeMinersFromBase.size()>=0){
                             Thread thread = new Thread()
                             {
                                 @Override
@@ -109,7 +110,8 @@ public class SchoolyService extends Service {
                                         });
                                         while(true) {
                                             Thread.sleep(1000);
-                                            miningMoneyFun();
+                                            AAA();
+                                            Log.d("#####", "A  "+aaa);
                                         }
                                     } catch (InterruptedException e) {
                                     }
@@ -123,6 +125,12 @@ public class SchoolyService extends Service {
             }
         });
         return super.onStartCommand(intent, flags, startId);
+    }
+    public static void getAAA(transmitMiningMoney transmitMiningMoney){
+        transmitMiningMoney.transmitMoney(aaa);
+    }
+    public interface transmitMiningMoney{
+        void transmitMoney(int money);
     }
 
     public void MiningMoneyGap(){
@@ -237,5 +245,9 @@ public class SchoolyService extends Service {
                 RecentMethods.setState("Offline", nick, firebaseModel);
             }
         });
+    }
+
+    public void AAA(){
+        aaa=aaa+1;
     }
 }

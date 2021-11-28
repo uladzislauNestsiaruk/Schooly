@@ -16,6 +16,7 @@ import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
+import com.egormoroz.schooly.SchoolyService;
 import com.egormoroz.schooly.ui.main.MainFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -50,7 +51,6 @@ public class MiningFragment extends Fragment {
         BottomNavigationView bnv = getActivity().findViewById(R.id.bottomNavigationView);
         bnv.setVisibility(bnv.GONE);
         firebaseModel.initAll();
-        getSchoolyCoin();
         return root;
     }
 
@@ -86,6 +86,7 @@ public class MiningFragment extends Fragment {
         weakminersrecyclerview=view.findViewById(R.id.allminersrecyclerview);
         averageminersrecyclerview=view.findViewById(R.id.averageminersrecyclerview);
         strongminersrecyclerview=view.findViewById(R.id.strongminersrecyclerview);
+        f();
     }
 
 
@@ -139,9 +140,10 @@ public class MiningFragment extends Fragment {
                                         }
                                     });
                                     emptyActiveMiners.setText("Добавь активные майнеры");
-                                }else
+                                }else {
                                     emptyActiveMiners.setVisibility(View.GONE);
-                                addActiveMiners.setVisibility(View.GONE);
+                                    addActiveMiners.setVisibility(View.GONE);
+                                }
                                 listAdapterActiveMiner.addAll(activeMinersFromBase);
                                 ActiveMinersAdapter activeMinersAdapter=new ActiveMinersAdapter(listAdapterActiveMiner);
                                 activeminersrecyclerview.setAdapter(activeMinersAdapter);
@@ -165,17 +167,26 @@ public class MiningFragment extends Fragment {
         });
     }
 
-    public void getSchoolyCoin(){
-        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+//    public void getSchoolyCoin(){
+//        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+//            @Override
+//            public void PassUserNick(String nick) {
+//                RecentMethods.GetTodayMining(nick, firebaseModel, new Callbacks.GetTodayMining() {
+//                    @Override
+//                    public void GetTodayMining(double todayMiningFromBase) {
+//                        String todayMiningFormatted = new DecimalFormat("#0.00").format(todayMiningFromBase);
+//                        todayminingText.setText(todayMiningFormatted);
+//                    }
+//                });
+//            }
+//        });
+//    }
+
+    public void f(){
+        SchoolyService.getAAA(new SchoolyService.transmitMiningMoney() {
             @Override
-            public void PassUserNick(String nick) {
-                RecentMethods.GetTodayMining(nick, firebaseModel, new Callbacks.GetTodayMining() {
-                    @Override
-                    public void GetTodayMining(double todayMiningFromBase) {
-                        String todayMiningFormatted = new DecimalFormat("#0.00").format(todayMiningFromBase);
-                        todayminingText.setText(todayMiningFormatted);
-                    }
-                });
+            public void transmitMoney(int money) {
+                todayminingText.setText(String.valueOf(money));
             }
         });
     }
