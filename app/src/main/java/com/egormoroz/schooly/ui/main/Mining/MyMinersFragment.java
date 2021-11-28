@@ -28,7 +28,7 @@ public class MyMinersFragment extends Fragment {
     public static MyMinersFragment newInstanse(){return new MyMinersFragment();}
     private FirebaseModel firebaseModel = new FirebaseModel();
     RecyclerView recyclerviewMining;
-    TextView useMiner;
+    TextView useMiner,emptyMyMiners;
 
 
     @Override
@@ -54,6 +54,7 @@ public class MyMinersFragment extends Fragment {
         GetMyMinersFromBase();
         recyclerviewMining=view.findViewById(R.id.recyclerviewmyminers);
         useMiner=view.findViewById(R.id.use);
+        emptyMyMiners=view.findViewById(R.id.emptyMyMiners);
         Log.d("#####","Изображение установлено");
     }
 
@@ -65,6 +66,12 @@ public class MyMinersFragment extends Fragment {
                             @Override
                             public void GetMyMinerFromBase(ArrayList<Miner> myMinersFromBase) {
                                 listAdapter.addAll(myMinersFromBase);
+                                if (myMinersFromBase.size()==0){
+                                    emptyMyMiners.setVisibility(View.VISIBLE);
+                                    emptyMyMiners.setText("Купи свой первый майнер!");
+                                }else {
+                                    emptyMyMiners.setVisibility(View.GONE);
+                                }
                                 MyMinersAdapter myminersAdapter=new MyMinersAdapter(listAdapter);
                                 recyclerviewMining.setAdapter(myminersAdapter);
                             }

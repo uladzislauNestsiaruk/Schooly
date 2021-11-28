@@ -126,6 +126,31 @@
             android:textColor="@color/app_grey"
             android:textSize="16sp" />
 
+        <TextView
+            android:id="@+id/emptyMiners"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/workingminerstext"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="100dp"
+            android:fontFamily="@font/montserrat_extrabold"
+            android:textColor="@color/app_grey"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/addActiveMiner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/emptyMiners"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/corners14appcolor"
+            android:fontFamily="@font/montserrat_extrabold"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+
+
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/activeminersrecyclerview"
             android:layout_width="match_parent"

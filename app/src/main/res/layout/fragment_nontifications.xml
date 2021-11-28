@@ -35,6 +35,15 @@
 
     </RelativeLayout>
 
+    <TextView
+        android:id="@+id/emptyNonts"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/montserrat_bold"
+        android:layout_centerInParent="true"
+        android:textColor="@color/app_grey"
+        android:textSize="18sp" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/nontificationsrecyclerview"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"

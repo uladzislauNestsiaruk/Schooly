@@ -174,7 +174,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             }
         } else if (fromMessageType.equals("voice")) {
             if (fromUserID.equals(messageSenderId)) {
-                VoicePlayer.getInstance(ChatActivity.class).init(messages.getMessage(),);
+//                VoicePlayer.getInstance(ChatActivity.class).init(messages.getMessage());
 
                 MessageViewHolder.voicePlayerView.setAudio(messages.getMessage());
                 MessageViewHolder.voicePlayerView.setVisibility(View.VISIBLE);

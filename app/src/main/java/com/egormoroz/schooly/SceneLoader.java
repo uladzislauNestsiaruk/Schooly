@@ -1,9 +1,15 @@
 package com.egormoroz.schooly;
 
+import android.app.Activity;
 import android.net.Uri;
 import android.os.SystemClock;
 import android.util.Log;
 import android.widget.Toast;
+
+import androidx.fragment.app.Fragment;
+
+import com.egormoroz.schooly.ui.main.UserInformation;
+import com.egormoroz.schooly.ui.profile.ProfileFragment;
 
 import org.a3dexample.Animator;
 import org.a3dexample.Camera;
@@ -35,7 +41,7 @@ public class SceneLoader implements LoaderTask.Callback {
     /**
      * Parent component
      */
-    protected final ModelActivity parent;
+    protected final Fragment parent;
     /**
      * List of data objects containing info for building the opengl objects
      */
@@ -137,23 +143,21 @@ public class SceneLoader implements LoaderTask.Callback {
      */
     private long startTime;
 
-    public SceneLoader(ModelActivity main) {
-        this.parent = main;
+    public SceneLoader(Fragment fragment) {
+        this.parent = fragment;
     }
 
-    public void init() {
+    public void init(Uri uri) {
 
-        // Camera to show a point of view
+// Camera to show a point of view
         camera = new Camera();
         camera.setChanged(true); // force first draw
 
-        if (parent.getParamUri() == null){
+        if (uri == null){
             return;
         }
 
-        startTime = SystemClock.uptimeMillis();
-        Uri uri = parent.getParamUri();
-        new GltfLoaderTask(parent, uri, this).execute();
+        new GltfLoaderTask(parent.getActivity(), uri, this).execute();
     }
 
     public boolean isDrawAxis(){
@@ -169,7 +173,8 @@ public class SceneLoader implements LoaderTask.Callback {
     }
 
     private void makeToastText(final String text, final int toastDuration) {
-        parent.runOnUiThread(() -> Toast.makeText(parent.getApplicationContext(), text, toastDuration).show());
+        parent.getActivity().runOnUiThread(() -> Toast.makeText(parent.getActivity().getApplicationContext(), text,
+                toastDuration).show());
     }
 
     public Object3DData getLightBulb() {
@@ -187,10 +192,10 @@ public class SceneLoader implements LoaderTask.Callback {
 
         animateLight();
 
-        // smooth camera transition
+// smooth camera transition
         camera.animate();
 
-        // initial camera animation. animate if user didn't touch the screen
+// initial camera animation. animate if user didn't touch the screen
         if (!userHasInteracted) {
             animateCamera();
         }
@@ -208,7 +213,7 @@ public class SceneLoader implements LoaderTask.Callback {
     private void animateLight() {
         if (!rotatingLight) return;
 
-        // animate light - Do a complete rotation every 5 seconds.
+// animate light - Do a complete rotation every 5 seconds.
         long time = SystemClock.uptimeMillis() % 5000L;
         float angleInDegrees = (360.0f / 5000.0f) * ((int) time);
         lightPoint.setRotationY(angleInDegrees);
@@ -226,9 +231,10 @@ public class SceneLoader implements LoaderTask.Callback {
     }
 
     private void requestRender() {
-        // request render only if GL view is already initialized
-        if (parent.getGLView() != null) {
-            parent.getGLView().requestRender();
+// request render only if GL view is already initialized
+        ProfileFragment profileFragment=new ProfileFragment("user", new UserInformation());
+        if (profileFragment.getGLView() != null) {
+            profileFragment.getGLView().requestRender();
         }
     }
 
@@ -345,7 +351,7 @@ public class SceneLoader implements LoaderTask.Callback {
         } else if (this.isAnaglyph){
             this.isAnaglyph = false;
             this.isVRGlasses = true;
-            // move object automatically cause with VR glasses we still have no way of moving object
+// move object automatically cause with VR glasses we still have no way of moving object
             this.userHasInteracted = false;
             makeToastText("Stereoscopic VR Glasses", Toast.LENGTH_SHORT);
         } else {
@@ -354,7 +360,7 @@ public class SceneLoader implements LoaderTask.Callback {
             this.isVRGlasses = false;
             makeToastText("Stereoscopic disabled", Toast.LENGTH_SHORT);
         }
-        // recalculate camera
+// recalculate camera
         this.camera.setChanged(true);
     }
 
@@ -401,12 +407,12 @@ public class SceneLoader implements LoaderTask.Callback {
 
     @Override
     public void onStart(){
-        ContentUtils.setThreadActivity(parent);
+        ContentUtils.setThreadActivity(parent.getActivity());
     }
 
     @Override
     public void onLoadComplete(List<Object3DData> datas) {
-        // TODO: move texture load to LoaderTask
+// TODO: move texture load to LoaderTask
         for (Object3DData data : datas) {
             if (data.getTextureData() == null && data.getTextureFile() != null) {
                 Log.i("LoaderTask","Loading texture... "+data.getTextureFile());
@@ -420,7 +426,7 @@ public class SceneLoader implements LoaderTask.Callback {
             }
         }
 
-        // TODO: move error alert to LoaderTask
+// TODO: move error alert to LoaderTask
         List<String> allErrors = new ArrayList<>();
         for (Object3DData data : datas) {
             addObject(data);
@@ -459,30 +465,31 @@ public class SceneLoader implements LoaderTask.Callback {
         this.drawTextures = true;
     }
 
-    public void processTouch(float x, float y) {
-        ModelRenderer mr = parent.getGLView().getModelRenderer();
-        Object3DData objectToSelect = CollisionDetection.getBoxIntersection(getObjects(), mr.getWidth(), mr.getHeight
-                (), mr.getModelViewMatrix(), mr.getModelProjectionMatrix(), x, y);
-        if (objectToSelect != null) {
-            if (getSelectedObject() == objectToSelect) {
-                Log.i("SceneLoader", "Unselected object " + objectToSelect.getId());
-                setSelectedObject(null);
-            } else {
-                Log.i("SceneLoader", "Selected object " + objectToSelect.getId());
-                setSelectedObject(objectToSelect);
-            }
-            if (isCollision()) {
-                Log.d("SceneLoader", "Detecting collision...");
-
-                float[] point = CollisionDetection.getTriangleIntersection(getObjects(), mr.getWidth(), mr.getHeight
-                        (), mr.getModelViewMatrix(), mr.getModelProjectionMatrix(), x, y);
-                if (point != null) {
-                    Log.i("SceneLoader", "Drawing intersection point: " + Arrays.toString(point));
-                    addObject(Object3DBuilder.buildPoint(point).setColor(new float[]{1.0f, 0f, 0f, 1f}));
-                }
-            }
-        }
-    }
+// public void processTouch(float x, float y) {
+// ModelRenderer mr = parent.getGLView().getRenderer();
+// Object3DData objectToSelect = CollisionDetection.getBoxIntersection(getObjects(), mr.getWidth(), mr.getHeight
+// (), mr.getModelViewMatrix(), mr.getModelProjectionMatrix(), x, y);
+// if (objectToSelect != null) {
+// if (getSelectedObject() == objectToSelect) {
+// Log.i("SceneLoader", "Unselected object " + objectToSelect.getId());
+// setSelectedObject(null);
+// } else {
+// Log.i("SceneLoader", "Selected object " + objectToSelect.getId());
+// setSelectedObject(objectToSelect);
+// }
+// if (isCollision()) {
+// Log.d("SceneLoader", "Detecting collision...");
+//
+// float[] point = CollisionDetection.getTriangleIntersection(getObjects(), mr.getWidth(), mr.getHeight
+// (), mr.getModelViewMatrix(),
+//mr.getModelProjectionMatrix(), x, y);
+// if (point != null) {
+// Log.i("SceneLoader", "Drawing intersection point: " + Arrays.toString(point));
+// addObject(Object3DBuilder.buildPoint(point).setColor(new float[]{1.0f, 0f, 0f, 1f}));
+// }
+// }
+// }
+// }
 
     public void processMove(float dx1, float dy1) {
         userHasInteracted = true;

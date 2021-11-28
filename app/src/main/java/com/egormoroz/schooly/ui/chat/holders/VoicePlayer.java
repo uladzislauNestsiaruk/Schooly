@@ -29,7 +29,7 @@ public class VoicePlayer {
 
     public static synchronized VoicePlayer getInstance(Class<ChatActivity> context) {
         if (mInstance == null) {
-            mInstance = new VoicePlayer(context);
+//            mInstance = new VoicePlayer(context);
         }
         return mInstance;
     }

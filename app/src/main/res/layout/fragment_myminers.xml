@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:scrollbars="none">
 
         <RelativeLayout
@@ -33,6 +34,17 @@
                 android:textSize="22sp" />
 
         </RelativeLayout>
+
+    <TextView
+        android:id="@+id/emptyMyMiners"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="11dp"
+        android:fontFamily="@font/montserrat_bold"
+        android:layout_centerInParent="true"
+        android:textColor="@color/app_grey"
+        android:textSize="18sp" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerviewmyminers"

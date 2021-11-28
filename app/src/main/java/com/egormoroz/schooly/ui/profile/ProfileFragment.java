@@ -1,11 +1,15 @@
 package com.egormoroz.schooly.ui.profile;
 
+import static android.os.Looper.getMainLooper;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,8 +23,10 @@ import androidx.fragment.app.Fragment;
 import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.MainActivity;
+
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
+import com.egormoroz.schooly.SceneLoader;
 import com.egormoroz.schooly.ui.main.ChatActivity;
 import com.egormoroz.schooly.ui.main.UserInformation;
 import com.egormoroz.schooly.ui.profile.Wardrobe.WardrobeFragment;
@@ -39,7 +45,9 @@ public class ProfileFragment extends Fragment {
     UserInformation info;
     TextView nickname,message,biographyTextView;
     DatabaseReference user;
+    SceneLoader scene;
     GLSurfaceView glSurfaceView;
+    private Handler handler;
 
     @Override
     public void onAttach(Context context) {
@@ -196,6 +204,9 @@ public class ProfileFragment extends Fragment {
                         });
                     }
                 });
+                handler = new Handler(getMainLooper());
+                scene = new SceneLoader(this);
+                scene.init(Uri.parse("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Funtitled.gltf?alt=media&token=7bcf39f9-bc1a-4733-8702-056c3e7224d6"));
 
 
 
@@ -248,5 +259,13 @@ public class ProfileFragment extends Fragment {
                 }
             }
         });
+    }
+
+    public GLSurfaceView getGLView() {
+        return glSurfaceView;
+    }
+
+    public SceneLoader getScene() {
+        return scene;
     }
 }

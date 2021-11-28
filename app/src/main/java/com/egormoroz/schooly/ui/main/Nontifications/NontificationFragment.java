@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -30,6 +31,7 @@ public class NontificationFragment extends Fragment {
 
     FirebaseModel firebaseModel=new FirebaseModel();
     RecyclerView nontsRecyclerView;
+    TextView emptyNonts;
     ArrayList<Subscriber> arrayListNonts=new ArrayList<>();
 
     @Override
@@ -54,6 +56,7 @@ public class NontificationFragment extends Fragment {
             }
         });
         nontsRecyclerView=view.findViewById(R.id.nontificationsrecyclerview);
+        emptyNonts=view.findViewById(R.id.emptyNonts);
         getNontificationList();
     }
 
@@ -65,6 +68,12 @@ public class NontificationFragment extends Fragment {
                     @Override
                     public void getSubscribersList(ArrayList<Subscriber> subscribers) {
                         arrayListNonts.addAll(subscribers);
+                        if (subscribers.size()==0){
+                            emptyNonts.setVisibility(View.VISIBLE);
+                            emptyNonts.setText("Пока нет уведомлений :)");
+                        }else {
+                            emptyNonts.setVisibility(View.GONE);
+                        }
                         NontificationAdapter nontificationAdapter=new NontificationAdapter(arrayListNonts);
                         nontsRecyclerView.setAdapter(nontificationAdapter);
                         Log.d("####","ddddddff"+subscribers);

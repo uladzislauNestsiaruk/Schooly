@@ -39,7 +39,7 @@ public class MiningFragment extends Fragment {
     ImageView viewminer;
     double todayMining;
     Map<String,String> timeStamp;
-    TextView minerprice, schoolycoinminer, myminers, upgrade, todayminingText, morecoins,buy,numderOfActiveMiners;
+    TextView minerprice, schoolycoinminer, myminers, upgrade, todayminingText, morecoins,buy,numderOfActiveMiners,emptyActiveMiners,addActiveMiners;
     RecyclerView activeminersrecyclerview,weakminersrecyclerview,averageminersrecyclerview,strongminersrecyclerview;
     private static final String TAG = "###########";
 
@@ -76,7 +76,9 @@ public class MiningFragment extends Fragment {
         todayminingText = view.findViewById(R.id.todaymining);
         numderOfActiveMiners=view.findViewById(R.id.numbersactiveminers);
         buy=view.findViewById(R.id.buy);
+        addActiveMiners=view.findViewById(R.id.addActiveMiner);
         morecoins = view.findViewById(R.id.morecoins);
+        emptyActiveMiners=view.findViewById(R.id.emptyMiners);
         GetDataFromBase();
         getActiveMinersFromBase();
         SetSchoolyCoin();
@@ -127,6 +129,19 @@ public class MiningFragment extends Fragment {
                             @Override
                             public void GetActiveMiners(ArrayList<Miner> activeMinersFromBase) {
                                 numderOfActiveMiners.setText(String.valueOf(activeMinersFromBase.size())+"/5");
+                                if(activeMinersFromBase.size()==0) {
+                                    emptyActiveMiners.setVisibility(View.VISIBLE);
+                                    addActiveMiners.setVisibility(View.VISIBLE);
+                                    addActiveMiners.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            RecentMethods.setCurrentFragment(MyMinersFragment.newInstanse(), getActivity());
+                                        }
+                                    });
+                                    emptyActiveMiners.setText("Добавь активные майнеры");
+                                }else
+                                    emptyActiveMiners.setVisibility(View.GONE);
+                                addActiveMiners.setVisibility(View.GONE);
                                 listAdapterActiveMiner.addAll(activeMinersFromBase);
                                 ActiveMinersAdapter activeMinersAdapter=new ActiveMinersAdapter(listAdapterActiveMiner);
                                 activeminersrecyclerview.setAdapter(activeMinersAdapter);
