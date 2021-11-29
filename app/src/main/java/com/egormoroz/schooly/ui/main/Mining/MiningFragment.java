@@ -1,6 +1,7 @@
 package com.egormoroz.schooly.ui.main.Mining;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,6 +41,7 @@ public class MiningFragment extends Fragment {
     ImageView viewminer;
     double todayMining;
     Map<String,String> timeStamp;
+    String todayMiningFormatted;
     TextView minerprice, schoolycoinminer, myminers, upgrade, todayminingText, morecoins,buy,numderOfActiveMiners,emptyActiveMiners,addActiveMiners;
     RecyclerView activeminersrecyclerview,weakminersrecyclerview,averageminersrecyclerview,strongminersrecyclerview;
     private static final String TAG = "###########";
@@ -186,7 +188,7 @@ public class MiningFragment extends Fragment {
         SchoolyService.getAAA(new SchoolyService.transmitMiningMoney() {
             @Override
             public void transmitMoney(double money) {
-                String todayMiningFormatted = new DecimalFormat("#0.00").format(money);
+                todayMiningFormatted = new DecimalFormat("#0.00").format(money);
                 todayminingText.setText(todayMiningFormatted);
             }
         });
