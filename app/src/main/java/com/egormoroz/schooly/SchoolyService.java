@@ -16,7 +16,16 @@ import java.util.ArrayList;
 
 public class SchoolyService extends Service {
     FirebaseModel firebaseModel=new FirebaseModel();
-    double todayMining,minInGap,miningMoneyInGap,todayMiningBase,t,getFirstMinerInHour,getSecondMinerInHour,getThirdMinerInHour,getFourthMinerInHour,getFifthMinerInHour;
+    static double todayMining;
+    double minInGap;
+    double miningMoneyInGap;
+    double todayMiningBase;
+    double t;
+    double getFirstMinerInHour;
+    double getSecondMinerInHour;
+    double getThirdMinerInHour;
+    double getFourthMinerInHour;
+    double getFifthMinerInHour;
     long a,d,min,getInHourMinerFirst,getInHourMinerSecond,getInHourMinerThird,getInHourMinerFourth,getInHourMinerFifth;
     Miner getFirstActiveMiner, getSecondActiveMiner,getThirdActiveMiner,getFourthActiveMiner,getFifthActiveMiner;
     int aee=8;
@@ -110,8 +119,8 @@ public class SchoolyService extends Service {
                                         });
                                         while(true) {
                                             Thread.sleep(1000);
-                                            AAA();
-                                            Log.d("#####", "A  "+aaa);
+                                            miningMoneyFun();
+                                            Log.d("#####", "A  "+todayMining);
                                         }
                                     } catch (InterruptedException e) {
                                     }
@@ -127,10 +136,10 @@ public class SchoolyService extends Service {
         return super.onStartCommand(intent, flags, startId);
     }
     public static void getAAA(transmitMiningMoney transmitMiningMoney){
-        transmitMiningMoney.transmitMoney(aaa);
+        transmitMiningMoney.transmitMoney(todayMining);
     }
     public interface transmitMiningMoney{
-        void transmitMoney(int money);
+        void transmitMoney(double money);
     }
 
     public void MiningMoneyGap(){
@@ -195,38 +204,29 @@ public class SchoolyService extends Service {
                                     firstMiner = activeMinersFromBase.get(0);
                                     firstMinerHour = Double.valueOf(String.valueOf(firstMiner.getInHour()));
                                     firstMinerInHour = firstMinerHour / 3600;
-                                    todayMining = todayMiningBase + firstMinerInHour;
-                                    firebaseModel.getUsersReference().child(nick)
-                                            .child("todayMining").setValue(todayMining);
+                                    Log.d("#####", "b  "+firstMinerInHour);
+                                    todayMining =todayMining+ firstMinerInHour;
                                 }else if (activeMinersFromBase.size()==2){
                                     secondMiner = activeMinersFromBase.get(1);
                                     secondMinerHour = Double.valueOf(String.valueOf(secondMiner.getInHour()));
                                     secondMinerInHour = secondMinerHour / 3600;
-                                    todayMining = todayMiningBase + firstMinerInHour+secondMinerInHour;
-                                    firebaseModel.getUsersReference().child(nick)
-                                            .child("todayMining").setValue(todayMining);
+                                    todayMining = todayMining + firstMinerInHour+secondMinerInHour;
                                 }else if (activeMinersFromBase.size()==3){
                                     thirdMiner = activeMinersFromBase.get(2);
                                     thirdMinerHour = Double.valueOf(String.valueOf(thirdMiner.getInHour()));
                                     thirdMinerInHour = thirdMinerHour / 3600;
-                                    todayMining = todayMiningBase + firstMinerInHour+secondMinerInHour+thirdMinerInHour;
-                                    firebaseModel.getUsersReference().child(nick)
-                                            .child("todayMining").setValue(todayMining);
+                                    todayMining = todayMining + firstMinerInHour+secondMinerInHour+thirdMinerInHour;
                                 }
                                 else if (activeMinersFromBase.size()==4){
                                     fourthMiner = activeMinersFromBase.get(3);
                                     fourthMinerHour = Double.valueOf(String.valueOf(fourthMiner.getInHour()));
                                     fourthMinerInHour = fourthMinerHour / 3600;
-                                    todayMining = todayMiningBase + firstMinerInHour+secondMinerInHour+thirdMinerInHour+fourthMinerInHour;
-                                    firebaseModel.getUsersReference().child(nick)
-                                            .child("todayMining").setValue(todayMining);
+                                    todayMining = todayMining + firstMinerInHour+secondMinerInHour+thirdMinerInHour+fourthMinerInHour;
                                 }else if (activeMinersFromBase.size()==5){
                                     fifthMiner = activeMinersFromBase.get(4);
                                     fifthMinerHour = Double.valueOf(String.valueOf(fifthMiner.getInHour()));
                                     fifthMinerInHour = fifthMinerHour / 3600;
-                                    todayMining = todayMiningBase + firstMinerInHour+secondMinerInHour+thirdMinerInHour+fourthMinerInHour+fifthMinerInHour;
-                                    firebaseModel.getUsersReference().child(nick)
-                                            .child("todayMining").setValue(todayMining);
+                                    todayMining = todayMining + firstMinerInHour+secondMinerInHour+thirdMinerInHour+fourthMinerInHour+fifthMinerInHour;
                                 }
                             }
                         });
@@ -245,9 +245,5 @@ public class SchoolyService extends Service {
                 RecentMethods.setState("Offline", nick, firebaseModel);
             }
         });
-    }
-
-    public void AAA(){
-        aaa=aaa+1;
     }
 }

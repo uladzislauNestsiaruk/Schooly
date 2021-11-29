@@ -86,7 +86,7 @@ public class MiningFragment extends Fragment {
         weakminersrecyclerview=view.findViewById(R.id.allminersrecyclerview);
         averageminersrecyclerview=view.findViewById(R.id.averageminersrecyclerview);
         strongminersrecyclerview=view.findViewById(R.id.strongminersrecyclerview);
-        f();
+        setMiningMoney();
     }
 
 
@@ -182,11 +182,12 @@ public class MiningFragment extends Fragment {
 //        });
 //    }
 
-    public void f(){
+    public void setMiningMoney(){
         SchoolyService.getAAA(new SchoolyService.transmitMiningMoney() {
             @Override
-            public void transmitMoney(int money) {
-                todayminingText.setText(String.valueOf(money));
+            public void transmitMoney(double money) {
+                String todayMiningFormatted = new DecimalFormat("#0.00").format(money);
+                todayminingText.setText(todayMiningFormatted);
             }
         });
     }

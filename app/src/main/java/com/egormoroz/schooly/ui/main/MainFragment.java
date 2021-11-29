@@ -29,6 +29,7 @@ import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.MainActivity;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
+import com.egormoroz.schooly.SchoolyService;
 import com.egormoroz.schooly.ui.main.Mining.MiningFragment;
 import com.egormoroz.schooly.ui.main.Nontifications.NontificationFragment;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
@@ -125,18 +126,13 @@ public class MainFragment extends Fragment{
             }
         });
         todayMiningMain=view.findViewById(R.id.todayminingmain);
-        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-            @Override
-            public void PassUserNick(String nick) {
-                RecentMethods.GetTodayMining(nick, firebaseModel, new Callbacks.GetTodayMining() {
-                    @Override
-                    public void GetTodayMining(double todayMiningFromBase) {
-                        String todayMiningFormatted = new DecimalFormat("#0.00").format(todayMiningFromBase);
-                        todayMiningMain.setText(todayMiningFormatted);
-                    }
-                });
-            }
-        });
+            SchoolyService.getAAA(new SchoolyService.transmitMiningMoney() {
+                @Override
+                public void transmitMoney(double money) {
+                    String todayMiningFormatted = new DecimalFormat("#0.00").format(money);
+                    todayMiningMain.setText(todayMiningFormatted);
+                }
+            });
         clothesRecyclerMain=view.findViewById(R.id.newchlothesinshop);
         loadClothesFromBase();
         itemClickListener=new NewClothesAdapter.ItemClickListener() {
