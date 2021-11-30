@@ -27,6 +27,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.MainActivity;
+import com.egormoroz.schooly.ModelActivity;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.SchoolyService;
@@ -162,6 +163,9 @@ public class MainFragment extends Fragment{
                         NotificationManagerCompat.from(getActivity());
                 notificationManager.notify(NOTIFY_ID, builder.build());
                 Log.d("######", "good");
+                Intent i = new Intent(getActivity(), ModelActivity.class);
+                startActivity(i);
+                ((Activity) getActivity()).overridePendingTransition(0, 0);
             }
         });
     }

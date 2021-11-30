@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
@@ -181,36 +182,31 @@ public class SchoolyService extends Service {
                             getInHourMinerFirst = getFirstActiveMiner.getInHour();
                             getFirstMinerInHour = Double.valueOf(String.valueOf(getInHourMinerFirst));
                             miningMoneyInGap = minInGap * (getFirstMinerInHour / 60);
-                            firebaseModel.getUsersReference().child(nick)
-                                    .child("todayMining").setValue(miningMoneyInGap+t);
+                            todayMining=miningMoneyInGap+t;
                         }else if (getActiveMinersArrayList.size()==3){
                             getSecondActiveMiner=getActiveMinersArrayList.get(1);
                             getInHourMinerSecond= getSecondActiveMiner.getInHour();
                             getSecondMinerInHour = Double.valueOf(String.valueOf(getInHourMinerSecond));
                             miningMoneyInGap = minInGap * ((getFirstMinerInHour+getSecondMinerInHour) / 60);
-                            firebaseModel.getUsersReference().child(nick)
-                                    .child("todayMining").setValue(miningMoneyInGap+t);
+                            todayMining=miningMoneyInGap+t;
                         }else if (getActiveMinersArrayList.size()==3){
                             getThirdActiveMiner=getActiveMinersArrayList.get(2);
                             getInHourMinerThird= getThirdActiveMiner.getInHour();
                             getThirdMinerInHour = Double.valueOf(String.valueOf(getInHourMinerThird));
                             miningMoneyInGap = minInGap * ((getFirstMinerInHour+getSecondMinerInHour+getThirdMinerInHour) / 60);
-                            firebaseModel.getUsersReference().child(nick)
-                                    .child("todayMining").setValue(miningMoneyInGap+t);
+                            todayMining=miningMoneyInGap+t;
                         }else if (getActiveMinersArrayList.size()==4){
                             getFourthActiveMiner=getActiveMinersArrayList.get(3);
                             getInHourMinerFourth= getFourthActiveMiner.getInHour();
                             getFourthMinerInHour = Double.valueOf(String.valueOf(getInHourMinerFourth));
                             miningMoneyInGap = minInGap * ((getFirstMinerInHour+getSecondMinerInHour+getThirdMinerInHour+getFourthMinerInHour) / 60);
-                            firebaseModel.getUsersReference().child(nick)
-                                    .child("todayMining").setValue(miningMoneyInGap+t);
+                            todayMining=miningMoneyInGap+t;
                         }else if (getActiveMinersArrayList.size()==5){
                             getFifthActiveMiner=getActiveMinersArrayList.get(4);
                             getInHourMinerFifth= getFifthActiveMiner.getInHour();
                             getFifthMinerInHour = Double.valueOf(String.valueOf(getInHourMinerFifth));
                             miningMoneyInGap = minInGap * ((getFirstMinerInHour+getSecondMinerInHour+getThirdMinerInHour+getFourthMinerInHour+getFifthMinerInHour) / 60);
-                            firebaseModel.getUsersReference().child(nick)
-                                    .child("todayMining").setValue(miningMoneyInGap+t);
+                            todayMining=miningMoneyInGap+t;
                         }
                     }
                 });
@@ -219,36 +215,43 @@ public class SchoolyService extends Service {
     }
 
     public void miningMoneyFun(){
-                RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+            @Override
+            public void PassUserNick(String nick) {
+                RecentMethods.GetActiveMiner(nick, firebaseModel, new Callbacks.GetActiveMiners() {
                     @Override
-                    public void PassUserNick(String nick) {
-                        RecentMethods.GetActiveMiner(nick, firebaseModel, new Callbacks.GetActiveMiners() {
-                            @Override
-                            public void GetActiveMiners(ArrayList<Miner> activeMinersFromBase) {
-                                if (listSize==1) {
-                                    todayMining =todayMining+ firstMinerInHour;
-                                }else if (listSize==2){
-                                    todayMining = todayMining + firstMinerInHour+secondMinerInHour;
-                                    Log.d("###", "xggg  "+todayMining);
-                                }else if (listSize==3){
-                                    todayMining = todayMining + firstMinerInHour+secondMinerInHour+thirdMinerInHour;
-                                }
-                                else if (listSize==4){
-                                    todayMining = todayMining + firstMinerInHour+secondMinerInHour+thirdMinerInHour+fourthMinerInHour;
-                                }else if (listSize==5){
-                                    todayMining = todayMining + firstMinerInHour+secondMinerInHour+thirdMinerInHour+fourthMinerInHour+fifthMinerInHour;
-                                }
-                            }
-                        });
+                    public void GetActiveMiners(ArrayList<Miner> activeMinersFromBase) {
+                        if (listSize==1) {
+                            todayMining =todayMining+ firstMinerInHour;
+                        }else if (listSize==2){
+                            todayMining = todayMining + firstMinerInHour+secondMinerInHour;
+                            Log.d("###", "xggg  "+todayMining);
+                        }else if (listSize==3){
+                            todayMining = todayMining + firstMinerInHour+secondMinerInHour+thirdMinerInHour;
+                        }
+                        else if (listSize==4){
+                            todayMining = todayMining + firstMinerInHour+secondMinerInHour+thirdMinerInHour+fourthMinerInHour;
+                        }else if (listSize==5){
+                            todayMining = todayMining + firstMinerInHour+secondMinerInHour+thirdMinerInHour+fourthMinerInHour+fifthMinerInHour;
+                        }
                     }
                 });
+            }
+        });
     }
+
 
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
-        firebaseModel.initAll();
+        Log.d("####", "nick  ");
+        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+            @Override
+            public void PassUserNick(String nick) {
+                firebaseModel.getUsersReference().child(nick).child("timesTamp").setValue(ServerValue.TIMESTAMP);
+                Log.d("ssss", "nick  "+nick);
+            }
+        });
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @Override
             public void PassUserNick(String nick) {
@@ -256,4 +259,5 @@ public class SchoolyService extends Service {
             }
         });
     }
+
 }
