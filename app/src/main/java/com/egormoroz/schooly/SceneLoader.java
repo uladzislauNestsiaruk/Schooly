@@ -20,6 +20,7 @@ import org.a3dexample.IOUtils;
 import org.a3dexample.LoaderTask;
 import org.a3dexample.Object3DBuilder;
 import org.a3dexample.Object3DData;
+import org.a3dexample.WavefrontLoaderTask;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -161,7 +162,7 @@ public class SceneLoader implements LoaderTask.Callback {
         Uri uri = parent.getParamUri();
         Log.i("Object3DBuilder", "Loading model " + uri + ". async and parallel..");
             Log.i("Object3DBuilder", "Loading GLtf object from: "+uri);
-            new GltfLoaderTask(parent, uri, this).execute();
+        new WavefrontLoaderTask(parent, uri, this).execute();
     }
 
     public boolean isDrawAxis(){
