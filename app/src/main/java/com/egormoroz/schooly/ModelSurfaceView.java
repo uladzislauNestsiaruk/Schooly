@@ -1,9 +1,11 @@
 package com.egormoroz.schooly;
 
-
-
 import android.opengl.GLSurfaceView;
 import android.view.MotionEvent;
+
+import com.egormoroz.schooly.ModelActivity;
+import com.egormoroz.schooly.ModelRenderer;
+
 
 import java.io.IOException;
 
@@ -17,7 +19,7 @@ public class ModelSurfaceView extends GLSurfaceView {
 
 	private ModelActivity parent;
 	private ModelRenderer mRenderer;
-//	private TouchController touchHandler;
+	private TouchController touchHandler;
 
 	public ModelSurfaceView(ModelActivity parent) throws IllegalAccessException, IOException {
 		super(parent);
@@ -36,13 +38,13 @@ public class ModelSurfaceView extends GLSurfaceView {
 		// TODO: enable this?
 		// setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
 
-//		touchHandler = new TouchController(this, mRenderer);
+		touchHandler = new TouchController(this, mRenderer);
 	}
 
-//	@Override
-//	public boolean onTouchEvent(MotionEvent event) {
-//		return touchHandler.onTouchEvent(event);
-//	}
+	@Override
+	public boolean onTouchEvent(MotionEvent event) {
+		return touchHandler.onTouchEvent(event);
+	}
 
 	public ModelActivity getModelActivity() {
 		return parent;

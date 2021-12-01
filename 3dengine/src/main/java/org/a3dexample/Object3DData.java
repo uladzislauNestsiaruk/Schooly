@@ -5,6 +5,10 @@ import android.opengl.GLES20;
 import android.opengl.Matrix;
 import android.util.Log;
 
+import org.a3dexample.WavefrontLoader.FaceMaterials;
+import org.a3dexample.WavefrontLoader.Faces;
+import org.a3dexample.WavefrontLoader.Materials;
+import org.a3dexample.WavefrontLoader.Tuple3;
 import org.a3dexample.jgltf_model.MaterialModel;
 
 import java.io.InputStream;
@@ -18,6 +22,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * This is the basic 3D data necessary to build the 3D object
+ *
+ * @author andres
+ *
+ */
 public class Object3DData {
 
     enum Transformation {
@@ -31,7 +41,6 @@ public class Object3DData {
      * files
      */
     private Uri uri;
-    private Octree octree = null;
     /**
      * The assets directory where the files reside so we can build referenced files in the model like material and
      * textures files
@@ -58,10 +67,10 @@ public class Object3DData {
     private FloatBuffer vertexNormalsBuffer = null;
     private Buffer drawOrderBuffer = null;
 
-    private ArrayList<WavefrontLoader.Tuple3> texCoords;
-    private WavefrontLoader.Faces faces;
-    private WavefrontLoader.FaceMaterials faceMats;
-    private WavefrontLoader.Materials materials;
+    private ArrayList<Tuple3> texCoords;
+    private Faces faces;
+    private FaceMaterials faceMats;
+    private Materials materials;
     private MaterialModel gltfMaterial;
     private String textureFile;
 
@@ -97,19 +106,19 @@ public class Object3DData {
     private BoundingBox boundingBox;
 
     // Transformation data
-    protected float[] translation = new float[]{0f, 0f, 0f};
-    protected float[] position = new float[]{0f, 0f, 0f};
-    protected float[] rotation = new float[]{0f, 0f, 0f};
+    protected float[] translation = new float[] {0f, 0f, 0f};
+    protected float[] position = new float[] { 0f, 0f, 0f };
+    protected float[] rotation = new float[] { 0f, 0f, 0f };
     // theta, x, y, z
     // TODO: need refactor for rotateM to not call this when no rotation,
     // TODO: currently, transformation construct model matrix once per set transformation calls
     // TODO: this is an inefficient way ant easy to make mistake
-    protected float[] quadRotation = new float[]{0f, 0f, 0f, 1f};
-    protected float[] scale = new float[]{1, 1, 1};
+    protected float[] quadRotation = new float[] {0f, 0f, 0f, 1f};
+    protected float[] scale = new float[] { 1, 1, 1 };
     protected float[] modelMatrix = new float[16];
 
     {
-        Matrix.setIdentityM(modelMatrix, 0);
+        Matrix.setIdentityM(modelMatrix,0);
     }
 
     // whether the object has changed
@@ -120,11 +129,12 @@ public class Object3DData {
     private WavefrontLoader loader;
 
     // collision detection
+    private Octree octree = null;
 
     // errors detected
     private List<String> errors = new ArrayList<>();
 
-    public Object3DData() {
+    public Object3DData(){
         this.version = 1;
     }
 
@@ -155,8 +165,8 @@ public class Object3DData {
         this.version = 4;
     }
 
-    public Object3DData(FloatBuffer verts, FloatBuffer normals, ArrayList<WavefrontLoader.Tuple3> texCoords, WavefrontLoader.Faces faces,
-                        WavefrontLoader.FaceMaterials faceMats, WavefrontLoader.Materials materials) {
+    public Object3DData(FloatBuffer verts, FloatBuffer normals, ArrayList<Tuple3> texCoords, Faces faces,
+                        FaceMaterials faceMats, Materials materials) {
         super();
         this.vertexBuffer = verts;
         this.vertexNormalsBuffer = normals;
@@ -183,20 +193,23 @@ public class Object3DData {
         return modelDimensions;
     }
 
+    public void setOctree(Octree octree){
+        this.octree = octree;
+    }
+
+    public Octree getOctree(){
+        return octree;
+    }
 
     /**
      * Can be called when the faces were loaded asynchronously
      *
      * @param faces 3d faces
      */
-    public Object3DData setFaces(WavefrontLoader.Faces faces) {
+    public Object3DData setFaces(Faces faces) {
         this.faces = faces;
         this.drawOrderBuffer = faces.getIndexBuffer();
         return this;
-    }
-
-    public Octree getOctree(){
-        return octree;
     }
 
     public boolean isVisible() {
@@ -237,11 +250,11 @@ public class Object3DData {
         if (getColor() == null || getColor().length != 4) {
             return null;
         }
-        return new float[]{1 - getColor()[0], 1 - getColor()[1], 1 - getColor()[2], 1};
+        return new float[] { 1 - getColor()[0], 1 - getColor()[1], 1 - getColor()[2], 1 };
     }
 
     public Object3DData setColor(float[] color) {
-        if (color != null) {
+        if (color != null){
             // color variable when using single color
             this.color = color;
         }
@@ -271,7 +284,7 @@ public class Object3DData {
         this.textureData = textureData;
     }
 
-    public void setTextureWrap(Integer s, Integer t) {
+    public void setTextureWrap(Integer s, Integer t){
         if (s != null) {
             this.textureWrapS = s;
         }
@@ -281,53 +294,35 @@ public class Object3DData {
         }
     }
 
-    public void setFilter(Integer min, Integer mag) {
-        if (min != null) {
+    public void setFilter(Integer min, Integer mag){
+        if (min != null){
             this.textureMinFilter = min;
         }
-        if (mag != null) {
+        if (mag != null){
             this.textureMagFilter = mag;
         }
     }
 
-    public void setOctree(Octree octree){
-        this.octree = octree;
-    }
+    public int getTextureWrapS() { return textureWrapS; }
+    public int getTextureWrapT() { return textureWrapT; }
+    public int getTextureMinFilter() { return textureMinFilter; }
+    public int getTextureMagFilter() { return textureMagFilter; }
 
-    public int getTextureWrapS() {
-        return textureWrapS;
-    }
-
-    public int getTextureWrapT() {
-        return textureWrapT;
-    }
-
-    public int getTextureMinFilter() {
-        return textureMinFilter;
-    }
-
-    public int getTextureMagFilter() {
-        return textureMagFilter;
-    }
-
-    public boolean getIsDoubleSided() {
-        return (isDoubleSided == 1);
-    }
-
+    public boolean getIsDoubleSided() { return (isDoubleSided == 1); }
     public void setIsDoubleSided(Integer isDoubleSided) {
-        if (isDoubleSided != null) {
-            this.isDoubleSided = isDoubleSided;
+        if (isDoubleSided != null){
+            this.isDoubleSided  = isDoubleSided;
         }
     }
 
     // emissive Texture
 
-    public Integer getEmissiveTextureHandle() {
+    public Integer getEmissiveTextureHandle(){
         return emissiveTextureHandle;
     }
 
-    public void setEmissiveTextureHandle(Integer emissiveTextureHandle) {
-        if (emissiveTextureHandle != null) {
+    public void setEmissiveTextureHandle(Integer emissiveTextureHandle){
+        if (emissiveTextureHandle != null){
             this.emissiveTextureHandle = emissiveTextureHandle;
         } else {
             this.emissiveTextureHandle = -1;
@@ -337,21 +332,17 @@ public class Object3DData {
     public FloatBuffer getEmissiveTextureCoordsArrayBuffer() {
         return emissiveTextureCoordsArrayBuffer;
     }
-
     public Object3DData setEmissiveTextureCoordsArrayBuffer(FloatBuffer emissiveTextureCoordsArrayBuffer) {
-        this.emissiveTextureCoordsArrayBuffer = emissiveTextureCoordsArrayBuffer;
+        this.emissiveTextureCoordsArrayBuffer =  emissiveTextureCoordsArrayBuffer;
         return this;
     }
-
     public byte[] getEmissiveTextureData() {
         return emissiveTextureData;
     }
-
     public void setEmissiveTextureData(byte[] emissiveTextureData) {
         this.emissiveTextureData = emissiveTextureData;
     }
-
-    public void setEmissiveTextureWrap(Integer s, Integer t) {
+    public void setEmissiveTextureWrap(Integer s, Integer t){
         if (s != null) {
             this.emissiveTextureWrapS = s;
         }
@@ -360,64 +351,49 @@ public class Object3DData {
             this.emissiveTextureWrapT = t;
         }
     }
-
-    public void setEmissiveFilter(Integer min, Integer mag) {
-        if (min != null) {
+    public void setEmissiveFilter(Integer min, Integer mag){
+        if (min != null){
             this.emissiveTextureMinFilter = min;
         }
-        if (mag != null) {
+        if (mag != null){
             this.emissiveTextureMagFilter = mag;
         }
     }
-
-    public int getEmissiveTextureWrapS() {
-        return emissiveTextureWrapS;
-    }
-
-    public int getEmissiveTextureWrapT() {
-        return emissiveTextureWrapT;
-    }
-
-    public int getEmissiveTextureMinFilter() {
-        return emissiveTextureMinFilter;
-    }
-
-    public int getEmissiveTextureMagFilter() {
-        return emissiveTextureMagFilter;
-    }
+    public int getEmissiveTextureWrapS() { return emissiveTextureWrapS; }
+    public int getEmissiveTextureWrapT() { return emissiveTextureWrapT; }
+    public int getEmissiveTextureMinFilter() { return emissiveTextureMinFilter; }
+    public int getEmissiveTextureMagFilter() { return emissiveTextureMagFilter; }
 
     // read texture coords to be identify later
-    public FloatBuffer getTextureCoords(String key) {
-        if (key != null) {
+    public FloatBuffer getTextureCoords(String key){
+        if (key != null){
             return this.textureCoords.get(key);
         } else
             return null;
     }
 
-    public void addTextureCoords(String key, FloatBuffer value) {
-        if (key != null && value != null) {
+    public void addTextureCoords(String key, FloatBuffer value){
+        if (key != null && value != null){
             this.textureCoords.put(key, value);
         }
     }
 
-    public Object3DData setTranslation(float[] translation) {
-        if (translation == null) {
+    public Object3DData setTranslation(float[] translation){
+        if (translation == null){
             return this;
         }
         this.translation = translation;
-        for (int i = 0; i < this.position.length; i++) {
+        for (int i = 0; i < this.position.length; i++){
             this.position[i] += translation[i];
         }
         updateModelMatrix();
         return this;
     }
 
-    public float[] getTranslation() {
-        return translation;
-    }
+    public float[] getTranslation() { return translation; }
 
     public Object3DData setPosition(float[] position) {
-        if (position == null) {
+        if (position == null){
             return this;
         }
 
@@ -450,11 +426,11 @@ public class Object3DData {
         return quadRotation;
     }
 
-    public float getRotationX() {
+    public float getRotationX(){
         return rotation[0];
     }
 
-    public float getRotationY() {
+    public float getRotationY(){
         return rotation[1];
     }
 
@@ -462,8 +438,8 @@ public class Object3DData {
         return rotation[2];
     }
 
-    public Object3DData setScale(float[] scale) {
-        if (scale == null) {
+    public Object3DData setScale(float[] scale){
+        if (scale == null){
             return this;
         }
         this.scale = scale;
@@ -471,7 +447,7 @@ public class Object3DData {
         return this;
     }
 
-    public float[] getScale() {
+    public float[] getScale(){
         return scale;
     }
 
@@ -488,10 +464,10 @@ public class Object3DData {
     }
 
     public Object3DData setRotation(float[] rotation) {
-        if (rotation == null) {
+        if (rotation == null){
             return this;
         }
-        if (rotation.length == 4) {
+        if (rotation.length == 4){
             float x = rotation[0];
             float y = rotation[1];
             float z = rotation[2];
@@ -500,15 +476,15 @@ public class Object3DData {
             // angle
             double thetaOver2 = Math.acos(w);
 
-            if (thetaOver2 != 0) {
-                this.quadRotation[0] = (float) Math.toDegrees(thetaOver2) * 2;
+            if (thetaOver2 != 0){
+                this.quadRotation[0] = (float)Math.toDegrees(thetaOver2) * 2;
 
                 // n_x
-                this.quadRotation[1] = x / (float) Math.sin(thetaOver2);
+                this.quadRotation[1] = x / (float)Math.sin(thetaOver2);
                 // n_y
-                this.quadRotation[2] = y / (float) Math.sin(thetaOver2);
+                this.quadRotation[2] = y / (float)Math.sin(thetaOver2);
                 // n_z
-                this.quadRotation[3] = z / (float) Math.sin(thetaOver2);
+                this.quadRotation[3] = z / (float)Math.sin(thetaOver2);
             }
 
 
@@ -526,7 +502,7 @@ public class Object3DData {
     }
 
     // TODO: change model matrix to be accumulated instead of set for only one time
-    private void updateModelMatrix() {
+    private void updateModelMatrix(){
         Matrix.setIdentityM(modelMatrix, 0);
 
         // T*R*S*I
@@ -551,12 +527,12 @@ public class Object3DData {
 
     }
 
-    public float[] getModelMatrix() {
+    public float[] getModelMatrix(){
         return modelMatrix;
     }
 
-    public void setModelMatrix(float[] mMatrix) {
-        if (mMatrix != null) {
+    public void setModelMatrix(float[] mMatrix){
+        if (mMatrix != null){
             this.modelMatrix = mMatrix;
         }
     }
@@ -566,23 +542,22 @@ public class Object3DData {
     }
 
     public IntBuffer getDrawOrder() {
-        return (IntBuffer) drawOrderBuffer;
+        return (IntBuffer)drawOrderBuffer;
     }
 
     /**
      * In case OpenGL doesn't support using GL_UNSIGNED_INT for glDrawElements(), then use this buffer
-     *
      * @return the draw buffer as short
      */
     public ShortBuffer getDrawOrderAsShort() {
-        if (drawOrderBuffer != null && drawOrderBuffer instanceof IntBuffer) {
+        if (drawOrderBuffer != null && drawOrderBuffer instanceof IntBuffer){
             ShortBuffer shortDrawOrderBuffer = createNativeByteBuffer(drawOrderBuffer.capacity() * 2).asShortBuffer();
-            for (int i = 0; i < drawOrderBuffer.capacity(); i++) {
-                shortDrawOrderBuffer.put((short) ((IntBuffer) drawOrderBuffer).get(i));
+            for (int i=0; i<drawOrderBuffer.capacity(); i++){
+                shortDrawOrderBuffer.put((short)((IntBuffer)drawOrderBuffer).get(i));
             }
             return shortDrawOrderBuffer;
         }
-        return (ShortBuffer) drawOrderBuffer;
+        return (ShortBuffer)drawOrderBuffer;
     }
 
     public Object3DData setDrawOrder(Buffer drawBuffer) {
@@ -632,45 +607,45 @@ public class Object3DData {
         return vertexNormalsBuffer;
     }
 
-    public ArrayList<WavefrontLoader.Tuple3> getTexCoords() {
+    public ArrayList<Tuple3> getTexCoords() {
         return texCoords;
     }
 
-    public WavefrontLoader.Faces getFaces() {
+    public Faces getFaces() {
         return faces;
     }
 
-    public WavefrontLoader.FaceMaterials getFaceMats() {
+    public FaceMaterials getFaceMats() {
         return faceMats;
     }
 
-    public WavefrontLoader.Materials getMaterials() {
+    public Materials getMaterials() {
         return materials;
     }
 
-    public MaterialModel getGltfMaterial() {
+    public MaterialModel getGltfMaterial(){
         return gltfMaterial;
     }
 
-    public void setGltfMaterial(MaterialModel material) {
-        if (material != null) {
+    public void setGltfMaterial(MaterialModel material){
+        if (material != null){
             this.gltfMaterial = material;
         }
     }
 
-    public void setVertices(float[] vertices) {
+    public void setVertices(float[] vertices){
         this.vertices = vertices;
     }
 
-    public float[] getVertices() {
+    public float[] getVertices(){
         return this.vertices;
     }
 
-    public void setDrawOrderBufferType(int type) {
+    public void setDrawOrderBufferType(int type){
         this.drawOrderBufferType = type;
     }
 
-    public int getDrawOrderBufferType() {
+    public int getDrawOrderBufferType(){
         return this.drawOrderBufferType;
     }
 
@@ -743,7 +718,7 @@ public class Object3DData {
         this.textureFile = textureFile;
     }
 
-    public String getTextureFile() {
+    public String getTextureFile(){
         return textureFile;
     }
 
@@ -773,9 +748,9 @@ public class Object3DData {
             else if (vertexBuffer.get(i + 2) < farPt)
                 farPt = vertexBuffer.get(i + 2);
         } // end
-        Log.i("Object3DData", "Dimensions for '" + getId() + " (X left, X right): (" + leftPt + "," + rightPt + ")");
-        Log.i("Object3DData", "Dimensions for '" + getId() + " (Y top, Y bottom): (" + topPt + "," + bottomPt + ")");
-        Log.i("Object3DData", "Dimensions for '" + getId() + " (Z near, Z far): (" + nearPt + "," + farPt + ")");
+        Log.i("Object3DData", "Dimensions for '" + getId() + " (X left, X right): ("+leftPt+","+rightPt+")");
+        Log.i("Object3DData", "Dimensions for '" + getId() + " (Y top, Y bottom): ("+topPt+","+bottomPt+")");
+        Log.i("Object3DData", "Dimensions for '" + getId() + " (Z near, Z far): ("+nearPt+","+farPt+")");
 
         // calculate center of 3D object
         float xc = (rightPt + leftPt) / 2.0f;
@@ -792,7 +767,7 @@ public class Object3DData {
             largest = height;
         if (depth > largest)
             largest = depth;
-        Log.i("Object3DData", "Largest dimension [" + largest + "]");
+        Log.i("Object3DData", "Largest dimension ["+largest+"]");
 
         // scale object
 
@@ -910,8 +885,8 @@ public class Object3DData {
             float x3 = vertexBuffer.get(i + 6);
             float y3 = vertexBuffer.get(i + 7);
             float z3 = vertexBuffer.get(i + 8);
-            float[] center1 = Math3DUtils.calculateFaceCenter(new float[]{x1, y1, z1}, new float[]{x2, y2, z2},
-                    new float[]{x3, y3, z3});
+            float[] center1 = Math3DUtils.calculateFaceCenter(new float[] { x1, y1, z1 }, new float[] { x2, y2, z2 },
+                    new float[] { x3, y3, z3 });
 
             float xe1 = vertexBufferNew.get(i);
             float ye1 = vertexBufferNew.get(i + 1);
@@ -922,8 +897,8 @@ public class Object3DData {
             float xe3 = vertexBufferNew.get(i + 6);
             float ye3 = vertexBufferNew.get(i + 7);
             float ze3 = vertexBufferNew.get(i + 8);
-            float[] center2 = Math3DUtils.calculateFaceCenter(new float[]{xe1, ye1, ze1},
-                    new float[]{xe2, ye2, ze2}, new float[]{xe3, ye3, ze3});
+            float[] center2 = Math3DUtils.calculateFaceCenter(new float[] { xe1, ye1, ze1 },
+                    new float[] { xe2, ye2, ze2 }, new float[] { xe3, ye3, ze3 });
 
             vertexBuffer.put(i + 0, x1 + (center2[0] - center1[0]));
             vertexBuffer.put(i + 1, y1 + (center2[1] - center1[1]));
@@ -949,18 +924,18 @@ public class Object3DData {
 
     public BoundingBox getBoundingBox() {
         FloatBuffer vertexBuffer = getVertexBuffer();
-        if (vertexBuffer == null) {
+        if (vertexBuffer == null){
             vertexBuffer = getVertexArrayBuffer();
         }
         if (boundingBox == null) {
-            boundingBox = (BoundingBox) BoundingBox.create(getId() + "_BoundingBox", vertexBuffer, getModelMatrix());
+            boundingBox = BoundingBox.create(getId()+"_BoundingBox", vertexBuffer, getModelMatrix());
         }
         return boundingBox;
     }
 
     public void center(float[] newPosition) {
         // calculate a scale factor
-        WavefrontLoader.Tuple3 center = modelDimensions.getCenter();
+        Tuple3 center = modelDimensions.getCenter();
         setPosition(new float[]{-center.getX() + newPosition[0], -center.getY() + newPosition[1], -center.getZ() + newPosition[2]});
     }
 
@@ -973,11 +948,11 @@ public class Object3DData {
             scaleFactor = (1.0f / largest);
         setScale(new float[]{scaleFactor * newScale, scaleFactor * newScale, scaleFactor * newScale});
 
-        WavefrontLoader.Tuple3 center = modelDimensions.getCenter();
+        Tuple3 center = modelDimensions.getCenter();
         setPosition(new float[]{-center.getX() + newPosition[0], -center.getY() + newPosition[1], -center.getZ() + newPosition[2]});
     }
 
-    public static void centerAndScale(List<Object3DData> datas, float newScale, float[] newPosition) {
+    public static void centerAndScale(List<Object3DData> datas, float newScale, float[] newPosition){
         // calculate the global max length
         float maxRight = datas.get(0).getDimensions().rightPt;
         float maxLeft = datas.get(0).getDimensions().leftPt;
@@ -985,7 +960,7 @@ public class Object3DData {
         float maxBottom = datas.get(0).getDimensions().bottomPt;
         float maxNear = datas.get(0).getDimensions().nearPt;
         float maxFar = datas.get(0).getDimensions().farPt;
-        for (int i = 1; i < datas.size(); i++) {
+        for (int i=1; i<datas.size(); i++){
             float maxRight2 = datas.get(i).getDimensions().rightPt;
             float maxLeft2 = datas.get(i).getDimensions().leftPt;
             float maxTop2 = datas.get(i).getDimensions().topPt;
@@ -1007,9 +982,9 @@ public class Object3DData {
         if (lengthZ > maxLength) maxLength = lengthZ;
 
         // calculate the global center
-        float centerX = (maxRight + maxLeft) / 2;
-        float centerY = (maxTop + maxBottom) / 2;
-        float centerZ = (maxNear + maxFar) / 2;
+        float centerX = (maxRight + maxLeft)/2;
+        float centerY = (maxTop + maxBottom)/2;
+        float centerZ = (maxNear + maxFar)/2;
 
         // calculate the scale factor
         float scaleFactor = 1.0f / maxLength * newScale;
@@ -1017,7 +992,7 @@ public class Object3DData {
         float translationY = -centerY + newPosition[1];
         float translationZ = -centerZ + newPosition[2];
 
-        for (Object3DData data : datas) {
+        for (Object3DData data : datas){
             data.setPosition(new float[]{translationX, translationY, translationZ});
             data.setScale(new float[]{scaleFactor, scaleFactor, scaleFactor});
         }
@@ -1028,34 +1003,34 @@ public class Object3DData {
         /*
          * Position the model so it's center is at the origin, and scale it so its longest dimension is no bigger than
          * maxSize.
-         */ {
-
+         */
+    {
         // calculate a scale factor
         float scaleFactor = 1.0f;
         float largest = modelDimensions.getLargest();
         // System.out.println("Largest dimension: " + largest);
         if (largest != 0.0f)
             scaleFactor = (1.0f / largest);
-        Log.i("Object3DData", "Scaling model with factor: " + scaleFactor + ". Largest: " + largest);
+        Log.i("Object3DData","Scaling model with factor: " + scaleFactor+". Largest: "+largest);
 
         // get the model's center point
-        WavefrontLoader.Tuple3 center = modelDimensions.getCenter();
-        Log.i("Object3DData", "Objects actual position: " + center.toString());
+        Tuple3 center = modelDimensions.getCenter();
+        Log.i("Object3DData","Objects actual position: " + center.toString());
 
         // modify the model's vertices
         float x0, y0, z0;
         float x, y, z;
-        FloatBuffer vertexBuffer = getVertexBuffer() != null ? getVertexBuffer() : getVertexArrayBuffer();
-        for (int i = 0; i < vertexBuffer.capacity() / 3; i++) {
-            x0 = vertexBuffer.get(i * 3);
-            y0 = vertexBuffer.get(i * 3 + 1);
-            z0 = vertexBuffer.get(i * 3 + 2);
+        FloatBuffer vertexBuffer = getVertexBuffer() != null? getVertexBuffer() : getVertexArrayBuffer();
+        for (int i = 0; i < vertexBuffer.capacity()/3; i++) {
+            x0 = vertexBuffer.get(i*3);
+            y0 = vertexBuffer.get(i*3+1);
+            z0 = vertexBuffer.get(i*3+2);
             x = (x0 - center.getX()) * scaleFactor;
-            vertexBuffer.put(i * 3, x);
+            vertexBuffer.put(i*3,x);
             y = (y0 - center.getY()) * scaleFactor;
-            vertexBuffer.put(i * 3 + 1, y);
+            vertexBuffer.put(i*3+1,y);
             z = (z0 - center.getZ()) * scaleFactor;
-            vertexBuffer.put(i * 3 + 2, z);
+            vertexBuffer.put(i*3+2,z);
         }
     } // end of centerScale()
 
@@ -1063,7 +1038,7 @@ public class Object3DData {
         errors.add(error);
     }
 
-    public List<String> getErrors() {
+    public List<String> getErrors(){
         return errors;
     }
 }
