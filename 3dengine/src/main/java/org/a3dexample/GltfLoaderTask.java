@@ -3,13 +3,17 @@ package org.a3dexample;
 import android.app.Activity;
 import android.net.Uri;
 
+import android.util.Log;
+
 import org.a3dexample.jgltf_model.GltfModel;
 
 import java.io.IOException;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
+import java.net.URI;
+
 
 public class GltfLoaderTask extends LoaderTask {
 
@@ -38,6 +42,5 @@ public class GltfLoaderTask extends LoaderTask {
             Object3DData.centerAndScale(datas, 5, new float[]{0, 0, 0});
         }
     }
+
 }
-
-

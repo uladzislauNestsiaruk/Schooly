@@ -205,8 +205,8 @@ public class ProfileFragment extends Fragment {
                     }
                 });
                 handler = new Handler(getMainLooper());
-                scene = new SceneLoader(this);
-                scene.init(Uri.parse("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Funtitled.gltf?alt=media&token=7bcf39f9-bc1a-4733-8702-056c3e7224d6"));
+//                scene = new SceneLoader(this);
+//                scene.init(Uri.parse("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Funtitled.gltf?alt=media&token=7bcf39f9-bc1a-4733-8702-056c3e7224d6"));
 
 
 

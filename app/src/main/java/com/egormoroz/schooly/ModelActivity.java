@@ -52,7 +52,7 @@ public class ModelActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        String uri="https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Fship.obj?alt=media&token=e88e027c-8949-4c5d-bf59-940b5b56a37d";
+        String uri="https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2FSciFiHelmet.gltf?alt=media&token=a82512c1-14bf-4faf-8f67-abeb70da7697";
         this.paramUri=Uri.parse(uri);
         // Try to get input parameters
         Bundle b = getIntent().getExtras();

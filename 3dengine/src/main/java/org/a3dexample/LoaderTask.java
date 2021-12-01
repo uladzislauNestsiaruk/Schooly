@@ -7,6 +7,11 @@ import android.os.AsyncTask;
 
 import java.util.List;
 
+/**
+ * This component allows loading the model without blocking the UI.
+ *
+ * @author andresoviedo
+ */
 public abstract class LoaderTask extends AsyncTask<Void, Integer, List<Object3DData>> {
 
     /**
@@ -105,5 +110,4 @@ public abstract class LoaderTask extends AsyncTask<Void, Integer, List<Object3DD
 
         void onLoadComplete(List<Object3DData> data);
     }
-
 }

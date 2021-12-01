@@ -1,8 +1,13 @@
 package org.a3dexample;
 
+import android.opengl.GLES20;
 import android.opengl.Matrix;
 import android.util.Log;
 
+
+import org.a3dexample.AnimatedModel;
+import org.a3dexample.Object3DData;
+import org.a3dexample.WavefrontLoader;
 import org.a3dexample.jgltf_model.AccessorModel;
 import org.a3dexample.jgltf_model.GltfModel;
 import org.a3dexample.jgltf_model.ImageModel;
@@ -18,9 +23,12 @@ import java.net.URI;
 import java.net.URL;
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,9 +42,9 @@ public class GltfLoader {
 
     private static Map<String, Integer> keyHandleMap = new HashMap<>();
     private static String[] textureKeys = {"baseColorTexture"
-                                            , "emissiveTexture"
-                                            , "occlusionTexture"
-                                            , "normalTexture"};
+            , "emissiveTexture"
+            , "occlusionTexture"
+            , "normalTexture"};
 
     private  static Map<NodeModel, List<AnimatedModel>> nodeMap = new HashMap<>();
 
