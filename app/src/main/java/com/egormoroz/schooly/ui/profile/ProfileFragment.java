@@ -11,6 +11,7 @@ import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -24,9 +25,12 @@ import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.MainActivity;
 
+import com.egormoroz.schooly.ModelRenderer;
+import com.egormoroz.schooly.ModelSurfaceView;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.SceneLoader;
+import com.egormoroz.schooly.TouchController;
 import com.egormoroz.schooly.ui.main.ChatActivity;
 import com.egormoroz.schooly.ui.main.UserInformation;
 import com.egormoroz.schooly.ui.profile.Wardrobe.WardrobeFragment;
@@ -38,6 +42,8 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.io.IOException;
+
 public class ProfileFragment extends Fragment {
     FirebaseModel firebaseModel = new FirebaseModel();
     Context profileContext;
@@ -46,7 +52,10 @@ public class ProfileFragment extends Fragment {
     TextView nickname,message,biographyTextView;
     DatabaseReference user;
     SceneLoader scene;
-    GLSurfaceView glSurfaceView;
+    ModelSurfaceView modelSurfaceView;
+    GLSurfaceView mainLook;
+    ModelRenderer modelRenderer;
+    private float[] backgroundColor = new float[]{0f, 0f, 0f, 1.0f};
     private Handler handler;
 
     @Override
@@ -134,6 +143,16 @@ public class ProfileFragment extends Fragment {
         firebaseModel.initAll();
         switch (type) {
             case "user":
+                Bundle b = getActivity().getIntent().getExtras();
+                try {
+                    String[] backgroundColors = b.getString("backgroundColor").split(" ");
+                    backgroundColor[0] = Float.parseFloat(backgroundColors[0]);
+                    backgroundColor[1] = Float.parseFloat(backgroundColors[1]);
+                    backgroundColor[2] = Float.parseFloat(backgroundColors[2]);
+                    backgroundColor[3] = Float.parseFloat(backgroundColors[3]);
+                } catch (Exception ex) {
+                    // Assuming default background color
+                }
                 ///////////////////////// set nickname /////////////////////
                 RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(),
                         firebaseModel,
@@ -205,9 +224,17 @@ public class ProfileFragment extends Fragment {
                     }
                 });
                 handler = new Handler(getMainLooper());
-//                scene = new SceneLoader(this);
-//                scene.init(Uri.parse("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Funtitled.gltf?alt=media&token=7bcf39f9-bc1a-4733-8702-056c3e7224d6"));
-
+                scene = new SceneLoader(this);
+                scene.init(Uri.parse("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Fpenguin.obj?alt=media&token=347af199-fe1b-4719-92a4-b979f551466f"));
+                mainLook=view.findViewById(R.id.mainlookview);
+                try {
+                    modelRenderer=new ModelRenderer(mainLook);
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                mainLook.setRenderer(modelRenderer);
 
 
                 break;
@@ -262,10 +289,58 @@ public class ProfileFragment extends Fragment {
     }
 
     public GLSurfaceView getGLView() {
-        return glSurfaceView;
+        return mainLook;
     }
 
     public SceneLoader getScene() {
         return scene;
     }
+    public ModelRenderer getModelRenderer(){
+        return modelRenderer;
+    }
+
+    public float[] getBackgroundColor() {
+        return backgroundColor;
+    }
+
+//    public class ModelSurfaceView extends GLSurfaceView {
+//
+//        private ProfileFragment parent;
+//        private ModelRenderer mRenderer;
+//        private TouchController touchHandler;
+//
+//        public ModelSurfaceView(ProfileFragment parent) throws IllegalAccessException, IOException {
+//            super(parent.getContext());
+//
+//            // parent component
+//            this.parent = parent;
+//
+//            // Create an OpenGL ES 2.0 context.
+//            setEGLContextClientVersion(2);
+//
+//            // This is the actual renderer of the 3D space
+//            mRenderer = new ModelRenderer(this);
+//            setRenderer(mRenderer);
+//
+//            // Render the view only when there is a change in the drawing data
+//            // TODO: enable this?
+//            // setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
+//
+//            touchHandler = new TouchController(this, mRenderer);
+//        }
+//
+//        @Override
+//        public boolean onTouchEvent(MotionEvent event) {
+//            return touchHandler.onTouchEvent(event);
+//        }
+//
+//        public ModelActivity getModelActivity() {
+//            return parent;
+//        }
+//
+//        public ModelRenderer getModelRenderer(){
+//            return mRenderer;
+//        }
+//
+//    }
 }

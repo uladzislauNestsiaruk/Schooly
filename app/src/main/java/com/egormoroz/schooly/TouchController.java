@@ -1,6 +1,7 @@
 package com.egormoroz.schooly;
 
 import android.graphics.PointF;
+import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
 import android.os.SystemClock;
 import android.util.Log;
@@ -176,14 +177,14 @@ public class TouchController {
 		}
 
 		if (pointerCount == 1 && simpleTouch) {
-            SceneLoader scene = view.getModelActivity().getScene();
+            SceneLoader scene = view.getProfileFragment().getScene();
             scene.processTouch(x1,y1);
 		}
 
 		int max = Math.max(mRenderer.getWidth(), mRenderer.getHeight());
 		if (touchDelay > 1) {
 			// INFO: Process gesture
-            SceneLoader scene = view.getModelActivity().getScene();
+            SceneLoader scene = view.getProfileFragment().getScene();
             scene.processMove(dx1, dy1);
 			Camera camera = scene.getCamera();
 			if (pointerCount == 1 && currentPress1 > 4.0f) {

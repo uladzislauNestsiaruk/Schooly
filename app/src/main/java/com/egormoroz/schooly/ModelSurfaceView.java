@@ -3,8 +3,10 @@ package com.egormoroz.schooly;
 import android.opengl.GLSurfaceView;
 import android.view.MotionEvent;
 
-import com.egormoroz.schooly.ModelActivity;
+import androidx.fragment.app.Fragment;
+
 import com.egormoroz.schooly.ModelRenderer;
+import com.egormoroz.schooly.ui.profile.ProfileFragment;
 
 
 import java.io.IOException;
@@ -17,12 +19,12 @@ import java.io.IOException;
  */
 public class ModelSurfaceView extends GLSurfaceView {
 
-	private ModelActivity parent;
+	private ProfileFragment parent;
 	private ModelRenderer mRenderer;
 	private TouchController touchHandler;
 
-	public ModelSurfaceView(ModelActivity parent) throws IllegalAccessException, IOException {
-		super(parent);
+	public ModelSurfaceView(ProfileFragment parent) throws IllegalAccessException, IOException {
+		super(parent.getContext());
 
 		// parent component
 		this.parent = parent;
@@ -46,8 +48,12 @@ public class ModelSurfaceView extends GLSurfaceView {
 		return touchHandler.onTouchEvent(event);
 	}
 
-	public ModelActivity getModelActivity() {
+	public ProfileFragment getProfileFragment() {
 		return parent;
+	}
+
+	public Fragment getFragment(Fragment fragment){
+		return fragment;
 	}
 
 	public ModelRenderer getModelRenderer(){

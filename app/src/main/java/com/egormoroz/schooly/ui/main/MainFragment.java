@@ -27,7 +27,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.MainActivity;
-import com.egormoroz.schooly.ModelActivity;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.SchoolyService;
@@ -126,16 +125,19 @@ public class MainFragment extends Fragment{
                 });
             }
         });
-        todayMiningMain=view.findViewById(R.id.todayminingmain);
-            SchoolyService.getAAA(new SchoolyService.transmitMiningMoney() {
-                @Override
-                public void transmitMoney(double money) {
-                    String todayMiningFormatted = new DecimalFormat("#0.00").format(money);
-                    todayMiningMain.setText(todayMiningFormatted);
-                }
-            });
         clothesRecyclerMain=view.findViewById(R.id.newchlothesinshop);
         loadClothesFromBase();
+//        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+//            @Override
+//            public void PassUserNick(String nick) {
+//                RecentMethods.GetTodayMining(nick, firebaseModel, new Callbacks.GetTodayMining() {
+//                    @Override
+//                    public void GetTodayMining(double todayMiningFromBase) {
+//                        todayMiningMain.setText(String.valueOf(todayMiningFromBase));
+//                    }
+//                });
+//            }
+//        });
         itemClickListener=new NewClothesAdapter.ItemClickListener() {
             @Override
             public void onItemClick(Clothes clothes) {
@@ -163,9 +165,17 @@ public class MainFragment extends Fragment{
                         NotificationManagerCompat.from(getActivity());
                 notificationManager.notify(NOTIFY_ID, builder.build());
                 Log.d("######", "good");
-                Intent i = new Intent(getActivity(), ModelActivity.class);
-                startActivity(i);
-                ((Activity) getActivity()).overridePendingTransition(0, 0);
+//                Intent i = new Intent(getActivity(), ModelActivity.class);
+//                startActivity(i);
+//                ((Activity) getActivity()).overridePendingTransition(0, 0);
+            }
+        });
+        todayMiningMain=view.findViewById(R.id.todayminingmain);
+        SchoolyService.getAAA(new SchoolyService.transmitMiningMoney() {
+            @Override
+            public void transmitMoney(double money) {
+                String todayMiningFormatted = new DecimalFormat("#0.00").format(money);
+                todayMiningMain.setText(todayMiningFormatted);
             }
         });
     }
