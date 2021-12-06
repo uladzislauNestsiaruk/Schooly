@@ -187,6 +187,9 @@ public class MainFragment extends Fragment{
                 RecentMethods.getShoes(nick, firebaseModel, new Callbacks.GetClothes() {
                     @Override
                     public void getClothes(ArrayList<Clothes> allClothes) {
+                        firebaseModel.getUsersReference().child(nick)
+                                .child("AppData").child("Clothes").child("Popular").setValue(new Clothes("shoes", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
+                                ,120,"Jordan 1",0));
                         clothesArrayList.addAll(allClothes);
                         NewClothesAdapter newClothesAdapter=new NewClothesAdapter(clothesArrayList,itemClickListener);
                         clothesRecyclerMain.setAdapter(newClothesAdapter);
@@ -198,8 +201,6 @@ public class MainFragment extends Fragment{
     }
 
     private void createNotificationChannel() {
-        // Create the NotificationChannel, but only on API 26+ because
-        // the NotificationChannel class is new and not in the support library
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CharSequence name = getString(R.string.chanel_name);
             String description = getString(R.string.app_name);

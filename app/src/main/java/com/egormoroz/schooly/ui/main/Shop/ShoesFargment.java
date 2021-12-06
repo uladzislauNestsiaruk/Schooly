@@ -65,7 +65,6 @@ public class ShoesFargment extends Fragment {
             clothesArrayList.addAll(allClothes);
             NewClothesAdapter newClothesAdapter=new NewClothesAdapter(clothesArrayList,itemClickListener);
             clothes.setAdapter(newClothesAdapter);
-            Log.d("#####", "ggvppp  "+clothesArrayList);
           }
         });
       }

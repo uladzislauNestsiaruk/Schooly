@@ -99,7 +99,7 @@ public class ViewingClothesPopular extends Fragment {
         buyClothesBottom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(schoolyCoins>clothesPrise){
+                if(schoolyCoins>=clothesPrise){
                     RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
                         @Override
                         public void PassUserNick(String nick) {

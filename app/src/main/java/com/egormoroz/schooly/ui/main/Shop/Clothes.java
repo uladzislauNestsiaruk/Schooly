@@ -6,13 +6,15 @@ public class Clothes {
     private String type;
     private String clothesImage;
     private long clothesPrice=1;
+    private long purchaseNumber;
     private String clothesTitle;
 
-    public Clothes(String type, String  clothesImage, long clothesPrice,String clothesTitle){
+    public Clothes(String type, String  clothesImage, long clothesPrice,String clothesTitle,long purchaseNumber){
         this.type=type;
         this.clothesImage=clothesImage;
         this.clothesPrice=clothesPrice;
         this.clothesTitle=clothesTitle;
+        this.purchaseNumber=purchaseNumber;
     }
     public Clothes(){
     }
@@ -47,6 +49,14 @@ public class Clothes {
 
     public void setClothesTitle(String clothesTitle){
         this.clothesTitle=clothesTitle;
+    }
+
+    public long getPurchaseNumber(){
+        return this.purchaseNumber;
+    }
+
+    public void setPurchaseNumber(long purchaseNumber){
+        this.purchaseNumber=purchaseNumber;
     }
 
 }
