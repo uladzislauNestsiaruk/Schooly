@@ -175,6 +175,7 @@ public class NewsFragment extends Fragment {
                         };
                 viewPager2.setAdapter(adapter);
                 adapter.startListening();
+
             }
         });
     }
