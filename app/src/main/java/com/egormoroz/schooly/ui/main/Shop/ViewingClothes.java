@@ -116,6 +116,9 @@ public class ViewingClothes extends Fragment {
                                     .child(clothesViewing.getClothesType()).child(clothesViewing.getClothesTitle()).setValue(clothesViewing);
                             Query query=firebaseModel.getUsersReference().child(nick).child("basket").
                                     child(clothesViewing.getClothesTitle());
+                            long purchaseNumber=clothesViewing.getPurchaseNumber()+1;
+                            firebaseModel.getReference().child("AppData").child("Clothes").child("Popular")
+                                    .child(clothesViewing.getClothesTitle()).child("purchaseNumber").setValue(purchaseNumber);
                             query.addValueEventListener(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {

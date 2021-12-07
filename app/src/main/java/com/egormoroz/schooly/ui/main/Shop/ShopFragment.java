@@ -87,7 +87,6 @@ public class ShopFragment extends Fragment {
         FragmentManager fm = getChildFragmentManager();
         fragmentAdapter = new FragmentAdapter(fm, getLifecycle());
         viewPager.setAdapter(fragmentAdapter);
-        loadModelInBase();
 
         tabLayout.addTab(tabLayout.newTab().setText("Главная"));
         tabLayout.addTab(tabLayout.newTab().setText("Обувь"));
@@ -130,28 +129,28 @@ public class ShopFragment extends Fragment {
 
     }
 
-    public void loadModelInBase(){
-        Clothes clothes=new Clothes("shoes", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
-                , 120,"Jordan 1");
-        Clothes clothes2=new Clothes("shoes", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
-                , 100,"Jordan 4");
-        Clothes clothes3=new Clothes("shoes", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
-                , 10,"Jordan 6");
-        firebaseModel.getReference().child("AppData").child("Clothes")
-                .child("AllClothes").child(clothes.getClothesTitle()).setValue(clothes);
-        firebaseModel.getReference().child("AppData").child("Clothes")
-                .child("Popular").child(clothes.getClothesTitle()).setValue(clothes);
-        firebaseModel.getReference().child("AppData").child("Clothes")
-                .child("AllNew").child(clothes.getClothesTitle()).setValue(clothes);
+//    public void loadModelInBase(){
+//        Clothes clothes=new Clothes("shoes", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
+//                , 120,"Jordan 1");
+//        Clothes clothes2=new Clothes("shoes", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
+//                , 100,"Jordan 4");
+//        Clothes clothes3=new Clothes("shoes", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
+//                , 10,"Jordan 6");
 //        firebaseModel.getReference().child("AppData").child("Clothes")
-//                .child("AllClothes").child(clothes2.getClothesTitle()).setValue(clothes2);
-        firebaseModel.getReference().child("AppData").child("Clothes")
-                .child("Popular").child(clothes2.getClothesTitle()).setValue(clothes2);
-        firebaseModel.getReference().child("AppData").child("Clothes")
-                .child("AllNew").child(clothes2.getClothesTitle()).setValue(clothes2);
-        firebaseModel.getReference().child("AppData").child("Clothes")
-                .child("AllNew").child(clothes3.getClothesTitle()).setValue(clothes3);
-    }
+//                .child("AllClothes").child(clothes.getClothesTitle()).setValue(clothes);
+//        firebaseModel.getReference().child("AppData").child("Clothes")
+//                .child("Popular").child(clothes.getClothesTitle()).setValue(clothes);
+//        firebaseModel.getReference().child("AppData").child("Clothes")
+//                .child("AllNew").child(clothes.getClothesTitle()).setValue(clothes);
+////        firebaseModel.getReference().child("AppData").child("Clothes")
+////                .child("AllClothes").child(clothes2.getClothesTitle()).setValue(clothes2);
+//        firebaseModel.getReference().child("AppData").child("Clothes")
+//                .child("Popular").child(clothes2.getClothesTitle()).setValue(clothes2);
+//        firebaseModel.getReference().child("AppData").child("Clothes")
+//                .child("AllNew").child(clothes2.getClothesTitle()).setValue(clothes2);
+//        firebaseModel.getReference().child("AppData").child("Clothes")
+//                .child("AllNew").child(clothes3.getClothesTitle()).setValue(clothes3);
+//    }
 
 
 

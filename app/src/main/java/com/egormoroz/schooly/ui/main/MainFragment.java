@@ -90,6 +90,15 @@ public class MainFragment extends Fragment{
 //
             }
         });
+//        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+//            @Override
+//            public void PassUserNick(String nick) {
+//                clothesArrayList.add(new Clothes("shoes", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
+//                        ,120,"Jordan 1",0));
+//                firebaseModel.getReference().child("AppData").child("Clothes").child("AllNew").child("Jordan 1").setValue(new Clothes("shoes", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
+//                        ,120,"Jordan 1",0));
+//            }
+//        });
         TextView shop=view.findViewById(R.id.shop);
         shop.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -126,7 +135,6 @@ public class MainFragment extends Fragment{
             }
         });
         clothesRecyclerMain=view.findViewById(R.id.newchlothesinshop);
-        loadClothesFromBase();
 //        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
 //            @Override
 //            public void PassUserNick(String nick) {
@@ -178,19 +186,18 @@ public class MainFragment extends Fragment{
                 todayMiningMain.setText(todayMiningFormatted);
             }
         });
+        loadClothesFromBase();
     }
 
     public void loadClothesFromBase(){
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @Override
             public void PassUserNick(String nick) {
-                RecentMethods.getShoes(nick, firebaseModel, new Callbacks.GetClothes() {
+                RecentMethods.getPopular(firebaseModel, new Callbacks.GetClothes() {
                     @Override
                     public void getClothes(ArrayList<Clothes> allClothes) {
-                        firebaseModel.getUsersReference().child(nick)
-                                .child("AppData").child("Clothes").child("Popular").setValue(new Clothes("shoes", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
-                                ,120,"Jordan 1",0));
                         clothesArrayList.addAll(allClothes);
+                        Log.d("#####", "size  "+clothesArrayList);
                         NewClothesAdapter newClothesAdapter=new NewClothesAdapter(clothesArrayList,itemClickListener);
                         clothesRecyclerMain.setAdapter(newClothesAdapter);
                     }
