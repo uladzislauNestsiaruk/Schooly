@@ -20,6 +20,7 @@ import com.google.firebase.auth.SignInMethodQueryResult;
 import com.google.firebase.database.*;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Queue;
 
 public class RecentMethods {
@@ -1084,5 +1085,21 @@ public class RecentMethods {
       });
       firebaseModel.getUsersReference().child(nick).child("Status").setValue(time[0]);
     }
+  }
+
+  public static String getCurrentTime() {
+    String time;
+    final Calendar c = Calendar.getInstance();
+    int hours = c.get(Calendar.HOUR_OF_DAY);
+    int minutes = c.get(Calendar.MINUTE);
+    String timeH, timeM;
+    timeH = String.valueOf(hours);
+    timeM = String.valueOf(minutes);
+    if (minutes < 10)
+      timeM = "0" + minutes;
+    if (hours < 10)
+      timeH = "0" + hours;
+    time = timeH + ":" + timeM;
+    return time;
   }
 }

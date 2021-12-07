@@ -163,7 +163,7 @@ public class AddNewsFragment extends Fragment {
                             newsBody.put("item_description", text.getText().toString());
                             newsBody.put("date", RecentMethods.getCurrentTime());
                             newsBody.put("newsID", newsPushID);
-                            newsBody.put("likes_couny", "0");
+                            newsBody.put("likes_count", "0");
                             newsBody.put("TimeMill", String.valueOf(calendar.getTimeInMillis() * -1));
 
 

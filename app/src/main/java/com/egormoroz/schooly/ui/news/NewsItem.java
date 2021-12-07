@@ -1,5 +1,7 @@
 package com.egormoroz.schooly.ui.news;
 
+import android.widget.ImageView;
+
 public class NewsItem {
     public String ImageUrl, item_description, likes_count;
 
@@ -7,11 +9,10 @@ public class NewsItem {
         this.ImageUrl = ImageUrl;
         this.likes_count = likes_count;
         this.item_description = item_description;
-    }
-
-    NewsItem(){
 
     }
+
+
 
     public void setImageUrl(String imageUrl) {
         ImageUrl = imageUrl;
