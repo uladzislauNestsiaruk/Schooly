@@ -19,7 +19,9 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.SignInMethodQueryResult;
 import com.google.firebase.database.*;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Queue;
 
 public class RecentMethods {
@@ -1056,7 +1058,7 @@ public class RecentMethods {
 
     public static void setState (String state, String nick, FirebaseModel firebaseModel){
         firebaseModel.initAll();
-        final long[] time = new long[1];
+        final String time;
 
         if (state == "Online"){
             firebaseModel.getUsersReference().child(nick).child("Status").setValue(state);
@@ -1064,14 +1066,28 @@ public class RecentMethods {
         }
         else {
             firebaseModel.getUsersReference().child(nick).child("Status").setValue(state);
-            GetTimeStampNow(nick, firebaseModel, new Callbacks.GetTimesTamp() {
-                @Override
-                public void GetTimesTamp(long timesTamp) {
-                    time[0] = timesTamp;
-                }
-            });
-            firebaseModel.getUsersReference().child(nick).child("Status").setValue(time[0]);
+            Calendar calendar= Calendar.getInstance();
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd hh:mm");
+            time = dateFormat.format(calendar.getTime());
+            firebaseModel.getUsersReference().child(nick).child("Status").setValue(time);
         }
     }
+
+    public static String getCurrentTime() {
+        String time;
+        final Calendar c = Calendar.getInstance();
+        int hours = c.get(Calendar.HOUR_OF_DAY);
+        int minutes = c.get(Calendar.MINUTE);
+        String timeH, timeM;
+        timeH = String.valueOf(hours);
+        timeM = String.valueOf(minutes);
+        if (minutes < 10)
+            timeM = "0" + minutes;
+        if (hours < 10)
+            timeH = "0" + hours;
+        time = timeH + ":" + timeM;
+        return time;
+    }
+
 }
 

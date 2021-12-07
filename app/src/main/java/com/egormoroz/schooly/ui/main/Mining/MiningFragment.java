@@ -81,13 +81,18 @@ public class MiningFragment extends Fragment {
         addActiveMiners=view.findViewById(R.id.addActiveMiner);
         morecoins = view.findViewById(R.id.morecoins);
         emptyActiveMiners=view.findViewById(R.id.emptyMiners);
+
+
         GetDataFromBase();
         getActiveMinersFromBase();
         SetSchoolyCoin();
+
+
         todayminingText.setText(String.valueOf(0));
         weakminersrecyclerview=view.findViewById(R.id.allminersrecyclerview);
         averageminersrecyclerview=view.findViewById(R.id.averageminersrecyclerview);
         strongminersrecyclerview=view.findViewById(R.id.strongminersrecyclerview);
+
         setMiningMoney();
     }
 

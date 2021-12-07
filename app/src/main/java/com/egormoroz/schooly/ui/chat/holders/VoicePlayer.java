@@ -10,8 +10,6 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.egormoroz.schooly.ui.main.ChatActivity;
-
 import java.io.IOException;
 
 public class VoicePlayer {
@@ -27,12 +25,15 @@ public class VoicePlayer {
         this.context = context;
     }
 
-    public static synchronized VoicePlayer getInstance(Class<ChatActivity> context) {
+    public static synchronized VoicePlayer getInstance(Context context) {
         if (mInstance == null) {
 //            mInstance = new VoicePlayer(context);
         }
         return mInstance;
     }
+
+
+
     public void init(String path, final ImageView imgPlay, final ImageView imgPause, final SeekBar seekBar, final TextView txtProcess){
 
         this.imgPlay = imgPlay;
@@ -53,7 +54,7 @@ public class VoicePlayer {
                     @Override
                     public void onPrepared(MediaPlayer mp) {
                         seekBar.setMax(mp.getDuration());
-                        txtProcess.setText("00:00:00/"+convertTime(mp.getDuration() / 1000));
+                        txtProcess.setText("00:00/"+convertTime(mp.getDuration() / 1000));
                     }
                 });
                 mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
@@ -81,8 +82,7 @@ public class VoicePlayer {
     private static String convertTime(long seconds) {
         long s = seconds % 60;
         long m = (seconds / 60) % 60;
-        long h = (seconds / (60 * 60)) % 24;
-        return String.format("%02d:%02d:%02d", h,m,s);
+        return String.format("%02d:%02d", m,s);
     }
 
     //These both functions to avoid mediaplayer errors

@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,18 +22,11 @@ import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.ui.chat.Chat;
-import com.egormoroz.schooly.ui.main.ChatActivity;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.squareup.picasso.Picasso;
-
-import de.hdodenhof.circleimageview.CircleImageView;
 
 
 public class ChatsFragment extends Fragment
@@ -72,7 +66,7 @@ public class ChatsFragment extends Fragment
                                 .setQuery(firebaseModel.getUsersReference().child(nick).child("Chats").orderByChild("TimeMill"), Chat.class)
                                 .build();
 
-
+                Log.d("Neews", String.valueOf(options));
                 FirebaseRecyclerAdapter<Chat, ChatsViewHolder> adapter =
                         new FirebaseRecyclerAdapter<Chat, ChatsViewHolder>(options) {
                             @Override

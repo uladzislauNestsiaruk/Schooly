@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.MediaMetadataRetriever;
@@ -52,21 +53,23 @@ import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Type;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ChatActivity extends Activity {
+public final class ChatActivity extends Activity {
     private String messageReceiverName, messageReceiverImage, messageSenderName;
 
+    private static Activity instance;
     private TextView userName, userLastSeen;
     private ImageView userImage;
     FirebaseModel firebaseModel = new FirebaseModel();
 
     ImageView back;
-    private FirebaseAuth mAuth;
     private DatabaseReference RootRef;
 
     private MediaRecorder recorder = null;
@@ -88,13 +91,14 @@ public class ChatActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         firebaseModel.initAll();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
-        mAuth = FirebaseAuth.getInstance();
         RootRef = firebaseModel.getUsersReference();
 
+        instance = this;
         ActivityCompat.requestPermissions(this, permissions, REQUEST_RECORD_AUDIO_PERMISSION);
         Intent intentReceived = getIntent();
         Bundle data = intentReceived.getExtras();
@@ -102,7 +106,7 @@ public class ChatActivity extends Activity {
             messageSenderName = data.getString("curUser");
             messageReceiverName = data.getString("othUser");
         }
-        Log.d("One", messageSenderName);
+
 
         //     messageReceiverImage = getIntent().getExtras().get("visit_image").toString();
         DatabaseReference ref = firebaseModel.getUsersReference().child(messageSenderName).child("Chats").child(messageReceiverName).child("Unread");
@@ -148,7 +152,9 @@ public class ChatActivity extends Activity {
 
         });
     }
-
+    public static Context getContext() {
+        return instance.getApplicationContext();
+    }
 
     private void IntializeControllers() {
 
@@ -211,7 +217,7 @@ public class ChatActivity extends Activity {
                         messageTextBody.put("type", checker);
                         messageTextBody.put("from", messageSenderName);
                         messageTextBody.put("to", messageReceiverName);
-                        messageTextBody.put("time", getCurrentTime());
+                        messageTextBody.put("time", RecentMethods.getCurrentTime());
                         messageTextBody.put("messageID", messagePushID);
 
 
@@ -320,7 +326,7 @@ public class ChatActivity extends Activity {
             messageTextBody.put("type", "text");
             messageTextBody.put("from", messageSenderName);
             messageTextBody.put("to", messageReceiverName);
-            messageTextBody.put("time", getCurrentTime());
+            messageTextBody.put("time", RecentMethods.getCurrentTime());
             messageTextBody.put("messageID", messagePushID);
             addLastMessage("text", messageText);
 
@@ -373,7 +379,7 @@ public class ChatActivity extends Activity {
                 messageTextBody.put("type", "voice");
                 messageTextBody.put("from", messageSenderName);
                 messageTextBody.put("to", messageReceiverName);
-                messageTextBody.put("time", getCurrentTime());
+                messageTextBody.put("time", RecentMethods.getCurrentTime());
                 messageTextBody.put("messageID", messagePushID);
                 addLastMessage("voice", myUrl);
 
@@ -494,21 +500,6 @@ public class ChatActivity extends Activity {
     }
 
 
-    private String getCurrentTime() {
-        String time;
-        final Calendar c = Calendar.getInstance();
-        int hours = c.get(Calendar.HOUR_OF_DAY);
-        int minutes = c.get(Calendar.MINUTE);
-        String timeH, timeM;
-        timeH = String.valueOf(hours);
-        timeM = String.valueOf(minutes);
-        if (minutes < 10)
-            timeM = "0" + minutes;
-        if (hours < 10)
-            timeH = "0" + hours;
-        time = timeH + ":" + timeM;
-        return time;
-    }
 
    private void addLastMessage(String type, String Message){
 
@@ -518,25 +509,25 @@ public class ChatActivity extends Activity {
                firebaseModel.getUsersReference().child(messageReceiverName).child("Chats").child(messageSenderName).child("LastMessage").setValue(Message);
                break;
            case "voice":
-               firebaseModel.getUsersReference().child(messageSenderName).child("Dialogs").child(messageReceiverName).child("LastMessage").setValue("Голосовое сообщение");
-               firebaseModel.getUsersReference().child(messageReceiverName).child("Dialogs").child(messageSenderName).child("LastMessage").setValue("Голосовое сообщение");
+               firebaseModel.getUsersReference().child(messageSenderName).child("Chats").child(messageReceiverName).child("LastMessage").setValue("Голосовое сообщение");
+               firebaseModel.getUsersReference().child(messageReceiverName).child("Chats").child(messageSenderName).child("LastMessage").setValue("Голосовое сообщение");
                break;
            case "image":
-               firebaseModel.getUsersReference().child(messageSenderName).child("Dialogs").child(messageReceiverName).child("LastMessage").setValue("Фотография");
-               firebaseModel.getUsersReference().child(messageReceiverName).child("Dialogs").child(messageSenderName).child("LastMessage").setValue("Фотография");
+               firebaseModel.getUsersReference().child(messageSenderName).child("Chats").child(messageReceiverName).child("LastMessage").setValue("Фотография");
+               firebaseModel.getUsersReference().child(messageReceiverName).child("Chats").child(messageSenderName).child("LastMessage").setValue("Фотография");
 
                break;
        }
        Calendar calendar = Calendar.getInstance();
-       firebaseModel.getUsersReference().child(messageSenderName).child("Chats").child(messageReceiverName).child("LastTime").setValue(getCurrentTime());
-       firebaseModel.getUsersReference().child(messageReceiverName).child("Chats").child(messageSenderName).child("LastTime").setValue(getCurrentTime());
+       firebaseModel.getUsersReference().child(messageSenderName).child("Chats").child(messageReceiverName).child("LastTime").setValue(RecentMethods.getCurrentTime());
+       firebaseModel.getUsersReference().child(messageReceiverName).child("Chats").child(messageSenderName).child("LastTime").setValue(RecentMethods.getCurrentTime());
        firebaseModel.getUsersReference().child(messageSenderName).child("Chats").child(messageReceiverName).child("TimeMill").setValue(calendar.getTimeInMillis() * -1);
        firebaseModel.getUsersReference().child(messageReceiverName).child("Chats").child(messageSenderName).child("TimeMill").setValue(calendar.getTimeInMillis() * -1);
    }
 
     public void addUnread() {
         final long[] value = new long[1];
-        DatabaseReference ref = firebaseModel.getUsersReference().child(messageReceiverName).child("Dialogs").child(messageSenderName).child("Unread");
+        DatabaseReference ref = firebaseModel.getUsersReference().child(messageReceiverName).child("Chats").child(messageSenderName).child("Unread");
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

@@ -4,7 +4,7 @@ public class News {
     private String user_nick = "";
     private String date = "";
     private String like_count = "";
-    private String text = "";
+    private String text  = "";
     private String image;
 
     private News(String user_nick, String date, String like_count, String text, String image){

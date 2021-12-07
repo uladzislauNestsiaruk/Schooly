@@ -29,6 +29,7 @@ import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.SceneLoader;
 import com.egormoroz.schooly.ui.main.ChatActivity;
 import com.egormoroz.schooly.ui.main.UserInformation;
+import com.egormoroz.schooly.ui.news.AddNewsFragment;
 import com.egormoroz.schooly.ui.profile.Wardrobe.WardrobeFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.database.DataSnapshot;
@@ -134,6 +135,12 @@ public class ProfileFragment extends Fragment {
         firebaseModel.initAll();
         switch (type) {
             case "user":
+                nickname.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        RecentMethods.setCurrentFragment(AddNewsFragment.newInstance(), getActivity());
+                    }
+                });
                 ///////////////////////// set nickname /////////////////////
                 RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(),
                         firebaseModel,
