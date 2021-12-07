@@ -484,9 +484,9 @@ public class RecentMethods {
   //////////////////////////////////////////////////////////////
   ////////////////////SHOP//////////////////////////////////////
 
-  public static void getClothes(String nick,FirebaseModel firebaseModel,Callbacks.GetClothes callback){
+  public static void getClothes(FirebaseModel firebaseModel,Callbacks.GetClothes callback){
     firebaseModel.initAll();
-    Query query=firebaseModel.getReference("AppData/Clothes");
+    Query query=firebaseModel.getReference("AppData/Clothes/AllClothes");
     query.addValueEventListener(new ValueEventListener() {
       @Override
       public void onDataChange(@NonNull DataSnapshot snapshot) {

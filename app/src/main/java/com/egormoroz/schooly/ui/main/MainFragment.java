@@ -46,6 +46,7 @@ public class MainFragment extends Fragment{
     TextView todayMiningMain;
     private FirebaseModel firebaseModel = new FirebaseModel();
     ArrayList<Clothes> clothesArrayList=new ArrayList<Clothes>();
+    ArrayList<Clothes> popularClothesArrayList=new ArrayList<Clothes>();
     private UserInformation userData = new UserInformation();
     RecyclerView clothesRecyclerMain;
     NewClothesAdapter.ItemClickListener itemClickListener;
@@ -90,15 +91,13 @@ public class MainFragment extends Fragment{
 //
             }
         });
-//        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-//            @Override
-//            public void PassUserNick(String nick) {
-//                clothesArrayList.add(new Clothes("shoes", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
-//                        ,120,"Jordan 1",0));
-//                firebaseModel.getReference().child("AppData").child("Clothes").child("AllNew").child("Jordan 1").setValue(new Clothes("shoes", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
-//                        ,120,"Jordan 1",0));
-//            }
-//        });
+        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+            @Override
+            public void PassUserNick(String nick) {
+                firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").child("Jordan 1").setValue(new Clothes("shoes", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
+                        ,120,"Jordan 1",0));
+            }
+        });
         TextView shop=view.findViewById(R.id.shop);
         shop.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -193,12 +192,20 @@ public class MainFragment extends Fragment{
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @Override
             public void PassUserNick(String nick) {
-                RecentMethods.getPopular(firebaseModel, new Callbacks.GetClothes() {
+                RecentMethods.getClothes(firebaseModel, new Callbacks.GetClothes() {
                     @Override
                     public void getClothes(ArrayList<Clothes> allClothes) {
                         clothesArrayList.addAll(allClothes);
+                        for(int i=0;i<clothesArrayList.size();i++){
+                            Clothes cl=clothesArrayList.get(i);
+                            popularClothesArrayList.add(cl);
+                            Log.d("######", "x "+popularClothesArrayList);
+//                            if (cl.getPurchaseNumber()==1){
+//                                firebaseModel.getReference("AppData/Clothes/Popular").setValue()
+//                            }
+                        }
                         Log.d("#####", "size  "+clothesArrayList);
-                        NewClothesAdapter newClothesAdapter=new NewClothesAdapter(clothesArrayList,itemClickListener);
+                        NewClothesAdapter newClothesAdapter=new NewClothesAdapter(popularClothesArrayList,itemClickListener);
                         clothesRecyclerMain.setAdapter(newClothesAdapter);
                     }
                 });

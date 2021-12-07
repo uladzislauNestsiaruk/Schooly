@@ -31,6 +31,7 @@ public class PopularFragment extends Fragment {
 
     FirebaseModel firebaseModel=new FirebaseModel();
     ArrayList<Clothes> clothesArrayList=new ArrayList<Clothes>();
+    ArrayList<Clothes> newClothesArrayList=new ArrayList<Clothes>();
     ArrayList<Clothes> popularClothesArrayList=new ArrayList<Clothes>();
     RecyclerView clothes,popularClothes;
     NewClothesAdapter.ItemClickListener itemClickListener;
@@ -71,12 +72,25 @@ public class PopularFragment extends Fragment {
 
 
     public void loadClothesFromBase(){
-        RecentMethods.getNewClothes( firebaseModel, new Callbacks.GetClothes() {
+        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @Override
-            public void getClothes(ArrayList<Clothes> allClothes) {
-                clothesArrayList.addAll(allClothes);
-                NewClothesAdapter newClothesAdapter=new NewClothesAdapter(clothesArrayList,itemClickListener);
-                clothes.setAdapter(newClothesAdapter);
+            public void PassUserNick(String nick) {
+                RecentMethods.getClothes(firebaseModel, new Callbacks.GetClothes() {
+                    @Override
+                    public void getClothes(ArrayList<Clothes> allClothes) {
+                        clothesArrayList.addAll(allClothes);
+                        for(int i=0;i<clothesArrayList.size();i++){
+                            Clothes cl=clothesArrayList.get(i);
+                            newClothesArrayList.add(cl);
+//                           if (cl.getPurchaseNumber()==1){
+//                               firebaseModel.getReference("AppData/Clothes/Popular").setValue()
+//                            }
+                        }
+                        Log.d("#####", "size  "+clothesArrayList);
+                        NewClothesAdapter newClothesAdapter=new NewClothesAdapter(newClothesArrayList,itemClickListener);
+                        clothes.setAdapter(newClothesAdapter);
+                    }
+                });
             }
         });
 
