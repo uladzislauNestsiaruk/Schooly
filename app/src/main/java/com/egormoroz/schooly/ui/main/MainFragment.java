@@ -27,7 +27,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.MainActivity;
-import com.egormoroz.schooly.ModelActivity;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.SchoolyService;
@@ -47,6 +46,7 @@ public class MainFragment extends Fragment{
     TextView todayMiningMain;
     private FirebaseModel firebaseModel = new FirebaseModel();
     ArrayList<Clothes> clothesArrayList=new ArrayList<Clothes>();
+    ArrayList<Clothes> popularClothesArrayList=new ArrayList<Clothes>();
     private UserInformation userData = new UserInformation();
     RecyclerView clothesRecyclerMain;
     NewClothesAdapter.ItemClickListener itemClickListener;
@@ -91,6 +91,13 @@ public class MainFragment extends Fragment{
 //
             }
         });
+        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+            @Override
+            public void PassUserNick(String nick) {
+                firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").child("Jordan 1").setValue(new Clothes("shoes", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
+                        ,120,"Jordan 1",0));
+            }
+        });
         TextView shop=view.findViewById(R.id.shop);
         shop.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -126,16 +133,18 @@ public class MainFragment extends Fragment{
                 });
             }
         });
-        todayMiningMain=view.findViewById(R.id.todayminingmain);
-            SchoolyService.getAAA(new SchoolyService.transmitMiningMoney() {
-                @Override
-                public void transmitMoney(double money) {
-                    String todayMiningFormatted = new DecimalFormat("#0.00").format(money);
-                    todayMiningMain.setText(todayMiningFormatted);
-                }
-            });
         clothesRecyclerMain=view.findViewById(R.id.newchlothesinshop);
-        loadClothesFromBase();
+//        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+//            @Override
+//            public void PassUserNick(String nick) {
+//                RecentMethods.GetTodayMining(nick, firebaseModel, new Callbacks.GetTodayMining() {
+//                    @Override
+//                    public void GetTodayMining(double todayMiningFromBase) {
+//                        todayMiningMain.setText(String.valueOf(todayMiningFromBase));
+//                    }
+//                });
+//            }
+//        });
         itemClickListener=new NewClothesAdapter.ItemClickListener() {
             @Override
             public void onItemClick(Clothes clothes) {
@@ -163,22 +172,40 @@ public class MainFragment extends Fragment{
                         NotificationManagerCompat.from(getActivity());
                 notificationManager.notify(NOTIFY_ID, builder.build());
                 Log.d("######", "good");
-                Intent i = new Intent(getActivity(), ModelActivity.class);
-                startActivity(i);
-                ((Activity) getActivity()).overridePendingTransition(0, 0);
+//                Intent i = new Intent(getActivity(), ModelActivity.class);
+//                startActivity(i);
+//                ((Activity) getActivity()).overridePendingTransition(0, 0);
             }
         });
+        todayMiningMain=view.findViewById(R.id.todayminingmain);
+        SchoolyService.getAAA(new SchoolyService.transmitMiningMoney() {
+            @Override
+            public void transmitMoney(double money) {
+                String todayMiningFormatted = new DecimalFormat("#0.00").format(money);
+                todayMiningMain.setText(todayMiningFormatted);
+            }
+        });
+        loadClothesFromBase();
     }
 
     public void loadClothesFromBase(){
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @Override
             public void PassUserNick(String nick) {
-                RecentMethods.getShoes(nick, firebaseModel, new Callbacks.GetClothes() {
+                RecentMethods.getClothes(firebaseModel, new Callbacks.GetClothes() {
                     @Override
                     public void getClothes(ArrayList<Clothes> allClothes) {
                         clothesArrayList.addAll(allClothes);
-                        NewClothesAdapter newClothesAdapter=new NewClothesAdapter(clothesArrayList,itemClickListener);
+                        for(int i=0;i<clothesArrayList.size();i++){
+                            Clothes cl=clothesArrayList.get(i);
+                            popularClothesArrayList.add(cl);
+                            Log.d("######", "x "+popularClothesArrayList);
+//                            if (cl.getPurchaseNumber()==1){
+//                                firebaseModel.getReference("AppData/Clothes/Popular").setValue()
+//                            }
+                        }
+                        Log.d("#####", "size  "+clothesArrayList);
+                        NewClothesAdapter newClothesAdapter=new NewClothesAdapter(popularClothesArrayList,itemClickListener);
                         clothesRecyclerMain.setAdapter(newClothesAdapter);
                     }
                 });
@@ -188,8 +215,6 @@ public class MainFragment extends Fragment{
     }
 
     private void createNotificationChannel() {
-        // Create the NotificationChannel, but only on API 26+ because
-        // the NotificationChannel class is new and not in the support library
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CharSequence name = getString(R.string.chanel_name);
             String description = getString(R.string.app_name);

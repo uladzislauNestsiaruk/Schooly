@@ -39,7 +39,7 @@ public class ModelRenderer implements GLSurfaceView.Renderer {
 	private static final float[] COLOR_BLUE = {0.0f, 1.0f, 0.0f, 1f};
 
 	// 3D window (parent component)
-	private ModelSurfaceView main;
+	private GLSurfaceView main;
 	// width of the screen
 	private int width;
 	// height of the screen
@@ -84,6 +84,8 @@ public class ModelRenderer implements GLSurfaceView.Renderer {
 	 * Whether the info of the model has been written to console log
 	 */
 	private Map<Object3DData, Boolean> infoLogged = new HashMap<>();
+
+	ProfileFragment profileFragment=new ProfileFragment("user", new UserInformation());
 	/**
 	 * Switch to akternate drawing of right and left image
 	 */
@@ -103,7 +105,7 @@ public class ModelRenderer implements GLSurfaceView.Renderer {
 	 *
 	 * @param modelSurfaceView the 3D window
 	 */
-	public ModelRenderer(ModelSurfaceView modelSurfaceView) throws IllegalAccessException, IOException {
+	public ModelRenderer(GLSurfaceView modelSurfaceView) throws IllegalAccessException, IOException {
 		this.main = modelSurfaceView;
 		// This component will draw the actual models using OpenGL
 		drawer = new DrawerFactory(modelSurfaceView.getContext());
@@ -120,7 +122,7 @@ public class ModelRenderer implements GLSurfaceView.Renderer {
 	@Override
 	public void onSurfaceCreated(GL10 unused, EGLConfig config) {
 		// Set the background frame color
-		float[] backgroundColor = main.getModelActivity().getBackgroundColor();
+		float[] backgroundColor = profileFragment.getBackgroundColor();
 		GLES20.glClearColor(backgroundColor[0], backgroundColor[1], backgroundColor[2], backgroundColor[3]);
 
 		// Use culling to remove back faces.
@@ -163,7 +165,7 @@ public class ModelRenderer implements GLSurfaceView.Renderer {
 			// Draw background color
 			GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
 
-			SceneLoader scene = main.getModelActivity().getScene();
+			SceneLoader scene = profileFragment.getScene();
 			if (scene == null) {
 				// scene not ready
 				return;
@@ -270,7 +272,7 @@ public class ModelRenderer implements GLSurfaceView.Renderer {
 							 float[] lightPosInEyeSpace, float[] colorMask) {
 
 
-		SceneLoader scene = main.getModelActivity().getScene();
+		SceneLoader scene = profileFragment.getScene();
 
 		// draw light
 		if (scene.isDrawLighting()) {

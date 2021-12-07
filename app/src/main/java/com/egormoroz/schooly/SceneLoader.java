@@ -42,7 +42,7 @@ public class SceneLoader implements LoaderTask.Callback {
     /**
      * Parent component
      */
-    protected final ModelActivity parent;
+    protected final ProfileFragment parent;
     /**
      * List of data objects containing info for building the opengl objects
      */
@@ -144,25 +144,22 @@ public class SceneLoader implements LoaderTask.Callback {
      */
     private long startTime;
 
-    public SceneLoader(ModelActivity main) {
+    public SceneLoader(ProfileFragment main) {
         this.parent = main;
     }
 
-    public void init() {
+    public void init(Uri uri) {
 
         // Camera to show a point of view
         camera = new Camera();
         camera.setChanged(true); // force first draw
 
-        if (parent.getParamUri() == null){
-            return;
-        }
+
 
         startTime = SystemClock.uptimeMillis();
-        Uri uri = parent.getParamUri();
         Log.i("Object3DBuilder", "Loading model " + uri + ". async and parallel..");
             Log.i("Object3DBuilder", "Loading GLtf object from: "+uri);
-        new WavefrontLoaderTask(parent, uri, this).execute();
+        new WavefrontLoaderTask(parent.getActivity(), uri, this).execute();
     }
 
     public boolean isDrawAxis(){
@@ -178,7 +175,7 @@ public class SceneLoader implements LoaderTask.Callback {
     }
 
     private void makeToastText(final String text, final int toastDuration) {
-        parent.runOnUiThread(() -> Toast.makeText(parent.getApplicationContext(), text, toastDuration).show());
+        parent.getActivity().runOnUiThread(() -> Toast.makeText(parent.getActivity().getApplicationContext(), text, toastDuration).show());
     }
 
     public Object3DData getLightBulb() {
@@ -410,7 +407,7 @@ public class SceneLoader implements LoaderTask.Callback {
 
     @Override
     public void onStart(){
-        ContentUtils.setThreadActivity(parent);
+        ContentUtils.setThreadActivity(parent.getActivity());
     }
 
     @Override
@@ -469,7 +466,7 @@ public class SceneLoader implements LoaderTask.Callback {
     }
 
     public void processTouch(float x, float y) {
-        ModelRenderer mr = parent.getGLView().getModelRenderer();
+        ModelRenderer mr = parent.getModelRenderer();
         Object3DData objectToSelect = CollisionDetection.getBoxIntersection(getObjects(), mr.getWidth(), mr.getHeight
                 (), mr.getModelViewMatrix(), mr.getModelProjectionMatrix(), x, y);
         if (objectToSelect != null) {
