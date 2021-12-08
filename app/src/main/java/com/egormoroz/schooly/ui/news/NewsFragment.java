@@ -31,6 +31,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import  com.egormoroz.schooly.ui.news.NewsAdapter;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
@@ -66,125 +67,147 @@ public class NewsFragment extends Fragment {
             }
         });
 
-        return root;
-    }
+        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+            @Override
+            public void PassUserNick(String nick) {
 
-
-    public void onViewCreated(@Nullable View view, @NonNull Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-
-        FirebaseDatabase.getInstance().getReference().child("news").child("spaccacrani")
-                .addListenerForSingleValueEvent(new ValueEventListener() {
+                Query query=firebaseModel.getReference("news/spaccacrani");
+                query.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        Log.d("news", "error");
-                        for (DataSnapshot data : snapshot.getChildren()) {
+                        for (DataSnapshot data : snapshot.getChildren())
                             remoteImages.add(new NewsItem(data.child("item_description").getValue().toString(),
-                                    (data.child("ImageUrl").getValue().toString()), data.child("likes_count").getValue().toString()));
-                            Log.d("news", data.child("ImageUrl").getValue().toString());
-                        }
+                                    data.child("ImageUrl").getValue().toString()
+                                    ,data.child("likes_count").getValue().toString()));
+                        Log.d("####", "news  "+remoteImages);
                     }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
-                        Log.d("news", "error");
+
                     }
                 });
-        viewPager2.setAdapter(new NewsAdapter(remoteImages));
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-            @Override
-            public void PassUserNick(String nick) {
-
-                ref.child(nick)
-                        .addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                Log.d("news", String.valueOf(snapshot));
-                                for (DataSnapshot data : snapshot.getChildren())
-                                    remoteImages.add(new NewsItem(data.child("item_description").getValue().toString(),
-                                            data.child("ImageUrl").getValue().toString(),
-                                            data.child("likes_count").getValue().toString()));
-                                viewPager2.setAdapter(new NewsAdapter(remoteImages));
-
-
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
-                                Log.d("news", "error");
-                            }
-                        });
                 viewPager2.setAdapter(new NewsAdapter(remoteImages));
                 Log.d("news", String.valueOf(remoteImages.size()));
             }
         });
-        //////////////
-        ////SECOND////
-        //////////////
-        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-            @Override
-            public void PassUserNick(String nick) {
-                FirebaseRecyclerOptions<NewsItem> options =
-                        new FirebaseRecyclerOptions.Builder<NewsItem>()
-                                .setQuery(ref.orderByChild("TimeMill"), NewsItem.class)
-                                .build();
 
-                FirebaseRecyclerAdapter<NewsItem, NewsAdapter.ImageViewHolder> adapter =
-                        new FirebaseRecyclerAdapter<NewsItem, NewsAdapter.ImageViewHolder>(options) {
-                            @Override
-                            protected void onBindViewHolder(@NonNull final NewsAdapter.ImageViewHolder holder, int position, @NonNull NewsItem model) {
-                                final String usersIDs = getRef(position).getKey();
-                                Log.d("Neews", usersIDs);
-                                final String[] retImage = {"default_image"};
-                                ref.child(usersIDs).addValueEventListener(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(DataSnapshot dataSnapshot) {
-                                        if (dataSnapshot.exists()) {
-                                            if (dataSnapshot.hasChild("LastMessage"))
-
-                                                Picasso.get().load(model.getImageUrl()).into(holder.newsImage);
-                                               holder.description.setText(model.getItem_description());
-                                               Log.d("Neews", model.getItem_description());
-                                               holder.like_count.setText(model.getLikes_count());
-                                               holder.itemView.setOnClickListener(new View.OnClickListener() {
-                                                @Override
-                                                public void onClick(View view) {
-                                                    Intent chatIntent = new Intent(getContext(), ChatActivity.class);
-                                                    chatIntent.putExtra("curUser", nick);
-                                                    chatIntent.putExtra("othUser", usersIDs);
-                                                    chatIntent.putExtra("visit_image", retImage[0]);
-                                                    startActivity(chatIntent);
-                                                }
-                                            });
-                                        }
-                                    }
-
-
-                                    @Override
-                                    public void onCancelled(DatabaseError databaseError) {
-
-                                    }
-                                });
-                            }
-
-
-                            @NonNull
-                            @Override
-                            public NewsAdapter.ImageViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-                                View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_news_image, viewGroup, false);
-                                return new NewsAdapter.ImageViewHolder(view);
-                            }
-                        };
-
-                viewPager2.setAdapter(adapter);
-                adapter.startListening();
-            }
-        });
+        return root;
     }
+
+
+//    public void onViewCreated(@Nullable View view, @NonNull Bundle savedInstanceState) {
+//        super.onViewCreated(view, savedInstanceState);
+//
+//
+//        FirebaseDatabase.getInstance().getReference().child("news").child("spaccacrani")
+//                .addListenerForSingleValueEvent(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                        Log.d("news", "error");
+//                        for (DataSnapshot data : snapshot.getChildren()) {
+//                            remoteImages.add(new NewsItem(data.child("item_description").getValue().toString(),
+//                                    (data.child("ImageUrl").getValue().toString()), data.child("likes_count").getValue().toString()));
+//                            Log.d("news", data.child("ImageUrl").getValue().toString());
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(@NonNull DatabaseError error) {
+//                        Log.d("news", "error");
+//                    }
+//                });
+//        viewPager2.setAdapter(new NewsAdapter(remoteImages));
+//    }
+
+//    @Override
+//    public void onStart() {
+//        super.onStart();
+//        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+//            @Override
+//            public void PassUserNick(String nick) {
+//
+//                Query query=firebaseModel.getReference("news/spaccacrani");
+//                query.addValueEventListener(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                        for (DataSnapshot data : snapshot.getChildren())
+//                            remoteImages.add(new NewsItem(data.child("item_description").getValue().toString(),
+//                                    data.child("ImageUrl").getValue().toString(),
+//                                    data.child("likes_count").getValue().toString()));
+//                        Log.d("####", "news  "+remoteImages);
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(@NonNull DatabaseError error) {
+//
+//                    }
+//                });
+//                viewPager2.setAdapter(new NewsAdapter(remoteImages));
+//                Log.d("news", String.valueOf(remoteImages.size()));
+//            }
+//        });
+//        //////////////
+//        ////SECOND////
+//        //////////////
+//        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+//            @Override
+//            public void PassUserNick(String nick) {
+//                FirebaseRecyclerOptions<NewsItem> options =
+//                        new FirebaseRecyclerOptions.Builder<NewsItem>()
+//                                .setQuery(ref.orderByChild("TimeMill"), NewsItem.class)
+//                                .build();
+//
+//                FirebaseRecyclerAdapter<NewsItem, NewsAdapter.ImageViewHolder> adapter =
+//                        new FirebaseRecyclerAdapter<NewsItem, NewsAdapter.ImageViewHolder>(options) {
+//                            @Override
+//                            protected void onBindViewHolder(@NonNull final NewsAdapter.ImageViewHolder holder, int position, @NonNull NewsItem model) {
+//                                final String usersIDs = getRef(position).getKey();
+//                                Log.d("Neews", usersIDs);
+//                                final String[] retImage = {"default_image"};
+//                                ref.child(usersIDs).addValueEventListener(new ValueEventListener() {
+//                                    @Override
+//                                    public void onDataChange(DataSnapshot dataSnapshot) {
+//                                        if (dataSnapshot.exists()) {
+//                                            if (dataSnapshot.hasChild("LastMessage"))
+//
+//                                                Picasso.get().load(model.getImageUrl()).into(holder.newsImage);
+//                                               holder.description.setText(model.getItem_description());
+//                                               Log.d("Neews", model.getItem_description());
+//                                               holder.like_count.setText(model.getLikes_count());
+//                                               holder.itemView.setOnClickListener(new View.OnClickListener() {
+//                                                @Override
+//                                                public void onClick(View view) {
+//                                                    Intent chatIntent = new Intent(getContext(), ChatActivity.class);
+//                                                    chatIntent.putExtra("curUser", nick);
+//                                                    chatIntent.putExtra("othUser", usersIDs);
+//                                                    chatIntent.putExtra("visit_image", retImage[0]);
+//                                                    startActivity(chatIntent);
+//                                                }
+//                                            });
+//                                        }
+//                                    }
+//
+//
+//                                    @Override
+//                                    public void onCancelled(DatabaseError databaseError) {
+//
+//                                    }
+//                                });
+//                            }
+//
+//
+//                            @NonNull
+//                            @Override
+//                            public NewsAdapter.ImageViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+//                                View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_news_image, viewGroup, false);
+//                                return new NewsAdapter.ImageViewHolder(view);
+//                            }
+//                        };
+//
+//                viewPager2.setAdapter(adapter);
+//                adapter.startListening();
+//            }
+//        });
+//    }
 }
