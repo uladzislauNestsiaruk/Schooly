@@ -113,7 +113,7 @@ public class ViewingClothes extends Fragment {
                         @Override
                         public void PassUserNick(String nick) {
                             firebaseModel.getUsersReference().child(nick).child("clothes")
-                                    .child(clothesViewing.getClothesType()).child(clothesViewing.getClothesTitle()).setValue(clothesViewing);
+                                    .child(clothesViewing.getClothesTitle()).setValue(clothesViewing);
                             Query query=firebaseModel.getUsersReference().child(nick).child("basket").
                                     child(clothesViewing.getClothesTitle());
                             long purchaseNumber=clothesViewing.getPurchaseNumber()+1;
@@ -153,8 +153,8 @@ public class ViewingClothes extends Fragment {
                 RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
                     @Override
                     public void PassUserNick(String nick) {
-                        Query query=firebaseModel.getUsersReference().child(nick).child("clothes").
-                                child(clothesViewing.getClothesType()).child(String.valueOf(clothesViewing.getClothesTitle()));
+                        Query query=firebaseModel.getUsersReference().child(nick).child("clothes")
+                                .child(clothesViewing.getClothesTitle());
                         query.addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {

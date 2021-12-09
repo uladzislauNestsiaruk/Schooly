@@ -694,7 +694,7 @@ public class RecentMethods {
   public static void getClothesInWardrobe(String nick,FirebaseModel firebaseModel,Callbacks.GetClothes callback){
     firebaseModel.initAll();
     Query query=firebaseModel.getUsersReference().child(nick)
-            .child("clothes").child("clothes");
+            .child("clothes");
     query.addValueEventListener(new ValueEventListener() {
       @Override
       public void onDataChange(@NonNull DataSnapshot snapshot) {

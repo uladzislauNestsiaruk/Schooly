@@ -26,6 +26,7 @@ public class WardrobeShoes extends Fragment {
     }
     FirebaseModel firebaseModel=new FirebaseModel();
     ArrayList<Clothes> clothesArrayListWardrobe=new ArrayList<Clothes>();
+    ArrayList<Clothes> sortShoesArrayListWardrobe=new ArrayList<Clothes>();
     RecyclerView wardrobeRecyclerView;
     WardrobeClothesAdapter.ItemClickListener itemClickListener;
 
@@ -59,13 +60,19 @@ public class WardrobeShoes extends Fragment {
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @Override
             public void PassUserNick(String nick) {
-                RecentMethods.getShoesInWardrobe(nick, firebaseModel, new Callbacks.GetClothes() {
+                RecentMethods.getClothesInWardrobe(nick, firebaseModel, new Callbacks.GetClothes() {
                     @Override
                     public void getClothes(ArrayList<Clothes> allClothes) {
                         clothesArrayListWardrobe.addAll(allClothes);
-                        WardrobeClothesAdapter newClothesAdapter=new WardrobeClothesAdapter(clothesArrayListWardrobe,itemClickListener);
+                        for(int i=0;i<=clothesArrayListWardrobe.size();i++){
+                            Clothes cl=clothesArrayListWardrobe.get(i);
+                            String clType=cl.getClothesType();
+                            if (clType == "clothes"){
+                                sortShoesArrayListWardrobe.add(cl);
+                            }
+                        }
+                        WardrobeClothesAdapter newClothesAdapter=new WardrobeClothesAdapter(sortShoesArrayListWardrobe,itemClickListener);
                         wardrobeRecyclerView.setAdapter(newClothesAdapter);
-                        Log.d("#####", "ggvppp  "+clothesArrayListWardrobe);
                     }
                 });
             }

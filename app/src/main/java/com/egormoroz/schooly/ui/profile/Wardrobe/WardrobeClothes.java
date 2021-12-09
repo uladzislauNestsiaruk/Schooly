@@ -26,6 +26,7 @@ public class WardrobeClothes extends Fragment {
     }
     FirebaseModel firebaseModel=new FirebaseModel();
     ArrayList<Clothes> clothesArrayListWardrobe=new ArrayList<Clothes>();
+    ArrayList<Clothes> sortClothesArrayListWardrobe=new ArrayList<Clothes>();
     RecyclerView wardrobeRecyclerView;
     WardrobeClothesAdapter.ItemClickListener itemClickListener;
 
@@ -63,7 +64,14 @@ public class WardrobeClothes extends Fragment {
                     @Override
                     public void getClothes(ArrayList<Clothes> allClothes) {
                         clothesArrayListWardrobe.addAll(allClothes);
-                        WardrobeClothesAdapter newClothesAdapter=new WardrobeClothesAdapter(clothesArrayListWardrobe,itemClickListener);
+                        for(int i=0;i<clothesArrayListWardrobe.size();i++){
+                            Clothes cl=clothesArrayListWardrobe.get(i);
+                            String clType=cl.getClothesType();
+                            if (clType == "clothes"){
+                                sortClothesArrayListWardrobe.add(cl);
+                            }
+                        }
+                        WardrobeClothesAdapter newClothesAdapter=new WardrobeClothesAdapter(sortClothesArrayListWardrobe,itemClickListener);
                         wardrobeRecyclerView.setAdapter(newClothesAdapter);
                         Log.d("#####", "ggvppp  "+clothesArrayListWardrobe);
                     }

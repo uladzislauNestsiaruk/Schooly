@@ -103,7 +103,7 @@ public class ViewingClothesBasket extends Fragment {
             @Override
             public void PassUserNick(String nick) {
               firebaseModel.getUsersReference().child(nick).child("clothes")
-                      .child(clothesViewing.getClothesType()).child(clothesViewing.getClothesTitle()).setValue(clothesViewing);
+                      .child(clothesViewing.getClothesTitle()).setValue(clothesViewing);
               Query query=firebaseModel.getUsersReference().child(nick).child("basket").
                       child(String.valueOf(clothesViewing.getClothesTitle()));
               query.addValueEventListener(new ValueEventListener() {
@@ -156,7 +156,7 @@ public class ViewingClothesBasket extends Fragment {
       @Override
       public void PassUserNick(String nick) {
         Query query=firebaseModel.getUsersReference().child(nick).child("clothes").
-                child("shoes").child(String.valueOf(clothesViewing.getClothesTitle()));
+                child(String.valueOf(clothesViewing.getClothesTitle()));
         query.addValueEventListener(new ValueEventListener() {
           @Override
           public void onDataChange(@NonNull DataSnapshot snapshot) {

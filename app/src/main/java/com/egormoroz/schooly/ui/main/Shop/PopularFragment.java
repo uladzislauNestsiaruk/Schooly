@@ -82,6 +82,8 @@ public class PopularFragment extends Fragment {
                         for(int i=0;i<clothesArrayList.size();i++){
                             Clothes cl=clothesArrayList.get(i);
                             newClothesArrayList.add(cl);
+                            long purchaseNumber=cl.getPurchaseNumber();
+
 //                           if (cl.getPurchaseNumber()==1){
 //                               firebaseModel.getReference("AppData/Clothes/Popular").setValue()
 //                            }
