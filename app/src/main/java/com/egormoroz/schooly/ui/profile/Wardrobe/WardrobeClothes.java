@@ -67,7 +67,7 @@ public class WardrobeClothes extends Fragment {
                         for(int i=0;i<clothesArrayListWardrobe.size();i++){
                             Clothes cl=clothesArrayListWardrobe.get(i);
                             String clType=cl.getClothesType();
-                            if (clType == "clothes"){
+                            if (clType.equals("clothes")){
                                 sortClothesArrayListWardrobe.add(cl);
                             }
                         }

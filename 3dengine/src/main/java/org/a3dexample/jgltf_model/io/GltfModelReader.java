@@ -46,8 +46,8 @@ public final class GltfModelReader
      * The consumer for {@link JsonError} instances
      */
     private Consumer<? super JsonError> jsonErrorConsumer =
-        JsonErrorConsumers.createLogging();
-    
+            JsonErrorConsumers.createLogging();
+
     /**
      * Default constructor
      */
@@ -55,22 +55,22 @@ public final class GltfModelReader
     {
         // Default constructor
     }
-    
+
     /**
      * Set the given consumer to receive {@link JsonError}s that may
      * occur when a glTF is read
-     * 
+     *
      * @param jsonErrorConsumer The {@link JsonError} consumer
      */
     public void setJsonErrorConsumer(
-        Consumer<? super JsonError> jsonErrorConsumer)
+            Consumer<? super JsonError> jsonErrorConsumer)
     {
         this.jsonErrorConsumer = jsonErrorConsumer;
     }
-    
+
     /**
      * Read the {@link GltfModel} from the given URI
-     * 
+     *
      * @param uri The URI
      * @return The {@link GltfModel}
      * @throws IOException If an IO error occurs
@@ -82,15 +82,15 @@ public final class GltfModelReader
         GltfAsset gltfAsset = gltfAssetReader.read(uri);
         return createModel(gltfAsset);
     }
-    
+
     /**
      * Read the {@link GltfModel} from the given URI. In contrast to the
-     * {@link #read(URI)} method, this method will not resolve any 
+     * {@link #read(URI)} method, this method will not resolve any
      * references that are contained in the {@link GltfModel}. <br>
      * <br>
      * This is mainly intended for binary- or embedded glTF assets that do not
      * have external references.
-     * 
+     *
      * @param uri The URI
      * @return The {@link GltfModel}
      * @throws IOException If an IO error occurs
@@ -103,32 +103,32 @@ public final class GltfModelReader
             return gltfModel;
         }
     }
-    
+
     /**
      * Read the {@link GltfModel} from the given input stream. In contrast
-     * to the {@link #read(URI)} method, this method will not resolve any 
+     * to the {@link #read(URI)} method, this method will not resolve any
      * references that are contained in the {@link GltfAsset}. <br>
      * <br>
      * This is mainly intended for binary- or embedded glTF assets that do not
      * have external references.
-     * 
+     *
      * @param inputStream The input stream to read from
      * @return The {@link GltfModel}
      * @throws IOException If an IO error occurs
      */
     public GltfModel readWithoutReferences(InputStream inputStream)
-        throws IOException
+            throws IOException
     {
         GltfAssetReader gltfAssetReader = new GltfAssetReader();
         gltfAssetReader.setJsonErrorConsumer(jsonErrorConsumer);
         GltfAsset gltfAsset =
-            gltfAssetReader.readWithoutReferences(inputStream);
+                gltfAssetReader.readWithoutReferences(inputStream);
         return createModel(gltfAsset);
     }
-    
+
     /**
      * Creates a {@link GltfModel} instance from the given {@link GltfAsset}
-     * 
+     *
      * @param gltfAsset The {@link GltfAsset}
      * @return The {@link GltfModel}
      * @throws IOException If the given asset has an unknown version
@@ -146,7 +146,7 @@ public final class GltfModelReader
             return new GltfModelV2(gltfAssetV2);
         }
         throw new IOException(
-            "The glTF asset has an unknown version: " + gltfAsset);
+                "The glTF asset has an unknown version: " + gltfAsset);
     }
-    
+
 }

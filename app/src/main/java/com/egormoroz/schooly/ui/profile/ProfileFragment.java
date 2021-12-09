@@ -225,7 +225,7 @@ public class ProfileFragment extends Fragment {
                 });
                 handler = new Handler(getMainLooper());
                 scene = new SceneLoader(this);
-                scene.init(Uri.parse("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Fpenguin.obj?alt=media&token=347af199-fe1b-4719-92a4-b979f551466f"));
+                scene.init(Uri.parse("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2FSciFiHelmet.gltf?alt=media&token=a82512c1-14bf-4faf-8f67-abeb70da7697"));
                 mainLook=view.findViewById(R.id.mainlookview);
                 try {
                     modelRenderer=new ModelRenderer(mainLook);

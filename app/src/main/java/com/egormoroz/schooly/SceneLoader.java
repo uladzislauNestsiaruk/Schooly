@@ -159,7 +159,7 @@ public class SceneLoader implements LoaderTask.Callback {
         startTime = SystemClock.uptimeMillis();
         Log.i("Object3DBuilder", "Loading model " + uri + ". async and parallel..");
             Log.i("Object3DBuilder", "Loading GLtf object from: "+uri);
-        new WavefrontLoaderTask(parent.getActivity(), uri, this).execute();
+        new GltfLoaderTask(parent.getActivity(), uri, this).execute();
     }
 
     public boolean isDrawAxis(){

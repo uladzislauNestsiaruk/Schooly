@@ -73,7 +73,7 @@ class MaterialModelHandler
      * The logger used in this class
      */
     private static final Logger logger =
-        Logger.getLogger(MaterialModelHandler.class.getName());
+            Logger.getLogger(MaterialModelHandler.class.getName());
 
     /**
      * The mapping from joint counts to vertex {@link ShaderModel} instances
@@ -102,11 +102,11 @@ class MaterialModelHandler
     MaterialModelHandler()
     {
         this.vertexShaderModels =
-            new LinkedHashMap<Integer, ShaderModel>();
+                new LinkedHashMap<Integer, ShaderModel>();
         this.programModels =
-            new LinkedHashMap<Integer, ProgramModel>();
+                new LinkedHashMap<Integer, ProgramModel>();
         this.techniqueModels =
-            new LinkedHashMap<MaterialStructure, TechniqueModel>();
+                new LinkedHashMap<MaterialStructure, TechniqueModel>();
     }
 
     /**
@@ -141,8 +141,8 @@ class MaterialModelHandler
             vertexShaderDefines += "#define NUM_JOINTS " + numJoints + "\n";
         }
         ShaderModel vertexShaderModel = createDefaultShaderModel(
-            "pbr.vert", "pbr" + numJoints + ".vert",
-            ShaderModel.ShaderType.VERTEX_SHADER, vertexShaderDefines);
+                "pbr.vert", "pbr" + numJoints + ".vert",
+                ShaderType.VERTEX_SHADER, vertexShaderDefines);
         return vertexShaderModel;
     }
 
@@ -156,7 +156,7 @@ class MaterialModelHandler
         if (fragmentShaderModel == null)
         {
             fragmentShaderModel = createDefaultShaderModel(
-                "pbr.frag", "pbr.frag", ShaderModel.ShaderType.FRAGMENT_SHADER, null);
+                    "pbr.frag", "pbr.frag", ShaderType.FRAGMENT_SHADER, null);
         }
         return fragmentShaderModel;
     }
@@ -190,9 +190,9 @@ class MaterialModelHandler
     private ProgramModel createProgramModel(int numJoints)
     {
         ShaderModel vertexShaderModel =
-            obtainVertexShaderModel(numJoints);
+                obtainVertexShaderModel(numJoints);
         ShaderModel fragmentShaderModel =
-            obtainFragmentShaderModel();
+                obtainFragmentShaderModel();
 
         DefaultProgramModel programModel = new DefaultProgramModel();
         programModel.setVertexShaderModel(vertexShaderModel);
@@ -210,7 +210,7 @@ class MaterialModelHandler
      * @return The {@link TechniqueModel}
      */
     private TechniqueModel obtainTechniqueModel(
-        MaterialStructure materialStructure)
+            MaterialStructure materialStructure)
     {
         TechniqueModel techniqueModel = techniqueModels.get(materialStructure);
         if (techniqueModel == null)
@@ -230,10 +230,10 @@ class MaterialModelHandler
      * @return The {@link TechniqueModel}
      */
     private TechniqueModel createTechniqueModel(
-        MaterialStructure materialStructure)
+            MaterialStructure materialStructure)
     {
         ProgramModel programModel =
-            obtainProgramModel(materialStructure.getNumJoints());
+                obtainProgramModel(materialStructure.getNumJoints());
 
         DefaultTechniqueModel techniqueModel = new DefaultTechniqueModel();
         techniqueModel.setProgramModel(programModel);
@@ -241,7 +241,7 @@ class MaterialModelHandler
         addParametersForPbrTechnique(techniqueModel, materialStructure);
 
         TechniqueStatesModel techniqueStatesModel =
-            TechniqueStatesModels.createDefault();
+                TechniqueStatesModels.createDefault();
         techniqueModel.setTechniqueStatesModel(techniqueStatesModel);
 
         return techniqueModel;
@@ -260,17 +260,17 @@ class MaterialModelHandler
         DefaultMaterialModel materialModel = new DefaultMaterialModel();
 
         MaterialStructure materialStructure =
-            new MaterialStructure(material, numJoints);
+                new MaterialStructure(material, numJoints);
         TechniqueModel techniqueModel =
-            obtainTechniqueModel(materialStructure);
+                obtainTechniqueModel(materialStructure);
         materialModel.setTechniqueModel(techniqueModel);
 
         MaterialPbrMetallicRoughness pbrMetallicRoughness =
-            material.getPbrMetallicRoughness();
+                material.getPbrMetallicRoughness();
         if (pbrMetallicRoughness == null)
         {
             pbrMetallicRoughness =
-                Materials.createDefaultMaterialPbrMetallicRoughness();
+                    Materials.createDefaultMaterialPbrMetallicRoughness();
         }
 
         Map<String, Object> values = new LinkedHashMap<String, Object>();
@@ -285,63 +285,63 @@ class MaterialModelHandler
         }
 
         TextureInfo baseColorTextureInfo =
-            pbrMetallicRoughness.getBaseColorTexture();
+                pbrMetallicRoughness.getBaseColorTexture();
         if (baseColorTextureInfo != null)
         {
             values.put("hasBaseColorTexture", 1);
             values.put("baseColorTexCoord",
-                materialStructure.getBaseColorTexCoordSemantic());
+                    materialStructure.getBaseColorTexCoordSemantic());
             values.put("baseColorTexture",
-                baseColorTextureInfo.getIndex());
+                    baseColorTextureInfo.getIndex());
         }
         else
         {
             values.put("hasBaseColorTexture", 0);
         }
         float[] baseColorFactor = Optionals.of(
-            pbrMetallicRoughness.getBaseColorFactor(),
-            pbrMetallicRoughness.defaultBaseColorFactor());
+                pbrMetallicRoughness.getBaseColorFactor(),
+                pbrMetallicRoughness.defaultBaseColorFactor());
         values.put("baseColorFactor", baseColorFactor);
 
 
         TextureInfo metallicRoughnessTextureInfo =
-            pbrMetallicRoughness.getMetallicRoughnessTexture();
+                pbrMetallicRoughness.getMetallicRoughnessTexture();
         if (metallicRoughnessTextureInfo != null)
         {
             values.put("hasMetallicRoughnessTexture", 1);
             values.put("metallicRoughnessTexCoord",
-                materialStructure.getMetallicRoughnessTexCoordSemantic());
+                    materialStructure.getMetallicRoughnessTexCoordSemantic());
             values.put("metallicRoughnessTexture",
-                metallicRoughnessTextureInfo.getIndex());
+                    metallicRoughnessTextureInfo.getIndex());
         }
         else
         {
             values.put("hasMetallicRoughnessTexture", 0);
         }
         float metallicFactor = Optionals.of(
-            pbrMetallicRoughness.getMetallicFactor(),
-            pbrMetallicRoughness.defaultMetallicFactor());
+                pbrMetallicRoughness.getMetallicFactor(),
+                pbrMetallicRoughness.defaultMetallicFactor());
         values.put("metallicFactor", metallicFactor);
 
         float roughnessFactor = Optionals.of(
-            pbrMetallicRoughness.getRoughnessFactor(),
-            pbrMetallicRoughness.defaultRoughnessFactor());
+                pbrMetallicRoughness.getRoughnessFactor(),
+                pbrMetallicRoughness.defaultRoughnessFactor());
         values.put("roughnessFactor", roughnessFactor);
 
 
         MaterialNormalTextureInfo normalTextureInfo =
-            material.getNormalTexture();
+                material.getNormalTexture();
         if (normalTextureInfo != null)
         {
             values.put("hasNormalTexture", 1);
             values.put("normalTexCoord",
-                materialStructure.getNormalTexCoordSemantic());
+                    materialStructure.getNormalTexCoordSemantic());
             values.put("normalTexture",
-                normalTextureInfo.getIndex());
+                    normalTextureInfo.getIndex());
 
             float normalScale = Optionals.of(
-                normalTextureInfo.getScale(),
-                normalTextureInfo.defaultScale());
+                    normalTextureInfo.getScale(),
+                    normalTextureInfo.defaultScale());
             values.put("normalScale", normalScale);
         }
         else
@@ -351,18 +351,18 @@ class MaterialModelHandler
         }
 
         MaterialOcclusionTextureInfo occlusionTextureInfo =
-            material.getOcclusionTexture();
+                material.getOcclusionTexture();
         if (occlusionTextureInfo != null)
         {
             values.put("hasOcclusionTexture", 1);
             values.put("occlusionTexCoord",
-                materialStructure.getOcclusionTexCoordSemantic());
+                    materialStructure.getOcclusionTexCoordSemantic());
             values.put("occlusionTexture",
-                occlusionTextureInfo.getIndex());
+                    occlusionTextureInfo.getIndex());
 
             float occlusionStrength = Optionals.of(
-                occlusionTextureInfo.getStrength(),
-                occlusionTextureInfo.defaultStrength());
+                    occlusionTextureInfo.getStrength(),
+                    occlusionTextureInfo.defaultStrength());
             values.put("occlusionStrength", occlusionStrength);
         }
         else
@@ -374,14 +374,14 @@ class MaterialModelHandler
         }
 
         TextureInfo emissiveTextureInfo =
-            material.getEmissiveTexture();
+                material.getEmissiveTexture();
         if (emissiveTextureInfo != null)
         {
             values.put("hasEmissiveTexture", 1);
             values.put("emissiveTexCoord",
-                materialStructure.getEmissiveTexCoordSemantic());
+                    materialStructure.getEmissiveTexCoordSemantic());
             values.put("emissiveTexture",
-                emissiveTextureInfo.getIndex());
+                    emissiveTextureInfo.getIndex());
         }
         else
         {
@@ -389,8 +389,8 @@ class MaterialModelHandler
         }
 
         float[] emissiveFactor = Optionals.of(
-            material.getEmissiveFactor(),
-            material.defaultEmissiveFactor());
+                material.getEmissiveFactor(),
+                material.defaultEmissiveFactor());
         values.put("emissiveFactor", emissiveFactor);
 
 
@@ -422,16 +422,16 @@ class MaterialModelHandler
      */
     private static DefaultShaderModel createDefaultShaderModel(
             String resourceName, String uriString,
-            ShaderModel.ShaderType shaderType, String defines)
+            ShaderType shaderType, String defines)
     {
         DefaultShaderModel shaderModel = new DefaultShaderModel(
-            uriString, shaderType);
+                uriString, shaderType);
 
         //InputStream inputStream =
         //            MaterialModelHandler.class.getResourceAsStream("/" + resourceName)
 
         try (InputStream inputStream =
-            MaterialModelHandler.class.getResourceAsStream("/" + resourceName))
+                     MaterialModelHandler.class.getResourceAsStream("/" + resourceName))
         {
             byte[] data = IO.readStream(inputStream);
             String basicShaderString = new String(data);
@@ -441,13 +441,13 @@ class MaterialModelHandler
                 fullShaderString = defines + "\n" + basicShaderString;
             }
             ByteBuffer shaderData =
-                Buffers.create(fullShaderString.getBytes());
+                    Buffers.create(fullShaderString.getBytes());
             shaderModel.setShaderData(shaderData);
         }
         catch (IOException e)
         {
             logger.log(Level.SEVERE,
-                "Could not read shader source code", e);
+                    "Could not read shader source code", e);
         }
         return shaderModel;
     }
@@ -462,93 +462,93 @@ class MaterialModelHandler
      * for which the {@link TechniqueModel} is intended
      */
     private static void addParametersForPbrTechnique(
-        DefaultTechniqueModel techniqueModel,
-        MaterialStructure materialStructure)
+            DefaultTechniqueModel techniqueModel,
+            MaterialStructure materialStructure)
     {
         addAttributeParameters(techniqueModel, "a_position",
-            "position", GltfConstants.GL_FLOAT_VEC4, 1, "POSITION");
+                "position", GltfConstants.GL_FLOAT_VEC4, 1, "POSITION");
         addAttributeParameters(techniqueModel, "a_normal",
-            "normal", GltfConstants.GL_FLOAT_VEC4, 1, "NORMAL");
+                "normal", GltfConstants.GL_FLOAT_VEC4, 1, "NORMAL");
         addAttributeParameters(techniqueModel, "a_tangent",
-            "tangent", GltfConstants.GL_FLOAT_VEC4, 1, "TANGENT");
+                "tangent", GltfConstants.GL_FLOAT_VEC4, 1, "TANGENT");
 
         addAttributeParameters(techniqueModel, "a_baseColorTexCoord",
-            "baseColorTexCoord", GltfConstants.GL_FLOAT_VEC2, 1,
-            materialStructure.getBaseColorTexCoordSemantic());
+                "baseColorTexCoord", GltfConstants.GL_FLOAT_VEC2, 1,
+                materialStructure.getBaseColorTexCoordSemantic());
         addAttributeParameters(techniqueModel, "a_metallicRoughnessTexCoord",
-            "metallicRoughnessTexCoord", GltfConstants.GL_FLOAT_VEC2, 1,
-            materialStructure.getMetallicRoughnessTexCoordSemantic());
+                "metallicRoughnessTexCoord", GltfConstants.GL_FLOAT_VEC2, 1,
+                materialStructure.getMetallicRoughnessTexCoordSemantic());
         addAttributeParameters(techniqueModel, "a_normalTexCoord",
-            "normalTexCoord", GltfConstants.GL_FLOAT_VEC2, 1,
-            materialStructure.getNormalTexCoordSemantic());
+                "normalTexCoord", GltfConstants.GL_FLOAT_VEC2, 1,
+                materialStructure.getNormalTexCoordSemantic());
         addAttributeParameters(techniqueModel, "a_occlusionTexCoord",
-            "occlusionTexCoord", GltfConstants.GL_FLOAT_VEC2, 1,
-            materialStructure.getOcclusionTexCoordSemantic());
+                "occlusionTexCoord", GltfConstants.GL_FLOAT_VEC2, 1,
+                materialStructure.getOcclusionTexCoordSemantic());
         addAttributeParameters(techniqueModel, "a_emissiveTexCoord",
-            "emissiveTexCoord", GltfConstants.GL_FLOAT_VEC2, 1,
-            materialStructure.getEmissiveTexCoordSemantic());
+                "emissiveTexCoord", GltfConstants.GL_FLOAT_VEC2, 1,
+                materialStructure.getEmissiveTexCoordSemantic());
 
         addUniformParameters(techniqueModel, "u_modelViewMatrix",
-            "modelViewMatrix", GltfConstants.GL_FLOAT_MAT4, 1, "MODELVIEW");
+                "modelViewMatrix", GltfConstants.GL_FLOAT_MAT4, 1, "MODELVIEW");
         addUniformParameters(techniqueModel, "u_projectionMatrix",
-            "projectionMatrix", GltfConstants.GL_FLOAT_MAT4, 1, "PROJECTION");
+                "projectionMatrix", GltfConstants.GL_FLOAT_MAT4, 1, "PROJECTION");
         addUniformParameters(techniqueModel, "u_normalMatrix",
-            "normalMatrix", GltfConstants.GL_FLOAT_MAT3, 1,
-            "MODELVIEWINVERSETRANSPOSE");
+                "normalMatrix", GltfConstants.GL_FLOAT_MAT3, 1,
+                "MODELVIEWINVERSETRANSPOSE");
 
         addUniformParameters(techniqueModel, "u_isDoubleSided",
-            "isDoubleSided", GltfConstants.GL_INT, 1, null);
+                "isDoubleSided", GltfConstants.GL_INT, 1, null);
 
         addUniformParameters(techniqueModel, "u_baseColorTexture",
-            "baseColorTexture", GltfConstants.GL_SAMPLER_2D, 1, null);
+                "baseColorTexture", GltfConstants.GL_SAMPLER_2D, 1, null);
         addUniformParameters(techniqueModel, "u_metallicRoughnessTexture",
-            "metallicRoughnessTexture", GltfConstants.GL_SAMPLER_2D, 1, null);
+                "metallicRoughnessTexture", GltfConstants.GL_SAMPLER_2D, 1, null);
         addUniformParameters(techniqueModel, "u_normalTexture",
-            "normalTexture", GltfConstants.GL_SAMPLER_2D, 1, null);
+                "normalTexture", GltfConstants.GL_SAMPLER_2D, 1, null);
         addUniformParameters(techniqueModel, "u_occlusionTexture",
-            "occlusionTexture", GltfConstants.GL_SAMPLER_2D, 1, null);
+                "occlusionTexture", GltfConstants.GL_SAMPLER_2D, 1, null);
         addUniformParameters(techniqueModel, "u_emissiveTexture",
-            "emissiveTexture", GltfConstants.GL_SAMPLER_2D, 1, null);
+                "emissiveTexture", GltfConstants.GL_SAMPLER_2D, 1, null);
 
         addUniformParameters(techniqueModel, "u_hasBaseColorTexture",
-            "hasBaseColorTexture", GltfConstants.GL_INT, 1, null);
+                "hasBaseColorTexture", GltfConstants.GL_INT, 1, null);
         addUniformParameters(techniqueModel, "u_hasMetallicRoughnessTexture",
-            "hasMetallicRoughnessTexture", GltfConstants.GL_INT, 1, null);
+                "hasMetallicRoughnessTexture", GltfConstants.GL_INT, 1, null);
         addUniformParameters(techniqueModel, "u_hasNormalTexture",
-            "hasNormalTexture", GltfConstants.GL_INT, 1, null);
+                "hasNormalTexture", GltfConstants.GL_INT, 1, null);
         addUniformParameters(techniqueModel, "u_hasOcclusionTexture",
-            "hasOcclusionTexture", GltfConstants.GL_INT, 1, null);
+                "hasOcclusionTexture", GltfConstants.GL_INT, 1, null);
         addUniformParameters(techniqueModel, "u_hasEmissiveTexture",
-            "hasEmissiveTexture", GltfConstants.GL_INT, 1, null);
+                "hasEmissiveTexture", GltfConstants.GL_INT, 1, null);
 
         addUniformParameters(techniqueModel, "u_baseColorFactor",
-            "baseColorFactor", GltfConstants.GL_FLOAT_VEC4, 1, null);
+                "baseColorFactor", GltfConstants.GL_FLOAT_VEC4, 1, null);
         addUniformParameters(techniqueModel, "u_metallicFactor",
-            "metallicFactor", GltfConstants.GL_FLOAT, 1, null);
+                "metallicFactor", GltfConstants.GL_FLOAT, 1, null);
         addUniformParameters(techniqueModel, "u_roughnessFactor",
-            "roughnessFactor", GltfConstants.GL_FLOAT, 1, null);
+                "roughnessFactor", GltfConstants.GL_FLOAT, 1, null);
         addUniformParameters(techniqueModel, "u_normalScale",
-            "normalScale", GltfConstants.GL_FLOAT, 1, null);
+                "normalScale", GltfConstants.GL_FLOAT, 1, null);
         addUniformParameters(techniqueModel, "u_occlusionStrength",
-            "occlusionStrength", GltfConstants.GL_FLOAT, 1, null);
+                "occlusionStrength", GltfConstants.GL_FLOAT, 1, null);
         addUniformParameters(techniqueModel, "u_emissiveFactor",
-            "emissiveFactor", GltfConstants.GL_FLOAT_VEC3, 1, null);
+                "emissiveFactor", GltfConstants.GL_FLOAT_VEC3, 1, null);
 
         addAttributeParameters(techniqueModel, "a_joint",
-            "joint", GltfConstants.GL_FLOAT_VEC4, 1, "JOINTS_0");
+                "joint", GltfConstants.GL_FLOAT_VEC4, 1, "JOINTS_0");
         addAttributeParameters(techniqueModel, "a_weight",
-            "weight", GltfConstants.GL_FLOAT_VEC4, 1, "WEIGHTS_0");
+                "weight", GltfConstants.GL_FLOAT_VEC4, 1, "WEIGHTS_0");
 
         if (materialStructure.getNumJoints() > 0)
         {
             addUniformParameters(techniqueModel, "u_jointMat",
-                "jointMat", GltfConstants.GL_FLOAT_MAT4,
-                materialStructure.getNumJoints(), "JOINTMATRIX");
+                    "jointMat", GltfConstants.GL_FLOAT_MAT4,
+                    materialStructure.getNumJoints(), "JOINTMATRIX");
         }
 
         // TODO Preliminary uniform for a single point light
         addUniformParameters(techniqueModel, "u_lightPosition",
-            "lightPosition", GltfConstants.GL_FLOAT_VEC3, 1, null);
+                "lightPosition", GltfConstants.GL_FLOAT_VEC3, 1, null);
 
     }
 
@@ -604,10 +604,10 @@ class MaterialModelHandler
         Object value = null;
         NodeModel nodeModel = null;
         TechniqueParametersModel techniqueParametersModel =
-            new DefaultTechniqueParametersModel(
-                type, count, semantic, value, nodeModel);
+                new DefaultTechniqueParametersModel(
+                        type, count, semantic, value, nodeModel);
         techniqueModel.addParameter(
-            parameterName, techniqueParametersModel);
+                parameterName, techniqueParametersModel);
     }
 
 

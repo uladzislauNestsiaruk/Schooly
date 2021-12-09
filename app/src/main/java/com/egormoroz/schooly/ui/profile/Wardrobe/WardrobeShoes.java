@@ -64,11 +64,13 @@ public class WardrobeShoes extends Fragment {
                     @Override
                     public void getClothes(ArrayList<Clothes> allClothes) {
                         clothesArrayListWardrobe.addAll(allClothes);
-                        for(int i=0;i<=clothesArrayListWardrobe.size();i++){
+                        Log.d("###","z "+clothesArrayListWardrobe);
+                        for(int i=0;i<clothesArrayListWardrobe.size();i++){
                             Clothes cl=clothesArrayListWardrobe.get(i);
                             String clType=cl.getClothesType();
-                            if (clType == "clothes"){
+                            if (clType.equals("shoes")){
                                 sortShoesArrayListWardrobe.add(cl);
+                                Log.d("###","z "+sortShoesArrayListWardrobe);
                             }
                         }
                         WardrobeClothesAdapter newClothesAdapter=new WardrobeClothesAdapter(sortShoesArrayListWardrobe,itemClickListener);
