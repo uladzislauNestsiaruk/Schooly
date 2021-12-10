@@ -153,7 +153,6 @@ public class SchoolyService extends Service {
                                         while(true) {
                                             Thread.sleep(1000);
                                             miningMoneyFun();
-                                            Log.d("#####", "A  "+todayMining);
                                         }
                                     } catch (InterruptedException e) {
                                     }
@@ -233,7 +232,6 @@ public class SchoolyService extends Service {
                             firstMinerHour = Double.valueOf(String.valueOf(firstMiner.getInHour()));
                             firstMinerInHour = firstMinerHour / 3600;
                             todayMining = todayMining + firstMinerInHour;
-                            Log.d("####", "aaaaa "+todayMining);
                         }else if (activeMinersFromBase.size()==2){
                             secondMiner = activeMinersFromBase.get(1);
                             secondMinerHour = Double.valueOf(String.valueOf(secondMiner.getInHour()));

@@ -20,10 +20,10 @@ import java.util.ArrayList;
 import java.util.List;
 public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.ViewHolder> {
 
-    List<UserInformation> listAdapterPeople;
+    List<UserPeopleAdapter> listAdapterPeople;
     private ItemClickListener clickListener;
 
-    public  PeopleAdapter(ArrayList<UserInformation> listAdapter) {
+    public  PeopleAdapter(ArrayList<UserPeopleAdapter> listAdapter) {
         this.listAdapterPeople = listAdapter;
     }
 
@@ -38,7 +38,7 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        UserInformation userInformation=listAdapterPeople.get(position);
+        UserPeopleAdapter userInformation=listAdapterPeople.get(position);
         holder.usernickname.setText(userInformation.getNick());
         holder.userAvatar.setImageResource(getItemViewType((int) userInformation.getAvatar()));
         holder.usernickname.setOnClickListener(new View.OnClickListener() {
@@ -65,7 +65,7 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.ViewHolder
         }
     }
 
-    UserInformation getItem(int id) {
+    UserPeopleAdapter getItem(int id) {
         return listAdapterPeople.get(id);
     }
 

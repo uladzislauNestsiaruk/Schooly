@@ -36,6 +36,7 @@ import com.egormoroz.schooly.ui.main.Shop.Clothes;
 import com.egormoroz.schooly.ui.main.Shop.NewClothesAdapter;
 import com.egormoroz.schooly.ui.main.Shop.ShopFragment;
 import com.egormoroz.schooly.ui.main.Shop.ViewingClothes;
+import com.egormoroz.schooly.ui.people.UserPeopleAdapter;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.text.DecimalFormat;
@@ -192,6 +193,9 @@ public class MainFragment extends Fragment{
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @Override
             public void PassUserNick(String nick) {
+                firebaseModel.getReference("usersNicks").child("tyomaa").setValue(new UserPeopleAdapter("tyomaa", 5, "hello"));
+                firebaseModel.getReference("usersNicks").child("spaccacrani").setValue(new UserPeopleAdapter("spaccacrani", 5, "hello"));
+                firebaseModel.getReference("usersNicks").child("Vladcpp").setValue(new UserPeopleAdapter("Vladcpp", 5, "hello"));
                 RecentMethods.getClothes(firebaseModel, new Callbacks.GetClothes() {
                     @Override
                     public void getClothes(ArrayList<Clothes> allClothes) {
