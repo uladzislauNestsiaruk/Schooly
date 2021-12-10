@@ -38,7 +38,6 @@ import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.logging.Logger;
-
 import org.a3dexample.jgltf_model.AccessorData;
 import org.a3dexample.jgltf_model.AccessorDatas;
 import org.a3dexample.jgltf_model.AccessorModel;
@@ -99,6 +98,7 @@ import org.a3dexample.jgltf_model.io.Buffers;
 import org.a3dexample.jgltf_model.io.IO;
 import org.a3dexample.jgltf_model.io.v2.GltfAssetV2;
 import org.a3dexample.jgltf_model.v2.gl.Materials;
+import org.a3dexample.jgltf_model.AnimationModel.Channel;
 
 /**
  * Implementation of a {@link GltfModel}, based on a {@link GlTF glTF 2.0}.<br>
@@ -756,11 +756,11 @@ public final class GltfModelV2 implements GltfModel
 
         String interpolationString =
                 animationSampler.getInterpolation();
-        Interpolation interpolation =
-                interpolationString == null ? Interpolation.LINEAR :
-                        Interpolation.valueOf(interpolationString);
+        AnimationModel.Interpolation interpolation =
+                interpolationString == null ? AnimationModel.Interpolation.LINEAR :
+                        AnimationModel.Interpolation.valueOf(interpolationString);
 
-        AnimationModel.Sampler sampler = new DefaultSampler(
+        AnimationModel.Sampler sampler = new DefaultAnimationModel.DefaultSampler(
                 inputAccessorModel, interpolation, outputAccessorModel);
 
         AnimationChannelTarget animationChannelTarget =
@@ -780,7 +780,7 @@ public final class GltfModelV2 implements GltfModel
         String path = animationChannelTarget.getPath();
 
         AnimationModel.Channel channel =
-                new DefaultChannel(sampler, nodeModel, path);
+                new DefaultAnimationModel.DefaultChannel(sampler, nodeModel, path);
         return channel;
     }
 
@@ -1273,15 +1273,7 @@ public final class GltfModelV2 implements GltfModel
         return Collections.unmodifiableList(textureModels);
     }
 
-    /**
-     * Returns the raw glTF object, which is a
-     * {@link org.andresoviedo.android_3d_model_engine.services.gltf.jgltf_model.impl.v1.GlTF version 2.0 glTF}.<br>
-     * <br>
-     * This method should usually not be called by clients. It may be
-     * omitted in future versions.
-     *
-     * @return The glTF object
-     */
+
     public GlTF getGltf()
     {
         return gltf;

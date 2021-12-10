@@ -3,6 +3,7 @@ package com.egormoroz.schooly.ui.people;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,10 @@ import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.Subscriber;
 import com.egormoroz.schooly.ui.main.UserInformation;
 import com.egormoroz.schooly.ui.profile.ProfileFragment;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -67,7 +72,7 @@ public class PeopleFragment extends Fragment {
                         new Callbacks.PassLoadUserDataInterface() {
                             @Override
                             public void PassData(ArrayList<UserInformation> data) {
-                                PeopleAdapter peopleAdapter= new PeopleAdapter(data);
+                                PeopleAdapter peopleAdapter = new PeopleAdapter(data);
                                 PeopleAdapter.ItemClickListener clickListener =
                                         new PeopleAdapter.ItemClickListener() {
                                             @Override
@@ -85,7 +90,39 @@ public class PeopleFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable editable) {
+                RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+                    @Override
+                    public void PassUserNick(String nick) {
+                        Query query=firebaseModel.getReference("users");
+                        query.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                ArrayList<String> userFromBase=new ArrayList<>();
+                                String userName = String.valueOf(searchUser.getText()).trim();
+                                userName=userName.toLowerCase();
+                                for (DataSnapshot snap : snapshot.getChildren()) {
+                                    UserInformation us=new UserInformation();
+//                                    us.setNick(snap.child("nick").getValue(String.class));
+                                    String nickName=snap.getValue(String.class);
+                                    String nick=nickName;
+                                    int valueLetters=userName.length();
+                                    Log.d("####","un "+userName);
+                                    nick=nick.substring(0, valueLetters);
+                                    Log.d("####","nb "+nick);
+                                    if(nick.equals(userName))
+                                        userFromBase.add(nickName);
+                                    Log.d("####", "cc " +userFromBase);
 
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+                    }
+                });
             }
         });
     }

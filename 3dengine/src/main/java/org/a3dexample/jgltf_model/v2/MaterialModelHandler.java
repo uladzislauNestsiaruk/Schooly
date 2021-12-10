@@ -142,7 +142,7 @@ class MaterialModelHandler
         }
         ShaderModel vertexShaderModel = createDefaultShaderModel(
                 "pbr.vert", "pbr" + numJoints + ".vert",
-                ShaderType.VERTEX_SHADER, vertexShaderDefines);
+                ShaderModel.ShaderType.VERTEX_SHADER, vertexShaderDefines);
         return vertexShaderModel;
     }
 
@@ -156,7 +156,7 @@ class MaterialModelHandler
         if (fragmentShaderModel == null)
         {
             fragmentShaderModel = createDefaultShaderModel(
-                    "pbr.frag", "pbr.frag", ShaderType.FRAGMENT_SHADER, null);
+                    "pbr.frag", "pbr.frag", ShaderModel.ShaderType.FRAGMENT_SHADER, null);
         }
         return fragmentShaderModel;
     }
@@ -422,7 +422,7 @@ class MaterialModelHandler
      */
     private static DefaultShaderModel createDefaultShaderModel(
             String resourceName, String uriString,
-            ShaderType shaderType, String defines)
+            ShaderModel.ShaderType shaderType, String defines)
     {
         DefaultShaderModel shaderModel = new DefaultShaderModel(
                 uriString, shaderType);

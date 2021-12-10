@@ -186,6 +186,7 @@ public class RecentMethods {
       }
     }, nick);
   }
+
   public static void UserNickByUid(String uid, FirebaseModel model, Callbacks.GetUserNickByUid callback) {
     model.initAll();
     Query query = model.getUsersReference().orderByChild("uid").equalTo(uid);
