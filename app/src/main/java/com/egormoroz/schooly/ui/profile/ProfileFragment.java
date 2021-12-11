@@ -35,12 +35,15 @@ import com.egormoroz.schooly.ui.main.ChatActivity;
 import com.egormoroz.schooly.ui.main.UserInformation;
 import com.egormoroz.schooly.ui.profile.Wardrobe.WardrobeFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.ar.sceneform.rendering.LoadGltfListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+
+import org.a3dexample.GltfLoader;
 
 import java.io.IOException;
 

@@ -32,7 +32,7 @@ public class PeopleFragment extends Fragment {
     ArrayList<UserInformation> listAdapterPeople=new ArrayList<UserInformation>();
     RecyclerView peopleRecyclerView;
     EditText searchUser;
-    String userName;
+    String userName,userNameToProfile;
 
 
     public static PeopleFragment newInstance() {
@@ -68,14 +68,14 @@ public class PeopleFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                userName = String.valueOf(searchUser.getText()).trim();
+                userName=userName.toLowerCase();
                 Query query=firebaseModel.getReference("usersNicks");
                 query.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         ArrayList<UserPeopleAdapter> userFromBase=new ArrayList<>();
-                        userName = String.valueOf(searchUser.getText()).trim();
                         Log.d("####","un "+userName);
-                        userName=userName.toLowerCase();
                         for (DataSnapshot snap : snapshot.getChildren()) {
                             UserPeopleAdapter upa=new UserPeopleAdapter();
                             upa.setNick(snap.child("nick").getValue(String.class));
@@ -85,16 +85,45 @@ public class PeopleFragment extends Fragment {
                             String nick=nickName;
                             int valueLetters=userName.length();
                             Log.d("####","un "+userName);
-                            nick=nick.substring(0, valueLetters);
                             nick=nick.toLowerCase();
-                            Log.d("####","nb "+nick);
-                            if(nick.equals(userName))
-                                userFromBase.add(upa);
+                            if(nick.length()<valueLetters){
+                                if(nick.equals(userName))
+                                    userFromBase.add(upa);
+                                Log.d("####","nb "+nick);
+                            }else{
+                                nick=nick.substring(0, valueLetters);
+                                if(nick.equals(userName))
+                                    userFromBase.add(upa);
+                                Log.d("####","nb "+nick);
+                            }
                             Log.d("####", "cc " +userFromBase);
 
                         }
                         PeopleAdapter peopleAdapter = new PeopleAdapter(userFromBase);
                         peopleRecyclerView.setAdapter(peopleAdapter);
+                        PeopleAdapter.ItemClickListener clickListener =
+                                new PeopleAdapter.ItemClickListener() {
+                                    @Override
+                                    public void onItemClick(View view, int position) {
+                                        UserPeopleAdapter user = peopleAdapter.getItem(position);
+                                        userNameToProfile=user.getNick();
+                                        Query query1=firebaseModel.getReference().child("users").child(userNameToProfile);
+                                        query1.addValueEventListener(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                UserInformation userInformation=snapshot.getValue(UserInformation.class);
+                                                RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userInformation),
+                                                        getActivity());
+                                            }
+
+                                            @Override
+                                            public void onCancelled(@NonNull DatabaseError error) {
+
+                                            }
+                                        });
+                                    }
+                                };
+                        peopleAdapter.setClickListener(clickListener);
                     }
 
                     @Override
@@ -102,24 +131,6 @@ public class PeopleFragment extends Fragment {
 
                     }
                 });
-//                RecentMethods.LoadUserDataByNick(new FirebaseModel(), userName,
-//                        new Callbacks.PassLoadUserDataInterface() {
-//                            @Override
-//                            public void PassData(ArrayList<UserInformation> data) {
-//                                PeopleAdapter peopleAdapter = new PeopleAdapter(data);
-//                                PeopleAdapter.ItemClickListener clickListener =
-//                                        new PeopleAdapter.ItemClickListener() {
-//                                            @Override
-//                                            public void onItemClick(View view, int position) {
-//                                                UserInformation user = peopleAdapter.getItem(position);
-//                                                RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", user),
-//                                                        getActivity());
-//                                            }
-//                                        };
-//                                peopleAdapter.setClickListener(clickListener);
-//                                peopleRecyclerView.setAdapter(peopleAdapter);
-//                            }
-//                        });
             }
 
             @Override
