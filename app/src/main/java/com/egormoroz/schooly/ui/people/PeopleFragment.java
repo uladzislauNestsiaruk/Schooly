@@ -123,7 +123,7 @@ public class PeopleFragment extends Fragment {
                                                 userData.setUid(snapshot.child("uid").getValue(String.class));
                                                 userData.setQueue(snapshot.child("queue").getValue(String.class));
 //                    userData.setSubscribers(snapshot.child("subscribers").getValue(String.class));
-                                                userData.setFriends(snapshot.child("friends").getValue(String.class));
+//                                                userData.setFriends(snapshot.child("friends").getValue(String.class));
                                                 RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userData),
                                                         getActivity());
                                             }
