@@ -107,12 +107,24 @@ public class PeopleFragment extends Fragment {
                                     public void onItemClick(View view, int position) {
                                         UserPeopleAdapter user = peopleAdapter.getItem(position);
                                         userNameToProfile=user.getNick();
+                                        Log.d("###","n "+userNameToProfile);
                                         Query query1=firebaseModel.getReference().child("users").child(userNameToProfile);
                                         query1.addValueEventListener(new ValueEventListener() {
                                             @Override
                                             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                UserInformation userInformation=snapshot.getValue(UserInformation.class);
-                                                RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userInformation),
+                                                UserInformation userData=new UserInformation();
+                                                userData.setAge(snapshot.child("age").getValue(Long.class));
+                                                userData.setAvatar(snapshot.child("avatar").getValue(Long.class));
+                                                userData.setGender(snapshot.child("gender").getValue(String.class));
+                                                //////////////////userData.setMiners();
+                                                userData.setNick(snapshot.child("nick").getValue(String.class));
+                                                userData.setPassword(snapshot.child("password").getValue(String.class));
+                                                userData.setPhone(snapshot.child("phone").getValue(String.class));
+                                                userData.setUid(snapshot.child("uid").getValue(String.class));
+                                                userData.setQueue(snapshot.child("queue").getValue(String.class));
+//                    userData.setSubscribers(snapshot.child("subscribers").getValue(String.class));
+                                                userData.setFriends(snapshot.child("friends").getValue(String.class));
+                                                RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userData),
                                                         getActivity());
                                             }
 

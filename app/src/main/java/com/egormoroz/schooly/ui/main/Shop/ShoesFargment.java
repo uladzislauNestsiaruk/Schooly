@@ -1,5 +1,7 @@
 package com.egormoroz.schooly.ui.main.Shop;
 
+import static java.lang.Double.max;
+
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,6 +21,7 @@ import com.egormoroz.schooly.RecentMethods;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class ShoesFargment extends Fragment {
   public static ShoesFargment newInstance() {
@@ -67,9 +70,7 @@ public class ShoesFargment extends Fragment {
             for(int i=0;i<clothesArrayList.size();i++){
               Clothes cl=clothesArrayList.get(i);
               shoesArrayList.add(cl);
-//                           if (cl.getPurchaseNumber()==1){
-//                               firebaseModel.getReference("AppData/Clothes/Popular").setValue()
-//                            }
+
             }
             Log.d("#####", "size  "+clothesArrayList);
             NewClothesAdapter newClothesAdapter=new NewClothesAdapter(shoesArrayList,itemClickListener);
@@ -78,5 +79,13 @@ public class ShoesFargment extends Fragment {
         });
       }
     });
+  }
+
+  public static ArrayList<Integer> get_max(int amount, ArrayList<Integer> nums){
+    Collections.sort(nums);
+    ArrayList<Integer> res = new ArrayList<Integer>();
+    for(int i = nums.size() - 1; i >= max(0, nums.size() - amount); i--)
+      res.add(nums.get(i));
+    return res;
   }
 }

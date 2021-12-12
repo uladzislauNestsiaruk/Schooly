@@ -6,8 +6,10 @@ import android.app.Activity;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -82,6 +84,31 @@ public class MainFragment extends Fragment{
                 ((Activity) getActivity()).overridePendingTransition(0, 0);
 //                Intent intent = new Intent(getActivity(), ChatActivity.class);
 //                startActivity(intent);
+            }
+        });
+        TextView getMore=view.findViewById(R.id.getMore);
+        getMore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                Uri uri=Uri.parse("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/miners%2Ffims.png?alt=media&token=adafb44e-3ac1-43a3-bde6-6f7c4315ee0c");
+//                Intent intent = new Intent(Intent.ACTION_SEND);
+//
+//                Intent chooser =Intent.createChooser(intent, "Hello");
+//                try {
+//                    startActivity(chooser);
+//                } catch (ActivityNotFoundException e) {
+//                    // Define what your app should do if no activity can handle the intent.
+//                }
+                Uri location = Uri.parse("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/miners%2Ffims.png?alt=media&token=adafb44e-3ac1-43a3-bde6-6f7c4315ee0c");
+                Intent intent = new Intent(Intent.ACTION_VIEW, location);
+                Intent chooser =Intent.createChooser(intent, "Hello");
+
+// Try to invoke the intent.
+                try {
+                    startActivity(chooser);
+                } catch (ActivityNotFoundException e) {
+                    // Define what your app should do if no activity can handle the intent.
+                }
             }
         });
         ImageView nontifications=view.findViewById(R.id.nontification);
