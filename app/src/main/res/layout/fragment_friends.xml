@@ -24,13 +24,13 @@
                 android:src="@drawable/left_arrow"/>
 
             <TextView
-                android:id="@+id/subscribers"
+                android:id="@+id/friends"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="11dp"
                 android:layout_toRightOf="@+id/back_toprofile"
-                android:text="@string/susriders"
+                android:text="@string/friends"
                 android:textColor="@color/app_color"
                 android:textSize="22sp"
                 android:fontFamily="@font/montserrat_bold"/>

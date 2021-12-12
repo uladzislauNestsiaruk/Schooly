@@ -62,18 +62,19 @@
                 android:text="@string/friends"
                 android:textColor="@color/app_grey"
                 android:textSize="12sp" />
+
             <TextView
                 android:id="@+id/subscribe"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/subscribe"
-                android:textColor="@color/app_grey"
-                android:textSize="12sp"
-                android:fontFamily="@font/montserrat_bold"
-                android:layout_toLeftOf="@id/friends"
+                android:layout_below="@+id/redact"
                 android:layout_marginTop="50dp"
                 android:layout_marginEnd="48dp"
-                android:layout_below="@+id/redact"/>
+                android:layout_toLeftOf="@id/friends"
+                android:fontFamily="@font/montserrat_bold"
+                android:text="@string/subscribe"
+                android:textColor="@color/app_grey"
+                android:textSize="12sp" />
             <TextView
                 android:id="@+id/looks"
                 android:layout_width="wrap_content"
