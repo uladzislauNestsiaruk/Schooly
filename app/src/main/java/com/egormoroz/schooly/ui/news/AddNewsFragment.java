@@ -31,6 +31,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
+import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -91,34 +92,52 @@ public class AddNewsFragment extends Fragment {
                 sendNews.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-
-
-                        DatabaseReference NewsPush = reference.child(nick).push();
+                        DatabaseReference NewsPush = reference.push();
                         String newsPushID = NewsPush.getKey();
-
+                        StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("Images");
                         Calendar calendar = Calendar.getInstance();
+                        final StorageReference filePath = storageReference.child(newsPushID + "." + "jpg");
+                        uploadTask = filePath.putFile(fileUri);
 
-
-                        Map<String, String> newsBody = new HashMap<String, String>();
-                        newsBody.put("news", myUrl);
-                        newsBody.put("description", text.getText().toString());
-                        newsBody.put("date", RecentMethods.getCurrentTime());
-                        newsBody.put("newsID", newsPushID);
-                        newsBody.put("TimeMill", String.valueOf(calendar.getTimeInMillis() * -1));
-
-
-                        Map<String, Object> newsBodyDetails = new HashMap<String, Object>();
-                        newsBodyDetails.put(nick + "/" + newsPushID, newsBody);
-                        reference.updateChildren(newsBodyDetails).addOnCompleteListener(new OnCompleteListener() {
+                        uploadTask.continueWithTask(new Continuation() {
                             @Override
-                            public void onComplete(@NonNull Task task) {
-                                text.setText("");
+                            public Object then(@NonNull Task task) throws Exception {
+                                if (!task.isSuccessful()) {
+                                    throw task.getException();
+                                }
+                                return filePath.getDownloadUrl();
+                            }
+                        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Uri> task) {
+                                Uri downloadUrl = task.getResult();
+                                myUrl = downloadUrl.toString();
+
+
+                                Map<String, String> newsBody = new HashMap<String, String>();
+                                newsBody.put("imageUrl", myUrl);
+                                newsBody.put("itemDescription", text.getText().toString());
+                                newsBody.put("date", RecentMethods.getCurrentTime());
+                                newsBody.put("from", nick);
+                                newsBody.put("newsID", newsPushID);
+
+
+                                Map<String, Object> newsBodyDetails = new HashMap<String, Object>();
+                                newsBodyDetails.put(newsPushID, newsBody);
+                                reference.updateChildren(newsBodyDetails).addOnCompleteListener(new OnCompleteListener() {
+                                    @Override
+                                    public void onComplete(@NonNull Task task) {
+                                        firebaseDatabase.getReference("news").child(newsPushID).child("likesCount").setValue(Long.valueOf(0));
+                                        firebaseDatabase.getReference("news").child(newsPushID).child("TimeMill").setValue(calendar.getTimeInMillis() * -1);
+                                    }
+                                });
                             }
                         });
                     }
                 });
             }
         });
+
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -130,65 +149,9 @@ public class AddNewsFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-
-            @Override
-            public void PassUserNick(String nick) {
-                DatabaseReference NewsPush = reference.push();
-                String newsPushID = NewsPush.getKey();
-                StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("Images");
-
-                Calendar calendar = Calendar.getInstance();
-                final StorageReference filePath = storageReference.child(newsPushID + "." + "jpg");
                 if (requestCode == 443 && resultCode == RESULT_OK && data != null && data.getData() != null) {
                     fileUri = data.getData();
-                    uploadTask = filePath.putFile(fileUri);
-
-                    uploadTask.continueWithTask(new Continuation() {
-                        @Override
-                        public Object then(@NonNull Task task) throws Exception {
-                            if (!task.isSuccessful()) {
-                                throw task.getException();
-                            }
-                            return filePath.getDownloadUrl();
-                        }
-                    }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Uri> task) {
-                            Uri downloadUrl = task.getResult();
-                            myUrl = downloadUrl.toString();
-
-
-                            Map<String, String> newsBody = new HashMap<String, String>();
-                            newsBody.put("imageUrl", myUrl);
-                            newsBody.put("itemDescription", text.getText().toString());
-                            newsBody.put("date", RecentMethods.getCurrentTime());
-                            newsBody.put("from", nick);
-                            newsBody.put("newsID", newsPushID);
-                            Map<String,Long> newsBodyLong = new HashMap<String, Long>();
-                            newsBodyLong.put("likesCount", Long.valueOf(0));
-                            newsBodyLong.put("TimeMill",calendar.getTimeInMillis() * -1);
-
-
-                            Map<String, Object> newsBodyDetails = new HashMap<String, Object>();
-                            newsBodyDetails.put(newsPushID, newsBody);
-                            reference.updateChildren(newsBodyDetails).addOnCompleteListener(new OnCompleteListener() {
-                                @Override
-                                public void onComplete(@NonNull Task task) {
-
-                                }
-                            });
-                            newsBodyDetails.put(newsPushID + "/longData", newsBodyLong);
-                            reference.updateChildren(newsBodyDetails).addOnCompleteListener(new OnCompleteListener() {
-                                @Override
-                                public void onComplete(@NonNull Task task) {
-                                    text.setText("");
-                                }
-                            });
-                        }
-                    });
+                    Picasso.get().load(fileUri).into(image);
                 }
-            }
-        });
     }
 }
