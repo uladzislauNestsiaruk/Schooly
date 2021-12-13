@@ -14,5 +14,7 @@ public class SchoolyApplication extends Application {
         startService(new Intent(this, NontificationService.class));
         startService(new Intent(this, SchoolyService.class));
     }
+
+
 }
 

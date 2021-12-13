@@ -119,6 +119,12 @@ public class MainFragment extends Fragment{
 //
             }
         });
+        ImageView coin = view.findViewById(R.id.schoolycoin);
+        coin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+            }
+        });
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @Override
             public void PassUserNick(String nick) {

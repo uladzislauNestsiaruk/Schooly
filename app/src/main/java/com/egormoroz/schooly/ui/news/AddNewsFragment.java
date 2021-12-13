@@ -45,7 +45,7 @@ public class AddNewsFragment extends Fragment {
     private DatabaseReference reference;
     private String date, news_text, senderNick, myUrl;
     private ImageView sendNews, back;
-    private TextView imageload;
+    private ImageView image, imageload;
     private Uri fileUri;
     private StorageTask uploadTask;
     private EditText text;
@@ -61,9 +61,10 @@ public class AddNewsFragment extends Fragment {
         firebaseDatabase = FirebaseDatabase.getInstance(CONST.RealtimeDatabaseUrl);
         reference = firebaseDatabase.getReference().child("news");
         sendNews = root.findViewById(R.id.sendButton);
-        imageload = root.findViewById(R.id.newscreate);
+        imageload = root.findViewById(R.id.add_news);
         text = root.findViewById(R.id.news_enter);
         back = root.findViewById(R.id.back);
+        image = root.findViewById(R.id.news_image);
         return root;
     }
 
@@ -133,7 +134,7 @@ public class AddNewsFragment extends Fragment {
 
             @Override
             public void PassUserNick(String nick) {
-                DatabaseReference NewsPush = reference.child(nick).push();
+                DatabaseReference NewsPush = reference.push();
                 String newsPushID = NewsPush.getKey();
                 StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("Images");
 
@@ -159,16 +160,25 @@ public class AddNewsFragment extends Fragment {
 
 
                             Map<String, String> newsBody = new HashMap<String, String>();
-                            newsBody.put("ImageUrl", myUrl);
-                            newsBody.put("item_description", text.getText().toString());
+                            newsBody.put("imageUrl", myUrl);
+                            newsBody.put("itemDescription", text.getText().toString());
                             newsBody.put("date", RecentMethods.getCurrentTime());
+                            newsBody.put("from", nick);
                             newsBody.put("newsID", newsPushID);
-                            newsBody.put("likes_count", "0");
-                            newsBody.put("TimeMill", String.valueOf(calendar.getTimeInMillis() * -1));
+                            Map<String,Long> newsBodyLong = new HashMap<String, Long>();
+                            newsBodyLong.put("likesCount", Long.valueOf(0));
+                            newsBodyLong.put("TimeMill",calendar.getTimeInMillis() * -1);
 
 
                             Map<String, Object> newsBodyDetails = new HashMap<String, Object>();
-                            newsBodyDetails.put(nick + "/" + newsPushID, newsBody);
+                            newsBodyDetails.put(newsPushID, newsBody);
+                            reference.updateChildren(newsBodyDetails).addOnCompleteListener(new OnCompleteListener() {
+                                @Override
+                                public void onComplete(@NonNull Task task) {
+
+                                }
+                            });
+                            newsBodyDetails.put(newsPushID + "/longData", newsBodyLong);
                             reference.updateChildren(newsBodyDetails).addOnCompleteListener(new OnCompleteListener() {
                                 @Override
                                 public void onComplete(@NonNull Task task) {

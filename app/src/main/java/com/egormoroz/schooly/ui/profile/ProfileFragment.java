@@ -34,8 +34,8 @@ import com.egormoroz.schooly.TouchController;
 import com.egormoroz.schooly.ui.main.ChatActivity;
 import com.egormoroz.schooly.ui.main.UserInformation;
 import com.egormoroz.schooly.ui.profile.Wardrobe.WardrobeFragment;
+import com.google.android.filament.Filament;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.ar.sceneform.rendering.LoadGltfListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -113,8 +113,10 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+
         View root = type.equals("user") ? inflater.inflate(R.layout.fragment_profile, container, false) :
                 inflater.inflate(R.layout.fragment_otheruser, container, false);
+        Filament.init();
 //        AppBarLayout abl=getActivity().findViewById(R.id.AppBarLayout);
 //        abl.setVisibility(abl.GONE);
         BottomNavigationView bnv = getActivity().findViewById(R.id.bottomNavigationView);

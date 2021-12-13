@@ -66,7 +66,7 @@ public class ChatsFragment extends Fragment
                                 .setQuery(firebaseModel.getUsersReference().child(nick).child("Chats").orderByChild("TimeMill"), Chat.class)
                                 .build();
 
-                Log.d("Neews", String.valueOf(options));
+
                 FirebaseRecyclerAdapter<Chat, ChatsViewHolder> adapter =
                         new FirebaseRecyclerAdapter<Chat, ChatsViewHolder>(options) {
                             @Override
@@ -76,10 +76,10 @@ public class ChatsFragment extends Fragment
                                 firebaseModel.getUsersReference().child(nick).child("Chats").child(usersIDs).addValueEventListener(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(DataSnapshot dataSnapshot) {
+
                                         if (dataSnapshot.exists()) {
                                             if (dataSnapshot.hasChild("LastMessage"))
-
-                                            holder.lastMeassage.setText(model.getLastMessage());
+                                                holder.lastMeassage.setText(model.getLastMessage());
                                             holder.userName.setText(usersIDs);
                                             holder.lastTime.setText(model.getLastTime());
                                             holder.itemView.setOnClickListener(new View.OnClickListener() {
