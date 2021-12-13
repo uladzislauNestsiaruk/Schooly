@@ -49,12 +49,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/rel"
-            android:layout_marginTop="24dp"
             android:layout_marginStart="8dp"
-            android:textSize="22sp"
-            android:textColor="@color/app_color"
+            android:layout_marginTop="24dp"
+            android:layout_toRightOf="@id/userImage"
             android:fontFamily="@font/montserrat_extrabold"
-            android:layout_toRightOf="@id/userImage"/>
+            android:textColor="@color/app_color"
+            android:textSize="22sp" />
 
         <TextView
             android:id="@+id/account"
@@ -63,10 +63,10 @@
             android:layout_below="@+id/userImage"
             android:layout_marginStart="24dp"
             android:layout_marginTop="16dp"
+            android:fontFamily="@font/montserrat_bold"
             android:text="@string/account"
             android:textColor="@color/app_grey"
-            android:textSize="20sp"
-            android:fontFamily="@font/montserrat_bold"/>
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/numder"
@@ -75,10 +75,10 @@
             android:layout_below="@+id/account"
             android:layout_marginStart="24dp"
             android:layout_marginTop="8dp"
+            android:fontFamily="@font/montserrat_bold"
             android:text="@string/phone"
             android:textColor="@color/app_grey"
-            android:textSize="16sp"
-            android:fontFamily="@font/montserrat_bold"/>
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/userNumber"
@@ -87,9 +87,9 @@
             android:layout_below="@+id/numder"
             android:layout_marginStart="24dp"
             android:layout_marginTop="4dp"
+            android:fontFamily="@font/montserrat_bold"
             android:textColor="@color/app_color"
-            android:textSize="18sp"
-            android:fontFamily="@font/montserrat_bold"/>
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/password"
@@ -98,10 +98,10 @@
             android:layout_below="@+id/userNumber"
             android:layout_marginStart="24dp"
             android:layout_marginTop="8dp"
+            android:fontFamily="@font/montserrat_bold"
             android:text="@string/password"
             android:textColor="@color/app_grey"
-            android:textSize="16sp"
-            android:fontFamily="@font/montserrat_bold"/>
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/userPassword"
@@ -110,9 +110,9 @@
             android:layout_below="@+id/password"
             android:layout_marginStart="24dp"
             android:layout_marginTop="4dp"
+            android:fontFamily="@font/montserrat_bold"
             android:textColor="@color/app_color"
-            android:textSize="18sp"
-            android:fontFamily="@font/montserrat_bold"/>
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/closeAccount"
@@ -126,6 +126,14 @@
             android:textColor="@color/app_grey"
             android:textSize="16sp" />
 
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/privateAccountSwich"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/userPassword"
+            android:layout_alignParentRight="true"
+            android:layout_marginEnd="24dp" />
+
         <TextView
             android:id="@+id/nontification"
             android:layout_width="wrap_content"
@@ -136,7 +144,7 @@
             android:fontFamily="@font/montserrat_bold"
             android:text="@string/nontifications"
             android:textColor="@color/app_grey"
-            android:textSize="20sp" />
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/singleChat"
@@ -145,10 +153,18 @@
             android:layout_below="@+id/nontification"
             android:layout_marginStart="24dp"
             android:layout_marginTop="16dp"
+            android:fontFamily="@font/montserrat_bold"
             android:text="@string/lichnyechats"
             android:textColor="@color/app_grey"
-            android:textSize="16sp"
-            android:fontFamily="@font/montserrat_bold"/>
+            android:textSize="14sp" />
+
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/chatsSwitch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/nontification"
+            android:layout_alignParentRight="true"
+            android:layout_marginEnd="24dp" />
 
         <TextView
             android:id="@+id/groupChat"
@@ -160,7 +176,16 @@
             android:fontFamily="@font/montserrat_bold"
             android:text="@string/group"
             android:textColor="@color/app_grey"
-            android:textSize="16sp" />
+            android:textSize="14sp" />
+
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/groupChatsSwitch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_below="@+id/singleChat"
+            android:layout_alignParentRight="true"
+            android:layout_marginEnd="24dp" />
 
         <TextView
             android:id="@+id/profile"
@@ -169,10 +194,19 @@
             android:layout_below="@+id/groupChat"
             android:layout_marginStart="24dp"
             android:layout_marginTop="20dp"
+            android:fontFamily="@font/montserrat_bold"
             android:text="@string/profilereact"
             android:textColor="@color/app_grey"
-            android:textSize="16sp"
-            android:fontFamily="@font/montserrat_bold"/>
+            android:textSize="14sp" />
+
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/profileSwitch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_below="@+id/groupChat"
+            android:layout_alignParentRight="true"
+            android:layout_marginEnd="24dp" />
 
     </RelativeLayout>
 

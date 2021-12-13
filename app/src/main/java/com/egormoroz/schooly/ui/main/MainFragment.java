@@ -1,5 +1,7 @@
 package com.egormoroz.schooly.ui.main;
 
+import static android.provider.MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE;
+import static android.provider.MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO;
 import static androidx.core.content.ContextCompat.getSystemService;
 
 import android.app.Activity;
@@ -9,6 +11,7 @@ import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -18,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -41,6 +45,7 @@ import com.egormoroz.schooly.ui.main.Shop.ViewingClothes;
 import com.egormoroz.schooly.ui.people.UserPeopleAdapter;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.io.FileNotFoundException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
@@ -90,25 +95,35 @@ public class MainFragment extends Fragment{
         getMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Uri uri=Uri.parse("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/miners%2Ffims.png?alt=media&token=adafb44e-3ac1-43a3-bde6-6f7c4315ee0c");
-//                Intent intent = new Intent(Intent.ACTION_SEND);
-//
-//                Intent chooser =Intent.createChooser(intent, "Hello");
-//                try {
-//                    startActivity(chooser);
-//                } catch (ActivityNotFoundException e) {
-//                    // Define what your app should do if no activity can handle the intent.
-//                }
-                Uri location = Uri.parse("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/miners%2Ffims.png?alt=media&token=adafb44e-3ac1-43a3-bde6-6f7c4315ee0c");
-                Intent intent = new Intent(Intent.ACTION_VIEW, location);
-                Intent chooser =Intent.createChooser(intent, "Hello");
+                Uri stickerAssetUri =  Uri.parse("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/miners%2Ffimw.png?alt=media&token=9798e9ea-15a0-4ef2-869b-63ce4dc95b78");
+                String sourceApplication = "com.egormoroz.schooly";
 
-// Try to invoke the intent.
-                try {
-                    startActivity(chooser);
-                } catch (ActivityNotFoundException e) {
-                    // Define what your app should do if no activity can handle the intent.
+                Intent intent = new Intent("com.instagram.share.ADD_TO_STORY");
+                intent.putExtra("source_application", sourceApplication);
+
+                intent.setType("image/зтп");
+                intent.putExtra("interactive_asset_uri", stickerAssetUri);
+                intent.putExtra("top_background_color", "#33FF33");
+                intent.putExtra("bottom_background_color", "#FF00FF");
+
+// Instantiate activity and verify it will resolve implicit intent
+                Activity activity = getActivity();
+                activity.grantUriPermission(
+                        "com.instagram.android", stickerAssetUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                if (activity.getPackageManager().resolveActivity(intent, 0) != null) {
+                    activity.startActivityForResult(intent, 0);
                 }
+
+// Instantiate implicit intent with ADD_TO_STORY action,
+// sticker asset, and background colors
+//                Intent intent = new Intent(Intent.ACTION_SEND);
+//                intent.putExtra("source_application", sourceApplication);
+//
+//                intent.setType("image/jpg");
+//                intent.putExtra("interactive_asset_uri", stickerAssetUri);
+//
+//// Instantiate activity and verify it will resolve implicit intent
+//                startActivity(intent);
             }
         });
         ImageView nontifications=view.findViewById(R.id.nontification);
@@ -265,7 +280,33 @@ public class MainFragment extends Fragment{
         }
     }
 
+    private boolean isAppInstalled(String packageName) {
+        PackageManager pm = getContext().getPackageManager();
+        boolean installed = false;
+        try {
+            pm.getPackageInfo(packageName, PackageManager.GET_ACTIVITIES);
+            installed = true;
+        } catch (PackageManager.NameNotFoundException e) {
+            installed = false;
+        }
+        return installed;
+    }
 
-
+    private void shareToInstagram() {
+        Intent intent = getContext().getPackageManager().getLaunchIntentForPackage("com.instagram.android");
+        if (intent != null) {
+            Intent shareIntent = new Intent();
+            shareIntent.setAction(Intent.ACTION_SEND);
+            shareIntent.setPackage("com.instagram.android");
+                shareIntent.putExtra(Intent.EXTRA_STREAM, "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/miners%2Ffims.png?alt=media&token=adafb44e-3ac1-43a3-bde6-6f7c4315ee0c");
+            shareIntent.setType("image/jpeg");
+            startActivity(shareIntent);
+        } else {
+            intent = new Intent(Intent.ACTION_VIEW);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.setData(Uri.parse("market://details?id=" + "com.instagram.android"));
+            startActivity(intent);
+        }
+    }
 
 }
