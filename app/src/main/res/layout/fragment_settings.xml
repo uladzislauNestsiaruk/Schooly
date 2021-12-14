@@ -63,7 +63,7 @@
             android:layout_below="@+id/userImage"
             android:layout_marginStart="24dp"
             android:layout_marginTop="16dp"
-            android:fontFamily="@font/montserrat_bold"
+            android:fontFamily="@font/montserrat_extrabold"
             android:text="@string/account"
             android:textColor="@color/app_grey"
             android:textSize="18sp" />
@@ -140,9 +140,9 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/closeAccount"
             android:layout_marginStart="24dp"
-            android:layout_marginTop="24dp"
-            android:fontFamily="@font/montserrat_bold"
-            android:text="@string/nontifications"
+            android:layout_marginTop="28dp"
+            android:fontFamily="@font/montserrat_extrabold"
+            android:text="@string/nontsBig"
             android:textColor="@color/app_grey"
             android:textSize="18sp" />
 
@@ -152,7 +152,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/nontification"
             android:layout_marginStart="24dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="20dp"
             android:fontFamily="@font/montserrat_bold"
             android:text="@string/lichnyechats"
             android:textColor="@color/app_grey"
@@ -163,6 +163,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/nontification"
+            android:layout_marginTop="4dp"
             android:layout_alignParentRight="true"
             android:layout_marginEnd="24dp" />
 
@@ -172,7 +173,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/singleChat"
             android:layout_marginStart="24dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="24dp"
             android:fontFamily="@font/montserrat_bold"
             android:text="@string/group"
             android:textColor="@color/app_grey"
@@ -182,9 +183,9 @@
             android:id="@+id/groupChatsSwitch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
             android:layout_below="@+id/singleChat"
             android:layout_alignParentRight="true"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="24dp" />
 
         <TextView
@@ -193,7 +194,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/groupChat"
             android:layout_marginStart="24dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="24dp"
             android:fontFamily="@font/montserrat_bold"
             android:text="@string/profilereact"
             android:textColor="@color/app_grey"
@@ -203,9 +204,9 @@
             android:id="@+id/profileSwitch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
             android:layout_below="@+id/groupChat"
             android:layout_alignParentRight="true"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="24dp" />
 
     </RelativeLayout>

@@ -150,6 +150,7 @@
     <string name="rejectFriend">Отказать</string>
     <string name="wantadd">хочет добавить тебя в друзья</string>
 
-    <string name="account">Аккаунт</string>
+    <string name="account">АККАУНТ</string>
+    <string name="nontsBig">УВЕДОМЛЕНИЯ</string>
 
 </resources>
