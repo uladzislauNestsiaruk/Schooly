@@ -172,8 +172,8 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="16dp"
-                android:textColor="@color/white"
                 android:fontFamily="@font/montserrat_extrabold"
+                android:textColor="@color/white"
                 android:textSize="40sp" />
 
             <TextView

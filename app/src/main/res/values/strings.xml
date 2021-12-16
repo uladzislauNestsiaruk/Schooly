@@ -153,4 +153,9 @@
     <string name="account">АККАУНТ</string>
     <string name="nontsBig">УВЕДОМЛЕНИЯ</string>
 
+    <string name="dataProtect">Защита данных</string>
+    <string name="rules">Правила</string>
+    <string name="change">Изменить</string>
+    <string name="fromBrest">From Brest to You</string>
+
 </resources>

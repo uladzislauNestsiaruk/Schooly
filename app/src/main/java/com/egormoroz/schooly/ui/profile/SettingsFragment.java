@@ -32,7 +32,7 @@ public class SettingsFragment extends Fragment {
     }
 
     FirebaseModel firebaseModel=new FirebaseModel();
-    TextView  userNick,userNumber,userPassword;
+    TextView  userNick,userNumber,userPassword,changePassword;
     String userNickString;
 
     @Override
@@ -116,6 +116,13 @@ public class SettingsFragment extends Fragment {
 
                     }
                 });
+            }
+        });
+        changePassword=view.findViewById(R.id.changePassword);
+        changePassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RecentMethods.setCurrentFragment(PasswordFragment.newInstance(), getActivity());
             }
         });
         viewNick();
