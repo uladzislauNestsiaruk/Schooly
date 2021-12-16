@@ -13,6 +13,8 @@ public class UserInformation {
     private long age = 404;
     private String miners="Start mining stupid dog!";
     private long level=1;
+    private long subscribersCount;
+    private long looksCount;
     private long money=100;
     private double todayMining=0;
     private String friends;
@@ -130,9 +132,22 @@ public class UserInformation {
         this.bio = bio;
     }
 
+    public long getSubscribersCount() {return subscribersCount;}
+
+    public void setSubscribersCount(long subscribersCount) {
+        this.subscribersCount =subscribersCount;
+    }
+
+    public long getLooksCount() {return looksCount;}
+
+    public void setLooksCount(long looksCount) {
+        this.looksCount =looksCount;
+    }
+
     public UserInformation(String nick, String phone, String uid, long Avatar, String password,
                            String gender, long age,String miners,long level,long money,double todayMining,
-                           String friends, String subscribers, String queue,String bio) {
+                           String friends, String subscribers, String queue,String bio,long subscribersCount,
+                           long looksCount) {
         this.Nick = nick;
         this.uid = uid;
         this.phone = phone;
@@ -148,6 +163,8 @@ public class UserInformation {
         this.subscribers = subscribers;
         this.queue = queue;
         this.bio=bio;
+        this.subscribersCount=subscribersCount;
+        this.looksCount=looksCount;
     }
 
 }

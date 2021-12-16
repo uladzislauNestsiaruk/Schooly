@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -39,6 +40,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -256,8 +258,29 @@ public class ProfileFragment extends Fragment {
                     });
                 }
                 TextView addFriend;
-
                 addFriend=view.findViewById(R.id.addFriend);
+                RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+                @Override
+                public void PassUserNick(String nick) {
+                    Query query=firebaseModel.getUsersReference().child(nick).child("subscribers")
+                            .child(info.getNick());
+                    query.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            if(snapshot.exists()){
+                                addFriend.setBackgroundResource(R.drawable.corners14dpappcolor2dpstroke);
+                                addFriend.setText("Ответить");
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+                }
+            });
+
                 addFriend.setOnClickListener(new View.OnClickListener() { @Override public void onClick(View v) {
                     RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
                         @Override
@@ -273,6 +296,22 @@ public class ProfileFragment extends Fragment {
                                     .child(info.getNick()).setValue(info.getNick());
                             addFriend.setBackgroundResource(R.drawable.corners14dpappcolor2dpstroke);
                             addFriend.setText("Отписаться");
+                            Query query=firebaseModel.getUsersReference().child(info.getNick())
+                                    .child("subscribersCount");
+                            query.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    long subsCount=snapshot.getValue(Long.class);
+                                    firebaseModel.getUsersReference().child(info.getNick())
+                                            .child("subscribersCount").setValue(subsCount+1);
+                                    Log.d("####", "1   "+subsCount);
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
                         }
                     });
                 } });

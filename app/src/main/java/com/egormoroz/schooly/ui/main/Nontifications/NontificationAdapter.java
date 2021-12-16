@@ -16,6 +16,10 @@ import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.Subscriber;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -61,6 +65,22 @@ public class NontificationAdapter extends RecyclerView.Adapter<NontificationAdap
                         firebaseModel.getReference().child("users")
                                 .child(nick).child("friends")
                                 .child(subscriber.getSub()).setValue(subscriber.getSub());
+                        Query query=firebaseModel.getUsersReference().child(nick)
+                                .child("subscribersCount");
+                        query.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                long subsCount=snapshot.getValue(Long.class);
+                                firebaseModel.getUsersReference().child(nick)
+                                        .child("subscribersCount").setValue(subsCount-1);
+                                Log.d("####", "1   "+subsCount);
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
                         holder.addFriend.setText("Добавлен");
                     }
                 });
