@@ -25,8 +25,8 @@ import com.google.firebase.database.ValueEventListener;
 
 public class PasswordFragment extends Fragment {
 
-    public static SettingsFragment newInstance() {
-        return new SettingsFragment();
+    public static PasswordFragment newInstance() {
+        return new PasswordFragment();
     }
 
     FirebaseModel firebaseModel=new FirebaseModel();
