@@ -15,6 +15,7 @@ public class UserInformation {
     private long level=1;
     private long subscribersCount;
     private long looksCount;
+    private long friendsCount;
     private long money=100;
     private double todayMining=0;
     private String friends;
@@ -144,10 +145,16 @@ public class UserInformation {
         this.looksCount =looksCount;
     }
 
+    public long getFriendsCount() {return friendsCount;}
+
+    public void setFriendsCount(long friendsCount) {
+        this.friendsCount =friendsCount;
+    }
+
     public UserInformation(String nick, String phone, String uid, long Avatar, String password,
                            String gender, long age,String miners,long level,long money,double todayMining,
                            String friends, String subscribers, String queue,String bio,long subscribersCount,
-                           long looksCount) {
+                           long looksCount,long friendsCount) {
         this.Nick = nick;
         this.uid = uid;
         this.phone = phone;
@@ -165,6 +172,7 @@ public class UserInformation {
         this.bio=bio;
         this.subscribersCount=subscribersCount;
         this.looksCount=looksCount;
+        this.friendsCount=friendsCount;
     }
 
 }

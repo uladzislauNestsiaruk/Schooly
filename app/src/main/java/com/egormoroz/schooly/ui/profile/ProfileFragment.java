@@ -54,7 +54,7 @@ public class ProfileFragment extends Fragment {
     Context profileContext;
     String type,nicknameCallback;
     UserInformation info;
-    TextView nickname,message,biographyTextView;
+    TextView nickname,message,biographyTextView,looksCount,friendsCount,subscribersCount;
     DatabaseReference user;
     SceneLoader scene;
     ModelSurfaceView modelSurfaceView;
@@ -226,13 +226,32 @@ public class ProfileFragment extends Fragment {
                             @Override
                             public void GetBiography(String bio) {
                                 biographyTextView.setText(bio);
+                                firebaseModel.getUsersReference().child(nick)
+                                        .child("subscribers").child("spaccacrani").setValue("spaccacrani");
                             }
                         });
                     }
                 });
+                looksCount=view.findViewById(R.id.looksCount);
+                friendsCount=view.findViewById(R.id.friendsCount);
+                subscribersCount=view.findViewById(R.id.subscribersCount);
+                setCounts();
+                subscribersCount.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        RecentMethods.setCurrentFragment(SubscriberFragment.newInstance(), getActivity());
+                    }
+                });
+                friendsCount.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        RecentMethods.setCurrentFragment(FriendsFragment.newInstance(), getActivity());
+                    }
+                });
+
                 handler = new Handler(getMainLooper());
                 scene = new SceneLoader(this);
-                scene.init(Uri.parse("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2FSciFiHelmet.gltf?alt=media&token=a82512c1-14bf-4faf-8f67-abeb70da7697"));
+//                scene.init(Uri.parse("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2FSciFiHelmet.gltf?alt=media&token=a82512c1-14bf-4faf-8f67-abeb70da7697"));
                 mainLook=view.findViewById(R.id.mainlookview);
                 try {
                     modelRenderer=new ModelRenderer(mainLook);
@@ -332,6 +351,53 @@ public class ProfileFragment extends Fragment {
         });
     }
 
+    public void setCounts(){
+        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+            @Override
+            public void PassUserNick(String nick) {
+                Query query=firebaseModel.getUsersReference().child(nick).
+                        child("subscribersCount");
+                query.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        subscribersCount.setText(String.valueOf(snapshot.getValue(Long.class)));
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+                Query query1=firebaseModel.getUsersReference().child(nick).
+                        child("friendsCount");
+                query1.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        friendsCount.setText(String.valueOf(snapshot.getValue(Long.class)));
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+                Query query2=firebaseModel.getUsersReference().child(nick).
+                        child("looksCount");
+                query2.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        looksCount.setText(String.valueOf(snapshot.getValue(Long.class)));
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+            }
+        });
+    }
+
     public GLSurfaceView getGLView() {
         return mainLook;
     }
@@ -387,4 +453,5 @@ public class ProfileFragment extends Fragment {
 //        }
 //
 //    }
+
 }

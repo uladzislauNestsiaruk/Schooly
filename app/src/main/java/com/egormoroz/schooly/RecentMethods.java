@@ -108,7 +108,7 @@ public class RecentMethods {
 
     UserInformation res = new UserInformation(nick, "unknown", user.getUid(),
             6, "unknown", "Helicopter", 1000
-            , "Miner", 1,100,0, "", "", "","",0,0);
+            , "Miner", 1,100,0, "", "", "","",0,0,0);
     ref.child(nick).setValue(res);
     return nick.isEmpty();
   }
@@ -1006,7 +1006,6 @@ public class RecentMethods {
           subscriber.setSub(snap.getValue(String.class));
           subscribersList.add(subscriber);
         }
-        Log.d("###", "name2"+subscribersList);
         callback.getSubscribersList(subscribersList);
       }
 
@@ -1043,7 +1042,7 @@ public class RecentMethods {
 
 
   }
-  public static void getFriendssList(String nickName, FirebaseModel model, Callbacks.getFriendsList callback){
+  public static void getFriendsList(String nickName, FirebaseModel model, Callbacks.getFriendsList callback){
     model.initAll();
     Query query=model.getUsersReference().child(nickName).child("friends");
     query.addListenerForSingleValueEvent(new ValueEventListener() {

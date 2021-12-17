@@ -51,10 +51,11 @@
                 android:padding="6dp"
                 android:text="@string/redact"
                 android:textColor="@color/app_grey" />
+
             <TextView
                 android:id="@+id/friends"
                 android:layout_width="wrap_content"
-                android:layout_height="4dp"
+                android:layout_height="wrap_content"
                 android:layout_below="@+id/redact"
                 android:layout_centerInParent="true"
                 android:layout_marginTop="50dp"
@@ -64,7 +65,42 @@
                 android:textSize="12sp" />
 
             <TextView
-                android:id="@+id/subscribe"
+                android:id="@+id/friendsCount"
+                android:layout_width="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@+id/redact"
+                android:layout_marginTop="18dp"
+                android:textSize="20sp"
+                android:textColor="@color/app_color"
+                android:fontFamily="@font/montserrat_extrabold"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/looksCount"
+                android:layout_width="wrap_content"
+                android:layout_toLeftOf="@+id/friends"
+                android:layout_marginEnd="70dp"
+                android:layout_below="@+id/redact"
+                android:layout_marginTop="18dp"
+                android:textSize="20sp"
+                android:textColor="@color/app_color"
+                android:fontFamily="@font/montserrat_extrabold"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/subscribersCount"
+                android:layout_width="wrap_content"
+                android:layout_toRightOf="@+id/friends"
+                android:layout_marginStart="88dp"
+                android:layout_below="@+id/redact"
+                android:layout_marginTop="18dp"
+                android:textSize="20sp"
+                android:textColor="@color/app_color"
+                android:fontFamily="@font/montserrat_extrabold"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/looks"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/redact"
@@ -72,21 +108,22 @@
                 android:layout_marginEnd="48dp"
                 android:layout_toLeftOf="@id/friends"
                 android:fontFamily="@font/montserrat_bold"
+                android:text="@string/looks"
+                android:textColor="@color/app_grey"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/subscribers"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/redact"
+                android:layout_marginStart="48dp"
+                android:layout_marginTop="50dp"
+                android:layout_toRightOf="@id/friends"
+                android:fontFamily="@font/montserrat_bold"
                 android:text="@string/subscribe"
                 android:textColor="@color/app_grey"
                 android:textSize="12sp" />
-            <TextView
-                android:id="@+id/looks"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/subscribe"
-                android:textColor="@color/app_grey"
-                android:textSize="12sp"
-                android:fontFamily="@font/montserrat_bold"
-                android:layout_toRightOf="@id/friends"
-                android:layout_marginTop="50dp"
-                android:layout_marginStart="48dp"
-                android:layout_below="@+id/redact"/>
 
             <android.opengl.GLSurfaceView
                 android:id="@+id/mainlookview"

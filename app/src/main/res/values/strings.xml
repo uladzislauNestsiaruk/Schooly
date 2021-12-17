@@ -158,4 +158,7 @@
     <string name="change">Изменить</string>
     <string name="fromBrest">From Brest to You</string>
 
+    <string name="deleteFriend">Удалить</string>
+
+
 </resources>
