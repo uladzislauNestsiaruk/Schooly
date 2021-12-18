@@ -11,29 +11,18 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FirebaseModel;
-import com.egormoroz.schooly.MainActivity;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
-import com.egormoroz.schooly.Subscriber;
-import com.egormoroz.schooly.ui.main.Nontifications.NontificationAdapter;
 import com.egormoroz.schooly.ui.main.UserInformation;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
-
-public class SubscriberFragment extends Fragment {
+public class SubscribesFragmentOther extends Fragment {
     FirebaseModel firebaseModel=new FirebaseModel();
     RecyclerView recyclerView;
     ImageView back;
-
-    public static SubscriberFragment newInstance() {
-        return new SubscriberFragment();
+    public static SubscribesFragmentOther newInstance() {
+        return new SubscribesFragmentOther();
     }
 
     @Override
@@ -58,18 +47,18 @@ public class SubscriberFragment extends Fragment {
             }
         });
 
-        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-            @Override
-            public void PassUserNick(String nick) {
-                RecentMethods.getSubscribersList(nick, firebaseModel, new Callbacks.getSubscribersList() {
-                    @Override
-                    public void getSubscribersList(ArrayList<Subscriber> subscribers) {
-                        SubscribersAdapter subscribersAdapter=new SubscribersAdapter(subscribers);
-                        recyclerView.setAdapter(subscribersAdapter);
-
-                    }
-                });
-            }
-        });
+//        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+//            @Override
+//            public void PassUserNick(String nick) {
+//                RecentMethods.getSubscribersList(nick, firebaseModel, new Callbacks.getSubscribersList() {
+//                    @Override
+//                    public void getSubscribersList(ArrayList<Subscriber> subscribers) {
+//                        SubscribersAdapter subscribersAdapter=new SubscribersAdapter(subscribers);
+//                        recyclerView.setAdapter(subscribersAdapter);
+//
+//                    }
+//                });
+//            }
+//        });
     }
 }

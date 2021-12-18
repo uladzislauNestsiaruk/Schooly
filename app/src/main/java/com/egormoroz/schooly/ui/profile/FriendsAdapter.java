@@ -29,6 +29,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
     ArrayList<Subscriber> listAdapter;
     private FriendsAdapter.ItemClickListener clickListener;
     private FirebaseModel firebaseModel = new FirebaseModel();
+    long friendsCount;
 
     public  FriendsAdapter(ArrayList<Subscriber> listAdapter) {
         this.listAdapter = listAdapter;
@@ -56,22 +57,17 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
                     @Override
                     public void PassUserNick(String nick) {
                         Log.d("####", "daa"+subscriber.getSub());
-                        firebaseModel.getReference().child("users").child(nick).child("nontifications")
-                                .child(subscriber.getSub()).removeValue();
-                        firebaseModel.getReference().child("users").child(nick).child("subscribers")
+                        firebaseModel.getReference().child("users").child(nick).child("friends")
                                 .child(subscriber.getSub()).removeValue();
                         firebaseModel.getReference().child("users")
-                                .child(nick).child("friends")
+                                .child(nick).child("subscriders")
                                 .child(subscriber.getSub()).setValue(subscriber.getSub());
                         Query query=firebaseModel.getUsersReference().child(nick)
                                 .child("subscribersCount");
                         query.addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                long subsCount=snapshot.getValue(Long.class);
-                                firebaseModel.getUsersReference().child(nick)
-                                        .child("subscribersCount").setValue(subsCount-1);
-                                Log.d("####", "1   "+subsCount);
+                                friendsCount=snapshot.getValue(Long.class);
                             }
 
                             @Override
@@ -79,6 +75,8 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
 
                             }
                         });
+                        firebaseModel.getUsersReference().child(nick)
+                                .child("subscribersCount").setValue(friendsCount-1);
                         holder.deleteFriend.setText("Добавлен");
                     }
                 });

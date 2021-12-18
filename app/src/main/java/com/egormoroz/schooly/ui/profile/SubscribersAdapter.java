@@ -30,6 +30,7 @@ public class SubscribersAdapter extends RecyclerView.Adapter<SubscribersAdapter.
     ArrayList<Subscriber> listAdapter;
     private SubscribersAdapter.ItemClickListener clickListener;
     private FirebaseModel firebaseModel = new FirebaseModel();
+    long subsCount;
 
     public  SubscribersAdapter(ArrayList<Subscriber> listAdapter) {
         this.listAdapter = listAdapter;
@@ -57,8 +58,6 @@ public class SubscribersAdapter extends RecyclerView.Adapter<SubscribersAdapter.
                     @Override
                     public void PassUserNick(String nick) {
                         Log.d("####", "daa"+subscriber.getSub());
-                        firebaseModel.getReference().child("users").child(nick).child("nontifications")
-                                .child(subscriber.getSub()).removeValue();
                         firebaseModel.getReference().child("users").child(nick).child("subscribers")
                                 .child(subscriber.getSub()).removeValue();
                         firebaseModel.getReference().child("users")
@@ -69,9 +68,7 @@ public class SubscribersAdapter extends RecyclerView.Adapter<SubscribersAdapter.
                         query.addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                long subsCount=snapshot.getValue(Long.class);
-                                firebaseModel.getUsersReference().child(nick)
-                                        .child("subscribersCount").setValue(subsCount-1);
+                                subsCount=snapshot.getValue(Long.class);
                                 Log.d("####", "1   "+subsCount);
                             }
 
@@ -80,6 +77,8 @@ public class SubscribersAdapter extends RecyclerView.Adapter<SubscribersAdapter.
 
                             }
                         });
+                        firebaseModel.getUsersReference().child(nick)
+                                .child("subscribersCount").setValue(subsCount-1);
                         holder.addFriend.setText("Добавлен");
                     }
                 });

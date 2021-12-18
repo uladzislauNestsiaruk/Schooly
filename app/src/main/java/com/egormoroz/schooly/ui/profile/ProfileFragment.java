@@ -6,16 +6,16 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
+import android.graphics.Color;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -31,7 +31,6 @@ import com.egormoroz.schooly.ModelSurfaceView;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.SceneLoader;
-import com.egormoroz.schooly.TouchController;
 import com.egormoroz.schooly.ui.main.ChatActivity;
 import com.egormoroz.schooly.ui.main.UserInformation;
 import com.egormoroz.schooly.ui.profile.Wardrobe.WardrobeFragment;
@@ -45,8 +44,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import org.a3dexample.GltfLoader;
-
 import java.io.IOException;
 
 public class ProfileFragment extends Fragment {
@@ -54,9 +51,11 @@ public class ProfileFragment extends Fragment {
     Context profileContext;
     String type,nicknameCallback;
     UserInformation info;
-    TextView nickname,message,biographyTextView,looksCount,friendsCount,subscribersCount;
+    TextView nickname,message,biographyTextView,looksCount,friendsCount,subscribersCount,otherLooksCount,otherFriendsCount,
+    otherSubscribersCount;
     DatabaseReference user;
     SceneLoader scene;
+    LinearLayout linearLooks,linearSubscribers,linearFriends;
     ModelSurfaceView modelSurfaceView;
     GLSurfaceView mainLook;
     ModelRenderer modelRenderer;
@@ -276,6 +275,28 @@ public class ProfileFragment extends Fragment {
                         }
                     });
                 }
+                otherLooksCount=view.findViewById(R.id.looksCountOther);
+                otherFriendsCount=view.findViewById(R.id.friendsCountOther);
+                otherSubscribersCount=view.findViewById(R.id.subsCountOther);
+                otherFriendsCount.setText(String.valueOf(info.getFriendsCount()));
+                otherLooksCount.setText(String.valueOf(info.getLooksCount()));
+                otherSubscribersCount.setText(String.valueOf(info.getSubscribersCount()));
+
+                linearFriends=view.findViewById(R.id.friendsLinear);
+                linearSubscribers=view.findViewById(R.id.subsLinear);
+                linearFriends.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        RecentMethods.setCurrentFragment(FriendsFragmentOther.newInstance(), getActivity());
+                    }
+                });
+                linearSubscribers.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        RecentMethods.setCurrentFragment(SubscribesFragmentOther.newInstance(), getActivity());
+                    }
+                });
+
                 TextView addFriend;
                 addFriend=view.findViewById(R.id.addFriend);
                 RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
@@ -287,7 +308,8 @@ public class ProfileFragment extends Fragment {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             if(snapshot.exists()){
-                                addFriend.setBackgroundResource(R.drawable.corners14dpappcolor2dpstroke);
+                                addFriend.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
+                                addFriend.setTextColor(Color.parseColor("#F3A2E5"));
                                 addFriend.setText("Ответить");
                             }
                         }
@@ -397,6 +419,53 @@ public class ProfileFragment extends Fragment {
             }
         });
     }
+
+//    public void setCountsOther() {
+//        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+//            @Override
+//            public void PassUserNick(String nick) {
+//                Query query = firebaseModel.getUsersReference().child(info.getNick()).
+//                        child("subscribersCount");
+//                query.addValueEventListener(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                        otherSubscribersCount.setText(String.valueOf(snapshot.getValue(Long.class)));
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(@NonNull DatabaseError error) {
+//
+//                    }
+//                });
+//                Query query1 = firebaseModel.getUsersReference().child(info.getNick()).
+//                        child("friendsCount");
+//                query1.addValueEventListener(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                        otherFriendsCount.setText(String.valueOf(snapshot.getValue(Long.class)));
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(@NonNull DatabaseError error) {
+//
+//                    }
+//                });
+//                Query query2 = firebaseModel.getUsersReference().child(info.getNick()).
+//                        child("looksCount");
+//                query2.addValueEventListener(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                        otherLooksCount.setText(String.valueOf(snapshot.getValue(Long.class)));
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(@NonNull DatabaseError error) {
+//
+//                    }
+//                });
+//            }
+//        });
+//    }
 
     public GLSurfaceView getGLView() {
         return mainLook;
