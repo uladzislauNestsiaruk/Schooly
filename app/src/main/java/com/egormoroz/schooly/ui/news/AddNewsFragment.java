@@ -62,7 +62,7 @@ public class AddNewsFragment extends Fragment {
         firebaseDatabase = FirebaseDatabase.getInstance(CONST.RealtimeDatabaseUrl);
         reference = firebaseDatabase.getReference().child("news");
         sendNews = root.findViewById(R.id.sendButton);
-        imageload = root.findViewById(R.id.add_news);
+        imageload = root.findViewById(R.id.add_image);
         text = root.findViewById(R.id.news_enter);
         back = root.findViewById(R.id.back);
         image = root.findViewById(R.id.news_image);
@@ -120,6 +120,7 @@ public class AddNewsFragment extends Fragment {
                                 newsBody.put("date", RecentMethods.getCurrentTime());
                                 newsBody.put("from", nick);
                                 newsBody.put("newsID", newsPushID);
+                                newsBody.put("likesCount", "0");
 
 
                                 Map<String, Object> newsBodyDetails = new HashMap<String, Object>();
@@ -127,10 +128,10 @@ public class AddNewsFragment extends Fragment {
                                 reference.updateChildren(newsBodyDetails).addOnCompleteListener(new OnCompleteListener() {
                                     @Override
                                     public void onComplete(@NonNull Task task) {
-                                        firebaseDatabase.getReference("news").child(newsPushID).child("likesCount").setValue(Long.valueOf(0));
-                                        firebaseDatabase.getReference("news").child(newsPushID).child("TimeMill").setValue(calendar.getTimeInMillis() * -1);
+
                                     }
                                 });
+                                firebaseDatabase.getReference("news").child(newsPushID).child("TimeMill").setValue(calendar.getTimeInMillis() * -1);
                             }
                         });
                     }

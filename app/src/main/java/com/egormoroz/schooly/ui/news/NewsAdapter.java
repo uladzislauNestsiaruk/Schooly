@@ -1,5 +1,7 @@
 package com.egormoroz.schooly.ui.news;
 
+import android.annotation.SuppressLint;
+import android.os.Build;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
@@ -26,8 +29,8 @@ import java.util.List;
 public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolder> {
 
     private List<NewsItem> newsList;
-    public static String newsId;
-    FirebaseModel firebaseModel=new FirebaseModel();
+    public static String newsId, likeWord;
+    FirebaseModel firebaseModel = new FirebaseModel();
     long value;
 
 
@@ -46,29 +49,60 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
 
     @Override
     public void onBindViewHolder(@NonNull ImageViewHolder holder, int position) {
-        holder.setImageData(newsList.get(position));
-        holder.like.setOnClickListener(new View.OnClickListener() {
+        NewsItem newsItem = newsList.get(position);
+        holder.setIsRecyclable(false);
+        holder.like_count.setText(newsItem.getLikes_count());
+        Picasso.get().load(newsItem.getImageUrl()).into(holder.newsImage);
+        holder.description.setText(newsItem.getItem_description());
+        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @Override
-            public void onClick(View view) {
-                Query query = firebaseModel.getReference().child("news").child(newsId).child("likesCount");
-                query.addValueEventListener(new ValueEventListener() {
+            public void PassUserNick(String nick) {
+                Query likeref = firebaseModel.getUsersReference().child(nick).child("likedNews").child(newsItem.getNewsId());
+                likeref.addValueEventListener(new ValueEventListener() {
                     @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        Log.d("######", "dd  ");
-                        value = Long.valueOf(dataSnapshot.getValue(String.class));
-                        value = value + 1;
-                        Log.d("news", "addLike");
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if (snapshot.exists()) {
+                            holder.like.setImageResource(R.drawable.ic_pressedheart40dp);
+                        }
+                        else {
+                            holder.like.setImageResource(R.drawable.ic_heart40dp);
+                        }
                     }
-
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
 
                     }
-
-
                 });
-                firebaseModel.getReference("news").child(newsId).child("likesCount").setValue(String.valueOf(value));
+
+                holder.like.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        value = Long.parseLong(holder.like_count.getText().toString());
+                        Query likeref = firebaseModel.getUsersReference().child(nick).child("likedNews").child(newsItem.getNewsId());
+                        likeref.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                if (snapshot.exists()) {
+                                    value -= 1;
+                                    holder.like.setImageResource(R.drawable.ic_heart40dp);
+                                    firebaseModel.getReference("users").child(nick).child("likedNews").child(newsItem.getNewsId()).removeValue();
+                                }
+                                else {
+                                    value += 1;
+                                    holder.like.setImageResource(R.drawable.ic_pressedheart40dp);
+                                    firebaseModel.getReference("users").child(nick).child("likedNews").child(newsItem.getNewsId()).setValue("liked");
+                                }
+                                firebaseModel.getReference("news").child(newsItem.getNewsId()).child("likesCount").setValue(String.valueOf(value));
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+                    }
+                });
             }
         });
     }
@@ -78,11 +112,12 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
         return newsList.size();
     }
 
-    static class ImageViewHolder extends RecyclerView.ViewHolder {
+    class ImageViewHolder extends RecyclerView.ViewHolder {
 
         ImageView newsImage, like, comment;
         TextView description, like_count;
         private DatabaseReference ref;
+
         public ImageViewHolder(@NonNull View itemView) {
             super(itemView);
 
@@ -92,43 +127,9 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
             like_count = itemView.findViewById(R.id.likes_count);
             comment = itemView.findViewById(R.id.news_comment);
         }
-
-
-        void setImageData(NewsItem newsItem) {
-            ref = FirebaseDatabase.getInstance().getReference().child("news").child(newsItem.item_description);
-            description.setText(newsItem.item_description);
-            Picasso.get().load(newsItem.ImageUrl).into(newsImage);
-            like_count.setText(newsItem.likes_count);
-            newsId = newsItem.newsId;
-            like.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    final long[] value = new long[1];
-                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("news").child("likesCount");
-                    ref.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            value[0] = Long.parseLong((String) dataSnapshot.getValue());
-                            value[0] = value[0] + 1;
-                            dataSnapshot.getRef().setValue(String.valueOf(value[0]));
-                            Log.d("news", "addLike");
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-
-                        }
-
-
-                    });
-                }
-            });
-            comment.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                }
-            });
-        }
     }
+
+
 }
+
+

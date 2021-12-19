@@ -20,6 +20,7 @@ import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
+import com.google.android.filament.Camera;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -54,6 +55,7 @@ public class EnterFragment extends Fragment {
         BottomNavigationView bnv = getActivity().findViewById(R.id.bottomNavigationView);
         bnv.setVisibility(bnv.GONE);
         initElements(root);
+
         ////////////////Init network references
         initFirebase();
         ///////////////Authorization throw google
