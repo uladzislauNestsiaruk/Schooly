@@ -47,6 +47,7 @@ import com.google.firebase.storage.StorageReference;
 import java.io.IOException;
 
 public class ProfileFragment extends Fragment {
+    private static String sendNickString;
     FirebaseModel firebaseModel = new FirebaseModel();
     Context profileContext;
     String type,nicknameCallback;
@@ -263,6 +264,7 @@ public class ProfileFragment extends Fragment {
                 break;
             case "other":
                 nickname.setText(info.getNick());
+                sendNickString=info.getNick();
                 user = firebaseModel.getUsersReference().child(info.getNick());
                 if (message != null) {
                     message.setOnClickListener(new View.OnClickListener() {
@@ -279,6 +281,7 @@ public class ProfileFragment extends Fragment {
                 otherFriendsCount.setText(String.valueOf(info.getFriendsCount()));
                 otherLooksCount.setText(String.valueOf(info.getLooksCount()));
                 otherSubscribersCount.setText(String.valueOf(info.getSubscribersCount()));
+
 
                 linearFriends=view.findViewById(R.id.friendsLinear);
                 linearSubscribers=view.findViewById(R.id.subsLinear);
@@ -366,6 +369,13 @@ public class ProfileFragment extends Fragment {
                 }
             }
         });
+    }
+    public static void sendNickToAdapter(sendNick sendNick){
+        sendNick.sendNick(sendNickString);
+    }
+
+    public interface sendNick{
+        void sendNick(String nick);
     }
 
     public void setCounts(){

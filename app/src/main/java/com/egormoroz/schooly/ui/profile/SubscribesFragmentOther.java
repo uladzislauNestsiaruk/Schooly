@@ -11,16 +11,25 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
+import com.egormoroz.schooly.Subscriber;
 import com.egormoroz.schooly.ui.main.UserInformation;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
 
 public class SubscribesFragmentOther extends Fragment {
     FirebaseModel firebaseModel=new FirebaseModel();
     RecyclerView recyclerView;
     ImageView back;
+    String otherUserNick;
     public static SubscribesFragmentOther newInstance() {
         return new SubscribesFragmentOther();
     }
@@ -43,22 +52,50 @@ public class SubscribesFragmentOther extends Fragment {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(ProfileFragment.newInstance("user",new UserInformation()),getActivity());
+                Query query1=firebaseModel.getReference().child("users").child(otherUserNick);
+                query1.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        UserInformation userData=new UserInformation();
+                        userData.setAge(snapshot.child("age").getValue(Long.class));
+                        userData.setAvatar(snapshot.child("avatar").getValue(Long.class));
+                        userData.setGender(snapshot.child("gender").getValue(String.class));
+                        //////////////////userData.setMiners();
+                        userData.setNick(snapshot.child("nick").getValue(String.class));
+                        userData.setPassword(snapshot.child("password").getValue(String.class));
+                        userData.setPhone(snapshot.child("phone").getValue(String.class));
+                        userData.setUid(snapshot.child("uid").getValue(String.class));
+                        userData.setQueue(snapshot.child("queue").getValue(String.class));
+                        userData.setFriendsCount(snapshot.child("friendsCount").getValue(Long.class));
+                        userData.setSubscribersCount(snapshot.child("subscribersCount").getValue(Long.class));
+                        userData.setLooksCount(snapshot.child("looksCount").getValue(Long.class));
+//                    userData.setSubscribers(snapshot.child("subscribers").getValue(String.class));
+//                                                userData.setFriends(snapshot.child("friends").getValue(String.class));
+                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userData),
+                                getActivity());
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
             }
         });
 
-//        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-//            @Override
-//            public void PassUserNick(String nick) {
-//                RecentMethods.getSubscribersList(nick, firebaseModel, new Callbacks.getSubscribersList() {
-//                    @Override
-//                    public void getSubscribersList(ArrayList<Subscriber> subscribers) {
-//                        SubscribersAdapter subscribersAdapter=new SubscribersAdapter(subscribers);
-//                        recyclerView.setAdapter(subscribersAdapter);
-//
-//                    }
-//                });
-//            }
-//        });
+        ProfileFragment.sendNickToAdapter(new ProfileFragment.sendNick() {
+            @Override
+            public void sendNick(String nick) {
+                otherUserNick=nick;
+                RecentMethods.getSubscribersList(nick, firebaseModel, new Callbacks.getSubscribersList() {
+                    @Override
+                    public void getSubscribersList(ArrayList<Subscriber> subscribers) {
+                        SubscribersAdapter subscribersAdapter=new SubscribersAdapter(subscribers);
+                        recyclerView.setAdapter(subscribersAdapter);
+
+                   }
+                });
+            }
+        });
     }
 }
