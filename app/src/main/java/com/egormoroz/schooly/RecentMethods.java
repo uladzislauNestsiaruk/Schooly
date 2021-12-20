@@ -1087,6 +1087,22 @@ public class RecentMethods {
     }
   }
 
+  public static void getSubscrigersCount(String nick,FirebaseModel firebaseModel,Callbacks.getSubsCount callback){
+    Query query=firebaseModel.getUsersReference().child(nick)
+            .child("subscribersCount");
+    query.addValueEventListener(new ValueEventListener() {
+      @Override
+      public void onDataChange(@NonNull DataSnapshot snapshot) {
+        callback.getCount(snapshot.getValue(Long.class));
+      }
+
+      @Override
+      public void onCancelled(@NonNull DatabaseError error) {
+
+      }
+    });
+  }
+
   public static String getCurrentTime() {
     String time;
     final Calendar c = Calendar.getInstance();

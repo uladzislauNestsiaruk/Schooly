@@ -225,8 +225,6 @@ public class ProfileFragment extends Fragment {
                             @Override
                             public void GetBiography(String bio) {
                                 biographyTextView.setText(bio);
-                                firebaseModel.getUsersReference().child(nick)
-                                        .child("subscribers").child("spaccacrani").setValue("spaccacrani");
                             }
                         });
                     }
@@ -332,9 +330,6 @@ public class ProfileFragment extends Fragment {
                             firebaseModel.getReference().child("users")
                                     .child(info.getNick()).child("nontifications")
                                     .child(nick).setValue(nick);
-                            firebaseModel.getReference().child("users")
-                                    .child(nick).child("nontifications")
-                                    .child(info.getNick()).setValue(info.getNick());
                             addFriend.setBackgroundResource(R.drawable.corners14dpappcolor2dpstroke);
                             addFriend.setText("Отписаться");
                             Query query=firebaseModel.getUsersReference().child(info.getNick())

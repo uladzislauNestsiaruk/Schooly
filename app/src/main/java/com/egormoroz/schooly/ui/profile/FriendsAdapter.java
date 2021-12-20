@@ -43,6 +43,25 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
                 inflate(R.layout.rvitemfriends, viewGroup, false);
         FriendsAdapter.ViewHolder viewHolder=new FriendsAdapter.ViewHolder(v);
         firebaseModel.initAll();
+        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+            @Override
+            public void PassUserNick(String nick) {
+                Query query=firebaseModel.getUsersReference().child(nick)
+                        .child("friendsCount");
+                query.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        friendsCount=snapshot.getValue(Long.class);
+                        Log.d("####", "1   "+friendsCount);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+            }
+        });
         return viewHolder;
     }
 
@@ -62,21 +81,11 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
                         firebaseModel.getReference().child("users")
                                 .child(nick).child("subscriders")
                                 .child(subscriber.getSub()).setValue(subscriber.getSub());
-                        Query query=firebaseModel.getUsersReference().child(nick)
-                                .child("subscribersCount");
-                        query.addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                friendsCount=snapshot.getValue(Long.class);
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
-
-                            }
-                        });
-                        firebaseModel.getUsersReference().child(nick)
-                                .child("subscribersCount").setValue(friendsCount-1);
+                        if (friendsCount!=-1) {
+                            friendsCount = friendsCount - 1;
+                            firebaseModel.getUsersReference().child(nick)
+                                    .child("subscribersCount").setValue(friendsCount - 1);
+                        }
                         holder.deleteFriend.setText("Добавлен");
                     }
                 });
