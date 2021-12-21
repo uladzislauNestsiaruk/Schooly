@@ -24,30 +24,30 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
-public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHolder>  {
+public class SubscriptionsAdapter extends RecyclerView.Adapter<SubscriptionsAdapter.ViewHolder>  {
 
     ArrayList<Subscriber> listAdapter;
-    private FriendsAdapter.ItemClickListener clickListener;
+    private SubscriptionsAdapter.ItemClickListener clickListener;
     private FirebaseModel firebaseModel = new FirebaseModel();
     long friendsCount;
 
-    public  FriendsAdapter(ArrayList<Subscriber> listAdapter) {
+    public SubscriptionsAdapter(ArrayList<Subscriber> listAdapter) {
         this.listAdapter = listAdapter;
     }
 
 
     @NotNull
     @Override
-    public FriendsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
+    public SubscriptionsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
         RelativeLayout v = (RelativeLayout) LayoutInflater.from(viewGroup.getContext()).
-                inflate(R.layout.rvitemfriends, viewGroup, false);
-        FriendsAdapter.ViewHolder viewHolder=new FriendsAdapter.ViewHolder(v);
+                inflate(R.layout.rvitemsubscriptions, viewGroup, false);
+        SubscriptionsAdapter.ViewHolder viewHolder=new SubscriptionsAdapter.ViewHolder(v);
         firebaseModel.initAll();
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @Override
             public void PassUserNick(String nick) {
                 Query query=firebaseModel.getUsersReference().child(nick)
-                        .child("friendsCount");
+                        .child("subscriptionCount");
                 query.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -69,7 +69,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Subscriber subscriber=listAdapter.get(position);
         holder.otherUserNick.setText(subscriber.getSub());
-        holder.deleteFriend.setOnClickListener(new View.OnClickListener() {
+        holder.unsubscribe.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
@@ -86,7 +86,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
                             firebaseModel.getUsersReference().child(nick)
                                     .child("subscribersCount").setValue(friendsCount - 1);
                         }
-                        holder.deleteFriend.setText("Добавлен");
+                        holder.unsubscribe.setText("Добавлен");
                     }
                 });
             }
@@ -101,11 +101,11 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        final TextView otherUserNick,deleteFriend;
+        final TextView otherUserNick,unsubscribe;
         ViewHolder(View itemView) {
             super(itemView);
             otherUserNick = itemView.findViewById(R.id.otherUserNick);
-            deleteFriend=itemView.findViewById(R.id.deleteFriend);
+            unsubscribe=itemView.findViewById(R.id.unsubscribe);
         }
 
         @Override
@@ -118,7 +118,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
         return listAdapter.get(id);
     }
 
-    void setClickListener(FriendsAdapter.ItemClickListener itemClickListener) {
+    void setClickListener(SubscriptionsAdapter.ItemClickListener itemClickListener) {
         this.clickListener = itemClickListener;
     }
 

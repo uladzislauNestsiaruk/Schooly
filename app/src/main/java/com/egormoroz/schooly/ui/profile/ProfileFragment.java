@@ -52,11 +52,11 @@ public class ProfileFragment extends Fragment {
     Context profileContext;
     String type,nicknameCallback;
     UserInformation info;
-    TextView nickname,message,biographyTextView,looksCount,friendsCount,subscribersCount,otherLooksCount,otherFriendsCount,
+    TextView nickname,message,biographyTextView,looksCount,subscriptionsCount,subscribersCount,otherLooksCount,otherSubscriptionCount,
     otherSubscribersCount;
     DatabaseReference user;
     SceneLoader scene;
-    LinearLayout linearLooks,linearSubscribers,linearFriends;
+    LinearLayout linearLooks,linearSubscribers,linearSubscriptions;
     ModelSurfaceView modelSurfaceView;
     GLSurfaceView mainLook;
     ModelRenderer modelRenderer;
@@ -231,7 +231,7 @@ public class ProfileFragment extends Fragment {
                     }
                 });
                 looksCount=view.findViewById(R.id.looksCount);
-                friendsCount=view.findViewById(R.id.friendsCount);
+                subscriptionsCount=view.findViewById(R.id.subscriptionsCount);
                 subscribersCount=view.findViewById(R.id.subscribersCount);
                 setCounts();
                 subscribersCount.setOnClickListener(new View.OnClickListener() {
@@ -240,10 +240,10 @@ public class ProfileFragment extends Fragment {
                         RecentMethods.setCurrentFragment(SubscriberFragment.newInstance(), getActivity());
                     }
                 });
-                friendsCount.setOnClickListener(new View.OnClickListener() {
+                subscriptionsCount.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        RecentMethods.setCurrentFragment(FriendsFragment.newInstance(), getActivity());
+                        RecentMethods.setCurrentFragment(SubscriptionsFragment.newInstance(), getActivity());
                     }
                 });
 
@@ -276,19 +276,19 @@ public class ProfileFragment extends Fragment {
                     });
                 }
                 otherLooksCount=view.findViewById(R.id.looksCountOther);
-                otherFriendsCount=view.findViewById(R.id.friendsCountOther);
+                otherSubscriptionCount=view.findViewById(R.id.subscriptionCountOther);
                 otherSubscribersCount=view.findViewById(R.id.subsCountOther);
-                otherFriendsCount.setText(String.valueOf(info.getFriendsCount()));
+                otherSubscriptionCount.setText(String.valueOf(info.getSubscriptionCount()));
                 otherLooksCount.setText(String.valueOf(info.getLooksCount()));
                 otherSubscribersCount.setText(String.valueOf(info.getSubscribersCount()));
 
 
-                linearFriends=view.findViewById(R.id.friendsLinear);
-                linearSubscribers=view.findViewById(R.id.subsLinear);
-                linearFriends.setOnClickListener(new View.OnClickListener() {
+                linearSubscriptions=view.findViewById(R.id.subscriptionLinear);
+                linearSubscribers=view.findViewById(R.id.subscribersLinear);
+                linearSubscriptions.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        RecentMethods.setCurrentFragment(FriendsFragmentOther.newInstance(), getActivity());
+                        RecentMethods.setCurrentFragment(SubscriptionsFragmentOther.newInstance(), getActivity());
                     }
                 });
                 linearSubscribers.setOnClickListener(new View.OnClickListener() {
@@ -396,11 +396,11 @@ public class ProfileFragment extends Fragment {
                     }
                 });
                 Query query1=firebaseModel.getUsersReference().child(nick).
-                        child("friendsCount");
+                        child("subscriptionCount");
                 query1.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        friendsCount.setText(String.valueOf(snapshot.getValue(Long.class)));
+                        subscriptionsCount.setText(String.valueOf(snapshot.getValue(Long.class)));
                     }
 
                     @Override

@@ -122,7 +122,7 @@ public class PeopleFragment extends Fragment {
                                                 userData.setPhone(snapshot.child("phone").getValue(String.class));
                                                 userData.setUid(snapshot.child("uid").getValue(String.class));
                                                 userData.setQueue(snapshot.child("queue").getValue(String.class));
-                                                userData.setFriendsCount(snapshot.child("friendsCount").getValue(Long.class));
+                                                userData.setSubscriptionCount(snapshot.child("subscriptionCount").getValue(Long.class));
                                                 userData.setSubscribersCount(snapshot.child("subscribersCount").getValue(Long.class));
                                                 userData.setLooksCount(snapshot.child("looksCount").getValue(Long.class));
 //                    userData.setSubscribers(snapshot.child("subscribers").getValue(String.class));

@@ -78,7 +78,7 @@
 				android:textSize="14sp"
 				android:fontFamily="@font/montserrat_extrabold"
 				android:background="@drawable/corners10dpappcolor"
-				android:text="@string/add"/>
+				android:text="@string/subscride"/>
 
 		</LinearLayout>
 
@@ -117,7 +117,7 @@
 			</LinearLayout>
 
 			<LinearLayout
-				android:id="@+id/friendsLinear"
+				android:id="@+id/subscribersLinear"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:layout_weight="1"
@@ -127,7 +127,7 @@
 				android:orientation="vertical">
 
 				<TextView
-					android:id="@+id/friendsCountOther"
+					android:id="@+id/subsCountOther"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:textSize="20sp"
@@ -137,14 +137,14 @@
 				<TextView
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
-					android:text="@string/friends"
+					android:text="@string/subscribers"
 					android:fontFamily="@font/montserrat_bold"
 					android:textColor="@color/app_grey"
 					android:textSize="10sp"/>
 			</LinearLayout>
 
 			<LinearLayout
-				android:id="@+id/subsLinear"
+				android:id="@+id/subscriptionLinear"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:layout_weight="1"
@@ -153,7 +153,7 @@
 				android:orientation="vertical">
 
 				<TextView
-					android:id="@+id/subsCountOther"
+					android:id="@+id/subscriptionCountOther"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:gravity="center_horizontal"
@@ -165,7 +165,7 @@
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:gravity="center"
-					android:text="@string/susriders"
+					android:text="@string/subscriptions"
 					android:fontFamily="@font/montserrat_bold"
 					android:textColor="@color/app_grey"
 					android:textSize="10sp"/>

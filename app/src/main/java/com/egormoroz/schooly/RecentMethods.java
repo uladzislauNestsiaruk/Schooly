@@ -164,7 +164,7 @@ public class RecentMethods {
           userData.setUid(snapshot.child("uid").getValue(String.class));
           userData.setQueue(snapshot.child("queue").getValue(String.class));
 //                    userData.setSubscribers(snapshot.child("subscribers").getValue(String.class));
-          userData.setFriends(snapshot.child("friends").getValue(String.class));
+          userData.setSubscription(snapshot.child("subscription").getValue(String.class));
           data.add(userData);
         }
         callback.LoadData(data);
@@ -1042,9 +1042,9 @@ public class RecentMethods {
 
 
   }
-  public static void getFriendsList(String nickName, FirebaseModel model, Callbacks.getFriendsList callback){
+  public static void getSubscriptionList(String nickName, FirebaseModel model, Callbacks.getFriendsList callback){
     model.initAll();
-    Query query=model.getUsersReference().child(nickName).child("friends");
+    Query query=model.getUsersReference().child(nickName).child("subscription");
     query.addListenerForSingleValueEvent(new ValueEventListener() {
       @Override
       public void onDataChange(@NonNull DataSnapshot snapshot) {

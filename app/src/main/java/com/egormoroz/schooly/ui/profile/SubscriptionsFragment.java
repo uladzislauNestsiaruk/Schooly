@@ -21,19 +21,19 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
 
-public class FriendsFragment extends Fragment {
+public class SubscriptionsFragment extends Fragment {
     FirebaseModel firebaseModel=new FirebaseModel();
     RecyclerView recyclerView;
     ImageView back;
 
-    public static FriendsFragment newInstance() {
-        return new FriendsFragment();
+    public static SubscriptionsFragment newInstance() {
+        return new SubscriptionsFragment();
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_friends, container, false);
+        View root = inflater.inflate(R.layout.fragment_subscriptions, container, false);
         BottomNavigationView bnv = getActivity().findViewById(R.id.bottomNavigationView);
         bnv.setVisibility(bnv.GONE);
         firebaseModel.initAll();
@@ -55,10 +55,10 @@ public class FriendsFragment extends Fragment {
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @Override
             public void PassUserNick(String nick) {
-                RecentMethods.getFriendsList(nick, firebaseModel, new Callbacks.getFriendsList() {
+                RecentMethods.getSubscriptionList(nick, firebaseModel, new Callbacks.getFriendsList() {
                     @Override
                     public void getFriendsList(ArrayList<Subscriber> friends) {
-                        FriendsAdapter subscribersAdapter=new FriendsAdapter(friends);
+                        SubscriptionsAdapter subscribersAdapter=new SubscriptionsAdapter(friends);
                         recyclerView.setAdapter(subscribersAdapter);
                     }
                 });
