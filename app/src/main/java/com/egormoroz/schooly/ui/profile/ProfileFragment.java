@@ -276,19 +276,6 @@ public class ProfileFragment extends Fragment {
                         }
                     });
                 }
-                Query query=firebaseModel.getUsersReference().child(info.getNick())
-                        .child("subscribersCount");
-                query.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        subsCount=snapshot.getValue(Long.class);
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
                 RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
                     @Override
                     public void PassUserNick(String nick) {
@@ -366,15 +353,17 @@ public class ProfileFragment extends Fragment {
                             firebaseModel.getReference().child("users")
                                     .child(info.getNick()).child("nontifications")
                                     .child(nick).setValue(nick);
-                            firebaseModel.getReference().child("users")
+                           firebaseModel.getReference().child("users")
                                     .child(nick).child("subscription")
                                     .child(info.getNick()).setValue(info.getNick());
-                            subsCount=subsCount+1;
+//                           subsCount=info.getSubscribersCount();
+//                           Log.d("####", "ffsffs  "+subsCount);
+//                            subsCount=subsCount+1;
                             firebaseModel.getUsersReference().child(info.getNick())
                                     .child("subscribersCount").setValue(subsCount);
                             firebaseModel.getUsersReference().child(nick)
                                     .child("subscriptionCount").setValue(subscriptionCount);
-                            addFriend.setBackgroundResource(R.drawable.corners14dpappcolor2dpstroke);
+                            addFriend.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
                             addFriend.setText("Отписаться");
                             addFriend.setTextColor(Color.parseColor("#F3A2E5"));
                         }
