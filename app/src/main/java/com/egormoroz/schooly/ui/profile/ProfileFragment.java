@@ -60,6 +60,7 @@ public class ProfileFragment extends Fragment {
     ModelSurfaceView modelSurfaceView;
     GLSurfaceView mainLook;
     ModelRenderer modelRenderer;
+    long subsCount,subscriptionCount;
     private float[] backgroundColor = new float[]{0f, 0f, 0f, 1.0f};
     private Handler handler;
 
@@ -275,6 +276,38 @@ public class ProfileFragment extends Fragment {
                         }
                     });
                 }
+                Query query=firebaseModel.getUsersReference().child(info.getNick())
+                        .child("subscribersCount");
+                query.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        subsCount=snapshot.getValue(Long.class);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+                RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+                    @Override
+                    public void PassUserNick(String nick) {
+                        Query query=firebaseModel.getUsersReference().child(nick)
+                                .child("subscriptionCount");
+                        query.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                subscriptionCount=snapshot.getValue(Long.class);
+                                Log.d("####", "1   "+subscriptionsCount);
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+                    }
+                });
                 otherLooksCount=view.findViewById(R.id.looksCountOther);
                 otherSubscriptionCount=view.findViewById(R.id.subscriptionCountOther);
                 otherSubscribersCount=view.findViewById(R.id.subsCountOther);
@@ -333,24 +366,17 @@ public class ProfileFragment extends Fragment {
                             firebaseModel.getReference().child("users")
                                     .child(info.getNick()).child("nontifications")
                                     .child(nick).setValue(nick);
+                            firebaseModel.getReference().child("users")
+                                    .child(nick).child("subscription")
+                                    .child(info.getNick()).setValue(info.getNick());
+                            subsCount=subsCount+1;
+                            firebaseModel.getUsersReference().child(info.getNick())
+                                    .child("subscribersCount").setValue(subsCount);
+                            firebaseModel.getUsersReference().child(nick)
+                                    .child("subscriptionCount").setValue(subscriptionCount);
                             addFriend.setBackgroundResource(R.drawable.corners14dpappcolor2dpstroke);
                             addFriend.setText("Отписаться");
-                            Query query=firebaseModel.getUsersReference().child(info.getNick())
-                                    .child("subscribersCount");
-                            query.addValueEventListener(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                    long subsCount=snapshot.getValue(Long.class);
-                                    firebaseModel.getUsersReference().child(info.getNick())
-                                            .child("subscribersCount").setValue(subsCount+1);
-                                    Log.d("####", "1   "+subsCount);
-                                }
-
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError error) {
-
-                                }
-                            });
+                            addFriend.setTextColor(Color.parseColor("#F3A2E5"));
                         }
                     });
                 } });

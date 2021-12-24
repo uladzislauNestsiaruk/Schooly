@@ -1,5 +1,6 @@
 package com.egormoroz.schooly.ui.profile;
 
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,7 +30,7 @@ public class SubscriptionsAdapter extends RecyclerView.Adapter<SubscriptionsAdap
     ArrayList<Subscriber> listAdapter;
     private SubscriptionsAdapter.ItemClickListener clickListener;
     private FirebaseModel firebaseModel = new FirebaseModel();
-    long friendsCount;
+    long subscriptionsCount,subscribersCount;
 
     public SubscriptionsAdapter(ArrayList<Subscriber> listAdapter) {
         this.listAdapter = listAdapter;
@@ -51,8 +52,8 @@ public class SubscriptionsAdapter extends RecyclerView.Adapter<SubscriptionsAdap
                 query.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        friendsCount=snapshot.getValue(Long.class);
-                        Log.d("####", "1   "+friendsCount);
+                        subscriptionsCount=snapshot.getValue(Long.class);
+                        Log.d("####", "1   "+subscriptionsCount);
                     }
 
                     @Override
@@ -69,6 +70,20 @@ public class SubscriptionsAdapter extends RecyclerView.Adapter<SubscriptionsAdap
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Subscriber subscriber=listAdapter.get(position);
         holder.otherUserNick.setText(subscriber.getSub());
+        Query query=firebaseModel.getUsersReference().child(subscriber.getSub())
+                .child("subscribersCount");
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                subscribersCount=snapshot.getValue(Long.class);
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
         holder.unsubscribe.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -76,17 +91,24 @@ public class SubscriptionsAdapter extends RecyclerView.Adapter<SubscriptionsAdap
                     @Override
                     public void PassUserNick(String nick) {
                         Log.d("####", "daa"+subscriber.getSub());
-                        firebaseModel.getReference().child("users").child(nick).child("friends")
+                        firebaseModel.getReference().child("users").child(nick).child("subscription")
                                 .child(subscriber.getSub()).removeValue();
                         firebaseModel.getReference().child("users")
-                                .child(nick).child("subscriders")
-                                .child(subscriber.getSub()).setValue(subscriber.getSub());
-                        if (friendsCount!=-1) {
-                            friendsCount = friendsCount - 1;
+                                .child(subscriber.getSub()).child("subscribers")
+                                .child(nick).removeValue();
+                        if (subscriptionsCount!=-1) {
+                            subscriptionsCount = subscriptionsCount - 1;
                             firebaseModel.getUsersReference().child(nick)
-                                    .child("subscribersCount").setValue(friendsCount - 1);
+                                    .child("subscriptionCount").setValue(subscriptionsCount);
                         }
-                        holder.unsubscribe.setText("Добавлен");
+                        if (subscribersCount!=-1) {
+                            subscribersCount = subscribersCount- 1;
+                            firebaseModel.getUsersReference().child(subscriber.getSub())
+                                    .child("subscribersCount").setValue(subscribersCount);
+                        }
+                        holder.unsubscribe.setText("Подписаться");
+                        holder.unsubscribe.setTextColor(Color.parseColor("#FFFEFE"));
+                        holder.unsubscribe.setBackgroundResource(R.drawable.corners10dpappcolor);
                     }
                 });
             }
