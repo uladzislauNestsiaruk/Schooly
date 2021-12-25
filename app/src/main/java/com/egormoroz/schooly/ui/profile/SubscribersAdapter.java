@@ -82,6 +82,7 @@ public class SubscribersAdapter extends RecyclerView.Adapter<SubscribersAdapter.
                             holder.addFriend.setText("Отписаться");
                             holder.addFriend.setTextColor(Color.parseColor("#F3A2E5"));
                             holder.addFriend.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
+
                         }
                     }
 
