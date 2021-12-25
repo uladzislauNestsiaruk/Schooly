@@ -370,6 +370,7 @@ public class ProfileFragment extends Fragment {
                             addFriend.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
                             addFriend.setText("Отписаться");
                             addFriend.setTextColor(Color.parseColor("#F3A2E5"));
+                            //
                         }
                     });
                 } });
