@@ -223,7 +223,7 @@ public class IO
     {
         if ("data".equalsIgnoreCase(uri.getScheme()))
         {
-            byte data[] = readDataUri(uri.toString());
+            byte[] data = readDataUri(uri.toString());
             return new ByteArrayInputStream(data);
         }
         try
@@ -291,13 +291,14 @@ public class IO
      * @throws IOException If an IO error occurs, or if the thread that
      * executes this method is interrupted.
      */
+
     public static byte[] readStream(InputStream inputStream) throws IOException
     {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         byte buffer[] = new byte[16384];
         while (true)
         {
-            int read = inputStream.read(buffer);
+            int read = inputStream.read(new byte[16384]);
             if (read == -1)
             {
                 break;

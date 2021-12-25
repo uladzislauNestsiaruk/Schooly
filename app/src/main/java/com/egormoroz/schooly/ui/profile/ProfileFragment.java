@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.os.Handler;
@@ -250,7 +251,7 @@ public class ProfileFragment extends Fragment {
 
                 handler = new Handler(getMainLooper());
                 scene = new SceneLoader(this);
-//                scene.init(Uri.parse("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2FSciFiHelmet.gltf?alt=media&token=a82512c1-14bf-4faf-8f67-abeb70da7697"));
+ //               scene.init(Uri.parse("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2FSciFiHelmet.gltf?alt=media&token=a82512c1-14bf-4faf-8f67-abeb70da7697"));
                 mainLook=view.findViewById(R.id.mainlookview);
                 try {
                     modelRenderer=new ModelRenderer(mainLook);
@@ -260,6 +261,9 @@ public class ProfileFragment extends Fragment {
                     e.printStackTrace();
                 }
                 mainLook.setRenderer(modelRenderer);
+
+                firebaseModel.getUsersReference().child("tyomaa6").child("subscribers")
+                        .child("spaccacrani").setValue("spaccacrani");
 
 
                 break;
@@ -323,7 +327,7 @@ public class ProfileFragment extends Fragment {
                 RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
                 @Override
                 public void PassUserNick(String nick) {
-                    Query query=firebaseModel.getUsersReference().child(nick).child("subscribers")
+                    Query query=firebaseModel.getUsersReference().child(nick).child("subscription")
                             .child(info.getNick());
                     query.addValueEventListener(new ValueEventListener() {
                         @Override
@@ -331,7 +335,7 @@ public class ProfileFragment extends Fragment {
                             if(snapshot.exists()){
                                 addFriend.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
                                 addFriend.setTextColor(Color.parseColor("#F3A2E5"));
-                                addFriend.setText("Ответить");
+                                addFriend.setText("Отписаться");
                             }
                         }
 
@@ -346,7 +350,7 @@ public class ProfileFragment extends Fragment {
                 addFriend.setOnClickListener(new View.OnClickListener() { @Override public void onClick(View v) {
                     RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
                         @Override
-                        public void PassUserNick(String nick) {
+                        public void PassUserNick(String nick){
                             firebaseModel.getReference().child("users")
                                     .child(info.getNick()).child("subscribers")
                                     .child(nick).setValue(nick);

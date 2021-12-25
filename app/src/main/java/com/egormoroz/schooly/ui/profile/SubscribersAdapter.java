@@ -70,6 +70,28 @@ public class SubscribersAdapter extends RecyclerView.Adapter<SubscribersAdapter.
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Subscriber subscriber=listAdapter.get(position);
         holder.otherUserNick.setText(subscriber.getSub());
+        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+            @Override
+            public void PassUserNick(String nick) {
+                Query query=firebaseModel.getUsersReference().child(nick)
+                        .child("subscription").child(subscriber.getSub());
+                query.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if(snapshot.exists()){
+                            holder.addFriend.setText("Отписаться");
+                            holder.addFriend.setTextColor(Color.parseColor("#F3A2E5"));
+                            holder.addFriend.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+            }
+        });
         holder.addFriend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

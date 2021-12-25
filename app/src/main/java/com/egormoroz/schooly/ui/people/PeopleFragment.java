@@ -125,7 +125,7 @@ public class PeopleFragment extends Fragment {
                                                 userData.setSubscriptionCount(snapshot.child("subscriptionCount").getValue(Long.class));
                                                 userData.setSubscribersCount(snapshot.child("subscribersCount").getValue(Long.class));
                                                 userData.setLooksCount(snapshot.child("looksCount").getValue(Long.class));
-//                    userData.setSubscribers(snapshot.child("subscribers").getValue(String.class));
+ //                                               userData.setSubscribers(snapshot.child("subscribers").getValue(String.class));
 //                                                userData.setFriends(snapshot.child("friends").getValue(String.class));
                                                 RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userData),
                                                         getActivity());

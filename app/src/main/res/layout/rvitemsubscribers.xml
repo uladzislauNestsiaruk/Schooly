@@ -33,7 +33,7 @@
         android:background="@drawable/corners10dpappcolor"
         android:fontFamily="@font/montserrat_bold"
         android:padding="8dp"
-        android:text="@string/add"
+        android:text="@string/subscride"
         android:textColor="@color/white"
         android:textSize="12sp" />
 
