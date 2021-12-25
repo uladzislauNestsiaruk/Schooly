@@ -74,13 +74,15 @@ public class SubscriptionsAdapterOther extends RecyclerView.Adapter<Subscription
             public void PassUserNick(String nick) {
                 Query query=firebaseModel.getUsersReference().child(nick)
                         .child("subscription").child(subscriber.getSub());
+                Log.d("######", "sub  "+subscriber.getSub());
                 query.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if (snapshot.exists()){
+                        if(snapshot.exists()){
                             holder.subscribe.setText("Отписаться");
                             holder.subscribe.setTextColor(Color.parseColor("#F3A2E5"));
                             holder.subscribe.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
+
                         }
                     }
 
@@ -98,17 +100,19 @@ public class SubscriptionsAdapterOther extends RecyclerView.Adapter<Subscription
                     @Override
                     public void PassUserNick(String nick) {
                         Log.d("####", "daa"+subscriber.getSub());
-                        firebaseModel.getReference().child("users").child(nick).child("friends")
+                        firebaseModel.getReference().child("users").child(nick).child("subscription")
                                 .child(subscriber.getSub()).removeValue();
                         firebaseModel.getReference().child("users")
-                                .child(nick).child("subscriders")
-                                .child(subscriber.getSub()).setValue(subscriber.getSub());
+                                .child(subscriber.getSub()).child("subscriders")
+                                .child(nick).setValue(subscriber.getSub());
                         if (subscriptionsCount!=-1) {
                             subscriptionsCount = subscriptionsCount - 1;
                             firebaseModel.getUsersReference().child(nick)
                                     .child("subscribersCount").setValue(subscriptionsCount);
                         }
-                        holder.subscribe.setText("Добавлен");
+                        holder.subscribe.setText("Подписаться");
+                        holder.subscribe.setTextColor(Color.parseColor("#FFFEFE"));
+                        holder.subscribe.setBackgroundResource(R.drawable.corners10dpappcolor);
                     }
                 });
             }

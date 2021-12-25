@@ -74,7 +74,7 @@ public class SubscribersAdapterOther extends RecyclerView.Adapter<SubscribersAda
             @Override
             public void PassUserNick(String nick) {
                 Query query=firebaseModel.getUsersReference().child(nick)
-                        .child("subscriptions").child(subscriber.getSub());
+                        .child("subscription").child(subscriber.getSub());
                 query.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -98,18 +98,36 @@ public class SubscribersAdapterOther extends RecyclerView.Adapter<SubscribersAda
                 RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
                     @Override
                     public void PassUserNick(String nick) {
-                        firebaseModel.getReference().child("users").child(nick).child("subscribers")
-                                .child(subscriber.getSub()).removeValue();
+                        Query query=firebaseModel.getUsersReference().child(nick)
+                                .child("subscription").child(subscriber.getSub());
+                        query.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                if (snapshot.exists()){
+                                    firebaseModel.getReference().child("users").child(nick).child("subscription")
+                                            .child(subscriber.getSub()).removeValue();
+                                    firebaseModel.getReference().child("users")
+                                            .child(subscriber.getSub()).child("subscribers")
+                                            .child(nick).removeValue();
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
                         firebaseModel.getReference().child("users")
-                                .child(nick).child("friends")
-                                .child(subscriber.getSub()).setValue(subscriber.getSub());
-                        if (subsCount!=-1){
-                            subsCount=subsCount-1;
-                            Log.d("#####","subsCount  "+subsCount);
+                                .child(subscriber.getSub()).child("subscribers")
+                                .child(nick).setValue(subscriber.getSub());
+                        if (subsCount!=-1) {
+                            subsCount = subsCount - 1;
                             firebaseModel.getUsersReference().child(nick)
                                     .child("subscribersCount").setValue(subsCount);
                         }
-                        holder.newSubscribe.setText("Добавлен");
+                        holder.newSubscribe.setText("Подписаться");
+                        holder.newSubscribe.setTextColor(Color.parseColor("#FFFEFE"));
+                        holder.newSubscribe.setBackgroundResource(R.drawable.corners10dpappcolor);
                     }
                 });
             }
