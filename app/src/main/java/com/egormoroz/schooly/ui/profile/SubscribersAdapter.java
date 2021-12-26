@@ -31,6 +31,8 @@ public class SubscribersAdapter extends RecyclerView.Adapter<SubscribersAdapter.
     private SubscribersAdapter.ItemClickListener clickListener;
     private FirebaseModel firebaseModel = new FirebaseModel();
     long subsCount;
+    boolean check=false;
+    int a=0;
 
     public  SubscribersAdapter(ArrayList<Subscriber> listAdapter) {
         this.listAdapter = listAdapter;
@@ -99,18 +101,51 @@ public class SubscribersAdapter extends RecyclerView.Adapter<SubscribersAdapter.
                 RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
                     @Override
                     public void PassUserNick(String nick) {
-                        firebaseModel.getReference().child("users").child(nick).child("subscribers")
-                                .child(subscriber.getSub()).removeValue();
-                        firebaseModel.getReference().child("users")
-                                .child(nick).child("friends")
-                                .child(subscriber.getSub()).setValue(subscriber.getSub());
-                        if (subsCount!=-1){
-                        subsCount=subsCount-1;
-                        Log.d("#####","subsCount  "+subsCount);
-                        firebaseModel.getUsersReference().child(nick)
-                                .child("subscribersCount").setValue(subsCount);
+                        Query query=firebaseModel.getUsersReference().child(nick)
+                                .child("subscription").child(subscriber.getSub());
+                        query.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                if(snapshot.exists()){
+                                    a=1;
+                                    Log.d("#####", "c  "+a);
+
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+                        Log.d("#####", "ff  "+a);
+                        if(a==0)  {
+                            Log.d("#####", "ab  "+a);
+                            firebaseModel.getReference().child("users").child(nick).child("subscription")
+                                    .child(subscriber.getSub()).setValue(subscriber.getSub());
+                            firebaseModel.getReference().child("users").child(subscriber.getSub()).child("subscribers")
+                                    .child(nick).setValue(nick);
+                            holder.addFriend.setText("Отписаться");
+                            holder.addFriend.setTextColor(Color.parseColor("#F3A2E5"));
+                            holder.addFriend.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
                         }
-                        holder.addFriend.setText("Добавлен");
+                        if (a==1){
+                            Log.d("#####", "one  "+a);
+                            firebaseModel.getReference().child("users").child(nick).child("subscription")
+                                    .child(subscriber.getSub()).removeValue();
+                            firebaseModel.getReference().child("users").child(subscriber.getSub()).child("subscribers")
+                                    .child(nick).removeValue();
+                            holder.addFriend.setText("Подписаться");
+                            holder.addFriend.setTextColor(Color.parseColor("#FFFEFE"));
+                            holder.addFriend.setBackgroundResource(R.drawable.corners10dpappcolor);
+                        }
+//                        if (subsCount!=-1){
+//                        subsCount=subsCount-1;
+//                        Log.d("#####","subsCount  "+subsCount);
+//                        firebaseModel.getUsersReference().child(nick)
+//                                .child("subscribersCount").setValue(subsCount);
+//                        }
+//                        holder.addFriend.setText("Добавлен");
                     }
                 });
             }
