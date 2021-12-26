@@ -128,6 +128,7 @@ public class SubscriptionsAdapter extends RecyclerView.Adapter<SubscriptionsAdap
                             holder.unsubscribe.setText("Подписаться");
                             holder.unsubscribe.setTextColor(Color.parseColor("#FFFEFE"));
                             holder.unsubscribe.setBackgroundResource(R.drawable.corners10dpappcolor);
+
                         }
 //                        if (subsCount!=-1){
 //                        subsCount=subsCount-1;
