@@ -122,6 +122,18 @@ public class SubscriptionsAdapter extends RecyclerView.Adapter<SubscriptionsAdap
                                 holder.unsubscribe.setTextColor(Color.parseColor("#F3A2E5"));
                                 holder.unsubscribe.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
                                 a=0;
+                                if (subscribersCount!=-1){
+                                    subscribersCount=subscribersCount+1;
+                                    Log.d("#####","subsCount  "+subscribersCount);
+                                    firebaseModel.getUsersReference().child(subscriber.getSub())
+                                            .child("subscribersCount").setValue(subscribersCount);
+                                }
+                                if (subscriptionsCount!=-1) {
+                                    subscriptionsCount = subscriptionsCount + 1;
+                                    Log.d("#####", "subsCount  " + subscriptionsCount);
+                                    firebaseModel.getUsersReference().child(nick)
+                                            .child("subscriptionCount").setValue(subscriptionsCount);
+                                }
                             }
                             if (a == 1) {
                                 Log.d("#####", "one  " + a);
@@ -133,16 +145,20 @@ public class SubscriptionsAdapter extends RecyclerView.Adapter<SubscriptionsAdap
                                 holder.unsubscribe.setTextColor(Color.parseColor("#FFFEFE"));
                                 holder.unsubscribe.setBackgroundResource(R.drawable.corners10dpappcolor);
                                 a=0;
-
+                                if (subscribersCount!=-1){
+                                    subscribersCount=subscribersCount-1;
+                                    Log.d("#####","subsCount  "+subscribersCount);
+                                    firebaseModel.getUsersReference().child(subscriber.getSub())
+                                            .child("subscribersCount").setValue(subscribersCount);
+                                }
+                                if (subscriptionsCount!=-1){
+                                    subscriptionsCount=subscriptionsCount-1;
+                                    Log.d("#####","subsCount  "+subscriptionsCount);
+                                    firebaseModel.getUsersReference().child(nick)
+                                            .child("subscriptionCount").setValue(subscriptionsCount);
+                                }
                             }
                         }
-//                        if (subsCount!=-1){
-//                        subsCount=subsCount-1;
-//                        Log.d("#####","subsCount  "+subsCount);
-//                        firebaseModel.getUsersReference().child(nick)
-//                                .child("subscribersCount").setValue(subsCount);
-//                        }
-//                        holder.addFriend.setText("Добавлен");
                     }
                 });
             }

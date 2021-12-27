@@ -162,6 +162,7 @@ public class ProfileFragment extends Fragment {
                 } catch (Exception ex) {
                     // Assuming default background color
                 }
+
                 ///////////////////////// set nickname /////////////////////
                 RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(),
                         firebaseModel,

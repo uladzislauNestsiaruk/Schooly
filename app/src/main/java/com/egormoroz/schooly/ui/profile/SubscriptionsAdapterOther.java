@@ -30,7 +30,7 @@ public class SubscriptionsAdapterOther extends RecyclerView.Adapter<Subscription
     ArrayList<Subscriber> listAdapter;
     private SubscriptionsAdapterOther.ItemClickListener clickListener;
     private FirebaseModel firebaseModel = new FirebaseModel();
-    long subscriptionsCount;
+    long subscriptionsCount,subscribersCount;
     int a;
 
     public SubscriptionsAdapterOther(ArrayList<Subscriber> listAdapter) {
@@ -70,6 +70,20 @@ public class SubscriptionsAdapterOther extends RecyclerView.Adapter<Subscription
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Subscriber subscriber=listAdapter.get(position);
         holder.otherUserNick.setText(subscriber.getSub());
+        Query query=firebaseModel.getUsersReference().child(subscriber.getSub())
+                .child("subscribersCount");
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                subscribersCount=snapshot.getValue(Long.class);
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @Override
             public void PassUserNick(String nick) {
@@ -131,6 +145,18 @@ public class SubscriptionsAdapterOther extends RecyclerView.Adapter<Subscription
                                 holder.subscribe.setTextColor(Color.parseColor("#F3A2E5"));
                                 holder.subscribe.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
                                 a=0;
+                                if (subscribersCount!=-1){
+                                    subscribersCount=subscribersCount+1;
+                                    Log.d("#####","subsCount  "+subscribersCount);
+                                    firebaseModel.getUsersReference().child(subscriber.getSub())
+                                            .child("subscribersCount").setValue(subscribersCount);
+                                }
+                                if (subscriptionsCount!=-1) {
+                                    subscriptionsCount = subscriptionsCount + 1;
+                                    Log.d("#####", "subsCount  " + subscriptionsCount);
+                                    firebaseModel.getUsersReference().child(nick)
+                                            .child("subscriptionCount").setValue(subscriptionsCount);
+                                }
                             }
                             if (a == 1) {
                                 Log.d("#####", "one  " + a);
@@ -142,6 +168,18 @@ public class SubscriptionsAdapterOther extends RecyclerView.Adapter<Subscription
                                 holder.subscribe.setTextColor(Color.parseColor("#FFFEFE"));
                                 holder.subscribe.setBackgroundResource(R.drawable.corners10dpappcolor);
                                 a=0;
+                                if (subscribersCount!=-1){
+                                    subscribersCount=subscribersCount-1;
+                                    Log.d("#####","subsCount  "+subscribersCount);
+                                    firebaseModel.getUsersReference().child(subscriber.getSub())
+                                            .child("subscribersCount").setValue(subscribersCount);
+                                }
+                                if (subscriptionsCount!=-1){
+                                    subscriptionsCount=subscriptionsCount-1;
+                                    Log.d("#####","subsCount  "+subscriptionsCount);
+                                    firebaseModel.getUsersReference().child(nick)
+                                            .child("subscriptionCount").setValue(subscriptionsCount);
+                                }
 
                             }
                         }
