@@ -31,6 +31,7 @@ public class SubscriptionsAdapterOther extends RecyclerView.Adapter<Subscription
     private SubscriptionsAdapterOther.ItemClickListener clickListener;
     private FirebaseModel firebaseModel = new FirebaseModel();
     long subscriptionsCount;
+    int a;
 
     public SubscriptionsAdapterOther(ArrayList<Subscriber> listAdapter) {
         this.listAdapter = listAdapter;
@@ -99,20 +100,58 @@ public class SubscriptionsAdapterOther extends RecyclerView.Adapter<Subscription
                 RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
                     @Override
                     public void PassUserNick(String nick) {
-                        Log.d("####", "daa"+subscriber.getSub());
-                        firebaseModel.getReference().child("users").child(nick).child("subscription")
-                                .child(subscriber.getSub()).removeValue();
-                        firebaseModel.getReference().child("users")
-                                .child(subscriber.getSub()).child("subscriders")
-                                .child(nick).setValue(subscriber.getSub());
-                        if (subscriptionsCount!=-1) {
-                            subscriptionsCount = subscriptionsCount - 1;
-                            firebaseModel.getUsersReference().child(nick)
-                                    .child("subscribersCount").setValue(subscriptionsCount);
+                        Query query=firebaseModel.getUsersReference().child(nick)
+                                .child("subscription").child(subscriber.getSub());
+                        query.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                if(snapshot.exists()){
+                                    a=1;
+                                    Log.d("#####", "c  "+a);
+
+                                }else{
+                                    a=2;
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+                        Log.d("#####", "ff  "+a);
+                        if(a!=0) {
+                            if (a == 2) {
+                                Log.d("#####", "ab  " + a);
+                                firebaseModel.getReference().child("users").child(nick).child("subscription")
+                                        .child(subscriber.getSub()).setValue(subscriber.getSub());
+                                firebaseModel.getReference().child("users").child(subscriber.getSub()).child("subscribers")
+                                        .child(nick).setValue(nick);
+                                holder.subscribe.setText("Отписаться");
+                                holder.subscribe.setTextColor(Color.parseColor("#F3A2E5"));
+                                holder.subscribe.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
+                                a=0;
+                            }
+                            if (a == 1) {
+                                Log.d("#####", "one  " + a);
+                                firebaseModel.getReference().child("users").child(nick).child("subscription")
+                                        .child(subscriber.getSub()).removeValue();
+                                firebaseModel.getReference().child("users").child(subscriber.getSub()).child("subscribers")
+                                        .child(nick).removeValue();
+                                holder.subscribe.setText("Подписаться");
+                                holder.subscribe.setTextColor(Color.parseColor("#FFFEFE"));
+                                holder.subscribe.setBackgroundResource(R.drawable.corners10dpappcolor);
+                                a=0;
+
+                            }
                         }
-                        holder.subscribe.setText("Подписаться");
-                        holder.subscribe.setTextColor(Color.parseColor("#FFFEFE"));
-                        holder.subscribe.setBackgroundResource(R.drawable.corners10dpappcolor);
+//                        if (subsCount!=-1){
+//                        subsCount=subsCount-1;
+//                        Log.d("#####","subsCount  "+subsCount);
+//                        firebaseModel.getUsersReference().child(nick)
+//                                .child("subscribersCount").setValue(subsCount);
+//                        }
+//                        holder.addFriend.setText("Добавлен");
                     }
                 });
             }

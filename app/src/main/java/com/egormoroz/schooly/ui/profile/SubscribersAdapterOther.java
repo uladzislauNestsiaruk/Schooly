@@ -31,6 +31,7 @@ public class SubscribersAdapterOther extends RecyclerView.Adapter<SubscribersAda
     private SubscribersAdapterOther.ItemClickListener clickListener;
     private FirebaseModel firebaseModel = new FirebaseModel();
     long subsCount;
+    int a;
 
     public  SubscribersAdapterOther(ArrayList<Subscriber> listAdapter) {
         this.listAdapter = listAdapter;
@@ -103,12 +104,12 @@ public class SubscribersAdapterOther extends RecyclerView.Adapter<SubscribersAda
                         query.addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                if (snapshot.exists()){
-                                    firebaseModel.getReference().child("users").child(nick).child("subscription")
-                                            .child(subscriber.getSub()).removeValue();
-                                    firebaseModel.getReference().child("users")
-                                            .child(subscriber.getSub()).child("subscribers")
-                                            .child(nick).removeValue();
+                                if(snapshot.exists()){
+                                    a=1;
+                                    Log.d("#####", "c  "+a);
+
+                                }else{
+                                    a=2;
                                 }
                             }
 
@@ -117,17 +118,39 @@ public class SubscribersAdapterOther extends RecyclerView.Adapter<SubscribersAda
 
                             }
                         });
-                        firebaseModel.getReference().child("users")
-                                .child(subscriber.getSub()).child("subscribers")
-                                .child(nick).setValue(subscriber.getSub());
-                        if (subsCount!=-1) {
-                            subsCount = subsCount - 1;
-                            firebaseModel.getUsersReference().child(nick)
-                                    .child("subscribersCount").setValue(subsCount);
+                        Log.d("#####", "ff  "+a);
+                        if(a!=0) {
+                            if (a == 2) {
+                                Log.d("#####", "ab  " + a);
+                                firebaseModel.getReference().child("users").child(nick).child("subscription")
+                                        .child(subscriber.getSub()).setValue(subscriber.getSub());
+                                firebaseModel.getReference().child("users").child(subscriber.getSub()).child("subscribers")
+                                        .child(nick).setValue(nick);
+                                holder.newSubscribe.setText("Отписаться");
+                                holder.newSubscribe.setTextColor(Color.parseColor("#F3A2E5"));
+                                holder.newSubscribe.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
+                                a=0;
+                            }
+                            if (a == 1) {
+                                Log.d("#####", "one  " + a);
+                                firebaseModel.getReference().child("users").child(nick).child("subscription")
+                                        .child(subscriber.getSub()).removeValue();
+                                firebaseModel.getReference().child("users").child(subscriber.getSub()).child("subscribers")
+                                        .child(nick).removeValue();
+                                holder.newSubscribe.setText("Подписаться");
+                                holder.newSubscribe.setTextColor(Color.parseColor("#FFFEFE"));
+                                holder.newSubscribe.setBackgroundResource(R.drawable.corners10dpappcolor);
+                                a=0;
+
+                            }
                         }
-                        holder.newSubscribe.setText("Подписаться");
-                        holder.newSubscribe.setTextColor(Color.parseColor("#FFFEFE"));
-                        holder.newSubscribe.setBackgroundResource(R.drawable.corners10dpappcolor);
+//                        if (subsCount!=-1){
+//                        subsCount=subsCount-1;
+//                        Log.d("#####","subsCount  "+subsCount);
+//                        firebaseModel.getUsersReference().child(nick)
+//                                .child("subscribersCount").setValue(subsCount);
+//                        }
+//                        holder.addFriend.setText("Добавлен");
                     }
                 });
             }
