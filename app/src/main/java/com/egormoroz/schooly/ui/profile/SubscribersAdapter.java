@@ -110,6 +110,8 @@ public class SubscribersAdapter extends RecyclerView.Adapter<SubscribersAdapter.
                                     a=1;
                                     Log.d("#####", "c  "+a);
 
+                                }else{
+                                    a=2;
                                 }
                             }
 
@@ -119,25 +121,30 @@ public class SubscribersAdapter extends RecyclerView.Adapter<SubscribersAdapter.
                             }
                         });
                         Log.d("#####", "ff  "+a);
-                        if(a==0)  {
-                            Log.d("#####", "ab  "+a);
-                            firebaseModel.getReference().child("users").child(nick).child("subscription")
-                                    .child(subscriber.getSub()).setValue(subscriber.getSub());
-                            firebaseModel.getReference().child("users").child(subscriber.getSub()).child("subscribers")
-                                    .child(nick).setValue(nick);
-                            holder.addFriend.setText("Отписаться");
-                            holder.addFriend.setTextColor(Color.parseColor("#F3A2E5"));
-                            holder.addFriend.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
-                        }
-                        if (a==1){
-                            Log.d("#####", "one  "+a);
-                            firebaseModel.getReference().child("users").child(nick).child("subscription")
-                                    .child(subscriber.getSub()).removeValue();
-                            firebaseModel.getReference().child("users").child(subscriber.getSub()).child("subscribers")
-                                    .child(nick).removeValue();
-                            holder.addFriend.setText("Подписаться");
-                            holder.addFriend.setTextColor(Color.parseColor("#FFFEFE"));
-                            holder.addFriend.setBackgroundResource(R.drawable.corners10dpappcolor);
+                        if(a!=0) {
+                            if (a == 2) {
+                                Log.d("#####", "ab  " + a);
+                                firebaseModel.getReference().child("users").child(nick).child("subscription")
+                                        .child(subscriber.getSub()).setValue(subscriber.getSub());
+                                firebaseModel.getReference().child("users").child(subscriber.getSub()).child("subscribers")
+                                        .child(nick).setValue(nick);
+                                holder.addFriend.setText("Отписаться");
+                                holder.addFriend.setTextColor(Color.parseColor("#F3A2E5"));
+                                holder.addFriend.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
+                                a=0;
+                            }
+                            if (a == 1) {
+                                Log.d("#####", "one  " + a);
+                                firebaseModel.getReference().child("users").child(nick).child("subscription")
+                                        .child(subscriber.getSub()).removeValue();
+                                firebaseModel.getReference().child("users").child(subscriber.getSub()).child("subscribers")
+                                        .child(nick).removeValue();
+                                holder.addFriend.setText("Подписаться");
+                                holder.addFriend.setTextColor(Color.parseColor("#FFFEFE"));
+                                holder.addFriend.setBackgroundResource(R.drawable.corners10dpappcolor);
+                                a=0;
+
+                            }
                         }
 //                        if (subsCount!=-1){
 //                        subsCount=subsCount-1;

@@ -31,7 +31,7 @@ public class SubscriptionsAdapter extends RecyclerView.Adapter<SubscriptionsAdap
     private SubscriptionsAdapter.ItemClickListener clickListener;
     private FirebaseModel firebaseModel = new FirebaseModel();
     long subscriptionsCount,subscribersCount;
-    int a=0;
+    int a;
 
     public SubscriptionsAdapter(ArrayList<Subscriber> listAdapter) {
         this.listAdapter = listAdapter;
@@ -100,6 +100,8 @@ public class SubscriptionsAdapter extends RecyclerView.Adapter<SubscriptionsAdap
                                     a=1;
                                     Log.d("#####", "c  "+a);
 
+                                }else{
+                                    a=2;
                                 }
                             }
 
@@ -109,26 +111,30 @@ public class SubscriptionsAdapter extends RecyclerView.Adapter<SubscriptionsAdap
                             }
                         });
                         Log.d("#####", "ff  "+a);
-                        if(a==0)  {
-                            Log.d("#####", "ab  "+a);
-                            firebaseModel.getReference().child("users").child(nick).child("subscription")
-                                    .child(subscriber.getSub()).setValue(subscriber.getSub());
-                            firebaseModel.getReference().child("users").child(subscriber.getSub()).child("subscribers")
-                                    .child(nick).setValue(nick);
-                            holder.unsubscribe.setText("Отписаться");
-                            holder.unsubscribe.setTextColor(Color.parseColor("#F3A2E5"));
-                            holder.unsubscribe.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
-                        }
-                        if (a==1){
-                            Log.d("#####", "one  "+a);
-                            firebaseModel.getReference().child("users").child(nick).child("subscription")
-                                    .child(subscriber.getSub()).removeValue();
-                            firebaseModel.getReference().child("users").child(subscriber.getSub()).child("subscribers")
-                                    .child(nick).removeValue();
-                            holder.unsubscribe.setText("Подписаться");
-                            holder.unsubscribe.setTextColor(Color.parseColor("#FFFEFE"));
-                            holder.unsubscribe.setBackgroundResource(R.drawable.corners10dpappcolor);
+                        if(a!=0) {
+                            if (a == 2) {
+                                Log.d("#####", "ab  " + a);
+                                firebaseModel.getReference().child("users").child(nick).child("subscription")
+                                        .child(subscriber.getSub()).setValue(subscriber.getSub());
+                                firebaseModel.getReference().child("users").child(subscriber.getSub()).child("subscribers")
+                                        .child(nick).setValue(nick);
+                                holder.unsubscribe.setText("Отписаться");
+                                holder.unsubscribe.setTextColor(Color.parseColor("#F3A2E5"));
+                                holder.unsubscribe.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
+                                a=0;
+                            }
+                            if (a == 1) {
+                                Log.d("#####", "one  " + a);
+                                firebaseModel.getReference().child("users").child(nick).child("subscription")
+                                        .child(subscriber.getSub()).removeValue();
+                                firebaseModel.getReference().child("users").child(subscriber.getSub()).child("subscribers")
+                                        .child(nick).removeValue();
+                                holder.unsubscribe.setText("Подписаться");
+                                holder.unsubscribe.setTextColor(Color.parseColor("#FFFEFE"));
+                                holder.unsubscribe.setBackgroundResource(R.drawable.corners10dpappcolor);
+                                a=0;
 
+                            }
                         }
 //                        if (subsCount!=-1){
 //                        subsCount=subsCount-1;
