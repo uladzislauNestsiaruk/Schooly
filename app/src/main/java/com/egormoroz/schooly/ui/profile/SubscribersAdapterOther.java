@@ -110,6 +110,7 @@ public class SubscribersAdapterOther extends RecyclerView.Adapter<SubscribersAda
 
                                 }else{
                                     a=2;
+
                                 }
                             }
 
