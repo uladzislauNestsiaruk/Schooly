@@ -1,12 +1,15 @@
 package com.egormoroz.schooly.ui.main;
 
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.IBinder;
+import android.os.Vibrator;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -42,12 +45,17 @@ public class NontificationService extends Service {
     Subscriber otherUserNickNonts;
     String name;
 
+//    @Override
+//    public void onCreate() {
+//        startForeground(6, getNotification());
+//    }
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         firebaseModel.initAll();
         getChangesInSubscribers();
         createNotificationChannel();
-        return super.onStartCommand(intent, flags, startId);
+        return Service.START_STICKY;
     }
 
 
@@ -71,6 +79,24 @@ public class NontificationService extends Service {
         createNotificationChannel();
         getChangesInSubscribers();
     }
+    public Notification getNotification()
+    {
+
+        Intent intent = new Intent(this, NontificationService.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this,0,intent,0);
+
+
+        NotificationCompat.Builder foregroundNotification = new NotificationCompat.Builder(this);
+        foregroundNotification.setOngoing(true);
+
+        foregroundNotification.setContentTitle("MY Foreground Notification")
+                .setContentText("This is the first foreground notification Peace")
+                .setSmallIcon(android.R.drawable.ic_btn_speak_now)
+                .setContentIntent(pendingIntent);
+
+
+        return foregroundNotification.build();
+    }
 
     public void getChangesInSubscribers(){
 //        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
@@ -91,7 +117,7 @@ public class NontificationService extends Service {
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @Override
             public void PassUserNick(String nick) {
-                Query query=firebaseModel.getUsersReference().child(nick).child("subscribers");
+                Query query=firebaseModel.getUsersReference().child(nick).child("nontifications");
                 query.addChildEventListener(new ChildEventListener() {
                     @Override
                     public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
@@ -140,7 +166,7 @@ public class NontificationService extends Service {
                 PendingIntent.FLAG_CANCEL_CURRENT);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_schoolycoin)
+                .setSmallIcon(R.drawable.ic_nontification_image)
                 .setContentTitle(name)
                 .setContentText("хочет добавить вас в друзья")
                 .setContentIntent(contentIntent)
@@ -150,6 +176,9 @@ public class NontificationService extends Service {
                 NotificationManagerCompat.from(this);
         notificationManager.notify(NOTIFY_ID, builder.build());
         Log.d("######", "good");
+        Vibrator v = (Vibrator) getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
+// Vibrate for 500 milliseconds
+        v.vibrate(400);
     }
 
 }
