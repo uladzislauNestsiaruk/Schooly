@@ -32,6 +32,7 @@ import com.egormoroz.schooly.ModelSurfaceView;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.SceneLoader;
+import com.egormoroz.schooly.Subscriber;
 import com.egormoroz.schooly.ui.main.ChatActivity;
 import com.egormoroz.schooly.ui.main.UserInformation;
 import com.egormoroz.schooly.ui.profile.Wardrobe.WardrobeFragment;
@@ -46,6 +47,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class ProfileFragment extends Fragment {
     private static String sendNickString;
@@ -303,9 +305,10 @@ public class ProfileFragment extends Fragment {
                 otherLooksCount=view.findViewById(R.id.looksCountOther);
                 otherSubscriptionCount=view.findViewById(R.id.subscriptionCountOther);
                 otherSubscribersCount=view.findViewById(R.id.subsCountOther);
-                otherSubscriptionCount.setText(String.valueOf(info.getSubscriptionCount()));
-                otherLooksCount.setText(String.valueOf(info.getLooksCount()));
-                otherSubscribersCount.setText(String.valueOf(info.getSubscribersCount()));
+                setCountsOther();
+//                otherSubscriptionCount.setText(String.valueOf(info.getSubscriptionCount()));
+//                otherLooksCount.setText(String.valueOf(info.getLooksCount()));
+//                otherSubscribersCount.setText(String.valueOf(info.getSubscribersCount()));
 
 
                 linearSubscriptions=view.findViewById(R.id.subscriptionLinear);
@@ -403,30 +406,16 @@ public class ProfileFragment extends Fragment {
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @Override
             public void PassUserNick(String nick) {
-                Query query=firebaseModel.getUsersReference().child(nick).
-                        child("subscribersCount");
-                query.addValueEventListener(new ValueEventListener() {
+                RecentMethods.getSubscriptionList(nick, firebaseModel, new Callbacks.getFriendsList() {
                     @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        subscribersCount.setText(String.valueOf(snapshot.getValue(Long.class)));
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
+                    public void getFriendsList(ArrayList<Subscriber> friends) {
+                        subscriptionsCount.setText(String.valueOf(friends.size()));
                     }
                 });
-                Query query1=firebaseModel.getUsersReference().child(nick).
-                        child("subscriptionCount");
-                query1.addValueEventListener(new ValueEventListener() {
+                RecentMethods.getSubscribersList(nick, firebaseModel, new Callbacks.getSubscribersList() {
                     @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        subscriptionsCount.setText(String.valueOf(snapshot.getValue(Long.class)));
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
+                    public void getSubscribersList(ArrayList<Subscriber> subscribers) {
+                        subscribersCount.setText(String.valueOf(subscribers.size()));
                     }
                 });
                 Query query2=firebaseModel.getUsersReference().child(nick).
@@ -446,52 +435,33 @@ public class ProfileFragment extends Fragment {
         });
     }
 
-//    public void setCountsOther() {
-//        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-//            @Override
-//            public void PassUserNick(String nick) {
-//                Query query = firebaseModel.getUsersReference().child(info.getNick()).
-//                        child("subscribersCount");
-//                query.addValueEventListener(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                        otherSubscribersCount.setText(String.valueOf(snapshot.getValue(Long.class)));
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(@NonNull DatabaseError error) {
-//
-//                    }
-//                });
-//                Query query1 = firebaseModel.getUsersReference().child(info.getNick()).
-//                        child("friendsCount");
-//                query1.addValueEventListener(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                        otherFriendsCount.setText(String.valueOf(snapshot.getValue(Long.class)));
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(@NonNull DatabaseError error) {
-//
-//                    }
-//                });
-//                Query query2 = firebaseModel.getUsersReference().child(info.getNick()).
-//                        child("looksCount");
-//                query2.addValueEventListener(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                        otherLooksCount.setText(String.valueOf(snapshot.getValue(Long.class)));
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(@NonNull DatabaseError error) {
-//
-//                    }
-//                });
-//            }
-//        });
-//    }
+    public void setCountsOther() {
+        RecentMethods.getSubscriptionList(info.getNick(), firebaseModel, new Callbacks.getFriendsList() {
+            @Override
+            public void getFriendsList(ArrayList<Subscriber> friends) {
+                otherSubscriptionCount.setText(String.valueOf(friends.size()));
+            }
+        });
+        RecentMethods.getSubscribersList(info.getNick(), firebaseModel, new Callbacks.getSubscribersList() {
+            @Override
+            public void getSubscribersList(ArrayList<Subscriber> subscribers) {
+                otherSubscribersCount.setText(String.valueOf(subscribers.size()));
+            }
+        });
+        Query query2=firebaseModel.getUsersReference().child(info.getNick()).
+                child("looksCount");
+        query2.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                otherLooksCount.setText(String.valueOf(snapshot.getValue(Long.class)));
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
 
     public GLSurfaceView getGLView() {
         return mainLook;

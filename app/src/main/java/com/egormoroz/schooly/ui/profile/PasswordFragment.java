@@ -32,6 +32,7 @@ public class PasswordFragment extends Fragment {
     FirebaseModel firebaseModel=new FirebaseModel();
     TextView userNick,userNumber,userPassword;
     String userNickString;
+    ImageView backToSettings;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -46,6 +47,13 @@ public class PasswordFragment extends Fragment {
     @Override
     public void onViewCreated(@Nullable View view, @NonNull Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
+        backToSettings=view.findViewById(R.id.back_tosettings);
+        backToSettings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RecentMethods.setCurrentFragment(SettingsFragment.newInstance(), getActivity());
+            }
+        });
 
     }
 }

@@ -1017,6 +1017,29 @@ public class RecentMethods {
 
 
   }
+  public static void getLooksList(String nickName, FirebaseModel model, Callbacks.getSubscribersList callback){
+    model.initAll();
+    Query query=model.getUsersReference().child(nickName).child("looks");
+    query.addListenerForSingleValueEvent(new ValueEventListener() {
+      @Override
+      public void onDataChange(@NonNull DataSnapshot snapshot) {
+        ArrayList<Subscriber> subscribersList = new ArrayList<>();
+        for (DataSnapshot snap:snapshot.getChildren()){
+          Subscriber subscriber=new Subscriber();
+          subscriber.setSub(snap.getValue(String.class));
+          subscribersList.add(subscriber);
+        }
+        callback.getSubscribersList(subscribersList);
+      }
+
+      @Override
+      public void onCancelled(@NonNull DatabaseError error) {
+
+      }
+    });
+
+
+  }
 
   public static void getNontificationsList(String nickName, FirebaseModel model, Callbacks.getSubscribersList callback){
     model.initAll();
@@ -1087,21 +1110,6 @@ public class RecentMethods {
     }
   }
 
-  public static void getSubscrigersCount(String nick,FirebaseModel firebaseModel,Callbacks.getSubsCount callback){
-    Query query=firebaseModel.getUsersReference().child(nick)
-            .child("subscribersCount");
-    query.addValueEventListener(new ValueEventListener() {
-      @Override
-      public void onDataChange(@NonNull DataSnapshot snapshot) {
-        callback.getCount(snapshot.getValue(Long.class));
-      }
-
-      @Override
-      public void onCancelled(@NonNull DatabaseError error) {
-
-      }
-    });
-  }
 
   public static String getCurrentTime() {
     String time;

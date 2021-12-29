@@ -164,5 +164,7 @@
     <string name="subscride">Подписаться</string>
     <string name="unsubscride">Отписаться</string>
 
+    <string name="changepassword">Смена пароля</string>
+
 
 </resources>
