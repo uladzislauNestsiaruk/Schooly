@@ -22,6 +22,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FirebaseModel;
@@ -56,14 +58,16 @@ public class ProfileFragment extends Fragment {
     String type,nicknameCallback;
     UserInformation info;
     TextView nickname,message,biographyTextView,looksCount,subscriptionsCount,subscribersCount,otherLooksCount,otherSubscriptionCount,
-    otherSubscribersCount;
+    otherSubscribersCount,createNewLookText,createNewLook;
     DatabaseReference user;
     SceneLoader scene;
     LinearLayout linearLooks,linearSubscribers,linearSubscriptions;
     ModelSurfaceView modelSurfaceView;
     GLSurfaceView mainLook;
     ModelRenderer modelRenderer;
+    RecyclerView looksRecycler;
     long subsCount,subscriptionCount;
+    int looksListSize;
     private float[] backgroundColor = new float[]{0f, 0f, 0f, 1.0f};
     private Handler handler;
 
@@ -251,6 +255,26 @@ public class ProfileFragment extends Fragment {
                         RecentMethods.setCurrentFragment(SubscriptionsFragment.newInstance(), getActivity());
                     }
                 });
+                /////////////////LOOKS///////////////
+                createNewLook=view.findViewById(R.id.CreateYourLook);
+                createNewLookText=view.findViewById(R.id.textCreateYourLook);
+                looksRecycler=view.findViewById(R.id.looksRecycler);
+                looksRecycler.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+                RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+                    @Override
+                    public void PassUserNick(String nick) {
+                        RecentMethods.getLooksList(nick, firebaseModel, new Callbacks.getSubscribersList() {
+                            @Override
+                            public void getSubscribersList(ArrayList<Subscriber> subscribers) {
+                                looksListSize=subscribers.size();
+                            }
+                        });
+                    }
+                });
+                if (looksListSize==0){
+                    createNewLookText.setVisibility(View.VISIBLE);
+                    createNewLook.setVisibility(View.VISIBLE);
+                }
 
                 handler = new Handler(getMainLooper());
                 scene = new SceneLoader(this);
