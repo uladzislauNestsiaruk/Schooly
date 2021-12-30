@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -31,9 +32,12 @@ public class PasswordFragment extends Fragment {
     }
 
     FirebaseModel firebaseModel=new FirebaseModel();
-    TextView userNumber,userPassword,next,errorText,editUsePassword;
+    TextView userNumber,userPassword,next,errorText,errorTextNewPassword,textCreateNewPassword,textRepeatNewPassword
+            ,enterUsePassword;
+    EditText editUsePassword,editTextCreateNewPassword,editTextRepeatNewPassword;
     String passwordFromBase;
     ImageView backToSettings;
+    int a=0;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -42,6 +46,24 @@ public class PasswordFragment extends Fragment {
         BottomNavigationView bnv = getActivity().findViewById(R.id.bottomNavigationView);
         bnv.setVisibility(bnv.GONE);
         firebaseModel.initAll();
+        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+            @Override
+            public void PassUserNick(String nick) {
+                Query query=firebaseModel.getUsersReference().child(nick)
+                        .child("password");
+                query.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        passwordFromBase=snapshot.getValue(String.class);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+            }
+        });
         return root;
     }
 
@@ -57,33 +79,49 @@ public class PasswordFragment extends Fragment {
         });
         next=view.findViewById(R.id.next);
         errorText=view.findViewById(R.id.errorText);
+        enterUsePassword=view.findViewById(R.id.textenterpassword);
+        textCreateNewPassword=view.findViewById(R.id.textCreateNewPassword);
+        textRepeatNewPassword=view.findViewById(R.id.textRepeatNewPassword);
         editUsePassword=view.findViewById(R.id.edittextenterpassword);
+        editTextCreateNewPassword=view.findViewById(R.id.ediTextCreateNewPassword);
+        editTextRepeatNewPassword=view.findViewById(R.id.editTextRepeatNewPassword);
+        errorTextNewPassword=view.findViewById(R.id.errorTextNewPassword);
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String passwordEditText = editUsePassword.getText().toString();
-                RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-                    @Override
-                    public void PassUserNick(String nick) {
-                        Query query=firebaseModel.getUsersReference().child(nick)
-                                .child("password");
-                        query.addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                passwordFromBase=snapshot.getValue(String.class);
-                            }
+                if(a==0) {
+                    String passwordEditText = editUsePassword.getText().toString();
+                    if (passwordEditText.equals(passwordFromBase)) {
+                        editTextCreateNewPassword.setVisibility(View.VISIBLE);
+                        editTextRepeatNewPassword.setVisibility(View.VISIBLE);
+                        errorTextNewPassword.setVisibility(View.VISIBLE);
+                        textCreateNewPassword.setVisibility(View.VISIBLE);
+                        textRepeatNewPassword.setVisibility(View.VISIBLE);
+                        editUsePassword.setVisibility(View.GONE);
+                        errorText.setVisibility(View.GONE);
+                        enterUsePassword.setVisibility(View.GONE);
+                        next.setText(R.string.change);
+                        a = 1;
+                    } else {
+                        errorText.setText(R.string.errortext);
 
+                    }
+                }else if(a==1){
+                    String getNewPasswordOne=editTextCreateNewPassword.getText().toString();
+                    String getNewPasswordTwo=editTextRepeatNewPassword.getText().toString();
+                    if(getNewPasswordOne.equals(getNewPasswordTwo)){
+                        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
                             @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
-
+                            public void PassUserNick(String nick) {
+                                firebaseModel.getUsersReference().child(nick).child("password")
+                                        .removeValue();
+                                firebaseModel.getUsersReference().child(nick).child("password")
+                                        .setValue(getNewPasswordOne);
                             }
                         });
+                    }else {
+                        errorTextNewPassword.setText(R.string.passwordNotEquals);
                     }
-                });
-                if(passwordEditText.equals(passwordFromBase)){
-                    Log.d("#####", "suck");
-                }else {
-                    errorText.setText(R.string.errortext);
                 }
             }
         });

@@ -170,6 +170,11 @@
 
     <string name="сreateYourFirstLook">Создай свой первый образ!</string>
     <string name="сreate">Создать</string>
+    <string name="сreateNewPassword">Придумай новый пароль</string>
+    <string name="repeatPassword">Повтори пароль</string>
+    <string name="passwordNotEquals">Пароли не совпадают</string>
+
+    <string name="myClothes">Моя одежда</string>
 
 
 </resources>

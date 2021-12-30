@@ -12,6 +12,7 @@ import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+
 public class RegisrtationstartFragment extends Fragment {
     public static RegisrtationstartFragment newInstance(){return new RegisrtationstartFragment();}
     Button RegistrationButton;

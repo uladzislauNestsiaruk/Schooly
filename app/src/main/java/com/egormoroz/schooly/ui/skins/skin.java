@@ -8,7 +8,6 @@ import com.egormoroz.schooly.ui.chat.User;
 import java.util.ArrayList;
 
 
-
 public class skin
 {
 

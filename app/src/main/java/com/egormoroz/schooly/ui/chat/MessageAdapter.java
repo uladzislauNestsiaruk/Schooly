@@ -8,24 +8,19 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.load.model.Model;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.ui.chat.holders.ImageViewerActivity;
 import com.egormoroz.schooly.ui.chat.holders.VoicePlayer;
 import com.egormoroz.schooly.ui.main.ChatActivity;
-import com.google.android.filament.Camera;
-import com.google.android.filament.Filament;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -104,13 +99,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     public MessageViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext())
                 .inflate(R.layout.custom_messages_layout, viewGroup, false);
-        if (!messageReceiverId.isEmpty() && !messageSenderId.isEmpty()) {
-            reference = FirebaseDatabase.getInstance().getReference("users").child(messageSenderId).child("Chats").child(messageReceiverId).child("Messages");
-            usersRef = FirebaseDatabase.getInstance().getReference().child("users");
-        }
-        else
-            reference = FirebaseDatabase.getInstance().getReference("users").child("Groups").child(messageSenderId).child("Messages");
-            usersRef = FirebaseDatabase.getInstance().getReference().child("users").child("Groups");
+        reference = FirebaseDatabase.getInstance().getReference("users").child(messageSenderId).child("Chats").child(messageReceiverId).child("Messages");
+        usersRef = FirebaseDatabase.getInstance().getReference().child("users");
         return new MessageViewHolder(view);
     }
 
@@ -120,7 +110,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
 
         Message messages = userMessagesList.get(position);
-        Log.d("Chat", String.valueOf(userMessagesList.size()));
         fromUserID = messages.getFrom();
         String fromMessageType = messages.getType();
 

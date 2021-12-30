@@ -30,6 +30,7 @@ import com.google.firebase.auth.PhoneAuthProvider.OnVerificationStateChangedCall
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.TimeUnit;
+
 public class PhoneCodeActivity extends AppCompatActivity {
     final int PhoneSMSResend = 30000;
     final int Second = 1000;
@@ -96,7 +97,7 @@ public class PhoneCodeActivity extends AppCompatActivity {
     }
     /////////////////////// SMS CODE METHODS /////////////////
     public void sendSMS(){
-        callbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+        callbacks = new OnVerificationStateChangedCallbacks() {
             @Override
             public void onVerificationCompleted(@NonNull @NotNull PhoneAuthCredential credential) {
                 Log.d(TAG, "Verification completed with: " + credential);

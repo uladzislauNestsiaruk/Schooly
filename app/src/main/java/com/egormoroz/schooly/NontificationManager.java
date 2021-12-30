@@ -1,4 +1,4 @@
-//package com.egormoroz.schooly;
+package com.egormoroz.schooly;//package com.egormoroz.schooly;
 //
 //import android.util.Log;
 //

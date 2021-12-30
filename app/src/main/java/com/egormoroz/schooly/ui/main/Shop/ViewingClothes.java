@@ -29,8 +29,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.squareup.picasso.Picasso;
 
 public class ViewingClothes extends Fragment {
-    public static com.egormoroz.schooly.ui.main.Shop.ViewingClothes newInstance() {
-        return new com.egormoroz.schooly.ui.main.Shop.ViewingClothes();
+    public static ViewingClothes newInstance() {
+        return new ViewingClothes();
 
     }
 

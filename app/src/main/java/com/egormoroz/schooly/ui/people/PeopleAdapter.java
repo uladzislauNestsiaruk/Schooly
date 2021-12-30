@@ -18,6 +18,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+
 public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.ViewHolder> {
 
     List<UserPeopleAdapter> listAdapterPeople;

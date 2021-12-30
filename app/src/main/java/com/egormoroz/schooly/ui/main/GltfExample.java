@@ -1,4 +1,4 @@
-//package com.egormoroz.schooly.ui.main;
+package com.egormoroz.schooly.ui.main;//package com.egormoroz.schooly.ui.main;
 //
 //import com.badlogic.gdx.ApplicationAdapter;
 //import com.badlogic.gdx.Gdx;

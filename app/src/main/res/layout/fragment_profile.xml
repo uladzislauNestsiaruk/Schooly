@@ -26,6 +26,15 @@
                 android:layout_marginEnd="24dp"
                 android:layout_marginTop="16dp"/>
 
+            <ImageView
+                android:id="@+id/Plus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_plus"
+                android:layout_alignParentRight="true"
+                android:layout_marginEnd="72dp"
+                android:layout_marginTop="16dp"/>
+
             <TextView
                 android:id="@+id/biography"
                 android:layout_width="wrap_content"
@@ -137,7 +146,7 @@
                 android:text="@string/wardrobe"
                 android:textSize="18sp"
                 android:textColor="@color/app_color"
-                android:fontFamily="@font/montserrat_bold"
+                android:fontFamily="@font/montserrat_extrabold"
                 android:layout_below="@id/mainlookview"
                 android:layout_marginTop="24dp"
                 android:layout_marginStart="24dp" />
@@ -150,25 +159,33 @@
                 android:layout_alignParentEnd="true"
                 android:layout_marginEnd="24dp"
                 android:layout_marginTop="28dp"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerProfileToWardrobe"
+                android:layout_width="match_parent"
+                android:layout_height="260dp"
+                android:layout_marginTop="4dp"
+                android:orientation="horizontal"
+                android:layout_below="@+id/shielf"
+                android:scrollbars="none"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
             <TextView
-                android:id="@+id/newLook"
+                android:id="@+id/looksText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/newlook"
-                android:textColor="@color/white"
-                android:textSize="16sp"
-                android:padding="8dp"
-                android:background="@drawable/corners14appcolor"
-                android:layout_below="@id/shielf"
+                android:text="@string/looks"
+                android:textColor="@color/app_color"
+                android:textSize="18sp"
+                android:layout_marginStart="24dp"
+                android:layout_below="@id/recyclerProfileToWardrobe"
                 android:fontFamily="@font/montserrat_extrabold"
-                android:layout_marginTop="178dp"
-                android:layout_centerHorizontal="true" />
+                android:layout_marginTop="16dp"/>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/looksRecycler"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/newLook"
+                android:layout_below="@+id/looksText"
                 android:layout_marginTop="16dp"
                 android:orientation="vertical"
                 android:scrollbars="none" />
@@ -181,7 +198,7 @@
                 android:textSize="18sp"
                 android:fontFamily="@font/montserrat_bold"
                 android:textColor="@color/app_color"
-                android:layout_below="@+id/newLook"
+                android:layout_below="@+id/looksText"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="48dp"
                 android:visibility="gone"/>

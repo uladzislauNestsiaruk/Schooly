@@ -1,5 +1,8 @@
 package com.egormoroz.schooly.ui.news;
 
+import android.annotation.SuppressLint;
+import android.os.Build;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +19,7 @@ import com.egormoroz.schooly.RecentMethods;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
@@ -24,7 +28,8 @@ import java.util.List;
 
 public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolder> {
 
-    private final List<NewsItem> newsList;
+    private List<NewsItem> newsList;
+    public static String newsId, likeWord;
     FirebaseModel firebaseModel = new FirebaseModel();
     long value;
 
@@ -53,7 +58,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
             @Override
             public void PassUserNick(String nick) {
                 Query likeref = firebaseModel.getUsersReference().child(nick).child("likedNews").child(newsItem.getNewsId());
-                likeref.addListenerForSingleValueEvent(new ValueEventListener() {
+                likeref.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         if (snapshot.exists()) {
@@ -75,27 +80,26 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
                     public void onClick(View view) {
                         value = Long.parseLong(holder.like_count.getText().toString());
                         Query likeref = firebaseModel.getUsersReference().child(nick).child("likedNews").child(newsItem.getNewsId());
-                        likeref.addListenerForSingleValueEvent(new ValueEventListener() {
+                        likeref.addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
                                 if (snapshot.exists()) {
                                     value -= 1;
-                                    firebaseModel.getReference("news").child(newsItem.getNewsId()).child("likesCount").setValue(String.valueOf(value));
                                     holder.like.setImageResource(R.drawable.ic_heart40dp);
                                     firebaseModel.getReference("users").child(nick).child("likedNews").child(newsItem.getNewsId()).removeValue();
-                                } else {
+                                }
+                                else {
                                     value += 1;
-                                    firebaseModel.getReference("news").child(newsItem.getNewsId()).child("likesCount").setValue(String.valueOf(value));
                                     holder.like.setImageResource(R.drawable.ic_pressedheart40dp);
                                     firebaseModel.getReference("users").child(nick).child("likedNews").child(newsItem.getNewsId()).setValue("liked");
                                 }
+                                firebaseModel.getReference("news").child(newsItem.getNewsId()).child("likesCount").setValue(String.valueOf(value));
                             }
 
                             @Override
                             public void onCancelled(@NonNull DatabaseError error) {
 
                             }
-
                         });
                     }
                 });
@@ -108,7 +112,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
         return newsList.size();
     }
 
-    static class ImageViewHolder extends RecyclerView.ViewHolder {
+    class ImageViewHolder extends RecyclerView.ViewHolder {
 
         ImageView newsImage, like, comment;
         TextView description, like_count;

@@ -114,23 +114,25 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
             android:layout_marginTop="283dp"
-            android:text="@string/tests"
+            android:text="@string/myClothes"
             android:layout_below="@id/relativeshop"
             android:textColor="@color/grey"
             android:fontFamily="@font/montserratblack"
             android:textSize="20sp"/>
 
-        <TextView
-            android:id="@+id/famous"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:id="@+id/relativeFirstClothes"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/tests"
-            android:layout_marginLeft="24dp"
-            android:layout_marginTop="12dp"
-            android:text="@string/popular"
-            android:textColor="@color/app_color"
-            android:fontFamily="@font/montserratblack"
-            android:textSize="14sp"/>
+            android:layout_below="@id/tests"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="24dp"
+            android:background="@drawable/corners30appcolor">
+
+
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/mining"
@@ -138,7 +140,7 @@
             android:layout_height="wrap_content"
             android:text="@string/mining"
             android:layout_marginStart="24dp"
-            android:layout_below="@+id/famous"
+            android:layout_below="@+id/relativeFirstClothes"
             android:textColor="@color/grey"
             android:fontFamily="@font/montserratblack"
             android:textSize="20sp"
