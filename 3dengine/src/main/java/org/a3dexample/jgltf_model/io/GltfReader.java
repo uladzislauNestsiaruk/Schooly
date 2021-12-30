@@ -100,6 +100,7 @@ final class GltfReader
      */
     void read(InputStream inputStream) throws IOException
     {
+
         JacksonUtils.configure(objectMapper, jsonErrorConsumer);
         rootNode = objectMapper.readTree(inputStream);
     }

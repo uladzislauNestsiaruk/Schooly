@@ -21,19 +21,19 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
 
-public class FriendsFragmentOther extends Fragment {
+public class SubscriptionsFragment extends Fragment {
     FirebaseModel firebaseModel=new FirebaseModel();
     RecyclerView recyclerView;
     ImageView back;
 
-    public static FriendsFragmentOther newInstance() {
-        return new FriendsFragmentOther();
+    public static SubscriptionsFragment newInstance() {
+        return new SubscriptionsFragment();
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_friends, container, false);
+        View root = inflater.inflate(R.layout.fragment_subscriptions, container, false);
         BottomNavigationView bnv = getActivity().findViewById(R.id.bottomNavigationView);
         bnv.setVisibility(bnv.GONE);
         firebaseModel.initAll();
@@ -52,17 +52,17 @@ public class FriendsFragmentOther extends Fragment {
                 RecentMethods.setCurrentFragment(ProfileFragment.newInstance("user",new UserInformation()),getActivity());
             }
         });
-//        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-//            @Override
-//            public void PassUserNick(String nick) {
-//                RecentMethods.getFriendsList(nick, firebaseModel, new Callbacks.getFriendsList() {
-//                    @Override
-//                    public void getFriendsList(ArrayList<Subscriber> friends) {
-//                        FriendsAdapter subscribersAdapter=new FriendsAdapter(friends);
-//                        recyclerView.setAdapter(subscribersAdapter);
-//                    }
-//                });
-//            }
-//        });
+        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+            @Override
+            public void PassUserNick(String nick) {
+                RecentMethods.getSubscriptionList(nick, firebaseModel, new Callbacks.getFriendsList() {
+                    @Override
+                    public void getFriendsList(ArrayList<Subscriber> friends) {
+                        SubscriptionsAdapter subscribersAdapter=new SubscriptionsAdapter(friends);
+                        recyclerView.setAdapter(subscribersAdapter);
+                    }
+                });
+            }
+        });
     }
 }

@@ -24,7 +24,7 @@
         android:layout_marginStart="4dp"/>
 
     <TextView
-        android:id="@+id/addFriend"
+        android:id="@+id/subscribe"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
@@ -35,6 +35,6 @@
         android:padding="8dp"
         android:text="@string/subscride"
         android:textColor="@color/white"
-        android:textSize="12sp" />
+        android:textSize="13sp" />
 
 </RelativeLayout>

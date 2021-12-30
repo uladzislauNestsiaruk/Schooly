@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.os.Handler;
@@ -21,6 +22,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FirebaseModel;
@@ -31,6 +34,7 @@ import com.egormoroz.schooly.ModelSurfaceView;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.SceneLoader;
+import com.egormoroz.schooly.Subscriber;
 import com.egormoroz.schooly.ui.main.ChatActivity;
 import com.egormoroz.schooly.ui.main.UserInformation;
 import com.egormoroz.schooly.ui.profile.Wardrobe.WardrobeFragment;
@@ -45,20 +49,25 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class ProfileFragment extends Fragment {
+    private static String sendNickString;
     FirebaseModel firebaseModel = new FirebaseModel();
     Context profileContext;
     String type,nicknameCallback;
     UserInformation info;
-    TextView nickname,message,biographyTextView,looksCount,friendsCount,subscribersCount,otherLooksCount,otherFriendsCount,
-    otherSubscribersCount;
+    TextView nickname,message,biographyTextView,looksCount,subscriptionsCount,subscribersCount,otherLooksCount,otherSubscriptionCount,
+    otherSubscribersCount,createNewLookText,createNewLook;
     DatabaseReference user;
     SceneLoader scene;
-    LinearLayout linearLooks,linearSubscribers,linearFriends;
+    LinearLayout linearLooks,linearSubscribers,linearSubscriptions;
     ModelSurfaceView modelSurfaceView;
     GLSurfaceView mainLook;
     ModelRenderer modelRenderer;
+    RecyclerView looksRecycler;
+    long subsCount,subscriptionCount;
+    int looksListSize;
     private float[] backgroundColor = new float[]{0f, 0f, 0f, 1.0f};
     private Handler handler;
 
@@ -159,6 +168,7 @@ public class ProfileFragment extends Fragment {
                 } catch (Exception ex) {
                     // Assuming default background color
                 }
+
                 ///////////////////////// set nickname /////////////////////
                 RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(),
                         firebaseModel,
@@ -225,14 +235,12 @@ public class ProfileFragment extends Fragment {
                             @Override
                             public void GetBiography(String bio) {
                                 biographyTextView.setText(bio);
-                                firebaseModel.getUsersReference().child(nick)
-                                        .child("subscribers").child("spaccacrani").setValue("spaccacrani");
                             }
                         });
                     }
                 });
                 looksCount=view.findViewById(R.id.looksCount);
-                friendsCount=view.findViewById(R.id.friendsCount);
+                subscriptionsCount=view.findViewById(R.id.subscriptionsCount);
                 subscribersCount=view.findViewById(R.id.subscribersCount);
                 setCounts();
                 subscribersCount.setOnClickListener(new View.OnClickListener() {
@@ -241,16 +249,36 @@ public class ProfileFragment extends Fragment {
                         RecentMethods.setCurrentFragment(SubscriberFragment.newInstance(), getActivity());
                     }
                 });
-                friendsCount.setOnClickListener(new View.OnClickListener() {
+                subscriptionsCount.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        RecentMethods.setCurrentFragment(FriendsFragment.newInstance(), getActivity());
+                        RecentMethods.setCurrentFragment(SubscriptionsFragment.newInstance(), getActivity());
                     }
                 });
+                /////////////////LOOKS///////////////
+                createNewLook=view.findViewById(R.id.CreateYourLook);
+                createNewLookText=view.findViewById(R.id.textCreateYourLook);
+                looksRecycler=view.findViewById(R.id.looksRecycler);
+                looksRecycler.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+                RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+                    @Override
+                    public void PassUserNick(String nick) {
+                        RecentMethods.getLooksList(nick, firebaseModel, new Callbacks.getSubscribersList() {
+                            @Override
+                            public void getSubscribersList(ArrayList<Subscriber> subscribers) {
+                                looksListSize=subscribers.size();
+                            }
+                        });
+                    }
+                });
+                if (looksListSize==0){
+                    createNewLookText.setVisibility(View.VISIBLE);
+                    createNewLook.setVisibility(View.VISIBLE);
+                }
 
                 handler = new Handler(getMainLooper());
                 scene = new SceneLoader(this);
-//                scene.init(Uri.parse("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2FSciFiHelmet.gltf?alt=media&token=a82512c1-14bf-4faf-8f67-abeb70da7697"));
+ //               scene.init(Uri.parse("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2FSciFiHelmet.gltf?alt=media&token=a82512c1-14bf-4faf-8f67-abeb70da7697"));
                 mainLook=view.findViewById(R.id.mainlookview);
                 try {
                     modelRenderer=new ModelRenderer(mainLook);
@@ -261,10 +289,14 @@ public class ProfileFragment extends Fragment {
                 }
                 mainLook.setRenderer(modelRenderer);
 
+                firebaseModel.getUsersReference().child("tyomaa6").child("subscribers")
+                        .child("spaccacrani").setValue("spaccacrani");
+
 
                 break;
             case "other":
                 nickname.setText(info.getNick());
+                sendNickString=info.getNick();
                 user = firebaseModel.getUsersReference().child(info.getNick());
                 if (message != null) {
                     message.setOnClickListener(new View.OnClickListener() {
@@ -275,19 +307,40 @@ public class ProfileFragment extends Fragment {
                         }
                     });
                 }
-                otherLooksCount=view.findViewById(R.id.looksCountOther);
-                otherFriendsCount=view.findViewById(R.id.friendsCountOther);
-                otherSubscribersCount=view.findViewById(R.id.subsCountOther);
-                otherFriendsCount.setText(String.valueOf(info.getFriendsCount()));
-                otherLooksCount.setText(String.valueOf(info.getLooksCount()));
-                otherSubscribersCount.setText(String.valueOf(info.getSubscribersCount()));
+                RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+                    @Override
+                    public void PassUserNick(String nick) {
+                        Query query=firebaseModel.getUsersReference().child(nick)
+                                .child("subscriptionCount");
+                        query.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                subscriptionCount=snapshot.getValue(Long.class);
+                                Log.d("####", "1   "+subscriptionsCount);
+                            }
 
-                linearFriends=view.findViewById(R.id.friendsLinear);
-                linearSubscribers=view.findViewById(R.id.subsLinear);
-                linearFriends.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+                    }
+                });
+                otherLooksCount=view.findViewById(R.id.looksCountOther);
+                otherSubscriptionCount=view.findViewById(R.id.subscriptionCountOther);
+                otherSubscribersCount=view.findViewById(R.id.subsCountOther);
+                setCountsOther();
+//                otherSubscriptionCount.setText(String.valueOf(info.getSubscriptionCount()));
+//                otherLooksCount.setText(String.valueOf(info.getLooksCount()));
+//                otherSubscribersCount.setText(String.valueOf(info.getSubscribersCount()));
+
+
+                linearSubscriptions=view.findViewById(R.id.subscriptionLinear);
+                linearSubscribers=view.findViewById(R.id.subscribersLinear);
+                linearSubscriptions.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        RecentMethods.setCurrentFragment(FriendsFragmentOther.newInstance(), getActivity());
+                        RecentMethods.setCurrentFragment(SubscriptionsFragmentOther.newInstance(), getActivity());
                     }
                 });
                 linearSubscribers.setOnClickListener(new View.OnClickListener() {
@@ -302,7 +355,7 @@ public class ProfileFragment extends Fragment {
                 RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
                 @Override
                 public void PassUserNick(String nick) {
-                    Query query=firebaseModel.getUsersReference().child(nick).child("subscribers")
+                    Query query=firebaseModel.getUsersReference().child(nick).child("subscription")
                             .child(info.getNick());
                     query.addValueEventListener(new ValueEventListener() {
                         @Override
@@ -310,7 +363,7 @@ public class ProfileFragment extends Fragment {
                             if(snapshot.exists()){
                                 addFriend.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
                                 addFriend.setTextColor(Color.parseColor("#F3A2E5"));
-                                addFriend.setText("Ответить");
+                                addFriend.setText("Отписаться");
                             }
                         }
 
@@ -325,34 +378,27 @@ public class ProfileFragment extends Fragment {
                 addFriend.setOnClickListener(new View.OnClickListener() { @Override public void onClick(View v) {
                     RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
                         @Override
-                        public void PassUserNick(String nick) {
+                        public void PassUserNick(String nick){
                             firebaseModel.getReference().child("users")
                                     .child(info.getNick()).child("subscribers")
                                     .child(nick).setValue(nick);
                             firebaseModel.getReference().child("users")
                                     .child(info.getNick()).child("nontifications")
                                     .child(nick).setValue(nick);
-                            firebaseModel.getReference().child("users")
-                                    .child(nick).child("nontifications")
+                           firebaseModel.getReference().child("users")
+                                    .child(nick).child("subscription")
                                     .child(info.getNick()).setValue(info.getNick());
-                            addFriend.setBackgroundResource(R.drawable.corners14dpappcolor2dpstroke);
+//                           subsCount=info.getSubscribersCount();
+//                           Log.d("####", "ffsffs  "+subsCount);
+//                            subsCount=subsCount+1;
+                            firebaseModel.getUsersReference().child(info.getNick())
+                                    .child("subscribersCount").setValue(subsCount);
+                            firebaseModel.getUsersReference().child(nick)
+                                    .child("subscriptionCount").setValue(subscriptionCount);
+                            addFriend.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
                             addFriend.setText("Отписаться");
-                            Query query=firebaseModel.getUsersReference().child(info.getNick())
-                                    .child("subscribersCount");
-                            query.addValueEventListener(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                    long subsCount=snapshot.getValue(Long.class);
-                                    firebaseModel.getUsersReference().child(info.getNick())
-                                            .child("subscribersCount").setValue(subsCount+1);
-                                    Log.d("####", "1   "+subsCount);
-                                }
-
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError error) {
-
-                                }
-                            });
+                            addFriend.setTextColor(Color.parseColor("#F3A2E5"));
+                            //
                         }
                     });
                 } });
@@ -372,35 +418,28 @@ public class ProfileFragment extends Fragment {
             }
         });
     }
+    public static void sendNickToAdapter(sendNick sendNick){
+        sendNick.sendNick(sendNickString);
+    }
+
+    public interface sendNick{
+        void sendNick(String nick);
+    }
 
     public void setCounts(){
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @Override
             public void PassUserNick(String nick) {
-                Query query=firebaseModel.getUsersReference().child(nick).
-                        child("subscribersCount");
-                query.addValueEventListener(new ValueEventListener() {
+                RecentMethods.getSubscriptionList(nick, firebaseModel, new Callbacks.getFriendsList() {
                     @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        subscribersCount.setText(String.valueOf(snapshot.getValue(Long.class)));
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
+                    public void getFriendsList(ArrayList<Subscriber> friends) {
+                        subscriptionsCount.setText(String.valueOf(friends.size()));
                     }
                 });
-                Query query1=firebaseModel.getUsersReference().child(nick).
-                        child("friendsCount");
-                query1.addValueEventListener(new ValueEventListener() {
+                RecentMethods.getSubscribersList(nick, firebaseModel, new Callbacks.getSubscribersList() {
                     @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        friendsCount.setText(String.valueOf(snapshot.getValue(Long.class)));
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
+                    public void getSubscribersList(ArrayList<Subscriber> subscribers) {
+                        subscribersCount.setText(String.valueOf(subscribers.size()));
                     }
                 });
                 Query query2=firebaseModel.getUsersReference().child(nick).
@@ -420,52 +459,33 @@ public class ProfileFragment extends Fragment {
         });
     }
 
-//    public void setCountsOther() {
-//        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-//            @Override
-//            public void PassUserNick(String nick) {
-//                Query query = firebaseModel.getUsersReference().child(info.getNick()).
-//                        child("subscribersCount");
-//                query.addValueEventListener(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                        otherSubscribersCount.setText(String.valueOf(snapshot.getValue(Long.class)));
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(@NonNull DatabaseError error) {
-//
-//                    }
-//                });
-//                Query query1 = firebaseModel.getUsersReference().child(info.getNick()).
-//                        child("friendsCount");
-//                query1.addValueEventListener(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                        otherFriendsCount.setText(String.valueOf(snapshot.getValue(Long.class)));
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(@NonNull DatabaseError error) {
-//
-//                    }
-//                });
-//                Query query2 = firebaseModel.getUsersReference().child(info.getNick()).
-//                        child("looksCount");
-//                query2.addValueEventListener(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                        otherLooksCount.setText(String.valueOf(snapshot.getValue(Long.class)));
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(@NonNull DatabaseError error) {
-//
-//                    }
-//                });
-//            }
-//        });
-//    }
+    public void setCountsOther() {
+        RecentMethods.getSubscriptionList(info.getNick(), firebaseModel, new Callbacks.getFriendsList() {
+            @Override
+            public void getFriendsList(ArrayList<Subscriber> friends) {
+                otherSubscriptionCount.setText(String.valueOf(friends.size()));
+            }
+        });
+        RecentMethods.getSubscribersList(info.getNick(), firebaseModel, new Callbacks.getSubscribersList() {
+            @Override
+            public void getSubscribersList(ArrayList<Subscriber> subscribers) {
+                otherSubscribersCount.setText(String.valueOf(subscribers.size()));
+            }
+        });
+        Query query2=firebaseModel.getUsersReference().child(info.getNick()).
+                child("looksCount");
+        query2.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                otherLooksCount.setText(String.valueOf(snapshot.getValue(Long.class)));
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
 
     public GLSurfaceView getGLView() {
         return mainLook;

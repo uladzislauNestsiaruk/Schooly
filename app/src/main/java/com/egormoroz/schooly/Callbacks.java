@@ -76,4 +76,7 @@ public class Callbacks {
     public interface friendQuery{
         default void friendQuery(){}
     }
+    public interface getSubsCount{
+        void getCount(Long subsCount);
+    }
 }

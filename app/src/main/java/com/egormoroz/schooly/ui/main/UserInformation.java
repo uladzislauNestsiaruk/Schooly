@@ -15,10 +15,10 @@ public class UserInformation {
     private long level=1;
     private long subscribersCount;
     private long looksCount;
-    private long friendsCount;
+    private long subscriptionCount;
     private long money=100;
     private double todayMining=0;
-    private String friends;
+    private String subscription;
     private String subscribers;
     private String queue;
     private String bio;
@@ -103,12 +103,12 @@ public class UserInformation {
         this.todayMining = todayMining;
     }
 
-    public String getFriends(){
-        return friends;
+    public String getSubscription(){
+        return subscription;
     }
 
-    public void setFriends(String friends){
-        this.friends = friends;
+    public void setSubscription(String subscription){
+        this.subscription = subscription;
     }
 
     public String getSubscribers(){
@@ -145,16 +145,16 @@ public class UserInformation {
         this.looksCount =looksCount;
     }
 
-    public long getFriendsCount() {return friendsCount;}
+    public long getSubscriptionCount() {return subscriptionCount;}
 
-    public void setFriendsCount(long friendsCount) {
-        this.friendsCount =friendsCount;
+    public void setSubscriptionCount(long subscriptionCount) {
+        this.subscriptionCount =subscriptionCount;
     }
 
     public UserInformation(String nick, String phone, String uid, long Avatar, String password,
                            String gender, long age,String miners,long level,long money,double todayMining,
-                           String friends, String subscribers, String queue,String bio,long subscribersCount,
-                           long looksCount,long friendsCount) {
+                           String subscription, String subscribers, String queue,String bio,long subscribersCount,
+                           long looksCount,long subscriptionCount) {
         this.Nick = nick;
         this.uid = uid;
         this.phone = phone;
@@ -166,13 +166,13 @@ public class UserInformation {
         this.level=level;
         this.money=money;
         this.todayMining=todayMining;
-        this.friends = friends;
+        this.subscription = subscription;
         this.subscribers = subscribers;
         this.queue = queue;
         this.bio=bio;
         this.subscribersCount=subscribersCount;
         this.looksCount=looksCount;
-        this.friendsCount=friendsCount;
+        this.subscriptionCount=subscriptionCount;
     }
 
 }

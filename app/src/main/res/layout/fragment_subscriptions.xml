@@ -26,7 +26,7 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="11dp"
             android:layout_toRightOf="@+id/back_toprofile"
-            android:text="@string/friends"
+            android:text="@string/subscriptions"
             android:textColor="@color/app_color"
             android:textSize="22sp"
             android:fontFamily="@font/montserrat_bold"/>

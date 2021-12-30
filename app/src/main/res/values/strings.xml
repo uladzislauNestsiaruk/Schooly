@@ -41,7 +41,7 @@
     <string name="man">МУЖСКОЙ</string>
     <string name="woman">ЖЕНСКИЙ</string>
 
-    <string name="subscribe">Подписчики</string>
+    <string name="subscribers">Подписчики</string>
     <string name="friends">Друзья</string>
     <string name="looks">Образы</string>
     <string name="wardrobe">Гардероб</string>
@@ -159,6 +159,17 @@
     <string name="fromBrest">From Brest to You</string>
 
     <string name="deleteFriend">Удалить</string>
+
+    <string name="subscriptions">Подписки</string>
+    <string name="subscride">Подписаться</string>
+    <string name="unsubscride">Отписаться</string>
+
+    <string name="changepassword">Смена пароля</string>
+    <string name="textEnterUsePassword">Введи действующий пароль</string>
+    <string name="errortext">Неверный пароль</string>
+
+    <string name="сreateYourFirstLook">Создай свой первый образ!</string>
+    <string name="сreate">Создать</string>
 
 
 </resources>

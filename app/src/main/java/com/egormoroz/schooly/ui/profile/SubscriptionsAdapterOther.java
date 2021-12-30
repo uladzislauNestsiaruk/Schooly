@@ -25,26 +25,25 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
-public class SubscribersAdapter extends RecyclerView.Adapter<SubscribersAdapter.ViewHolder>  {
+public class SubscriptionsAdapterOther extends RecyclerView.Adapter<SubscriptionsAdapterOther.ViewHolder>  {
 
     ArrayList<Subscriber> listAdapter;
-    private SubscribersAdapter.ItemClickListener clickListener;
+    private SubscriptionsAdapterOther.ItemClickListener clickListener;
     private FirebaseModel firebaseModel = new FirebaseModel();
     long subscriptionsCount,subscribersCount;
-    boolean check=false;
-    int a=0;
+    int a;
 
-    public  SubscribersAdapter(ArrayList<Subscriber> listAdapter) {
+    public SubscriptionsAdapterOther(ArrayList<Subscriber> listAdapter) {
         this.listAdapter = listAdapter;
     }
 
 
     @NotNull
     @Override
-    public SubscribersAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
+    public SubscriptionsAdapterOther.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
         RelativeLayout v = (RelativeLayout) LayoutInflater.from(viewGroup.getContext()).
-                inflate(R.layout.rvitemsubscribers, viewGroup, false);
-        SubscribersAdapter.ViewHolder viewHolder=new SubscribersAdapter.ViewHolder(v);
+                inflate(R.layout.rvitemfriendsother, viewGroup, false);
+        SubscriptionsAdapterOther.ViewHolder viewHolder=new SubscriptionsAdapterOther.ViewHolder(v);
         firebaseModel.initAll();
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @Override
@@ -55,7 +54,6 @@ public class SubscribersAdapter extends RecyclerView.Adapter<SubscribersAdapter.
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         subscriptionsCount=snapshot.getValue(Long.class);
-                        Log.d("####", "1   "+subscriptionsCount);
                     }
 
                     @Override
@@ -91,13 +89,14 @@ public class SubscribersAdapter extends RecyclerView.Adapter<SubscribersAdapter.
             public void PassUserNick(String nick) {
                 Query query=firebaseModel.getUsersReference().child(nick)
                         .child("subscription").child(subscriber.getSub());
+                Log.d("######", "sub  "+subscriber.getSub());
                 query.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         if(snapshot.exists()){
-                            holder.addFriend.setText("Отписаться");
-                            holder.addFriend.setTextColor(Color.parseColor("#F3A2E5"));
-                            holder.addFriend.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
+                            holder.subscribe.setText("Отписаться");
+                            holder.subscribe.setTextColor(Color.parseColor("#F3A2E5"));
+                            holder.subscribe.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
 
                         }
                     }
@@ -109,7 +108,7 @@ public class SubscribersAdapter extends RecyclerView.Adapter<SubscribersAdapter.
                 });
             }
         });
-        holder.addFriend.setOnClickListener(new View.OnClickListener() {
+        holder.subscribe.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
@@ -142,9 +141,9 @@ public class SubscribersAdapter extends RecyclerView.Adapter<SubscribersAdapter.
                                         .child(subscriber.getSub()).setValue(subscriber.getSub());
                                 firebaseModel.getReference().child("users").child(subscriber.getSub()).child("subscribers")
                                         .child(nick).setValue(nick);
-                                holder.addFriend.setText("Отписаться");
-                                holder.addFriend.setTextColor(Color.parseColor("#F3A2E5"));
-                                holder.addFriend.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
+                                holder.subscribe.setText("Отписаться");
+                                holder.subscribe.setTextColor(Color.parseColor("#F3A2E5"));
+                                holder.subscribe.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
                                 a=0;
                                 if (subscribersCount!=-1){
                                     subscribersCount=subscribersCount+1;
@@ -165,9 +164,9 @@ public class SubscribersAdapter extends RecyclerView.Adapter<SubscribersAdapter.
                                         .child(subscriber.getSub()).removeValue();
                                 firebaseModel.getReference().child("users").child(subscriber.getSub()).child("subscribers")
                                         .child(nick).removeValue();
-                                holder.addFriend.setText("Подписаться");
-                                holder.addFriend.setTextColor(Color.parseColor("#FFFEFE"));
-                                holder.addFriend.setBackgroundResource(R.drawable.corners10dpappcolor);
+                                holder.subscribe.setText("Подписаться");
+                                holder.subscribe.setTextColor(Color.parseColor("#FFFEFE"));
+                                holder.subscribe.setBackgroundResource(R.drawable.corners10dpappcolor);
                                 a=0;
                                 if (subscribersCount!=-1){
                                     subscribersCount=subscribersCount-1;
@@ -205,11 +204,11 @@ public class SubscribersAdapter extends RecyclerView.Adapter<SubscribersAdapter.
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        final TextView otherUserNick,addFriend;
+        final TextView otherUserNick,subscribe;
         ViewHolder(View itemView) {
             super(itemView);
             otherUserNick = itemView.findViewById(R.id.otherUserNick);
-            addFriend=itemView.findViewById(R.id.addFriend);
+            subscribe=itemView.findViewById(R.id.subscribe);
         }
 
         @Override
@@ -222,7 +221,7 @@ public class SubscribersAdapter extends RecyclerView.Adapter<SubscribersAdapter.
         return listAdapter.get(id);
     }
 
-    void setClickListener(SubscribersAdapter.ItemClickListener itemClickListener) {
+    void setClickListener(SubscriptionsAdapterOther.ItemClickListener itemClickListener) {
         this.clickListener = itemClickListener;
     }
 

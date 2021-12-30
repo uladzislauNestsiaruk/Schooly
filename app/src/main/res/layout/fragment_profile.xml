@@ -5,9 +5,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".MainActivity"    android:background="@color/white">
-    <LinearLayout        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -53,19 +50,19 @@
                 android:textColor="@color/app_grey" />
 
             <TextView
-                android:id="@+id/friends"
+                android:id="@+id/subscribers"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/redact"
                 android:layout_centerInParent="true"
                 android:layout_marginTop="50dp"
                 android:fontFamily="@font/montserrat_bold"
-                android:text="@string/friends"
+                android:text="@string/susriders"
                 android:textColor="@color/app_grey"
                 android:textSize="12sp" />
 
             <TextView
-                android:id="@+id/friendsCount"
+                android:id="@+id/subscribersCount"
                 android:layout_width="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_below="@+id/redact"
@@ -82,22 +79,22 @@
                 android:layout_below="@+id/redact"
                 android:layout_marginTop="18dp"
                 android:layout_marginEnd="70dp"
-                android:layout_toLeftOf="@+id/friends"
+                android:layout_toLeftOf="@+id/subscribers"
                 android:fontFamily="@font/montserrat_extrabold"
                 android:textColor="@color/app_color"
                 android:textSize="20sp" />
 
             <TextView
-                android:id="@+id/subscribersCount"
+                android:id="@+id/subscriptionsCount"
                 android:layout_width="wrap_content"
-                android:layout_toRightOf="@+id/friends"
-                android:layout_marginStart="88dp"
+                android:layout_height="wrap_content"
                 android:layout_below="@+id/redact"
+                android:layout_marginStart="82dp"
                 android:layout_marginTop="18dp"
-                android:textSize="20sp"
-                android:textColor="@color/app_color"
+                android:layout_toRightOf="@+id/subscribers"
                 android:fontFamily="@font/montserrat_extrabold"
-                android:layout_height="wrap_content"/>
+                android:textColor="@color/app_color"
+                android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/looks"
@@ -106,22 +103,22 @@
                 android:layout_below="@+id/redact"
                 android:layout_marginTop="50dp"
                 android:layout_marginEnd="48dp"
-                android:layout_toLeftOf="@id/friends"
+                android:layout_toLeftOf="@id/subscribers"
                 android:fontFamily="@font/montserrat_bold"
                 android:text="@string/looks"
                 android:textColor="@color/app_grey"
                 android:textSize="12sp" />
 
             <TextView
-                android:id="@+id/subscribers"
+                android:id="@+id/subscriptions"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/redact"
                 android:layout_marginStart="48dp"
                 android:layout_marginTop="50dp"
-                android:layout_toRightOf="@id/friends"
+                android:layout_toRightOf="@id/subscribers"
                 android:fontFamily="@font/montserrat_bold"
-                android:text="@string/subscribe"
+                android:text="@string/subscriptions"
                 android:textColor="@color/app_grey"
                 android:textSize="12sp" />
 
@@ -129,7 +126,7 @@
                 android:id="@+id/mainlookview"
                 android:layout_width="match_parent"
                 android:layout_height="384dp"
-                android:layout_below="@+id/friends"
+                android:layout_below="@+id/subscribers"
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="30dp"
                 android:layout_marginEnd="24dp" />
@@ -154,6 +151,7 @@
                 android:layout_marginEnd="24dp"
                 android:layout_marginTop="28dp"/>
             <TextView
+                android:id="@+id/newLook"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/newlook"
@@ -164,10 +162,49 @@
                 android:layout_below="@id/shielf"
                 android:fontFamily="@font/montserrat_extrabold"
                 android:layout_marginTop="178dp"
+                android:layout_centerHorizontal="true" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/looksRecycler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/newLook"
+                android:layout_marginTop="16dp"
+                android:orientation="vertical"
+                android:scrollbars="none" />
+
+            <TextView
+                android:id="@+id/textCreateYourLook"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/сreateYourFirstLook"
+                android:textSize="18sp"
+                android:fontFamily="@font/montserrat_bold"
+                android:textColor="@color/app_color"
+                android:layout_below="@+id/newLook"
                 android:layout_centerHorizontal="true"
-                android:layout_marginBottom="130dp"/>
+                android:layout_marginTop="48dp"
+                android:visibility="gone"/>
+
+            <TextView
+                android:id="@+id/CreateYourLook"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/сreate"
+                android:textSize="18sp"
+                android:layout_below="@+id/textCreateYourLook"
+                android:fontFamily="@font/montserrat_extrabold"
+                android:textColor="@color/white"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/corners14appcolor"
+                android:paddingStart="14dp"
+                android:paddingEnd="14dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="130dp"
+                android:visibility="gone"/>
         </RelativeLayout>
-    </LinearLayout>
 </ScrollView>
 
 

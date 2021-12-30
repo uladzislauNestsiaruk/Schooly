@@ -1,6 +1,7 @@
 package com.egormoroz.schooly.ui.profile;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,8 +31,9 @@ public class PasswordFragment extends Fragment {
     }
 
     FirebaseModel firebaseModel=new FirebaseModel();
-    TextView userNick,userNumber,userPassword;
-    String userNickString;
+    TextView userNumber,userPassword,next,errorText,editUsePassword;
+    String passwordFromBase;
+    ImageView backToSettings;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -46,6 +48,45 @@ public class PasswordFragment extends Fragment {
     @Override
     public void onViewCreated(@Nullable View view, @NonNull Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
+        backToSettings=view.findViewById(R.id.back_tosettings);
+        backToSettings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RecentMethods.setCurrentFragment(SettingsFragment.newInstance(), getActivity());
+            }
+        });
+        next=view.findViewById(R.id.next);
+        errorText=view.findViewById(R.id.errorText);
+        editUsePassword=view.findViewById(R.id.edittextenterpassword);
+        next.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String passwordEditText = editUsePassword.getText().toString();
+                RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+                    @Override
+                    public void PassUserNick(String nick) {
+                        Query query=firebaseModel.getUsersReference().child(nick)
+                                .child("password");
+                        query.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                passwordFromBase=snapshot.getValue(String.class);
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+                    }
+                });
+                if(passwordEditText.equals(passwordFromBase)){
+                    Log.d("#####", "suck");
+                }else {
+                    errorText.setText(R.string.errortext);
+                }
+            }
+        });
 
     }
 }
