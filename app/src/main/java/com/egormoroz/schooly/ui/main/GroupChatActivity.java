@@ -242,7 +242,7 @@ public final class GroupChatActivity extends Activity {
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @Override
             public void PassUserNick(String nick) {
-                firebaseModel.getUsersReference().child(nick).child("Groups").child(messageReceiverName).child("Messages")
+                firebaseModel.getUsersReference().child("Groups").child(messageReceiverName).child("Messages")
                         .addChildEventListener(new ChildEventListener() {
                             @Override
                             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
