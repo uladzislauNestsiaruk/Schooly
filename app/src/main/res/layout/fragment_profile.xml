@@ -139,17 +139,18 @@
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="30dp"
                 android:layout_marginEnd="24dp" />
+
             <TextView
                 android:id="@+id/shielf"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/wardrobe"
-                android:textSize="18sp"
-                android:textColor="@color/app_color"
-                android:fontFamily="@font/montserrat_extrabold"
                 android:layout_below="@id/mainlookview"
+                android:layout_marginStart="24dp"
                 android:layout_marginTop="24dp"
-                android:layout_marginStart="24dp" />
+                android:fontFamily="@font/montserrat_extrabold"
+                android:text="@string/wardrobe"
+                android:textColor="@color/app_color"
+                android:textSize="18sp" />
             <ImageView
                 android:id="@+id/arrowtowardrobe"
                 android:layout_width="wrap_content"
@@ -164,9 +165,9 @@
                 android:id="@+id/recyclerProfileToWardrobe"
                 android:layout_width="match_parent"
                 android:layout_height="260dp"
+                android:layout_below="@+id/shielf"
                 android:layout_marginTop="4dp"
                 android:orientation="horizontal"
-                android:layout_below="@+id/shielf"
                 android:scrollbars="none"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
             <TextView

@@ -176,5 +176,8 @@
 
     <string name="myClothes">Моя одежда</string>
 
+    <string name="firstSubscribe">Подпишись на</string>
+    <string name="closeAccount">У этого пользователя закрытый аккаунт(</string>
+
 
 </resources>
