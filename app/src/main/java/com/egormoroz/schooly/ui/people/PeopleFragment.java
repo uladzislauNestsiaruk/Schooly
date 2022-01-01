@@ -58,7 +58,7 @@ public class PeopleFragment extends Fragment {
 
     public void setPeopleData(){
         listAdapterPeople.add(new UserInformation("nick", "fidjfif", "gk",
-                6, "password", "Helicopter", 1000, "Miners",1,100,0, "", "", ""," ",0,0,0));
+                6, "password", "Helicopter", 1000, "Miners",1,100,0, "", "", ""," ",0,0,0,"open"));
     }
     public void initUserEnter(){
         searchUser.addTextChangedListener(new TextWatcher() {
@@ -122,10 +122,9 @@ public class PeopleFragment extends Fragment {
                                                 userData.setPhone(snapshot.child("phone").getValue(String.class));
                                                 userData.setUid(snapshot.child("uid").getValue(String.class));
                                                 userData.setQueue(snapshot.child("queue").getValue(String.class));
-                                                userData.setSubscriptionCount(snapshot.child("subscriptionCount").getValue(Long.class));
-                                                userData.setSubscribersCount(snapshot.child("subscribersCount").getValue(Long.class));
-                                                userData.setLooksCount(snapshot.child("looksCount").getValue(Long.class));
- //                                               userData.setSubscribers(snapshot.child("subscribers").getValue(String.class));
+                                                userData.setAccountType(snapshot.child("accountType").getValue(String.class));
+                                                userData.setBio(snapshot.child("bio").getValue(String.class));
+                                                //                                               userData.setSubscribers(snapshot.child("subscribers").getValue(String.class));
 //                                                userData.setFriends(snapshot.child("friends").getValue(String.class));
                                                 RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userData),
                                                         getActivity());

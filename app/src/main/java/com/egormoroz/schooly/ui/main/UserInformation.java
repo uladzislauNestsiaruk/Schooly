@@ -22,6 +22,7 @@ public class UserInformation {
     private String subscribers;
     private String queue;
     private String bio;
+    private String accountType;
     public UserInformation(){
     }
 
@@ -151,10 +152,18 @@ public class UserInformation {
         this.subscriptionCount =subscriptionCount;
     }
 
+    public String getAccountType() {
+        return accountType;
+    }
+
+    public void setAccountType(String accountType) {
+        this.accountType = accountType;
+    }
+
     public UserInformation(String nick, String phone, String uid, long Avatar, String password,
                            String gender, long age,String miners,long level,long money,double todayMining,
                            String subscription, String subscribers, String queue,String bio,long subscribersCount,
-                           long looksCount,long subscriptionCount) {
+                           long looksCount,long subscriptionCount,String accountType) {
         this.Nick = nick;
         this.uid = uid;
         this.phone = phone;
@@ -173,6 +182,7 @@ public class UserInformation {
         this.subscribersCount=subscribersCount;
         this.looksCount=looksCount;
         this.subscriptionCount=subscriptionCount;
+        this.accountType=accountType;
     }
 
 }

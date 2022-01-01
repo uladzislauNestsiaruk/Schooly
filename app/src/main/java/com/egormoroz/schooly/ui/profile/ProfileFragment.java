@@ -58,7 +58,8 @@ public class ProfileFragment extends Fragment {
     String type,nicknameCallback;
     UserInformation info;
     TextView nickname,message,biographyTextView,looksCount,subscriptionsCount,subscribersCount,otherLooksCount,otherSubscriptionCount,
-    otherSubscribersCount,createNewLookText,createNewLook;
+            otherSubscribersCount,createNewLookText,createNewLook,otherUserBiography,subscribeClose,addFriend,looksText
+            ,subscribeFirst,closeAccount;
     DatabaseReference user;
     SceneLoader scene;
     LinearLayout linearLooks,linearSubscribers,linearSubscriptions;
@@ -141,7 +142,7 @@ public class ProfileFragment extends Fragment {
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @Override
             public void PassUserNick(String nick) {
-               nicknameCallback=nick;
+                nicknameCallback=nick;
             }
         });
 
@@ -278,7 +279,7 @@ public class ProfileFragment extends Fragment {
 
                 handler = new Handler(getMainLooper());
                 scene = new SceneLoader(this);
- //               scene.init(Uri.parse("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2FSciFiHelmet.gltf?alt=media&token=a82512c1-14bf-4faf-8f67-abeb70da7697"));
+                //               scene.init(Uri.parse("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2FSciFiHelmet.gltf?alt=media&token=a82512c1-14bf-4faf-8f67-abeb70da7697"));
                 mainLook=view.findViewById(R.id.mainlookview);
                 try {
                     modelRenderer=new ModelRenderer(mainLook);
@@ -298,6 +299,14 @@ public class ProfileFragment extends Fragment {
                 nickname.setText(info.getNick());
                 sendNickString=info.getNick();
                 user = firebaseModel.getUsersReference().child(info.getNick());
+                otherUserBiography=view.findViewById(R.id.otheruserbiography);
+                looksText=view.findViewById(R.id.looksText);
+                looksRecycler=view.findViewById(R.id.looksRecycler);
+                subscribeClose=view.findViewById(R.id.subscribeClose);
+                otherUserBiography.setText(info.getBio());
+                addFriend=view.findViewById(R.id.addFriend);
+                subscribeFirst=view.findViewById(R.id.SubscribeFirst);
+                closeAccount=view.findViewById(R.id.closeAccount);
                 if (message != null) {
                     message.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -307,101 +316,88 @@ public class ProfileFragment extends Fragment {
                         }
                     });
                 }
-                RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-                    @Override
-                    public void PassUserNick(String nick) {
-                        Query query=firebaseModel.getUsersReference().child(nick)
-                                .child("subscriptionCount");
-                        query.addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                subscriptionCount=snapshot.getValue(Long.class);
-                                Log.d("####", "1   "+subscriptionsCount);
-                            }
+                if(info.getAccountType().equals("open")){
+                    otherLooksCount=view.findViewById(R.id.looksCountOther);
+                    otherSubscriptionCount=view.findViewById(R.id.subscriptionCountOther);
+                    otherSubscribersCount=view.findViewById(R.id.subsCountOther);
+                    setCountsOther();
 
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
-
-                            }
-                        });
-                    }
-                });
-                otherLooksCount=view.findViewById(R.id.looksCountOther);
-                otherSubscriptionCount=view.findViewById(R.id.subscriptionCountOther);
-                otherSubscribersCount=view.findViewById(R.id.subsCountOther);
-                setCountsOther();
-//                otherSubscriptionCount.setText(String.valueOf(info.getSubscriptionCount()));
-//                otherLooksCount.setText(String.valueOf(info.getLooksCount()));
-//                otherSubscribersCount.setText(String.valueOf(info.getSubscribersCount()));
-
-
-                linearSubscriptions=view.findViewById(R.id.subscriptionLinear);
-                linearSubscribers=view.findViewById(R.id.subscribersLinear);
-                linearSubscriptions.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        RecentMethods.setCurrentFragment(SubscriptionsFragmentOther.newInstance(), getActivity());
-                    }
-                });
-                linearSubscribers.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        RecentMethods.setCurrentFragment(SubscribesFragmentOther.newInstance(), getActivity());
-                    }
-                });
-
-                TextView addFriend;
-                addFriend=view.findViewById(R.id.addFriend);
-                RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-                @Override
-                public void PassUserNick(String nick) {
-                    Query query=firebaseModel.getUsersReference().child(nick).child("subscription")
-                            .child(info.getNick());
-                    query.addValueEventListener(new ValueEventListener() {
+                    linearSubscriptions=view.findViewById(R.id.subscriptionLinear);
+                    linearSubscribers=view.findViewById(R.id.subscribersLinear);
+                    linearSubscriptions.setOnClickListener(new View.OnClickListener() {
                         @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            if(snapshot.exists()){
-                                addFriend.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
-                                addFriend.setTextColor(Color.parseColor("#F3A2E5"));
-                                addFriend.setText("Отписаться");
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-
+                        public void onClick(View v) {
+                            RecentMethods.setCurrentFragment(SubscriptionsFragmentOther.newInstance(), getActivity());
                         }
                     });
-                }
-            });
+                    linearSubscribers.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            RecentMethods.setCurrentFragment(SubscribesFragmentOther.newInstance(), getActivity());
+                        }
+                    });
 
-                addFriend.setOnClickListener(new View.OnClickListener() { @Override public void onClick(View v) {
                     RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
                         @Override
-                        public void PassUserNick(String nick){
-                            firebaseModel.getReference().child("users")
-                                    .child(info.getNick()).child("subscribers")
-                                    .child(nick).setValue(nick);
-                            firebaseModel.getReference().child("users")
-                                    .child(info.getNick()).child("nontifications")
-                                    .child(nick).setValue(nick);
-                           firebaseModel.getReference().child("users")
-                                    .child(nick).child("subscription")
-                                    .child(info.getNick()).setValue(info.getNick());
+                        public void PassUserNick(String nick) {
+                            Query query=firebaseModel.getUsersReference().child(nick).child("subscription")
+                                    .child(info.getNick());
+                            query.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    if(snapshot.exists()){
+                                        addFriend.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
+                                        addFriend.setTextColor(Color.parseColor("#F3A2E5"));
+                                        addFriend.setText("Отписаться");
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
+                        }
+                    });
+
+                    addFriend.setOnClickListener(new View.OnClickListener() { @Override public void onClick(View v) {
+                        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+                            @Override
+                            public void PassUserNick(String nick){
+                                firebaseModel.getReference().child("users")
+                                        .child(info.getNick()).child("subscribers")
+                                        .child(nick).setValue(nick);
+                                firebaseModel.getReference().child("users")
+                                        .child(info.getNick()).child("nontifications")
+                                        .child(nick).setValue(nick);
+                                firebaseModel.getReference().child("users")
+                                        .child(nick).child("subscription")
+                                        .child(info.getNick()).setValue(info.getNick());
 //                           subsCount=info.getSubscribersCount();
 //                           Log.d("####", "ffsffs  "+subsCount);
 //                            subsCount=subsCount+1;
-                            firebaseModel.getUsersReference().child(info.getNick())
-                                    .child("subscribersCount").setValue(subsCount);
-                            firebaseModel.getUsersReference().child(nick)
-                                    .child("subscriptionCount").setValue(subscriptionCount);
-                            addFriend.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
-                            addFriend.setText("Отписаться");
-                            addFriend.setTextColor(Color.parseColor("#F3A2E5"));
-                            //
-                        }
-                    });
-                } });
+                                firebaseModel.getUsersReference().child(info.getNick())
+                                        .child("subscribersCount").setValue(subsCount);
+                                firebaseModel.getUsersReference().child(nick)
+                                        .child("subscriptionCount").setValue(subscriptionCount);
+                                addFriend.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
+                                addFriend.setText("Отписаться");
+                                addFriend.setTextColor(Color.parseColor("#F3A2E5"));
+                                //
+                            }
+                        });
+                    } });
+                }else {
+                    subscribeClose.setVisibility(View.VISIBLE);
+                    closeAccount.setVisibility(View.VISIBLE);
+                    subscribeFirst.setVisibility(View.VISIBLE);
+                    subscribeFirst.setText("Подпишись на "+" "+info.getNick()+" !");
+                    message.setVisibility(View.GONE);
+                    addFriend.setVisibility(View.GONE);
+                    looksText.setVisibility(View.GONE);
+                    looksRecycler.setVisibility(View.GONE);
+                }
+
                 break;
         }
     }
