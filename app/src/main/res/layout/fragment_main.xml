@@ -37,10 +37,42 @@
             android:id="@+id/nontification"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toLeftOf="@+id/chat"
             android:layout_marginTop="20dp"
             android:layout_marginEnd="24dp"
-            android:src="@drawable/ic_notification"/>
+            android:layout_toLeftOf="@+id/chat"
+            android:src="@drawable/ic_notification" />
+
+        <TextView
+            android:id="@+id/circleChat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="14dp"
+            android:layout_marginEnd="18dp"
+            android:textSize="12sp"
+            android:paddingBottom="1dp"
+            android:paddingStart="4dp"
+            android:paddingEnd="4dp"
+            android:textColor="@color/white"
+            android:fontFamily="@font/montserrat_bold"
+            android:background="@drawable/corners10dpappcolor"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/circleNontifications"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="14dp"
+            android:layout_marginEnd="72dp"
+            android:textSize="12sp"
+            android:paddingBottom="1dp"
+            android:paddingStart="4dp"
+            android:paddingEnd="4dp"
+            android:textColor="@color/white"
+            android:fontFamily="@font/montserrat_bold"
+            android:background="@drawable/corners10dpappcolor"
+            android:visibility="gone"/>
 
 
         <RelativeLayout

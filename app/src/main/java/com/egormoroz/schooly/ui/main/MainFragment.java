@@ -51,7 +51,7 @@ import java.util.ArrayList;
 
 public class MainFragment extends Fragment{
 
-    TextView todayMiningMain;
+    TextView todayMiningMain,circleNontifications,circleChat;
     private FirebaseModel firebaseModel = new FirebaseModel();
     ArrayList<Clothes> clothesArrayList=new ArrayList<Clothes>();
     ArrayList<Clothes> popularClothesArrayList=new ArrayList<Clothes>();
@@ -91,6 +91,9 @@ public class MainFragment extends Fragment{
 //                startActivity(intent);
             }
         });
+        circleChat=view.findViewById(R.id.circleChat);
+        circleNontifications=view.findViewById(R.id.circleNontifications);
+
         TextView getMore=view.findViewById(R.id.getMore);
         getMore.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -101,7 +104,7 @@ public class MainFragment extends Fragment{
                 Intent intent = new Intent("com.instagram.share.ADD_TO_STORY");
                 intent.putExtra("source_application", sourceApplication);
 
-                intent.setType("image/зтп");
+                intent.setType("image/*");
                 intent.putExtra("interactive_asset_uri", stickerAssetUri);
                 intent.putExtra("top_background_color", "#33FF33");
                 intent.putExtra("bottom_background_color", "#FF00FF");
