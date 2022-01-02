@@ -307,6 +307,10 @@ public class ProfileFragment extends Fragment {
                 addFriend=view.findViewById(R.id.addFriend);
                 subscribeFirst=view.findViewById(R.id.SubscribeFirst);
                 closeAccount=view.findViewById(R.id.closeAccount);
+                otherLooksCount=view.findViewById(R.id.looksCountOther);
+                otherSubscriptionCount=view.findViewById(R.id.subscriptionCountOther);
+                otherSubscribersCount=view.findViewById(R.id.subsCountOther);
+                setCountsOther();
                 if (message != null) {
                     message.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -320,7 +324,6 @@ public class ProfileFragment extends Fragment {
                     otherLooksCount=view.findViewById(R.id.looksCountOther);
                     otherSubscriptionCount=view.findViewById(R.id.subscriptionCountOther);
                     otherSubscribersCount=view.findViewById(R.id.subsCountOther);
-                    setCountsOther();
 
                     linearSubscriptions=view.findViewById(R.id.subscriptionLinear);
                     linearSubscribers=view.findViewById(R.id.subscribersLinear);

@@ -179,5 +179,9 @@
     <string name="firstSubscribe">Подпишись на</string>
     <string name="closeAccount">У этого пользователя закрытый аккаунт(</string>
 
+    <string name="createFirstClothes">Создавай одежду</string>
+    <string name="getSchoolyCoin">и получай Schooly-coin!</string>
+    <string name="create">Создать</string>
+
 
 </resources>

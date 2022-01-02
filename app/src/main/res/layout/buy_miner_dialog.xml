@@ -4,7 +4,7 @@
     android:layout_height="140dp"
     android:layout_centerInParent="true"
     android:elevation="6dp"
-    android:background="@drawable/corners15dpwhite">
+    android:background="@drawable/corners14dpwhite">
 
     <TextView
         android:layout_width="wrap_content"

@@ -51,7 +51,7 @@ import java.util.ArrayList;
 
 public class MainFragment extends Fragment{
 
-    TextView todayMiningMain,circleNontifications,circleChat;
+    TextView todayMiningMain,circleNontifications,circleChat,createClothes;
     private FirebaseModel firebaseModel = new FirebaseModel();
     ArrayList<Clothes> clothesArrayList=new ArrayList<Clothes>();
     ArrayList<Clothes> popularClothesArrayList=new ArrayList<Clothes>();
@@ -155,13 +155,6 @@ public class MainFragment extends Fragment{
             @Override
             public void onClick(View v) {
                 ((MainActivity)getActivity()).setCurrentFragment((ShopFragment.newInstance()));
-            }
-        });
-        TextView tests=view.findViewById(R.id.tests);
-        tests.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
             }
         });
         TextView mining=view.findViewById(R.id.mining);

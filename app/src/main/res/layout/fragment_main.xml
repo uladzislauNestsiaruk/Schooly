@@ -141,27 +141,61 @@
 
 
         <TextView
-            android:id="@+id/tests"
+            android:id="@+id/myClothes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@id/relativeshop"
             android:layout_marginStart="24dp"
             android:layout_marginTop="283dp"
-            android:text="@string/myClothes"
-            android:layout_below="@id/relativeshop"
-            android:textColor="@color/grey"
             android:fontFamily="@font/montserratblack"
-            android:textSize="20sp"/>
+            android:text="@string/myClothes"
+            android:textColor="@color/grey"
+            android:textSize="20sp" />
 
         <RelativeLayout
             android:id="@+id/relativeFirstClothes"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/tests"
-            android:layout_marginTop="16dp"
+            android:layout_below="@id/myClothes"
             android:layout_marginStart="24dp"
+            android:layout_marginTop="16dp"
             android:layout_marginEnd="24dp"
             android:layout_marginBottom="24dp"
             android:background="@drawable/corners30appcolor">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="12dp"
+                android:fontFamily="@font/montserrat_bold"
+                android:text="@string/createFirstClothes"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="36dp"
+                android:fontFamily="@font/montserrat_bold"
+                android:text="@string/getSchoolyCoin"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/createClothes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="78dp"
+                android:layout_marginBottom="14dp"
+                android:background="@drawable/corners14dpwhite"
+                android:fontFamily="@font/montserrat_extrabold"
+                android:padding="10dp"
+                android:text="@string/create"
+                android:textColor="@color/app_color"
+                android:textSize="16sp" />
 
 
         </RelativeLayout>
@@ -170,13 +204,13 @@
             android:id="@+id/mining"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/mining"
-            android:layout_marginStart="24dp"
             android:layout_below="@+id/relativeFirstClothes"
-            android:textColor="@color/grey"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="12dp"
             android:fontFamily="@font/montserratblack"
-            android:textSize="20sp"
-            android:layout_marginTop="70dp" />
+            android:text="@string/mining"
+            android:textColor="@color/grey"
+            android:textSize="20sp" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -185,6 +219,7 @@
             android:layout_marginStart="24dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="24dp"
+            android:layout_marginBottom="130dp"
             android:background="@drawable/corners30appcolor">
 
             <TextView
@@ -217,7 +252,7 @@
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="16dp"
-                android:background="@drawable/corners15dpwhite"
+                android:background="@drawable/corners14dpwhite"
                 android:elevation="20dp"
                 android:fontFamily="@font/montserrat_bold"
                 android:paddingStart="6dp"

@@ -46,25 +46,6 @@ public class SubscribersAdapter extends RecyclerView.Adapter<SubscribersAdapter.
                 inflate(R.layout.rvitemsubscribers, viewGroup, false);
         SubscribersAdapter.ViewHolder viewHolder=new SubscribersAdapter.ViewHolder(v);
         firebaseModel.initAll();
-        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-            @Override
-            public void PassUserNick(String nick) {
-                Query query=firebaseModel.getUsersReference().child(nick)
-                        .child("subscriptionCount");
-                query.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        subscriptionsCount=snapshot.getValue(Long.class);
-                        Log.d("####", "1   "+subscriptionsCount);
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-            }
-        });
         return viewHolder;
     }
 
@@ -72,20 +53,6 @@ public class SubscribersAdapter extends RecyclerView.Adapter<SubscribersAdapter.
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Subscriber subscriber=listAdapter.get(position);
         holder.otherUserNick.setText(subscriber.getSub());
-        Query query=firebaseModel.getUsersReference().child(subscriber.getSub())
-                .child("subscribersCount");
-        query.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                subscribersCount=snapshot.getValue(Long.class);
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @Override
             public void PassUserNick(String nick) {
