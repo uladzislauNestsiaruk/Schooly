@@ -141,22 +141,16 @@ public class SubscriptionsAdapterOther extends RecyclerView.Adapter<Subscription
                                         .child(subscriber.getSub()).setValue(subscriber.getSub());
                                 firebaseModel.getReference().child("users").child(subscriber.getSub()).child("subscribers")
                                         .child(nick).setValue(nick);
+                                firebaseModel.getReference().child("users")
+                                        .child(subscriber.getSub()).child("nontifications")
+                                        .child(nick).setValue(nick);
+                                firebaseModel.getReference().child("users")
+                                        .child(subscriber.getSub()).child("nontificationsRecycler")
+                                        .child(nick).setValue(nick);
                                 holder.subscribe.setText("Отписаться");
                                 holder.subscribe.setTextColor(Color.parseColor("#F3A2E5"));
                                 holder.subscribe.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
                                 a=0;
-                                if (subscribersCount!=-1){
-                                    subscribersCount=subscribersCount+1;
-                                    Log.d("#####","subsCount  "+subscribersCount);
-                                    firebaseModel.getUsersReference().child(subscriber.getSub())
-                                            .child("subscribersCount").setValue(subscribersCount);
-                                }
-                                if (subscriptionsCount!=-1) {
-                                    subscriptionsCount = subscriptionsCount + 1;
-                                    Log.d("#####", "subsCount  " + subscriptionsCount);
-                                    firebaseModel.getUsersReference().child(nick)
-                                            .child("subscriptionCount").setValue(subscriptionsCount);
-                                }
                             }
                             if (a == 1) {
                                 Log.d("#####", "one  " + a);
@@ -168,18 +162,7 @@ public class SubscriptionsAdapterOther extends RecyclerView.Adapter<Subscription
                                 holder.subscribe.setTextColor(Color.parseColor("#FFFEFE"));
                                 holder.subscribe.setBackgroundResource(R.drawable.corners10dpappcolor);
                                 a=0;
-                                if (subscribersCount!=-1){
-                                    subscribersCount=subscribersCount-1;
-                                    Log.d("#####","subsCount  "+subscribersCount);
-                                    firebaseModel.getUsersReference().child(subscriber.getSub())
-                                            .child("subscribersCount").setValue(subscribersCount);
-                                }
-                                if (subscriptionsCount!=-1){
-                                    subscriptionsCount=subscriptionsCount-1;
-                                    Log.d("#####","subsCount  "+subscriptionsCount);
-                                    firebaseModel.getUsersReference().child(nick)
-                                            .child("subscriptionCount").setValue(subscriptionsCount);
-                                }
+
 
                             }
                         }
