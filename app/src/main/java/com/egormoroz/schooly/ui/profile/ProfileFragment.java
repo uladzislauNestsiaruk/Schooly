@@ -331,27 +331,6 @@ public class ProfileFragment extends Fragment {
                 otherLooksCount=view.findViewById(R.id.looksCountOther);
                 otherSubscriptionCount=view.findViewById(R.id.subscriptionCountOther);
                 otherSubscribersCount=view.findViewById(R.id.subsCountOther);
-                RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-                    @Override
-                    public void PassUserNick(String nick) {
-                        Query query=firebaseModel.getUsersReference().child(nick).child("subscription")
-                                .child(info.getNick());
-                        query.addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                if(snapshot.exists()){
-                                    profileValue=1;
-                                }else {profileValue=-1;
-                                }
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
-
-                            }
-                        });
-                    }
-                });
                 setCountsOther();
                 if (message != null) {
                     message.setOnClickListener(new View.OnClickListener() {
@@ -363,8 +342,12 @@ public class ProfileFragment extends Fragment {
                     });
                 }
                 Log.d("######", "v "+profileValue);
-                if (profileValue!=0) {
-                    if (!(!info.getAccountType().equals("open") || profileValue == 1)) {
+                if (profileValue==0){
+                    checkOtherUser();
+                }
+                else if (profileValue!=0) {
+                    if (info.getAccountType().equals("open") || profileValue == 1) {
+                        Log.d("######", "goo "+profileValue);
                         otherLooksCount = view.findViewById(R.id.looksCountOther);
                         otherSubscriptionCount = view.findViewById(R.id.subscriptionCountOther);
                         otherSubscribersCount = view.findViewById(R.id.subsCountOther);
@@ -596,6 +579,31 @@ public class ProfileFragment extends Fragment {
                     looksRecyclerOther.setAdapter(looksAdapter);
                 }
                 Log.d("#####", "sf  "+subscribers.size());
+            }
+        });
+    }
+
+    public void checkOtherUser(){
+        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+            @Override
+            public void PassUserNick(String nick) {
+                Query query=firebaseModel.getUsersReference().child(nick).child("subscription")
+                        .child(info.getNick());
+                query.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if(snapshot.exists()){
+                            profileValue=1;
+                            Log.d("###", "swag "+profileValue);
+                        }else {profileValue=-1;
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
             }
         });
     }

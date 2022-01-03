@@ -36,6 +36,7 @@ import com.egormoroz.schooly.MainActivity;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.SchoolyService;
+import com.egormoroz.schooly.Subscriber;
 import com.egormoroz.schooly.ui.main.Mining.MiningFragment;
 import com.egormoroz.schooly.ui.main.Nontifications.NontificationFragment;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
@@ -93,6 +94,21 @@ public class MainFragment extends Fragment{
         });
         circleChat=view.findViewById(R.id.circleChat);
         circleNontifications=view.findViewById(R.id.circleNontifications);
+
+        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+            @Override
+            public void PassUserNick(String nick) {
+                RecentMethods.getNontificationsList(nick, firebaseModel, new Callbacks.getSubscribersList() {
+                    @Override
+                    public void getSubscribersList(ArrayList<Subscriber> subscribers) {
+                        if(subscribers.size()!=0){
+                            circleNontifications.setVisibility(View.VISIBLE);
+                            circleNontifications.setText(String.valueOf(subscribers.size()));
+                        }
+                    }
+                });
+            }
+        });
 
         TextView getMore=view.findViewById(R.id.getMore);
         getMore.setOnClickListener(new View.OnClickListener() {
