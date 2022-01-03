@@ -183,5 +183,8 @@
     <string name="getSchoolyCoin">и получай Schooly-coin!</string>
     <string name="create">Создать</string>
 
+    <string name="noClothes">Нет одежды в гардеробе(</string>
+
+    <string name="noLooksOther">У пользователя нет образов(</string>
 
 </resources>

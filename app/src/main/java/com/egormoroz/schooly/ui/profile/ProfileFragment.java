@@ -36,6 +36,10 @@ import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.SceneLoader;
 import com.egormoroz.schooly.Subscriber;
 import com.egormoroz.schooly.ui.main.ChatActivity;
+import com.egormoroz.schooly.ui.main.Shop.Clothes;
+import com.egormoroz.schooly.ui.main.Shop.NewClothesAdapter;
+import com.egormoroz.schooly.ui.main.Shop.ShopFragment;
+import com.egormoroz.schooly.ui.main.Shop.ViewingClothes;
 import com.egormoroz.schooly.ui.main.UserInformation;
 import com.egormoroz.schooly.ui.profile.Wardrobe.WardrobeFragment;
 import com.google.android.filament.Filament;
@@ -59,15 +63,15 @@ public class ProfileFragment extends Fragment {
     UserInformation info;
     TextView nickname,message,biographyTextView,looksCount,subscriptionsCount,subscribersCount,otherLooksCount,otherSubscriptionCount,
             otherSubscribersCount,createNewLookText,createNewLook,otherUserBiography,subscribeClose,addFriend,looksText
-            ,subscribeFirst,closeAccount;
+            ,subscribeFirst,closeAccount,noClothes,buyClothesProfile,noLooksOther;
     DatabaseReference user;
+    NewClothesAdapter.ItemClickListener itemClickListener;
     SceneLoader scene;
     LinearLayout linearLooks,linearSubscribers,linearSubscriptions;
     ModelSurfaceView modelSurfaceView;
     GLSurfaceView mainLook;
     ModelRenderer modelRenderer;
-    RecyclerView looksRecycler;
-    long subsCount,subscriptionCount;
+    RecyclerView looksRecycler,wardrobeRecycler,looksRecyclerOther;
     int looksListSize,profileValue;
     private float[] backgroundColor = new float[]{0f, 0f, 0f, 1.0f};
     private Handler handler;
@@ -219,14 +223,6 @@ public class ProfileFragment extends Fragment {
                         ((MainActivity) getActivity()).setCurrentFragment(EditingFragment.newInstance());
                     }
                 });
-                TextView texttowardrobe = view.findViewById(R.id.shielf);
-                texttowardrobe.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        ((MainActivity) getActivity()).setCurrentFragment(WardrobeFragment.newInstance());
-                    }
-                });
 
                 biographyTextView=view.findViewById(R.id.biography);
                 RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
@@ -256,6 +252,26 @@ public class ProfileFragment extends Fragment {
                         RecentMethods.setCurrentFragment(SubscriptionsFragment.newInstance(), getActivity());
                     }
                 });
+                ////////////////WARDROBE/////////////
+                TextView texttowardrobe = view.findViewById(R.id.shielf);
+                texttowardrobe.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        RecentMethods.setCurrentFragment(WardrobeFragment
+                        .newInstance(), getActivity());
+                    }
+                });
+                itemClickListener=new NewClothesAdapter.ItemClickListener() {
+                    @Override
+                    public void onItemClick(Clothes clothes) {
+                        ((MainActivity)getActivity()).setCurrentFragment(ViewingClothes.newInstance());
+                    }
+                };
+                wardrobeRecycler=view.findViewById(R.id.recyclerProfileToWardrobe);
+                noClothes=view.findViewById(R.id.noClothesText);
+                buyClothesProfile=view.findViewById(R.id.buyClothesProfile);
+                checkWardrobe();
+                //////////////////////////////////////
                 /////////////////LOOKS///////////////
                 createNewLook=view.findViewById(R.id.CreateYourLook);
                 createNewLookText=view.findViewById(R.id.textCreateYourLook);
@@ -268,14 +284,20 @@ public class ProfileFragment extends Fragment {
                             @Override
                             public void getSubscribersList(ArrayList<Subscriber> subscribers) {
                                 looksListSize=subscribers.size();
+                                if (looksListSize==0){
+                                    createNewLookText.setVisibility(View.VISIBLE);
+                                    createNewLook.setVisibility(View.VISIBLE);
+                                    looksRecycler.setVisibility(View.GONE);
+                                }else {
+                                    LooksAdapter looksAdapter=new LooksAdapter(subscribers);
+                                    looksRecycler.setLayoutManager(new GridLayoutManager(getActivity(), 3));
+                                    looksRecycler.setAdapter(looksAdapter);
+                                }
                             }
                         });
                     }
                 });
-                if (looksListSize==0){
-                    createNewLookText.setVisibility(View.VISIBLE);
-                    createNewLook.setVisibility(View.VISIBLE);
-                }
+                ///////////////////////////////////////
 
                 handler = new Handler(getMainLooper());
                 scene = new SceneLoader(this);
@@ -300,7 +322,6 @@ public class ProfileFragment extends Fragment {
                 sendNickString=info.getNick();
                 user = firebaseModel.getUsersReference().child(info.getNick());
                 otherUserBiography=view.findViewById(R.id.otheruserbiography);
-                looksText=view.findViewById(R.id.looksText);
                 looksRecycler=view.findViewById(R.id.looksRecycler);
                 subscribeClose=view.findViewById(R.id.subscribeClose);
                 otherUserBiography.setText(info.getBio());
@@ -347,9 +368,12 @@ public class ProfileFragment extends Fragment {
                         otherLooksCount = view.findViewById(R.id.looksCountOther);
                         otherSubscriptionCount = view.findViewById(R.id.subscriptionCountOther);
                         otherSubscribersCount = view.findViewById(R.id.subsCountOther);
-
+                        looksRecycler=view.findViewById(R.id.looksRecyclerOther);
+                        looksText=view.findViewById(R.id.looksText);
+                        noLooksOther=view.findViewById(R.id.noLooksOther);
                         linearSubscriptions = view.findViewById(R.id.subscriptionLinear);
                         linearSubscribers = view.findViewById(R.id.subscribersLinear);
+                        checkLooksOther();
                         linearSubscriptions.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -504,6 +528,33 @@ public class ProfileFragment extends Fragment {
         });
     }
 
+    public void checkWardrobe(){
+        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+            @Override
+            public void PassUserNick(String nick) {
+                RecentMethods.getClothesInWardrobe(nick, firebaseModel, new Callbacks.GetClothes() {
+                    @Override
+                    public void getClothes(ArrayList<Clothes> allClothes) {
+                        if(allClothes.size()==0){
+                            wardrobeRecycler.setVisibility(View.GONE);
+                            noClothes.setVisibility(View.VISIBLE);
+                            buyClothesProfile.setVisibility(View.VISIBLE);
+                            buyClothesProfile.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    RecentMethods.setCurrentFragment(ShopFragment.newInstance(), getActivity());
+                                }
+                            });
+                        }else {
+                            NewClothesAdapter newClothesAdapter=new NewClothesAdapter(allClothes, itemClickListener);
+                            wardrobeRecycler.setAdapter(newClothesAdapter);
+                        }
+                    }
+                });
+            }
+        });
+    }
+
     public void setCountsOther() {
         RecentMethods.getSubscriptionList(info.getNick(), firebaseModel, new Callbacks.getFriendsList() {
             @Override
@@ -528,6 +579,23 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
+            }
+        });
+    }
+
+    public void checkLooksOther(){
+        RecentMethods.getLooksList(info.getNick(), firebaseModel, new Callbacks.getSubscribersList() {
+            @Override
+            public void getSubscribersList(ArrayList<Subscriber> subscribers) { ;
+                if (subscribers.size()==0){
+                    noLooksOther.setVisibility(View.VISIBLE);
+                    looksRecyclerOther.setVisibility(View.GONE);
+                }else {
+                    LooksAdapter looksAdapter=new LooksAdapter(subscribers);
+                    looksRecyclerOther.setLayoutManager(new GridLayoutManager(getActivity(), 3));
+                    looksRecyclerOther.setAdapter(looksAdapter);
+                }
+                Log.d("#####", "sf  "+subscribers.size());
             }
         });
     }
