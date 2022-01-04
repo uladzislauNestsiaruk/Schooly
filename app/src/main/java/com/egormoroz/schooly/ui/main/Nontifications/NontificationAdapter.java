@@ -49,7 +49,6 @@ public class NontificationAdapter extends RecyclerView.Adapter<NontificationAdap
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Subscriber subscriber=listAdapter.get(position);
-        Log.d("####", "suuck"+listAdapter);
         holder.otherUserNick.setText(subscriber.getSub());
         holder.addFriend.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,7 +56,6 @@ public class NontificationAdapter extends RecyclerView.Adapter<NontificationAdap
                 RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
                     @Override
                     public void PassUserNick(String nick) {
-                        Log.d("####", "daa"+subscriber.getSub());
                         firebaseModel.getReference().child("users").child(nick).child("nontifications")
                                 .child(subscriber.getSub()).removeValue();
                         firebaseModel.getReference().child("users").child(nick).child("subscribers")

@@ -1017,6 +1017,30 @@ public class RecentMethods {
 
 
     }
+
+    public static void getBlackList(String nickName, FirebaseModel model, Callbacks.getSubscribersList callback){
+        model.initAll();
+        Query query=model.getUsersReference().child(nickName).child("blackList");
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                ArrayList<Subscriber> subscribersList = new ArrayList<>();
+                for (DataSnapshot snap:snapshot.getChildren()){
+                    Subscriber subscriber=new Subscriber();
+                    subscriber.setSub(snap.getValue(String.class));
+                    subscribersList.add(subscriber);
+                }
+                callback.getSubscribersList(subscribersList);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
+    }
     public static void getLooksList(String nickName, FirebaseModel model, Callbacks.getSubscribersList callback){
         model.initAll();
         Query query=model.getUsersReference().child(nickName).child("looks");
@@ -1029,6 +1053,31 @@ public class RecentMethods {
                     subscriber.setSub(snap.getValue(String.class));
                     subscribersList.add(subscriber);
                 }
+                callback.getSubscribersList(subscribersList);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
+    }
+
+    public static void getNontificationsRecyclerList(String nickName, FirebaseModel model, Callbacks.getSubscribersList callback){
+        model.initAll();
+        Query query=model.getUsersReference().child(nickName).child("nontificationsRecycler");
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                ArrayList<Subscriber> subscribersList = new ArrayList<>();
+                for (DataSnapshot snap:snapshot.getChildren()){
+                    Subscriber subscriber=new Subscriber();
+                    subscriber.setSub(snap.getValue(String.class));
+                    subscribersList.add(subscriber);
+                }
+                Log.d("###", "name2"+subscribersList);
                 callback.getSubscribersList(subscribersList);
             }
 

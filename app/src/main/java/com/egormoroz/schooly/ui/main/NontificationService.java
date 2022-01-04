@@ -43,7 +43,7 @@ public class NontificationService extends Service {
     ArrayList<String> listOfNontifications = new ArrayList<String>();
     ArrayList<String> list = new ArrayList<String>();
     Subscriber otherUserNickNonts;
-    String name;
+    String name,nickOther;
 
 //    @Override
 //    public void onCreate() {
@@ -70,14 +70,12 @@ public class NontificationService extends Service {
             channel.setDescription(description);
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
-
+            Log.d("####", "dd  "+nickOther);
         }
     }
     @Override
     public void onDestroy() {
         super.onDestroy();
-        createNotificationChannel();
-        getChangesInSubscribers();
     }
     public Notification getNotification()
     {
@@ -121,7 +119,7 @@ public class NontificationService extends Service {
                 query.addChildEventListener(new ChildEventListener() {
                     @Override
                     public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                        RecentMethods.getSubscribersList(nick, firebaseModel, new Callbacks.getSubscribersList() {
+                        RecentMethods.getNontificationsList(nick, firebaseModel, new Callbacks.getSubscribersList() {
                             @Override
                             public void getSubscribersList(ArrayList<Subscriber> subscribers) {
                                 int lastIndex=subscribers.size()-1;
@@ -129,6 +127,7 @@ public class NontificationService extends Service {
                                 Log.d("###", "dsaddf"+subscribers.size());
                                 Log.d("###", "dsad"+lastIndex);
                                 name=otherUserNickNonts.getSub();
+                                nickOther=otherUserNickNonts.getSub();
                                 Log.d("###", "d"+name);
                                 nontification();
                             }

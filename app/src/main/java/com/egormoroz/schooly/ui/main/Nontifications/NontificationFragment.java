@@ -76,7 +76,6 @@ public class NontificationFragment extends Fragment {
                         }
                         NontificationAdapter nontificationAdapter=new NontificationAdapter(arrayListNonts);
                         nontsRecyclerView.setAdapter(nontificationAdapter);
-                        Log.d("####","ddddddff"+subscribers);
                     }
                 });
             }

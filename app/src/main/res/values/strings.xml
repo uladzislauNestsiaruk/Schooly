@@ -187,4 +187,10 @@
 
     <string name="noLooksOther">У пользователя нет образов(</string>
 
+    <string name="block">Заблокировать</string>
+    <string name="complain">Пожаловаться</string>
+    <string name="deleteSubscriber">Удалить подписчика</string>
+
+    <string name="blackList">Черный список</string>
+
 </resources>
