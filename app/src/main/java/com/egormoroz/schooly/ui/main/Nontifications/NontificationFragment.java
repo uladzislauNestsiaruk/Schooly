@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.MainActivity;
+import com.egormoroz.schooly.Nontification;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.Subscriber;
@@ -64,17 +65,16 @@ public class NontificationFragment extends Fragment {
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @Override
             public void PassUserNick(String nick) {
-                RecentMethods.getNontificationsList(nick, firebaseModel, new Callbacks.getSubscribersList() {
+                RecentMethods.getNontificationsList(nick, firebaseModel, new Callbacks.getNontificationsList() {
                     @Override
-                    public void getSubscribersList(ArrayList<Subscriber> subscribers) {
-                        arrayListNonts.addAll(subscribers);
-                        if (subscribers.size()==0){
+                    public void getNontificationsList(ArrayList<Nontification> nontifications) {
+                        if (nontifications.size()==0){
                             emptyNonts.setVisibility(View.VISIBLE);
                             emptyNonts.setText("Пока нет уведомлений :)");
                         }else {
                             emptyNonts.setVisibility(View.GONE);
                         }
-                        NontificationAdapter nontificationAdapter=new NontificationAdapter(arrayListNonts);
+                        NontificationAdapter nontificationAdapter=new NontificationAdapter(nontifications);
                         nontsRecyclerView.setAdapter(nontificationAdapter);
                     }
                 });

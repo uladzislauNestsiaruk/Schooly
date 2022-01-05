@@ -1065,45 +1065,63 @@ public class RecentMethods {
 
     }
 
-    public static void getNontificationsRecyclerList(String nickName, FirebaseModel model, Callbacks.getSubscribersList callback){
-        model.initAll();
-        Query query=model.getUsersReference().child(nickName).child("nontificationsRecycler");
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                ArrayList<Subscriber> subscribersList = new ArrayList<>();
-                for (DataSnapshot snap:snapshot.getChildren()){
-                    Subscriber subscriber=new Subscriber();
-                    subscriber.setSub(snap.getValue(String.class));
-                    subscribersList.add(subscriber);
-                }
-                Log.d("###", "name2"+subscribersList);
-                callback.getSubscribersList(subscribersList);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-
-
-    }
-
-    public static void getNontificationsList(String nickName, FirebaseModel model, Callbacks.getSubscribersList callback){
+    public static void getNontificationsListAdded(String nickName, FirebaseModel model, Callbacks.getNontificationsList callback){
         model.initAll();
         Query query=model.getUsersReference().child(nickName).child("nontifications");
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
+        query.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                ArrayList<Nontification> nontificationArrayList = new ArrayList<>();
+                for (DataSnapshot snap:dataSnapshot.getChildren()){
+                    Nontification nontification=new Nontification();
+                    nontification.setNick(snap.child("nick").getValue(String.class));
+                    nontification.setTypeDispatch(snap.child("typeDispatch").getValue(String.class));
+                    nontification.setTypeView(snap.child("typeView").getValue(String.class));
+                    nontification.setTimestamp(snap.child("timestamp").getValue(String.class));
+                }
+                callback.getNontificationsList(nontificationArrayList);
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+    }
+
+    public static void getNontificationsList(String nickName, FirebaseModel model, Callbacks.getNontificationsList callback){
+        model.initAll();
+        Query query=model.getUsersReference().child(nickName).child("nontifications");
+        query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                ArrayList<Subscriber> subscribersList = new ArrayList<>();
+                ArrayList<Nontification> nontificationArrayList = new ArrayList<>();
                 for (DataSnapshot snap:snapshot.getChildren()){
-                    Subscriber subscriber=new Subscriber();
-                    subscriber.setSub(snap.getValue(String.class));
-                    subscribersList.add(subscriber);
+                    Nontification nontification=new Nontification();
+                    nontification.setNick(snap.child("nick").getValue(String.class));
+                    nontification.setTypeDispatch(snap.child("typeDispatch").getValue(String.class));
+                    nontification.setTypeView(snap.child("typeView").getValue(String.class));
+                    nontification.setTimestamp(snap.child("timestamp").getValue(String.class));
+                    nontificationArrayList.add(nontification);
                 }
-                Log.d("###", "name2"+subscribersList);
-                callback.getSubscribersList(subscribersList);
+                callback.getNontificationsList(nontificationArrayList);
             }
 
             @Override
@@ -1114,6 +1132,7 @@ public class RecentMethods {
 
 
     }
+
     public static void getSubscriptionList(String nickName, FirebaseModel model, Callbacks.getFriendsList callback){
         model.initAll();
         Query query=model.getUsersReference().child(nickName).child("subscription");

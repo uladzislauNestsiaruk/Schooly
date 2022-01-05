@@ -70,6 +70,9 @@ public class Callbacks {
     public interface getSubscribersList{
         default void getSubscribersList(ArrayList<Subscriber> subscribers){}
     }
+    public interface getNontificationsList{
+        default void getNontificationsList(ArrayList<Nontification> nontifications){}
+    }
     public interface getAmountOfSubscribers{
         default void getAmountOfSubscribers(int amount){}
     }
