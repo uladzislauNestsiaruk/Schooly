@@ -25,33 +25,48 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
-public class LooksAdapter extends RecyclerView.Adapter<LooksAdapter.ViewHolder> {
+public class BlackListAdapter extends RecyclerView.Adapter<BlackListAdapter.ViewHolder>  {
 
-    ArrayList<Look> listAdapter;
-    private SubscriptionsAdapter.ItemClickListener clickListener;
+    ArrayList<Subscriber> listAdapter;
+    private SubscribersAdapter.ItemClickListener clickListener;
     private FirebaseModel firebaseModel = new FirebaseModel();
     long subscriptionsCount,subscribersCount;
-    int a;
+    boolean check=false;
+    int a=0;
 
-    public LooksAdapter(ArrayList<Look> listAdapter) {
+    public  BlackListAdapter(ArrayList<Subscriber> listAdapter) {
         this.listAdapter = listAdapter;
     }
 
 
     @NotNull
     @Override
-    public LooksAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
+    public BlackListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
         RelativeLayout v = (RelativeLayout) LayoutInflater.from(viewGroup.getContext()).
-                inflate(R.layout.rvitemsubscriptions, viewGroup, false);
-        LooksAdapter.ViewHolder viewHolder=new LooksAdapter.ViewHolder(v);
+                inflate(R.layout.rvitem_blacklist, viewGroup, false);
+        BlackListAdapter.ViewHolder viewHolder=new BlackListAdapter.ViewHolder(v);
         firebaseModel.initAll();
         return viewHolder;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull LooksAdapter.ViewHolder holder, int position) {
-        Look look=listAdapter.get(position);
-        holder.otherUserNick.setText(look.getNick());
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        Subscriber subscriber=listAdapter.get(position);
+        holder.otherUserNick.setText(subscriber.getSub());
+        holder.putAwayText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+                    @Override
+                    public void PassUserNick(String nick) {
+                        firebaseModel.getUsersReference().child(nick)
+                                .child("blackList").child(subscriber.getSub()).removeValue();
+                        holder.putAwayText.setText(R.string.putAwayDone);
+                        holder.putAwayText.setBackgroundResource(R.drawable.corners10grey);
+                    }
+                });
+            }
+        });
     }
 
 
@@ -62,11 +77,11 @@ public class LooksAdapter extends RecyclerView.Adapter<LooksAdapter.ViewHolder> 
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        final TextView otherUserNick,unsubscribe;
+        final TextView otherUserNick,putAwayText;
         ViewHolder(View itemView) {
             super(itemView);
             otherUserNick = itemView.findViewById(R.id.otherUserNick);
-            unsubscribe=itemView.findViewById(R.id.unsubscribe);
+            putAwayText=itemView.findViewById(R.id.putAwayText);
         }
 
         @Override
@@ -75,15 +90,16 @@ public class LooksAdapter extends RecyclerView.Adapter<LooksAdapter.ViewHolder> 
         }
     }
 
-    Look getItem(int id) {
+    Subscriber getItem(int id) {
         return listAdapter.get(id);
     }
 
-    void setClickListener(SubscriptionsAdapter.ItemClickListener itemClickListener) {
+    void setClickListener(SubscribersAdapter.ItemClickListener itemClickListener) {
         this.clickListener = itemClickListener;
     }
 
     public interface ItemClickListener {
         void onItemClick(View view, int position);
     }
+
 }

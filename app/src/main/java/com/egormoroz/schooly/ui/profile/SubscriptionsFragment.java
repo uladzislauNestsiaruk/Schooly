@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -25,6 +26,7 @@ public class SubscriptionsFragment extends Fragment {
     FirebaseModel firebaseModel=new FirebaseModel();
     RecyclerView recyclerView;
     ImageView back;
+    TextView emptyList;
 
     public static SubscriptionsFragment newInstance() {
         return new SubscriptionsFragment();
@@ -44,7 +46,7 @@ public class SubscriptionsFragment extends Fragment {
     public void onViewCreated(@Nullable View view, @NonNull Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         recyclerView=view.findViewById(R.id.friendsRecycler);
-
+        emptyList=view.findViewById(R.id.emptySubscriptionList);
         back=view.findViewById(R.id.back_toprofile);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,8 +60,13 @@ public class SubscriptionsFragment extends Fragment {
                 RecentMethods.getSubscriptionList(nick, firebaseModel, new Callbacks.getFriendsList() {
                     @Override
                     public void getFriendsList(ArrayList<Subscriber> friends) {
-                        SubscriptionsAdapter subscribersAdapter=new SubscriptionsAdapter(friends);
-                        recyclerView.setAdapter(subscribersAdapter);
+                        if (friends.size()==0){
+                            emptyList.setVisibility(View.VISIBLE);
+                            recyclerView.setVisibility(View.GONE);
+                        }else {
+                            SubscriptionsAdapter subscribersAdapter = new SubscriptionsAdapter(friends);
+                            recyclerView.setAdapter(subscribersAdapter);
+                        }
                     }
                 });
             }

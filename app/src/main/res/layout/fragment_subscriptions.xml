@@ -1,13 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical">
 
 
         <ImageView
@@ -39,7 +34,17 @@
             android:scrollbars="none"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
+    <TextView
+        android:id="@+id/emptySubscriptionList"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/emptySubscriptionList"
+        android:layout_centerInParent="true"
+        android:textColor="@color/app_color"
+        android:textSize="16sp"
+        android:fontFamily="@font/montserrat_bold"
+        android:visibility="gone"/>
 
-    </RelativeLayout>
 
-</ScrollView>
+
+</RelativeLayout>

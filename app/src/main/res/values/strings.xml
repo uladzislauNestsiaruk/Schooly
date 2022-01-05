@@ -132,7 +132,6 @@
     <string name="miners">Майнеры</string>
     <string name="weak">Слабые</string>
     <string name="buy">Купить</string>
-    <string name="putaway">Убрать</string>
     <string name="inhour">в час</string>
     <string name="noactiveminers">Нет активных майнеров</string>
     <string name="use">Использовать</string>
@@ -192,5 +191,13 @@
     <string name="deleteSubscriber">Удалить подписчика</string>
 
     <string name="blackList">Черный список</string>
+
+    <string name="putAway">Убрать</string>
+    <string name="putAwayDone">Убран</string>
+    <string name="emptyBlackList">Черный список пуст</string>
+    <string name="emptySubscribersList">Скажи всем, чтобы подписались не тебя!</string>
+    <string name="emptySubscriptionList">Подпишись на других пользователей!</string>
+    <string name="emptySubscriptionListOther">Нет подписок:(</string>
+    <string name="emptySubscribersListOther">Нет подписчиков:(</string>
 
 </resources>

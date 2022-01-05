@@ -74,7 +74,7 @@ public class ProfileFragment extends Fragment {
     GLSurfaceView mainLook;
     ModelRenderer modelRenderer;
     RecyclerView looksRecycler,wardrobeRecycler,looksRecyclerOther;
-    ImageView moreSquare;
+    ImageView moreSquare,back;
     int looksListSize,profileValue;
     private float[] backgroundColor = new float[]{0f, 0f, 0f, 1.0f};
     private Handler handler;
@@ -283,16 +283,16 @@ public class ProfileFragment extends Fragment {
                 RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
                     @Override
                     public void PassUserNick(String nick) {
-                        RecentMethods.getLooksList(nick, firebaseModel, new Callbacks.getSubscribersList() {
+                        RecentMethods.getLooksList(nick, firebaseModel, new Callbacks.getLooksList() {
                             @Override
-                            public void getSubscribersList(ArrayList<Subscriber> subscribers) {
-                                looksListSize=subscribers.size();
+                            public void getLooksList(ArrayList<Look> look) {
+                                looksListSize=look.size();
                                 if (looksListSize==0){
                                     createNewLookText.setVisibility(View.VISIBLE);
                                     createNewLook.setVisibility(View.VISIBLE);
                                     looksRecycler.setVisibility(View.GONE);
                                 }else {
-                                    LooksAdapter looksAdapter=new LooksAdapter(subscribers);
+                                    LooksAdapter looksAdapter=new LooksAdapter(look);
                                     looksRecycler.setLayoutManager(new GridLayoutManager(getActivity(), 3));
                                     looksRecycler.setAdapter(looksAdapter);
                                 }
@@ -326,6 +326,7 @@ public class ProfileFragment extends Fragment {
                 user = firebaseModel.getUsersReference().child(info.getNick());
                 otherUserBiography=view.findViewById(R.id.otheruserbiography);
                 subscribeClose=view.findViewById(R.id.subscribeClose);
+                back=view.findViewById(R.id.back);
                 otherUserBiography.setText(info.getBio());
                 addFriend=view.findViewById(R.id.addFriend);
                 subscribeFirst=view.findViewById(R.id.SubscribeFirst);
@@ -363,16 +364,24 @@ public class ProfileFragment extends Fragment {
                                     moreSquare.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
-                                            Log.d("####", "hello");
                                             PopupMenu popup = new PopupMenu(getActivity(), moreSquare);
-                                            //Inflating the Popup using xml file
                                             popup.getMenuInflater()
                                                     .inflate(R.menu.other_user_menu, popup.getMenu());
 
-                                            //registering popup with OnMenuItemClickListener
                                             popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                                                 public boolean onMenuItemClick(MenuItem item) {
                                                     String itemTitle=item.getTitle().toString();
+                                                    if(itemTitle.equals("Заблокировать")){
+                                                        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+                                                            @Override
+                                                            public void PassUserNick(String nick) {
+                                                                firebaseModel.getUsersReference().child(nick)
+                                                                        .child("blackList").child(info.getNick())
+                                                                        .setValue(info.getNick());
+                                                                Log.d("####", "hellosss"+itemTitle);
+                                                            }
+                                                        });
+                                                    }
                                                     return true;
                                                 }
                                             });
@@ -481,15 +490,12 @@ public class ProfileFragment extends Fragment {
                                         @Override
                                         public void onClick(View v) {
                                             PopupMenu popup = new PopupMenu(getActivity(), moreSquare);
-                                            //Inflating the Popup using xml file
                                             popup.getMenuInflater()
                                                     .inflate(R.menu.other_user_menu, popup.getMenu());
 
-                                            //registering popup with OnMenuItemClickListener
                                             popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                                                 public boolean onMenuItemClick(MenuItem item) {
                                                     String itemTitle=item.getTitle().toString();
-                                                    Log.d("####", "hello"+itemTitle);
                                                     if(itemTitle.equals("Заблокировать")){
                                                         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
                                                             @Override
@@ -497,6 +503,7 @@ public class ProfileFragment extends Fragment {
                                                                 firebaseModel.getUsersReference().child(nick)
                                                                         .child("blackList").child(info.getNick())
                                                                         .setValue(info.getNick());
+                                                                Log.d("####", "hellosss"+itemTitle);
                                                             }
                                                         });
                                                     }
@@ -736,18 +743,17 @@ public class ProfileFragment extends Fragment {
     }
 
     public void checkLooksOther(){
-        RecentMethods.getLooksList(info.getNick(), firebaseModel, new Callbacks.getSubscribersList() {
+        RecentMethods.getLooksList(info.getNick(), firebaseModel, new Callbacks.getLooksList() {
             @Override
-            public void getSubscribersList(ArrayList<Subscriber> subscribers) { ;
-                if (subscribers.size()==0){
+            public void getLooksList(ArrayList<Look> look) {
+                if (look.size()==0){
                     noLooksOther.setVisibility(View.VISIBLE);
                     looksRecyclerOther.setVisibility(View.GONE);
-                }else {
-                    LooksAdapter looksAdapter=new LooksAdapter(subscribers);
+                }else{
+                    LooksAdapter looksAdapter=new LooksAdapter(look);
                     looksRecyclerOther.setLayoutManager(new GridLayoutManager(getActivity(), 3));
                     looksRecyclerOther.setAdapter(looksAdapter);
                 }
-                Log.d("#####", "sf  "+subscribers.size());
             }
         });
     }

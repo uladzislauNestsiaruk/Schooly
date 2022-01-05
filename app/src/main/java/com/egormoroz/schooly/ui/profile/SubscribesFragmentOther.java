@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -30,6 +31,7 @@ public class SubscribesFragmentOther extends Fragment {
     RecyclerView recyclerView;
     ImageView back;
     String otherUserNick;
+    TextView emptyList;
     public static SubscribesFragmentOther newInstance() {
         return new SubscribesFragmentOther();
     }
@@ -37,7 +39,7 @@ public class SubscribesFragmentOther extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_subscribers, container, false);
+        View root = inflater.inflate(R.layout.fragment_subscriberother, container, false);
         BottomNavigationView bnv = getActivity().findViewById(R.id.bottomNavigationView);
         bnv.setVisibility(bnv.GONE);
         firebaseModel.initAll();
@@ -49,6 +51,7 @@ public class SubscribesFragmentOther extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         recyclerView=view.findViewById(R.id.subscribersRecycler);
         back=view.findViewById(R.id.back_toprofile);
+        emptyList=view.findViewById(R.id.emptySubscribersListOther);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -66,9 +69,7 @@ public class SubscribesFragmentOther extends Fragment {
                         userData.setPhone(snapshot.child("phone").getValue(String.class));
                         userData.setUid(snapshot.child("uid").getValue(String.class));
                         userData.setQueue(snapshot.child("queue").getValue(String.class));
-                        userData.setSubscriptionCount(snapshot.child("subscriptionCount").getValue(Long.class));
-                        userData.setSubscribersCount(snapshot.child("subscribersCount").getValue(Long.class));
-                        userData.setLooksCount(snapshot.child("looksCount").getValue(Long.class));
+                        userData.setAccountType(snapshot.child("accountType").getValue(String.class));
 //                    userData.setSubscribers(snapshot.child("subscribers").getValue(String.class));
 //                                                userData.setFriends(snapshot.child("friends").getValue(String.class));
                         RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userData),
@@ -90,9 +91,13 @@ public class SubscribesFragmentOther extends Fragment {
                 RecentMethods.getSubscribersList(nick, firebaseModel, new Callbacks.getSubscribersList() {
                     @Override
                     public void getSubscribersList(ArrayList<Subscriber> subscribers) {
-                        SubscribersAdapterOther subscribersAdapter=new SubscribersAdapterOther(subscribers);
-                        recyclerView.setAdapter(subscribersAdapter);
-
+                        if (subscribers.size()==0){
+                            emptyList.setVisibility(View.VISIBLE);
+                            recyclerView.setVisibility(View.GONE);
+                        }else {
+                            SubscribersAdapterOther subscribersAdapter = new SubscribersAdapterOther(subscribers);
+                            recyclerView.setAdapter(subscribersAdapter);
+                        }
                    }
                 });
             }

@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -26,6 +27,7 @@ public  class BlackListFragment extends Fragment {
     FirebaseModel firebaseModel=new FirebaseModel();
     RecyclerView recyclerView;
     ImageView back;
+    TextView emptyList;
 
     public static BlackListFragment newInstance() {
         return new BlackListFragment();
@@ -46,6 +48,7 @@ public  class BlackListFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         recyclerView=view.findViewById(R.id.blackListRecycler);
         back=view.findViewById(R.id.back_tosettings);
+        emptyList=view.findViewById(R.id.emptyBlackList);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -59,10 +62,14 @@ public  class BlackListFragment extends Fragment {
                 RecentMethods.getBlackList(nick, firebaseModel, new Callbacks.getSubscribersList() {
                     @Override
                     public void getSubscribersList(ArrayList<Subscriber> subscribers) {
-                        SubscribersAdapter subscribersAdapter=new SubscribersAdapter(subscribers);
-                        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-                        recyclerView.setAdapter(subscribersAdapter);
-
+                        if(subscribers.size()==0){
+                            emptyList.setVisibility(View.VISIBLE);
+                            recyclerView.setVisibility(View.GONE);
+                        }else {
+                            BlackListAdapter blackListAdapter=new BlackListAdapter(subscribers);
+                            recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+                            recyclerView.setAdapter(blackListAdapter);
+                        }
                     }
                 });
             }

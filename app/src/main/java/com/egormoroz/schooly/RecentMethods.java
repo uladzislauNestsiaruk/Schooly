@@ -12,6 +12,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.egormoroz.schooly.ui.main.Mining.Miner;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
 import com.egormoroz.schooly.ui.main.UserInformation;
+import com.egormoroz.schooly.ui.profile.Look;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -1041,19 +1042,22 @@ public class RecentMethods {
 
 
     }
-    public static void getLooksList(String nickName, FirebaseModel model, Callbacks.getSubscribersList callback){
+    public static void getLooksList(String nickName, FirebaseModel model, Callbacks.getLooksList callback){
         model.initAll();
         Query query=model.getUsersReference().child(nickName).child("looks");
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                ArrayList<Subscriber> subscribersList = new ArrayList<>();
+                ArrayList<Look> lookList = new ArrayList<>();
                 for (DataSnapshot snap:snapshot.getChildren()){
-                    Subscriber subscriber=new Subscriber();
-                    subscriber.setSub(snap.getValue(String.class));
-                    subscribersList.add(subscriber);
+                    Look look=new Look();
+                    look.setNick(snap.child("nick").getValue(String.class));
+                    look.setLookImage(snap.child("lookImage").getValue(String.class));
+                    look.setPostTime(snap.child("postTime").getValue(String.class));
+                    look.setLookID(snap.child("lookID").getValue(String.class));
+                    lookList.add(look);
                 }
-                callback.getSubscribersList(subscribersList);
+                callback.getLooksList(lookList);
             }
 
             @Override
@@ -1129,8 +1133,6 @@ public class RecentMethods {
 
             }
         });
-
-
     }
 
     public static void getSubscriptionList(String nickName, FirebaseModel model, Callbacks.getFriendsList callback){
