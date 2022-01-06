@@ -1,10 +1,12 @@
 package com.egormoroz.schooly.ui.profile;
 
 import android.graphics.Color;
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -20,6 +22,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -42,7 +45,7 @@ public class LooksAdapter extends RecyclerView.Adapter<LooksAdapter.ViewHolder> 
     @Override
     public LooksAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
         RelativeLayout v = (RelativeLayout) LayoutInflater.from(viewGroup.getContext()).
-                inflate(R.layout.rvitemsubscriptions, viewGroup, false);
+                inflate(R.layout.rvitem_look, viewGroup, false);
         LooksAdapter.ViewHolder viewHolder=new LooksAdapter.ViewHolder(v);
         firebaseModel.initAll();
         return viewHolder;
@@ -51,7 +54,7 @@ public class LooksAdapter extends RecyclerView.Adapter<LooksAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(@NonNull LooksAdapter.ViewHolder holder, int position) {
         Look look=listAdapter.get(position);
-        holder.otherUserNick.setText(look.getNick());
+        Picasso.get().load(look.getLookImage()).into(holder.lookImage);
     }
 
 
@@ -62,11 +65,11 @@ public class LooksAdapter extends RecyclerView.Adapter<LooksAdapter.ViewHolder> 
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        final TextView otherUserNick,unsubscribe;
+        final ImageView lookImage;
         ViewHolder(View itemView) {
             super(itemView);
-            otherUserNick = itemView.findViewById(R.id.otherUserNick);
-            unsubscribe=itemView.findViewById(R.id.unsubscribe);
+            lookImage=itemView.findViewById(R.id.lookImage);
+
         }
 
         @Override
