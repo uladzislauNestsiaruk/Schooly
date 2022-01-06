@@ -200,4 +200,7 @@
     <string name="emptySubscriptionListOther">Нет подписок:(</string>
     <string name="emptySubscribersListOther">Нет подписчиков:(</string>
 
+    <string name="toComplain">Пожаловаться</string>
+    <string name="complainReason">Причина жалобы на</string>
+
 </resources>

@@ -13,6 +13,7 @@ import com.egormoroz.schooly.ui.main.Mining.Miner;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
 import com.egormoroz.schooly.ui.main.UserInformation;
 import com.egormoroz.schooly.ui.profile.Look;
+import com.egormoroz.schooly.ui.profile.Reason;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -1126,6 +1127,28 @@ public class RecentMethods {
                     nontificationArrayList.add(nontification);
                 }
                 callback.getNontificationsList(nontificationArrayList);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    public static void getComplainReasonList( FirebaseModel model, Callbacks.getComplainReasonsList callback){
+        model.initAll();
+        Query query=model.getUsersReference().child("reasons");
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                ArrayList<Reason> reasonsArrayList = new ArrayList<>();
+                for (DataSnapshot snap:snapshot.getChildren()){
+                    Reason reason=new Reason();
+                    reason.setReason(snap.getValue(String.class));
+                    reasonsArrayList.add(reason);
+                }
+                callback.getComplainReasonsList(reasonsArrayList);
             }
 
             @Override

@@ -4,6 +4,7 @@ import com.egormoroz.schooly.ui.main.Mining.Miner;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
 import com.egormoroz.schooly.ui.main.UserInformation;
 import com.egormoroz.schooly.ui.profile.Look;
+import com.egormoroz.schooly.ui.profile.Reason;
 
 import java.util.ArrayList;
 
@@ -73,6 +74,9 @@ public class Callbacks {
     }
     public interface getNontificationsList{
         default void getNontificationsList(ArrayList<Nontification> nontifications){}
+    }
+    public interface getComplainReasonsList{
+        default void getComplainReasonsList(ArrayList<Reason> reason){}
     }
     public interface getLooksList{
         default void getLooksList(ArrayList<Look> look){}

@@ -124,12 +124,14 @@ public class NontificationService extends Service {
                             @Override
                             public void getNontificationsList(ArrayList<Nontification> nontifications) {
                                 Log.d("#####", "f "+nontifications);
-                                int lastIndex=nontifications.size()-1;
-                                Log.d("####### ", "fege  "+lastIndex);
-                                otherUserNickNonts=nontifications.get(lastIndex);
-                                name=otherUserNickNonts.getNick();
-                                nickOther=otherUserNickNonts.getNick();
-                                nontification();
+                                if(nontifications.size()!=0) {
+                                    int lastIndex = nontifications.size() - 1;
+                                    Log.d("####### ", "fege  " + lastIndex);
+                                    otherUserNickNonts = nontifications.get(lastIndex);
+                                    name = otherUserNickNonts.getNick();
+                                    nickOther = otherUserNickNonts.getNick();
+                                    nontification();
+                                }
                             }
                         });
 

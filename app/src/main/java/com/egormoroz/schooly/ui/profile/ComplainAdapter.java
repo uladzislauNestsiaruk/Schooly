@@ -1,12 +1,10 @@
 package com.egormoroz.schooly.ui.profile;
 
 import android.graphics.Color;
-import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -22,37 +20,36 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.squareup.picasso.Picasso;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
-public class LooksAdapter extends RecyclerView.Adapter<LooksAdapter.ViewHolder> {
+public class ComplainAdapter extends RecyclerView.Adapter<ComplainAdapter.ViewHolder>  {
 
-    ArrayList<Look> listAdapter;
-    private LooksAdapter.ItemClickListener clickListener;
+    ArrayList<Reason> listAdapter;
+    private ComplainAdapter.ItemClickListener clickListener;
     private FirebaseModel firebaseModel = new FirebaseModel();
 
-    public LooksAdapter(ArrayList<Look> listAdapter) {
+    public  ComplainAdapter(ArrayList<Reason> listAdapter) {
         this.listAdapter = listAdapter;
     }
 
 
     @NotNull
     @Override
-    public LooksAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
+    public ComplainAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
         RelativeLayout v = (RelativeLayout) LayoutInflater.from(viewGroup.getContext()).
-                inflate(R.layout.rvitem_look, viewGroup, false);
-        LooksAdapter.ViewHolder viewHolder=new LooksAdapter.ViewHolder(v);
+                inflate(R.layout.rvitem_reason, viewGroup, false);
+        ComplainAdapter.ViewHolder viewHolder=new ComplainAdapter.ViewHolder(v);
         firebaseModel.initAll();
         return viewHolder;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull LooksAdapter.ViewHolder holder, int position) {
-        Look look=listAdapter.get(position);
-        Picasso.get().load(look.getLookImage()).into(holder.lookImage);
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        Reason reason=listAdapter.get(position);
+        holder.reasonText.setText(reason.getReason());
     }
 
 
@@ -63,11 +60,10 @@ public class LooksAdapter extends RecyclerView.Adapter<LooksAdapter.ViewHolder> 
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        final ImageView lookImage;
+        final TextView reasonText;
         ViewHolder(View itemView) {
             super(itemView);
-            lookImage=itemView.findViewById(R.id.lookImage);
-
+            reasonText=itemView.findViewById(R.id.reasonText);
         }
 
         @Override
@@ -76,15 +72,16 @@ public class LooksAdapter extends RecyclerView.Adapter<LooksAdapter.ViewHolder> 
         }
     }
 
-    Look getItem(int id) {
+    Reason getItem(int id) {
         return listAdapter.get(id);
     }
 
-    void setClickListener(LooksAdapter.ItemClickListener itemClickListener) {
+    void setClickListener(ComplainAdapter.ItemClickListener itemClickListener) {
         this.clickListener = itemClickListener;
     }
 
     public interface ItemClickListener {
         void onItemClick(View view, int position);
     }
+
 }

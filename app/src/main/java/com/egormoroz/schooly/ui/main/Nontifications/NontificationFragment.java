@@ -53,6 +53,13 @@ public class NontificationFragment extends Fragment {
         backToMain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+                    @Override
+                    public void PassUserNick(String nick) {
+                        firebaseModel.getUsersReference().child(nick).child("nontifications")
+                                .removeValue();
+                    }
+                });
                 ((MainActivity) getActivity()).setCurrentFragment(MainFragment.newInstance());
             }
         });

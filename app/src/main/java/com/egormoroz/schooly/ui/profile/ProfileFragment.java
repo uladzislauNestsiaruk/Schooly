@@ -495,17 +495,24 @@ public class ProfileFragment extends Fragment {
 
                                             popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                                                 public boolean onMenuItemClick(MenuItem item) {
-                                                    String itemTitle=item.getTitle().toString();
-                                                    if(itemTitle.equals("Заблокировать")){
-                                                        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-                                                            @Override
-                                                            public void PassUserNick(String nick) {
-                                                                firebaseModel.getUsersReference().child(nick)
-                                                                        .child("blackList").child(info.getNick())
-                                                                        .setValue(info.getNick());
-                                                                Log.d("####", "hellosss"+itemTitle);
-                                                            }
-                                                        });
+                                                    String itemTitle= item.getTitle().toString().trim();
+
+                                                    Log.d("####", "hell"+itemTitle);
+                                                    if (itemTitle!=null) {
+                                                        if (itemTitle.equals("Заблокировать")) {
+                                                            RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+                                                                @Override
+                                                                public void PassUserNick(String nick) {
+                                                                    firebaseModel.getUsersReference().child(nick)
+                                                                            .child("blackList").child(info.getNick())
+                                                                            .setValue(info.getNick());
+                                                                    Log.d("####", "hellosss" + itemTitle);
+                                                                }
+                                                            });
+                                                        } else if (itemTitle.equals("Пожаловаться")) {
+                                                            RecentMethods.setCurrentFragment(ComplainFragment.newInstance(info.getNick()), getActivity());
+                                                            Log.d("####", "hellosss" + itemTitle);
+                                                        }
                                                     }
                                                     return true;
                                                 }
