@@ -58,21 +58,7 @@ public class SubscribersAdapter extends RecyclerView.Adapter<SubscribersAdapter.
             @Override
             public void onClick(View view) {
                 if (clickListener != null) clickListener.onItemClick(view, position);
-            }
-        });
-        holder.otherUserNick.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-                    @Override
-                    public void PassUserNick(String nick) {
-                        if(subscriber.getSub().equals(nick)){
-//                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("user", new UserInformation()),Activity);
-                        }else{
-
-                        }
-                    }
-                });
+                Log.d("#####", "fhjh");
             }
         });
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
@@ -111,7 +97,6 @@ public class SubscribersAdapter extends RecyclerView.Adapter<SubscribersAdapter.
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
                                 if(snapshot.exists()){
                                     a=1;
-                                    Log.d("#####", "c  "+a);
 
                                 }else{
                                     a=2;
