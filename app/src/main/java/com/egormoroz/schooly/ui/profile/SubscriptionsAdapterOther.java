@@ -45,24 +45,6 @@ public class SubscriptionsAdapterOther extends RecyclerView.Adapter<Subscription
                 inflate(R.layout.rvitemfriendsother, viewGroup, false);
         SubscriptionsAdapterOther.ViewHolder viewHolder=new SubscriptionsAdapterOther.ViewHolder(v);
         firebaseModel.initAll();
-        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-            @Override
-            public void PassUserNick(String nick) {
-                Query query=firebaseModel.getUsersReference().child(nick)
-                        .child("subscriptionCount");
-                query.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        subscriptionsCount=snapshot.getValue(Long.class);
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-            }
-        });
         return viewHolder;
     }
 
@@ -70,18 +52,10 @@ public class SubscriptionsAdapterOther extends RecyclerView.Adapter<Subscription
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Subscriber subscriber=listAdapter.get(position);
         holder.otherUserNick.setText(subscriber.getSub());
-        Query query=firebaseModel.getUsersReference().child(subscriber.getSub())
-                .child("subscribersCount");
-        query.addValueEventListener(new ValueEventListener() {
+        holder.otherUserNick.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                subscribersCount=snapshot.getValue(Long.class);
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
+            public void onClick(View view) {
+                if (clickListener != null) clickListener.onItemClick(view, position);
             }
         });
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
@@ -141,22 +115,16 @@ public class SubscriptionsAdapterOther extends RecyclerView.Adapter<Subscription
                                         .child(subscriber.getSub()).setValue(subscriber.getSub());
                                 firebaseModel.getReference().child("users").child(subscriber.getSub()).child("subscribers")
                                         .child(nick).setValue(nick);
+                                firebaseModel.getReference().child("users")
+                                        .child(subscriber.getSub()).child("nontifications")
+                                        .child(nick).setValue(nick);
+                                firebaseModel.getReference().child("users")
+                                        .child(subscriber.getSub()).child("nontificationsRecycler")
+                                        .child(nick).setValue(nick);
                                 holder.subscribe.setText("Отписаться");
                                 holder.subscribe.setTextColor(Color.parseColor("#F3A2E5"));
                                 holder.subscribe.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
                                 a=0;
-                                if (subscribersCount!=-1){
-                                    subscribersCount=subscribersCount+1;
-                                    Log.d("#####","subsCount  "+subscribersCount);
-                                    firebaseModel.getUsersReference().child(subscriber.getSub())
-                                            .child("subscribersCount").setValue(subscribersCount);
-                                }
-                                if (subscriptionsCount!=-1) {
-                                    subscriptionsCount = subscriptionsCount + 1;
-                                    Log.d("#####", "subsCount  " + subscriptionsCount);
-                                    firebaseModel.getUsersReference().child(nick)
-                                            .child("subscriptionCount").setValue(subscriptionsCount);
-                                }
                             }
                             if (a == 1) {
                                 Log.d("#####", "one  " + a);
@@ -168,18 +136,7 @@ public class SubscriptionsAdapterOther extends RecyclerView.Adapter<Subscription
                                 holder.subscribe.setTextColor(Color.parseColor("#FFFEFE"));
                                 holder.subscribe.setBackgroundResource(R.drawable.corners10dpappcolor);
                                 a=0;
-                                if (subscribersCount!=-1){
-                                    subscribersCount=subscribersCount-1;
-                                    Log.d("#####","subsCount  "+subscribersCount);
-                                    firebaseModel.getUsersReference().child(subscriber.getSub())
-                                            .child("subscribersCount").setValue(subscribersCount);
-                                }
-                                if (subscriptionsCount!=-1){
-                                    subscriptionsCount=subscriptionsCount-1;
-                                    Log.d("#####","subsCount  "+subscriptionsCount);
-                                    firebaseModel.getUsersReference().child(nick)
-                                            .child("subscriptionCount").setValue(subscriptionsCount);
-                                }
+
 
                             }
                         }

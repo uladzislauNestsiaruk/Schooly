@@ -32,7 +32,7 @@ public class SettingsFragment extends Fragment {
     }
 
     FirebaseModel firebaseModel=new FirebaseModel();
-    TextView  userNick,userNumber,userPassword,changePassword;
+    TextView  userNick,userNumber,userPassword,changePassword,blackList;
     String userNickString;
 
     @Override
@@ -56,6 +56,14 @@ public class SettingsFragment extends Fragment {
             public void onClick(View v) {
                 ((MainActivity)getActivity()).setCurrentFragment(ProfileFragment.newInstance("user",
                         new UserInformation()));
+            }
+        });
+
+        blackList=view.findViewById(R.id.blackList);
+        blackList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RecentMethods.setCurrentFragment(BlackListFragment.newInstance(), getActivity());
             }
         });
 

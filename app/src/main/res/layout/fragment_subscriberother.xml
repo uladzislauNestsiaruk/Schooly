@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <ImageView
+        android:id="@+id/back_toprofile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/corners14"
+        android:src="@drawable/left_arrow" />
+
+    <TextView
+        android:id="@+id/subscribers"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="11dp"
+        android:layout_toRightOf="@+id/back_toprofile"
+        android:text="@string/susriders"
+        android:textColor="@color/app_color"
+        android:textSize="22sp"
+        android:fontFamily="@font/montserrat_bold"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/subscribersRecycler"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/subscribers"
+        android:scrollbars="none"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+    <TextView
+        android:id="@+id/emptySubscribersListOther"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/emptySubscribersListOther"
+        android:layout_centerInParent="true"
+        android:textColor="@color/app_grey"
+        android:textSize="16sp"
+        android:fontFamily="@font/montserrat_bold"
+        android:visibility="gone"/>
+
+
+</RelativeLayout>

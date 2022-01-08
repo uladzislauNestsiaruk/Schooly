@@ -8,13 +8,21 @@
 		android:layout_width="match_parent"
 		android:layout_height="match_parent">
 
+		<ImageView
+			android:id="@+id/back"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginStart="24dp"
+			android:layout_marginTop="20dp"
+			android:src="@drawable/left_arrow" />
 
 		<TextView
 			android:id="@+id/otherusernick"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_marginTop="16dp"
-			android:layout_marginStart="24dp"
+			android:layout_marginStart="16dp"
+			android:layout_toRightOf="@+id/back"
 			android:textSize="20sp"
 			android:textColor="@color/app_color"
 			android:fontFamily="@font/montserrat_bold"/>
@@ -26,7 +34,7 @@
 			android:src="@drawable/ic_more_square"
 			android:layout_alignParentEnd="true"
 			android:layout_marginEnd="24dp"
-			android:layout_marginTop="15dp"/>
+			android:layout_marginTop="18dp"/>
 
 		<TextView
 			android:id="@+id/otheruserbiography"
@@ -214,13 +222,27 @@
 			android:textSize="18dp" />
 
 		<androidx.recyclerview.widget.RecyclerView
-			android:id="@+id/looksRecycler"
+			android:id="@+id/looksRecyclerOther"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_below="@+id/looksText"
 			android:layout_marginTop="16dp"
 			android:orientation="vertical"
 			android:scrollbars="none" />
+
+		<TextView
+			android:id="@+id/noLooksOther"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_below="@id/looksText"
+			android:layout_centerHorizontal="true"
+			android:layout_marginTop="24dp"
+			android:fontFamily="@font/montserrat_extrabold"
+			android:text="@string/noLooksOther"
+			android:textColor="@color/app_grey"
+			android:textSize="16sp"
+			android:visibility="gone"/>
+
 
 		<TextView
 			android:id="@+id/SubscribeFirst"

@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FirebaseModel;
+import com.egormoroz.schooly.Nontification;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.Subscriber;
@@ -27,11 +28,11 @@ import java.util.ArrayList;
 
 public class NontificationAdapter extends RecyclerView.Adapter<NontificationAdapter.ViewHolder>  {
 
-    ArrayList<Subscriber> listAdapter;
+    ArrayList<Nontification> listAdapter;
     private ItemClickListener clickListener;
     private FirebaseModel firebaseModel = new FirebaseModel();
 
-    public  NontificationAdapter(ArrayList<Subscriber> listAdapter) {
+    public  NontificationAdapter(ArrayList<Nontification> listAdapter) {
         this.listAdapter = listAdapter;
     }
 
@@ -48,23 +49,21 @@ public class NontificationAdapter extends RecyclerView.Adapter<NontificationAdap
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Subscriber subscriber=listAdapter.get(position);
-        Log.d("####", "suuck"+listAdapter);
-        holder.otherUserNick.setText(subscriber.getSub());
+        Nontification nontification=listAdapter.get(position);
+        holder.otherUserNick.setText(nontification.getNick());
         holder.addFriend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
                     @Override
                     public void PassUserNick(String nick) {
-                        Log.d("####", "daa"+subscriber.getSub());
-                        firebaseModel.getReference().child("users").child(nick).child("nontifications")
-                                .child(subscriber.getSub()).removeValue();
+//                        firebaseModel.getReference().child("users").child(nick).child("nontifications")
+//                                .child(nontification.getNick()).removeValue();
                         firebaseModel.getReference().child("users").child(nick).child("subscribers")
-                                .child(subscriber.getSub()).removeValue();
+                                .child(nontification.getNick()).removeValue();
                         firebaseModel.getReference().child("users")
                                 .child(nick).child("friends")
-                                .child(subscriber.getSub()).setValue(subscriber.getSub());
+                                .child(nontification.getNick()).setValue(nontification.getNick());
                         Query query=firebaseModel.getUsersReference().child(nick)
                                 .child("subscribersCount");
                         query.addValueEventListener(new ValueEventListener() {
@@ -93,7 +92,7 @@ public class NontificationAdapter extends RecyclerView.Adapter<NontificationAdap
                     @Override
                     public void PassUserNick(String nick) {
                         firebaseModel.getReference().child("users").child(nick).child("nontifications")
-                                .child(subscriber.getSub()).removeValue();
+                                .child(nontification.getNick()).removeValue();
                         holder.rejectFriend.setText("Отклонен");
                         holder.addFriend.setBackgroundResource(R.drawable.corners14grey);
                         holder.rejectFriend.setTextColor(Color.parseColor("#FFFFFF"));
@@ -125,7 +124,7 @@ public class NontificationAdapter extends RecyclerView.Adapter<NontificationAdap
         }
     }
 
-    Subscriber getItem(int id) {
+    Nontification getItem(int id) {
         return listAdapter.get(id);
     }
 

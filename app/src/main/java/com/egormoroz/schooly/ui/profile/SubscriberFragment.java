@@ -1,10 +1,12 @@
 package com.egormoroz.schooly.ui.profile;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,6 +21,8 @@ import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.Subscriber;
 import com.egormoroz.schooly.ui.main.Nontifications.NontificationAdapter;
 import com.egormoroz.schooly.ui.main.UserInformation;
+import com.egormoroz.schooly.ui.people.PeopleAdapter;
+import com.egormoroz.schooly.ui.people.UserPeopleAdapter;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -31,6 +35,8 @@ public class SubscriberFragment extends Fragment {
     FirebaseModel firebaseModel=new FirebaseModel();
     RecyclerView recyclerView;
     ImageView back;
+    TextView emptyList;
+    String userNameToProfile;
 
     public static SubscriberFragment newInstance() {
         return new SubscriberFragment();
@@ -51,6 +57,7 @@ public class SubscriberFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         recyclerView=view.findViewById(R.id.subscribersRecycler);
         back=view.findViewById(R.id.back_toprofile);
+        emptyList=view.findViewById(R.id.emptySubscribersList);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -64,9 +71,50 @@ public class SubscriberFragment extends Fragment {
                 RecentMethods.getSubscribersList(nick, firebaseModel, new Callbacks.getSubscribersList() {
                     @Override
                     public void getSubscribersList(ArrayList<Subscriber> subscribers) {
-                        SubscribersAdapter subscribersAdapter=new SubscribersAdapter(subscribers);
-                        recyclerView.setAdapter(subscribersAdapter);
+                        if (subscribers.size()==0){
+                            emptyList.setVisibility(View.VISIBLE);
+                            recyclerView.setVisibility(View.GONE);
+                        }else {
+                            SubscribersAdapter subscribersAdapter = new SubscribersAdapter(subscribers);
+                            recyclerView.setAdapter(subscribersAdapter);
+                            SubscribersAdapter.ItemClickListener clickListener =
+                                    new SubscribersAdapter.ItemClickListener() {
+                                        @Override
+                                        public void onItemClick(View view, int position) {
+                                            Subscriber user = subscribersAdapter.getItem(position);
+                                            userNameToProfile=user.getSub();
+                                            Log.d("###","n "+userNameToProfile);
+                                            Query query1=firebaseModel.getReference().child("users").child(userNameToProfile);
+                                            query1.addValueEventListener(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                    UserInformation userData=new UserInformation();
+                                                    userData.setAge(snapshot.child("age").getValue(Long.class));
+                                                    userData.setAvatar(snapshot.child("avatar").getValue(Long.class));
+                                                    userData.setGender(snapshot.child("gender").getValue(String.class));
+                                                    //////////////////userData.setMiners();
+                                                    userData.setNick(snapshot.child("nick").getValue(String.class));
+                                                    userData.setPassword(snapshot.child("password").getValue(String.class));
+                                                    userData.setPhone(snapshot.child("phone").getValue(String.class));
+                                                    userData.setUid(snapshot.child("uid").getValue(String.class));
+                                                    userData.setQueue(snapshot.child("queue").getValue(String.class));
+                                                    userData.setAccountType(snapshot.child("accountType").getValue(String.class));
+                                                    userData.setBio(snapshot.child("bio").getValue(String.class));
+                                                    //                                               userData.setSubscribers(snapshot.child("subscribers").getValue(String.class));
+//                                                userData.setFriends(snapshot.child("friends").getValue(String.class));
+                                                    RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userData),
+                                                            getActivity());
+                                                }
 
+                                                @Override
+                                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                                }
+                                            });
+                                        }
+                                    };
+                            subscribersAdapter.setClickListener(clickListener);
+                        }
                     }
                 });
             }

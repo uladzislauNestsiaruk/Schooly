@@ -20,6 +20,7 @@ import androidx.core.app.NotificationManagerCompat;
 import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.MainActivity;
+import com.egormoroz.schooly.Nontification;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.Subscriber;
@@ -42,8 +43,8 @@ public class NontificationService extends Service {
     private static final String CHANNEL_ID = "Tyomaa channel";
     ArrayList<String> listOfNontifications = new ArrayList<String>();
     ArrayList<String> list = new ArrayList<String>();
-    Subscriber otherUserNickNonts;
-    String name;
+    Nontification otherUserNickNonts;
+    String name,nickOther;
 
 //    @Override
 //    public void onCreate() {
@@ -70,14 +71,12 @@ public class NontificationService extends Service {
             channel.setDescription(description);
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
-
+            Log.d("####", "dd  "+nickOther);
         }
     }
     @Override
     public void onDestroy() {
         super.onDestroy();
-        createNotificationChannel();
-        getChangesInSubscribers();
     }
     public Notification getNotification()
     {
@@ -117,20 +116,22 @@ public class NontificationService extends Service {
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @Override
             public void PassUserNick(String nick) {
-                Query query=firebaseModel.getUsersReference().child(nick).child("nontifications");
+                Query query=firebaseModel.getReference();
                 query.addChildEventListener(new ChildEventListener() {
                     @Override
                     public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                        RecentMethods.getSubscribersList(nick, firebaseModel, new Callbacks.getSubscribersList() {
+                        RecentMethods.getNontificationsList(nick, firebaseModel, new Callbacks.getNontificationsList() {
                             @Override
-                            public void getSubscribersList(ArrayList<Subscriber> subscribers) {
-                                int lastIndex=subscribers.size()-1;
-                                otherUserNickNonts=subscribers.get(lastIndex);
-                                Log.d("###", "dsaddf"+subscribers.size());
-                                Log.d("###", "dsad"+lastIndex);
-                                name=otherUserNickNonts.getSub();
-                                Log.d("###", "d"+name);
-                                nontification();
+                            public void getNontificationsList(ArrayList<Nontification> nontifications) {
+                                Log.d("#####", "f "+nontifications);
+                                if(nontifications.size()!=0) {
+                                    int lastIndex = nontifications.size() - 1;
+                                    Log.d("####### ", "fege  " + lastIndex);
+                                    otherUserNickNonts = nontifications.get(lastIndex);
+                                    name = otherUserNickNonts.getNick();
+                                    nickOther = otherUserNickNonts.getNick();
+                                    nontification();
+                                }
                             }
                         });
 
