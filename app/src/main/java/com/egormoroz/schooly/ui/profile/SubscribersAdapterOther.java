@@ -54,6 +54,12 @@ public class SubscribersAdapterOther extends RecyclerView.Adapter<SubscribersAda
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Subscriber subscriber=listAdapter.get(position);
         holder.otherUserNick.setText(subscriber.getSub());
+        holder.otherUserNick.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (clickListener != null) clickListener.onItemClick(view, position);
+            }
+        });
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @Override
             public void PassUserNick(String nick) {

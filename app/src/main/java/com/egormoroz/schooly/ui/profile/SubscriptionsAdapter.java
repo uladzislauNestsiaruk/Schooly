@@ -52,6 +52,12 @@ public class SubscriptionsAdapter extends RecyclerView.Adapter<SubscriptionsAdap
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Subscriber subscriber=listAdapter.get(position);
         holder.otherUserNick.setText(subscriber.getSub());
+        holder.otherUserNick.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (clickListener != null) clickListener.onItemClick(view, position);
+            }
+        });
         holder.unsubscribe.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

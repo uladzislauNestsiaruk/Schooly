@@ -1,6 +1,7 @@
 package com.egormoroz.schooly.ui.profile;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,10 @@ import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.Subscriber;
 import com.egormoroz.schooly.ui.main.UserInformation;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -27,6 +32,7 @@ public class SubscriptionsFragment extends Fragment {
     RecyclerView recyclerView;
     ImageView back;
     TextView emptyList;
+    String userNameToProfile;
 
     public static SubscriptionsFragment newInstance() {
         return new SubscriptionsFragment();
@@ -64,8 +70,45 @@ public class SubscriptionsFragment extends Fragment {
                             emptyList.setVisibility(View.VISIBLE);
                             recyclerView.setVisibility(View.GONE);
                         }else {
-                            SubscriptionsAdapter subscribersAdapter = new SubscriptionsAdapter(friends);
-                            recyclerView.setAdapter(subscribersAdapter);
+                            SubscriptionsAdapter subscriptionsAdapter = new SubscriptionsAdapter(friends);
+                            recyclerView.setAdapter(subscriptionsAdapter);
+                            SubscriptionsAdapter.ItemClickListener clickListener =
+                                    new SubscriptionsAdapter.ItemClickListener() {
+                                        @Override
+                                        public void onItemClick(View view, int position) {
+                                            Subscriber user = subscriptionsAdapter.getItem(position);
+                                            userNameToProfile=user.getSub();
+                                            Log.d("###","n "+userNameToProfile);
+                                            Query query1=firebaseModel.getReference().child("users").child(userNameToProfile);
+                                            query1.addValueEventListener(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                    UserInformation userData=new UserInformation();
+                                                    userData.setAge(snapshot.child("age").getValue(Long.class));
+                                                    userData.setAvatar(snapshot.child("avatar").getValue(Long.class));
+                                                    userData.setGender(snapshot.child("gender").getValue(String.class));
+                                                    //////////////////userData.setMiners();
+                                                    userData.setNick(snapshot.child("nick").getValue(String.class));
+                                                    userData.setPassword(snapshot.child("password").getValue(String.class));
+                                                    userData.setPhone(snapshot.child("phone").getValue(String.class));
+                                                    userData.setUid(snapshot.child("uid").getValue(String.class));
+                                                    userData.setQueue(snapshot.child("queue").getValue(String.class));
+                                                    userData.setAccountType(snapshot.child("accountType").getValue(String.class));
+                                                    userData.setBio(snapshot.child("bio").getValue(String.class));
+                                                    //                                               userData.setSubscribers(snapshot.child("subscribers").getValue(String.class));
+//                                                userData.setFriends(snapshot.child("friends").getValue(String.class));
+                                                    RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userData),
+                                                            getActivity());
+                                                }
+
+                                                @Override
+                                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                                }
+                                            });
+                                        }
+                                    };
+                            subscriptionsAdapter.setClickListener(clickListener);
                         }
                     }
                 });
