@@ -1138,14 +1138,14 @@ public class RecentMethods {
 
     public static void getComplainReasonList( FirebaseModel model, Callbacks.getComplainReasonsList callback){
         model.initAll();
-        Query query=model.getUsersReference().child("reasons");
+        Query query=model.getReference().child("complains");
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 ArrayList<Reason> reasonsArrayList = new ArrayList<>();
                 for (DataSnapshot snap:snapshot.getChildren()){
                     Reason reason=new Reason();
-                    reason.setReason(snap.getValue(String.class));
+                    reason.setReason(snap.child("reason").getValue(String.class));
                     reasonsArrayList.add(reason);
                 }
                 callback.getComplainReasonsList(reasonsArrayList);
