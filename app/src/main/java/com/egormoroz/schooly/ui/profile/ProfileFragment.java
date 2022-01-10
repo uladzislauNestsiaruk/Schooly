@@ -43,6 +43,7 @@ import com.egormoroz.schooly.ui.main.Shop.NewClothesAdapter;
 import com.egormoroz.schooly.ui.main.Shop.ShopFragment;
 import com.egormoroz.schooly.ui.main.Shop.ViewingClothes;
 import com.egormoroz.schooly.ui.main.UserInformation;
+import com.egormoroz.schooly.ui.people.PeopleFragment;
 import com.egormoroz.schooly.ui.profile.Wardrobe.WardrobeFragment;
 import com.google.android.filament.Filament;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -327,6 +328,12 @@ public class ProfileFragment extends Fragment {
                 otherUserBiography=view.findViewById(R.id.otheruserbiography);
                 subscribeClose=view.findViewById(R.id.subscribeClose);
                 back=view.findViewById(R.id.back);
+                back.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        RecentMethods.setCurrentFragment(PeopleFragment.newInstance(), getActivity());
+                    }
+                });
                 otherUserBiography.setText(info.getBio());
                 addFriend=view.findViewById(R.id.addFriend);
                 subscribeFirst=view.findViewById(R.id.SubscribeFirst);
