@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FirebaseModel;
+import com.egormoroz.schooly.Nontification;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.Subscriber;
@@ -20,6 +21,7 @@ import com.egormoroz.schooly.ui.main.UserInformation;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 
 import org.jetbrains.annotations.NotNull;
@@ -118,10 +120,8 @@ public class SubscribersAdapter extends RecyclerView.Adapter<SubscribersAdapter.
                                         .child(nick).setValue(nick);
                                 firebaseModel.getReference().child("users")
                                         .child(subscriber.getSub()).child("nontifications")
-                                        .child(nick).setValue(nick);
-                                firebaseModel.getReference().child("users")
-                                        .child(subscriber.getSub()).child("nontificationsRecycler")
-                                        .child(nick).setValue(nick);
+                                        .child(nick).setValue(new Nontification(subscriber.getSub(),"не отправлено"
+                                        ,"не просмотрено", ServerValue.TIMESTAMP.toString()));
                                 holder.addFriend.setText("Отписаться");
                                 holder.addFriend.setTextColor(Color.parseColor("#F3A2E5"));
                                 holder.addFriend.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);

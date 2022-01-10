@@ -130,7 +130,11 @@ public class NontificationService extends Service {
                                     otherUserNickNonts = nontifications.get(lastIndex);
                                     name = otherUserNickNonts.getNick();
                                     nickOther = otherUserNickNonts.getNick();
-                                    nontification();
+                                    if(otherUserNickNonts.getTypeDispatch().equals("не отправлено")){
+                                        nontification();
+                                    }else {
+
+                                    }
                                 }
                             }
                         });

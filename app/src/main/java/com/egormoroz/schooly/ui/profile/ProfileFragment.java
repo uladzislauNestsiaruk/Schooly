@@ -712,8 +712,8 @@ public class ProfileFragment extends Fragment {
                                 }
                             });
                         }else {
-                            NewClothesAdapter newClothesAdapter=new NewClothesAdapter(allClothes, itemClickListener);
-                            wardrobeRecycler.setAdapter(newClothesAdapter);
+                            WardrobeAdapter wardrobeAdapter=new WardrobeAdapter(allClothes);
+                            wardrobeRecycler.setAdapter(wardrobeAdapter);
                         }
                     }
                 });

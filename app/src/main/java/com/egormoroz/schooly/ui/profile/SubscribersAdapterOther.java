@@ -119,7 +119,7 @@ public class SubscribersAdapterOther extends RecyclerView.Adapter<SubscribersAda
                                 firebaseModel.getReference().child("users")
                                         .child(subscriber.getSub()).child("nontifications")
                                         .child(nick).setValue(new Nontification(nick,"не отправлено","не просмотрено"
-                                ,String.valueOf(ServerValue.TIMESTAMP)));
+                                ,ServerValue.TIMESTAMP.toString()));
                                 holder.newSubscribe.setText("Отписаться");
                                 holder.newSubscribe.setTextColor(Color.parseColor("#F3A2E5"));
                                 holder.newSubscribe.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
