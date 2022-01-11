@@ -22,6 +22,7 @@ import com.egormoroz.schooly.MainActivity;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.ui.main.UserInformation;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.Query;
@@ -37,7 +38,8 @@ public class SettingsFragment extends Fragment {
     FirebaseModel firebaseModel=new FirebaseModel();
     TextView  userNick,userNumber,userPassword,changePassword,blackList;
     String userNickString;
-    Switch privateAccountSwitch;
+    SwitchMaterial privateAccountSwitch;
+    boolean checkType;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -54,19 +56,47 @@ public class SettingsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         privateAccountSwitch=view.findViewById(R.id.privateAccountSwitch);
+        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+            @Override
+            public void PassUserNick(String nick) {
+                Query query=firebaseModel.getUsersReference().child(nick).child("accountType");
+                query.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                       String accountType = snapshot.getValue(String.class);
+                       if(accountType.equals("open")){
+                           privateAccountSwitch.setChecked(false);
+                       }else {
+                           privateAccountSwitch.setChecked(true);
+                       }
+                    }
 
-        privateAccountSwitch.setOnCheckedChangeListener(
-                new CompoundButton.OnCheckedChangeListener() {
-                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        if (isChecked) {
-                            Toast.makeText(getActivity(),
-                                    "Switch On", Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(getActivity(),
-                                    "Switch Off", Toast.LENGTH_SHORT).show();
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+            }
+        });
+
+        privateAccountSwitch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                checkType=true;
+                RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+                    @Override
+                    public void PassUserNick(String nick) {
+                        if (checkType=privateAccountSwitch.isChecked()){
+                            firebaseModel.getUsersReference().child(nick)
+                                    .child("accountType").setValue("close");
+                        }else {
+                            firebaseModel.getUsersReference().child(nick)
+                                    .child("accountType").setValue("open");
                         }
                     }
                 });
+            }
+        });
 
 
         ImageView imageView = view.findViewById(R.id.backtomainfromsettings);
