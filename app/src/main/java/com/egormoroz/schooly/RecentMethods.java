@@ -516,7 +516,7 @@ public class RecentMethods {
 
     public static void getPopular(FirebaseModel firebaseModel,Callbacks.GetClothes callback){
         firebaseModel.initAll();
-        Query query=firebaseModel.getReference("AppData/Clothes/Popular");
+        Query query=firebaseModel.getReference("AppData/Clothes/AllClothes");
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {

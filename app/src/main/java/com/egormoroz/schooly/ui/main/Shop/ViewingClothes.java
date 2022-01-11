@@ -116,9 +116,6 @@ public class ViewingClothes extends Fragment {
                                     .child(clothesViewing.getClothesTitle()).setValue(clothesViewing);
                             Query query=firebaseModel.getUsersReference().child(nick).child("basket").
                                     child(clothesViewing.getClothesTitle());
-                            long purchaseNumber=clothesViewing.getPurchaseNumber()+1;
-                            firebaseModel.getReference().child("AppData").child("Clothes").child("Popular")
-                                    .child(clothesViewing.getClothesTitle()).child("purchaseNumber").setValue(purchaseNumber);
                             query.addValueEventListener(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -159,7 +156,6 @@ public class ViewingClothes extends Fragment {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
                                 if(snapshot.exists()){
-                                    Log.d("######", "fuck  ");
                                 }else {firebaseModel.getUsersReference().child(nick).child("basket")
                                         .child(clothesViewing.getClothesTitle()).setValue(clothesViewing);}
                             }
@@ -206,14 +202,14 @@ public class ViewingClothes extends Fragment {
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @Override
             public void PassUserNick(String nick) {
-                Query query=firebaseModel.getUsersReference().child(nick).child("clothes").
-                        child("shoes").child(String.valueOf(clothesViewing.getClothesTitle()));
+                Query query=firebaseModel.getUsersReference().child(nick).child("clothes")
+                        .child(String.valueOf(clothesViewing.getClothesTitle()));
                 query.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         if(snapshot.exists()){
                             buyClothesBottom.setText("Куплено");
-                            buyClothesBottom.setBackgroundResource(R.drawable.corners14grey);
+                            buyClothesBottom.setBackgroundResource(R.drawable.corners14appcolor);
                             inBasket.setBackgroundResource(R.drawable.corners14grey);
                         }else {
                             buyClothesBottom.setText("Купить");

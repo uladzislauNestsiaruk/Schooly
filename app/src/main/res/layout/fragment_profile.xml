@@ -169,7 +169,7 @@
             android:layout_height="wrap_content"
             android:text="@string/noClothes"
             android:layout_below="@+id/shielf"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="60dp"
             android:textColor="@color/app_grey"
             android:textSize="16sp"
             android:fontFamily="@font/montserrat_bold"
@@ -187,7 +187,7 @@
             android:padding="12dp"
             android:background="@drawable/corners14appcolor"
             android:textSize="16sp"
-            android:fontFamily="@font/montserrat_bold"
+            android:fontFamily="@font/montserrat_extrabold"
             android:layout_centerHorizontal="true"
             android:visibility="gone"/>
 
@@ -208,9 +208,9 @@
             android:textColor="@color/app_color"
             android:textSize="18sp"
             android:layout_marginStart="24dp"
-            android:layout_below="@id/recyclerProfileToWardrobe"
+            android:layout_below="@id/shielf"
             android:fontFamily="@font/montserrat_extrabold"
-            android:layout_marginTop="16dp"/>
+            android:layout_marginTop="240dp"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/looksRecycler"
