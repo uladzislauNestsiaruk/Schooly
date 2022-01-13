@@ -110,13 +110,13 @@ public class RecentMethods {
 
         UserInformation res = new UserInformation(nick, "unknown", user.getUid(),
                 6, "unknown", "Helicopter", 1000
-                , "Miner", 1,100,0, "", "", "","",0,0,0,"open");
+                , "Miner", 1,100,0, "", "", "","",0,0,0,"open","open","open","open");
         ref.child(nick).setValue(res);
         return nick.isEmpty();
     }
     public static void hasThisUserFun(FirebaseAuth AuthenticationBase, FirebaseUser user,
                                       Callbacks.hasGoogleUser callback) {
-        if (user == null) {
+        if(user == null){
             callback.hasGoogleUserCallback(false);
             return;
         }

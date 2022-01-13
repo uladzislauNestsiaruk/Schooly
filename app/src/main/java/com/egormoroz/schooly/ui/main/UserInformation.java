@@ -5,6 +5,9 @@ import com.google.firebase.database.IgnoreExtraProperties;
 @IgnoreExtraProperties
 public class UserInformation {
     private String Nick;
+    private String chatsNontsType;
+    private String groupChatsNontsType;
+    private String profileNontsType;
     private String phone;
     private String uid;
     private long Avatar = 6;
@@ -112,6 +115,30 @@ public class UserInformation {
         this.subscription = subscription;
     }
 
+    public String getCheckNontsType(){
+        return chatsNontsType;
+    }
+
+    public void setChatsNontsType(String chatsNontsType){
+        this.chatsNontsType = chatsNontsType;
+    }
+
+    public String getProfileNontsType(){
+        return profileNontsType;
+    }
+
+    public void setProfileNontsType(String profileNontsType){
+        this.profileNontsType = profileNontsType;
+    }
+
+    public String getGroupChatsNontsType(){
+        return groupChatsNontsType;
+    }
+
+    public void setGroupChatsNontsType(String groupChatsNontsType){
+        this.groupChatsNontsType = groupChatsNontsType;
+    }
+
     public String getSubscribers(){
         return subscribers;
     }
@@ -163,7 +190,8 @@ public class UserInformation {
     public UserInformation(String nick, String phone, String uid, long Avatar, String password,
                            String gender, long age,String miners,long level,long money,double todayMining,
                            String subscription, String subscribers, String queue,String bio,long subscribersCount,
-                           long looksCount,long subscriptionCount,String accountType) {
+                           long looksCount,long subscriptionCount,String accountType,String chatsNontsType,
+                           String groupChatsNontsType,String profileNontsType) {
         this.Nick = nick;
         this.uid = uid;
         this.phone = phone;
@@ -183,6 +211,9 @@ public class UserInformation {
         this.looksCount=looksCount;
         this.subscriptionCount=subscriptionCount;
         this.accountType=accountType;
+        this.chatsNontsType=chatsNontsType;
+        this.groupChatsNontsType=groupChatsNontsType;
+        this.profileNontsType=profileNontsType;
     }
 
 }
