@@ -132,7 +132,7 @@ public class NontificationService extends Service {
                                         if(otherUserNickNonts.getTypeDispatch().equals("не отправлено")) {
                                             nontification(nickOther);
                                             firebaseModel.getUsersReference().child(nick).child("nontifications").child(otherUserNickNonts.getNick())
-                                                    .child("typeDispatch").setValue("просмотрено");
+                                                    .child("typeDispatch").setValue("отправлено");
                                         }
                                     }
                                 }
