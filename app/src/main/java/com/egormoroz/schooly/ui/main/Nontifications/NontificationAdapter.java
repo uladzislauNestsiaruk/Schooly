@@ -31,6 +31,7 @@ public class NontificationAdapter extends RecyclerView.Adapter<NontificationAdap
     ArrayList<Nontification> listAdapter;
     private ItemClickListener clickListener;
     private FirebaseModel firebaseModel = new FirebaseModel();
+    String accountType;
 
     public  NontificationAdapter(ArrayList<Nontification> listAdapter) {
         this.listAdapter = listAdapter;
@@ -50,56 +51,59 @@ public class NontificationAdapter extends RecyclerView.Adapter<NontificationAdap
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Nontification nontification=listAdapter.get(position);
-        holder.otherUserNick.setText(nontification.getNick());
-        holder.addFriend.setOnClickListener(new View.OnClickListener() {
+        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @Override
-            public void onClick(View v) {
-                RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+            public void PassUserNick(String nick) {
+                Query query=firebaseModel.getUsersReference().child(nick).child("accountType");
+                query.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
-                    public void PassUserNick(String nick) {
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        accountType=snapshot.getValue(String.class);
+                        if(accountType.equals("close")){
+                            holder.addFriend.setVisibility(View.VISIBLE);
+                            holder.rejectFriend.setVisibility(View.VISIBLE);
+                            holder.addFriend.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+                                        @Override
+                                        public void PassUserNick(String nick) {
 //                        firebaseModel.getReference().child("users").child(nick).child("nontifications")
 //                                .child(nontification.getNick()).removeValue();
-                        firebaseModel.getReference().child("users").child(nick).child("subscribers")
-                                .child(nontification.getNick()).removeValue();
-                        firebaseModel.getReference().child("users")
-                                .child(nick).child("friends")
-                                .child(nontification.getNick()).setValue(nontification.getNick());
-                        Query query=firebaseModel.getUsersReference().child(nick)
-                                .child("subscribersCount");
-                        query.addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                long subsCount=snapshot.getValue(Long.class);
-                                firebaseModel.getUsersReference().child(nick)
-                                        .child("subscribersCount").setValue(subsCount-1);
-                                Log.d("####", "1   "+subsCount);
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
-
-                            }
-                        });
-                        holder.addFriend.setText("Добавлен");
+                                            firebaseModel.getReference().child("users")
+                                                    .child(nick).child("subscribers")
+                                                    .child(nontification.getNick()).setValue(nontification.getNick());
+                                            holder.addFriend.setText("Добавлен");
+                                        }
+                                    });
+                                }
+                            });
+                            holder.rejectFriend.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+                                        @Override
+                                        public void PassUserNick(String nick) {
+                                            firebaseModel.getReference().child("users").child(nick).child("nontifications")
+                                                    .child(nontification.getNick()).removeValue();
+                                            holder.rejectFriend.setText("Отклонен");
+                                            holder.addFriend.setBackgroundResource(R.drawable.corners14grey);
+                                            holder.rejectFriend.setTextColor(Color.parseColor("#FFFFFF"));
+                                        }
+                                    });
+                                }
+                            });
+                        }
                     }
-                });
-            }
-        });
-        holder.rejectFriend.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+
                     @Override
-                    public void PassUserNick(String nick) {
-                        firebaseModel.getReference().child("users").child(nick).child("nontifications")
-                                .child(nontification.getNick()).removeValue();
-                        holder.rejectFriend.setText("Отклонен");
-                        holder.addFriend.setBackgroundResource(R.drawable.corners14grey);
-                        holder.rejectFriend.setTextColor(Color.parseColor("#FFFFFF"));
+                    public void onCancelled(@NonNull DatabaseError error) {
+
                     }
                 });
             }
         });
+        holder.otherUserNick.setText(nontification.getNick()+" подписался на тебя");
     }
 
 

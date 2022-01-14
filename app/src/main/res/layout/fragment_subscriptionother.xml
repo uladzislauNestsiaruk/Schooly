@@ -15,7 +15,7 @@
         android:src="@drawable/left_arrow"/>
 
     <TextView
-        android:id="@+id/friends"
+        android:id="@+id/subscriptions"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
@@ -26,11 +26,30 @@
         android:textSize="22sp"
         android:fontFamily="@font/montserrat_bold"/>
 
+    <EditText
+        android:id="@+id/searchuser"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/search"
+        android:paddingTop="11dp"
+        android:paddingBottom="11dp"
+        android:textColorHint="@color/greysearch"
+        android:textSize="15sp"
+        android:layout_below="@+id/subscriptions"
+        android:background="@drawable/corners12_2dpstrokeappcolor"
+        android:textColor="@color/app_color"
+        android:layout_marginTop="12dp"
+        android:paddingStart="16sp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginStart="24dp"
+        android:fontFamily="@font/montserrat_bold"/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/friendsRecycler"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/friends"
+        android:layout_below="@+id/searchuser"
+        android:layout_marginTop="12dp"
         android:scrollbars="none"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 

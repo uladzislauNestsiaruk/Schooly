@@ -1,10 +1,13 @@
 package com.egormoroz.schooly.ui.profile;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -19,6 +22,7 @@ import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.Subscriber;
 import com.egormoroz.schooly.ui.main.UserInformation;
+import com.egormoroz.schooly.ui.people.PeopleAdapter;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -28,11 +32,13 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 public class SubscribesFragmentOther extends Fragment {
-    FirebaseModel firebaseModel=new FirebaseModel();
+    FirebaseModel firebaseModel = new FirebaseModel();
     RecyclerView recyclerView;
     ImageView back;
-    String otherUserNick,userNameToProfile;
+    String otherUserNick, userNameToProfile,userName;
     TextView emptyList;
+    EditText searchUser;
+
     public static SubscribesFragmentOther newInstance() {
         return new SubscribesFragmentOther();
     }
@@ -50,17 +56,17 @@ public class SubscribesFragmentOther extends Fragment {
     @Override
     public void onViewCreated(@Nullable View view, @NonNull Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        recyclerView=view.findViewById(R.id.subscribersRecycler);
-        back=view.findViewById(R.id.back_toprofile);
-        emptyList=view.findViewById(R.id.emptySubscribersListOther);
+        recyclerView = view.findViewById(R.id.subscribersRecycler);
+        back = view.findViewById(R.id.back_toprofile);
+        emptyList = view.findViewById(R.id.emptySubscribersListOther);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Query query1=firebaseModel.getReference().child("users").child(otherUserNick);
+                Query query1 = firebaseModel.getReference().child("users").child(otherUserNick);
                 query1.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        UserInformation userData=new UserInformation();
+                        UserInformation userData = new UserInformation();
                         userData.setAge(snapshot.child("age").getValue(Long.class));
                         userData.setAvatar(snapshot.child("avatar").getValue(Long.class));
                         userData.setGender(snapshot.child("gender").getValue(String.class));
@@ -88,14 +94,14 @@ public class SubscribesFragmentOther extends Fragment {
         ProfileFragment.sendNickToAdapter(new ProfileFragment.sendNick() {
             @Override
             public void sendNick(String nick) {
-                otherUserNick=nick;
+                otherUserNick = nick;
                 RecentMethods.getSubscribersList(nick, firebaseModel, new Callbacks.getSubscribersList() {
                     @Override
                     public void getSubscribersList(ArrayList<Subscriber> subscribers) {
-                        if (subscribers.size()==0){
+                        if (subscribers.size() == 0) {
                             emptyList.setVisibility(View.VISIBLE);
                             recyclerView.setVisibility(View.GONE);
-                        }else {
+                        } else {
                             SubscribersAdapterOther subscribersAdapter = new SubscribersAdapterOther(subscribers);
                             recyclerView.setAdapter(subscribersAdapter);
                             SubscribersAdapterOther.ItemClickListener clickListener =
@@ -103,13 +109,13 @@ public class SubscribesFragmentOther extends Fragment {
                                         @Override
                                         public void onItemClick(View view, int position) {
                                             Subscriber user = subscribersAdapter.getItem(position);
-                                            userNameToProfile=user.getSub();
-                                            Log.d("###","n "+userNameToProfile);
-                                            Query query1=firebaseModel.getReference().child("users").child(userNameToProfile);
+                                            userNameToProfile = user.getSub();
+                                            Log.d("###", "n " + userNameToProfile);
+                                            Query query1 = firebaseModel.getReference().child("users").child(userNameToProfile);
                                             query1.addValueEventListener(new ValueEventListener() {
                                                 @Override
                                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                    UserInformation userData=new UserInformation();
+                                                    UserInformation userData = new UserInformation();
                                                     userData.setAge(snapshot.child("age").getValue(Long.class));
                                                     userData.setAvatar(snapshot.child("avatar").getValue(Long.class));
                                                     userData.setGender(snapshot.child("gender").getValue(String.class));
@@ -136,7 +142,104 @@ public class SubscribesFragmentOther extends Fragment {
                                     };
                             subscribersAdapter.setClickListener(clickListener);
                         }
-                   }
+                    }
+                });
+            }
+        });
+        searchUser=view.findViewById(R.id.searchuser);
+        initUserEnter();
+    }
+
+    public void initUserEnter() {
+        searchUser.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                userName = String.valueOf(searchUser.getText()).trim();
+                userName = userName.toLowerCase();
+                Query query = firebaseModel.getUsersReference().child(otherUserNick).child("subscribers");
+                query.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        ArrayList<Subscriber> userFromBase = new ArrayList<>();
+                        Log.d("####", "un " + userName);
+                        for (DataSnapshot snap : snapshot.getChildren()) {
+                            Subscriber subscriber = new Subscriber();
+                            subscriber.setSub(snap.getValue(String.class));
+                            String nick = subscriber.getSub();
+                            int valueLetters = userName.length();
+                            Log.d("####", "un " + userName);
+                            nick = nick.toLowerCase();
+                            if (nick.length() < valueLetters) {
+                                if (nick.equals(userName))
+                                    userFromBase.add(subscriber);
+                                Log.d("####", "nb " + nick);
+                            } else {
+                                nick = nick.substring(0, valueLetters);
+                                if (nick.equals(userName))
+                                    userFromBase.add(subscriber);
+                                Log.d("####", "nb " + nick);
+                            }
+                            Log.d("####", "cc " + userFromBase);
+
+                        }
+                        SubscribersAdapterOther subscribersAdapterOther = new SubscribersAdapterOther(userFromBase);
+                        recyclerView.setAdapter(subscribersAdapterOther);
+                        SubscribersAdapterOther.ItemClickListener clickListener =
+                                new SubscribersAdapterOther.ItemClickListener() {
+                                    @Override
+                                    public void onItemClick(View view, int position) {
+                                        Subscriber subscriber = subscribersAdapterOther.getItem(position);
+                                        userNameToProfile = subscriber.getSub();
+                                        Log.d("###", "n " + userNameToProfile);
+                                        Query query1 = firebaseModel.getReference().child("users").child(userNameToProfile);
+                                        query1.addValueEventListener(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                UserInformation userData = new UserInformation();
+                                                userData.setAge(snapshot.child("age").getValue(Long.class));
+                                                userData.setAvatar(snapshot.child("avatar").getValue(Long.class));
+                                                userData.setGender(snapshot.child("gender").getValue(String.class));
+                                                //////////////////userData.setMiners();
+                                                userData.setNick(snapshot.child("nick").getValue(String.class));
+                                                userData.setPassword(snapshot.child("password").getValue(String.class));
+                                                userData.setPhone(snapshot.child("phone").getValue(String.class));
+                                                userData.setUid(snapshot.child("uid").getValue(String.class));
+                                                userData.setQueue(snapshot.child("queue").getValue(String.class));
+                                                userData.setAccountType(snapshot.child("accountType").getValue(String.class));
+                                                userData.setBio(snapshot.child("bio").getValue(String.class));
+                                                //                                               userData.setSubscribers(snapshot.child("subscribers").getValue(String.class));
+//                                                userData.setFriends(snapshot.child("friends").getValue(String.class));
+                                                RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userData),
+                                                        getActivity());
+                                            }
+
+                                            @Override
+                                            public void onCancelled(@NonNull DatabaseError error) {
+
+                                            }
+                                        });
+                                    }
+                                };
+                        subscribersAdapterOther.setClickListener(clickListener);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+                    @Override
+                    public void PassUserNick(String nick) {
+                    }
                 });
             }
         });

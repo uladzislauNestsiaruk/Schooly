@@ -32,6 +32,7 @@ public class SubscribersAdapterOther extends RecyclerView.Adapter<SubscribersAda
     ArrayList<Subscriber> listAdapter;
     private SubscribersAdapterOther.ItemClickListener clickListener;
     private FirebaseModel firebaseModel = new FirebaseModel();
+
     long subscriptionsCount,subscribersCount;
     int a;
 

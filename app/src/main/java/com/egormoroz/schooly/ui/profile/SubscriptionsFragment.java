@@ -1,10 +1,13 @@
 package com.egormoroz.schooly.ui.profile;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -32,7 +35,8 @@ public class SubscriptionsFragment extends Fragment {
     RecyclerView recyclerView;
     ImageView back;
     TextView emptyList;
-    String userNameToProfile;
+    String userNameToProfile,userName;
+    EditText searchUser;
 
     public static SubscriptionsFragment newInstance() {
         return new SubscriptionsFragment();
@@ -110,6 +114,113 @@ public class SubscriptionsFragment extends Fragment {
                                     };
                             subscriptionsAdapter.setClickListener(clickListener);
                         }
+                    }
+                });
+            }
+        });
+        searchUser=view.findViewById(R.id.searchuser);
+        initUserEnter();
+    }
+    public void initUserEnter() {
+        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+            @Override
+            public void PassUserNick(String nick) {
+                searchUser.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                        userName = String.valueOf(searchUser.getText()).trim();
+                        userName = userName.toLowerCase();
+                        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+                            @Override
+                            public void PassUserNick(String nick) {
+
+                            }
+                        });
+                        Query query = firebaseModel.getUsersReference().child(nick).child("subscription");
+                        query.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                ArrayList<Subscriber> userFromBase = new ArrayList<>();
+                                Log.d("####", "un " + userName);
+                                for (DataSnapshot snap : snapshot.getChildren()) {
+                                    Subscriber subscriber = new Subscriber();
+                                    subscriber.setSub(snap.getValue(String.class));
+                                    String nick = subscriber.getSub();
+                                    int valueLetters = userName.length();
+                                    Log.d("####", "un " + userName);
+                                    nick = nick.toLowerCase();
+                                    if (nick.length() < valueLetters) {
+                                        if (nick.equals(userName))
+                                            userFromBase.add(subscriber);
+                                        Log.d("####", "nb " + nick);
+                                    } else {
+                                        nick = nick.substring(0, valueLetters);
+                                        if (nick.equals(userName))
+                                            userFromBase.add(subscriber);
+                                        Log.d("####", "nb " + nick);
+                                    }
+                                    Log.d("####", "cc " + userFromBase);
+
+                                }
+                                SubscriptionsAdapter subscriptionsAdapter = new SubscriptionsAdapter(userFromBase);
+                                recyclerView.setAdapter(subscriptionsAdapter);
+                                SubscriptionsAdapter.ItemClickListener clickListener =
+                                        new SubscriptionsAdapter.ItemClickListener() {
+                                            @Override
+                                            public void onItemClick(View view, int position) {
+                                                Subscriber subscriber = subscriptionsAdapter.getItem(position);
+                                                userNameToProfile = subscriber.getSub();
+                                                Log.d("###", "n " + userNameToProfile);
+                                                Query query1 = firebaseModel.getReference().child("users").child(userNameToProfile);
+                                                query1.addValueEventListener(new ValueEventListener() {
+                                                    @Override
+                                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                        UserInformation userData = new UserInformation();
+                                                        userData.setAge(snapshot.child("age").getValue(Long.class));
+                                                        userData.setAvatar(snapshot.child("avatar").getValue(Long.class));
+                                                        userData.setGender(snapshot.child("gender").getValue(String.class));
+                                                        //////////////////userData.setMiners();
+                                                        userData.setNick(snapshot.child("nick").getValue(String.class));
+                                                        userData.setPassword(snapshot.child("password").getValue(String.class));
+                                                        userData.setPhone(snapshot.child("phone").getValue(String.class));
+                                                        userData.setUid(snapshot.child("uid").getValue(String.class));
+                                                        userData.setQueue(snapshot.child("queue").getValue(String.class));
+                                                        userData.setAccountType(snapshot.child("accountType").getValue(String.class));
+                                                        userData.setBio(snapshot.child("bio").getValue(String.class));
+                                                        //                                               userData.setSubscribers(snapshot.child("subscribers").getValue(String.class));
+//                                                userData.setFriends(snapshot.child("friends").getValue(String.class));
+                                                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userData),
+                                                                getActivity());
+                                                    }
+
+                                                    @Override
+                                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                                    }
+                                                });
+                                            }
+                                        };
+                                subscriptionsAdapter.setClickListener(clickListener);
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable editable) {
+                        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+                            @Override
+                            public void PassUserNick(String nick) {
+                            }
+                        });
                     }
                 });
             }
