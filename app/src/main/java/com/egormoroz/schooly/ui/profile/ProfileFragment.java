@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -377,17 +378,29 @@ public class ProfileFragment extends Fragment {
 
                                             popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                                                 public boolean onMenuItemClick(MenuItem item) {
-                                                    String itemTitle=item.getTitle().toString();
-                                                    if(itemTitle.equals("Заблокировать")){
-                                                        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-                                                            @Override
-                                                            public void PassUserNick(String nick) {
-                                                                firebaseModel.getUsersReference().child(nick)
-                                                                        .child("blackList").child(info.getNick())
-                                                                        .setValue(info.getNick());
-                                                                Log.d("####", "hellosss"+itemTitle);
-                                                            }
-                                                        });
+                                                    String itemTitle= item.getTitle().toString().trim();
+
+                                                    Log.d("####", "hell"+itemTitle);
+                                                    int itemID=item.getItemId();
+                                                    switch(itemID){
+                                                        case R.id.one :
+                                                            RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+                                                                @Override
+                                                                public void PassUserNick(String nick) {
+                                                                    firebaseModel.getUsersReference().child(nick)
+                                                                            .child("blackList").child(info.getNick())
+                                                                            .setValue(info.getNick());
+                                                                    Log.d("####", "hellosss" + itemTitle);
+                                                                }
+                                                            });
+                                                            return true;
+                                                        case R.id.two:
+                                                            RecentMethods.setCurrentFragment(ComplainFragment.newInstance(info.getNick()), getActivity());
+                                                            Log.d("####", "hellosss" + itemTitle);
+                                                            return true;
+                                                        case R.id.three:
+                                                            Log.d("####", "gang" + itemTitle);
+                                                            return true;
                                                     }
                                                     return true;
                                                 }
@@ -505,8 +518,9 @@ public class ProfileFragment extends Fragment {
                                                     String itemTitle= item.getTitle().toString().trim();
 
                                                     Log.d("####", "hell"+itemTitle);
-                                                    if (itemTitle!=null) {
-                                                        if (itemTitle.equals("Заблокировать")) {
+                                                    int itemID=item.getItemId();
+                                                    switch(itemID){
+                                                        case R.id.one :
                                                             RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
                                                                 @Override
                                                                 public void PassUserNick(String nick) {
@@ -516,10 +530,14 @@ public class ProfileFragment extends Fragment {
                                                                     Log.d("####", "hellosss" + itemTitle);
                                                                 }
                                                             });
-                                                        } else if (itemTitle.equals("Пожаловаться")) {
+                                                            return true;
+                                                        case R.id.two:
                                                             RecentMethods.setCurrentFragment(ComplainFragment.newInstance(info.getNick()), getActivity());
                                                             Log.d("####", "hellosss" + itemTitle);
-                                                        }
+                                                            return true;
+                                                        case R.id.three:
+                                                            Log.d("####", "gang" + itemTitle);
+                                                            return true;
                                                     }
                                                     return true;
                                                 }
@@ -531,11 +549,13 @@ public class ProfileFragment extends Fragment {
                                 }
                             }
 
+
                             @Override
                             public void onCancelled(@NonNull DatabaseError error) {
 
                             }
                         });
+
                     }
                 });
 //                if (profileValue!=0) {
@@ -647,6 +667,7 @@ public class ProfileFragment extends Fragment {
                 break;
         }
     }
+
 
 
     private void AcceptChatRequest() {
