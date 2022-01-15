@@ -113,18 +113,43 @@ public class SubscribersAdapterOther extends RecyclerView.Adapter<SubscribersAda
                         if(a!=0) {
                             if (a == 2) {
                                 Log.d("#####", "ab  " + a);
-                                firebaseModel.getReference().child("users").child(nick).child("subscription")
-                                        .child(subscriber.getSub()).setValue(subscriber.getSub());
-                                firebaseModel.getReference().child("users").child(subscriber.getSub()).child("subscribers")
-                                        .child(nick).setValue(nick);
-                                firebaseModel.getReference().child("users")
-                                        .child(subscriber.getSub()).child("nontifications")
-                                        .child(nick).setValue(new Nontification(nick,"не отправлено","не просмотрено"
-                                ,ServerValue.TIMESTAMP.toString()));
-                                holder.newSubscribe.setText("Отписаться");
-                                holder.newSubscribe.setTextColor(Color.parseColor("#F3A2E5"));
-                                holder.newSubscribe.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
-                                a=0;
+                                Query query1=firebaseModel.getUsersReference().child(subscriber.getSub())
+                                        .child("accountType");
+                                query1.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        if(snapshot.getValue(String.class).equals("open")){
+                                            firebaseModel.getReference().child("users").child(nick).child("subscription")
+                                                    .child(subscriber.getSub()).setValue(subscriber.getSub());
+                                            firebaseModel.getReference().child("users").child(subscriber.getSub()).child("subscribers")
+                                                    .child(nick).setValue(nick);
+                                            firebaseModel.getReference().child("users")
+                                                    .child(subscriber.getSub()).child("nontifications")
+                                                    .child(nick).setValue(new Nontification(nick,"не отправлено","обычный"
+                                                    ,ServerValue.TIMESTAMP.toString()));
+                                            holder.newSubscribe.setText("Отписаться");
+                                            holder.newSubscribe.setTextColor(Color.parseColor("#F3A2E5"));
+                                            holder.newSubscribe.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
+                                            a=0;
+                                        }else {
+                                            firebaseModel.getReference().child("users").child(nick).child("request")
+                                                    .child(subscriber.getSub()).setValue(subscriber.getSub());
+                                            firebaseModel.getReference().child("users")
+                                                    .child(subscriber.getSub()).child("nontifications")
+                                                    .child(nick).setValue(new Nontification(nick,"не отправлено","запрос"
+                                                    ,ServerValue.TIMESTAMP.toString()));
+                                            holder.newSubscribe.setText("Запрошено");
+                                            holder.newSubscribe.setTextColor(Color.parseColor("#F3A2E5"));
+                                            holder.newSubscribe.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
+                                            a=0;
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                    }
+                                });
                             }
                             if (a == 1) {
                                 Log.d("#####", "one  " + a);
