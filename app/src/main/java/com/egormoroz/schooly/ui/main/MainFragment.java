@@ -96,9 +96,7 @@ public class MainFragment extends Fragment{
 //                startActivity(intent);
             }
         });
-        firebaseModel.getUsersReference().child("tyomaa6").child("nontifications").child("spaccacrani")
-                .setValue(new Nontification("spaccacrani","не отправлено"
-                        ,"не просмотрено", ServerValue.TIMESTAMP.toString()));
+
 //        ArrayList<Reason> reasonsArrayList=new ArrayList<>();
 //        reasonsArrayList.add(new Reason("Мошенничество"));
 //        reasonsArrayList.add(new Reason("Насилие или опасные организации"));

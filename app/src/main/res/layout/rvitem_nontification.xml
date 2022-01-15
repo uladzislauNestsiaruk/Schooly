@@ -47,23 +47,12 @@
             android:fontFamily="@font/montserrat_extrabold"
             android:textColor="@color/white"
             android:padding="8dp"
-            android:layout_toLeftOf="@+id/rejectFriend"
+            android:layout_alignParentEnd="true"
             android:layout_marginEnd="8dp"
             android:textSize="16dp"
             android:visibility="gone"/>
 
-        <TextView
-            android:id="@+id/rejectFriend"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/rejectFriend"
-            android:background="@drawable/corners14appcolor"
-            android:fontFamily="@font/montserrat_extrabold"
-            android:textColor="@color/white"
-            android:padding="8dp"
-            android:layout_alignParentEnd="true"
-            android:textSize="16dp"
-            android:visibility="gone"/>
+
 
 
     </RelativeLayout>

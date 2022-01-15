@@ -71,11 +71,27 @@ public class SubscribersAdapter extends RecyclerView.Adapter<SubscribersAdapter.
                 query.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if(snapshot.exists()){
+                        if (snapshot.exists()){
                             holder.addFriend.setText("Отписаться");
                             holder.addFriend.setTextColor(Color.parseColor("#F3A2E5"));
                             holder.addFriend.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
+                        }
+                    }
 
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+                Query queryRequest2=firebaseModel.getUsersReference().child(subscriber.getSub())
+                        .child("requests").child(nick);
+                queryRequest2.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if(snapshot.exists()){
+                            holder.addFriend.setText("Запрошено");
+                            holder.addFriend.setTextColor(Color.parseColor("#F3A2E5"));
+                            holder.addFriend.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
                         }
                     }
 
@@ -99,9 +115,28 @@ public class SubscribersAdapter extends RecyclerView.Adapter<SubscribersAdapter.
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
                                 if(snapshot.exists()){
                                     a=1;
+                                    Log.d("#####", "c  "+a);
 
                                 }else{
                                     a=2;
+
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+                        Query queryRequest=firebaseModel.getUsersReference().child(subscriber.getSub())
+                                .child("requests").child(nick);
+                        queryRequest.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                if(snapshot.exists()){
+                                    a=3;
+                                    Log.d("#####", "c  "+a);
+
                                 }
                             }
 
@@ -114,18 +149,43 @@ public class SubscribersAdapter extends RecyclerView.Adapter<SubscribersAdapter.
                         if(a!=0) {
                             if (a == 2) {
                                 Log.d("#####", "ab  " + a);
-                                firebaseModel.getReference().child("users").child(nick).child("subscription")
-                                        .child(subscriber.getSub()).setValue(subscriber.getSub());
-                                firebaseModel.getReference().child("users").child(subscriber.getSub()).child("subscribers")
-                                        .child(nick).setValue(nick);
-                                firebaseModel.getReference().child("users")
-                                        .child(subscriber.getSub()).child("nontifications")
-                                        .child(nick).setValue(new Nontification(subscriber.getSub(),"не отправлено"
-                                        ,"не просмотрено", ServerValue.TIMESTAMP.toString()));
-                                holder.addFriend.setText("Отписаться");
-                                holder.addFriend.setTextColor(Color.parseColor("#F3A2E5"));
-                                holder.addFriend.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
-                                a=0;
+                                Query query1=firebaseModel.getUsersReference().child(subscriber.getSub())
+                                        .child("accountType");
+                                query1.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        if(snapshot.getValue(String.class).equals("open")){
+                                            firebaseModel.getReference().child("users").child(nick).child("subscription")
+                                                    .child(subscriber.getSub()).setValue(subscriber.getSub());
+                                            firebaseModel.getReference().child("users").child(subscriber.getSub()).child("subscribers")
+                                                    .child(nick).setValue(nick);
+                                            firebaseModel.getReference().child("users")
+                                                    .child(subscriber.getSub()).child("nontifications")
+                                                    .child(nick).setValue(new Nontification(nick,"не отправлено","обычный"
+                                                    ,ServerValue.TIMESTAMP.toString()));
+                                            holder.addFriend.setText("Отписаться");
+                                            holder.addFriend.setTextColor(Color.parseColor("#F3A2E5"));
+                                            holder.addFriend.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
+                                            a=0;
+                                        }else {
+                                            firebaseModel.getReference().child("users").child(subscriber.getSub()).child("requests")
+                                                    .child(nick).setValue(nick);
+                                            firebaseModel.getReference().child("users")
+                                                    .child(subscriber.getSub()).child("nontifications")
+                                                    .child(nick).setValue(new Nontification(nick,"не отправлено","запрос"
+                                                    ,ServerValue.TIMESTAMP.toString()));
+                                            holder.addFriend.setText("Запрошено");
+                                            holder.addFriend.setTextColor(Color.parseColor("#F3A2E5"));
+                                            holder.addFriend.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
+                                            a=0;
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                    }
+                                });
                             }
                             if (a == 1) {
                                 Log.d("#####", "one  " + a);
@@ -139,14 +199,16 @@ public class SubscribersAdapter extends RecyclerView.Adapter<SubscribersAdapter.
                                 a=0;
 
                             }
+                            if (a == 3) {
+                                firebaseModel.getReference().child("users").child(subscriber.getSub()).child("requests")
+                                        .child(nick).removeValue();
+                                holder.addFriend.setText("Подписаться");
+                                holder.addFriend.setTextColor(Color.parseColor("#FFFEFE"));
+                                holder.addFriend.setBackgroundResource(R.drawable.corners10dpappcolor);
+                                a=0;
+
+                            }
                         }
-//                        if (subsCount!=-1){
-//                        subsCount=subsCount-1;
-//                        Log.d("#####","subsCount  "+subsCount);
-//                        firebaseModel.getUsersReference().child(nick)
-//                                .child("subscribersCount").setValue(subsCount);
-//                        }
-//                        holder.addFriend.setText("Добавлен");
                     }
                 });
             }

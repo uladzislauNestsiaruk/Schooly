@@ -30,6 +30,8 @@ public class ComplainAdapter extends RecyclerView.Adapter<ComplainAdapter.ViewHo
     ArrayList<Reason> listAdapter;
     private ComplainAdapter.ItemClickListener clickListener;
     private FirebaseModel firebaseModel = new FirebaseModel();
+    int clickValue;
+    ArrayList<Reason> reasonsToBase=new ArrayList<>();
 
     public  ComplainAdapter(ArrayList<Reason> listAdapter) {
         this.listAdapter = listAdapter;
@@ -49,7 +51,21 @@ public class ComplainAdapter extends RecyclerView.Adapter<ComplainAdapter.ViewHo
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Reason reason=listAdapter.get(position);
+        if(clickValue/2==0){
+            holder.reasonText.setTextColor(Color.parseColor("#D0D0D0"));
+        }else {
+            holder.reasonText.setTextColor(Color.parseColor("#F3A2E5"));
+        }
         holder.reasonText.setText(reason.getReason());
+        holder.reasonText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                holder.reasonText.getCurrentTextColor();
+                clickValue+=1;
+                reasonsToBase.add(new Reason(holder.reasonText.getText().toString()));
+                Log.d("#####", "re  "+reasonsToBase);
+            }
+        });
     }
 
 
