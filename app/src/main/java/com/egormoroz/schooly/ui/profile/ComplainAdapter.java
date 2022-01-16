@@ -5,6 +5,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -31,7 +33,7 @@ public class ComplainAdapter extends RecyclerView.Adapter<ComplainAdapter.ViewHo
     private ComplainAdapter.ItemClickListener clickListener;
     private FirebaseModel firebaseModel = new FirebaseModel();
     int clickValue;
-    ArrayList<Reason> reasonsToBase=new ArrayList<>();
+    static ArrayList<Reason> reasonsToBase=new ArrayList<>();
 
     public  ComplainAdapter(ArrayList<Reason> listAdapter) {
         this.listAdapter = listAdapter;
@@ -51,19 +53,17 @@ public class ComplainAdapter extends RecyclerView.Adapter<ComplainAdapter.ViewHo
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Reason reason=listAdapter.get(position);
-        if(clickValue/2==0){
-            holder.reasonText.setTextColor(Color.parseColor("#D0D0D0"));
-        }else {
-            holder.reasonText.setTextColor(Color.parseColor("#F3A2E5"));
-        }
         holder.reasonText.setText(reason.getReason());
-        holder.reasonText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                holder.reasonText.getCurrentTextColor();
-                clickValue+=1;
-                reasonsToBase.add(new Reason(holder.reasonText.getText().toString()));
-                Log.d("#####", "re  "+reasonsToBase);
+        holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked) {
+                    reasonsToBase.add(new Reason(reason.getReason()));
+                    Log.d("####", "list "+reasonsToBase);
+                }
+                else {
+                    reasonsToBase.remove(new Reason(reason.getReason()));
+                    Log.d("####", "list "+reasonsToBase);
+                }
             }
         });
     }
@@ -77,15 +77,24 @@ public class ComplainAdapter extends RecyclerView.Adapter<ComplainAdapter.ViewHo
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         final TextView reasonText;
+        final CheckBox checkBox;
         ViewHolder(View itemView) {
             super(itemView);
             reasonText=itemView.findViewById(R.id.reasonText);
+            checkBox=itemView.findViewById(R.id.checkBox);
         }
 
         @Override
         public void onClick(View view) {
             if (clickListener != null) clickListener.onItemClick(view, getAdapterPosition());
         }
+    }
+
+    public interface reasonsList{
+        void sendList(ArrayList<Reason> reasons);
+    }
+    public static void getReasonsList(reasonsList reasonsList){
+        reasonsList.sendList(reasonsToBase);
     }
 
     Reason getItem(int id) {

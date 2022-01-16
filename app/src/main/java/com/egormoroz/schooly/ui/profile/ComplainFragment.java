@@ -29,6 +29,7 @@ import java.util.ArrayList;
 
 public class ComplainFragment extends Fragment {
     String otherUserNick;
+    TextView sendReasons;
 
     public ComplainFragment(String otherUserNick) {
         this.otherUserNick = otherUserNick;
@@ -99,6 +100,15 @@ public class ComplainFragment extends Fragment {
 
                     }
                 });
+            }
+        });
+        sendReasons=view.findViewById(R.id.sendReasons);
+        ComplainAdapter.getReasonsList(new ComplainAdapter.reasonsList() {
+            @Override
+            public void sendList(ArrayList<Reason> reasons) {
+                if(reasons.size()>0){
+                    sendReasons.setBackgroundResource(R.drawable.corners14appcolor);
+                }
             }
         });
     }

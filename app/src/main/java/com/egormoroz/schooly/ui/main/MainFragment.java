@@ -254,8 +254,10 @@ public class MainFragment extends Fragment{
         SchoolyService.getAAA(new SchoolyService.transmitMiningMoney() {
             @Override
             public void transmitMoney(double money) {
-                String todayMiningFormatted = new DecimalFormat("#0.00").format(money);
-                todayMiningMain.setText(todayMiningFormatted);
+                if(money!=0) {
+                    String todayMiningFormatted = new DecimalFormat("#0.00").format(money);
+                    todayMiningMain.setText(todayMiningFormatted);
+                }
             }
         });
         loadClothesFromBase();
