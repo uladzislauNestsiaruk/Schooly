@@ -57,12 +57,14 @@ public class ComplainAdapter extends RecyclerView.Adapter<ComplainAdapter.ViewHo
         holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked) {
-                    reasonsToBase.add(new Reason(reason.getReason()));
+                    reasonsToBase.add(new Reason(holder.reasonText.getText().toString()));
                     Log.d("####", "list "+reasonsToBase);
+                    Log.d("####", "lyj "+holder.reasonText.getText().toString());
                 }
                 else {
-                    reasonsToBase.remove(new Reason(reason.getReason()));
-                    Log.d("####", "list "+reasonsToBase);
+                    reasonsToBase.remove(new Reason(holder.reasonText.getText().toString()));
+                    Log.d("####", "listbj "+reasonsToBase);
+                    Log.d("####", "listfhtjyj "+holder.reasonText.getText().toString());
                 }
             }
         });

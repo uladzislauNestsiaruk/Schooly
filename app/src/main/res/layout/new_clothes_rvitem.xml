@@ -2,7 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="170dp"
     android:layout_height="230dp"
-    android:padding="16dp"
+    android:paddingStart="14dp"
+    android:paddingEnd="14dp"
+    android:paddingTop="10dp"
     android:background="@drawable/corners"
     android:layout_margin="10dp"
     android:layout_marginTop="8dp"
@@ -13,7 +15,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/montserrat_extrabold"
-        android:textSize="20sp"
+        android:textSize="18sp"
         android:textColor="@color/app_color"
         />
 
@@ -32,7 +34,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/price"
-        android:textSize="18sp"
+        android:textSize="16sp"
         android:layout_marginStart="2dp"
         android:layout_toRightOf="@+id/coinsImage"
         android:textColor="@color/app_color"
@@ -51,7 +53,18 @@
         android:id="@+id/clothesImage"
         android:layout_width="150dp"
         android:layout_height="150dp"
-        android:layout_below="@+id/coinsImage" />
+        android:layout_below="@+id/coinsImage"
+        android:layout_marginBottom="16dp" />
+
+    <TextView
+        android:id="@+id/creator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:textColor="@color/app_color"
+        android:fontFamily="@font/montserrat_extrabold"/>
 
 
 </RelativeLayout>
