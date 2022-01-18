@@ -4,9 +4,11 @@ import static android.os.Looper.getMainLooper;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
@@ -21,6 +23,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -382,26 +385,43 @@ public class ProfileFragment extends Fragment {
                                                 public boolean onMenuItemClick(MenuItem item) {
                                                     String itemTitle= item.getTitle().toString().trim();
 
-                                                    Log.d("####", "hell"+itemTitle);
                                                     int itemID=item.getItemId();
                                                     switch(itemID){
                                                         case R.id.one :
-                                                            RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-                                                                @Override
-                                                                public void PassUserNick(String nick) {
-                                                                    firebaseModel.getUsersReference().child(nick)
-                                                                            .child("blackList").child(info.getNick())
-                                                                            .setValue(info.getNick());
-                                                                    Log.d("####", "hellosss" + itemTitle);
-                                                                }
-                                                            });
+                                                            showDialog();
                                                             return true;
                                                         case R.id.two:
                                                             RecentMethods.setCurrentFragment(ComplainFragment.newInstance(info.getNick()), getActivity());
-                                                            Log.d("####", "hellosss" + itemTitle);
                                                             return true;
                                                         case R.id.three:
-                                                            Log.d("####", "gang" + itemTitle);
+                                                            RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+                                                                @Override
+                                                                public void PassUserNick(String nick) {
+                                                                    Query query3=firebaseModel.getUsersReference().child(nick)
+                                                                            .child("subscribers").child(info.getNick());
+                                                                    query3.addValueEventListener(new ValueEventListener() {
+                                                                        @Override
+                                                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                                            if(snapshot.exists()){
+                                                                                Log.d("#####", "peace of shit");
+                                                                                firebaseModel.getUsersReference().child(nick)
+                                                                                        .child("subscribers").child(info.getNick()).removeValue();
+                                                                                firebaseModel.getUsersReference().child(info.getNick())
+                                                                                        .child("subscription").child(nick).removeValue();
+                                                                                Toast.makeText(getContext(), "Пользователь удален из подписчиков", Toast.LENGTH_SHORT).show();
+                                                                            }else {
+                                                                                Log.d("#####", "suck my dick");
+                                                                                Toast.makeText(getContext(), "Пользователь не подписан на тебя", Toast.LENGTH_SHORT).show();
+                                                                            }
+                                                                        }
+
+                                                                        @Override
+                                                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                                                        }
+                                                                    });
+                                                                }
+                                                            });
                                                             return true;
                                                     }
                                                     return true;
@@ -584,22 +604,12 @@ public class ProfileFragment extends Fragment {
                                                     int itemID=item.getItemId();
                                                     switch(itemID){
                                                         case R.id.one :
-                                                            RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-                                                                @Override
-                                                                public void PassUserNick(String nick) {
-                                                                    firebaseModel.getUsersReference().child(nick)
-                                                                            .child("blackList").child(info.getNick())
-                                                                            .setValue(info.getNick());
-                                                                    Log.d("####", "hellosss" + itemTitle);
-                                                                }
-                                                            });
+                                                            showDialog();
                                                             return true;
                                                         case R.id.two:
                                                             RecentMethods.setCurrentFragment(ComplainFragment.newInstance(info.getNick()), getActivity());
-                                                            Log.d("####", "hellosss" + itemTitle);
                                                             return true;
                                                         case R.id.three:
-                                                            Log.d("####", "gang" + itemTitle);
                                                             return true;
                                                     }
                                                     return true;
@@ -787,6 +797,43 @@ public class ProfileFragment extends Fragment {
                 });
             }
         });
+    }
+
+    public void showDialog() {
+
+        final Dialog dialog = new Dialog(getContext());
+        dialog.setContentView(R.layout.dialog_layout_blacklist);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        TextView complainTitle = dialog.findViewById(R.id.complainText);
+        TextView no=dialog.findViewById(R.id.no);
+        TextView yes=dialog.findViewById(R.id.yes);
+
+        complainTitle.setText("Заблокировать "+info.getNick()+"?");
+
+        no.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        yes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+                    @Override
+                    public void PassUserNick(String nick) {
+                        firebaseModel.getUsersReference().child(nick)
+                                .child("blackList").child(info.getNick())
+                                .setValue(info.getNick());
+                    }
+                });
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
     }
 
     public void checkWardrobe(){

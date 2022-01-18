@@ -95,7 +95,10 @@ public class SettingsFragment extends Fragment {
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
                                 if (checkType=chatsSwitch.isChecked()){
                                     firebaseModel.getUsersReference().child(nick)
-                                            .child("chatNontsType").setValue("close");
+                                            .child("chatsNontsType").setValue("close");
+                                }else {
+                                    firebaseModel.getUsersReference().child(nick)
+                                            .child("chatsNontsType").setValue("open");
                                 }
                             }
 
@@ -145,6 +148,9 @@ public class SettingsFragment extends Fragment {
                                 if (checkType=groupChatsSwitch.isChecked()){
                                     firebaseModel.getUsersReference().child(nick)
                                             .child("groupChatsNontsType").setValue("close");
+                                }else {
+                                    firebaseModel.getUsersReference().child(nick)
+                                            .child("groupChatsNontsType").setValue("open");
                                 }
                             }
 
@@ -194,7 +200,10 @@ public class SettingsFragment extends Fragment {
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
                                 if (checkType=profileSwitch.isChecked()){
                                     firebaseModel.getUsersReference().child(nick)
-                                            .child("groupChatsNontsType").setValue("close");
+                                            .child("profileNontsType").setValue("close");
+                                }else {
+                                    firebaseModel.getUsersReference().child(nick)
+                                            .child("profileNontsType").setValue("open");
                                 }
                             }
 

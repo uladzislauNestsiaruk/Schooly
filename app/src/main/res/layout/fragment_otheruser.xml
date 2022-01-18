@@ -36,6 +36,7 @@
 			android:layout_marginEnd="24dp"
 			android:layout_marginTop="18dp"/>
 
+
 		<TextView
 			android:id="@+id/otheruserbiography"
 			android:layout_width="wrap_content"

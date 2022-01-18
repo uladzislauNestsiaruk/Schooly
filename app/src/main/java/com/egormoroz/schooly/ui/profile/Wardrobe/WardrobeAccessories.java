@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,6 +17,7 @@ import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
+import com.egormoroz.schooly.ui.main.Shop.ShopFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
@@ -29,6 +31,7 @@ public class WardrobeAccessories extends Fragment {
     ArrayList<Clothes> sortAccessoriesArrayListWardrobe=new ArrayList<Clothes>();
     RecyclerView wardrobeRecyclerView;
     WardrobeClothesAdapter.ItemClickListener itemClickListener;
+    TextView buyToShop,noClothesText;
 
 
     @Override
@@ -53,6 +56,8 @@ public class WardrobeAccessories extends Fragment {
                 RecentMethods.setCurrentFragment(ViewingClothesWardrobe.newInstance(), getActivity());
             }
         };
+        buyToShop=view.findViewById(R.id.buyToShop);
+        noClothesText=view.findViewById(R.id.noClothesText);
     }
 
 
@@ -71,9 +76,20 @@ public class WardrobeAccessories extends Fragment {
                                 sortAccessoriesArrayListWardrobe.add(cl);
                             }
                         }
-                        WardrobeClothesAdapter newClothesAdapter=new WardrobeClothesAdapter(sortAccessoriesArrayListWardrobe,itemClickListener);
-                        wardrobeRecyclerView.setAdapter(newClothesAdapter);
-                        Log.d("#####", "ggvppp  "+clothesArrayListWardrobe);
+                        if (sortAccessoriesArrayListWardrobe.size()==0){
+                            buyToShop.setVisibility(View.VISIBLE);
+                            noClothesText.setVisibility(View.VISIBLE);
+                            wardrobeRecyclerView.setVisibility(View.GONE);
+                            buyToShop.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    RecentMethods.setCurrentFragment(ShopFragment.newInstance(), getActivity());
+                                }
+                            });
+                        }else {
+                            WardrobeClothesAdapter newClothesAdapter = new WardrobeClothesAdapter(sortAccessoriesArrayListWardrobe, itemClickListener);
+                            wardrobeRecyclerView.setAdapter(newClothesAdapter);
+                        }
                     }
                 });
             }

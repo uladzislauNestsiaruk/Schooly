@@ -205,4 +205,6 @@
     <string name="toComplain">Пожаловаться</string>
     <string name="complainReason">Причина жалобы на</string>
 
+    <string name="noClothesWardrobe">Нет одежды в гардеробе:(</string>
+
 </resources>
