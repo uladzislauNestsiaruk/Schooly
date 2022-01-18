@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.egormoroz.schooly.R;
 import com.google.ar.core.Anchor;
+import com.google.ar.core.exceptions.CameraNotAvailableException;
 import com.google.ar.sceneform.AnchorNode;
 import com.google.ar.sceneform.Node;
 import com.google.ar.sceneform.SceneView;
@@ -37,15 +38,27 @@ public class SceneViewModelActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scene_view_model);
-        loadUrl = Uri.parse("https://poly.googleusercontent.com/downloads/0BnDT3T1wTE/85QOHCZOvov/Mesh_Beagle.gltf");
+        loadUrl = Uri.parse("Model/SciFiHelmet.gltf");
         loadModels();
+        backgroundSceneView = findViewById(R.id.backgroundSceneView);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         backgroundSceneView.pause();
-        transparentSceneView.pause();
+
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        try {
+            loadModels();
+            backgroundSceneView.resume();
+        } catch (CameraNotAvailableException e) {
+            e.printStackTrace();
+        }
+
     }
 
 
@@ -58,7 +71,7 @@ public class SceneViewModelActivity extends AppCompatActivity {
                                 this,
                                 loadUrl,
                                 RenderableSource.SourceType.GLTF2
-                        ).setScale(0.01f)
+                        ).setScale(0.5f)
                                 .setRecenterMode(RenderableSource.RecenterMode.CENTER)
                                 .build()
                 )

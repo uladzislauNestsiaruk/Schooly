@@ -105,6 +105,7 @@ public final class ChatActivity extends Activity {
         if (data != null) {
             messageSenderName = data.getString("curUser");
             messageReceiverName = data.getString("othUser");
+
         }
 
 

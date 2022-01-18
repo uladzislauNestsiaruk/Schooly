@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'com.google.gms.google-services'
+
 }
 
 android {
@@ -29,7 +30,6 @@ android {
 }
 
 dependencies {
-
     implementation "com.squareup.picasso:picasso:2.71828"
     implementation 'com.google.firebase:firebase-analytics'
     implementation platform('com.google.firebase:firebase-bom:28.3.0')
@@ -69,10 +69,4 @@ dependencies {
     implementation 'com.fasterxml.jackson.core:jackson-annotations:2.9.8'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.9.8'
     implementation "android.arch.work:work-runtime:1.0.0-alpha02"
-    implementation 'de.javagl:jgltf-model:2.0.0'
-    implementation 'de.javagl:jgltf-viewer:2.0.0'
-    implementation 'de.javagl:jgltf-validator:2.0.0'
-    implementation 'de.javagl:jgltf-obj:2.0.0'
-    implementation 'de.javagl:jgltf-viewer-jogl:2.0.0'
-    implementation 'de.javagl:jgltf-viewer-lwjgl:2.0.0'
 }

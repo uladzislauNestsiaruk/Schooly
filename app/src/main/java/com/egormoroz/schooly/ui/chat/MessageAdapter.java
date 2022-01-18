@@ -139,53 +139,41 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         messageViewHolder.messageReceiverPicture.setVisibility(View.GONE);
 //        messageViewHolder.voicePlayerView.setVisibility(View.GONE);
 //        messageViewHolder.voicePlayerViewReceiver.setVisibility(View.GONE);
+        switch (fromMessageType) {
+            case "text":
 
-        if (fromMessageType.equals("text")) {
-            if (fromUserID.equals(messageSenderId)) {
-                messageViewHolder.senderMessageText.setVisibility(View.VISIBLE);
-                messageViewHolder.senderMessageText.setText(messages.getMessage());
-                messageViewHolder.senderMessageTime.setText(messages.getTime());
-            } else {
+                if (fromUserID.equals(messageSenderId)) {
+                    messageViewHolder.senderMessageText.setVisibility(View.VISIBLE);
+                    messageViewHolder.senderMessageText.setText(messages.getMessage());
+                    messageViewHolder.senderMessageTime.setText(messages.getTime());
+                } else {
 //                messageViewHolder.receiverProfileImage.setVisibility(View.VISIBLE);
-                messageViewHolder.receiverMessageText.setVisibility(View.VISIBLE);
-                messageViewHolder.receiverMessageText.setText(messages.getMessage());
-                messageViewHolder.receiverMessageTime.setText(messages.getTime());
-            }
-        } else if (fromMessageType.equals("image")) {
-            if (fromUserID.equals(messageSenderId)) {
-                messageViewHolder.messageSenderPicture.setVisibility(View.VISIBLE);
-                Picasso.get().load(messages.getMessage()).into(messageViewHolder.messageSenderPicture);
+                    messageViewHolder.receiverMessageText.setVisibility(View.VISIBLE);
+                    messageViewHolder.receiverMessageText.setText(messages.getMessage());
+                    messageViewHolder.receiverMessageTime.setText(messages.getTime());
+                }
 
-            } else {
+            case "image":
+                if (fromUserID.equals(messageSenderId)) {
+                    messageViewHolder.messageSenderPicture.setVisibility(View.VISIBLE);
+                    Picasso.get().load(messages.getMessage()).into(messageViewHolder.messageSenderPicture);
+
+                } else {
 //                messageViewHolder.receiverProfileImage.setVisibility(View.VISIBLE);
-                messageViewHolder.messageReceiverPicture.setVisibility(View.VISIBLE);
-                Picasso.get().load(messages.getMessage()).into(messageViewHolder.messageReceiverPicture);
-            }
-        } else if (fromMessageType.equals("pdf") || fromMessageType.equals("docx")) {
-            if (fromUserID.equals(messageSenderId)) {
-                messageViewHolder.messageSenderPicture.setVisibility(View.VISIBLE);
-                messageViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(userMessagesList.get(position).getMessage()));
-                        messageViewHolder.itemView.getContext().startActivity(intent);
-                    }
-                });
+                    messageViewHolder.messageReceiverPicture.setVisibility(View.VISIBLE);
+                    Picasso.get().load(messages.getMessage()).into(messageViewHolder.messageReceiverPicture);
+                }
 
-            } else {
-                messageViewHolder.receiverProfileImage.setVisibility(View.VISIBLE);
-                messageViewHolder.messageReceiverPicture.setVisibility(View.VISIBLE);
-            }
-        } else if (fromMessageType.equals("voice")) {
-            if (fromUserID.equals(messageSenderId)) {
+            case "voice":
+                if (fromUserID.equals(messageSenderId)) {
 //                VoicePlayer.getInstance(ChatActivity.getContext()).init(messages.getMessage(),messageViewHolder.);
 
 //                MessageViewHolder.voicePlayerView.setAudio(messages.getMessage());
 //                MessageViewHolder.voicePlayerView.setVisibility(View.VISIBLE);
-            }
-        } else {
+                } else {
 //            MessageViewHolder.voicePlayerViewReceiver.setAudio(messages.getMessage());
 //            MessageViewHolder.voicePlayerViewReceiver.setVisibility(View.VISIBLE);
+                }
         }
 
         if (fromUserID.equals(messageSenderId)) {
