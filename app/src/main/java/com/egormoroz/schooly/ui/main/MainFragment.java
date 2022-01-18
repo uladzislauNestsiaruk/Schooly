@@ -1,15 +1,11 @@
 package com.egormoroz.schooly.ui.main;
 
-import static android.provider.MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE;
-import static android.provider.MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO;
 import static androidx.core.content.ContextCompat.getSystemService;
 
 import android.app.Activity;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.ActivityNotFoundException;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -21,7 +17,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -33,11 +28,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.MainActivity;
-import com.egormoroz.schooly.Nontification;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.SchoolyService;
-import com.egormoroz.schooly.Subscriber;
+
+import com.egormoroz.schooly.ui.Model.SceneViewModelActivity;
 import com.egormoroz.schooly.ui.main.Mining.MiningFragment;
 import com.egormoroz.schooly.ui.main.Nontifications.NontificationFragment;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
@@ -51,13 +46,12 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.progressindicator.CircularProgressIndicator;
 import com.google.firebase.database.ServerValue;
 
-import java.io.FileNotFoundException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class MainFragment extends Fragment{
 
-    TextView todayMiningMain,circleNontifications,circleChat,createClothes;
+    TextView todayMiningMain,circleNontifications,circleChat;
     private FirebaseModel firebaseModel = new FirebaseModel();
     ArrayList<Clothes> clothesArrayList=new ArrayList<Clothes>();
     ArrayList<Clothes> popularClothesArrayList=new ArrayList<Clothes>();
@@ -91,9 +85,18 @@ public class MainFragment extends Fragment{
         chat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(getActivity(), DialogsActivity.class);
+                Intent i = new Intent(getActivity(), SceneViewModelActivity.class);
                 startActivity(i);
-                ((Activity) getActivity()).overridePendingTransition(0, 0);
+ //               ((Activity) getActivity()).overridePendingTransition(0, 0);
+//                Intent sceneViewerIntent = new Intent(Intent.ACTION_VIEW);
+//                Uri intentUri =
+//                        Uri.parse("https://arvr.google.com/scene-viewer/1.0").buildUpon()
+//                                .appendQueryParameter("file", "https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Avocado/glTF/Avocado.gltf")
+//                                .appendQueryParameter("mode", "3d_only")
+//                                .build();
+//                sceneViewerIntent.setData(intentUri);
+//                sceneViewerIntent.setPackage("com.google.ar.core");
+//                startActivity(sceneViewerIntent);
 //                Intent intent = new Intent(getActivity(), ChatActivity.class);
 //                startActivity(intent);
             }
@@ -108,20 +111,6 @@ public class MainFragment extends Fragment{
 //        firebaseModel.getReference().child("AppData").child("complains").setValue(reasonsArrayList);
         circleChat=view.findViewById(R.id.circleChat);
         circleNontifications=view.findViewById(R.id.circleNontifications);
-        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-            @Override
-            public void PassUserNick(String nick) {
-                RecentMethods.getNontificationsList(nick, firebaseModel, new Callbacks.getNontificationsList() {
-                    @Override
-                    public void getNontificationsList(ArrayList<Nontification> nontifications) {
-                        if(nontifications.size()!=0){
-                            circleNontifications.setVisibility(View.VISIBLE);
-                            circleNontifications.setText(String.valueOf(nontifications.size()));
-                        }
-                    }
-                });
-            }
-        });
 
         circularProgressIndicator=view.findViewById(R.id.miningIndicator);
 
@@ -189,6 +178,7 @@ public class MainFragment extends Fragment{
                 ((MainActivity)getActivity()).setCurrentFragment((ShopFragment.newInstance()));
             }
         });
+
         TextView mining=view.findViewById(R.id.mining);
         mining.setOnClickListener(new View.OnClickListener() {
             @Override
