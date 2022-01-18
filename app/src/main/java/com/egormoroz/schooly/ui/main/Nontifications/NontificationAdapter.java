@@ -31,6 +31,7 @@ public class NontificationAdapter extends RecyclerView.Adapter<NontificationAdap
     ArrayList<Nontification> listAdapter;
     private ItemClickListener clickListener;
     private FirebaseModel firebaseModel = new FirebaseModel();
+    String accountType;
 
     public  NontificationAdapter(ArrayList<Nontification> listAdapter) {
         this.listAdapter = listAdapter;
@@ -50,54 +51,36 @@ public class NontificationAdapter extends RecyclerView.Adapter<NontificationAdap
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Nontification nontification=listAdapter.get(position);
-        holder.otherUserNick.setText(nontification.getNick());
-        holder.addFriend.setOnClickListener(new View.OnClickListener() {
+        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @Override
-            public void onClick(View v) {
-                RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-                    @Override
-                    public void PassUserNick(String nick) {
-//                        firebaseModel.getReference().child("users").child(nick).child("nontifications")
-//                                .child(nontification.getNick()).removeValue();
-                        firebaseModel.getReference().child("users").child(nick).child("subscribers")
-                                .child(nontification.getNick()).removeValue();
-                        firebaseModel.getReference().child("users")
-                                .child(nick).child("friends")
-                                .child(nontification.getNick()).setValue(nontification.getNick());
-                        Query query=firebaseModel.getUsersReference().child(nick)
-                                .child("subscribersCount");
-                        query.addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                long subsCount=snapshot.getValue(Long.class);
-                                firebaseModel.getUsersReference().child(nick)
-                                        .child("subscribersCount").setValue(subsCount-1);
-                                Log.d("####", "1   "+subsCount);
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
-
-                            }
-                        });
-                        holder.addFriend.setText("Добавлен");
-                    }
-                });
-            }
-        });
-        holder.rejectFriend.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-                    @Override
-                    public void PassUserNick(String nick) {
-                        firebaseModel.getReference().child("users").child(nick).child("nontifications")
-                                .child(nontification.getNick()).removeValue();
-                        holder.rejectFriend.setText("Отклонен");
-                        holder.addFriend.setBackgroundResource(R.drawable.corners14grey);
-                        holder.rejectFriend.setTextColor(Color.parseColor("#FFFFFF"));
-                    }
-                });
+            public void PassUserNick(String nick) {
+                if(nontification.getTypeView().equals("запрос")) {
+                    holder.otherUserNick.setText(nontification.getNick()+" хочет подписаться на тебя");
+                    holder.addFriend.setVisibility(View.VISIBLE);
+                    holder.addFriend.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+                                @Override
+                                public void PassUserNick(String nick) {
+                                    firebaseModel.getReference().child("users")
+                                            .child(nick).child("subscribers")
+                                            .child(nontification.getNick()).setValue(nontification.getNick());
+                                    firebaseModel.getReference().child("users")
+                                            .child(nontification.getNick()).child("subscription")
+                                            .child(nick).setValue(nick);
+                                    firebaseModel.getReference().child("users").child(nick).child("nontifications")
+                                            .child(nontification.getNick()).removeValue();
+                                    firebaseModel.getReference().child("users").child(nick).child("requests")
+                                            .child(nontification.getNick()).removeValue();
+                                    holder.addFriend.setText("Добавлен");
+                                }
+                            });
+                        }
+                    });
+                }else {
+                    holder.otherUserNick.setText(nontification.getNick()+" подписался на тебя");
+                }
             }
         });
     }
@@ -110,12 +93,11 @@ public class NontificationAdapter extends RecyclerView.Adapter<NontificationAdap
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        final TextView otherUserNick,addFriend,rejectFriend;
+        final TextView otherUserNick,addFriend;
         ViewHolder(View itemView) {
             super(itemView);
             otherUserNick = itemView.findViewById(R.id.otherUserNick);
             addFriend=itemView.findViewById(R.id.addFriend);
-            rejectFriend=itemView.findViewById(R.id.rejectFriend);
         }
 
         @Override

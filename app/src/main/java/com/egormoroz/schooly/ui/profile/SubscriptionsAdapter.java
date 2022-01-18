@@ -13,12 +13,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FirebaseModel;
+import com.egormoroz.schooly.Nontification;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.Subscriber;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 
 import org.jetbrains.annotations.NotNull;
@@ -58,6 +60,45 @@ public class SubscriptionsAdapter extends RecyclerView.Adapter<SubscriptionsAdap
                 if (clickListener != null) clickListener.onItemClick(view, position);
             }
         });
+        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+            @Override
+            public void PassUserNick(String nick) {
+                Query query=firebaseModel.getUsersReference().child(nick)
+                        .child("subscription").child(subscriber.getSub());
+                query.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if (snapshot.exists()){
+                            holder.unsubscribe.setText("Отписаться");
+                            holder.unsubscribe.setTextColor(Color.parseColor("#F3A2E5"));
+                            holder.unsubscribe.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+                Query queryRequest2=firebaseModel.getUsersReference().child(subscriber.getSub())
+                        .child("requests").child(nick);
+                queryRequest2.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if(snapshot.exists()){
+                            holder.unsubscribe.setText("Запрошено");
+                            holder.unsubscribe.setTextColor(Color.parseColor("#F3A2E5"));
+                            holder.unsubscribe.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+            }
+        });
         holder.unsubscribe.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -75,6 +116,23 @@ public class SubscriptionsAdapter extends RecyclerView.Adapter<SubscriptionsAdap
 
                                 }else{
                                     a=2;
+
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+                        Query queryRequest=firebaseModel.getUsersReference().child(subscriber.getSub())
+                                .child("requests").child(nick);
+                        queryRequest.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                if(snapshot.exists()){
+                                    a=3;
+
                                 }
                             }
 
@@ -87,20 +145,43 @@ public class SubscriptionsAdapter extends RecyclerView.Adapter<SubscriptionsAdap
                         if(a!=0) {
                             if (a == 2) {
                                 Log.d("#####", "ab  " + a);
-                                firebaseModel.getReference().child("users").child(nick).child("subscription")
-                                        .child(subscriber.getSub()).setValue(subscriber.getSub());
-                                firebaseModel.getReference().child("users").child(subscriber.getSub()).child("subscribers")
-                                        .child(nick).setValue(nick);
-                                firebaseModel.getReference().child("users")
-                                        .child(subscriber.getSub()).child("nontifications")
-                                        .child(nick).setValue(nick);
-                                firebaseModel.getReference().child("users")
-                                        .child(subscriber.getSub()).child("nontificationsRecycler")
-                                        .child(nick).setValue(nick);
-                                holder.unsubscribe.setText("Отписаться");
-                                holder.unsubscribe.setTextColor(Color.parseColor("#F3A2E5"));
-                                holder.unsubscribe.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
-                                a=0;
+                                Query query1=firebaseModel.getUsersReference().child(subscriber.getSub())
+                                        .child("accountType");
+                                query1.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        if(snapshot.getValue(String.class).equals("open")){
+                                            firebaseModel.getReference().child("users").child(nick).child("subscription")
+                                                    .child(subscriber.getSub()).setValue(subscriber.getSub());
+                                            firebaseModel.getReference().child("users").child(subscriber.getSub()).child("subscribers")
+                                                    .child(nick).setValue(nick);
+                                            firebaseModel.getReference().child("users")
+                                                    .child(subscriber.getSub()).child("nontifications")
+                                                    .child(nick).setValue(new Nontification(nick,"не отправлено","обычный"
+                                                    ,ServerValue.TIMESTAMP.toString()));
+                                            holder.unsubscribe.setText("Отписаться");
+                                            holder.unsubscribe.setTextColor(Color.parseColor("#F3A2E5"));
+                                            holder.unsubscribe.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
+                                            a=0;
+                                        }else {
+                                            firebaseModel.getReference().child("users").child(subscriber.getSub()).child("requests")
+                                                    .child(nick).setValue(nick);
+                                            firebaseModel.getReference().child("users")
+                                                    .child(subscriber.getSub()).child("nontifications")
+                                                    .child(nick).setValue(new Nontification(nick,"не отправлено","запрос"
+                                                    ,ServerValue.TIMESTAMP.toString()));
+                                            holder.unsubscribe.setText("Запрошено");
+                                            holder.unsubscribe.setTextColor(Color.parseColor("#F3A2E5"));
+                                            holder.unsubscribe.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
+                                            a=0;
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                    }
+                                });
                             }
                             if (a == 1) {
                                 Log.d("#####", "one  " + a);
@@ -112,6 +193,16 @@ public class SubscriptionsAdapter extends RecyclerView.Adapter<SubscriptionsAdap
                                 holder.unsubscribe.setTextColor(Color.parseColor("#FFFEFE"));
                                 holder.unsubscribe.setBackgroundResource(R.drawable.corners10dpappcolor);
                                 a=0;
+
+                            }
+                            if (a == 3) {
+                                firebaseModel.getReference().child("users").child(subscriber.getSub()).child("requests")
+                                        .child(nick).removeValue();
+                                holder.unsubscribe.setText("Подписаться");
+                                holder.unsubscribe.setTextColor(Color.parseColor("#FFFEFE"));
+                                holder.unsubscribe.setBackgroundResource(R.drawable.corners10dpappcolor);
+                                a=0;
+
                             }
                         }
                     }

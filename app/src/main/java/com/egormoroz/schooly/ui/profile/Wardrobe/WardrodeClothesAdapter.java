@@ -56,7 +56,6 @@ class WardrobeClothesAdapter extends RecyclerView.Adapter<WardrobeClothesAdapter
   public void onBindViewHolder(ViewHolder holder, int position) {
     firebaseModel.initAll();
     clothes=clothesArrayListWardrobe.get(position);
-    holder.clothesPrise.setText(String.valueOf(clothes.getClothesPrice()));
     holder.clothesTitle.setText(clothes.getClothesTitle());
     File file=new File(clothes.getClothesImage());
     storageReference.child("clothes").getFile(file);
@@ -80,11 +79,10 @@ class WardrobeClothesAdapter extends RecyclerView.Adapter<WardrobeClothesAdapter
   }
 
   public class ViewHolder extends RecyclerView.ViewHolder {
-    TextView clothesPrise,clothesTitle;
+    TextView clothesTitle;
     ImageView clothesImage;
     ViewHolder(View itemView) {
       super(itemView);
-      clothesPrise=itemView.findViewById(R.id.clothesPrice);
       clothesImage=itemView.findViewById(R.id.clothesImage);
       clothesTitle=itemView.findViewById(R.id.clothesTitle);
     }

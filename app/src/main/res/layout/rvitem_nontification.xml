@@ -26,19 +26,17 @@
         android:id="@+id/justtext"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/app_grey"
-        android:textSize="18dp"
-        android:text="@string/wantadd"
-        android:fontFamily="@font/montserrat_extrabold"
-        android:layout_toRightOf="@+id/otherUserNick"
         android:layout_marginStart="4dp"
-        android:layout_marginTop="16dp"/>
+        android:layout_marginTop="16dp"
+        android:layout_toRightOf="@+id/userImage"
+        android:fontFamily="@font/montserrat_extrabold"
+        android:textColor="@color/app_grey"
+        android:textSize="18dp" />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/userImage"
-        android:layout_toRightOf="@id/userImage">
+        android:layout_below="@+id/userImage">
 
         <TextView
             android:id="@+id/addFriend"
@@ -49,20 +47,12 @@
             android:fontFamily="@font/montserrat_extrabold"
             android:textColor="@color/white"
             android:padding="8dp"
-            android:textSize="16dp"/>
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="8dp"
+            android:textSize="16dp"
+            android:visibility="gone"/>
 
-        <TextView
-            android:id="@+id/rejectFriend"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/rejectFriend"
-            android:background="@drawable/corners14appcolor"
-            android:fontFamily="@font/montserrat_extrabold"
-            android:layout_toRightOf="@+id/addFriend"
-            android:textColor="@color/white"
-            android:padding="8dp"
-            android:layout_marginStart="8dp"
-            android:textSize="16dp"/>
+
 
 
     </RelativeLayout>

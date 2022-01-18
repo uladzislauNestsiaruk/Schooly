@@ -44,7 +44,7 @@ public class NontificationService extends Service {
     ArrayList<String> listOfNontifications = new ArrayList<String>();
     ArrayList<String> list = new ArrayList<String>();
     Nontification otherUserNickNonts;
-    String name,nickOther;
+    String nickOther;
 
 //    @Override
 //    public void onCreate() {
@@ -125,12 +125,16 @@ public class NontificationService extends Service {
                             public void getNontificationsList(ArrayList<Nontification> nontifications) {
                                 Log.d("#####", "f "+nontifications);
                                 if(nontifications.size()!=0) {
-                                    int lastIndex = nontifications.size() - 1;
-                                    Log.d("####### ", "fege  " + lastIndex);
-                                    otherUserNickNonts = nontifications.get(lastIndex);
-                                    name = otherUserNickNonts.getNick();
-                                    nickOther = otherUserNickNonts.getNick();
-                                    nontification();
+                                    for(int i=0;i<nontifications.size();i++){
+                                        otherUserNickNonts = nontifications.get(i);
+                                        nickOther = otherUserNickNonts.getNick();
+                                        Log.d("####", "shiiiiiiiitttttttttttt");
+                                        if(otherUserNickNonts.getTypeDispatch().equals("не отправлено")) {
+                                            nontification(nickOther);
+                                            firebaseModel.getUsersReference().child(nick).child("nontifications").child(otherUserNickNonts.getNick())
+                                                    .child("typeDispatch").setValue("отправлено");
+                                        }
+                                    }
                                 }
                             }
                         });
@@ -160,7 +164,7 @@ public class NontificationService extends Service {
             }
         });
     }
-    public void nontification(){
+    public void nontification(String nickOther){
         Intent notificationIntent = new Intent(this, MainActivity.class);
         PendingIntent contentIntent = PendingIntent.getActivity(this,
                 0, notificationIntent,
@@ -168,7 +172,7 @@ public class NontificationService extends Service {
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_nontification_image)
-                .setContentTitle(name)
+                .setContentTitle(nickOther)
                 .setContentText("хочет добавить вас в друзья")
                 .setContentIntent(contentIntent)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);

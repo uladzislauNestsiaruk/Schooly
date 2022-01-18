@@ -86,15 +86,14 @@ public class NewClothesAdapter extends RecyclerView.Adapter<NewClothesAdapter.Vi
     File file=new File(clothes.getClothesImage());
     storageReference.child("clothes").getFile(file);
     holder.clothesImage.setVisibility(View.VISIBLE);
+    holder.creator.setText(clothes.getCreator());
     Picasso.get().load(clothes.getClothesImage()).into(holder.clothesImage);
     holder.itemView.setOnClickListener(new View.OnClickListener(){
       @Override
       public void onClick(View v)
       {
-        Log.d("#####", "title  "+itemClickListener);
         itemClickListener.onItemClick(clothesArrayList.get(holder.getAdapterPosition()));
         trueClothes=clothesArrayList.get(holder.getAdapterPosition());
-        Log.d("#####", "title  "+holder.getAdapterPosition());
       }
     });
   }
@@ -106,13 +105,14 @@ public class NewClothesAdapter extends RecyclerView.Adapter<NewClothesAdapter.Vi
   }
 
   public class ViewHolder extends RecyclerView.ViewHolder {
-    TextView clothesPrise,clothesTitle;
+    TextView clothesPrise,clothesTitle,creator;
     ImageView clothesImage;
     ViewHolder(View itemView) {
       super(itemView);
       clothesPrise=itemView.findViewById(R.id.clothesPrice);
       clothesImage=itemView.findViewById(R.id.clothesImage);
       clothesTitle=itemView.findViewById(R.id.clothesTitle);
+      creator=itemView.findViewById(R.id.creator);
     }
 
 

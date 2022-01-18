@@ -49,14 +49,14 @@
             android:layout_alignParentEnd="true"
             android:layout_marginTop="14dp"
             android:layout_marginEnd="18dp"
-            android:textSize="12sp"
-            android:paddingBottom="1dp"
+            android:background="@drawable/corners10dpappcolor"
+            android:fontFamily="@font/montserrat_bold"
             android:paddingStart="4dp"
             android:paddingEnd="4dp"
+            android:paddingBottom="1dp"
             android:textColor="@color/white"
-            android:fontFamily="@font/montserrat_bold"
-            android:background="@drawable/corners10dpappcolor"
-            android:visibility="gone"/>
+            android:textSize="12sp"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/circleNontifications"
@@ -65,22 +65,22 @@
             android:layout_alignParentEnd="true"
             android:layout_marginTop="14dp"
             android:layout_marginEnd="72dp"
-            android:textSize="12sp"
-            android:paddingBottom="1dp"
+            android:background="@drawable/corners10dpappcolor"
+            android:fontFamily="@font/montserrat_bold"
             android:paddingStart="4dp"
             android:paddingEnd="4dp"
+            android:paddingBottom="1dp"
             android:textColor="@color/white"
-            android:fontFamily="@font/montserrat_bold"
-            android:background="@drawable/corners10dpappcolor"
-            android:visibility="gone"/>
+            android:textSize="12sp"
+            android:visibility="gone" />
 
 
         <RelativeLayout
             android:id="@+id/relativeshop"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="4dp"
-            android:layout_below="@+id/appname">
+            android:layout_below="@+id/appname"
+            android:layout_marginTop="4dp">
 
             <TextView
                 android:id="@+id/shop"
@@ -232,6 +232,17 @@
                 android:text="@string/today"
                 android:textColor="@color/white"
                 android:textSize="14sp" />
+
+            <com.google.android.material.progressindicator.CircularProgressIndicator
+                android:id="@+id/miningIndicator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/today"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="18dp"
+                android:indeterminate="true"
+                app:indicatorColor="@color/white"
+                android:visibility="gone"/>
 
             <TextView
                 android:id="@+id/todayminingmain"

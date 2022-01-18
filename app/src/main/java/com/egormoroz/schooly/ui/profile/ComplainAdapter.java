@@ -5,6 +5,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -30,6 +32,8 @@ public class ComplainAdapter extends RecyclerView.Adapter<ComplainAdapter.ViewHo
     ArrayList<Reason> listAdapter;
     private ComplainAdapter.ItemClickListener clickListener;
     private FirebaseModel firebaseModel = new FirebaseModel();
+    int clickValue;
+    static ArrayList<Reason> reasonsToBase=new ArrayList<>();
 
     public  ComplainAdapter(ArrayList<Reason> listAdapter) {
         this.listAdapter = listAdapter;
@@ -50,6 +54,20 @@ public class ComplainAdapter extends RecyclerView.Adapter<ComplainAdapter.ViewHo
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Reason reason=listAdapter.get(position);
         holder.reasonText.setText(reason.getReason());
+        holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked) {
+                    reasonsToBase.add(new Reason(holder.reasonText.getText().toString()));
+                    Log.d("####", "list "+reasonsToBase);
+                    Log.d("####", "lyj "+holder.reasonText.getText().toString());
+                }
+                else {
+                    reasonsToBase.remove(new Reason(holder.reasonText.getText().toString()));
+                    Log.d("####", "listbj "+reasonsToBase);
+                    Log.d("####", "listfhtjyj "+holder.reasonText.getText().toString());
+                }
+            }
+        });
     }
 
 
@@ -61,15 +79,24 @@ public class ComplainAdapter extends RecyclerView.Adapter<ComplainAdapter.ViewHo
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         final TextView reasonText;
+        final CheckBox checkBox;
         ViewHolder(View itemView) {
             super(itemView);
             reasonText=itemView.findViewById(R.id.reasonText);
+            checkBox=itemView.findViewById(R.id.checkBox);
         }
 
         @Override
         public void onClick(View view) {
             if (clickListener != null) clickListener.onItemClick(view, getAdapterPosition());
         }
+    }
+
+    public interface reasonsList{
+        void sendList(ArrayList<Reason> reasons);
+    }
+    public static void getReasonsList(reasonsList reasonsList){
+        reasonsList.sendList(reasonsToBase);
     }
 
     Reason getItem(int id) {

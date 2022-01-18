@@ -110,13 +110,13 @@ public class RecentMethods {
 
         UserInformation res = new UserInformation(nick, "unknown", user.getUid(),
                 6, "unknown", "Helicopter", 1000
-                , "Miner", 1,100,0, "", "", "","",0,0,0,"open");
+                , "Miner", 1,100,0, "", "", "","",0,0,0,"open","open","open","open");
         ref.child(nick).setValue(res);
         return nick.isEmpty();
     }
     public static void hasThisUserFun(FirebaseAuth AuthenticationBase, FirebaseUser user,
                                       Callbacks.hasGoogleUser callback) {
-        if (user == null) {
+        if(user == null){
             callback.hasGoogleUserCallback(false);
             return;
         }
@@ -502,6 +502,7 @@ public class RecentMethods {
                     clothes.setPurchaseNumber(snap.child("purchaseNumber").getValue(Long.class));
                     clothes.setClothesType(snap.child("clothesType").getValue(String.class));
                     clothes.setClothesTitle(snap.child("clothesTitle").getValue(String.class));
+                    clothes.setCreator(snap.child("creator").getValue(String.class));
                     clothesFromBase.add(clothes);
                 }
                 callback.getClothes(clothesFromBase);
@@ -516,7 +517,7 @@ public class RecentMethods {
 
     public static void getPopular(FirebaseModel firebaseModel,Callbacks.GetClothes callback){
         firebaseModel.initAll();
-        Query query=firebaseModel.getReference("AppData/Clothes/Popular");
+        Query query=firebaseModel.getReference("AppData/Clothes/AllClothes");
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -528,6 +529,7 @@ public class RecentMethods {
                     clothes.setPurchaseNumber(snap.child("purchaseNumber").getValue(Long.class));
                     clothes.setClothesType(snap.child("clothesType").getValue(String.class));
                     clothes.setClothesTitle(snap.child("clothesTitle").getValue(String.class));
+                    clothes.setCreator(snap.child("creator").getValue(String.class));
                     clothesFromBase.add(clothes);
                 }
                 callback.getClothes(clothesFromBase);
@@ -553,6 +555,7 @@ public class RecentMethods {
                     clothes.setPurchaseNumber(snap.child("purchaseNumber").getValue(Long.class));
                     clothes.setClothesType(snap.child("clothesType").getValue(String.class));
                     clothes.setClothesTitle(snap.child("clothesTitle").getValue(String.class));
+                    clothes.setCreator(snap.child("creator").getValue(String.class));
                     clothesFromBase.add(clothes);
                 }
                 callback.getClothes(clothesFromBase);
@@ -578,6 +581,7 @@ public class RecentMethods {
                     clothes.setPurchaseNumber(snap.child("purchaseNumber").getValue(Long.class));
                     clothes.setClothesType(snap.child("clothesType").getValue(String.class));
                     clothes.setClothesTitle(snap.child("clothesTitle").getValue(String.class));
+                    clothes.setCreator(snap.child("creator").getValue(String.class));
                     clothesFromBase.add(clothes);
                 }
                 callback.getClothes(clothesFromBase);
@@ -603,6 +607,7 @@ public class RecentMethods {
                     clothes.setPurchaseNumber(snap.child("purchaseNumber").getValue(Long.class));
                     clothes.setClothesType(snap.child("clothesType").getValue(String.class));
                     clothes.setClothesTitle(snap.child("clothesTitle").getValue(String.class));
+                    clothes.setCreator(snap.child("creator").getValue(String.class));
                     clothesFromBase.add(clothes);
                 }
                 callback.getClothes(clothesFromBase);
@@ -629,6 +634,7 @@ public class RecentMethods {
                     clothes.setPurchaseNumber(snap.child("purchaseNumber").getValue(Long.class));
                     clothes.setClothesType(snap.child("clothesType").getValue(String.class));
                     clothes.setClothesTitle(snap.child("clothesTitle").getValue(String.class));
+                    clothes.setCreator(snap.child("creator").getValue(String.class));
                     clothesFromBase.add(clothes);
                 }
                 callback.getClothes(clothesFromBase);
@@ -655,6 +661,7 @@ public class RecentMethods {
                     clothes.setPurchaseNumber(snap.child("purchaseNumber").getValue(Long.class));
                     clothes.setClothesType(snap.child("clothesType").getValue(String.class));
                     clothes.setClothesTitle(snap.child("clothesTitle").getValue(String.class));
+                    clothes.setCreator(snap.child("creator").getValue(String.class));
                     clothesFromBase.add(clothes);
                 }
                 callback.getClothes(clothesFromBase);
@@ -681,6 +688,7 @@ public class RecentMethods {
                     clothes.setPurchaseNumber(snap.child("purchaseNumber").getValue(Long.class));
                     clothes.setClothesType(snap.child("clothesType").getValue(String.class));
                     clothes.setClothesTitle(snap.child("clothesTitle").getValue(String.class));
+                    clothes.setCreator(snap.child("creator").getValue(String.class));
                     clothesFromBase.add(clothes);
                 }
                 callback.getClothes(clothesFromBase);
@@ -1138,14 +1146,14 @@ public class RecentMethods {
 
     public static void getComplainReasonList( FirebaseModel model, Callbacks.getComplainReasonsList callback){
         model.initAll();
-        Query query=model.getUsersReference().child("reasons");
+        Query query=model.getReference().child("AppData").child("complains");
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 ArrayList<Reason> reasonsArrayList = new ArrayList<>();
                 for (DataSnapshot snap:snapshot.getChildren()){
                     Reason reason=new Reason();
-                    reason.setReason(snap.getValue(String.class));
+                    reason.setReason(snap.child("reason").getValue(String.class));
                     reasonsArrayList.add(reason);
                 }
                 callback.getComplainReasonsList(reasonsArrayList);

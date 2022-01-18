@@ -169,7 +169,7 @@
             android:layout_height="wrap_content"
             android:text="@string/noClothes"
             android:layout_below="@+id/shielf"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="60dp"
             android:textColor="@color/app_grey"
             android:textSize="16sp"
             android:fontFamily="@font/montserrat_bold"
@@ -187,19 +187,17 @@
             android:padding="12dp"
             android:background="@drawable/corners14appcolor"
             android:textSize="16sp"
-            android:fontFamily="@font/montserrat_bold"
+            android:fontFamily="@font/montserrat_extrabold"
             android:layout_centerHorizontal="true"
             android:visibility="gone"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerProfileToWardrobe"
             android:layout_width="match_parent"
-            android:layout_height="270dp"
+            android:layout_height="234dp"
             android:layout_below="@+id/shielf"
             android:layout_marginTop="4dp"
             android:orientation="vertical"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
             android:scrollbars="none"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
         <TextView
@@ -210,9 +208,9 @@
             android:textColor="@color/app_color"
             android:textSize="18sp"
             android:layout_marginStart="24dp"
-            android:layout_below="@id/recyclerProfileToWardrobe"
+            android:layout_below="@id/shielf"
             android:fontFamily="@font/montserrat_extrabold"
-            android:layout_marginTop="16dp"/>
+            android:layout_marginTop="240dp"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/looksRecycler"

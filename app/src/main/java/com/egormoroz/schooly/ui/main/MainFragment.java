@@ -40,7 +40,11 @@ import com.egormoroz.schooly.ui.main.Shop.NewClothesAdapter;
 import com.egormoroz.schooly.ui.main.Shop.ShopFragment;
 import com.egormoroz.schooly.ui.main.Shop.ViewingClothes;
 import com.egormoroz.schooly.ui.people.UserPeopleAdapter;
+import com.egormoroz.schooly.ui.profile.ComplainFragment;
+import com.egormoroz.schooly.ui.profile.Reason;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.progressindicator.CircularProgressIndicator;
+import com.google.firebase.database.ServerValue;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -55,6 +59,7 @@ public class MainFragment extends Fragment{
     RecyclerView clothesRecyclerMain;
     NewClothesAdapter.ItemClickListener itemClickListener;
     private static final int NOTIFY_ID = 101;
+    CircularProgressIndicator circularProgressIndicator;
 
     private static final String CHANNEL_ID = "Tyomaa channel";
 
@@ -96,31 +101,42 @@ public class MainFragment extends Fragment{
 //                startActivity(intent);
             }
         });
+
+//        ArrayList<Reason> reasonsArrayList=new ArrayList<>();
+//        reasonsArrayList.add(new Reason("Мошенничество"));
+//        reasonsArrayList.add(new Reason("Насилие или опасные организации"));
+//        reasonsArrayList.add(new Reason("Враждебные высказывания или символы"));
+//        reasonsArrayList.add(new Reason("Продажа незаконных товаров"));
+//        reasonsArrayList.add(new Reason("Нарушение прав на интеллектуальную собственность"));
+//        firebaseModel.getReference().child("AppData").child("complains").setValue(reasonsArrayList);
         circleChat=view.findViewById(R.id.circleChat);
         circleNontifications=view.findViewById(R.id.circleNontifications);
+
+        circularProgressIndicator=view.findViewById(R.id.miningIndicator);
 
         TextView getMore=view.findViewById(R.id.getMore);
         getMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Uri stickerAssetUri =  Uri.parse("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/miners%2Ffimw.png?alt=media&token=9798e9ea-15a0-4ef2-869b-63ce4dc95b78");
-                String sourceApplication = "com.egormoroz.schooly";
-
-                Intent intent = new Intent("com.instagram.share.ADD_TO_STORY");
-                intent.putExtra("source_application", sourceApplication);
-
-                intent.setType("image/*");
-                intent.putExtra("interactive_asset_uri", stickerAssetUri);
-                intent.putExtra("top_background_color", "#33FF33");
-                intent.putExtra("bottom_background_color", "#FF00FF");
-
-// Instantiate activity and verify it will resolve implicit intent
-                Activity activity = getActivity();
-                activity.grantUriPermission(
-                        "com.instagram.android", stickerAssetUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                if (activity.getPackageManager().resolveActivity(intent, 0) != null) {
-                    activity.startActivityForResult(intent, 0);
-                }
+                RecentMethods.setCurrentFragment(ComplainFragment.newInstance("spaccacrani"), getActivity());
+//                Uri stickerAssetUri =  Uri.parse("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/miners%2Ffimw.png?alt=media&token=9798e9ea-15a0-4ef2-869b-63ce4dc95b78");
+//                String sourceApplication = "com.egormoroz.schooly";
+//
+//                Intent intent = new Intent("com.instagram.share.ADD_TO_STORY");
+//                intent.putExtra("source_application", sourceApplication);
+//
+//                intent.setType("image/*");
+//                intent.putExtra("interactive_asset_uri", stickerAssetUri);
+//                intent.putExtra("top_background_color", "#33FF33");
+//                intent.putExtra("bottom_background_color", "#FF00FF");
+//
+//// Instantiate activity and verify it will resolve implicit intent
+//                Activity activity = getActivity();
+//                activity.grantUriPermission(
+//                        "com.instagram.android", stickerAssetUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
+//                if (activity.getPackageManager().resolveActivity(intent, 0) != null) {
+//                    activity.startActivityForResult(intent, 0);
+ //               }
 
 // Instantiate implicit intent with ADD_TO_STORY action,
 // sticker asset, and background colors
@@ -185,17 +201,6 @@ public class MainFragment extends Fragment{
             }
         });
         clothesRecyclerMain=view.findViewById(R.id.newchlothesinshop);
-//        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-//            @Override
-//            public void PassUserNick(String nick) {
-//                RecentMethods.GetTodayMining(nick, firebaseModel, new Callbacks.GetTodayMining() {
-//                    @Override
-//                    public void GetTodayMining(double todayMiningFromBase) {
-//                        todayMiningMain.setText(String.valueOf(todayMiningFromBase));
-//                    }
-//                });
-//            }
-//        });
         itemClickListener=new NewClothesAdapter.ItemClickListener() {
             @Override
             public void onItemClick(Clothes clothes) {
@@ -232,8 +237,10 @@ public class MainFragment extends Fragment{
         SchoolyService.getAAA(new SchoolyService.transmitMiningMoney() {
             @Override
             public void transmitMoney(double money) {
-                String todayMiningFormatted = new DecimalFormat("#0.00").format(money);
-                todayMiningMain.setText(todayMiningFormatted);
+                if(money!=-1) {
+                    String todayMiningFormatted = new DecimalFormat("#0.00").format(money);
+                    todayMiningMain.setText(todayMiningFormatted);
+                }
             }
         });
         loadClothesFromBase();

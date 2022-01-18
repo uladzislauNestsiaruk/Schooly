@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +34,7 @@ import com.egormoroz.schooly.MainActivity;
 
 import com.egormoroz.schooly.ModelRenderer;
 import com.egormoroz.schooly.ModelSurfaceView;
+import com.egormoroz.schooly.Nontification;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.SceneLoader;
@@ -43,6 +45,7 @@ import com.egormoroz.schooly.ui.main.Shop.NewClothesAdapter;
 import com.egormoroz.schooly.ui.main.Shop.ShopFragment;
 import com.egormoroz.schooly.ui.main.Shop.ViewingClothes;
 import com.egormoroz.schooly.ui.main.UserInformation;
+import com.egormoroz.schooly.ui.people.PeopleFragment;
 import com.egormoroz.schooly.ui.profile.Wardrobe.WardrobeFragment;
 import com.google.android.filament.Filament;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -50,6 +53,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -64,7 +68,7 @@ public class ProfileFragment extends Fragment {
     String type,nicknameCallback;
     UserInformation info;
     TextView nickname,message,biographyTextView,looksCount,subscriptionsCount,subscribersCount,otherLooksCount,otherSubscriptionCount,
-            otherSubscribersCount,createNewLookText,createNewLook,otherUserBiography,subscribeClose,addFriend,looksText
+            otherSubscribersCount,createNewLookText,createNewLook,otherUserBiography,subscribeClose,subscribe,looksText
             ,subscribeFirst,closeAccount,noClothes,buyClothesProfile,noLooksOther;
     DatabaseReference user;
     NewClothesAdapter.ItemClickListener itemClickListener;
@@ -78,6 +82,7 @@ public class ProfileFragment extends Fragment {
     int looksListSize,profileValue;
     private float[] backgroundColor = new float[]{0f, 0f, 0f, 1.0f};
     private Handler handler;
+    int a;
 
     @Override
     public void onAttach(Context context) {
@@ -327,8 +332,14 @@ public class ProfileFragment extends Fragment {
                 otherUserBiography=view.findViewById(R.id.otheruserbiography);
                 subscribeClose=view.findViewById(R.id.subscribeClose);
                 back=view.findViewById(R.id.back);
+                back.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        RecentMethods.setCurrentFragment(PeopleFragment.newInstance(), getActivity());
+                    }
+                });
                 otherUserBiography.setText(info.getBio());
-                addFriend=view.findViewById(R.id.addFriend);
+                subscribe=view.findViewById(R.id.addFriend);
                 subscribeFirst=view.findViewById(R.id.SubscribeFirst);
                 closeAccount=view.findViewById(R.id.closeAccount);
                 moreSquare=view.findViewById(R.id.moresquare);
@@ -342,7 +353,6 @@ public class ProfileFragment extends Fragment {
                     message.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-
                             open();
                         }
                     });
@@ -370,17 +380,29 @@ public class ProfileFragment extends Fragment {
 
                                             popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                                                 public boolean onMenuItemClick(MenuItem item) {
-                                                    String itemTitle=item.getTitle().toString();
-                                                    if(itemTitle.equals("Заблокировать")){
-                                                        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-                                                            @Override
-                                                            public void PassUserNick(String nick) {
-                                                                firebaseModel.getUsersReference().child(nick)
-                                                                        .child("blackList").child(info.getNick())
-                                                                        .setValue(info.getNick());
-                                                                Log.d("####", "hellosss"+itemTitle);
-                                                            }
-                                                        });
+                                                    String itemTitle= item.getTitle().toString().trim();
+
+                                                    Log.d("####", "hell"+itemTitle);
+                                                    int itemID=item.getItemId();
+                                                    switch(itemID){
+                                                        case R.id.one :
+                                                            RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+                                                                @Override
+                                                                public void PassUserNick(String nick) {
+                                                                    firebaseModel.getUsersReference().child(nick)
+                                                                            .child("blackList").child(info.getNick())
+                                                                            .setValue(info.getNick());
+                                                                    Log.d("####", "hellosss" + itemTitle);
+                                                                }
+                                                            });
+                                                            return true;
+                                                        case R.id.two:
+                                                            RecentMethods.setCurrentFragment(ComplainFragment.newInstance(info.getNick()), getActivity());
+                                                            Log.d("####", "hellosss" + itemTitle);
+                                                            return true;
+                                                        case R.id.three:
+                                                            Log.d("####", "gang" + itemTitle);
+                                                            return true;
                                                     }
                                                     return true;
                                                 }
@@ -414,9 +436,9 @@ public class ProfileFragment extends Fragment {
                                                 @Override
                                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                                                     if (snapshot.exists()) {
-                                                        addFriend.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
-                                                        addFriend.setTextColor(Color.parseColor("#F3A2E5"));
-                                                        addFriend.setText("Отписаться");
+                                                        subscribe.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
+                                                        subscribe.setTextColor(Color.parseColor("#F3A2E5"));
+                                                        subscribe.setText("Отписаться");
                                                     }
                                                 }
 
@@ -428,43 +450,24 @@ public class ProfileFragment extends Fragment {
                                         }
                                     });
 
-                                    addFriend.setOnClickListener(new View.OnClickListener() {
+                                    subscribe.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
                                             RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
                                                 @Override
                                                 public void PassUserNick(String nick) {
-                                                    Query query = firebaseModel.getUsersReference().child(nick).child("subscription")
-                                                            .child(info.getNick());
+                                                    Query query=firebaseModel.getUsersReference().child(nick)
+                                                            .child("subscription").child(info.getNick());
                                                     query.addValueEventListener(new ValueEventListener() {
                                                         @Override
                                                         public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                            if (snapshot.exists()) {
-                                                                firebaseModel.getReference().child("users")
-                                                                        .child(info.getNick()).child("subscribers")
-                                                                        .child(nick).removeValue();
-                                                                firebaseModel.getReference().child("users")
-                                                                        .child(nick).child("subscription")
-                                                                        .child(info.getNick()).removeValue();
-                                                                addFriend.setBackgroundResource(R.drawable.corners10dpappcolor);
-                                                                addFriend.setText("Подпиматься");
-                                                                addFriend.setTextColor(Color.parseColor("#FFFEFE"));
-                                                            } else {
-                                                                firebaseModel.getReference().child("users")
-                                                                        .child(info.getNick()).child("subscribers")
-                                                                        .child(nick).setValue(nick);
-                                                                firebaseModel.getReference().child("users")
-                                                                        .child(info.getNick()).child("nontifications")
-                                                                        .child(nick).setValue(nick);
-                                                                firebaseModel.getReference().child("users")
-                                                                        .child(info.getNick()).child("nontificationsRecycler")
-                                                                        .child(nick).setValue(nick);
-                                                                firebaseModel.getReference().child("users")
-                                                                        .child(nick).child("subscription")
-                                                                        .child(info.getNick()).setValue(info.getNick());
-                                                                addFriend.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
-                                                                addFriend.setText("Отписаться");
-                                                                addFriend.setTextColor(Color.parseColor("#F3A2E5"));
+                                                            if(snapshot.exists()){
+                                                                a=1;
+                                                                Log.d("#####", "c  "+a);
+
+                                                            }else{
+                                                                a=2;
+
                                                             }
                                                         }
 
@@ -473,6 +476,86 @@ public class ProfileFragment extends Fragment {
 
                                                         }
                                                     });
+                                                    Query queryRequest=firebaseModel.getUsersReference().child(info.getNick())
+                                                            .child("requests").child(nick);
+                                                    queryRequest.addValueEventListener(new ValueEventListener() {
+                                                        @Override
+                                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                            if(snapshot.exists()){
+                                                                a=3;
+
+                                                            }
+                                                        }
+
+                                                        @Override
+                                                        public void onCancelled(@NonNull DatabaseError error) {
+
+                                                        }
+                                                    });
+                                                    Log.d("#####", "ff  "+a);
+                                                    if(a!=0) {
+                                                        if (a == 2) {
+                                                            Log.d("#####", "ab  " + a);
+                                                            Query query1=firebaseModel.getUsersReference().child(info.getNick())
+                                                                    .child("accountType");
+                                                            query1.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                                @Override
+                                                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                                    if(snapshot.getValue(String.class).equals("open")){
+                                                                        firebaseModel.getReference().child("users").child(nick).child("subscription")
+                                                                                .child(info.getNick()).setValue(info.getNick());
+                                                                        firebaseModel.getReference().child("users").child(info.getNick()).child("subscribers")
+                                                                                .child(nick).setValue(nick);
+                                                                        firebaseModel.getReference().child("users")
+                                                                                .child(info.getNick()).child("nontifications")
+                                                                                .child(nick).setValue(new Nontification(nick,"не отправлено","обычный"
+                                                                                ,ServerValue.TIMESTAMP.toString()));
+                                                                        subscribe.setText("Отписаться");
+                                                                        subscribe.setTextColor(Color.parseColor("#F3A2E5"));
+                                                                        subscribe.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
+                                                                        a=0;
+                                                                    }else {
+                                                                        firebaseModel.getReference().child("users").child(info.getNick()).child("requests")
+                                                                                .child(nick).setValue(nick);
+                                                                        firebaseModel.getReference().child("users")
+                                                                                .child(info.getNick()).child("nontifications")
+                                                                                .child(nick).setValue(new Nontification(nick,"не отправлено","запрос"
+                                                                                ,ServerValue.TIMESTAMP.toString()));
+                                                                        subscribe.setText("Запрошено");
+                                                                        subscribe.setTextColor(Color.parseColor("#F3A2E5"));
+                                                                        subscribe.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
+                                                                        a=0;
+                                                                    }
+                                                                }
+
+                                                                @Override
+                                                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                                                }
+                                                            });
+                                                        }
+                                                        if (a == 1) {
+                                                            Log.d("#####", "one  " + a);
+                                                            firebaseModel.getReference().child("users").child(nick).child("subscription")
+                                                                    .child(info.getNick()).removeValue();
+                                                            firebaseModel.getReference().child("users").child(info.getNick()).child("subscribers")
+                                                                    .child(nick).removeValue();
+                                                            subscribe.setText("Подписаться");
+                                                            subscribe.setTextColor(Color.parseColor("#FFFEFE"));
+                                                            subscribe.setBackgroundResource(R.drawable.corners10dpappcolor);
+                                                            a=0;
+
+                                                        }
+                                                        if (a == 3) {
+                                                            firebaseModel.getReference().child("users").child(info.getNick()).child("requests")
+                                                                    .child(nick).removeValue();
+                                                            subscribe.setText("Подписаться");
+                                                            subscribe.setTextColor(Color.parseColor("#FFFEFE"));
+                                                            subscribe.setBackgroundResource(R.drawable.corners10dpappcolor);
+                                                            a=0;
+
+                                                        }
+                                                    }
                                                 }
                                             });
                                         }
@@ -483,7 +566,7 @@ public class ProfileFragment extends Fragment {
                                     subscribeFirst.setVisibility(View.VISIBLE);
                                     subscribeFirst.setText("Подпишись на " + " " + info.getNick() + " !");
                                     message.setVisibility(View.GONE);
-                                    addFriend.setVisibility(View.GONE);
+                                    subscribe.setVisibility(View.GONE);
                                     looksText.setVisibility(View.GONE);
                                     looksRecyclerOther.setVisibility(View.GONE);
                                     moreSquare.setOnClickListener(new View.OnClickListener() {
@@ -498,8 +581,9 @@ public class ProfileFragment extends Fragment {
                                                     String itemTitle= item.getTitle().toString().trim();
 
                                                     Log.d("####", "hell"+itemTitle);
-                                                    if (itemTitle!=null) {
-                                                        if (itemTitle.equals("Заблокировать")) {
+                                                    int itemID=item.getItemId();
+                                                    switch(itemID){
+                                                        case R.id.one :
                                                             RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
                                                                 @Override
                                                                 public void PassUserNick(String nick) {
@@ -509,10 +593,14 @@ public class ProfileFragment extends Fragment {
                                                                     Log.d("####", "hellosss" + itemTitle);
                                                                 }
                                                             });
-                                                        } else if (itemTitle.equals("Пожаловаться")) {
+                                                            return true;
+                                                        case R.id.two:
                                                             RecentMethods.setCurrentFragment(ComplainFragment.newInstance(info.getNick()), getActivity());
                                                             Log.d("####", "hellosss" + itemTitle);
-                                                        }
+                                                            return true;
+                                                        case R.id.three:
+                                                            Log.d("####", "gang" + itemTitle);
+                                                            return true;
                                                     }
                                                     return true;
                                                 }
@@ -524,11 +612,13 @@ public class ProfileFragment extends Fragment {
                                 }
                             }
 
+
                             @Override
                             public void onCancelled(@NonNull DatabaseError error) {
 
                             }
                         });
+
                     }
                 });
 //                if (profileValue!=0) {
@@ -642,6 +732,7 @@ public class ProfileFragment extends Fragment {
     }
 
 
+
     private void AcceptChatRequest() {
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @Override
@@ -655,6 +746,10 @@ public class ProfileFragment extends Fragment {
     }
     public static void sendNickToAdapter(sendNick sendNick){
         sendNick.sendNick(sendNickString);
+    }
+
+    public void subscribePeople(){
+
     }
 
     public interface sendNick{
@@ -712,8 +807,8 @@ public class ProfileFragment extends Fragment {
                                 }
                             });
                         }else {
-                            NewClothesAdapter newClothesAdapter=new NewClothesAdapter(allClothes, itemClickListener);
-                            wardrobeRecycler.setAdapter(newClothesAdapter);
+                            WardrobeAdapter wardrobeAdapter=new WardrobeAdapter(allClothes);
+                            wardrobeRecycler.setAdapter(wardrobeAdapter);
                         }
                     }
                 });
