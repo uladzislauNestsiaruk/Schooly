@@ -28,6 +28,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class ComplainFragment extends Fragment {
     String otherUserNick;
@@ -123,8 +124,10 @@ public class ComplainFragment extends Fragment {
                                 if(reasons.size()==0){
                                     Toast.makeText(getContext(), "Выбери причину жалобы)", Toast.LENGTH_SHORT).show();
                                 }else {
-                                    firebaseModel.getReference().child("complains").child(nick)
-                                            .setValue(new Complain(otherUserNick, reasons));
+                                    Random random = new Random();
+                                    int num = 36 + random.nextInt(1000000000);
+                                    firebaseModel.getReference().child("complains").child(String.valueOf(num))
+                                            .setValue(new Complain(nick,otherUserNick, reasons));
                                     Toast.makeText(getContext(), "Жалоба отправлена", Toast.LENGTH_SHORT).show();
                                     Query query2=firebaseModel.getReference().child("users").child(otherUserNick);
                                     query2.addValueEventListener(new ValueEventListener() {

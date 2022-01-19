@@ -54,17 +54,20 @@ public class ComplainAdapter extends RecyclerView.Adapter<ComplainAdapter.ViewHo
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Reason reason=listAdapter.get(position);
         holder.reasonText.setText(reason.getReason());
-        holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked) {
+        holder.checkBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(holder.checkBox.isChecked()) {
                     reasonsToBase.add(new Reason(holder.reasonText.getText().toString()));
                     Log.d("####", "list "+reasonsToBase);
                     Log.d("####", "lyj "+holder.reasonText.getText().toString());
                 }
                 else {
-                    reasonsToBase.remove(new Reason(holder.reasonText.getText().toString()));
-                    Log.d("####", "listbj "+reasonsToBase);
+                    int indexToRemove=reasonsToBase.indexOf(new Reason(reason.getReason()));
+                    Log.d("####", "i "+indexToRemove);
                     Log.d("####", "listfhtjyj "+holder.reasonText.getText().toString());
+                    reasonsToBase.remove(reasonsToBase.indexOf(new Reason(reason.getReason())));
+                    Log.d("####", "listbj "+reasonsToBase);
                 }
             }
         });

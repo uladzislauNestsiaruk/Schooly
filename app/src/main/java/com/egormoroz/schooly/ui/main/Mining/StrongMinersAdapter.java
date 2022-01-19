@@ -31,9 +31,11 @@ public class StrongMinersAdapter extends RecyclerView.Adapter<StrongMinersAdapte
     ArrayList<Miner> listAdapterStrongMiner;
     private ItemClickListener clickListener;
     private FirebaseModel firebaseModel = new FirebaseModel();
+    ItemClickListener itemClickListener;
 
-    public StrongMinersAdapter(ArrayList<Miner> listAdapter) {
+    public StrongMinersAdapter(ArrayList<Miner> listAdapter, ItemClickListener itemClickListener) {
         this.listAdapterStrongMiner = listAdapter;
+        this.itemClickListener= itemClickListener;
     }
 
 
@@ -84,18 +86,7 @@ public class StrongMinersAdapter extends RecyclerView.Adapter<StrongMinersAdapte
                                 @Override
                                 public void onClick(View v) {
                                     int pos=holder.getAdapterPosition();
-                                    RecentMethods.GetMoneyFromBase(nick, firebaseModel, new Callbacks.MoneyFromBase() {
-                                        @Override
-                                        public void GetMoneyFromBase(long money) {
-                                            RecentMethods.buyStrongMiner(String.valueOf(pos), firebaseModel, new Callbacks.buyMiner() {
-                                                @Override
-                                                public void buyMiner(Miner miner) {
-                                                    firebaseModel.getReference("users").child(nick)
-                                                            .child("miners").child(String.valueOf(pos)+"strong").setValue(miner);
-                                                }
-                                            });
-                                        }
-                                    });
+                                    itemClickListener.onItemClick(pos,miner,"strong");
                                 }
                             });
                         }
@@ -110,7 +101,7 @@ public class StrongMinersAdapter extends RecyclerView.Adapter<StrongMinersAdapte
         return listAdapterStrongMiner.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class ViewHolder extends RecyclerView.ViewHolder  {
         final TextView minerPrice,buy;
         ImageView minerImage;
         ViewHolder(View itemView) {
@@ -120,22 +111,16 @@ public class StrongMinersAdapter extends RecyclerView.Adapter<StrongMinersAdapte
             minerImage=itemView.findViewById(R.id.minerImage);
         }
 
-        @Override
-        public void onClick(View view) {
-            if (clickListener != null) clickListener.onItemClick(view, getAdapterPosition());
-        }
+
     }
 
     Miner getItem(int id) {
         return listAdapterStrongMiner.get(id);
     }
 
-    void setClickListener(ItemClickListener itemClickListener) {
-        this.clickListener = itemClickListener;
-    }
 
     public interface ItemClickListener {
-        void onItemClick(View view, int position);
+        void onItemClick(int position,Miner miner,String type);
     }
 
     static class SpaceItemDecoration extends RecyclerView.ItemDecoration {

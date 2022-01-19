@@ -31,9 +31,11 @@ public class AverageMinersAdapter extends RecyclerView.Adapter<AverageMinersAdap
     ArrayList<Miner> listAdapterAverageMiner;
     private ItemClickListener clickListener;
     private FirebaseModel firebaseModel = new FirebaseModel();
+    AverageMinersAdapter.ItemClickListener itemClickListener;
 
-    public AverageMinersAdapter(ArrayList<Miner> listAdapter) {
+    public AverageMinersAdapter(ArrayList<Miner> listAdapter, ItemClickListener itemClickListener) {
         this.listAdapterAverageMiner = listAdapter;
+        this.itemClickListener= itemClickListener;
     }
 
 
@@ -84,18 +86,7 @@ public class AverageMinersAdapter extends RecyclerView.Adapter<AverageMinersAdap
                                 @Override
                                 public void onClick(View v) {
                                     int pos=holder.getAdapterPosition();
-                                    RecentMethods.GetMoneyFromBase(nick, firebaseModel, new Callbacks.MoneyFromBase() {
-                                        @Override
-                                        public void GetMoneyFromBase(long money) {
-                                            RecentMethods.buyAverageMiner(String.valueOf(pos), firebaseModel, new Callbacks.buyMiner() {
-                                                @Override
-                                                public void buyMiner(Miner miner) {
-                                                    firebaseModel.getReference("users").child(nick)
-                                                            .child("miners").child(String.valueOf(pos)+"medium").setValue(miner);
-                                                }
-                                            });
-                                        }
-                                    });
+                                    itemClickListener.onItemClick(pos,miner,"medium");
                                 }
                             });
                         }
@@ -110,7 +101,7 @@ public class AverageMinersAdapter extends RecyclerView.Adapter<AverageMinersAdap
         return listAdapterAverageMiner.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class ViewHolder extends RecyclerView.ViewHolder {
         final TextView minerPrice,buy;
         ImageView minerImage;
         ViewHolder(View itemView) {
@@ -120,22 +111,14 @@ public class AverageMinersAdapter extends RecyclerView.Adapter<AverageMinersAdap
             minerImage=itemView.findViewById(R.id.minerImage);
         }
 
-        @Override
-        public void onClick(View view) {
-            if (clickListener != null) clickListener.onItemClick(view, getAdapterPosition());
-        }
     }
 
     Miner getItem(int id) {
         return listAdapterAverageMiner.get(id);
     }
 
-    void setClickListener(ItemClickListener itemClickListener) {
-        this.clickListener = itemClickListener;
-    }
-
     public interface ItemClickListener {
-        void onItemClick(View view, int position);
+        void onItemClick(int position,Miner miner,String type);
     }
 
     static class SpaceItemDecoration extends RecyclerView.ItemDecoration {

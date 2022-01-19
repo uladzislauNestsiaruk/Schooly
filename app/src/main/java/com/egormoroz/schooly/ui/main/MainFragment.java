@@ -33,6 +33,7 @@ import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.SchoolyService;
 
 import com.egormoroz.schooly.ui.Model.SceneViewModelActivity;
+import com.egormoroz.schooly.ui.main.Mining.Miner;
 import com.egormoroz.schooly.ui.main.Mining.MiningFragment;
 import com.egormoroz.schooly.ui.main.Nontifications.NontificationFragment;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;

@@ -16,6 +16,7 @@ import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
+import com.egormoroz.schooly.ui.main.Shop.NewClothesAdapter;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.Query;
@@ -28,12 +29,15 @@ import java.util.ArrayList;
 
 public class WeakMinersAdapter extends RecyclerView.Adapter<WeakMinersAdapter.ViewHolder> {
 
+
     ArrayList<Miner> listAdapterMiner;
     private ItemClickListener clickListener;
     private FirebaseModel firebaseModel = new FirebaseModel();
+    ItemClickListener itemClickListener;
 
-    public WeakMinersAdapter(ArrayList<Miner> listAdapter) {
+    public WeakMinersAdapter(ArrayList<Miner> listAdapter, ItemClickListener itemClickListener) {
         this.listAdapterMiner = listAdapter;
+        this.itemClickListener= itemClickListener;
     }
 
 
@@ -84,18 +88,7 @@ public class WeakMinersAdapter extends RecyclerView.Adapter<WeakMinersAdapter.Vi
                                 @Override
                                 public void onClick(View v) {
                                     int pos=holder.getAdapterPosition();
-                                    RecentMethods.GetMoneyFromBase(nick, firebaseModel, new Callbacks.MoneyFromBase() {
-                                        @Override
-                                        public void GetMoneyFromBase(long money) {
-                                                RecentMethods.buyWeakMiner(String.valueOf(pos), firebaseModel, new Callbacks.buyMiner() {
-                                                    @Override
-                                                    public void buyMiner(Miner miner) {
-                                                        firebaseModel.getReference("users").child(nick)
-                                                                                .child("miners").child(String.valueOf(pos)+"weak").setValue(miner);
-                                                    }
-                                                });
-                                        }
-                                    });
+                                    itemClickListener.onItemClick(pos,miner,"weak");
                                 }
                             });
                         }
@@ -110,7 +103,7 @@ public class WeakMinersAdapter extends RecyclerView.Adapter<WeakMinersAdapter.Vi
         return listAdapterMiner.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class ViewHolder extends RecyclerView.ViewHolder{
         final TextView minerPrice,buy;
         ImageView minerImage;
         ViewHolder(View itemView) {
@@ -119,23 +112,15 @@ public class WeakMinersAdapter extends RecyclerView.Adapter<WeakMinersAdapter.Vi
             buy=itemView.findViewById(R.id.buy);
             minerImage=itemView.findViewById(R.id.minerImage);
         }
-
-        @Override
-        public void onClick(View view) {
-            if (clickListener != null) clickListener.onItemClick(view, getAdapterPosition());
-        }
     }
 
     Miner getItem(int id) {
         return listAdapterMiner.get(id);
     }
 
-    void setClickListener(ItemClickListener itemClickListener) {
-        this.clickListener = itemClickListener;
-    }
 
     public interface ItemClickListener {
-        void onItemClick(View view, int position);
+        void onItemClick(int position,Miner miner,String type);
     }
 
     static class SpaceItemDecoration extends RecyclerView.ItemDecoration {

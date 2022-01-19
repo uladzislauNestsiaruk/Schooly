@@ -1,5 +1,8 @@
 package com.egormoroz.schooly.ui.main.Mining;
 
+import android.app.Dialog;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,6 +22,7 @@ import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.SchoolyService;
 import com.egormoroz.schooly.ui.main.MainFragment;
+import com.egormoroz.schooly.ui.main.Shop.NewClothesAdapter;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.text.DecimalFormat;
@@ -45,6 +49,10 @@ public class MiningFragment extends Fragment {
     TextView minerprice, schoolycoinminer, myminers, upgrade, todayminingText, morecoins,buy,numderOfActiveMiners,emptyActiveMiners,addActiveMiners;
     RecyclerView activeminersrecyclerview,weakminersrecyclerview,averageminersrecyclerview,strongminersrecyclerview;
     private static final String TAG = "###########";
+    WeakMinersAdapter.ItemClickListener itemClickListener;
+    StrongMinersAdapter.ItemClickListener itemClickListenerStrong;
+    AverageMinersAdapter.ItemClickListener itemClickListenerAverage;
+    long moneyAfterBuy,moneyOriginal;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -59,6 +67,18 @@ public class MiningFragment extends Fragment {
     @Override
     public void onViewCreated(@Nullable View view, @NonNull Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+            @Override
+            public void PassUserNick(String nick) {
+                RecentMethods.GetMoneyFromBase(nick, firebaseModel, new Callbacks.MoneyFromBase() {
+                    @Override
+                    public void GetMoneyFromBase(long money) {
+                        moneyOriginal=money;
+                        Log.d("######", "suck "+moneyOriginal);
+                    }
+                });
+            }
+        });
         myminers = view.findViewById(R.id.myminers);
         myminers.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -94,6 +114,25 @@ public class MiningFragment extends Fragment {
         strongminersrecyclerview=view.findViewById(R.id.strongminersrecyclerview);
 
         setMiningMoney();
+
+        itemClickListener=new WeakMinersAdapter.ItemClickListener() {
+            @Override
+            public void onItemClick(int position,Miner miner,String type) {
+                showDialog(position,miner,type);
+            }
+        };
+        itemClickListenerStrong=new StrongMinersAdapter.ItemClickListener() {
+            @Override
+            public void onItemClick(int position, Miner miner, String type) {
+                showDialog(position,miner,type);
+            }
+        };
+        itemClickListenerAverage=new AverageMinersAdapter.ItemClickListener() {
+            @Override
+            public void onItemClick(int position, Miner miner, String type) {
+                showDialog(position,miner,type);
+            }
+        };
     }
 
 
@@ -102,7 +141,7 @@ public class MiningFragment extends Fragment {
             @Override
             public void GetMinerFromBase(ArrayList<Miner> minersFromBase) {
                 listAdapterMiner.addAll(minersFromBase);
-                WeakMinersAdapter allMinersAdapter=new WeakMinersAdapter(listAdapterMiner);
+                WeakMinersAdapter allMinersAdapter=new WeakMinersAdapter(listAdapterMiner,itemClickListener);
                 weakminersrecyclerview.setAdapter(allMinersAdapter);
                 weakminersrecyclerview.addItemDecoration(new WeakMinersAdapter.SpaceItemDecoration());
             }
@@ -111,7 +150,7 @@ public class MiningFragment extends Fragment {
             @Override
             public void GetMinerFromBase(ArrayList<Miner> minersFromBase) {
                 listAdapterAverageMiner.addAll(minersFromBase);
-                AverageMinersAdapter avarageMinersAdapter=new AverageMinersAdapter(listAdapterAverageMiner);
+                AverageMinersAdapter avarageMinersAdapter=new AverageMinersAdapter(listAdapterAverageMiner,itemClickListenerAverage);
                 averageminersrecyclerview.setAdapter(avarageMinersAdapter);
                 averageminersrecyclerview.addItemDecoration(new AverageMinersAdapter.SpaceItemDecoration());
             }
@@ -120,7 +159,7 @@ public class MiningFragment extends Fragment {
             @Override
             public void GetMinerFromBase(ArrayList<Miner> minersFromBase) {
                 listAdapterStrongMiner.addAll(minersFromBase);
-                StrongMinersAdapter strongMinersAdapter=new StrongMinersAdapter(listAdapterStrongMiner);
+                StrongMinersAdapter strongMinersAdapter=new StrongMinersAdapter(listAdapterStrongMiner,itemClickListenerStrong);
                 strongminersrecyclerview.setAdapter(strongMinersAdapter);
                 strongminersrecyclerview.addItemDecoration(new StrongMinersAdapter.SpaceItemDecoration());
             }
@@ -172,6 +211,98 @@ public class MiningFragment extends Fragment {
                 });
             }
         });
+    }
+
+    public void showDialog(int pos,Miner miner,String type){
+
+        final Dialog dialog = new Dialog(getContext());
+        dialog.setContentView(R.layout.buy_miner_dialog);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        TextView text=dialog.findViewById(R.id.acceptText);
+
+        TextView no=dialog.findViewById(R.id.no);
+        TextView yes=dialog.findViewById(R.id.yes);
+
+
+        no.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        yes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (type.equals("weak")){
+                    RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+                        @Override
+                        public void PassUserNick(String nick) {
+                            RecentMethods.GetMoneyFromBase(nick, firebaseModel, new Callbacks.MoneyFromBase() {
+                                @Override
+                                public void GetMoneyFromBase(long money) {
+                                    RecentMethods.buyWeakMiner(String.valueOf(pos), firebaseModel, new Callbacks.buyMiner() {
+                                        @Override
+                                        public void buyMiner(Miner miner) {
+                                            firebaseModel.getReference("users").child(nick)
+                                                    .child("miners").child(String.valueOf(pos)+type).setValue(miner);
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    });
+                }else if(type.equals("medium")){
+                    RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+                        @Override
+                        public void PassUserNick(String nick) {
+                            RecentMethods.GetMoneyFromBase(nick, firebaseModel, new Callbacks.MoneyFromBase() {
+                                @Override
+                                public void GetMoneyFromBase(long money) {
+                                    RecentMethods.buyAverageMiner(String.valueOf(pos), firebaseModel, new Callbacks.buyMiner() {
+                                        @Override
+                                        public void buyMiner(Miner miner) {
+                                            firebaseModel.getReference("users").child(nick)
+                                                    .child("miners").child(String.valueOf(pos)+type).setValue(miner);
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    });
+                }
+                else if(type.equals("strong")){
+                    RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+                        @Override
+                        public void PassUserNick(String nick) {
+                            RecentMethods.GetMoneyFromBase(nick, firebaseModel, new Callbacks.MoneyFromBase() {
+                                @Override
+                                public void GetMoneyFromBase(long money) {
+                                    RecentMethods.buyStrongMiner(String.valueOf(pos), firebaseModel, new Callbacks.buyMiner() {
+                                        @Override
+                                        public void buyMiner(Miner miner) {
+                                            firebaseModel.getReference("users").child(nick)
+                                                    .child("miners").child(String.valueOf(pos)+type).setValue(miner);
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    });
+                }
+                RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+                    @Override
+                    public void PassUserNick(String nick) {
+                        moneyAfterBuy=moneyOriginal-miner.getMinerPrice();
+                        firebaseModel.getUsersReference().child(nick).child("money").setValue(moneyAfterBuy);
+                    }
+                });
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
     }
 
 //    public void getSchoolyCoin(){
