@@ -86,7 +86,14 @@ public class StrongMinersAdapter extends RecyclerView.Adapter<StrongMinersAdapte
                                 @Override
                                 public void onClick(View v) {
                                     int pos=holder.getAdapterPosition();
-                                    itemClickListener.onItemClick(pos,miner,"strong");
+                                    RecentMethods.GetMoneyFromBase(nick, firebaseModel, new Callbacks.MoneyFromBase() {
+                                        @Override
+                                        public void GetMoneyFromBase(long money) {
+                                            if (money!=-1){
+                                                itemClickListener.onItemClick(pos,miner,"strong",money);
+                                            }
+                                        }
+                                    });
                                 }
                             });
                         }
@@ -120,7 +127,7 @@ public class StrongMinersAdapter extends RecyclerView.Adapter<StrongMinersAdapte
 
 
     public interface ItemClickListener {
-        void onItemClick(int position,Miner miner,String type);
+        void onItemClick(int position,Miner miner,String type,long money);
     }
 
     static class SpaceItemDecoration extends RecyclerView.ItemDecoration {

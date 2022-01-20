@@ -46,14 +46,14 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="24dp"
-            android:background="@drawable/corners14grey"
+            android:background="@drawable/corners14dpappcolor2dpstroke"
             android:fontFamily="@font/montserrat_extrabold"
             android:paddingStart="18dp"
             android:paddingTop="12dp"
             android:paddingEnd="18dp"
             android:paddingBottom="12dp"
             android:text="@string/putAway"
-            android:textColor="@color/white"
+            android:textColor="@color/app_color"
             android:textSize="12sp" />
 
     </RelativeLayout>

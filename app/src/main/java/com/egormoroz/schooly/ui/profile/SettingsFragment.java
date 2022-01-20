@@ -20,6 +20,7 @@ import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.MainActivity;
 import com.egormoroz.schooly.R;
+import com.egormoroz.schooly.ui.main.RegisrtationstartFragment;
 import com.egormoroz.schooly.ui.main.UserInformation;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.switchmaterial.SwitchMaterial;
@@ -36,7 +37,7 @@ public class SettingsFragment extends Fragment {
     }
 
     FirebaseModel firebaseModel=new FirebaseModel();
-    TextView  userNick,userNumber,userPassword,changePassword,blackList;
+    TextView  userNick,userNumber,userPassword,changePassword,blackList,exitAccout;
     String userNickString;
     SwitchMaterial privateAccountSwitch,chatsSwitch,groupChatsSwitch,profileSwitch;
     boolean checkType;
@@ -79,6 +80,14 @@ public class SettingsFragment extends Fragment {
 
                     }
                 });
+            }
+        });
+
+        exitAccout=view.findViewById(R.id.exitAccount);
+        exitAccout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RecentMethods.setCurrentFragment(RegisrtationstartFragment.newInstance(), getActivity());
             }
         });
 

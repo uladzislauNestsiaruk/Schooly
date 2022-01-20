@@ -117,20 +117,20 @@ public class MiningFragment extends Fragment {
 
         itemClickListener=new WeakMinersAdapter.ItemClickListener() {
             @Override
-            public void onItemClick(int position,Miner miner,String type) {
-                showDialog(position,miner,type);
+            public void onItemClick(int position,Miner miner,String type,long money) {
+                showDialog(position,miner,type,money);
             }
         };
         itemClickListenerStrong=new StrongMinersAdapter.ItemClickListener() {
             @Override
-            public void onItemClick(int position, Miner miner, String type) {
-                showDialog(position,miner,type);
+            public void onItemClick(int position, Miner miner, String type,long money) {
+                showDialog(position,miner,type,money);
             }
         };
         itemClickListenerAverage=new AverageMinersAdapter.ItemClickListener() {
             @Override
-            public void onItemClick(int position, Miner miner, String type) {
-                showDialog(position,miner,type);
+            public void onItemClick(int position, Miner miner, String type,long money) {
+                showDialog(position,miner,type,money);
             }
         };
     }
@@ -213,7 +213,7 @@ public class MiningFragment extends Fragment {
         });
     }
 
-    public void showDialog(int pos,Miner miner,String type){
+    public void showDialog(int pos,Miner miner,String type,long money){
 
         final Dialog dialog = new Dialog(getContext());
         dialog.setContentView(R.layout.buy_miner_dialog);
@@ -294,8 +294,7 @@ public class MiningFragment extends Fragment {
                 RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
                     @Override
                     public void PassUserNick(String nick) {
-                        moneyAfterBuy=moneyOriginal-miner.getMinerPrice();
-                        firebaseModel.getUsersReference().child(nick).child("money").setValue(moneyAfterBuy);
+                        firebaseModel.getUsersReference().child(nick).child("money").setValue(money-miner.getMinerPrice());
                     }
                 });
                 dialog.dismiss();
