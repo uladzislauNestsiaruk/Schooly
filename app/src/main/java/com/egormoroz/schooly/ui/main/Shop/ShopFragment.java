@@ -153,36 +153,35 @@ public class ShopFragment extends Fragment {
 //    }
 
 
-
-
     public class FragmentAdapter extends FragmentStateAdapter {
+
         public FragmentAdapter(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle) {
             super(fragmentManager, lifecycle);
         }
+            @NonNull
+            @Override
+            public Fragment createFragment ( int position){
 
-        @NonNull
-        @Override
-        public Fragment createFragment(int position) {
 
-            switch (position)
-            {
-                case 1 :
-                    return new ShoesFargment();
-                case 2 :
-                    return new ClothesFragment();
-                case 3 :
-                    return new HatsFragment();
-                case 4 :
-                    return new AccessoriesFragment();
+                switch (position) {
+                    case 1:
+                        return new ShoesFargment();
+                    case 2:
+                        return new ClothesFragment();
+                    case 3:
+                        return new HatsFragment();
+                    case 4:
+                        return new AccessoriesFragment();
+                }
+                    return new PopularFragment();
             }
 
-            return new PopularFragment();
-        }
 
         @Override
         public int getItemCount() {
             return 5;
         }
     }
+
 
 }

@@ -18,6 +18,8 @@ import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.Subscriber;
+import com.egormoroz.schooly.ui.main.Shop.Clothes;
+import com.egormoroz.schooly.ui.main.Shop.NewClothesAdapter;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.Query;
@@ -30,13 +32,19 @@ import java.util.ArrayList;
 public class ComplainAdapter extends RecyclerView.Adapter<ComplainAdapter.ViewHolder>  {
 
     ArrayList<Reason> listAdapter;
-    private ComplainAdapter.ItemClickListener clickListener;
     private FirebaseModel firebaseModel = new FirebaseModel();
     int clickValue;
     static ArrayList<Reason> reasonsToBase=new ArrayList<>();
+    ComplainAdapter.ItemClickListener itemClickListener;
+    static Reason reason1;
 
-    public  ComplainAdapter(ArrayList<Reason> listAdapter) {
+    public  ComplainAdapter(ArrayList<Reason> listAdapter,ItemClickListener itemClickListener) {
         this.listAdapter = listAdapter;
+        this.itemClickListener=itemClickListener;
+    }
+
+    public static void complain(ItemClickListener itemClickListener){
+        itemClickListener.onItemClick(reason1);
     }
 
 
@@ -54,21 +62,11 @@ public class ComplainAdapter extends RecyclerView.Adapter<ComplainAdapter.ViewHo
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Reason reason=listAdapter.get(position);
         holder.reasonText.setText(reason.getReason());
-        holder.checkBox.setOnClickListener(new View.OnClickListener() {
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(holder.checkBox.isChecked()) {
-                    reasonsToBase.add(new Reason(holder.reasonText.getText().toString()));
-                    Log.d("####", "list "+reasonsToBase);
-                    Log.d("####", "lyj "+holder.reasonText.getText().toString());
-                }
-                else {
-                    int indexToRemove=reasonsToBase.indexOf(new Reason(reason.getReason()));
-                    Log.d("####", "i "+indexToRemove);
-                    Log.d("####", "listfhtjyj "+holder.reasonText.getText().toString());
-                    reasonsToBase.remove(reasonsToBase.indexOf(new Reason(reason.getReason())));
-                    Log.d("####", "listbj "+reasonsToBase);
-                }
+                itemClickListener.onItemClick(new Reason(holder.reasonText.getText().toString()));
+                reason1=new Reason(holder.reasonText.getText().toString());
             }
         });
     }
@@ -80,38 +78,21 @@ public class ComplainAdapter extends RecyclerView.Adapter<ComplainAdapter.ViewHo
         return listAdapter.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class ViewHolder extends RecyclerView.ViewHolder  {
         final TextView reasonText;
-        final CheckBox checkBox;
         ViewHolder(View itemView) {
             super(itemView);
             reasonText=itemView.findViewById(R.id.reasonText);
-            checkBox=itemView.findViewById(R.id.checkBox);
         }
-
-        @Override
-        public void onClick(View view) {
-            if (clickListener != null) clickListener.onItemClick(view, getAdapterPosition());
-        }
-    }
-
-    public interface reasonsList{
-        void sendList(ArrayList<Reason> reasons);
-    }
-    public static void getReasonsList(reasonsList reasonsList){
-        reasonsList.sendList(reasonsToBase);
     }
 
     Reason getItem(int id) {
         return listAdapter.get(id);
     }
 
-    void setClickListener(ComplainAdapter.ItemClickListener itemClickListener) {
-        this.clickListener = itemClickListener;
-    }
 
     public interface ItemClickListener {
-        void onItemClick(View view, int position);
+        void onItemClick(Reason reason);
     }
 
 }

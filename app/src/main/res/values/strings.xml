@@ -209,4 +209,8 @@
 
     <string name="exitAccount">Выйти с аккаунта</string>
 
+    <string name="textReason">Причина жалобы:</string>
+
+    <string name="addDescription">Добавить описание</string>
+
 </resources>

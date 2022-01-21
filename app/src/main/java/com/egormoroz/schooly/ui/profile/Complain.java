@@ -5,12 +5,14 @@ import java.util.ArrayList;
 public class Complain {
     private String appealedPerson;
     private String sneakPerson;
-    private ArrayList<Reason> reasonArrayList;
+    private String reason;
+    private String description;
 
-    public Complain(String sneakPerson,String  appealedPerson,ArrayList<Reason> reasonArrayList){
+    public Complain(String sneakPerson,String  appealedPerson,String reason,String description){
         this.appealedPerson=appealedPerson;
-        this.reasonArrayList=reasonArrayList;
+        this.reason=reason;
         this.sneakPerson=sneakPerson;
+        this.description=description;
     }
     public Complain(){
     }
@@ -31,11 +33,19 @@ public class Complain {
         this.appealedPerson=appealedPerson;
     }
 
-    public ArrayList<Reason>  getReasonArrayList(){
-        return this.reasonArrayList;
+    public String  getReason(){
+        return this.reason;
     }
 
-    public void setReasonArrayList(ArrayList<Reason> reasonArrayList){
-        this.reasonArrayList=reasonArrayList;
+    public void setReason(String reason){
+        this.reason=reason;
+    }
+
+    public String  getDescription(){
+        return this.description;
+    }
+
+    public void setDescription(String description){
+        this.description=description;
     }
 }
