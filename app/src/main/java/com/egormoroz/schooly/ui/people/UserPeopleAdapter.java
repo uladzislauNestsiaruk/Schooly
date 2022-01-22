@@ -3,7 +3,7 @@ package com.egormoroz.schooly.ui.people;
 public class UserPeopleAdapter {
 
     private String Nick;
-    private long Avatar = 6;
+    private String Avatar ;
     private String bio;
     public UserPeopleAdapter(){
     }
@@ -16,9 +16,9 @@ public class UserPeopleAdapter {
         Nick = nick;
     }
 
-    public long getAvatar() {return Avatar;}
+    public String getAvatar() {return Avatar;}
 
-    public void setAvatar(long Avatar){
+    public void setAvatar(String Avatar){
         this.Avatar = Avatar;
     }
 
@@ -32,7 +32,7 @@ public class UserPeopleAdapter {
         this.bio = bio;
     }
 
-    public UserPeopleAdapter(String nick,  long Avatar, String bio) {
+    public UserPeopleAdapter(String nick,  String Avatar, String bio) {
         this.Nick = nick;
         this.Avatar = Avatar;
         this.bio=bio;

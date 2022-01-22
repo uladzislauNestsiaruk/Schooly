@@ -269,7 +269,7 @@ public class ProfileFragment extends Fragment {
                     @Override
                     public void onClick(View v) {
                         RecentMethods.setCurrentFragment(WardrobeFragment
-                        .newInstance(), getActivity());
+                                .newInstance(), getActivity());
                     }
                 });
                 itemClickListener=new NewClothesAdapter.ItemClickListener() {

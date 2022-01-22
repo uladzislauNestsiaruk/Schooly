@@ -201,6 +201,8 @@ public class MainFragment extends Fragment{
                 });
             }
         });
+        firebaseModel.getReference().child("usersNicks").child("tyomaa6")
+                .setValue(new UserPeopleAdapter("tyomaa6", "XXX", "XXX"));
         clothesRecyclerMain=view.findViewById(R.id.newchlothesinshop);
         itemClickListener=new NewClothesAdapter.ItemClickListener() {
             @Override
@@ -251,9 +253,9 @@ public class MainFragment extends Fragment{
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @Override
             public void PassUserNick(String nick) {
-                firebaseModel.getReference("usersNicks").child("tyomaa").setValue(new UserPeopleAdapter("tyomaa", 5, "hello"));
-                firebaseModel.getReference("usersNicks").child("spaccacrani").setValue(new UserPeopleAdapter("spaccacrani", 5, "hello"));
-                firebaseModel.getReference("usersNicks").child("Vladcpp").setValue(new UserPeopleAdapter("Vladcpp", 5, "hello"));
+                firebaseModel.getReference("usersNicks").child("tyomaa6").setValue(new UserPeopleAdapter("tyomaa", "5", "hello"));
+                firebaseModel.getReference("usersNicks").child("spaccacrani").setValue(new UserPeopleAdapter("spaccacrani", "5", "hello"));
+                firebaseModel.getReference("usersNicks").child("Vladcpp").setValue(new UserPeopleAdapter("Vladcpp", "5", "hello"));
                 RecentMethods.getClothes(firebaseModel, new Callbacks.GetClothes() {
                     @Override
                     public void getClothes(ArrayList<Clothes> allClothes) {

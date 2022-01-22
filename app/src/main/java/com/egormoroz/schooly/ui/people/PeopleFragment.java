@@ -80,7 +80,7 @@ public class PeopleFragment extends Fragment {
                             UserPeopleAdapter upa=new UserPeopleAdapter();
                             upa.setNick(snap.child("nick").getValue(String.class));
                             upa.setBio(snap.child("bio").getValue(String.class));
-                            upa.setAvatar(snap.child("avatar").getValue(Long.class));
+                            upa.setAvatar(snap.child("avatar").getValue(String.class));
                             String nickName=upa.getNick();
                             String nick=nickName;
                             int valueLetters=userName.length();
@@ -107,32 +107,40 @@ public class PeopleFragment extends Fragment {
                                     public void onItemClick(View view, int position) {
                                         UserPeopleAdapter user = peopleAdapter.getItem(position);
                                         userNameToProfile=user.getNick();
-                                        Log.d("###","n "+userNameToProfile);
-                                        Query query1=firebaseModel.getReference().child("users").child(userNameToProfile);
-                                        query1.addValueEventListener(new ValueEventListener() {
+                                        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
                                             @Override
-                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                UserInformation userData=new UserInformation();
-                                                userData.setAge(snapshot.child("age").getValue(Long.class));
-                                                userData.setAvatar(snapshot.child("avatar").getValue(Long.class));
-                                                userData.setGender(snapshot.child("gender").getValue(String.class));
-                                                //////////////////userData.setMiners();
-                                                userData.setNick(snapshot.child("nick").getValue(String.class));
-                                                userData.setPassword(snapshot.child("password").getValue(String.class));
-                                                userData.setPhone(snapshot.child("phone").getValue(String.class));
-                                                userData.setUid(snapshot.child("uid").getValue(String.class));
-                                                userData.setQueue(snapshot.child("queue").getValue(String.class));
-                                                userData.setAccountType(snapshot.child("accountType").getValue(String.class));
-                                                userData.setBio(snapshot.child("bio").getValue(String.class));
-                                                //                                               userData.setSubscribers(snapshot.child("subscribers").getValue(String.class));
+                                            public void PassUserNick(String nick) {
+                                                if(userNameToProfile.equals(nick)){
+                                                    RecentMethods.setCurrentFragment(ProfileFragment.newInstance("user",new UserInformation()),getActivity());
+                                                }else {
+                                                    Query query1=firebaseModel.getReference().child("users").child(userNameToProfile);
+                                                    query1.addValueEventListener(new ValueEventListener() {
+                                                        @Override
+                                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                            UserInformation userData=new UserInformation();
+                                                            userData.setAge(snapshot.child("age").getValue(Long.class));
+                                                            userData.setAvatar(snapshot.child("avatar").getValue(Long.class));
+                                                            userData.setGender(snapshot.child("gender").getValue(String.class));
+                                                            //////////////////userData.setMiners();
+                                                            userData.setNick(snapshot.child("nick").getValue(String.class));
+                                                            userData.setPassword(snapshot.child("password").getValue(String.class));
+                                                            userData.setPhone(snapshot.child("phone").getValue(String.class));
+                                                            userData.setUid(snapshot.child("uid").getValue(String.class));
+                                                            userData.setQueue(snapshot.child("queue").getValue(String.class));
+                                                            userData.setAccountType(snapshot.child("accountType").getValue(String.class));
+                                                            userData.setBio(snapshot.child("bio").getValue(String.class));
+                                                            //                                               userData.setSubscribers(snapshot.child("subscribers").getValue(String.class));
 //                                                userData.setFriends(snapshot.child("friends").getValue(String.class));
-                                                RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userData),
-                                                        getActivity());
-                                            }
+                                                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userData),
+                                                                    getActivity());
+                                                        }
 
-                                            @Override
-                                            public void onCancelled(@NonNull DatabaseError error) {
+                                                        @Override
+                                                        public void onCancelled(@NonNull DatabaseError error) {
 
+                                                        }
+                                                    });
+                                                }
                                             }
                                         });
                                     }

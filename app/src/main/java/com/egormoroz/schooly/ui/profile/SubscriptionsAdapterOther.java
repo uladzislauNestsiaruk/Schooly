@@ -63,6 +63,9 @@ public class SubscriptionsAdapterOther extends RecyclerView.Adapter<Subscription
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @Override
             public void PassUserNick(String nick) {
+                if(nick.equals(subscriber.getSub())){
+                    holder.subscribe.setVisibility(View.GONE);
+                }
                 Query query=firebaseModel.getUsersReference().child(nick)
                         .child("subscription").child(subscriber.getSub());
                 query.addValueEventListener(new ValueEventListener() {

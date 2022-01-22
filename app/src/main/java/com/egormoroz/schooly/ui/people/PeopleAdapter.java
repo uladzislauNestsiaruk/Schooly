@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.ui.main.UserInformation;
+import com.squareup.picasso.Picasso;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -41,7 +42,7 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.ViewHolder
     public void onBindViewHolder(ViewHolder holder, int position) {
         UserPeopleAdapter userInformation=listAdapterPeople.get(position);
         holder.usernickname.setText(userInformation.getNick());
-        holder.userAvatar.setImageResource(getItemViewType((int) userInformation.getAvatar()));
+        Picasso.get().load(userInformation.getAvatar()).into( holder.userAvatar);
         holder.usernickname.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
