@@ -2,10 +2,13 @@ package com.egormoroz.schooly.ui.main.Shop;
 
 import android.media.TimedText;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -46,6 +49,11 @@ public class ShopFragment extends Fragment {
     private ViewPager2 viewPager;
     FragmentAdapter fragmentAdapter;
     ImageView basket;
+    EditText searchClothes;
+    sendSearchText sendSearchText;
+    static String editGetText;
+    RecyclerView searchRecycler;
+    TabLayout tabLayout;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -71,6 +79,71 @@ public class ShopFragment extends Fragment {
                 ((MainActivity)getActivity()).setCurrentFragment(MainFragment.newInstance());
             }
         });
+
+        searchRecycler=view.findViewById(R.id.searchRecycler);
+        searchClothes=view.findViewById(R.id.searchClothes);
+        searchClothes.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                editGetText=searchClothes.getText().toString();
+                if (editGetText.length()>0) {
+                    viewPager.setVisibility(View.GONE);
+                    searchRecycler.setVisibility(View.VISIBLE);
+                    tabLayout.setVisibility(View.GONE);
+                }else if(editGetText.length()==0){
+                    Log.d("####", "ggg");
+                    viewPager.setVisibility(View.VISIBLE);
+                    searchRecycler.setVisibility(View.GONE);
+                    tabLayout.setVisibility(View.VISIBLE);
+                    tabLayout = view.findViewById(R.id.tabLayoutShop);
+                    viewPager=view.findViewById(R.id.frcontshop);
+                    FragmentManager fm = getChildFragmentManager();
+                    fragmentAdapter = new FragmentAdapter(fm, getLifecycle());
+                    viewPager.setAdapter(fragmentAdapter);
+
+                    tabLayout.addTab(tabLayout.newTab().setText("Главная"));
+                    tabLayout.addTab(tabLayout.newTab().setText("Обувь"));
+                    tabLayout.addTab(tabLayout.newTab().setText("Одежда"));
+                    tabLayout.addTab(tabLayout.newTab().setText("Головные уборы"));
+                    tabLayout.addTab(tabLayout.newTab().setText("Акскссуары"));
+
+                    tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+                        @Override
+                        public void onTabSelected(TabLayout.Tab tab) {
+                            viewPager.setCurrentItem(tab.getPosition());
+                        }
+
+                        @Override
+                        public void onTabUnselected(TabLayout.Tab tab) {
+
+                        }
+
+                        @Override
+                        public void onTabReselected(TabLayout.Tab tab) {
+
+                        }
+                    });
+
+
+                    viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+                        @Override
+                        public void onPageSelected(int position) {
+                            tabLayout.selectTab(tabLayout.getTabAt(position));
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @Override
             public void PassUserNick(String nick) {
@@ -82,42 +155,42 @@ public class ShopFragment extends Fragment {
                 });
             }
         });
-        TabLayout tabLayout = view.findViewById(R.id.tabLayoutShop);
-        viewPager=view.findViewById(R.id.frcontshop);
-        FragmentManager fm = getChildFragmentManager();
-        fragmentAdapter = new FragmentAdapter(fm, getLifecycle());
-        viewPager.setAdapter(fragmentAdapter);
+        tabLayout = view.findViewById(R.id.tabLayoutShop);
+            viewPager=view.findViewById(R.id.frcontshop);
+            FragmentManager fm = getChildFragmentManager();
+            fragmentAdapter = new FragmentAdapter(fm, getLifecycle());
+            viewPager.setAdapter(fragmentAdapter);
 
-        tabLayout.addTab(tabLayout.newTab().setText("Главная"));
-        tabLayout.addTab(tabLayout.newTab().setText("Обувь"));
-        tabLayout.addTab(tabLayout.newTab().setText("Одежда"));
-        tabLayout.addTab(tabLayout.newTab().setText("Головные уборы"));
-        tabLayout.addTab(tabLayout.newTab().setText("Акскссуары"));
+            tabLayout.addTab(tabLayout.newTab().setText("Главная"));
+            tabLayout.addTab(tabLayout.newTab().setText("Обувь"));
+            tabLayout.addTab(tabLayout.newTab().setText("Одежда"));
+            tabLayout.addTab(tabLayout.newTab().setText("Головные уборы"));
+            tabLayout.addTab(tabLayout.newTab().setText("Акскссуары"));
 
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                viewPager.setCurrentItem(tab.getPosition());
-            }
+            tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+                @Override
+                public void onTabSelected(TabLayout.Tab tab) {
+                    viewPager.setCurrentItem(tab.getPosition());
+                }
 
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
+                @Override
+                public void onTabUnselected(TabLayout.Tab tab) {
 
-            }
+                }
 
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
+                @Override
+                public void onTabReselected(TabLayout.Tab tab) {
 
-            }
-        });
+                }
+            });
 
 
-        viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-            @Override
-            public void onPageSelected(int position) {
-                tabLayout.selectTab(tabLayout.getTabAt(position));
-            }
-        });
+            viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+                @Override
+                public void onPageSelected(int position) {
+                    tabLayout.selectTab(tabLayout.getTabAt(position));
+                }
+            });
 
         basket=view.findViewById(R.id.basket);
         basket.setOnClickListener(new View.OnClickListener() {
@@ -127,6 +200,14 @@ public class ShopFragment extends Fragment {
             }
         });
 
+    }
+
+    public interface sendSearchText{
+        void sendSearch(String searchText);
+    }
+
+    public static void sendText(sendSearchText sendSearchText){
+        sendSearchText.sendSearch(editGetText);
     }
 
 //    public void loadModelInBase(){

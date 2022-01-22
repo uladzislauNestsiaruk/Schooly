@@ -78,6 +78,7 @@
                 android:paddingBottom="11dp">
 
                 <EditText
+                    android:id="@+id/searchClothes"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="start|center"
@@ -99,6 +100,16 @@
                 android:layout_marginTop="72dp"
                 android:layout_marginEnd="24dp"
                 android:src="@drawable/ic_basket" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/searchRecycler"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/searchclothes"
+                android:layout_marginTop="16dp"
+                android:visibility="gone"
+                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"/>
+
 
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/tabLayoutShop"

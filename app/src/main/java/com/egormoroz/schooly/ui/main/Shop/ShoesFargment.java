@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -32,6 +33,8 @@ public class ShoesFargment extends Fragment {
   ArrayList<Clothes> shoesArrayList=new ArrayList<Clothes>();
   RecyclerView clothes;
   NewClothesAdapter.ItemClickListener itemClickListener;
+  ShopFragment.sendSearchText sendSearchText;
+  TextView newText;
 
 
   @Override
@@ -50,6 +53,7 @@ public class ShoesFargment extends Fragment {
   public void onViewCreated(@Nullable View view,@NonNull Bundle savedInstanceState){
     super.onViewCreated(view, savedInstanceState);
 
+    newText=view.findViewById(R.id.newnew);
     itemClickListener=new NewClothesAdapter.ItemClickListener() {
       @Override
       public void onItemClick(Clothes clothes) {
@@ -69,7 +73,9 @@ public class ShoesFargment extends Fragment {
             clothesArrayList.addAll(allClothes);
             for(int i=0;i<clothesArrayList.size();i++){
               Clothes cl=clothesArrayList.get(i);
-              shoesArrayList.add(cl);
+              if (cl.getClothesType().equals("shoes")){
+                shoesArrayList.add(cl);
+              }
 
             }
             Log.d("#####", "size  "+clothesArrayList);

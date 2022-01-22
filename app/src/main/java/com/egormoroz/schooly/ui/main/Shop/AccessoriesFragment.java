@@ -67,7 +67,9 @@ public class AccessoriesFragment extends Fragment {
             clothesArrayList.addAll(allClothes);
             for(int i=0;i<clothesArrayList.size();i++){
               Clothes cl=clothesArrayList.get(i);
-              accessoriesArrayList.add(cl);
+              if (cl.getClothesType().equals("accessories")){
+                accessoriesArrayList.add(cl);
+              }
 //                           if (cl.getPurchaseNumber()==1){
 //                               firebaseModel.getReference("AppData/Clothes/Popular").setValue()
 //                            }

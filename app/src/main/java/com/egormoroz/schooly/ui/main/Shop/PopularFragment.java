@@ -36,6 +36,7 @@ public class PopularFragment extends Fragment {
     RecyclerView clothes,popularClothes;
     NewClothesAdapter.ItemClickListener itemClickListener;
     PopularClothesAdapter.ItemClickListener itemClickListenerPopular;
+    TextView newText;
 
 
     @Override
@@ -54,6 +55,8 @@ public class PopularFragment extends Fragment {
     @Override
     public void onViewCreated(@Nullable View view,@NonNull Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
+
+        newText=view.findViewById(R.id.newnew);
 
         itemClickListener=new NewClothesAdapter.ItemClickListener() {
             @Override

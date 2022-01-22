@@ -157,11 +157,6 @@ public class PeopleFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-                    @Override
-                    public void PassUserNick(String nick) {
-                    }
-                });
             }
         });
     }
