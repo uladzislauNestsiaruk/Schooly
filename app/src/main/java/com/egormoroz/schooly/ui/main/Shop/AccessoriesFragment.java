@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.egormoroz.schooly.Callbacks;
@@ -28,8 +29,11 @@ public class AccessoriesFragment extends Fragment {
   FirebaseModel firebaseModel=new FirebaseModel();
   ArrayList<Clothes> clothesArrayList=new ArrayList<Clothes>();
   ArrayList<Clothes> accessoriesArrayList=new ArrayList<Clothes>();
-  RecyclerView clothes;
+  ArrayList<Clothes> popularClothesArrayList=new ArrayList<Clothes>();
+  ArrayList<Clothes> popularSortAccessoriesArrayList=new ArrayList<Clothes>();
+  RecyclerView clothes,popularClothes;
   NewClothesAdapter.ItemClickListener itemClickListener;
+  PopularClothesAdapter.ItemClickListener itemClickListenerPopular;
 
 
   @Override
@@ -40,6 +44,7 @@ public class AccessoriesFragment extends Fragment {
     bnv.setVisibility(bnv.GONE);
     firebaseModel.initAll();
     clothes=root.findViewById(R.id.newchlothesinshop);
+    popularClothes=root.findViewById(R.id.popularchlothesinshop);
     loadClothesFromBase();
     return root;
   }
@@ -79,6 +84,21 @@ public class AccessoriesFragment extends Fragment {
             clothes.setAdapter(newClothesAdapter);
           }
         });
+      }
+    });
+    RecentMethods.getPopular( firebaseModel, new Callbacks.GetClothes() {
+      @Override
+      public void getClothes(ArrayList<Clothes> allClothes) {
+        popularClothesArrayList.addAll(allClothes);
+        for(int i=0;i<popularClothesArrayList.size();i++){
+          Clothes cl=popularClothesArrayList.get(i);
+          if (cl.getClothesType().equals("accessories")){
+            popularSortAccessoriesArrayList.add(cl);
+          }
+        }
+        PopularClothesAdapter popularClothesAdapter=new PopularClothesAdapter(popularSortAccessoriesArrayList,itemClickListenerPopular);
+        popularClothes.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+        popularClothes.setAdapter(popularClothesAdapter);
       }
     });
   }

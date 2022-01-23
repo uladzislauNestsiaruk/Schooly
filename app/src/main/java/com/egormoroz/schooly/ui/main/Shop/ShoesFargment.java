@@ -12,6 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.egormoroz.schooly.Callbacks;
@@ -31,8 +32,11 @@ public class ShoesFargment extends Fragment {
   FirebaseModel firebaseModel=new FirebaseModel();
   ArrayList<Clothes> clothesArrayList=new ArrayList<Clothes>();
   ArrayList<Clothes> shoesArrayList=new ArrayList<Clothes>();
-  RecyclerView clothes;
+  ArrayList<Clothes> popularClothesArrayList=new ArrayList<Clothes>();
+  ArrayList<Clothes> popularSortShoesArrayList=new ArrayList<Clothes>();
+  RecyclerView clothes,popularClothes;
   NewClothesAdapter.ItemClickListener itemClickListener;
+  PopularClothesAdapter.ItemClickListener itemClickListenerPopular;
   ShopFragment.sendSearchText sendSearchText;
   TextView newText;
 
@@ -45,6 +49,7 @@ public class ShoesFargment extends Fragment {
     bnv.setVisibility(bnv.GONE);
     firebaseModel.initAll();
     clothes=root.findViewById(R.id.newchlothesinshop);
+    popularClothes=root.findViewById(R.id.popularchlothesinshop);
     loadClothesFromBase();
     return root;
   }
@@ -83,6 +88,21 @@ public class ShoesFargment extends Fragment {
             clothes.setAdapter(newClothesAdapter);
           }
         });
+      }
+    });
+    RecentMethods.getPopular( firebaseModel, new Callbacks.GetClothes() {
+      @Override
+      public void getClothes(ArrayList<Clothes> allClothes) {
+        popularClothesArrayList.addAll(allClothes);
+        for(int i=0;i<popularClothesArrayList.size();i++){
+          Clothes cl=popularClothesArrayList.get(i);
+          if (cl.getClothesType().equals("shoes")){
+            popularSortShoesArrayList.add(cl);
+          }
+        }
+        PopularClothesAdapter popularClothesAdapter=new PopularClothesAdapter(popularSortShoesArrayList,itemClickListenerPopular);
+        popularClothes.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+        popularClothes.setAdapter(popularClothesAdapter);
       }
     });
   }

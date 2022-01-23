@@ -73,9 +73,8 @@ public class PopularClothesAdapter extends RecyclerView.Adapter<PopularClothesAd
         clothes=clothesArrayList.get(position);
         holder.clothesTitle.setText(clothes.getClothesTitle());
         holder.clothesPrice.setText(String.valueOf(clothes.getClothesPrice()));
-        File file=new File(clothes.getClothesImage());
-        storageReference.child("clothes").getFile(file);
         holder.clothesImage.setVisibility(View.VISIBLE);
+        holder.creator.setText(clothes.getCreator());
         Picasso.get().load(clothes.getClothesImage()).into(holder.clothesImage);
         holder.itemView.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -94,13 +93,14 @@ public class PopularClothesAdapter extends RecyclerView.Adapter<PopularClothesAd
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView clothesTitle,clothesPrice;
+        TextView clothesTitle,clothesPrice,creator;
         ImageView clothesImage;
         ViewHolder(View itemView) {
             super(itemView);
             clothesImage=itemView.findViewById(R.id.clothesImage);
             clothesTitle=itemView.findViewById(R.id.clothesTitle);
             clothesPrice=itemView.findViewById(R.id.clothesPrice);
+            creator=itemView.findViewById(R.id.creator);
         }
 
 

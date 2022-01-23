@@ -167,7 +167,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp"
-            android:background="@drawable/corners14grey"
+            android:background="@drawable/corners14appcolor"
             android:fontFamily="@font/montserratblack"
             android:paddingStart="20dp"
             android:paddingTop="12dp"

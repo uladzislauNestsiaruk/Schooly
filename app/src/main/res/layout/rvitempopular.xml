@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:elevation="5dp"
+    android:layout_height="230dp"
+    android:paddingStart="14dp"
+    android:paddingEnd="14dp"
+    android:paddingTop="10dp"
+    android:layout_marginBottom="23dp"
     android:background="@drawable/corners"
-    android:layout_marginStart="8dp"
-    android:layout_marginEnd="8dp"
-    android:layout_marginBottom="16dp">
+    android:layout_marginStart="10dp"
+    android:layout_marginEnd="10dp"
+    android:layout_marginTop="8dp"
+    android:elevation="10dp">
 
     <TextView
         android:id="@+id/clothesTitle"
@@ -16,29 +20,54 @@
         android:textSize="20sp"
         android:textColor="@color/app_color"
         android:layout_marginTop="8dp"
-        android:layout_marginStart="16dp"
         />
 
 
-    <ImageView
-        android:id="@+id/clothesImage"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
+    <TextView
+        android:id="@+id/price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/price"
         android:layout_below="@+id/clothesTitle"
-        android:layout_centerHorizontal="true"/>
+        android:fontFamily="@font/montserrat_bold"
+        android:textColor="@color/app_grey"
+        />
 
     <TextView
         android:id="@+id/clothesPrice"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/clothesImage"
-        android:textSize="18sp"
+        android:layout_below="@+id/price"
+        android:textSize="16sp"
         android:layout_marginStart="2dp"
-        android:layout_alignParentEnd="true"
+        android:layout_toRightOf="@+id/coinsImage"
         android:textColor="@color/app_color"
         android:fontFamily="@font/montserrat_extrabold"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="16dp"
         />
+
+    <ImageView
+        android:id="@+id/coinsImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/price"
+        android:layout_marginTop="6dp"
+        android:src="@drawable/ic_schoolycoinpurple" />
+
+    <ImageView
+        android:id="@+id/clothesImage"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_below="@+id/coinsImage"
+        android:layout_marginBottom="16dp" />
+
+    <TextView
+        android:id="@+id/creator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:textColor="@color/app_color"
+        android:fontFamily="@font/montserrat_extrabold"/>
 
 </RelativeLayout>

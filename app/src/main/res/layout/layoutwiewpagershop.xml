@@ -17,7 +17,7 @@
   <androidx.recyclerview.widget.RecyclerView
       android:id="@+id/newchlothesinshop"
       android:layout_width="match_parent"
-      android:layout_height="260dp"
+      android:layout_height="262dp"
       android:layout_below="@+id/newnew"
       android:layout_marginTop="12dp"
       android:orientation="horizontal"
@@ -39,7 +39,7 @@
   <androidx.recyclerview.widget.RecyclerView
       android:id="@+id/popularchlothesinshop"
       android:layout_width="match_parent"
-      android:layout_height="wrap_content"
+      android:layout_height="match_parent"
       android:layout_below="@+id/popular"
       android:layout_marginTop="16dp"
       android:orientation="vertical"

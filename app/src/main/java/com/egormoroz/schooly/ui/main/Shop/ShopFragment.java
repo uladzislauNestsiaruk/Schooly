@@ -18,6 +18,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.lifecycle.Lifecycle;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
@@ -35,9 +36,14 @@ import com.egormoroz.schooly.ui.main.GroupsFragment;
 import com.egormoroz.schooly.ui.main.MainFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class ShopFragment extends Fragment {
     public static ShopFragment newInstance() {
@@ -54,6 +60,8 @@ public class ShopFragment extends Fragment {
     static String editGetText;
     RecyclerView searchRecycler;
     TabLayout tabLayout;
+    ArrayList<Clothes> searchClothesArrayList=new ArrayList<Clothes>();
+    PopularClothesAdapter.ItemClickListener itemClickListenerPopular;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -91,10 +99,18 @@ public class ShopFragment extends Fragment {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 editGetText=searchClothes.getText().toString();
+                editGetText=editGetText.toLowerCase();
                 if (editGetText.length()>0) {
                     viewPager.setVisibility(View.GONE);
                     searchRecycler.setVisibility(View.VISIBLE);
                     tabLayout.setVisibility(View.GONE);
+                    loadSearchClothes(editGetText);
+                    itemClickListenerPopular=new PopularClothesAdapter.ItemClickListener() {
+                        @Override
+                        public void onItemClick(Clothes clothes) {
+                            ((MainActivity)getActivity()).setCurrentFragment(ViewingClothesPopular.newInstance());
+                        }
+                    };
                 }else if(editGetText.length()==0){
                     Log.d("####", "ggg");
                     viewPager.setVisibility(View.VISIBLE);
@@ -208,6 +224,45 @@ public class ShopFragment extends Fragment {
 
     public static void sendText(sendSearchText sendSearchText){
         sendSearchText.sendSearch(editGetText);
+    }
+
+    public void loadSearchClothes(String editTextText){
+        Query query=firebaseModel.getReference("AppData/Clothes/AllClothes");
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                ArrayList<Clothes> clothesFromBase=new ArrayList<>();
+                for (DataSnapshot snap : snapshot.getChildren()) {
+                    Clothes clothes = new Clothes();
+                    clothes.setClothesImage(snap.child("clothesImage").getValue(String.class));
+                    clothes.setClothesPrice(snap.child("clothesPrice").getValue(Long.class));
+                    clothes.setPurchaseNumber(snap.child("purchaseNumber").getValue(Long.class));
+                    clothes.setClothesType(snap.child("clothesType").getValue(String.class));
+                    clothes.setClothesTitle(snap.child("clothesTitle").getValue(String.class));
+                    clothes.setCreator(snap.child("creator").getValue(String.class));
+                    String clothesTitle=clothes.getClothesTitle();
+                    String title=clothesTitle;
+                    int valueLetters=editTextText.length();
+                    title=title.toLowerCase();
+                    if(title.length()<valueLetters){
+                        if(title.equals(editTextText))
+                            clothesFromBase.add(clothes);
+                    }else{
+                        title=title.substring(0, valueLetters);
+                        if(title.equals(editTextText))
+                            clothesFromBase.add(clothes);
+                    }
+                }
+                PopularClothesAdapter popularClothesAdapter=new PopularClothesAdapter(clothesFromBase,itemClickListenerPopular);
+                searchRecycler.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+                searchRecycler.setAdapter(popularClothesAdapter);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
 //    public void loadModelInBase(){
