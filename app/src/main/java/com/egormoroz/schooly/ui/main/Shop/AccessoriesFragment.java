@@ -22,84 +22,90 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import java.util.ArrayList;
 
 public class AccessoriesFragment extends Fragment {
-  public static AccessoriesFragment newInstance() {
-    return new AccessoriesFragment();
-  }
+    public static AccessoriesFragment newInstance() {
+        return new AccessoriesFragment();
+    }
 
-  FirebaseModel firebaseModel=new FirebaseModel();
-  ArrayList<Clothes> clothesArrayList=new ArrayList<Clothes>();
-  ArrayList<Clothes> accessoriesArrayList=new ArrayList<Clothes>();
-  ArrayList<Clothes> popularClothesArrayList=new ArrayList<Clothes>();
-  ArrayList<Clothes> popularSortAccessoriesArrayList=new ArrayList<Clothes>();
-  RecyclerView clothes,popularClothes;
-  NewClothesAdapter.ItemClickListener itemClickListener;
-  PopularClothesAdapter.ItemClickListener itemClickListenerPopular;
-
-
-  @Override
-  public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                           @Nullable Bundle savedInstanceState) {
-    View root = inflater.inflate(R.layout.layoutwiewpagershop, container, false);
-    BottomNavigationView bnv = getActivity().findViewById(R.id.bottomNavigationView);
-    bnv.setVisibility(bnv.GONE);
-    firebaseModel.initAll();
-    clothes=root.findViewById(R.id.newchlothesinshop);
-    popularClothes=root.findViewById(R.id.popularchlothesinshop);
-    loadClothesFromBase();
-    return root;
-  }
-
-  @Override
-  public void onViewCreated(@Nullable View view,@NonNull Bundle savedInstanceState){
-    super.onViewCreated(view, savedInstanceState);
-
-    itemClickListener=new NewClothesAdapter.ItemClickListener() {
-      @Override
-      public void onItemClick(Clothes clothes) {
-        ((MainActivity)getActivity()).setCurrentFragment(ViewingClothes.newInstance());
-      }
-    };
-  }
+    FirebaseModel firebaseModel=new FirebaseModel();
+    ArrayList<Clothes> clothesArrayList=new ArrayList<Clothes>();
+    ArrayList<Clothes> accessoriesArrayList=new ArrayList<Clothes>();
+    ArrayList<Clothes> popularClothesArrayList=new ArrayList<Clothes>();
+    ArrayList<Clothes> popularSortAccessoriesArrayList=new ArrayList<Clothes>();
+    RecyclerView clothes,popularClothes;
+    NewClothesAdapter.ItemClickListener itemClickListener;
+    PopularClothesAdapter.ItemClickListener itemClickListenerPopular;
 
 
-  public void loadClothesFromBase(){
-    RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-      @Override
-      public void PassUserNick(String nick) {
-        RecentMethods.getClothes(firebaseModel, new Callbacks.GetClothes() {
-          @Override
-          public void getClothes(ArrayList<Clothes> allClothes) {
-            clothesArrayList.addAll(allClothes);
-            for(int i=0;i<clothesArrayList.size();i++){
-              Clothes cl=clothesArrayList.get(i);
-              if (cl.getClothesType().equals("accessories")){
-                accessoriesArrayList.add(cl);
-              }
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        View root = inflater.inflate(R.layout.layoutwiewpagershop, container, false);
+        BottomNavigationView bnv = getActivity().findViewById(R.id.bottomNavigationView);
+        bnv.setVisibility(bnv.GONE);
+        firebaseModel.initAll();
+        clothes=root.findViewById(R.id.newchlothesinshop);
+        popularClothes=root.findViewById(R.id.popularchlothesinshop);
+        loadClothesFromBase();
+        return root;
+    }
+
+    @Override
+    public void onViewCreated(@Nullable View view,@NonNull Bundle savedInstanceState){
+        super.onViewCreated(view, savedInstanceState);
+
+        itemClickListener=new NewClothesAdapter.ItemClickListener() {
+            @Override
+            public void onItemClick(Clothes clothes) {
+                ((MainActivity)getActivity()).setCurrentFragment(ViewingClothes.newInstance());
+            }
+        };
+        itemClickListenerPopular=new PopularClothesAdapter.ItemClickListener() {
+            @Override
+            public void onItemClick(Clothes clothes) {
+                ((MainActivity)getActivity()).setCurrentFragment(ViewingClothesPopular.newInstance());
+            }
+        };
+    }
+
+
+    public void loadClothesFromBase(){
+        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+            @Override
+            public void PassUserNick(String nick) {
+                RecentMethods.getClothes(firebaseModel, new Callbacks.GetClothes() {
+                    @Override
+                    public void getClothes(ArrayList<Clothes> allClothes) {
+                        clothesArrayList.addAll(allClothes);
+                        for(int i=0;i<clothesArrayList.size();i++){
+                            Clothes cl=clothesArrayList.get(i);
+                            if (cl.getClothesType().equals("accessories")){
+                                accessoriesArrayList.add(cl);
+                            }
 //                           if (cl.getPurchaseNumber()==1){
 //                               firebaseModel.getReference("AppData/Clothes/Popular").setValue()
 //                            }
+                        }
+                        Log.d("#####", "size  "+clothesArrayList);
+                        NewClothesAdapter newClothesAdapter=new NewClothesAdapter(accessoriesArrayList,itemClickListener);
+                        clothes.setAdapter(newClothesAdapter);
+                    }
+                });
             }
-            Log.d("#####", "size  "+clothesArrayList);
-            NewClothesAdapter newClothesAdapter=new NewClothesAdapter(accessoriesArrayList,itemClickListener);
-            clothes.setAdapter(newClothesAdapter);
-          }
         });
-      }
-    });
-    RecentMethods.getPopular( firebaseModel, new Callbacks.GetClothes() {
-      @Override
-      public void getClothes(ArrayList<Clothes> allClothes) {
-        popularClothesArrayList.addAll(allClothes);
-        for(int i=0;i<popularClothesArrayList.size();i++){
-          Clothes cl=popularClothesArrayList.get(i);
-          if (cl.getClothesType().equals("accessories")){
-            popularSortAccessoriesArrayList.add(cl);
-          }
-        }
-        PopularClothesAdapter popularClothesAdapter=new PopularClothesAdapter(popularSortAccessoriesArrayList,itemClickListenerPopular);
-        popularClothes.setLayoutManager(new GridLayoutManager(getActivity(), 2));
-        popularClothes.setAdapter(popularClothesAdapter);
-      }
-    });
-  }
+        RecentMethods.getPopular( firebaseModel, new Callbacks.GetClothes() {
+            @Override
+            public void getClothes(ArrayList<Clothes> allClothes) {
+                popularClothesArrayList.addAll(allClothes);
+                for(int i=0;i<popularClothesArrayList.size();i++){
+                    Clothes cl=popularClothesArrayList.get(i);
+                    if (cl.getClothesType().equals("accessories")){
+                        popularSortAccessoriesArrayList.add(cl);
+                    }
+                }
+                PopularClothesAdapter popularClothesAdapter=new PopularClothesAdapter(popularSortAccessoriesArrayList,itemClickListenerPopular);
+                popularClothes.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+                popularClothes.setAdapter(popularClothesAdapter);
+            }
+        });
+    }
 }

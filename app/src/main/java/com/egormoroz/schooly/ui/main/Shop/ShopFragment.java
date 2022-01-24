@@ -56,7 +56,6 @@ public class ShopFragment extends Fragment {
     FragmentAdapter fragmentAdapter;
     ImageView basket;
     EditText searchClothes;
-    sendSearchText sendSearchText;
     static String editGetText;
     RecyclerView searchRecycler;
     TabLayout tabLayout;
@@ -172,41 +171,41 @@ public class ShopFragment extends Fragment {
             }
         });
         tabLayout = view.findViewById(R.id.tabLayoutShop);
-            viewPager=view.findViewById(R.id.frcontshop);
-            FragmentManager fm = getChildFragmentManager();
-            fragmentAdapter = new FragmentAdapter(fm, getLifecycle());
-            viewPager.setAdapter(fragmentAdapter);
+        viewPager=view.findViewById(R.id.frcontshop);
+        FragmentManager fm = getChildFragmentManager();
+        fragmentAdapter = new FragmentAdapter(fm, getLifecycle());
+        viewPager.setAdapter(fragmentAdapter);
 
-            tabLayout.addTab(tabLayout.newTab().setText("Главная"));
-            tabLayout.addTab(tabLayout.newTab().setText("Обувь"));
-            tabLayout.addTab(tabLayout.newTab().setText("Одежда"));
-            tabLayout.addTab(tabLayout.newTab().setText("Головные уборы"));
-            tabLayout.addTab(tabLayout.newTab().setText("Акскссуары"));
+        tabLayout.addTab(tabLayout.newTab().setText("Главная"));
+        tabLayout.addTab(tabLayout.newTab().setText("Обувь"));
+        tabLayout.addTab(tabLayout.newTab().setText("Одежда"));
+        tabLayout.addTab(tabLayout.newTab().setText("Головные уборы"));
+        tabLayout.addTab(tabLayout.newTab().setText("Акскссуары"));
 
-            tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-                @Override
-                public void onTabSelected(TabLayout.Tab tab) {
-                    viewPager.setCurrentItem(tab.getPosition());
-                }
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition());
+            }
 
-                @Override
-                public void onTabUnselected(TabLayout.Tab tab) {
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
 
-                }
+            }
 
-                @Override
-                public void onTabReselected(TabLayout.Tab tab) {
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
 
-                }
-            });
+            }
+        });
 
 
-            viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-                @Override
-                public void onPageSelected(int position) {
-                    tabLayout.selectTab(tabLayout.getTabAt(position));
-                }
-            });
+        viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageSelected(int position) {
+                tabLayout.selectTab(tabLayout.getTabAt(position));
+            }
+        });
 
         basket=view.findViewById(R.id.basket);
         basket.setOnClickListener(new View.OnClickListener() {
@@ -218,13 +217,6 @@ public class ShopFragment extends Fragment {
 
     }
 
-    public interface sendSearchText{
-        void sendSearch(String searchText);
-    }
-
-    public static void sendText(sendSearchText sendSearchText){
-        sendSearchText.sendSearch(editGetText);
-    }
 
     public void loadSearchClothes(String editTextText){
         Query query=firebaseModel.getReference("AppData/Clothes/AllClothes");
@@ -294,23 +286,23 @@ public class ShopFragment extends Fragment {
         public FragmentAdapter(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle) {
             super(fragmentManager, lifecycle);
         }
-            @NonNull
-            @Override
-            public Fragment createFragment ( int position){
+        @NonNull
+        @Override
+        public Fragment createFragment ( int position){
 
 
-                switch (position) {
-                    case 1:
-                        return new ShoesFargment();
-                    case 2:
-                        return new ClothesFragment();
-                    case 3:
-                        return new HatsFragment();
-                    case 4:
-                        return new AccessoriesFragment();
-                }
-                    return new PopularFragment();
+            switch (position) {
+                case 1:
+                    return new ShoesFargment();
+                case 2:
+                    return new ClothesFragment();
+                case 3:
+                    return new HatsFragment();
+                case 4:
+                    return new AccessoriesFragment();
             }
+            return new PopularFragment();
+        }
 
 
         @Override

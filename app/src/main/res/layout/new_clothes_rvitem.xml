@@ -29,17 +29,14 @@
         android:textColor="@color/app_grey"
         />
 
-    <TextView
+   <ImageView
         android:id="@+id/ifBuy"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/clothesTitle"
-        android:fontFamily="@font/montserrat_bold"
+        android:src="@drawable/ic_smallifbuy"
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="8dp"
-        android:background="@color/green"
-        android:text="yes"
-        android:textColor="@color/app_grey"
         android:visibility="gone"
         />
 

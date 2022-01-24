@@ -87,9 +87,6 @@ public class PopularFragment extends Fragment {
                             newClothesArrayList.add(cl);
                             long purchaseNumber=cl.getPurchaseNumber();
 
-//                           if (cl.getPurchaseNumber()==1){
-//                               firebaseModel.getReference("AppData/Clothes/Popular").setValue()
-//                            }
                         }
                         Log.d("#####", "size  "+clothesArrayList);
                         NewClothesAdapter newClothesAdapter=new NewClothesAdapter(newClothesArrayList,itemClickListener);
@@ -106,7 +103,6 @@ public class PopularFragment extends Fragment {
                 PopularClothesAdapter popularClothesAdapter=new PopularClothesAdapter(popularClothesArrayList,itemClickListenerPopular);
                 popularClothes.setLayoutManager(new GridLayoutManager(getActivity(), 2));
                 popularClothes.setAdapter(popularClothesAdapter);
-                Log.d("#####", "g  "+popularClothesArrayList);
             }
         });
     }

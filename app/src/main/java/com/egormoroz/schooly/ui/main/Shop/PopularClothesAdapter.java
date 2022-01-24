@@ -117,8 +117,8 @@ public class PopularClothesAdapter extends RecyclerView.Adapter<PopularClothesAd
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView clothesTitle,clothesPrice,creator,ifBuy;
-        ImageView clothesImage;
+        TextView clothesTitle,clothesPrice,creator;
+        ImageView clothesImage,ifBuy;
         ViewHolder(View itemView) {
             super(itemView);
             clothesImage=itemView.findViewById(R.id.clothesImage);

@@ -129,8 +129,8 @@ public class NewClothesAdapter extends RecyclerView.Adapter<NewClothesAdapter.Vi
   }
 
   public class ViewHolder extends RecyclerView.ViewHolder {
-    TextView clothesPrise,clothesTitle,creator,ifBuy;
-    ImageView clothesImage;
+    TextView clothesPrise,clothesTitle,creator;
+    ImageView clothesImage,ifBuy;
     ViewHolder(View itemView) {
       super(itemView);
       clothesPrise=itemView.findViewById(R.id.clothesPrice);
