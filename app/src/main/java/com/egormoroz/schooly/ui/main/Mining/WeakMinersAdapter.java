@@ -87,13 +87,28 @@ public class WeakMinersAdapter extends RecyclerView.Adapter<WeakMinersAdapter.Vi
                             holder.buy.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    int pos=holder.getAdapterPosition();
-                                    RecentMethods.GetMoneyFromBase(nick, firebaseModel, new Callbacks.MoneyFromBase() {
+                                    Query query=firebaseModel.getUsersReference().child(nick).child("miners")
+                                            .child(String.valueOf(holder.getAdapterPosition())+"weak");
+                                    query.addValueEventListener(new ValueEventListener() {
                                         @Override
-                                        public void GetMoneyFromBase(long money) {
-                                            if (money!=-1){
-                                                itemClickListener.onItemClick(pos,miner,"weak",money);
+                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                            if(snapshot.exists()){
+                                            }else{
+                                                int pos=holder.getAdapterPosition();
+                                                RecentMethods.GetMoneyFromBase(nick, firebaseModel, new Callbacks.MoneyFromBase() {
+                                                    @Override
+                                                    public void GetMoneyFromBase(long money) {
+                                                        if (money!=-1){
+                                                            itemClickListener.onItemClick(pos,miner,"strong",money);
+                                                        }
+                                                    }
+                                                });
                                             }
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError error) {
+
                                         }
                                     });
                                 }

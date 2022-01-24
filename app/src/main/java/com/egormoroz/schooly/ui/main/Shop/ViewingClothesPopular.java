@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -114,7 +115,7 @@ public class ViewingClothesPopular extends Fragment {
                                         firebaseModel.getUsersReference().child(nick).child("basket")
                                                 .child(clothesViewing.getClothesTitle()).removeValue();
                                     }else{
-                                        Log.d("######", "fuckfeafwe  ");
+                                        Toast.makeText(getContext(), "Предмет уже в куплен", Toast.LENGTH_SHORT).show();
                                     }
                                 }
 
@@ -147,9 +148,10 @@ public class ViewingClothesPopular extends Fragment {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
                                 if(snapshot.exists()){
+                                    Toast.makeText(getContext(), "Предмет уже в корзине", Toast.LENGTH_SHORT).show();
                                 }else {firebaseModel.getUsersReference().child(nick).child("basket")
                                         .child(clothesViewing.getClothesTitle()).setValue(clothesViewing);
-                                    Log.d("######", "fuck  ");}
+                                    }
                             }
 
                             @Override

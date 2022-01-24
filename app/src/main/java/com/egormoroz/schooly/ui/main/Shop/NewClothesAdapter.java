@@ -31,6 +31,10 @@ import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.ui.main.ChatsFragment;
 import com.egormoroz.schooly.ui.main.RegisrtationstartFragment;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
@@ -87,6 +91,26 @@ public class NewClothesAdapter extends RecyclerView.Adapter<NewClothesAdapter.Vi
     storageReference.child("clothes").getFile(file);
     holder.clothesImage.setVisibility(View.VISIBLE);
     holder.creator.setText(clothes.getCreator());
+    RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+      @Override
+      public void PassUserNick(String nick) {
+        Query query=firebaseModel.getUsersReference().child(nick).child("clothes")
+                .child(clothes.getClothesTitle());
+        query.addValueEventListener(new ValueEventListener() {
+          @Override
+          public void onDataChange(@NonNull DataSnapshot snapshot) {
+            if(snapshot.exists()){
+              holder.ifBuy.setVisibility(View.VISIBLE);
+            }
+          }
+
+          @Override
+          public void onCancelled(@NonNull DatabaseError error) {
+
+          }
+        });
+      }
+    });
     Picasso.get().load(clothes.getClothesImage()).into(holder.clothesImage);
     holder.itemView.setOnClickListener(new View.OnClickListener(){
       @Override
@@ -105,7 +129,7 @@ public class NewClothesAdapter extends RecyclerView.Adapter<NewClothesAdapter.Vi
   }
 
   public class ViewHolder extends RecyclerView.ViewHolder {
-    TextView clothesPrise,clothesTitle,creator;
+    TextView clothesPrise,clothesTitle,creator,ifBuy;
     ImageView clothesImage;
     ViewHolder(View itemView) {
       super(itemView);
@@ -113,6 +137,7 @@ public class NewClothesAdapter extends RecyclerView.Adapter<NewClothesAdapter.Vi
       clothesImage=itemView.findViewById(R.id.clothesImage);
       clothesTitle=itemView.findViewById(R.id.clothesTitle);
       creator=itemView.findViewById(R.id.creator);
+      ifBuy=itemView.findViewById(R.id.ifBuy);
     }
 
 

@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.egormoroz.schooly.Callbacks;
@@ -88,6 +89,7 @@ public class WardrobeHats extends Fragment {
                             });
                         }else {
                             WardrobeClothesAdapter newClothesAdapter = new WardrobeClothesAdapter(sortHatsArrayListWardrobe, itemClickListener);
+                            wardrobeRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
                             wardrobeRecyclerView.setAdapter(newClothesAdapter);
                         }
                     }

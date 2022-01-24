@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -113,7 +114,7 @@ public class ViewingClothesBasket extends Fragment {
                     firebaseModel.getUsersReference().child(nick).child("basket")
                             .child(clothesViewing.getClothesTitle()).removeValue();
                   }else{
-                    Log.d("######", "fuck  ");
+                    Toast.makeText(getContext(), "Предмет уже в куплен", Toast.LENGTH_SHORT).show();
                   }
                 }
 
@@ -127,7 +128,6 @@ public class ViewingClothesBasket extends Fragment {
             }
           });
         }else{
-          Log.d("######", "fuck  ");
         }
       }
     });
@@ -142,9 +142,25 @@ public class ViewingClothesBasket extends Fragment {
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
           @Override
           public void PassUserNick(String nick) {
-            firebaseModel.getUsersReference().child(nick).child("basket")
-                    .child(clothesViewing.getClothesTitle()).removeValue();
-            inBasket.setText("Убрано");
+            Query query=firebaseModel.getUsersReference().child(nick).child("basket").
+                    child(String.valueOf(clothesViewing.getClothesTitle()));
+            query.addValueEventListener(new ValueEventListener() {
+              @Override
+              public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists()){
+                  firebaseModel.getUsersReference().child(nick).child("basket")
+                          .child(clothesViewing.getClothesTitle()).removeValue();
+                  inBasket.setText("Убрано");
+                }else {
+                  Toast.makeText(getContext(), "Предмет уже убран", Toast.LENGTH_SHORT).show();
+                }
+              }
+
+              @Override
+              public void onCancelled(@NonNull DatabaseError error) {
+
+              }
+            });
           }
         });
       }
