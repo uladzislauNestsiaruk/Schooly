@@ -212,6 +212,7 @@ public class WardrobeFragment extends Fragment {
                             }
                         }
                         if(clothesFromBase.size()==0){
+                            searchRecycler.setVisibility(View.GONE);
                             notFound.setVisibility(View.VISIBLE);
                         }else{
                             WardrobeClothesAdapter wardrobeClothesAdapter=new WardrobeClothesAdapter(clothesFromBase,itemClickListener);

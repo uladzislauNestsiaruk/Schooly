@@ -91,6 +91,7 @@ public class NewClothesAdapter extends RecyclerView.Adapter<NewClothesAdapter.Vi
     storageReference.child("clothes").getFile(file);
     holder.clothesImage.setVisibility(View.VISIBLE);
     holder.creator.setText(clothes.getCreator());
+    holder.purchaseNumber.setText(String.valueOf(clothes.getPurchaseNumber()));
     RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
       @Override
       public void PassUserNick(String nick) {
@@ -129,7 +130,7 @@ public class NewClothesAdapter extends RecyclerView.Adapter<NewClothesAdapter.Vi
   }
 
   public class ViewHolder extends RecyclerView.ViewHolder {
-    TextView clothesPrise,clothesTitle,creator;
+    TextView clothesPrise,clothesTitle,creator,purchaseNumber;
     ImageView clothesImage,ifBuy;
     ViewHolder(View itemView) {
       super(itemView);
@@ -138,6 +139,7 @@ public class NewClothesAdapter extends RecyclerView.Adapter<NewClothesAdapter.Vi
       clothesTitle=itemView.findViewById(R.id.clothesTitle);
       creator=itemView.findViewById(R.id.creator);
       ifBuy=itemView.findViewById(R.id.ifBuy);
+      purchaseNumber=itemView.findViewById(R.id.purchaseNumber);
     }
 
 

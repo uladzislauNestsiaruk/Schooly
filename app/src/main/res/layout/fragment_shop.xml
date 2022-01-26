@@ -63,6 +63,18 @@
 
             </LinearLayout>
 
+            <TextView
+                android:id="@+id/notFound"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="350dp"
+                android:textSize="16sp"
+                android:visibility="gone"
+                android:textColor="@color/app_grey"
+                android:fontFamily="@font/montserrat_bold"
+                android:text="@string/notFound" />
+
 
             <LinearLayout
                 android:id="@+id/searchclothes"

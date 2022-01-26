@@ -59,6 +59,7 @@ public class ShopFragment extends Fragment {
     static String editGetText;
     RecyclerView searchRecycler;
     TabLayout tabLayout;
+    TextView notFound;
     ArrayList<Clothes> searchClothesArrayList=new ArrayList<Clothes>();
     PopularClothesAdapter.ItemClickListener itemClickListenerPopular;
 
@@ -88,6 +89,7 @@ public class ShopFragment extends Fragment {
         });
 
         searchRecycler=view.findViewById(R.id.searchRecycler);
+        notFound=view.findViewById(R.id.notFound);
         searchClothes=view.findViewById(R.id.searchClothes);
         searchClothes.addTextChangedListener(new TextWatcher() {
             @Override
@@ -245,9 +247,14 @@ public class ShopFragment extends Fragment {
                             clothesFromBase.add(clothes);
                     }
                 }
-                PopularClothesAdapter popularClothesAdapter=new PopularClothesAdapter(clothesFromBase,itemClickListenerPopular);
-                searchRecycler.setLayoutManager(new GridLayoutManager(getActivity(), 2));
-                searchRecycler.setAdapter(popularClothesAdapter);
+                if (clothesFromBase.size()==0){
+                    searchRecycler.setVisibility(View.GONE);
+                    notFound.setVisibility(View.VISIBLE);
+                }else {
+                    PopularClothesAdapter popularClothesAdapter=new PopularClothesAdapter(clothesFromBase,itemClickListenerPopular);
+                    searchRecycler.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+                    searchRecycler.setAdapter(popularClothesAdapter);
+                }
             }
 
             @Override

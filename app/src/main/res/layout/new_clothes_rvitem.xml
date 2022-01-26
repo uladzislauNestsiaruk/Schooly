@@ -23,11 +23,10 @@
         android:id="@+id/price"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/price"
         android:layout_below="@+id/clothesTitle"
         android:fontFamily="@font/montserrat_bold"
-        android:textColor="@color/app_grey"
-        />
+        android:text="@string/price"
+        android:textColor="@color/app_grey" />
 
    <ImageView
         android:id="@+id/ifBuy"
@@ -74,6 +73,16 @@
         android:textSize="16sp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
+        android:textColor="@color/app_color"
+        android:fontFamily="@font/montserrat_extrabold"/>
+
+    <TextView
+        android:id="@+id/purchaseNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
         android:textColor="@color/app_color"
         android:fontFamily="@font/montserrat_extrabold"/>
 

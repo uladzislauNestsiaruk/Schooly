@@ -57,12 +57,10 @@ public class ShoesFargment extends Fragment {
     public void onViewCreated(@Nullable View view,@NonNull Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
 
-        Log.d("#####", "cccddd");
         newText=view.findViewById(R.id.newnew);
         itemClickListener=new NewClothesAdapter.ItemClickListener() {
             @Override
             public void onItemClick(Clothes clothes) {
-                Log.d("#####", "cccaaa");
                 ((MainActivity)getActivity()).setCurrentFragment(ViewingClothes.newInstance());
             }
         };
@@ -91,7 +89,6 @@ public class ShoesFargment extends Fragment {
                             }
 
                         }
-                        Log.d("#####", "size  "+clothesArrayList);
                         NewClothesAdapter newClothesAdapter=new NewClothesAdapter(shoesArrayList,itemClickListener);
                         clothes.setAdapter(newClothesAdapter);
                     }

@@ -81,4 +81,14 @@
         android:textColor="@color/app_color"
         android:fontFamily="@font/montserrat_extrabold"/>
 
+    <TextView
+        android:id="@+id/purchaseNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:textColor="@color/app_color"
+        android:fontFamily="@font/montserrat_extrabold"/>
+
 </RelativeLayout>

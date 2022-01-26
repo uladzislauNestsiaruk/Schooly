@@ -79,15 +79,18 @@ public class PopularClothesAdapter extends RecyclerView.Adapter<PopularClothesAd
         holder.clothesPrice.setText(String.valueOf(clothes.getClothesPrice()));
         holder.clothesImage.setVisibility(View.VISIBLE);
         holder.creator.setText(clothes.getCreator());
+        holder.purchaseNumber.setText(String.valueOf(clothes.getPurchaseNumber()));
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @Override
             public void PassUserNick(String nick) {
+                Log.d("#####", "whats ");
                 Query query=firebaseModel.getUsersReference().child(nick).child("clothes")
                         .child(clothes.getClothesTitle());
                 query.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         if(snapshot.exists()){
+                            Log.d("#####", "whats what "+clothes.getClothesTitle());
                             holder.ifBuy.setVisibility(View.VISIBLE);
                         }
                     }
@@ -117,7 +120,7 @@ public class PopularClothesAdapter extends RecyclerView.Adapter<PopularClothesAd
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView clothesTitle,clothesPrice,creator;
+        TextView clothesTitle,clothesPrice,creator,purchaseNumber;
         ImageView clothesImage,ifBuy;
         ViewHolder(View itemView) {
             super(itemView);
@@ -126,6 +129,7 @@ public class PopularClothesAdapter extends RecyclerView.Adapter<PopularClothesAd
             clothesPrice=itemView.findViewById(R.id.clothesPrice);
             creator=itemView.findViewById(R.id.creator);
             ifBuy=itemView.findViewById(R.id.ifBuy);
+            purchaseNumber=itemView.findViewById(R.id.purchaseNumber);
         }
 
 
