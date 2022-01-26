@@ -107,6 +107,7 @@
                 android:layout_height="match_parent"
                 android:layout_below="@+id/searchclothes"
                 android:layout_marginTop="16dp"
+                android:scrollbars="none"
                 android:visibility="gone"
                 app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"/>
 

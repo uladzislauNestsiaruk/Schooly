@@ -114,7 +114,6 @@ public class ViewingClothesBasket extends Fragment {
                     firebaseModel.getUsersReference().child(nick).child("basket")
                             .child(clothesViewing.getClothesTitle()).removeValue();
                   }else{
-                    Toast.makeText(getContext(), "Предмет уже в куплен", Toast.LENGTH_SHORT).show();
                   }
                 }
 
@@ -151,8 +150,8 @@ public class ViewingClothesBasket extends Fragment {
                   firebaseModel.getUsersReference().child(nick).child("basket")
                           .child(clothesViewing.getClothesTitle()).removeValue();
                   inBasket.setText("Убрано");
+                  inBasket.setBackgroundResource(R.drawable.corners14grey);
                 }else {
-                  Toast.makeText(getContext(), "Предмет уже убран", Toast.LENGTH_SHORT).show();
                 }
               }
 

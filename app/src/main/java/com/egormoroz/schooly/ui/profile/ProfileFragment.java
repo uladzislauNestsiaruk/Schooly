@@ -49,6 +49,8 @@ import com.egormoroz.schooly.ui.main.Shop.ShopFragment;
 import com.egormoroz.schooly.ui.main.Shop.ViewingClothes;
 import com.egormoroz.schooly.ui.main.UserInformation;
 import com.egormoroz.schooly.ui.people.PeopleFragment;
+import com.egormoroz.schooly.ui.profile.Wardrobe.ViewingClothesWardrobe;
+import com.egormoroz.schooly.ui.profile.Wardrobe.WardrobeAdapterProfile;
 import com.egormoroz.schooly.ui.profile.Wardrobe.WardrobeFragment;
 import com.google.android.filament.Filament;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -82,6 +84,7 @@ public class ProfileFragment extends Fragment {
     ModelRenderer modelRenderer;
     RecyclerView looksRecycler,wardrobeRecycler,looksRecyclerOther;
     ImageView moreSquare,back;
+    WardrobeAdapterProfile.ItemClickListener itemClickListenerWardrobe;
     int looksListSize,profileValue;
     private float[] backgroundColor = new float[]{0f, 0f, 0f, 1.0f};
     private Handler handler;
@@ -281,6 +284,12 @@ public class ProfileFragment extends Fragment {
                 wardrobeRecycler=view.findViewById(R.id.recyclerProfileToWardrobe);
                 noClothes=view.findViewById(R.id.noClothesText);
                 buyClothesProfile=view.findViewById(R.id.buyClothesProfile);
+                itemClickListenerWardrobe=new WardrobeAdapterProfile.ItemClickListener() {
+                    @Override
+                    public void onItemClick(Clothes clothes) {
+                        RecentMethods.setCurrentFragment(ViewingClothesWardrobe.newInstance(), getActivity());
+                    }
+                };
                 checkWardrobe();
                 //////////////////////////////////////
                 /////////////////LOOKS///////////////
@@ -854,7 +863,7 @@ public class ProfileFragment extends Fragment {
                                 }
                             });
                         }else {
-                            WardrobeAdapter wardrobeAdapter=new WardrobeAdapter(allClothes);
+                            WardrobeAdapterProfile wardrobeAdapter=new WardrobeAdapterProfile(allClothes,itemClickListenerWardrobe);
                             wardrobeRecycler.setAdapter(wardrobeAdapter);
                         }
                     }

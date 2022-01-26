@@ -213,4 +213,6 @@
 
     <string name="addDescription">Добавить описание</string>
 
+    <string name="notFound">Ничего не найдено:(</string>
+
 </resources>

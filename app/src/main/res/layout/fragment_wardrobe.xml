@@ -36,8 +36,9 @@
                 style="@style/AppTabLayoutShop"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="374dp"
+                android:layout_marginTop="12dp"
                 app:tabMode="scrollable"
+                android:layout_below="@+id/linearsearch"
                 app:tabTextAppearance="@style/AppTabTextAppearanceShop" />
 
 
@@ -46,15 +47,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_below="@id/tabLayoutWardrobe"
             android:background="@drawable/corners12_2dpstrokeappcolor"
             android:paddingTop="13dp"
             android:paddingBottom="13dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="374dp"
             android:layout_marginEnd="24dp"
             android:layout_marginStart="24dp">
 
             <EditText
+                android:id="@+id/searchClothesWardrobe"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:hint="@string/search"
@@ -69,13 +70,36 @@
 
         </LinearLayout>
 
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/searchRecycler"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/linearsearch"
+                android:orientation="vertical"
+                android:layout_marginTop="16dp"
+                android:visibility="gone"
+                android:scrollbars="none"
+                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"/>
 
-        <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/frcontwardrobe"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/linearsearch"
-            android:layout_marginTop="8dp"/>
+            <TextView
+                android:id="@+id/notFound"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/linearsearch"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="56dp"
+                android:textSize="16sp"
+                android:visibility="gone"
+                android:textColor="@color/app_grey"
+                android:fontFamily="@font/montserrat_bold"
+                android:text="@string/notFound" />
+
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/frcontwardrobe"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="4dp"
+                android:layout_below="@+id/tabLayoutWardrobe" />
 
         </RelativeLayout>
 

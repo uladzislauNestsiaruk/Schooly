@@ -46,7 +46,7 @@ public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.ViewHolder
   @Override
   public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
     RelativeLayout v = (RelativeLayout) LayoutInflater.from(viewGroup.getContext()).
-            inflate(R.layout.new_clothes_rvitem, viewGroup, false);
+            inflate(R.layout.rvitempopular, viewGroup, false);
     ViewHolder viewHolder=new ViewHolder(v);
     return viewHolder;
   }

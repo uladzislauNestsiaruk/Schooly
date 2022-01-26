@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="166dp"
+    android:layout_height="200dp"
+    android:padding="16dp"
+    android:background="@drawable/corners"
+    android:layout_marginStart="8dp"
+    android:layout_marginEnd="8dp"
+    android:layout_marginTop="8dp"
+    android:layout_marginBottom="16dp"
+    android:elevation="12dp">
+
+    <TextView
+        android:id="@+id/clothesTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/montserrat_extrabold"
+        android:textColor="@color/app_color"
+        android:textSize="20sp" />
+
+
+    <ImageView
+        android:id="@+id/clothesImage"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_below="@+id/clothesTitle" />
+
+    <TextView
+        android:id="@+id/creator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:textColor="@color/app_color"
+        android:fontFamily="@font/montserrat_extrabold"/>
+
+
+</RelativeLayout>
