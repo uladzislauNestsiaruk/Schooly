@@ -99,7 +99,7 @@ public class WeakMinersAdapter extends RecyclerView.Adapter<WeakMinersAdapter.Vi
                                                     @Override
                                                     public void GetMoneyFromBase(long money) {
                                                         if (money!=-1){
-                                                            itemClickListener.onItemClick(pos,miner,"strong",money);
+                                                            itemClickListener.onItemClick(pos,miner,"weak",money);
                                                         }
                                                     }
                                                 });

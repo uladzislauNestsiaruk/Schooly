@@ -22,6 +22,7 @@ import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.ErrorList;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
+import com.egormoroz.schooly.ui.people.UserPeopleAdapter;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -301,8 +302,10 @@ public class RegFragment extends Fragment {
                             Log.d(TAG, "createUserWithEmail:success");
                             FirebaseUser user = AuthenticationBase.getCurrentUser();
                             UserInformation res = new UserInformation(nick, RecentMethods.getPhone(email), user.getUid(),
-                                    6, password, "Helicopter", 1000, "Miners",1,100,0, "", "", ""," ",0,0,0,"open","open","open","open");
+                                    "6", password, "Helicopter", 1000, "Miners",1,100,0, "", "", ""," ",0,0,0,"open","open","open","open");
                             reference.child(nick).setValue(res);
+                            database.getReference("usersNicks")
+                                    .child(nick).setValue(new UserPeopleAdapter(nick,"6"," "));
                             RecentMethods.setCurrentFragment(MainFragment.newInstance(), getActivity());
                         } else {
                             // If sign in fails, display a message to the user.

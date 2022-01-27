@@ -10,7 +10,7 @@ public class UserInformation {
     private String profileNontsType;
     private String phone;
     private String uid;
-    private long Avatar = 6;
+    private String Avatar;
     private String password;
     private String gender = "Helicopter";
     private long age = 404;
@@ -49,9 +49,9 @@ public class UserInformation {
 
     public void setUid(String uid) {this.uid = uid; }
 
-    public long getAvatar() {return Avatar;}
+    public String getAvatar() {return Avatar;}
 
-    public void setAvatar(long Avatar){
+    public void setAvatar(String Avatar){
         this.Avatar = Avatar;
     }
 
@@ -115,7 +115,7 @@ public class UserInformation {
         this.subscription = subscription;
     }
 
-    public String getCheckNontsType(){
+    public String getChatsNontsType(){
         return chatsNontsType;
     }
 
@@ -187,7 +187,7 @@ public class UserInformation {
         this.accountType = accountType;
     }
 
-    public UserInformation(String nick, String phone, String uid, long Avatar, String password,
+    public UserInformation(String nick, String phone, String uid, String Avatar, String password,
                            String gender, long age,String miners,long level,long money,double todayMining,
                            String subscription, String subscribers, String queue,String bio,long subscribersCount,
                            long looksCount,long subscriptionCount,String accountType,String chatsNontsType,

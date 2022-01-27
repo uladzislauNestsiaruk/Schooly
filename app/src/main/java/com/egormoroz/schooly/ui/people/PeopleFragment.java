@@ -58,7 +58,7 @@ public class PeopleFragment extends Fragment {
 
     public void setPeopleData(){
         listAdapterPeople.add(new UserInformation("nick", "fidjfif", "gk",
-                6, "password", "Helicopter", 1000, "Miners",1,100,0, "", "", ""," ",0,0,0,"open","open","open","open"));
+                "6", "password", "Helicopter", 1000, "Miners",1,100,0, "", "", ""," ",0,0,0,"open","open","open","open"));
     }
     public void initUserEnter(){
         searchUser.addTextChangedListener(new TextWatcher() {
@@ -119,7 +119,7 @@ public class PeopleFragment extends Fragment {
                                                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                                                             UserInformation userData=new UserInformation();
                                                             userData.setAge(snapshot.child("age").getValue(Long.class));
-                                                            userData.setAvatar(snapshot.child("avatar").getValue(Long.class));
+                                                            userData.setAvatar(snapshot.child("avatar").getValue(String.class));
                                                             userData.setGender(snapshot.child("gender").getValue(String.class));
                                                             //////////////////userData.setMiners();
                                                             userData.setNick(snapshot.child("nick").getValue(String.class));

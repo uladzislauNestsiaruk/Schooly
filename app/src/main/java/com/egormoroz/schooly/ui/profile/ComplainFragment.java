@@ -90,7 +90,7 @@ public class ComplainFragment extends Fragment {
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         UserInformation userData=new UserInformation();
                         userData.setAge(snapshot.child("age").getValue(Long.class));
-                        userData.setAvatar(snapshot.child("avatar").getValue(Long.class));
+                        userData.setAvatar(snapshot.child("avatar").getValue(String.class));
                         userData.setGender(snapshot.child("gender").getValue(String.class));
                         //////////////////userData.setMiners();
                         userData.setNick(snapshot.child("nick").getValue(String.class));

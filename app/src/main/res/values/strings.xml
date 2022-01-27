@@ -215,4 +215,7 @@
 
     <string name="notFound">Ничего не найдено:(</string>
 
+    <string name="character">Персонаж</string>
+    <string name="ready">ГОТОВО</string>
+
 </resources>

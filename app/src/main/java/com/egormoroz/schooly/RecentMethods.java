@@ -109,7 +109,7 @@ public class RecentMethods {
     public static boolean saveData(DatabaseReference ref, FirebaseUser user, String nick) {
 
         UserInformation res = new UserInformation(nick, "unknown", user.getUid(),
-                6, "unknown", "Helicopter", 1000
+                "6", "unknown", "Helicopter", 1000
                 , "Miner", 1,100,0, "", "", "","",0,0,0,"open","open","open","open");
         ref.child(nick).setValue(res);
         return nick.isEmpty();
@@ -157,7 +157,7 @@ public class RecentMethods {
                 for (DataSnapshot snapshot : snapshotParent.getChildren()) {
                     UserInformation userData = new UserInformation();
                     userData.setAge(snapshot.child("age").getValue(Long.class));
-                    userData.setAvatar(snapshot.child("avatar").getValue(Long.class));
+                    userData.setAvatar(snapshot.child("avatar").getValue(String.class));
                     userData.setGender(snapshot.child("gender").getValue(String.class));
                     //////////////////userData.setMiners();
                     userData.setNick(snapshot.child("nick").getValue(String.class));
