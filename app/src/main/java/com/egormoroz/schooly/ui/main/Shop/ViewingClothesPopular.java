@@ -31,7 +31,7 @@ public class ViewingClothesPopular extends Fragment {
     }
 
     PopularClothesAdapter.ItemClickListener itemClickListener;
-    TextView clothesPriceCV,clothesTitleCV,schoolyCoinCV,buyClothesBottom,inBasket;
+    TextView clothesPriceCV,clothesTitleCV,schoolyCoinCV,buyClothesBottom,inBasket,purchaseNumber;
     ImageView clothesImageCV,backToShop;
     long schoolyCoins,clothesPrise;
     Clothes clothesViewing;
@@ -60,6 +60,7 @@ public class ViewingClothesPopular extends Fragment {
         clothesTitleCV=view.findViewById(R.id.clothesTitlecv);
         clothesPriceCV=view.findViewById(R.id.clothesPricecv);
         backToShop=view.findViewById(R.id.back_toshop);
+        purchaseNumber=view.findViewById(R.id.purchaseNumberViewing);
         buyClothesBottom=view.findViewById(R.id.buyClothesBottom);
         backToShop.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,6 +74,7 @@ public class ViewingClothesPopular extends Fragment {
                 clothesViewing=clothes;
                 clothesPriceCV.setText(String.valueOf(clothes.getClothesPrice()));
                 clothesTitleCV.setText(clothes.getClothesTitle());
+                purchaseNumber.setText(String.valueOf(clothesViewing.getPurchaseNumber()));
                 clothesPrise=clothes.getClothesPrice();
                 Picasso.get().load(clothes.getClothesImage()).into(clothesImageCV);
             }

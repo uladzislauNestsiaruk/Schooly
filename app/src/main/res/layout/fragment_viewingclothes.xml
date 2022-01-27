@@ -64,12 +64,24 @@
         android:background="@drawable/corners30dp"
         android:elevation="25dp">
 
+        <TextView
+            android:id="@+id/purchaseNumberViewing"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:fontFamily="@font/montserrat_extrabold"
+            android:text="144"
+            android:textColor="@color/app_grey"
+            android:textSize="16sp" />
+
         <ImageView
             android:id="@+id/clothesImagecv"
             android:layout_width="match_parent"
             android:layout_height="280dp"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
+            android:layout_below="@+id/purchaseNumber"
             android:layout_marginEnd="16dp" />
 
         <RelativeLayout

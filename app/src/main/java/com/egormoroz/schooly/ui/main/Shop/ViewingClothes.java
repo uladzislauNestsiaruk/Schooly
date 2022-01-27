@@ -36,7 +36,7 @@ public class ViewingClothes extends Fragment {
     }
 
 
-    TextView clothesPriceCV,clothesTitleCV,schoolyCoinCV,buyClothesBottom,inBasket;
+    TextView clothesPriceCV,clothesTitleCV,schoolyCoinCV,buyClothesBottom,inBasket,purchaseNumber;
     ImageView clothesImageCV,backToShop;
     long schoolyCoins,clothesPrise;
     Clothes clothesViewing;
@@ -65,6 +65,7 @@ public class ViewingClothes extends Fragment {
         clothesPriceCV=view.findViewById(R.id.clothesPricecv);
         backToShop=view.findViewById(R.id.back_toshop);
         buyClothesBottom=view.findViewById(R.id.buyClothesBottom);
+        purchaseNumber=view.findViewById(R.id.purchaseNumberViewing);
         backToShop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -81,6 +82,7 @@ public class ViewingClothes extends Fragment {
                 clothesTitleCV.setText(clothes.getClothesTitle());
                 Log.d("#####", "title2  "+clothes.getClothesTitle());
                 clothesPrise=clothes.getClothesPrice();
+                purchaseNumber.setText(String.valueOf(clothesViewing.getPurchaseNumber()));
                 Picasso.get().load(clothes.getClothesImage()).into(clothesImageCV);
             }
         });
@@ -115,6 +117,9 @@ public class ViewingClothes extends Fragment {
                         public void PassUserNick(String nick) {
                             firebaseModel.getUsersReference().child(nick).child("clothes")
                                     .child(clothesViewing.getClothesTitle()).setValue(clothesViewing);
+                            firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes")
+                                    .child(clothesViewing.getClothesTitle()).child("purchaseNumber")
+                                    .setValue(clothesViewing.getPurchaseNumber()+1);
                             Query query=firebaseModel.getUsersReference().child(nick).child("basket").
                                     child(clothesViewing.getClothesTitle());
                             query.addValueEventListener(new ValueEventListener() {

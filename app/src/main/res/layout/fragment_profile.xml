@@ -194,7 +194,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerProfileToWardrobe"
             android:layout_width="match_parent"
-            android:layout_height="234dp"
+            android:layout_height="242dp"
             android:layout_below="@+id/shielf"
             android:layout_marginTop="4dp"
             android:orientation="horizontal"
@@ -208,9 +208,9 @@
             android:textColor="@color/app_color"
             android:textSize="18sp"
             android:layout_marginStart="24dp"
-            android:layout_below="@id/shielf"
+            android:layout_below="@id/recyclerProfileToWardrobe"
             android:fontFamily="@font/montserrat_extrabold"
-            android:layout_marginTop="240dp"/>
+            android:layout_marginTop="8dp"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/looksRecycler"
