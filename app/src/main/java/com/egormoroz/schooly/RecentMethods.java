@@ -711,13 +711,13 @@ public class RecentMethods {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 ArrayList<Clothes> clothesFromBase=new ArrayList<>();
                 for (DataSnapshot snap : snapshot.getChildren()) {
-                    Clothes clothes = new Clothes();
-                    clothes.setClothesImage(snap.child("clothesImage").getValue(String.class));
-                    clothes.setClothesPrice(snap.child("clothesPrice").getValue(Long.class));
-                    clothes.setPurchaseNumber(snap.child("purchaseNumber").getValue(Long.class));
-                    clothes.setClothesType(snap.child("clothesType").getValue(String.class));
-                    clothes.setClothesTitle(snap.child("clothesTitle").getValue(String.class));
-                    clothesFromBase.add(clothes);
+//                    Clothes clothes = new Clothes();
+//                    clothes.setClothesImage(snap.child("clothesImage").getValue(String.class));
+//                    clothes.setClothesPrice(snap.child("clothesPrice").getValue(Long.class));
+//                    clothes.setPurchaseNumber(snap.child("purchaseNumber").getValue(Long.class));
+//                    clothes.setClothesType(snap.child("clothesType").getValue(String.class));
+//                    clothes.setClothesTitle(snap.child("clothesTitle").getValue(String.class));
+        //           clothesFromBase.add(clothes);
                 }
                 callback.getClothes(clothesFromBase);
             }

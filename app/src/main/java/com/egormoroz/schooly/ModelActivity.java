@@ -1,4 +1,4 @@
-package com.egormoroz.schooly;//package com.egormoroz.schooly;
+//package com.egormoroz.schooly;//package com.egormoroz.schooly;
 //
 //import android.annotation.TargetApi;
 //import android.app.Activity;
@@ -13,6 +13,8 @@ package com.egormoroz.schooly;//package com.egormoroz.schooly;
 //import android.view.MenuItem;
 //import android.view.View;
 //import android.widget.Toast;
+//
+//import com.egormoroz.schooly.ui.profile.ProfileFragment;
 //
 //import org.a3dexample.ContentUtils;
 //
@@ -48,6 +50,7 @@ package com.egormoroz.schooly;//package com.egormoroz.schooly;
 //    private SceneLoader scene;
 //
 //    private Handler handler;
+//    private Object ModelActivity;
 //
 //    @Override
 //    protected void onCreate(Bundle savedInstanceState) {
@@ -73,8 +76,8 @@ package com.egormoroz.schooly;//package com.egormoroz.schooly;
 //
 //        handler = new Handler(getMainLooper());
 //
-//        scene = new SceneLoader(this);
-//        scene.init();
+//        scene = new SceneLoader(ProfileFragment.newInstance());
+//        scene.init(paramUri);
 //
 //        // Create a GLSurfaceView instance and set it
 //        // as the ContentView for this Activity.

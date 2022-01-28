@@ -11,6 +11,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.opengl.GLSurfaceView;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -27,7 +28,9 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -35,13 +38,12 @@ import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.MainActivity;
 
-import com.egormoroz.schooly.ModelRenderer;
-import com.egormoroz.schooly.ModelSurfaceView;
 import com.egormoroz.schooly.Nontification;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
-import com.egormoroz.schooly.SceneLoader;
+
 import com.egormoroz.schooly.Subscriber;
+import com.egormoroz.schooly.ui.Model.SceneViewModelActivity;
 import com.egormoroz.schooly.ui.main.ChatActivity;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
 import com.egormoroz.schooly.ui.main.Shop.NewClothesAdapter;
@@ -49,27 +51,38 @@ import com.egormoroz.schooly.ui.main.Shop.ShopFragment;
 import com.egormoroz.schooly.ui.main.Shop.ViewingClothes;
 import com.egormoroz.schooly.ui.main.UserInformation;
 import com.egormoroz.schooly.ui.people.PeopleFragment;
-import com.egormoroz.schooly.ui.profile.Wardrobe.ViewingClothesWardrobe;
-import com.egormoroz.schooly.ui.profile.Wardrobe.WardrobeAdapterProfile;
 import com.egormoroz.schooly.ui.profile.Wardrobe.WardrobeFragment;
 import com.google.android.filament.Filament;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.ar.core.exceptions.CameraNotAvailableException;
+import com.google.ar.sceneform.Node;
+import com.google.ar.sceneform.SceneView;
+import com.google.ar.sceneform.assets.RenderableSource;
+import com.google.ar.sceneform.math.Quaternion;
+import com.google.ar.sceneform.math.Vector3;
+import com.google.ar.sceneform.rendering.ModelRenderable;
+import com.google.ar.sceneform.ux.ArFragment;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.function.Consumer;
 
 public class ProfileFragment extends Fragment {
     private static String sendNickString;
     FirebaseModel firebaseModel = new FirebaseModel();
-    Context profileContext;
+    Context profileContext, context;
     String type,nicknameCallback;
     UserInformation info;
     TextView nickname,message,biographyTextView,looksCount,subscriptionsCount,subscribersCount,otherLooksCount,otherSubscriptionCount,
@@ -77,18 +90,18 @@ public class ProfileFragment extends Fragment {
             ,subscribeFirst,closeAccount,noClothes,buyClothesProfile,noLooksOther;
     DatabaseReference user;
     NewClothesAdapter.ItemClickListener itemClickListener;
-    SceneLoader scene;
+   // SceneLoader scene;
     LinearLayout linearLooks,linearSubscribers,linearSubscriptions;
-    ModelSurfaceView modelSurfaceView;
-    GLSurfaceView mainLook;
-    ModelRenderer modelRenderer;
+   // ModelSurfaceView modelSurfaceView;
+    SceneView mainLook;
+   // ModelRenderer modelRenderer;
     RecyclerView looksRecycler,wardrobeRecycler,looksRecyclerOther;
     ImageView moreSquare,back;
-    WardrobeAdapterProfile.ItemClickListener itemClickListenerWardrobe;
     int looksListSize,profileValue;
     private float[] backgroundColor = new float[]{0f, 0f, 0f, 1.0f};
     private Handler handler;
     int a;
+
 
     @Override
     public void onAttach(Context context) {
@@ -142,7 +155,7 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-
+        context = container.getContext();
         View root = type.equals("user") ? inflater.inflate(R.layout.fragment_profile, container, false) :
                 inflater.inflate(R.layout.fragment_otheruser, container, false);
         Filament.init();
@@ -284,12 +297,6 @@ public class ProfileFragment extends Fragment {
                 wardrobeRecycler=view.findViewById(R.id.recyclerProfileToWardrobe);
                 noClothes=view.findViewById(R.id.noClothesText);
                 buyClothesProfile=view.findViewById(R.id.buyClothesProfile);
-                itemClickListenerWardrobe=new WardrobeAdapterProfile.ItemClickListener() {
-                    @Override
-                    public void onItemClick(Clothes clothes) {
-                        RecentMethods.setCurrentFragment(ViewingClothesWardrobe.newInstance(), getActivity());
-                    }
-                };
                 checkWardrobe();
                 //////////////////////////////////////
                 /////////////////LOOKS///////////////
@@ -320,18 +327,42 @@ public class ProfileFragment extends Fragment {
                 ///////////////////////////////////////
 
                 handler = new Handler(getMainLooper());
-                scene = new SceneLoader(this);
+          //      scene = new SceneLoader(this);
                 //               scene.init(Uri.parse("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2FSciFiHelmet.gltf?alt=media&token=a82512c1-14bf-4faf-8f67-abeb70da7697"));
                 mainLook=view.findViewById(R.id.mainlookview);
+                StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("Models");
+                StorageReference islandRef = storageReference.child("models/untitled.gltf");
+                File localFile = null;
                 try {
-                    modelRenderer=new ModelRenderer(mainLook);
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    localFile = File.createTempFile("model", ".gltf");
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
                 }
-                mainLook.setRenderer(modelRenderer);
 
+                islandRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                        // Local temp file has been created
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        // Handle any errors
+                    }
+                });
+                loadModels(Uri.parse("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Funtitled.glb?alt=media&token=657b45d7-a84b-4f2a-89f4-a699029401f7"), mainLook, ProfileFragment.this);
+
+//                try {
+//                    modelRenderer=new ModelRenderer(mainLook);
+//                } catch (IllegalAccessException e) {
+//                    e.printStackTrace();
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//                mainLook.setRenderer(modelRenderer);
+
+                firebaseModel.getUsersReference().child("tyomaa6").child("subscribers")
+                        .child("spaccacrani").setValue("spaccacrani");
 
 
                 break;
@@ -861,8 +892,8 @@ public class ProfileFragment extends Fragment {
                                 }
                             });
                         }else {
-                            WardrobeAdapterProfile wardrobeAdapter=new WardrobeAdapterProfile(allClothes,itemClickListenerWardrobe);
-                            wardrobeRecycler.setAdapter(wardrobeAdapter);
+//                            WardrobeAdapter wardrobeAdapter=new WardrobeAdapter(allClothes);
+//                            wardrobeRecycler.setAdapter(wardrobeAdapter);
                         }
                     }
                 });
@@ -940,16 +971,16 @@ public class ProfileFragment extends Fragment {
 //        });
 //    }
 
-    public GLSurfaceView getGLView() {
-        return mainLook;
-    }
-
-    public SceneLoader getScene() {
-        return scene;
-    }
-    public ModelRenderer getModelRenderer(){
-        return modelRenderer;
-    }
+////    public GLSurfaceView getGLView() {
+//        return mainLook;
+//    }
+//
+//    public SceneLoader getScene() {
+//        return scene;
+//    }
+//    public ModelRenderer getModelRenderer(){
+//        return modelRenderer;
+//    }
 
     public float[] getBackgroundColor() {
         return backgroundColor;
@@ -995,5 +1026,64 @@ public class ProfileFragment extends Fragment {
 //        }
 //
 //    }
+
+
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mainLook.pause();
+
+    }
+    @Override
+    public void onResume() {
+        super.onResume();
+        try {
+            //loadModels(loadUrl);
+            mainLook.resume();
+        } catch (CameraNotAvailableException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
+
+
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public void loadModels(Uri url, SceneView sceneView, Fragment fragment) {
+        ModelRenderable.builder()
+                .setSource(
+                        fragment.getContext(), new RenderableSource.Builder().setSource(
+                                fragment.getContext(),
+                                url,
+                                RenderableSource.SourceType.GLB
+                        ).setScale(0.05f)
+                                .setRecenterMode(RenderableSource.RecenterMode.CENTER)
+                                .build()
+                )
+                .setRegistryId(url)
+                .build()
+                .thenAccept(new Consumer<ModelRenderable>() {
+                    @Override
+                    public void accept(ModelRenderable modelRenderable) {
+                        addNode(modelRenderable, sceneView);
+                    }
+                });
+    }
+
+    public void addNode(ModelRenderable modelRenderable, SceneView sceneView) {
+        Node modelNode1 = new Node();
+        modelNode1.setRenderable(modelRenderable);
+        modelNode1.setLocalScale(new Vector3(0.3f, 0.3f, 0.3f));
+        modelNode1.setLocalRotation(Quaternion.multiply(
+                Quaternion.axisAngle(new Vector3(1f, 0f, 0f), 45),
+                Quaternion.axisAngle(new Vector3(0f, 1f, 0f), 75)));
+        modelNode1.setLocalPosition(new Vector3(0f, 0f, -1.0f));
+        sceneView.getScene().addChild(modelNode1);
+    }
+
+
 
 }

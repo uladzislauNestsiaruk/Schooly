@@ -79,15 +79,10 @@ public class NewsFragment extends Fragment {
                         if (snapshot.hasChildren()) {
                             remoteImages.clear();
                             for (DataSnapshot data : snapshot.getChildren()) {
-                                if (data.child("from").getValue().toString().equals(nick))
-                                    remoteImages.add(new NewsItem(data.child("imageUrl").getValue().toString(),
-                                            data.child("itemDescription").getValue().toString(),
-                                            data.child("likesCount").getValue().toString(),
-                                            data.child("newsID").getValue().toString()));
-                                viewPager2.setAdapter(new NewsAdapter(remoteImages));
-
-                                Log.d("news", String.valueOf(remoteImages.size()));
-                                viewPager2.setOffscreenPageLimit(3);
+                                Log.d("news", data.toString());
+                                DataSnapshot dataSnapshot = data;
+                                String from = data.child("from").getValue().toString();
+                                isSubscribed(from, dataSnapshot);
                             }
                         }
                     }
@@ -108,27 +103,69 @@ public class NewsFragment extends Fragment {
     public void onViewCreated(@Nullable View view, @NonNull Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-//
-//        FirebaseDatabase.getInstance().getReference().child("news").child("spaccacrani")
-//                .addListenerForSingleValueEvent(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                        Log.d("news", "error");
-//                        for (DataSnapshot data : snapshot.getChildren()) {
-//                            remoteImages.add(new NewsItem(data.child("item_description").getValue().toString(),
-//                                    (data.child("ImageUrl").getValue().toString()), data.child("likes_count").getValue().toString()));
-//                            Log.d("news", data.child("ImageUrl").getValue().toString());
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(@NonNull DatabaseError error) {
-//                        Log.d("news", "error");
-//                    }
-//                });
-//        viewPager2.setAdapter(new NewsAdapter(remoteImages));
-//    }
-
 
     }
+
+    public void isSubscribed(String username, DataSnapshot data) {
+
+        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+            @Override
+            public void PassUserNick(String nick) {
+                Log.d("###", username);
+                Query query = firebaseModel.getUsersReference().child(nick).child("subscription").child(username);
+                query.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if (snapshot.exists()) {
+                            remoteImages.add(new NewsItem(data.child("imageUrl").getValue().toString(),
+                                    data.child("itemDescription").getValue().toString(),
+                                    data.child("likesCount").getValue().toString(),
+                                    data.child("newsID").getValue().toString()));
+                            viewPager2.setAdapter(new NewsAdapter(remoteImages));
+
+                            viewPager2.setOffscreenPageLimit(3);
+                        } else if (nick.equals(username))
+                            remoteImages.add(new NewsItem(data.child("imageUrl").getValue().toString(),
+                                    data.child("itemDescription").getValue().toString(),
+                                    data.child("likesCount").getValue().toString(),
+                                    data.child("newsID").getValue().toString()));
+                        viewPager2.setAdapter(new NewsAdapter(remoteImages));
+
+                        Log.d("news", String.valueOf(remoteImages.size()));
+                        viewPager2.setOffscreenPageLimit(3);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+            }
+        });
+    }
+
+    private void isOpen(String username, DataSnapshot data){
+        Query query = firebaseModel.getUsersReference().child(username).child("accountType");
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.equals("open")) {
+                    remoteImages.add(new NewsItem(data.child("imageUrl").getValue().toString(),
+                            data.child("itemDescription").getValue().toString(),
+                            data.child("likesCount").getValue().toString(),
+                            data.child("newsID").getValue().toString()));
+                    viewPager2.setAdapter(new NewsAdapter(remoteImages));
+
+                    Log.d("news", String.valueOf(remoteImages.size()));
+                    viewPager2.setOffscreenPageLimit(3);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
 }
