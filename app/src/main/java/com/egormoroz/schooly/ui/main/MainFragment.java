@@ -33,6 +33,7 @@ import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.SchoolyService;
 
 import com.egormoroz.schooly.ui.Model.SceneViewModelActivity;
+import com.egormoroz.schooly.ui.main.CreateCharacter.CreateCharacterFragment;
 import com.egormoroz.schooly.ui.main.Mining.Miner;
 import com.egormoroz.schooly.ui.main.Mining.MiningFragment;
 import com.egormoroz.schooly.ui.main.Nontifications.NontificationFragment;
@@ -224,6 +225,7 @@ public class MainFragment extends Fragment{
         appName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                RecentMethods.setCurrentFragment(CreateCharacterFragment.newInstance(), getActivity());
                 Intent notificationIntent = new Intent(getActivity(), MainActivity.class);
                 PendingIntent contentIntent = PendingIntent.getActivity(getActivity(),
                         0, notificationIntent,
