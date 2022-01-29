@@ -174,6 +174,7 @@ public final class ChatActivity extends Activity {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         userMessagesList.setLayoutManager(linearLayoutManager);
         userMessagesList.setAdapter(messageAdapter);
+        userMessagesList.setItemViewCacheSize(20);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

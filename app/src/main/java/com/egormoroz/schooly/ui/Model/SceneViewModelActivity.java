@@ -38,22 +38,22 @@ public class SceneViewModelActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scene_view_model);
-        loadUrl = Uri.parse("Model/SciFiHelmet.gltf");
-        loadModels();
+        loadUrl = Uri.parse("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2FSciFiHelmet.gltf?alt=media&token=a82512c1-14bf-4faf-8f67-abeb70da7697");
+        loadModels(loadUrl, backgroundSceneView);
         backgroundSceneView = findViewById(R.id.backgroundSceneView);
     }
 
     @Override
-    protected void onPause() {
+    public void onPause() {
         super.onPause();
         backgroundSceneView.pause();
 
     }
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
         try {
-            loadModels();
+          //  loadModels(loadUrl, backgroundSceneView);
             backgroundSceneView.resume();
         } catch (CameraNotAvailableException e) {
             e.printStackTrace();
@@ -63,29 +63,30 @@ public class SceneViewModelActivity extends AppCompatActivity {
 
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public void loadModels() {
+    public void loadModels(Uri url, SceneView sceneView) {
         ModelRenderable modelRenderable = null;
+
         modelRenderable.builder()
                 .setSource(
                         this, new RenderableSource.Builder().setSource(
                                 this,
-                                loadUrl,
+                                url,
                                 RenderableSource.SourceType.GLTF2
                         ).setScale(0.5f)
                                 .setRecenterMode(RenderableSource.RecenterMode.CENTER)
                                 .build()
                 )
-                .setRegistryId(loadUrl)
+                .setRegistryId(url)
                 .build()
                 .thenAccept(new Consumer<ModelRenderable>() {
                     @Override
                     public void accept(ModelRenderable modelRenderable) {
-                        addNode(modelRenderable);
+                        addNode(modelRenderable, sceneView);
                     }
                 });
     }
 
-    public void addNode(ModelRenderable modelRenderable) {
+    public void addNode(ModelRenderable modelRenderable, SceneView sceneView) {
         Node modelNode1 = new Node();
         modelNode1.setRenderable(modelRenderable);
         modelNode1.setLocalScale(new Vector3(0.3f, 0.3f, 0.3f));
@@ -93,7 +94,7 @@ public class SceneViewModelActivity extends AppCompatActivity {
                 Quaternion.axisAngle(new Vector3(1f, 0f, 0f), 45),
                 Quaternion.axisAngle(new Vector3(0f, 1f, 0f), 75)));
         modelNode1.setLocalPosition(new Vector3(0f, 0f, -1.0f));
-        backgroundSceneView.getScene().addChild(modelNode1);
+        sceneView.getScene().addChild(modelNode1);
     }
 
 

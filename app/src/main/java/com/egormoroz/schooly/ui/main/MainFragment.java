@@ -87,7 +87,7 @@ public class MainFragment extends Fragment{
         chat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(getActivity(), SceneViewModelActivity.class);
+                Intent i = new Intent(getActivity(), DialogsActivity.class);
                 startActivity(i);
  //               ((Activity) getActivity()).overridePendingTransition(0, 0);
 //                Intent sceneViewerIntent = new Intent(Intent.ACTION_VIEW);
