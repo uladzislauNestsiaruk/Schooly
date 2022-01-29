@@ -8,14 +8,19 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.egormoroz.schooly.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.util.ArrayList;
+
 public class SkinColourFragment extends Fragment {
 
     RecyclerView recyclerView;
+    CharacterAdapter.ItemClickListener itemClickListener;
+    ArrayList<String> bodyPartsArrayList=new ArrayList<>();
 
     public static SkinColourFragment newInstance() {
         return new SkinColourFragment();
@@ -38,5 +43,8 @@ public class SkinColourFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         recyclerView=view.findViewById(R.id.recyclerSkinColour);
+        CharacterAdapter characterAdapter=new CharacterAdapter(bodyPartsArrayList,itemClickListener);
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
+        recyclerView.setAdapter(characterAdapter);
     }
 }
