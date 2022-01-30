@@ -74,7 +74,12 @@ public class MainActivity extends AppCompatActivity {
 //                        appBarLayout.setVisibility(View.VISIBLE);
                         return true;
                     case R.id.bottom_nav_profile:
-                        setCurrentFragment(ProfileFragment.newInstance("user", new UserInformation()));
+                        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+                            @Override
+                            public void PassUserNick(String nick) {
+                                setCurrentFragment(ProfileFragment.newInstance("user", nick));
+                            }
+                        });
 //                        appBarLayout.setVisibility(View.GONE);
                         CoordinatorLayout.LayoutParams coordinatorLayoutParams = (CoordinatorLayout.LayoutParams) fragmentContainer.getLayoutParams();
                         coordinatorLayoutParams.setBehavior(null);

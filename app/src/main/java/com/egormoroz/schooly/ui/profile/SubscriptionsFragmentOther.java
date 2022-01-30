@@ -61,32 +61,8 @@ public class SubscriptionsFragmentOther extends Fragment {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Query query1=firebaseModel.getReference().child("users").child(otherUserNick);
-                query1.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        UserInformation userData=new UserInformation();
-                        userData.setAge(snapshot.child("age").getValue(Long.class));
-                        userData.setAvatar(snapshot.child("avatar").getValue(String.class));
-                        userData.setGender(snapshot.child("gender").getValue(String.class));
-                        //////////////////userData.setMiners();
-                        userData.setNick(snapshot.child("nick").getValue(String.class));
-                        userData.setPassword(snapshot.child("password").getValue(String.class));
-                        userData.setPhone(snapshot.child("phone").getValue(String.class));
-                        userData.setUid(snapshot.child("uid").getValue(String.class));
-                        userData.setQueue(snapshot.child("queue").getValue(String.class));
-                        userData.setAccountType(snapshot.child("accountType").getValue(String.class));
-//                    userData.setSubscribers(snapshot.child("subscribers").getValue(String.class));
-//                                                userData.setFriends(snapshot.child("friends").getValue(String.class));
-                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userData),
-                                getActivity());
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
+                RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", otherUserNick),
+                        getActivity());
             }
         });
         ProfileFragment.sendNickToAdapter(new ProfileFragment.sendNick() {
@@ -112,35 +88,10 @@ public class SubscriptionsFragmentOther extends Fragment {
                                                     Subscriber user = subscriptionsAdapterOther.getItem(position);
                                                     userNameToProfile=user.getSub();
                                                     if(userNameToProfile.equals(nick)){
-                                                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("user",new UserInformation()),getActivity());
+                                                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("user",nick),getActivity());
                                                     }else {
-                                                        Query query1 = firebaseModel.getReference().child("users").child(userNameToProfile);
-                                                        query1.addValueEventListener(new ValueEventListener() {
-                                                            @Override
-                                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                                UserInformation userData = new UserInformation();
-                                                                userData.setAge(snapshot.child("age").getValue(Long.class));
-                                                                userData.setAvatar(snapshot.child("avatar").getValue(String.class));
-                                                                userData.setGender(snapshot.child("gender").getValue(String.class));
-                                                                //////////////////userData.setMiners();
-                                                                userData.setNick(snapshot.child("nick").getValue(String.class));
-                                                                userData.setPassword(snapshot.child("password").getValue(String.class));
-                                                                userData.setPhone(snapshot.child("phone").getValue(String.class));
-                                                                userData.setUid(snapshot.child("uid").getValue(String.class));
-                                                                userData.setQueue(snapshot.child("queue").getValue(String.class));
-                                                                userData.setAccountType(snapshot.child("accountType").getValue(String.class));
-                                                                userData.setBio(snapshot.child("bio").getValue(String.class));
-                                                                //                                               userData.setSubscribers(snapshot.child("subscribers").getValue(String.class));
-//                                                userData.setFriends(snapshot.child("friends").getValue(String.class));
-                                                                RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userData),
-                                                                        getActivity());
-                                                            }
-
-                                                            @Override
-                                                            public void onCancelled(@NonNull DatabaseError error) {
-
-                                                            }
-                                                        });
+                                                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile
+                                                        ), getActivity());
                                                     }
                                                 }
                                             };
@@ -199,32 +150,15 @@ public class SubscriptionsFragmentOther extends Fragment {
                                     public void onItemClick(View view, int position) {
                                         Subscriber subscriber = subscriptionsAdapterOther.getItem(position);
                                         userNameToProfile = subscriber.getSub();
-                                        Log.d("###", "n " + userNameToProfile);
-                                        Query query1 = firebaseModel.getReference().child("users").child(userNameToProfile);
-                                        query1.addValueEventListener(new ValueEventListener() {
+                                        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
                                             @Override
-                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                UserInformation userData = new UserInformation();
-                                                userData.setAge(snapshot.child("age").getValue(Long.class));
-                                                userData.setAvatar(snapshot.child("avatar").getValue(String.class));
-                                                userData.setGender(snapshot.child("gender").getValue(String.class));
-                                                //////////////////userData.setMiners();
-                                                userData.setNick(snapshot.child("nick").getValue(String.class));
-                                                userData.setPassword(snapshot.child("password").getValue(String.class));
-                                                userData.setPhone(snapshot.child("phone").getValue(String.class));
-                                                userData.setUid(snapshot.child("uid").getValue(String.class));
-                                                userData.setQueue(snapshot.child("queue").getValue(String.class));
-                                                userData.setAccountType(snapshot.child("accountType").getValue(String.class));
-                                                userData.setBio(snapshot.child("bio").getValue(String.class));
-                                                //                                               userData.setSubscribers(snapshot.child("subscribers").getValue(String.class));
-//                                                userData.setFriends(snapshot.child("friends").getValue(String.class));
-                                                RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userData),
-                                                        getActivity());
-                                            }
-
-                                            @Override
-                                            public void onCancelled(@NonNull DatabaseError error) {
-
+                                            public void PassUserNick(String nick) {
+                                                if(userNameToProfile.equals(nick)){
+                                                    RecentMethods.setCurrentFragment(ProfileFragment.newInstance("user",nick),getActivity());
+                                                }else {
+                                                    RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile),
+                                                            getActivity());
+                                                }
                                             }
                                         });
                                     }

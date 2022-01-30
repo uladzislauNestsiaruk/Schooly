@@ -98,6 +98,7 @@ public class ProfileFragment extends Fragment {
     RecyclerView looksRecycler,wardrobeRecycler,looksRecyclerOther;
     ImageView moreSquare,back;
     int looksListSize,profileValue;
+    String sendNick;
     private float[] backgroundColor = new float[]{0f, 0f, 0f, 1.0f};
     private Handler handler;
     int a;
@@ -109,13 +110,13 @@ public class ProfileFragment extends Fragment {
         profileContext = context;
     }
 
-    public ProfileFragment(String type, UserInformation info) {
+    public ProfileFragment(String type, String sendNick) {
         this.type = type;
-        this.info = info;
+        this.sendNick=sendNick;
     }
 
-    public static ProfileFragment newInstance(String type, UserInformation info) {
-        return new ProfileFragment(type, info);
+    public static ProfileFragment newInstance(String type, String sendNick) {
+        return new ProfileFragment(type, sendNick);
     }
 
 
@@ -367,165 +368,152 @@ public class ProfileFragment extends Fragment {
 
                 break;
             case "other":
-                nickname.setText(info.getNick());
-                sendNickString=info.getNick();
-                user = firebaseModel.getUsersReference().child(info.getNick());
-                otherUserBiography=view.findViewById(R.id.otheruserbiography);
-                subscribeClose=view.findViewById(R.id.subscribeClose);
-                back=view.findViewById(R.id.back);
-                back.setOnClickListener(new View.OnClickListener() {
+                Query query1=firebaseModel.getReference().child("users").child(sendNick);
+                query1.addValueEventListener(new ValueEventListener() {
                     @Override
-                    public void onClick(View v) {
-                        RecentMethods.setCurrentFragment(PeopleFragment.newInstance(), getActivity());
-                    }
-                });
-                otherUserBiography.setText(info.getBio());
-                subscribe=view.findViewById(R.id.addFriend);
-                subscribeFirst=view.findViewById(R.id.SubscribeFirst);
-                closeAccount=view.findViewById(R.id.closeAccount);
-                moreSquare=view.findViewById(R.id.moresquare);
-                looksRecyclerOther=view.findViewById(R.id.looksRecyclerOther);
-                looksText=view.findViewById(R.id.looksText);
-                otherLooksCount=view.findViewById(R.id.looksCountOther);
-                otherSubscriptionCount=view.findViewById(R.id.subscriptionCountOther);
-                otherSubscribersCount=view.findViewById(R.id.subsCountOther);
-                setCountsOther();
-                if (message != null) {
-                    message.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            open();
-                        }
-                    });
-                }
-                Log.d("######", "v "+profileValue);
-                RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-                    @Override
-                    public void PassUserNick(String nick) {
-                        Query query=firebaseModel.getUsersReference().child(nick).child("subscription")
-                                .child(info.getNick());
-                        query.addValueEventListener(new ValueEventListener() {
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        info=new UserInformation();
+                        info.setAge(snapshot.child("age").getValue(Long.class));
+                        info.setAvatar(snapshot.child("avatar").getValue(String.class));
+                        info.setGender(snapshot.child("gender").getValue(String.class));
+                        //////////////////userData.setMiners();
+                        info.setNick(snapshot.child("nick").getValue(String.class));
+                        info.setPassword(snapshot.child("password").getValue(String.class));
+                        info.setPhone(snapshot.child("phone").getValue(String.class));
+                        info.setUid(snapshot.child("uid").getValue(String.class));
+                        info.setQueue(snapshot.child("queue").getValue(String.class));
+                        info.setAccountType(snapshot.child("accountType").getValue(String.class));
+                        info.setBio(snapshot.child("bio").getValue(String.class));
+                        nickname.setText(info.getNick());
+                        sendNickString=info.getNick();
+                        user = firebaseModel.getUsersReference().child(info.getNick());
+                        otherUserBiography=view.findViewById(R.id.otheruserbiography);
+                        subscribeClose=view.findViewById(R.id.subscribeClose);
+                        back=view.findViewById(R.id.back);
+                        back.setOnClickListener(new View.OnClickListener() {
                             @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                if (info.getAccountType().equals("open") || snapshot.exists()) {
-                                    otherLooksCount = view.findViewById(R.id.looksCountOther);
-                                    otherSubscriptionCount = view.findViewById(R.id.subscriptionCountOther);
-                                    otherSubscribersCount = view.findViewById(R.id.subsCountOther);
-                                    noLooksOther=view.findViewById(R.id.noLooksOther);
-                                    moreSquare.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            PopupMenu popup = new PopupMenu(getActivity(), moreSquare);
-                                            popup.getMenuInflater()
-                                                    .inflate(R.menu.other_user_menu, popup.getMenu());
+                            public void onClick(View v) {
+                                RecentMethods.setCurrentFragment(PeopleFragment.newInstance(), getActivity());
+                            }
+                        });
+                        otherUserBiography.setText(info.getBio());
+                        subscribe=view.findViewById(R.id.addFriend);
+                        subscribeFirst=view.findViewById(R.id.SubscribeFirst);
+                        closeAccount=view.findViewById(R.id.closeAccount);
+                        moreSquare=view.findViewById(R.id.moresquare);
+                        looksRecyclerOther=view.findViewById(R.id.looksRecyclerOther);
+                        looksText=view.findViewById(R.id.looksText);
+                        otherLooksCount=view.findViewById(R.id.looksCountOther);
+                        otherSubscriptionCount=view.findViewById(R.id.subscriptionCountOther);
+                        otherSubscribersCount=view.findViewById(R.id.subsCountOther);
+                        setCountsOther();
+                        if (message != null) {
+                            message.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    open();
+                                }
+                            });
+                        }
+                        Log.d("######", "v "+profileValue);
+                        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+                            @Override
+                            public void PassUserNick(String nick) {
+                                Query query=firebaseModel.getUsersReference().child(nick).child("subscription")
+                                        .child(info.getNick());
+                                query.addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        if (info.getAccountType().equals("open") || snapshot.exists()) {
+                                            otherLooksCount = view.findViewById(R.id.looksCountOther);
+                                            otherSubscriptionCount = view.findViewById(R.id.subscriptionCountOther);
+                                            otherSubscribersCount = view.findViewById(R.id.subsCountOther);
+                                            noLooksOther=view.findViewById(R.id.noLooksOther);
+                                            moreSquare.setOnClickListener(new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View v) {
+                                                    PopupMenu popup = new PopupMenu(getActivity(), moreSquare);
+                                                    popup.getMenuInflater()
+                                                            .inflate(R.menu.other_user_menu, popup.getMenu());
 
-                                            popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                                                public boolean onMenuItemClick(MenuItem item) {
-                                                    String itemTitle= item.getTitle().toString().trim();
+                                                    popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                                                        public boolean onMenuItemClick(MenuItem item) {
+                                                            String itemTitle= item.getTitle().toString().trim();
 
-                                                    int itemID=item.getItemId();
-                                                    switch(itemID){
-                                                        case R.id.one :
-                                                            showDialog();
-                                                            return true;
-                                                        case R.id.two:
-                                                            RecentMethods.setCurrentFragment(ComplainFragment.newInstance(info.getNick()), getActivity());
-                                                            return true;
-                                                        case R.id.three:
-                                                            RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-                                                                @Override
-                                                                public void PassUserNick(String nick) {
-                                                                    Query query3=firebaseModel.getUsersReference().child(nick)
-                                                                            .child("subscribers").child(info.getNick());
-                                                                    query3.addValueEventListener(new ValueEventListener() {
+                                                            int itemID=item.getItemId();
+                                                            switch(itemID){
+                                                                case R.id.one :
+                                                                    showDialog();
+                                                                    return true;
+                                                                case R.id.two:
+                                                                    RecentMethods.setCurrentFragment(ComplainFragment.newInstance(info.getNick()), getActivity());
+                                                                    return true;
+                                                                case R.id.three:
+                                                                    RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
                                                                         @Override
-                                                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                                                            if(snapshot.exists()){
-                                                                                Log.d("#####", "peace of shit");
-                                                                                firebaseModel.getUsersReference().child(nick)
-                                                                                        .child("subscribers").child(info.getNick()).removeValue();
-                                                                                firebaseModel.getUsersReference().child(info.getNick())
-                                                                                        .child("subscription").child(nick).removeValue();
-                                                                                Toast.makeText(getContext(), "Пользователь удален из подписчиков", Toast.LENGTH_SHORT).show();
-                                                                            }else {
-                                                                                Log.d("#####", "suck my dick");
-                                                                                Toast.makeText(getContext(), "Пользователь не подписан на тебя", Toast.LENGTH_SHORT).show();
-                                                                            }
-                                                                        }
+                                                                        public void PassUserNick(String nick) {
+                                                                            Query query3=firebaseModel.getUsersReference().child(nick)
+                                                                                    .child("subscribers").child(info.getNick());
+                                                                            query3.addValueEventListener(new ValueEventListener() {
+                                                                                @Override
+                                                                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                                                    if(snapshot.exists()){
+                                                                                        Log.d("#####", "peace of shit");
+                                                                                        firebaseModel.getUsersReference().child(nick)
+                                                                                                .child("subscribers").child(info.getNick()).removeValue();
+                                                                                        firebaseModel.getUsersReference().child(info.getNick())
+                                                                                                .child("subscription").child(nick).removeValue();
+                                                                                        Toast.makeText(getContext(), "Пользователь удален из подписчиков", Toast.LENGTH_SHORT).show();
+                                                                                    }else {
+                                                                                        Log.d("#####", "suck my dick");
+                                                                                        Toast.makeText(getContext(), "Пользователь не подписан на тебя", Toast.LENGTH_SHORT).show();
+                                                                                    }
+                                                                                }
 
-                                                                        @Override
-                                                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                                                                                @Override
+                                                                                public void onCancelled(@NonNull DatabaseError databaseError) {
 
+                                                                                }
+                                                                            });
                                                                         }
                                                                     });
-                                                                }
-                                                            });
+                                                                    return true;
+                                                            }
                                                             return true;
-                                                    }
-                                                    return true;
+                                                        }
+                                                    });
+
+                                                    popup.show();
+                                                }
+                                            });
+                                            linearSubscriptions = view.findViewById(R.id.subscriptionLinear);
+                                            linearSubscribers = view.findViewById(R.id.subscribersLinear);
+                                            checkLooksOther();
+                                            linearSubscriptions.setOnClickListener(new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View v) {
+                                                    RecentMethods.setCurrentFragment(SubscriptionsFragmentOther.newInstance(), getActivity());
+                                                }
+                                            });
+                                            linearSubscribers.setOnClickListener(new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View v) {
+                                                    RecentMethods.setCurrentFragment(SubscribesFragmentOther.newInstance(), getActivity());
                                                 }
                                             });
 
-                                            popup.show();
-                                        }
-                                    });
-                                    linearSubscriptions = view.findViewById(R.id.subscriptionLinear);
-                                    linearSubscribers = view.findViewById(R.id.subscribersLinear);
-                                    checkLooksOther();
-                                    linearSubscriptions.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            RecentMethods.setCurrentFragment(SubscriptionsFragmentOther.newInstance(), getActivity());
-                                        }
-                                    });
-                                    linearSubscribers.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            RecentMethods.setCurrentFragment(SubscribesFragmentOther.newInstance(), getActivity());
-                                        }
-                                    });
-
-                                    RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-                                        @Override
-                                        public void PassUserNick(String nick) {
-                                            Query query = firebaseModel.getUsersReference().child(nick).child("subscription")
-                                                    .child(info.getNick());
-                                            query.addValueEventListener(new ValueEventListener() {
-                                                @Override
-                                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                    if (snapshot.exists()) {
-                                                        subscribe.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
-                                                        subscribe.setTextColor(Color.parseColor("#F3A2E5"));
-                                                        subscribe.setText("Отписаться");
-                                                    }
-                                                }
-
-                                                @Override
-                                                public void onCancelled(@NonNull DatabaseError error) {
-
-                                                }
-                                            });
-                                        }
-                                    });
-
-                                    subscribe.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
                                             RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
                                                 @Override
                                                 public void PassUserNick(String nick) {
-                                                    Query query=firebaseModel.getUsersReference().child(nick)
-                                                            .child("subscription").child(info.getNick());
+                                                    Query query = firebaseModel.getUsersReference().child(nick).child("subscription")
+                                                            .child(info.getNick());
                                                     query.addValueEventListener(new ValueEventListener() {
                                                         @Override
                                                         public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                            if(snapshot.exists()){
-                                                                a=1;
-                                                                Log.d("#####", "c  "+a);
-
-                                                            }else{
-                                                                a=2;
-
+                                                            if (snapshot.exists()) {
+                                                                subscribe.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
+                                                                subscribe.setTextColor(Color.parseColor("#F3A2E5"));
+                                                                subscribe.setText("Отписаться");
                                                             }
                                                         }
 
@@ -534,55 +522,27 @@ public class ProfileFragment extends Fragment {
 
                                                         }
                                                     });
-                                                    Query queryRequest=firebaseModel.getUsersReference().child(info.getNick())
-                                                            .child("requests").child(nick);
-                                                    queryRequest.addValueEventListener(new ValueEventListener() {
+                                                }
+                                            });
+
+                                            subscribe.setOnClickListener(new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View v) {
+                                                    RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
                                                         @Override
-                                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                            if(snapshot.exists()){
-                                                                a=3;
-
-                                                            }
-                                                        }
-
-                                                        @Override
-                                                        public void onCancelled(@NonNull DatabaseError error) {
-
-                                                        }
-                                                    });
-                                                    Log.d("#####", "ff  "+a);
-                                                    if(a!=0) {
-                                                        if (a == 2) {
-                                                            Log.d("#####", "ab  " + a);
-                                                            Query query1=firebaseModel.getUsersReference().child(info.getNick())
-                                                                    .child("accountType");
-                                                            query1.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                        public void PassUserNick(String nick) {
+                                                            Query query=firebaseModel.getUsersReference().child(nick)
+                                                                    .child("subscription").child(info.getNick());
+                                                            query.addValueEventListener(new ValueEventListener() {
                                                                 @Override
                                                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                                    if(snapshot.getValue(String.class).equals("open")){
-                                                                        firebaseModel.getReference().child("users").child(nick).child("subscription")
-                                                                                .child(info.getNick()).setValue(info.getNick());
-                                                                        firebaseModel.getReference().child("users").child(info.getNick()).child("subscribers")
-                                                                                .child(nick).setValue(nick);
-                                                                        firebaseModel.getReference().child("users")
-                                                                                .child(info.getNick()).child("nontifications")
-                                                                                .child(nick).setValue(new Nontification(nick,"не отправлено","обычный"
-                                                                                ,ServerValue.TIMESTAMP.toString()));
-                                                                        subscribe.setText("Отписаться");
-                                                                        subscribe.setTextColor(Color.parseColor("#F3A2E5"));
-                                                                        subscribe.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
-                                                                        a=0;
-                                                                    }else {
-                                                                        firebaseModel.getReference().child("users").child(info.getNick()).child("requests")
-                                                                                .child(nick).setValue(nick);
-                                                                        firebaseModel.getReference().child("users")
-                                                                                .child(info.getNick()).child("nontifications")
-                                                                                .child(nick).setValue(new Nontification(nick,"не отправлено","запрос"
-                                                                                ,ServerValue.TIMESTAMP.toString()));
-                                                                        subscribe.setText("Запрошено");
-                                                                        subscribe.setTextColor(Color.parseColor("#F3A2E5"));
-                                                                        subscribe.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
-                                                                        a=0;
+                                                                    if(snapshot.exists()){
+                                                                        a=1;
+                                                                        Log.d("#####", "c  "+a);
+
+                                                                    }else{
+                                                                        a=2;
+
                                                                     }
                                                                 }
 
@@ -591,81 +551,145 @@ public class ProfileFragment extends Fragment {
 
                                                                 }
                                                             });
-                                                        }
-                                                        if (a == 1) {
-                                                            Log.d("#####", "one  " + a);
-                                                            firebaseModel.getReference().child("users").child(nick).child("subscription")
-                                                                    .child(info.getNick()).removeValue();
-                                                            firebaseModel.getReference().child("users").child(info.getNick()).child("subscribers")
-                                                                    .child(nick).removeValue();
-                                                            subscribe.setText("Подписаться");
-                                                            subscribe.setTextColor(Color.parseColor("#FFFEFE"));
-                                                            subscribe.setBackgroundResource(R.drawable.corners10dpappcolor);
-                                                            a=0;
+                                                            Query queryRequest=firebaseModel.getUsersReference().child(info.getNick())
+                                                                    .child("requests").child(nick);
+                                                            queryRequest.addValueEventListener(new ValueEventListener() {
+                                                                @Override
+                                                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                                    if(snapshot.exists()){
+                                                                        a=3;
 
-                                                        }
-                                                        if (a == 3) {
-                                                            firebaseModel.getReference().child("users").child(info.getNick()).child("requests")
-                                                                    .child(nick).removeValue();
-                                                            subscribe.setText("Подписаться");
-                                                            subscribe.setTextColor(Color.parseColor("#FFFEFE"));
-                                                            subscribe.setBackgroundResource(R.drawable.corners10dpappcolor);
-                                                            a=0;
+                                                                    }
+                                                                }
 
+                                                                @Override
+                                                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                                                }
+                                                            });
+                                                            Log.d("#####", "ff  "+a);
+                                                            if(a!=0) {
+                                                                if (a == 2) {
+                                                                    Log.d("#####", "ab  " + a);
+                                                                    Query query1=firebaseModel.getUsersReference().child(info.getNick())
+                                                                            .child("accountType");
+                                                                    query1.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                                        @Override
+                                                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                                            if(snapshot.getValue(String.class).equals("open")){
+                                                                                firebaseModel.getReference().child("users").child(nick).child("subscription")
+                                                                                        .child(info.getNick()).setValue(info.getNick());
+                                                                                firebaseModel.getReference().child("users").child(info.getNick()).child("subscribers")
+                                                                                        .child(nick).setValue(nick);
+                                                                                firebaseModel.getReference().child("users")
+                                                                                        .child(info.getNick()).child("nontifications")
+                                                                                        .child(nick).setValue(new Nontification(nick,"не отправлено","обычный"
+                                                                                        ,ServerValue.TIMESTAMP.toString()));
+                                                                                subscribe.setText("Отписаться");
+                                                                                subscribe.setTextColor(Color.parseColor("#F3A2E5"));
+                                                                                subscribe.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
+                                                                                a=0;
+                                                                            }else {
+                                                                                firebaseModel.getReference().child("users").child(info.getNick()).child("requests")
+                                                                                        .child(nick).setValue(nick);
+                                                                                firebaseModel.getReference().child("users")
+                                                                                        .child(info.getNick()).child("nontifications")
+                                                                                        .child(nick).setValue(new Nontification(nick,"не отправлено","запрос"
+                                                                                        ,ServerValue.TIMESTAMP.toString()));
+                                                                                subscribe.setText("Запрошено");
+                                                                                subscribe.setTextColor(Color.parseColor("#F3A2E5"));
+                                                                                subscribe.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
+                                                                                a=0;
+                                                                            }
+                                                                        }
+
+                                                                        @Override
+                                                                        public void onCancelled(@NonNull DatabaseError error) {
+
+                                                                        }
+                                                                    });
+                                                                }
+                                                                if (a == 1) {
+                                                                    Log.d("#####", "one  " + a);
+                                                                    firebaseModel.getReference().child("users").child(nick).child("subscription")
+                                                                            .child(info.getNick()).removeValue();
+                                                                    firebaseModel.getReference().child("users").child(info.getNick()).child("subscribers")
+                                                                            .child(nick).removeValue();
+                                                                    subscribe.setText("Подписаться");
+                                                                    subscribe.setTextColor(Color.parseColor("#FFFEFE"));
+                                                                    subscribe.setBackgroundResource(R.drawable.corners10dpappcolor);
+                                                                    a=0;
+
+                                                                }
+                                                                if (a == 3) {
+                                                                    firebaseModel.getReference().child("users").child(info.getNick()).child("requests")
+                                                                            .child(nick).removeValue();
+                                                                    subscribe.setText("Подписаться");
+                                                                    subscribe.setTextColor(Color.parseColor("#FFFEFE"));
+                                                                    subscribe.setBackgroundResource(R.drawable.corners10dpappcolor);
+                                                                    a=0;
+
+                                                                }
+                                                            }
                                                         }
-                                                    }
+                                                    });
+                                                }
+                                            });
+                                        } else {
+                                            subscribeClose.setVisibility(View.VISIBLE);
+                                            closeAccount.setVisibility(View.VISIBLE);
+                                            subscribeFirst.setVisibility(View.VISIBLE);
+                                            subscribeFirst.setText("Подпишись на " + " " + info.getNick() + " !");
+                                            message.setVisibility(View.GONE);
+                                            subscribe.setVisibility(View.GONE);
+                                            looksText.setVisibility(View.GONE);
+                                            looksRecyclerOther.setVisibility(View.GONE);
+                                            moreSquare.setOnClickListener(new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View v) {
+                                                    PopupMenu popup = new PopupMenu(getActivity(), moreSquare);
+                                                    popup.getMenuInflater()
+                                                            .inflate(R.menu.other_user_menu, popup.getMenu());
+
+                                                    popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                                                        public boolean onMenuItemClick(MenuItem item) {
+                                                            String itemTitle= item.getTitle().toString().trim();
+
+                                                            Log.d("####", "hell"+itemTitle);
+                                                            int itemID=item.getItemId();
+                                                            switch(itemID){
+                                                                case R.id.one :
+                                                                    showDialog();
+                                                                    return true;
+                                                                case R.id.two:
+                                                                    RecentMethods.setCurrentFragment(ComplainFragment.newInstance(info.getNick()), getActivity());
+                                                                    return true;
+                                                                case R.id.three:
+                                                                    return true;
+                                                            }
+                                                            return true;
+                                                        }
+                                                    });
+
+                                                    popup.show();
                                                 }
                                             });
                                         }
-                                    });
-                                } else {
-                                    subscribeClose.setVisibility(View.VISIBLE);
-                                    closeAccount.setVisibility(View.VISIBLE);
-                                    subscribeFirst.setVisibility(View.VISIBLE);
-                                    subscribeFirst.setText("Подпишись на " + " " + info.getNick() + " !");
-                                    message.setVisibility(View.GONE);
-                                    subscribe.setVisibility(View.GONE);
-                                    looksText.setVisibility(View.GONE);
-                                    looksRecyclerOther.setVisibility(View.GONE);
-                                    moreSquare.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            PopupMenu popup = new PopupMenu(getActivity(), moreSquare);
-                                            popup.getMenuInflater()
-                                                    .inflate(R.menu.other_user_menu, popup.getMenu());
-
-                                            popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                                                public boolean onMenuItemClick(MenuItem item) {
-                                                    String itemTitle= item.getTitle().toString().trim();
-
-                                                    Log.d("####", "hell"+itemTitle);
-                                                    int itemID=item.getItemId();
-                                                    switch(itemID){
-                                                        case R.id.one :
-                                                            showDialog();
-                                                            return true;
-                                                        case R.id.two:
-                                                            RecentMethods.setCurrentFragment(ComplainFragment.newInstance(info.getNick()), getActivity());
-                                                            return true;
-                                                        case R.id.three:
-                                                            return true;
-                                                    }
-                                                    return true;
-                                                }
-                                            });
-
-                                            popup.show();
-                                        }
-                                    });
-                                }
-                            }
+                                    }
 
 
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                    }
+                                });
 
                             }
                         });
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
 
                     }
                 });
@@ -1029,23 +1053,23 @@ public class ProfileFragment extends Fragment {
 
 
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        mainLook.pause();
-
-    }
-    @Override
-    public void onResume() {
-        super.onResume();
-        try {
-            //loadModels(loadUrl);
-            mainLook.resume();
-        } catch (CameraNotAvailableException e) {
-            e.printStackTrace();
-        }
-
-    }
+//    @Override
+//    public void onPause() {
+//        super.onPause();
+//        mainLook.pause();
+//
+//    }
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//        try {
+//            //loadModels(loadUrl);
+//            mainLook.resume();
+//        } catch (CameraNotAvailableException e) {
+//            e.printStackTrace();
+//        }
+//
+//    }
 
 
 

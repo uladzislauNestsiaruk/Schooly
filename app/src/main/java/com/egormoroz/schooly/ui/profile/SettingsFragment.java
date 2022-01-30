@@ -277,8 +277,12 @@ public class SettingsFragment extends Fragment {
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((MainActivity)getActivity()).setCurrentFragment(ProfileFragment.newInstance("user",
-                        new UserInformation()));
+                RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+                    @Override
+                    public void PassUserNick(String nick) {
+                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("user", nick), getActivity());
+                    }
+                });
             }
         });
 

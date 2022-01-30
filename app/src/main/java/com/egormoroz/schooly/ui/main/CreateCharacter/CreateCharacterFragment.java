@@ -57,6 +57,13 @@ public class CreateCharacterFragment extends Fragment {
         ready=view.findViewById(R.id.ready);
         viewPager=view.findViewById(R.id.viewPagerCharacter);
 
+        ready.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
         ImageView leftarrowtoreg =view.findViewById(R.id.leftarrowtoreg);
         leftarrowtoreg.setOnClickListener(new View.OnClickListener() {
             @Override
