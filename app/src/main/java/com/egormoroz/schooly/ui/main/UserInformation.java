@@ -16,9 +16,6 @@ public class UserInformation {
     private long age = 404;
     private String miners="Start mining stupid dog!";
     private long level=1;
-    private long subscribersCount;
-    private long looksCount;
-    private long subscriptionCount;
     private long money=100;
     private double todayMining=0;
     private String subscription;
@@ -161,23 +158,6 @@ public class UserInformation {
         this.bio = bio;
     }
 
-    public long getSubscribersCount() {return subscribersCount;}
-
-    public void setSubscribersCount(long subscribersCount) {
-        this.subscribersCount =subscribersCount;
-    }
-
-    public long getLooksCount() {return looksCount;}
-
-    public void setLooksCount(long looksCount) {
-        this.looksCount =looksCount;
-    }
-
-    public long getSubscriptionCount() {return subscriptionCount;}
-
-    public void setSubscriptionCount(long subscriptionCount) {
-        this.subscriptionCount =subscriptionCount;
-    }
 
     public String getAccountType() {
         return accountType;
@@ -189,8 +169,8 @@ public class UserInformation {
 
     public UserInformation(String nick, String phone, String uid, String Avatar, String password,
                            String gender, long age,String miners,long level,long money,double todayMining,
-                           String subscription, String subscribers, String queue,String bio,long subscribersCount,
-                           long looksCount,long subscriptionCount,String accountType,String chatsNontsType,
+                           String subscription, String subscribers, String queue,String bio,
+                           String accountType,String chatsNontsType,
                            String groupChatsNontsType,String profileNontsType) {
         this.Nick = nick;
         this.uid = uid;
@@ -207,9 +187,6 @@ public class UserInformation {
         this.subscribers = subscribers;
         this.queue = queue;
         this.bio=bio;
-        this.subscribersCount=subscribersCount;
-        this.looksCount=looksCount;
-        this.subscriptionCount=subscriptionCount;
         this.accountType=accountType;
         this.chatsNontsType=chatsNontsType;
         this.groupChatsNontsType=groupChatsNontsType;

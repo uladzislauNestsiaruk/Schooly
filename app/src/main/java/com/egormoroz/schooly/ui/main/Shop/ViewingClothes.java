@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment;
 import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.MainActivity;
+import com.egormoroz.schooly.Nontification;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.ui.main.ChatsFragment;
@@ -25,6 +26,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.squareup.picasso.Picasso;
@@ -120,6 +122,14 @@ public class ViewingClothes extends Fragment {
                             firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes")
                                     .child(clothesViewing.getClothesTitle()).child("purchaseNumber")
                                     .setValue(clothesViewing.getPurchaseNumber()+1);
+                            if(clothesViewing.getCreator().equals("Schooly")){
+
+                            }else {
+                                firebaseModel.getReference().child("users")
+                                        .child(clothesViewing.getCreator()).child("nontifications")
+                                        .child(nick).setValue(new Nontification(nick,"не отправлено","одежда"
+                                        , ServerValue.TIMESTAMP.toString(),clothesViewing.getClothesTitle(),clothesViewing.getClothesImage()));
+                            }
                             Query query=firebaseModel.getUsersReference().child(nick).child("basket").
                                     child(clothesViewing.getClothesTitle());
                             query.addValueEventListener(new ValueEventListener() {

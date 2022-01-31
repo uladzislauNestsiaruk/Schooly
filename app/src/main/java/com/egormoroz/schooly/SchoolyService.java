@@ -237,7 +237,6 @@ public class SchoolyService extends Service {
                             secondMinerHour = Double.valueOf(String.valueOf(secondMiner.getInHour()));
                             secondMinerInHour = secondMinerHour / 3600;
                             todayMining = todayMining + firstMinerInHour+secondMinerInHour;
-                            Log.d("####", "af "+todayMining);
                         }else if (activeMinersFromBase.size()==3){
                             thirdMiner = activeMinersFromBase.get(2);
                             thirdMinerHour = Double.valueOf(String.valueOf(thirdMiner.getInHour()));
@@ -265,12 +264,10 @@ public class SchoolyService extends Service {
 
     @Override
     public void onDestroy() {
-        Log.d("####", "nick  ");
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @Override
             public void PassUserNick(String nick) {
                 firebaseModel.getUsersReference().child(nick).child("timesTamp").setValue(ServerValue.TIMESTAMP);
-                Log.d("ssss", "nick  "+nick);
             }
         });
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {

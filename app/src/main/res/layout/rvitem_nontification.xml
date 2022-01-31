@@ -17,7 +17,7 @@
         android:layout_height="wrap_content"
         android:textColor="@color/app_color"
         android:textSize="18dp"
-        android:fontFamily="@font/montserratblack"
+        android:fontFamily="@font/montserrat_extrabold"
         android:layout_toRightOf="@+id/userImage"
         android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"/>

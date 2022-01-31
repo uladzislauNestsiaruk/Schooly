@@ -121,6 +121,7 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
 
+
     public void initFirebase(){
         database = FirebaseDatabase.getInstance(CONST.RealtimeDatabaseUrl);
         AuthenticationBase = FirebaseAuth.getInstance();

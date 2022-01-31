@@ -83,6 +83,7 @@
         android:textSize="14sp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
+        android:layout_marginBottom="2dp"
         android:textColor="@color/app_color"
         android:fontFamily="@font/montserrat_extrabold"/>
 

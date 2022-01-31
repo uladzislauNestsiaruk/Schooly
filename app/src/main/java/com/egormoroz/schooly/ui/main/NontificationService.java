@@ -40,7 +40,7 @@ public class NontificationService extends Service {
     }
     FirebaseModel firebaseModel=new FirebaseModel();
     private static final int NOTIFY_ID = 102;
-    private static final String CHANNEL_ID = "Tyomaa channel";
+    private static final String CHANNEL_ID = "channel";
     ArrayList<String> listOfNontifications = new ArrayList<String>();
     ArrayList<String> list = new ArrayList<String>();
     Nontification otherUserNickNonts;
@@ -77,24 +77,6 @@ public class NontificationService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-    }
-    public Notification getNotification()
-    {
-
-        Intent intent = new Intent(this, NontificationService.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this,0,intent,0);
-
-
-        NotificationCompat.Builder foregroundNotification = new NotificationCompat.Builder(this);
-        foregroundNotification.setOngoing(true);
-
-        foregroundNotification.setContentTitle("MY Foreground Notification")
-                .setContentText("This is the first foreground notification Peace")
-                .setSmallIcon(android.R.drawable.ic_btn_speak_now)
-                .setContentIntent(pendingIntent);
-
-
-        return foregroundNotification.build();
     }
 
     public void getChangesInSubscribers(){

@@ -78,8 +78,10 @@ public class NontificationAdapter extends RecyclerView.Adapter<NontificationAdap
                             });
                         }
                     });
-                }else {
+                }else if(nontification.getTypeView().equals("обычный")) {
                     holder.otherUserNick.setText(nontification.getNick()+" подписался на тебя");
+                }else if(nontification.getTypeView().equals("одежда")) {
+                    holder.otherUserNick.setText(nontification.getNick()+" купил у тебя "+nontification.getClothesName());
                 }
             }
         });

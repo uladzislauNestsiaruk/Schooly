@@ -110,7 +110,7 @@ public class RecentMethods {
 
         UserInformation res = new UserInformation(nick, "unknown", user.getUid(),
                 "6", "unknown", "Helicopter", 1000
-                , "Miner", 1,100,0, "", "", "","",0,0,0,"open","open","open","open");
+                , "Miner", 1,100,0, "", "", "","","open","open","open","open");
         ref.child(nick).setValue(res);
         return nick.isEmpty();
     }
@@ -1132,6 +1132,8 @@ public class RecentMethods {
                     nontification.setTypeDispatch(snap.child("typeDispatch").getValue(String.class));
                     nontification.setTypeView(snap.child("typeView").getValue(String.class));
                     nontification.setTimestamp(snap.child("timestamp").getValue(String.class));
+                    nontification.setClothesName(snap.child("clothesName").getValue(String.class));
+                    nontification.setClothesImage(snap.child("clothesImage").getValue(String.class));
                     nontificationArrayList.add(nontification);
                 }
                 callback.getNontificationsList(nontificationArrayList);

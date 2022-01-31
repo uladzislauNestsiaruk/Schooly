@@ -120,7 +120,6 @@ public class MainFragment extends Fragment{
         getMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(ComplainFragment.newInstance("spaccacrani"), getActivity());
 //                Uri stickerAssetUri =  Uri.parse("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/miners%2Ffimw.png?alt=media&token=9798e9ea-15a0-4ef2-869b-63ce4dc95b78");
 //                String sourceApplication = "com.egormoroz.schooly";
 //
@@ -226,25 +225,6 @@ public class MainFragment extends Fragment{
             @Override
             public void onClick(View v) {
                 RecentMethods.setCurrentFragment(CreateCharacterFragment.newInstance(), getActivity());
-                Intent notificationIntent = new Intent(getActivity(), MainActivity.class);
-                PendingIntent contentIntent = PendingIntent.getActivity(getActivity(),
-                        0, notificationIntent,
-                        PendingIntent.FLAG_CANCEL_CURRENT);
-
-                NotificationCompat.Builder builder = new NotificationCompat.Builder(getActivity(), CHANNEL_ID)
-                        .setSmallIcon(R.drawable.ic_schoolycoin)
-                        .setContentTitle("tyomaa6")
-                        .setContentText("hello")
-                        .setContentIntent(contentIntent)
-                        .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-
-                NotificationManagerCompat notificationManager =
-                        NotificationManagerCompat.from(getActivity());
-                notificationManager.notify(NOTIFY_ID, builder.build());
-                Log.d("######", "good");
-//                Intent i = new Intent(getActivity(), ModelActivity.class);
-//                startActivity(i);
-//                ((Activity) getActivity()).overridePendingTransition(0, 0);
             }
         });
         todayMiningMain=view.findViewById(R.id.todayminingmain);
