@@ -54,6 +54,24 @@ public class NontificationAdapter extends RecyclerView.Adapter<NontificationAdap
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @Override
             public void PassUserNick(String nick) {
+                RecentMethods.getNontificationsList(nick, firebaseModel, new Callbacks.getNontificationsList() {
+                    @Override
+                    public void getNontificationsList(ArrayList<Nontification> nontifications) {
+                        for (int i=0;i<nontifications.size();i++){
+                            Nontification nontification=nontifications.get(i);
+                            if(nontification.getType().equals("не просмотрено")){
+                                firebaseModel.getUsersReference().child(nick).child("nontifications")
+                                        .child(nontification.getNick()).child("type")
+                                        .setValue("просмотрено");
+                            }
+                        }
+                    }
+                });
+            }
+        });
+        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+            @Override
+            public void PassUserNick(String nick) {
                 if(nontification.getTypeView().equals("запрос")) {
                     holder.otherUserNick.setText(nontification.getNick()+" хочет подписаться на тебя");
                     holder.addFriend.setVisibility(View.VISIBLE);

@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -94,6 +95,7 @@ public class MyMinersAdapter extends RecyclerView.Adapter<MyMinersAdapter.ViewHo
                             public void GetActiveMiners(ArrayList<Miner> activeMinersFromBase) {
                                 if(activeMinersFromBase.size()==5){
                                     holder.use.setBackgroundResource(R.drawable.corners14grey);
+                                    Toast.makeText(v.getContext(), "Пять майнеров уже активны",Toast.LENGTH_SHORT).show();
                                 }else {int pos=holder.getAdapterPosition();
                                     RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel
                                             , new Callbacks.GetUserNickByUid() {

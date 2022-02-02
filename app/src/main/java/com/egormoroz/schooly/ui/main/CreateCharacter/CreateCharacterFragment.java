@@ -1,5 +1,8 @@
 package com.egormoroz.schooly.ui.main.CreateCharacter;
 
+import android.app.Dialog;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,9 +18,13 @@ import androidx.lifecycle.Lifecycle;
 import androidx.viewpager2.widget.ViewPager2;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
+import com.egormoroz.schooly.Callbacks;
+import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.MainActivity;
 import com.egormoroz.schooly.R;
+import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.ui.main.MainFragment;
+import com.egormoroz.schooly.ui.main.Mining.Miner;
 import com.egormoroz.schooly.ui.main.Shop.AccessoriesFragment;
 import com.egormoroz.schooly.ui.main.Shop.ClothesFragment;
 import com.egormoroz.schooly.ui.main.Shop.HatsFragment;
@@ -32,6 +39,7 @@ public class CreateCharacterFragment extends Fragment {
     TextView ready;
     ViewPager2 viewPager;
     FragmentAdapter fragmentAdapter;
+    private FirebaseModel firebaseModel = new FirebaseModel();
 
 
     public static CreateCharacterFragment newInstance() {
@@ -44,6 +52,7 @@ public class CreateCharacterFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_createcharacter, container, false);
         BottomNavigationView bnv = getActivity().findViewById(R.id.bottomNavigationView);
         bnv.setVisibility(bnv.GONE);
+        firebaseModel.initAll();
 //        AppBarLayout abl = getActivity().findViewById(R.id.AppBarLayout);
 //        abl.setVisibility(abl.GONE);
         return root;
@@ -60,7 +69,7 @@ public class CreateCharacterFragment extends Fragment {
         ready.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                showDialog();
             }
         });
 
@@ -111,6 +120,33 @@ public class CreateCharacterFragment extends Fragment {
         });
 
 
+    }
+
+    public void showDialog(){
+
+        final Dialog dialog = new Dialog(getContext());
+        dialog.setContentView(R.layout.accept_character_dialog);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        TextView no=dialog.findViewById(R.id.no);
+        TextView yes=dialog.findViewById(R.id.yes);
+
+
+        no.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        yes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
     }
 
     public class FragmentAdapter extends FragmentStateAdapter {

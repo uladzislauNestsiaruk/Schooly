@@ -116,7 +116,7 @@ public class ViewingClothesPopular extends Fragment {
                                 firebaseModel.getReference().child("users")
                                         .child(clothesViewing.getCreator()).child("nontifications")
                                         .child(nick).setValue(new Nontification(nick,"не отправлено","одежда"
-                                        , ServerValue.TIMESTAMP.toString(),clothesViewing.getClothesTitle(),clothesViewing.getClothesImage()));
+                                        , ServerValue.TIMESTAMP.toString(),clothesViewing.getClothesTitle(),clothesViewing.getClothesImage(),"не просмотрено"));
                             }
                             Query query=firebaseModel.getUsersReference().child(nick).child("basket").
                                     child(String.valueOf(clothesViewing.getClothesTitle()));

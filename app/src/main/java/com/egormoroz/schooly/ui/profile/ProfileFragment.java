@@ -584,7 +584,7 @@ public class ProfileFragment extends Fragment {
                                                                                 firebaseModel.getReference().child("users")
                                                                                         .child(info.getNick()).child("nontifications")
                                                                                         .child(nick).setValue(new Nontification(nick,"не отправлено","обычный"
-                                                                                        ,ServerValue.TIMESTAMP.toString()," "," "));
+                                                                                        ,ServerValue.TIMESTAMP.toString()," "," ","не просмотрено"));
                                                                                 subscribe.setText("Отписаться");
                                                                                 subscribe.setTextColor(Color.parseColor("#F3A2E5"));
                                                                                 subscribe.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
@@ -595,7 +595,7 @@ public class ProfileFragment extends Fragment {
                                                                                 firebaseModel.getReference().child("users")
                                                                                         .child(info.getNick()).child("nontifications")
                                                                                         .child(nick).setValue(new Nontification(nick,"не отправлено","запрос"
-                                                                                        ,ServerValue.TIMESTAMP.toString()," "," "));
+                                                                                        ,ServerValue.TIMESTAMP.toString()," "," ","не просмотрено"));
                                                                                 subscribe.setText("Запрошено");
                                                                                 subscribe.setTextColor(Color.parseColor("#F3A2E5"));
                                                                                 subscribe.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);

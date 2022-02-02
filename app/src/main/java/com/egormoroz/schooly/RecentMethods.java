@@ -1134,6 +1134,7 @@ public class RecentMethods {
                     nontification.setTimestamp(snap.child("timestamp").getValue(String.class));
                     nontification.setClothesName(snap.child("clothesName").getValue(String.class));
                     nontification.setClothesImage(snap.child("clothesImage").getValue(String.class));
+                    nontification.setType(snap.child("type").getValue(String.class));
                     nontificationArrayList.add(nontification);
                 }
                 callback.getNontificationsList(nontificationArrayList);

@@ -8,6 +8,7 @@ public class Clothes {
     private long clothesPrice=1;
     private long purchaseNumber;
     private String clothesTitle;
+    private String currensyType;
     private long timesTamp;
     private String creator;
 

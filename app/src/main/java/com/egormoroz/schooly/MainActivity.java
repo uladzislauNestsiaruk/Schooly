@@ -12,6 +12,7 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.egormoroz.schooly.ui.coins.CoinsMainFragment;
 import com.egormoroz.schooly.ui.main.MainFragment;
 import com.egormoroz.schooly.ui.main.RegisrtationstartFragment;
 import com.egormoroz.schooly.ui.main.UserInformation;
@@ -64,6 +65,12 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.bottom_nav_news:
                         setCurrentFragment(NewsFragment.newInstance());
 //                        toolbarTitle.setText(getString(R.string.toolbar_news));
+//                        toolbarTitle.setTextColor(getColor(R.color.black));
+//                        appBarLayout.setVisibility(View.VISIBLE);
+                        return true;
+                    case R.id.bottom_nav_coins:
+                        setCurrentFragment(CoinsMainFragment.newInstance());
+//                        toolbarTitle.setText(getString(R.string.toolbar_people));
 //                        toolbarTitle.setTextColor(getColor(R.color.black));
 //                        appBarLayout.setVisibility(View.VISIBLE);
                         return true;

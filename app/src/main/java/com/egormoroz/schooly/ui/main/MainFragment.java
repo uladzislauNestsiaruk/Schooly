@@ -28,6 +28,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.MainActivity;
+import com.egormoroz.schooly.Nontification;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.SchoolyService;
@@ -56,6 +57,7 @@ public class MainFragment extends Fragment{
     TextView todayMiningMain,circleNontifications,circleChat;
     private FirebaseModel firebaseModel = new FirebaseModel();
     ArrayList<Clothes> clothesArrayList=new ArrayList<Clothes>();
+    ArrayList<Nontification > noViewedNonts=new ArrayList<>();
     ArrayList<Clothes> popularClothesArrayList=new ArrayList<Clothes>();
     private UserInformation userData = new UserInformation();
     RecyclerView clothesRecyclerMain;
@@ -113,7 +115,30 @@ public class MainFragment extends Fragment{
 //        firebaseModel.getReference().child("AppData").child("complains").setValue(reasonsArrayList);
         circleChat=view.findViewById(R.id.circleChat);
         circleNontifications=view.findViewById(R.id.circleNontifications);
-
+        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+            @Override
+            public void PassUserNick(String nick) {
+                RecentMethods.getNontificationsList(nick, firebaseModel, new Callbacks.getNontificationsList() {
+                    @Override
+                    public void getNontificationsList(ArrayList<Nontification> nontifications) {
+                        for (int i=0;i<nontifications.size();i++){
+                            Nontification nontification=nontifications.get(i);
+                            if(nontification.getType().equals("не просмотрено")){
+                                noViewedNonts.add(nontification);
+                            }
+                        }
+                        if(noViewedNonts.size()>0){
+                            circleNontifications.setVisibility(View.VISIBLE);
+                            if(noViewedNonts.size()>9){
+                                circleNontifications.setText("9+");
+                            }else {
+                                circleNontifications.setText(String.valueOf(noViewedNonts.size()));
+                            }
+                        }
+                    }
+                });
+            }
+        });
         circularProgressIndicator=view.findViewById(R.id.miningIndicator);
 
         TextView getMore=view.findViewById(R.id.getMore);
