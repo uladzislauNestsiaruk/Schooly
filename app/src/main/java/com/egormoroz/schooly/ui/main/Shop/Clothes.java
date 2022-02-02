@@ -8,13 +8,13 @@ public class Clothes {
     private long clothesPrice=1;
     private long purchaseNumber;
     private String clothesTitle;
-    private String currensyType;
+    private String currencyType;
     private long timesTamp;
     private String creator;
 
 
     public Clothes(String type, String  clothesImage, long clothesPrice,String clothesTitle
-            ,long purchaseNumber,long timesTamp,String creator){
+            ,long purchaseNumber,long timesTamp,String creator,String currencyType){
         this.type=type;
         this.clothesImage=clothesImage;
         this.clothesPrice=clothesPrice;
@@ -22,6 +22,7 @@ public class Clothes {
         this.purchaseNumber=purchaseNumber;
         this.timesTamp=timesTamp;
         this.creator=creator;
+        this.currencyType=currencyType;
     }
     public Clothes(){
     }
@@ -72,6 +73,14 @@ public class Clothes {
 
     public void setCreator(String creator){
         this.creator=creator;
+    }
+
+    public String getCurrencyType(){
+        return this.currencyType;
+    }
+
+    public void setCurrencyType(String currencyType){
+        this.currencyType=currencyType;
     }
 
     public long getTimesTamp(){

@@ -181,7 +181,7 @@ public class CreateCharacterFragment extends Fragment {
 
         @Override
         public int getItemCount() {
-            return 5;
+            return 8;
         }
     }
 }

@@ -51,6 +51,8 @@ import com.egormoroz.schooly.ui.main.Shop.ShopFragment;
 import com.egormoroz.schooly.ui.main.Shop.ViewingClothes;
 import com.egormoroz.schooly.ui.main.UserInformation;
 import com.egormoroz.schooly.ui.people.PeopleFragment;
+import com.egormoroz.schooly.ui.profile.Wardrobe.WardrobeAdapterProfile;
+import com.egormoroz.schooly.ui.profile.Wardrobe.WardrobeClothes;
 import com.egormoroz.schooly.ui.profile.Wardrobe.WardrobeFragment;
 import com.google.android.filament.Filament;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -85,6 +87,7 @@ public class ProfileFragment extends Fragment {
     Context profileContext, context;
     String type,nicknameCallback;
     UserInformation info;
+    WardrobeAdapterProfile.ItemClickListener itemClickListenerWardrobe;
     TextView nickname,message,biographyTextView,looksCount,subscriptionsCount,subscribersCount,otherLooksCount,otherSubscriptionCount,
             otherSubscribersCount,createNewLookText,createNewLook,otherUserBiography,subscribeClose,subscribe,looksText
             ,subscribeFirst,closeAccount,noClothes,buyClothesProfile,noLooksOther;
@@ -916,8 +919,8 @@ public class ProfileFragment extends Fragment {
                                 }
                             });
                         }else {
-//                            WardrobeAdapter wardrobeAdapter=new WardrobeAdapter(allClothes);
-//                            wardrobeRecycler.setAdapter(wardrobeAdapter);
+                            WardrobeAdapterProfile wardrobeAdapter=new WardrobeAdapterProfile(allClothes,itemClickListenerWardrobe);
+                            wardrobeRecycler.setAdapter(wardrobeAdapter);
                         }
                     }
                 });

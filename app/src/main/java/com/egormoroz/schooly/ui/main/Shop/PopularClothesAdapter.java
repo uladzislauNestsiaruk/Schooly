@@ -80,6 +80,10 @@ public class PopularClothesAdapter extends RecyclerView.Adapter<PopularClothesAd
         holder.clothesImage.setVisibility(View.VISIBLE);
         holder.creator.setText(clothes.getCreator());
         holder.purchaseNumber.setText(String.valueOf(clothes.getPurchaseNumber()));
+        if (clothes.getCurrencyType().equals("dollar")){
+            holder.dollarImage.setVisibility(View.VISIBLE);
+            holder.coinsImage.setVisibility(View.GONE);
+        }
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @Override
             public void PassUserNick(String nick) {
@@ -121,7 +125,7 @@ public class PopularClothesAdapter extends RecyclerView.Adapter<PopularClothesAd
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView clothesTitle,clothesPrice,creator,purchaseNumber;
-        ImageView clothesImage,ifBuy;
+        ImageView clothesImage,ifBuy,dollarImage,coinsImage;
         ViewHolder(View itemView) {
             super(itemView);
             clothesImage=itemView.findViewById(R.id.clothesImage);
@@ -129,6 +133,8 @@ public class PopularClothesAdapter extends RecyclerView.Adapter<PopularClothesAd
             clothesPrice=itemView.findViewById(R.id.clothesPrice);
             creator=itemView.findViewById(R.id.creator);
             ifBuy=itemView.findViewById(R.id.ifBuy);
+            dollarImage=itemView.findViewById(R.id.dollarImage);
+            coinsImage=itemView.findViewById(R.id.coinsImage);
             purchaseNumber=itemView.findViewById(R.id.purchaseNumber);
         }
 

@@ -112,6 +112,7 @@
                 android:orientation="horizontal">
 
                 <ImageView
+                    android:id="@+id/coinsImage"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingStart="16dp"
@@ -119,6 +120,17 @@
                     android:paddingEnd="2dp"
                     android:paddingBottom="12dp"
                     android:src="@drawable/ic_schoolycoinsmall" />
+
+                <ImageView
+                    android:id="@+id/dollarImage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="16dp"
+                    android:paddingTop="2dp"
+                    android:paddingEnd="2dp"
+                    android:paddingBottom="2dp"
+                    android:src="@drawable/ic_dollarwhitebig"
+                    android:visibility="gone"/>
 
 
                 <TextView
