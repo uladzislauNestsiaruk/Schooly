@@ -1,5 +1,6 @@
 package com.egormoroz.schooly.ui.profile.Wardrobe;
 
+import android.app.Activity;
 import android.graphics.Rect;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
+import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
 import com.egormoroz.schooly.ui.main.Shop.NewClothesAdapter;
 import com.google.firebase.storage.FirebaseStorage;
@@ -26,18 +28,19 @@ import java.io.File;
 import java.util.ArrayList;
 
 public class WardrobeAdapterProfile extends RecyclerView.Adapter<WardrobeAdapterProfile.ViewHolder>  {
-    private NewClothesAdapter.ItemClickListener clickListener;
     ArrayList<Clothes> clothesArrayListWardrobe;
     private FirebaseModel firebaseModel = new FirebaseModel();
     FirebaseStorage storage = FirebaseStorage.getInstance();
     StorageReference storageReference=storage.getReference();
     static Clothes clothes,trueClothes;
-    ItemClickListener onClothesClick;
+    WardrobeAdapterProfile.ItemClickListener onClothesClick;
     static int pos;
+    Activity activity;
 
-    public WardrobeAdapterProfile(ArrayList<Clothes> clothesArrayListWardrobe, ItemClickListener onClothesClick) {
+    public WardrobeAdapterProfile(ArrayList<Clothes> clothesArrayListWardrobe, ItemClickListener onClothesClick,Activity activity) {
         this.clothesArrayListWardrobe= clothesArrayListWardrobe;
         this.onClothesClick=onClothesClick;
+        this.activity=activity;
     }
 
 
@@ -66,8 +69,7 @@ public class WardrobeAdapterProfile extends RecyclerView.Adapter<WardrobeAdapter
             @Override
             public void onClick(View v)
             {
-                onClothesClick.onItemClick(clothesArrayListWardrobe.get(holder.getAdapterPosition()));
-                trueClothes=clothesArrayListWardrobe.get(holder.getAdapterPosition());
+                RecentMethods.setCurrentFragment(WardrobeFragment.newInstance(), activity);
             }
         });
     }

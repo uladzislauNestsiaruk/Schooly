@@ -92,7 +92,7 @@ public class ProfileFragment extends Fragment {
             otherSubscribersCount,createNewLookText,createNewLook,otherUserBiography,subscribeClose,subscribe,looksText
             ,subscribeFirst,closeAccount,noClothes,buyClothesProfile,noLooksOther;
     DatabaseReference user;
-    NewClothesAdapter.ItemClickListener itemClickListener;
+    WardrobeAdapterProfile.ItemClickListener itemClickListener;
    // SceneLoader scene;
     LinearLayout linearLooks,linearSubscribers,linearSubscriptions;
    // ModelSurfaceView modelSurfaceView;
@@ -292,12 +292,6 @@ public class ProfileFragment extends Fragment {
                                 .newInstance(), getActivity());
                     }
                 });
-                itemClickListener=new NewClothesAdapter.ItemClickListener() {
-                    @Override
-                    public void onItemClick(Clothes clothes) {
-                        ((MainActivity)getActivity()).setCurrentFragment(ViewingClothes.newInstance());
-                    }
-                };
                 wardrobeRecycler=view.findViewById(R.id.recyclerProfileToWardrobe);
                 noClothes=view.findViewById(R.id.noClothesText);
                 buyClothesProfile=view.findViewById(R.id.buyClothesProfile);
@@ -919,7 +913,7 @@ public class ProfileFragment extends Fragment {
                                 }
                             });
                         }else {
-                            WardrobeAdapterProfile wardrobeAdapter=new WardrobeAdapterProfile(allClothes,itemClickListenerWardrobe);
+                            WardrobeAdapterProfile wardrobeAdapter=new WardrobeAdapterProfile(allClothes,itemClickListenerWardrobe,getActivity());
                             wardrobeRecycler.setAdapter(wardrobeAdapter);
                         }
                     }

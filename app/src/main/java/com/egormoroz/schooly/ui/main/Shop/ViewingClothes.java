@@ -32,8 +32,14 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.squareup.picasso.Picasso;
 
 public class ViewingClothes extends Fragment {
-    public static ViewingClothes newInstance() {
-        return new ViewingClothes();
+    Fragment fragment;
+
+    public ViewingClothes(Fragment fragment) {
+        this.fragment = fragment;
+    }
+
+    public static ViewingClothes newInstance(Fragment fragment) {
+        return new ViewingClothes(fragment);
 
     }
 
@@ -73,7 +79,7 @@ public class ViewingClothes extends Fragment {
         backToShop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(ShopFragment.newInstance(), getActivity());
+                RecentMethods.setCurrentFragment(fragment, getActivity());
             }
         });
 

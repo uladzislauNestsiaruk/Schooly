@@ -61,7 +61,7 @@ public class PopularFragment extends Fragment {
         itemClickListener=new NewClothesAdapter.ItemClickListener() {
             @Override
             public void onItemClick(Clothes clothes) {
-                ((MainActivity)getActivity()).setCurrentFragment(ViewingClothes.newInstance());
+                ((MainActivity)getActivity()).setCurrentFragment(ViewingClothes.newInstance(ShopFragment.newInstance()));
                 Log.d("######","ccc  "+clothes.getClothesTitle());
             }
         };

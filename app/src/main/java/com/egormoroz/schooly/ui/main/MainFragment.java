@@ -241,7 +241,7 @@ public class MainFragment extends Fragment{
         itemClickListener=new NewClothesAdapter.ItemClickListener() {
             @Override
             public void onItemClick(Clothes clothes) {
-                ((MainActivity)getActivity()).setCurrentFragment(ViewingClothes.newInstance());
+                ((MainActivity)getActivity()).setCurrentFragment(ViewingClothes.newInstance(MainFragment.newInstance()));
             }
         };
         TextView appName=view.findViewById(R.id.appname);
