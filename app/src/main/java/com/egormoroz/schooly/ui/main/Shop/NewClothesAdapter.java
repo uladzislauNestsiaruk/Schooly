@@ -96,6 +96,7 @@ public class NewClothesAdapter extends RecyclerView.Adapter<NewClothesAdapter.Vi
       holder.dollarImage.setVisibility(View.VISIBLE);
       holder.coinsImage.setVisibility(View.GONE);
     }
+    Log.d("####", "help0000");
     RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
       @Override
       public void PassUserNick(String nick) {
@@ -106,6 +107,7 @@ public class NewClothesAdapter extends RecyclerView.Adapter<NewClothesAdapter.Vi
           public void onDataChange(@NonNull DataSnapshot snapshot) {
             if(snapshot.exists()){
               holder.ifBuy.setVisibility(View.VISIBLE);
+              Log.d("####", "help");
             }
           }
 

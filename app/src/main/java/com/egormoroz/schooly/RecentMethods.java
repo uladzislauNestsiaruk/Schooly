@@ -504,6 +504,7 @@ public class RecentMethods {
                     clothes.setClothesTitle(snap.child("clothesTitle").getValue(String.class));
                     clothes.setCreator(snap.child("creator").getValue(String.class));
                     clothes.setCurrencyType(snap.child("currencyType").getValue(String.class));
+                    clothes.setDescription(snap.child("description").getValue(String.class));
                     clothesFromBase.add(clothes);
                 }
                 callback.getClothes(clothesFromBase);
@@ -532,6 +533,7 @@ public class RecentMethods {
                     clothes.setClothesTitle(snap.child("clothesTitle").getValue(String.class));
                     clothes.setCreator(snap.child("creator").getValue(String.class));
                     clothes.setCurrencyType(snap.child("currencyType").getValue(String.class));
+                    clothes.setDescription(snap.child("description").getValue(String.class));
                     clothesFromBase.add(clothes);
                 }
                 callback.getClothes(clothesFromBase);
@@ -692,6 +694,7 @@ public class RecentMethods {
                     clothes.setClothesTitle(snap.child("clothesTitle").getValue(String.class));
                     clothes.setCreator(snap.child("creator").getValue(String.class));
                     clothes.setCurrencyType(snap.child("currencyType").getValue(String.class));
+                    clothes.setDescription(snap.child("description").getValue(String.class));
                     clothesFromBase.add(clothes);
                 }
                 callback.getClothes(clothesFromBase);
@@ -722,6 +725,7 @@ public class RecentMethods {
                     clothes.setClothesTitle(snap.child("clothesTitle").getValue(String.class));
                     clothes.setCurrencyType(snap.child("currencyType").getValue(String.class));
                     clothes.setCreator(snap.child("creator").getValue(String.class));
+                    clothes.setDescription(snap.child("description").getValue(String.class));
                    clothesFromBase.add(clothes);
                 }
                 callback.getClothes(clothesFromBase);

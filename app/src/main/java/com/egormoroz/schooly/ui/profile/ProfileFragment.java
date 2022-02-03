@@ -359,9 +359,6 @@ public class ProfileFragment extends Fragment {
 //                }
 //                mainLook.setRenderer(modelRenderer);
 
-                firebaseModel.getUsersReference().child("tyomaa6").child("subscribers")
-                        .child("spaccacrani").setValue("spaccacrani");
-
 
                 break;
             case "other":

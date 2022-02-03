@@ -116,6 +116,9 @@ public class ViewingClothesPopular extends Fragment {
                         public void PassUserNick(String nick) {
                             firebaseModel.getUsersReference().child(nick).child("clothes")
                                     .child(clothesViewing.getClothesTitle()).setValue(clothesViewing);
+                            firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes")
+                                    .child(clothesViewing.getClothesTitle()).child("purchaseNumber")
+                                    .setValue(clothesViewing.getPurchaseNumber()+1);
                             if(clothesViewing.getCreator().equals("Schooly")){
 
                             }else {
@@ -133,7 +136,6 @@ public class ViewingClothesPopular extends Fragment {
                                         firebaseModel.getUsersReference().child(nick).child("basket")
                                                 .child(clothesViewing.getClothesTitle()).removeValue();
                                     }else{
-                                        Toast.makeText(getContext(), "Предмет уже в куплен", Toast.LENGTH_SHORT).show();
                                     }
                                 }
 
@@ -166,7 +168,6 @@ public class ViewingClothesPopular extends Fragment {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
                                 if(snapshot.exists()){
-                                    Toast.makeText(getContext(), "Предмет уже в корзине", Toast.LENGTH_SHORT).show();
                                 }else {firebaseModel.getUsersReference().child(nick).child("basket")
                                         .child(clothesViewing.getClothesTitle()).setValue(clothesViewing);
                                     }

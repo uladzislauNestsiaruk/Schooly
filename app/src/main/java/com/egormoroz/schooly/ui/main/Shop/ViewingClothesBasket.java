@@ -113,8 +113,10 @@ public class ViewingClothesBasket extends Fragment {
           RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @Override
             public void PassUserNick(String nick) {
-              firebaseModel.getUsersReference().child(nick).child("clothes")
-                      .child(clothesViewing.getClothesTitle()).setValue(clothesViewing);
+              firebaseModel.getUsersReference().child(nick).child("clothes");
+              firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes")
+                      .child(clothesViewing.getClothesTitle()).child("purchaseNumber")
+                      .setValue(clothesViewing.getPurchaseNumber()+1);
               if(clothesViewing.getCreator().equals("Schooly")){
 
               }else {

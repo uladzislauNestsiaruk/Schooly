@@ -14,8 +14,14 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
+import com.egormoroz.schooly.RecentMethods;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
@@ -56,11 +62,45 @@ public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.ViewHolder
     firebaseModel.initAll();
     clothes=clothesArrayList.get(position);
     holder.clothesTitle.setText(clothes.getClothesTitle());
-    holder.clothesPrise.setText(String.valueOf(clothes.getClothesPrice()));
+    holder.clothesPrice.setText(String.valueOf(clothes.getClothesPrice()));
     File file=new File(clothes.getClothesImage());
     storageReference.child("clothes").getFile(file);
     holder.clothesImage.setVisibility(View.VISIBLE);
+    holder.creator.setText(clothes.getCreator());
     Picasso.get().load(clothes.getClothesImage()).into(holder.clothesImage);
+    Query query=firebaseModel.getReference().child("AppData").child("Clothes")
+            .child("AllClothes").child(clothes.getClothesTitle());
+    query.addValueEventListener(new ValueEventListener() {
+      @Override
+      public void onDataChange(@NonNull DataSnapshot snapshot) {
+        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+          @Override
+          public void PassUserNick(String nick) {
+            Clothes clothesAll = new Clothes();
+            clothesAll.setClothesImage(snapshot.child("clothesImage").getValue(String.class));
+            clothesAll.setClothesPrice(snapshot.child("clothesPrice").getValue(Long.class));
+            clothesAll.setPurchaseNumber(snapshot.child("purchaseNumber").getValue(Long.class));
+            clothesAll.setClothesType(snapshot.child("clothesType").getValue(String.class));
+            clothesAll.setClothesTitle(snapshot.child("clothesTitle").getValue(String.class));
+            clothesAll.setCurrencyType(snapshot.child("currencyType").getValue(String.class));
+            clothesAll.setCreator(snapshot.child("creator").getValue(String.class));
+            if(clothesAll.getCreator().equals(clothes.getCreator())&&clothesAll.getClothesImage().equals(clothes.getClothesImage())){
+              holder.purchaseNumber.setText(String.valueOf(clothesAll.getPurchaseNumber()));
+            }
+
+          }
+        });
+      }
+
+      @Override
+      public void onCancelled(@NonNull DatabaseError error) {
+
+      }
+    });
+    if (clothes.getCurrencyType().equals("dollar")){
+      holder.dollarImage.setVisibility(View.VISIBLE);
+      holder.coinsImage.setVisibility(View.GONE);
+    }
     holder.itemView.setOnClickListener(new View.OnClickListener(){
       @Override
       public void onClick(View v)
@@ -79,13 +119,18 @@ public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.ViewHolder
   }
 
   public class ViewHolder extends RecyclerView.ViewHolder {
-    TextView clothesPrise,clothesTitle;
-    ImageView clothesImage;
+    TextView clothesTitle,clothesPrice,creator,purchaseNumber;
+    ImageView clothesImage,ifBuy,dollarImage,coinsImage;
     ViewHolder(View itemView) {
       super(itemView);
-      clothesPrise=itemView.findViewById(R.id.clothesPrice);
       clothesImage=itemView.findViewById(R.id.clothesImage);
       clothesTitle=itemView.findViewById(R.id.clothesTitle);
+      clothesPrice=itemView.findViewById(R.id.clothesPrice);
+      creator=itemView.findViewById(R.id.creator);
+      ifBuy=itemView.findViewById(R.id.ifBuy);
+      dollarImage=itemView.findViewById(R.id.dollarImage);
+      coinsImage=itemView.findViewById(R.id.coinsImage);
+      purchaseNumber=itemView.findViewById(R.id.purchaseNumber);
     }
 
 
