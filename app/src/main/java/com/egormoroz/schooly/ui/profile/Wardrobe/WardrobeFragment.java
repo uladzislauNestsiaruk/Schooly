@@ -140,7 +140,7 @@ public class WardrobeFragment extends Fragment {
                 RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
                     @Override
                     public void PassUserNick(String nick) {
-                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("user", nick), getActivity());
+                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("user", nick,WardrobeFragment.newInstance()), getActivity());
                     }
                 });
             }

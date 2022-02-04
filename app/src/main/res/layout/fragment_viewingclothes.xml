@@ -12,6 +12,7 @@
         android:src="@drawable/left_arrow" />
 
     <TextView
+        android:id="@+id/shopText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
@@ -53,152 +54,190 @@
 
     </LinearLayout>
 
-    <RelativeLayout
-        android:id="@+id/relativeClothesImage"
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/creator"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/back_toshop"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="32dp"
-        android:background="@drawable/corners30dp"
-        android:elevation="25dp">
+        android:layout_below="@+id/shopText"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        android:fontFamily="@font/montserrat_extrabold"
+        android:textColor="@color/app_color"
+        android:textSize="18sp" />
 
-        <TextView
-            android:id="@+id/purchaseNumberViewing"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="16dp"
-            android:fontFamily="@font/montserrat_extrabold"
-            android:text="144"
-            android:textColor="@color/app_grey"
-            android:textSize="16sp" />
+    <ImageView
+        android:id="@+id/bag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/shopText"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="28sp"
+        android:layout_marginEnd="24dp"
+        android:src="@drawable/ic_bag" />
 
-        <ImageView
-            android:id="@+id/clothesImagecv"
-            android:layout_width="match_parent"
-            android:layout_height="280dp"
-            android:layout_marginStart="16dp"
-            android:layout_below="@+id/purchaseNumber"
-            android:layout_marginEnd="16dp" />
+    <TextView
+        android:id="@+id/purchaseNumberViewing"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/shopText"
+        android:layout_marginTop="26dp"
+        android:layout_marginEnd="2dp"
+        android:layout_toLeftOf="@+id/bag"
+        android:fontFamily="@font/montserrat_bold"
+        android:text="144"
+        android:textColor="@color/app_grey"
+        android:textSize="14sp" />
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/clothesImagecv"
-            android:paddingTop="16dp"
-            android:paddingBottom="16dp">
+    <ImageView
+        android:id="@+id/clothesImagecv"
+        android:layout_width="match_parent"
+        android:layout_height="312dp"
+        android:layout_below="@+id/creator"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="24dp" />
 
-            <TextView
-                android:id="@+id/clothesTitlecv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginStart="16dp"
-                android:fontFamily="@font/montserratblack"
-                android:textColor="@color/app_color"
-                android:textSize="24dp" />
+    <TextView
+        android:id="@+id/clothesTitlecv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="16dp"
+        android:layout_below="@+id/clothesImagecv"
+        android:fontFamily="@font/montserratblack"
+        android:textColor="@color/app_color"
+        android:textSize="24dp" />
 
-            <LinearLayout
-                android:id="@+id/clothesPriceLayout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:layout_marginEnd="16dp"
-                android:background="@drawable/corners14appcolor"
-                android:orientation="horizontal">
+    <TextView
+        android:id="@+id/tryOnClothes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/app_color"
+        android:text="@string/tryOnClothes"
+        android:textSize="13dp"
+        android:background="@drawable/corners14dpappcolor2dpstroke"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/clothesImagecv"
+        android:layout_marginEnd="24dp"
+        android:layout_marginTop="16dp"
+        android:padding="11dp"
+        android:fontFamily="@font/montserrat_bold"/>
 
-                <ImageView
-                    android:id="@+id/coinsImage"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingStart="16dp"
-                    android:paddingTop="12dp"
-                    android:paddingEnd="2dp"
-                    android:paddingBottom="12dp"
-                    android:src="@drawable/ic_schoolycoinsmall" />
+    <RelativeLayout
+        android:id="@+id/checkBasket"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@+id/tryOnClothes"
+        android:layout_below="@+id/clothesImagecv"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="16dp">
 
-                <ImageView
-                    android:id="@+id/dollarImage"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingStart="16dp"
-                    android:paddingTop="2dp"
-                    android:paddingEnd="2dp"
-                    android:paddingBottom="2dp"
-                    android:src="@drawable/ic_dollarwhitebig"
-                    android:visibility="gone"/>
+    <ImageView
+        android:id="@+id/inBasketClothes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_inbasket"
+        android:visibility="gone"/>
 
-
-                <TextView
-                    android:id="@+id/clothesPricecv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:fontFamily="@font/montserratblack"
-                    android:paddingEnd="16dp"
-                    android:textColor="@color/white"
-                    android:textSize="20sp" />
-
-            </LinearLayout>
-
-        </RelativeLayout>
-
+    <ImageView
+        android:id="@+id/notInBasketClothes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_notinbasket" />
 
     </RelativeLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/relativeClothesImage" />
+    <TextView
+        android:id="@+id/descriptionText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tryOnClothes"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        android:fontFamily="@font/montserrat_bold"
+        android:text="@string/descriptipon"
+        android:textColor="@color/app_grey" />
+
+    <TextView
+        android:id="@+id/description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/descriptionText"
+        android:fontFamily="@font/montserrat_bold"
+        android:textColor="@color/app_grey"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginTop="4dp"/>
+
+    <TextView
+        android:id="@+id/noDescription"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/descriptionText"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="24dp"
+        android:textColor="@color/app_grey"
+        android:fontFamily="@font/montserrat_bold"
+        android:text="@string/noDescriptipon"
+        android:visibility="gone"/>
+
 
     <RelativeLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="24dp"
         android:layout_alignParentBottom="true"
-        android:background="@drawable/corners30dp"
-        android:elevation="25dp">
+        android:background="@drawable/corners20appcolor">
 
         <TextView
             android:id="@+id/buyClothesBottom"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/inBasketClothes"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
+            android:layout_alignParentEnd="true"
             android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
             android:layout_marginBottom="16dp"
-            android:background="@drawable/corners14green"
+            android:background="@drawable/corners14dpwhite"
             android:fontFamily="@font/montserratblack"
-            android:paddingStart="20dp"
+            android:paddingStart="25dp"
             android:paddingTop="12dp"
-            android:paddingEnd="20dp"
+            android:paddingEnd="25dp"
             android:paddingBottom="12dp"
-            android:textColor="@color/white"
-            android:textSize="18sp" />
+            android:text="@string/buy"
+            android:textColor="@color/app_color"
+            android:textSize="18sp"
+            android:elevation="18dp"/>
 
-        <TextView
-            android:id="@+id/inBasketClothes"
+        <ImageView
+            android:id="@+id/coinsImage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="16dp"
-            android:background="@drawable/corners14appcolor"
+            android:src="@drawable/ic_schoolycoin24dp"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="16dp"/>
+
+        <ImageView
+            android:id="@+id/dollarImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_dollarwhitebig"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="20dp"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/clothesPricecv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="42dp"
             android:fontFamily="@font/montserratblack"
-            android:paddingStart="20dp"
-            android:paddingTop="12dp"
-            android:paddingEnd="20dp"
-            android:paddingBottom="12dp"
             android:textColor="@color/white"
-            android:textSize="18sp" />
+            android:textSize="26sp" />
 
 
     </RelativeLayout>

@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,9 +45,10 @@ public class ViewingClothes extends Fragment {
     }
 
 
-    TextView clothesPriceCV,clothesTitleCV,schoolyCoinCV,buyClothesBottom,inBasket,purchaseNumber;
-    ImageView clothesImageCV,backToShop,coinsImage,dollarImage;
+    TextView clothesPriceCV,clothesTitleCV,schoolyCoinCV,buyClothesBottom,purchaseNumber,creator,description,noDescription;
+    ImageView clothesImageCV,backToShop,coinsImage,dollarImage,inBasket,notInBasket;
     long schoolyCoins,clothesPrise;
+    RelativeLayout checkBasket;
     Clothes clothesViewing;
     private FirebaseModel firebaseModel = new FirebaseModel();
     NewClothesAdapter.ViewHolder viewHolder;
@@ -69,9 +71,14 @@ public class ViewingClothes extends Fragment {
         schoolyCoinCV=view.findViewById(R.id.schoolycoincvfrag);
         clothesImageCV=view.findViewById(R.id.clothesImagecv);
         inBasket=view.findViewById(R.id.inBasketClothes);
+        notInBasket=view.findViewById(R.id.notInBasketClothes);
         coinsImage=view.findViewById(R.id.coinsImage);
+        noDescription=view.findViewById(R.id.noDescription);
         dollarImage=view.findViewById(R.id.dollarImage);
         clothesTitleCV=view.findViewById(R.id.clothesTitlecv);
+        description=view.findViewById(R.id.description);
+        creator=view.findViewById(R.id.creator);
+        checkBasket=view.findViewById(R.id.checkBasket);
         clothesPriceCV=view.findViewById(R.id.clothesPricecv);
         backToShop=view.findViewById(R.id.back_toshop);
         buyClothesBottom=view.findViewById(R.id.buyClothesBottom);
@@ -87,11 +94,16 @@ public class ViewingClothes extends Fragment {
             @Override
             public void onItemClick(Clothes clothes) {
                 clothesViewing=clothes;
-                Log.d("#####", "title2def  "+clothes);
                 clothesPriceCV.setText(String.valueOf(clothes.getClothesPrice()));
                 clothesTitleCV.setText(clothes.getClothesTitle());
-                Log.d("#####", "title2  "+clothes.getClothesTitle());
                 clothesPrise=clothes.getClothesPrice();
+                creator.setText(clothesViewing.getCreator());
+                if (clothesViewing.getDescription().length()==0){
+                    noDescription.setVisibility(View.VISIBLE);
+                    description.setVisibility(View.GONE);
+                }else {
+                    description.setText(clothesViewing.getDescription());
+                }
                 purchaseNumber.setText(String.valueOf(clothesViewing.getPurchaseNumber()));
                 Picasso.get().load(clothes.getClothesImage()).into(clothesImageCV);
                 if (clothesViewing.getCurrencyType().equals("dollar")){
@@ -170,7 +182,7 @@ public class ViewingClothes extends Fragment {
     }
 
     public void putInBasket(){
-        inBasket.setOnClickListener(new View.OnClickListener() {
+        checkBasket.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
@@ -207,11 +219,11 @@ public class ViewingClothes extends Fragment {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         if(snapshot.exists()){
-                            inBasket.setText("В корзине");
-                            inBasket.setBackgroundResource(R.drawable.corners14appcolor);
+                            inBasket.setVisibility(View.VISIBLE);
+                            notInBasket.setVisibility(View.GONE);
                         }else {
-                            inBasket.setText("В корзину");
-                            inBasket.setBackgroundResource(R.drawable.corners14appcolor);
+                            inBasket.setVisibility(View.GONE);
+                            notInBasket.setVisibility(View.VISIBLE);
                         }
                     }
 
@@ -235,8 +247,6 @@ public class ViewingClothes extends Fragment {
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         if(snapshot.exists()){
                             buyClothesBottom.setText("Куплено");
-                            buyClothesBottom.setBackgroundResource(R.drawable.corners14appcolor);
-                            inBasket.setBackgroundResource(R.drawable.corners14grey);
                         }else {
                             buyClothesBottom.setText("Купить");
                         }

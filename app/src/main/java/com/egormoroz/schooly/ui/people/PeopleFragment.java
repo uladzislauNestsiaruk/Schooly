@@ -111,9 +111,9 @@ public class PeopleFragment extends Fragment {
                                             @Override
                                             public void PassUserNick(String nick) {
                                                 if(userNameToProfile.equals(nick)){
-                                                    RecentMethods.setCurrentFragment(ProfileFragment.newInstance("user",nick),getActivity());
+                                                    RecentMethods.setCurrentFragment(ProfileFragment.newInstance("user",nick,PeopleFragment.newInstance()),getActivity());
                                                 }else {
-                                                    RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile),
+                                                    RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile,PeopleFragment.newInstance()),
                                                             getActivity());
                                                 }
                                             }

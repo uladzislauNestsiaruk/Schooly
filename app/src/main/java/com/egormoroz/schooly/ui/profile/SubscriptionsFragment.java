@@ -64,7 +64,7 @@ public class SubscriptionsFragment extends Fragment {
                 RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
                     @Override
                     public void PassUserNick(String nick) {
-                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("user",nick),getActivity());
+                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("user",nick,SubscriptionsFragment.newInstance()),getActivity());
                     }
                 });
             }
@@ -91,9 +91,9 @@ public class SubscriptionsFragment extends Fragment {
                                                     Subscriber user = subscriptionsAdapter.getItem(position);
                                                     userNameToProfile=user.getSub();
                                                     if(userNameToProfile.equals(nick)){
-                                                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("user",nick),getActivity());
+                                                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("user",nick,SubscriptionsFragment.newInstance()),getActivity());
                                                     }else {
-                                                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile),
+                                                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile,SubscriptionsFragment.newInstance()),
                                                                 getActivity());
                                                     }
                                                 }
@@ -163,7 +163,7 @@ public class SubscriptionsFragment extends Fragment {
                                                 Subscriber subscriber = subscriptionsAdapter.getItem(position);
                                                 userNameToProfile = subscriber.getSub();
                                                 Log.d("###", "n " + userNameToProfile);
-                                                RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile),
+                                                RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile,SubscriptionsFragment.newInstance()),
                                                         getActivity());
                                             }
                                         };

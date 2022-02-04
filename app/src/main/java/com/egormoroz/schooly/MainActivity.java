@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
                         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
                             @Override
                             public void PassUserNick(String nick) {
-                                setCurrentFragment(ProfileFragment.newInstance("user", nick));
+                                setCurrentFragment(ProfileFragment.newInstance("user", nick,MainFragment.newInstance()));
                             }
                         });
 //                        appBarLayout.setVisibility(View.GONE);

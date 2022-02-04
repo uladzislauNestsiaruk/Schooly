@@ -20,6 +20,7 @@ import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.ui.main.UserInformation;
+import com.egormoroz.schooly.ui.people.PeopleFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -86,7 +87,7 @@ public class ComplainFragmentToBase extends Fragment {
                         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
                             @Override
                             public void PassUserNick(String nick) {
-                                RecentMethods.setCurrentFragment(ProfileFragment.newInstance("user", nick), getActivity());
+                                RecentMethods.setCurrentFragment(ProfileFragment.newInstance("user", nick, PeopleFragment.newInstance()), getActivity());
                             }
                         });
                     }

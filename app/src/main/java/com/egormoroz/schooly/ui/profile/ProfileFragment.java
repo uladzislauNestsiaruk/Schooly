@@ -102,6 +102,7 @@ public class ProfileFragment extends Fragment {
     ImageView moreSquare,back;
     int looksListSize,profileValue;
     String sendNick;
+    Fragment fragment;
     private float[] backgroundColor = new float[]{0f, 0f, 0f, 1.0f};
     private Handler handler;
     int a;
@@ -113,13 +114,14 @@ public class ProfileFragment extends Fragment {
         profileContext = context;
     }
 
-    public ProfileFragment(String type, String sendNick) {
+    public ProfileFragment(String type, String sendNick,Fragment fragment) {
         this.type = type;
         this.sendNick=sendNick;
+        this.fragment=fragment;
     }
 
-    public static ProfileFragment newInstance(String type, String sendNick) {
-        return new ProfileFragment(type, sendNick);
+    public static ProfileFragment newInstance(String type, String sendNick,Fragment fragment) {
+        return new ProfileFragment(type, sendNick,fragment);
     }
 
 
@@ -387,7 +389,7 @@ public class ProfileFragment extends Fragment {
                         back.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                RecentMethods.setCurrentFragment(PeopleFragment.newInstance(), getActivity());
+                                RecentMethods.setCurrentFragment(fragment, getActivity());
                             }
                         });
                         otherUserBiography.setText(info.getBio());
@@ -687,112 +689,6 @@ public class ProfileFragment extends Fragment {
 
                     }
                 });
-//                if (profileValue!=0) {
-//                    if (info.getAccountType().equals("open") || profileValue == 1) {
-//                        otherLooksCount = view.findViewById(R.id.looksCountOther);
-//                        otherSubscriptionCount = view.findViewById(R.id.subscriptionCountOther);
-//                        otherSubscribersCount = view.findViewById(R.id.subsCountOther);
-//                        noLooksOther=view.findViewById(R.id.noLooksOther);
-//                        linearSubscriptions = view.findViewById(R.id.subscriptionLinear);
-//                        linearSubscribers = view.findViewById(R.id.subscribersLinear);
-//                        checkLooksOther();
-//                        linearSubscriptions.setOnClickListener(new View.OnClickListener() {
-//                            @Override
-//                            public void onClick(View v) {
-//                                RecentMethods.setCurrentFragment(SubscriptionsFragmentOther.newInstance(), getActivity());
-//                            }
-//                        });
-//                        linearSubscribers.setOnClickListener(new View.OnClickListener() {
-//                            @Override
-//                            public void onClick(View v) {
-//                                RecentMethods.setCurrentFragment(SubscribesFragmentOther.newInstance(), getActivity());
-//                            }
-//                        });
-//
-//                        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-//                            @Override
-//                            public void PassUserNick(String nick) {
-//                                Query query = firebaseModel.getUsersReference().child(nick).child("subscription")
-//                                        .child(info.getNick());
-//                                query.addValueEventListener(new ValueEventListener() {
-//                                    @Override
-//                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                                        if (snapshot.exists()) {
-//                                            addFriend.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
-//                                            addFriend.setTextColor(Color.parseColor("#F3A2E5"));
-//                                            addFriend.setText("Отписаться");
-//                                        }
-//                                    }
-//
-//                                    @Override
-//                                    public void onCancelled(@NonNull DatabaseError error) {
-//
-//                                    }
-//                                });
-//                            }
-//                        });
-//
-//                        addFriend.setOnClickListener(new View.OnClickListener() {
-//                            @Override
-//                            public void onClick(View v) {
-//                                RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-//                                    @Override
-//                                    public void PassUserNick(String nick) {
-//                                        Query query = firebaseModel.getUsersReference().child(nick).child("subscription")
-//                                                .child(info.getNick());
-//                                        query.addValueEventListener(new ValueEventListener() {
-//                                            @Override
-//                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                                                if (snapshot.exists()) {
-//                                                    firebaseModel.getReference().child("users")
-//                                                            .child(info.getNick()).child("subscribers")
-//                                                            .child(nick).removeValue();
-//                                                    firebaseModel.getReference().child("users")
-//                                                            .child(nick).child("subscription")
-//                                                            .child(info.getNick()).removeValue();
-//                                                    addFriend.setBackgroundResource(R.drawable.corners10dpappcolor);
-//                                                    addFriend.setText("Подпиматься");
-//                                                    addFriend.setTextColor(Color.parseColor("#FFFEFE"));
-//                                                } else {
-//                                                    firebaseModel.getReference().child("users")
-//                                                            .child(info.getNick()).child("subscribers")
-//                                                            .child(nick).setValue(nick);
-//                                                    firebaseModel.getReference().child("users")
-//                                                            .child(info.getNick()).child("nontifications")
-//                                                            .child(nick).setValue(nick);
-//                                                    firebaseModel.getReference().child("users")
-//                                                            .child(info.getNick()).child("nontificationsRecycler")
-//                                                            .child(nick).setValue(nick);
-//                                                    firebaseModel.getReference().child("users")
-//                                                            .child(nick).child("subscription")
-//                                                            .child(info.getNick()).setValue(info.getNick());
-//                                                    addFriend.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
-//                                                    addFriend.setText("Отписаться");
-//                                                    addFriend.setTextColor(Color.parseColor("#F3A2E5"));
-//                                                }
-//                                            }
-//
-//                                            @Override
-//                                            public void onCancelled(@NonNull DatabaseError error) {
-//
-//                                            }
-//                                        });
-//                                    }
-//                                });
-//                            }
-//                        });
-//                    } else {
-//                        subscribeClose.setVisibility(View.VISIBLE);
-//                        closeAccount.setVisibility(View.VISIBLE);
-//                        subscribeFirst.setVisibility(View.VISIBLE);
-//                        subscribeFirst.setText("Подпишись на " + " " + info.getNick() + " !");
-//                        message.setVisibility(View.GONE);
-//                        addFriend.setVisibility(View.GONE);
-//                        looksText.setVisibility(View.GONE);
-//                        looksRecycler.setVisibility(View.GONE);
-//                    }
-//                }
-
                 break;
         }
     }

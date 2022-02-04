@@ -57,7 +57,7 @@ public class EditingFragment extends Fragment {
                 RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
                     @Override
                     public void PassUserNick(String nick) {
-                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("user", nick), getActivity());
+                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("user", nick,EditingFragment.newInstance()), getActivity());
                     }
                 });
             }

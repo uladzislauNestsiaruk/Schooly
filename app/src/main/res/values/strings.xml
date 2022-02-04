@@ -218,5 +218,9 @@
     <string name="character">Персонаж</string>
     <string name="ready">ГОТОВО</string>
     <string name="acceptCharacter">Сохранить персонажа</string>
+    <string name="tryOnClothes">Примерить</string>
+    <string name="descriptipon">Описание:</string>
+    <string name="noDescriptipon">Нет описания:(</string>
+
 
 </resources>
