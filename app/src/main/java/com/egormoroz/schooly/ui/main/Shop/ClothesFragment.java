@@ -104,6 +104,7 @@ public class ClothesFragment extends Fragment {
                 }
                 PopularClothesAdapter popularClothesAdapter=new PopularClothesAdapter(popularSortClothesArrayList,itemClickListenerPopular);
                 popularClothes.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+                popularClothes.setNestedScrollingEnabled(false);
                 popularClothes.setAdapter(popularClothesAdapter);
             }
         });

@@ -51,6 +51,7 @@ import com.egormoroz.schooly.ui.main.Shop.ShopFragment;
 import com.egormoroz.schooly.ui.main.Shop.ViewingClothes;
 import com.egormoroz.schooly.ui.main.UserInformation;
 import com.egormoroz.schooly.ui.people.PeopleFragment;
+import com.egormoroz.schooly.ui.profile.Wardrobe.CreateLookFragment;
 import com.egormoroz.schooly.ui.profile.Wardrobe.WardrobeAdapterProfile;
 import com.egormoroz.schooly.ui.profile.Wardrobe.WardrobeClothes;
 import com.egormoroz.schooly.ui.profile.Wardrobe.WardrobeFragment;
@@ -99,7 +100,7 @@ public class ProfileFragment extends Fragment {
     SceneView mainLook;
    // ModelRenderer modelRenderer;
     RecyclerView looksRecycler,wardrobeRecycler,looksRecyclerOther;
-    ImageView moreSquare,back;
+    ImageView moreSquare,back,newLook;
     int looksListSize,profileValue;
     String sendNick;
     Fragment fragment;
@@ -223,6 +224,13 @@ public class ProfileFragment extends Fragment {
                     @Override
                     public void onClick(View v) {
                         ((MainActivity) getActivity()).setCurrentFragment(SettingsFragment.newInstance());
+                    }
+                });
+                newLook=view.findViewById(R.id.newLook);
+                newLook.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        RecentMethods.setCurrentFragment(CreateLookFragment.newInstance(), getActivity());
                     }
                 });
                 ///////// I want GM on CF

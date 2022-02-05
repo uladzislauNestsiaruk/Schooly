@@ -98,7 +98,7 @@ public class ViewingClothes extends Fragment {
                 clothesTitleCV.setText(clothes.getClothesTitle());
                 clothesPrise=clothes.getClothesPrice();
                 creator.setText(clothesViewing.getCreator());
-                if (clothesViewing.getDescription().length()==0){
+                if (clothesViewing.getDescription().trim().length()==0){
                     noDescription.setVisibility(View.VISIBLE);
                     description.setVisibility(View.GONE);
                 }else {
@@ -188,14 +188,33 @@ public class ViewingClothes extends Fragment {
                 RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
                     @Override
                     public void PassUserNick(String nick) {
+                        Query queryBasket=firebaseModel.getUsersReference().child(nick)
+                                .child("basket").child(clothesViewing.getClothesTitle());
+                        queryBasket.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                if (snapshot.exists()){
+                                    firebaseModel.getUsersReference().child(nick).child("basket")
+                                            .child(clothesViewing.getClothesTitle()).removeValue();
+                                }else {
+                                    firebaseModel.getUsersReference().child(nick).child("basket")
+                                            .child(clothesViewing.getClothesTitle()).setValue(clothesViewing);
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
                         Query query=firebaseModel.getUsersReference().child(nick).child("clothes")
                                 .child(clothesViewing.getClothesTitle());
                         query.addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
                                 if(snapshot.exists()){
-                                }else {firebaseModel.getUsersReference().child(nick).child("basket")
-                                        .child(clothesViewing.getClothesTitle()).setValue(clothesViewing);}
+                                    Toast.makeText(getContext(), "Предмет куплен", Toast.LENGTH_SHORT).show();
+                                }else {}
                             }
 
                             @Override

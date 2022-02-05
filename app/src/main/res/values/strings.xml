@@ -215,6 +215,8 @@
 
     <string name="notFound">Ничего не найдено:(</string>
 
+    <string name="newLook">Новый образ</string>
+
     <string name="character">Персонаж</string>
     <string name="ready">ГОТОВО</string>
     <string name="acceptCharacter">Сохранить персонажа</string>
