@@ -10,6 +10,14 @@
             android:layout_height="wrap_content"
             android:gravity="center_vertical">
 
+            <com.google.ar.sceneform.SceneView
+                android:id="@+id/sceneViewWardrobe"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignBottom="@+id/wardrobe_text"
+                android:layout_alignTop="@+id/linearsearch">
+
+            </com.google.ar.sceneform.SceneView>
 
             <ImageView
                 android:id="@+id/back_toprofile"
@@ -20,6 +28,7 @@
                 android:src="@drawable/left_arrow"/>
 
             <TextView
+                android:id="@+id/wardrobe_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
@@ -42,33 +51,33 @@
                 app:tabTextAppearance="@style/AppTabTextAppearanceShop" />
 
 
-        <LinearLayout
-            android:id="@+id/linearsearch"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:background="@drawable/corners12_2dpstrokeappcolor"
-            android:paddingTop="13dp"
-            android:paddingBottom="13dp"
-            android:layout_marginTop="374dp"
-            android:layout_marginEnd="24dp"
-            android:layout_marginStart="24dp">
-
-            <EditText
-                android:id="@+id/searchClothesWardrobe"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:id="@+id/linearsearch"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/search"
-                android:textColorHint="@color/greysearch"
-                android:textSize="15sp"
-                android:background="@null"
-                android:textColor="@color/app_grey"
-                android:layout_weight="10"
-                android:layout_marginStart="16dp"
-                android:layout_gravity="start|center"
-                android:fontFamily="@font/montserrat_bold"/>
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="374dp"
+                android:layout_marginEnd="24dp"
+                android:background="@drawable/corners12_2dpstrokeappcolor"
+                android:orientation="horizontal"
+                android:paddingTop="13dp"
+                android:paddingBottom="13dp">
 
-        </LinearLayout>
+                <EditText
+                    android:id="@+id/searchClothesWardrobe"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start|center"
+                    android:layout_marginStart="16dp"
+                    android:layout_weight="10"
+                    android:background="@null"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:hint="@string/search"
+                    android:textColor="@color/app_grey"
+                    android:textColorHint="@color/greysearch"
+                    android:textSize="15sp" />
+
+            </LinearLayout>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/searchRecycler"
