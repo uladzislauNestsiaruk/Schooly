@@ -49,6 +49,7 @@ public class ViewingClothes extends Fragment {
     ImageView clothesImageCV,backToShop,coinsImage,dollarImage,inBasket,notInBasket;
     long schoolyCoins,clothesPrise;
     RelativeLayout checkBasket;
+    int a=0;
     Clothes clothesViewing;
     private FirebaseModel firebaseModel = new FirebaseModel();
     NewClothesAdapter.ViewHolder viewHolder;
@@ -112,9 +113,15 @@ public class ViewingClothes extends Fragment {
                 }
             }
         });
+        checkClothes();
+        if (a==2 || a==0){
+            checkIfBuy();
+        }
         buyClothes();
         putInBasket();
-        checkClothes();
+        if (a!=3 && a!=0){
+            checkClothes();
+        }
         checkClothesOnBuy();
     }
 
@@ -127,6 +134,29 @@ public class ViewingClothes extends Fragment {
                     public void GetMoneyFromBase(long money) {
                         schoolyCoins=money;
                         schoolyCoinCV.setText(String.valueOf(money));
+                    }
+                });
+            }
+        });
+    }
+
+    public void checkIfBuy(){
+        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+            @Override
+            public void PassUserNick(String nick) {
+                Query query2=firebaseModel.getUsersReference().child(nick).child("clothes")
+                        .child(clothesViewing.getClothesTitle());
+                query2.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if(snapshot.exists()){
+                            a=3;
+                        }else {}
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
                     }
                 });
             }
@@ -188,31 +218,13 @@ public class ViewingClothes extends Fragment {
                 RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
                     @Override
                     public void PassUserNick(String nick) {
-                        Query queryBasket=firebaseModel.getUsersReference().child(nick)
-                                .child("basket").child(clothesViewing.getClothesTitle());
-                        queryBasket.addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                if (snapshot.exists()){
-                                    firebaseModel.getUsersReference().child(nick).child("basket")
-                                            .child(clothesViewing.getClothesTitle()).removeValue();
-                                }else {
-                                    firebaseModel.getUsersReference().child(nick).child("basket")
-                                            .child(clothesViewing.getClothesTitle()).setValue(clothesViewing);
-                                }
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
-
-                            }
-                        });
                         Query query=firebaseModel.getUsersReference().child(nick).child("clothes")
                                 .child(clothesViewing.getClothesTitle());
                         query.addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
                                 if(snapshot.exists()){
+                                    a=3;
                                     Toast.makeText(getContext(), "Предмет куплен", Toast.LENGTH_SHORT).show();
                                 }else {}
                             }
@@ -222,6 +234,15 @@ public class ViewingClothes extends Fragment {
 
                             }
                         });
+                        if(a!=0 && a!=3){
+                            if(a==1){
+                                firebaseModel.getUsersReference().child(nick).child("basket")
+                                        .child(clothesViewing.getClothesTitle()).removeValue();
+                            }else if (a==2){
+                                firebaseModel.getUsersReference().child(nick).child("basket")
+                                        .child(clothesViewing.getClothesTitle()).setValue(clothesViewing);
+                            }
+                        }
                     }
                 });
             }
@@ -238,9 +259,11 @@ public class ViewingClothes extends Fragment {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         if(snapshot.exists()){
+                            a=1;
                             inBasket.setVisibility(View.VISIBLE);
                             notInBasket.setVisibility(View.GONE);
                         }else {
+                            a=2;
                             inBasket.setVisibility(View.GONE);
                             notInBasket.setVisibility(View.VISIBLE);
                         }
