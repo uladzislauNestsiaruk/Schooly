@@ -118,6 +118,22 @@ public class PeopleFragment extends Fragment {
                                                         @Override
                                                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                                                             avatar=snapshot.getValue(String.class);
+                                                            Query querySearchedBio=firebaseModel.getUsersReference().child(userNameToProfile).child("bio");
+                                                            querySearchedBio.addValueEventListener(new ValueEventListener() {
+                                                                @Override
+                                                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                                    bio=snapshot.getValue(String.class);
+                                                                    firebaseModel.getUsersReference().child(nick).child("alreadySearched").child(userNameToProfile)
+                                                                            .setValue(new UserPeopleAdapter(userNameToProfile, avatar, bio));
+                                                                    RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile,PeopleFragment.newInstance()),
+                                                                            getActivity());
+                                                                }
+
+                                                                @Override
+                                                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                                                }
+                                                            });
                                                         }
 
                                                         @Override
@@ -125,23 +141,6 @@ public class PeopleFragment extends Fragment {
 
                                                         }
                                                     });
-                                                    Query querySearchedBio=firebaseModel.getUsersReference().child(userNameToProfile).child("bio");
-                                                    querySearchedBio.addValueEventListener(new ValueEventListener() {
-                                                        @Override
-                                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                            bio=snapshot.getValue(String.class);
-                                                        }
-
-                                                        @Override
-                                                        public void onCancelled(@NonNull DatabaseError error) {
-
-                                                        }
-                                                    });
-                                                    if (bio!=null && avatar!=null) {
-                                                        firebaseModel.getUsersReference().child(nick).child("alreadySearched").child(userNameToProfile).setValue(new UserPeopleAdapter(userNameToProfile, avatar, bio));
-                                                    }
-                                                    RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile,PeopleFragment.newInstance()),
-                                                            getActivity());
                                                 }
                                             }
                                         });

@@ -43,10 +43,10 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.ViewHolder
         UserPeopleAdapter userInformation=listAdapterPeople.get(position);
         holder.usernickname.setText(userInformation.getNick());
         Picasso.get().load(userInformation.getAvatar()).into( holder.userAvatar);
-        holder.usernickname.setOnClickListener(new View.OnClickListener() {
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                if (clickListener != null) clickListener.onItemClick(view, position);
+            public void onClick(View v) {
+                if (clickListener != null) clickListener.onItemClick(v, position);
             }
         });
     }

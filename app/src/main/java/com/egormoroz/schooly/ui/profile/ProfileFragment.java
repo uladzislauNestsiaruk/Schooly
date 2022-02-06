@@ -52,6 +52,7 @@ import com.egormoroz.schooly.ui.main.Shop.ShopFragment;
 import com.egormoroz.schooly.ui.main.Shop.ViewingClothes;
 import com.egormoroz.schooly.ui.main.UserInformation;
 import com.egormoroz.schooly.ui.people.PeopleFragment;
+import com.egormoroz.schooly.ui.people.UserPeopleAdapter;
 import com.egormoroz.schooly.ui.profile.Wardrobe.CreateLookFragment;
 import com.egormoroz.schooly.ui.profile.Wardrobe.WardrobeAdapterProfile;
 import com.egormoroz.schooly.ui.profile.Wardrobe.WardrobeClothes;
