@@ -53,6 +53,7 @@ public class AverageMinersAdapter extends RecyclerView.Adapter<AverageMinersAdap
         firebaseModel.initAll();
         Miner miner=listAdapterAverageMiner.get(position);
         holder.minerPrice.setText(String.valueOf(miner.getMinerPrice()));
+        holder.inHour.setText(String.valueOf(miner.getInHour()+" в час"));
         String minerPriceText= (String) holder.minerPrice.getText();
         holder.minerImage.setVisibility(View.VISIBLE);
         Picasso.get().load(miner.getMinerImage()).into(holder.minerImage);
@@ -124,13 +125,14 @@ public class AverageMinersAdapter extends RecyclerView.Adapter<AverageMinersAdap
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        final TextView minerPrice,buy;
+        final TextView minerPrice,buy,inHour;
         ImageView minerImage;
         ViewHolder(View itemView) {
             super(itemView);
             minerPrice=itemView.findViewById(R.id.minerprice);
             buy=itemView.findViewById(R.id.buy);
             minerImage=itemView.findViewById(R.id.minerImage);
+            inHour=itemView.findViewById(R.id.inHour);
         }
 
     }

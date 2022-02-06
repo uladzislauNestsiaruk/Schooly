@@ -237,11 +237,9 @@ public class ProfileFragment extends Fragment {
                 ///////// I want GM on CF
                 ImageView arrowtowardrobe = view.findViewById(R.id.arrowtowardrobe);
                 arrowtowardrobe.setOnClickListener(new View.OnClickListener() {
-
-
                     @Override
                     public void onClick(View v) {
-                        ((MainActivity) getActivity()).setCurrentFragment(WardrobeFragment.newInstance());
+                        RecentMethods.setCurrentFragment(WardrobeFragment.newInstance(), getActivity());
                     }
                 });
                 TextView editing = view.findViewById(R.id.redact);

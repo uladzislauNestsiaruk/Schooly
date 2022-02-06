@@ -26,7 +26,7 @@ public class SchoolyApplication extends Application {
                 .build();
 
         PeriodicWorkRequest sendLogsWorkRequest = new
-                PeriodicWorkRequest.Builder(NontificationManager.class, 24, TimeUnit.HOURS)
+                PeriodicWorkRequest.Builder(NontificationManager.class, 15, TimeUnit.MINUTES)
                 .setConstraints(constraints
                 )
                 .build();

@@ -101,7 +101,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_below="@+id/edittextbio"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="60dp"
                 android:background="@drawable/corners15dpappcolor"
                 android:fontFamily="@font/montserrat_bold"
                 android:padding="12dp"

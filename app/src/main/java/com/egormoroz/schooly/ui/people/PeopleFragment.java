@@ -32,7 +32,7 @@ public class PeopleFragment extends Fragment {
     ArrayList<UserInformation> listAdapterPeople=new ArrayList<UserInformation>();
     RecyclerView peopleRecyclerView;
     EditText searchUser;
-    String userName,userNameToProfile;
+    String userName,userNameToProfile,avatar,bio;
 
 
     public static PeopleFragment newInstance() {
@@ -113,6 +113,33 @@ public class PeopleFragment extends Fragment {
                                                 if(userNameToProfile.equals(nick)){
                                                     RecentMethods.setCurrentFragment(ProfileFragment.newInstance("user",nick,PeopleFragment.newInstance()),getActivity());
                                                 }else {
+                                                    Query querySearchedAvatar=firebaseModel.getUsersReference().child(userNameToProfile).child("avatar");
+                                                    querySearchedAvatar.addValueEventListener(new ValueEventListener() {
+                                                        @Override
+                                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                            avatar=snapshot.getValue(String.class);
+                                                        }
+
+                                                        @Override
+                                                        public void onCancelled(@NonNull DatabaseError error) {
+
+                                                        }
+                                                    });
+                                                    Query querySearchedBio=firebaseModel.getUsersReference().child(userNameToProfile).child("bio");
+                                                    querySearchedBio.addValueEventListener(new ValueEventListener() {
+                                                        @Override
+                                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                            bio=snapshot.getValue(String.class);
+                                                        }
+
+                                                        @Override
+                                                        public void onCancelled(@NonNull DatabaseError error) {
+
+                                                        }
+                                                    });
+                                                    if (bio!=null && avatar!=null) {
+                                                        firebaseModel.getUsersReference().child(nick).child("alreadySearched").child(userNameToProfile).setValue(new UserPeopleAdapter(userNameToProfile, avatar, bio));
+                                                    }
                                                     RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile,PeopleFragment.newInstance()),
                                                             getActivity());
                                                 }
