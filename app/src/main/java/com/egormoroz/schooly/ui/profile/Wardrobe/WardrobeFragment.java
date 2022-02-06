@@ -1,5 +1,7 @@
 package com.egormoroz.schooly.ui.profile.Wardrobe;
 
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -12,6 +14,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Lifecycle;
@@ -32,12 +35,20 @@ import com.egormoroz.schooly.ui.main.UserInformation;
 import com.egormoroz.schooly.ui.profile.ProfileFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.tabs.TabLayout;
+import com.google.ar.core.exceptions.CameraNotAvailableException;
+import com.google.ar.sceneform.Node;
+import com.google.ar.sceneform.SceneView;
+import com.google.ar.sceneform.assets.RenderableSource;
+import com.google.ar.sceneform.math.Quaternion;
+import com.google.ar.sceneform.math.Vector3;
+import com.google.ar.sceneform.rendering.ModelRenderable;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.function.Consumer;
 
 public class WardrobeFragment extends Fragment {
     public static WardrobeFragment newInstance() {
@@ -51,6 +62,7 @@ public class WardrobeFragment extends Fragment {
     EditText searchText;
     TabLayout tabLayout;
     TextView notFound;
+    SceneView sceneView;
     WardrobeClothesAdapter.ItemClickListener itemClickListener;
 
 
@@ -67,7 +79,7 @@ public class WardrobeFragment extends Fragment {
     @Override
     public void onViewCreated(@Nullable View view, @NonNull Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
-
+        sceneView = view.findViewById(R.id.sceneViewWardrobe);
         searchText=view.findViewById(R.id.searchClothesWardrobe);
         searchRecycler=view.findViewById(R.id.searchRecycler);
         notFound=view.findViewById(R.id.notFound);
@@ -84,6 +96,7 @@ public class WardrobeFragment extends Fragment {
                     searchRecycler.setVisibility(View.VISIBLE);
                     tabLayout.setVisibility(View.GONE);
                     loadSearchClothes(searchText.getText().toString());
+                    loadModels(Uri.parse("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Funtitled.glb?alt=media&token=657b45d7-a84b-4f2a-89f4-a699029401f7"), sceneView, WardrobeFragment.this);
                 }else{
                     viewPager.setVisibility(View.VISIBLE);
                     searchRecycler.setVisibility(View.GONE);
@@ -263,5 +276,62 @@ public class WardrobeFragment extends Fragment {
         public int getItemCount() {
             return 4;
         }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public void loadModels(Uri url, SceneView sceneView, Fragment fragment) {
+        ModelRenderable.builder()
+                .setSource(
+                        fragment.getContext(), new RenderableSource.Builder().setSource(
+                                fragment.getContext(),
+                                url,
+                                RenderableSource.SourceType.GLB
+                        ).setScale(0.25f)
+                                .setRecenterMode(RenderableSource.RecenterMode.CENTER)
+                                .build()
+                )
+                .setRegistryId(url)
+                .build()
+                .thenAccept(new Consumer<ModelRenderable>() {
+                    @Override
+                    public void accept(ModelRenderable modelRenderable) {
+                        addNode(modelRenderable, sceneView);
+                    }
+                });
+    }
+
+    public void addNode(ModelRenderable modelRenderable, SceneView sceneView) {
+        Node modelNode1 = new Node();
+        modelNode1.setRenderable(modelRenderable);
+        modelNode1.setLocalScale(new Vector3(0.3f, 0.3f, 0.3f));
+        modelNode1.setLocalRotation(Quaternion.multiply(
+                Quaternion.axisAngle(new Vector3(1f, 0f, 0f), 45),
+                Quaternion.axisAngle(new Vector3(0f, 1f, 0f), 75)));
+        modelNode1.setLocalPosition(new Vector3(0f, 0f, -0.9f));
+        sceneView.getScene().addChild(modelNode1);
+        try {
+            sceneView.resume();
+        } catch (CameraNotAvailableException e) {
+            e.printStackTrace();
+        }
+    }
+
+        @Override
+    public void onPause() {
+        super.onPause();
+      sceneView.pause();
+
+    }
+    @Override
+    public void onResume() {
+        super.onResume();
+        try {
+            sceneView.resume();
+
+
+        } catch (CameraNotAvailableException e) {
+            e.printStackTrace();
+        }
+
     }
 }

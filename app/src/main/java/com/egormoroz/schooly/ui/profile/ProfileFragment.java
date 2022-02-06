@@ -45,6 +45,7 @@ import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.Subscriber;
 import com.egormoroz.schooly.ui.Model.SceneViewModelActivity;
 import com.egormoroz.schooly.ui.main.ChatActivity;
+import com.egormoroz.schooly.ui.main.MainFragment;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
 import com.egormoroz.schooly.ui.main.Shop.NewClothesAdapter;
 import com.egormoroz.schooly.ui.main.Shop.ShopFragment;
@@ -97,7 +98,7 @@ public class ProfileFragment extends Fragment {
    // SceneLoader scene;
     LinearLayout linearLooks,linearSubscribers,linearSubscriptions;
    // ModelSurfaceView modelSurfaceView;
-    SceneView mainLook;
+    SceneView mainLook, otherMainLook;
    // ModelRenderer modelRenderer;
     RecyclerView looksRecycler,wardrobeRecycler,looksRecyclerOther;
     ImageView moreSquare,back,newLook;
@@ -358,16 +359,9 @@ public class ProfileFragment extends Fragment {
                         // Handle any errors
                     }
                 });
-                loadModels(Uri.parse("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Funtitled.glb?alt=media&token=657b45d7-a84b-4f2a-89f4-a699029401f7"), mainLook, ProfileFragment.this);
+                loadModels(Uri.parse("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Funtitled.glb?alt=media&token=657b45d7-a84b-4f2a-89f4-a699029401f7"), mainLook, ProfileFragment.this, 0.25f);
+                loadModels(Uri.parse("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Funtitled.glb?alt=media&token=657b45d7-a84b-4f2a-89f4-a699029401f7"), mainLook, ProfileFragment.this, 0.5f);
 
-//                try {
-//                    modelRenderer=new ModelRenderer(mainLook);
-//                } catch (IllegalAccessException e) {
-//                    e.printStackTrace();
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//                mainLook.setRenderer(modelRenderer);
 
 
                 break;
@@ -400,6 +394,7 @@ public class ProfileFragment extends Fragment {
                                 RecentMethods.setCurrentFragment(fragment, getActivity());
                             }
                         });
+                        otherMainLook = view.findViewById(R.id.mainlookview);
                         otherUserBiography.setText(info.getBio());
                         subscribe=view.findViewById(R.id.addFriend);
                         subscribeFirst=view.findViewById(R.id.SubscribeFirst);
@@ -419,6 +414,7 @@ public class ProfileFragment extends Fragment {
                                 }
                             });
                         }
+                        loadModels(Uri.parse("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Funtitled.glb?alt=media&token=657b45d7-a84b-4f2a-89f4-a699029401f7"), otherMainLook, ProfileFragment.this, 0.25f);
                         Log.d("######", "v "+profileValue);
                         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
                             @Override
@@ -867,102 +863,42 @@ public class ProfileFragment extends Fragment {
         });
     }
 
-//    public void checkOtherUser(){
-//        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-//            @Override
-//            public void PassUserNick(String nick) {
-//                Query query=firebaseModel.getUsersReference().child(nick).child("subscription")
-//                        .child(info.getNick());
-//                query.addValueEventListener(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                        if(snapshot.exists()){
-//                            profileValue=1;
-//                            Log.d("###", "swag "+profileValue);
-//                        }else {
-//                            profileValue=-1;
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(@NonNull DatabaseError error) {
-//
-//                    }
-//                });
-//            }
-//        });
-//    }
-
-////    public GLSurfaceView getGLView() {
-//        return mainLook;
-//    }
-//
-//    public SceneLoader getScene() {
-//        return scene;
-//    }
-//    public ModelRenderer getModelRenderer(){
-//        return modelRenderer;
-//    }
-
     public float[] getBackgroundColor() {
         return backgroundColor;
     }
 
-//    public class ModelSurfaceView extends GLSurfaceView {
-//
-//        private ProfileFragment parent;
-//        private ModelRenderer mRenderer;
-//        private TouchController touchHandler;
-//
-//        public ModelSurfaceView(ProfileFragment parent) throws IllegalAccessException, IOException {
-//            super(parent.getContext());
-//
-//            // parent component
-//            this.parent = parent;
-//
-//            // Create an OpenGL ES 2.0 context.
-//            setEGLContextClientVersion(2);
-//
-//            // This is the actual renderer of the 3D space
-//            mRenderer = new ModelRenderer(this);
-//            setRenderer(mRenderer);
-//
-//            // Render the view only when there is a change in the drawing data
-//            // TODO: enable this?
-//            // setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
-//
-//            touchHandler = new TouchController(this, mRenderer);
-//        }
-//
-//        @Override
-//        public boolean onTouchEvent(MotionEvent event) {
-//            return touchHandler.onTouchEvent(event);
-//        }
-//
-//        public ModelActivity getModelActivity() {
-//            return parent;
-//        }
-//
-//        public ModelRenderer getModelRenderer(){
-//            return mRenderer;
-//        }
-//
-//    }
 
 
-
+//
 //    @Override
 //    public void onPause() {
 //        super.onPause();
-//        mainLook.pause();
+//        switch (type) {
+//            case "user":
+//                //loadModels(loadUrl);
+//                mainLook.pause();
+//                break;
+//            case "other":
+//                otherMainLook.pause();
+//                break;
+//        }
 //
 //    }
 //    @Override
 //    public void onResume() {
 //        super.onResume();
 //        try {
-//            //loadModels(loadUrl);
-//            mainLook.resume();
+//            switch (type) {
+//                case "user":
+//                    //loadModels(loadUrl);
+//                    mainLook.resume();
+//                    break;
+//                case "other":
+//                    otherMainLook.resume();
+//                    break;
+//            }
+//
+//
 //        } catch (CameraNotAvailableException e) {
 //            e.printStackTrace();
 //        }
@@ -974,14 +910,14 @@ public class ProfileFragment extends Fragment {
 
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public void loadModels(Uri url, SceneView sceneView, Fragment fragment) {
+    public void loadModels(Uri url, SceneView sceneView, Fragment fragment, float scale) {
         ModelRenderable.builder()
                 .setSource(
                         fragment.getContext(), new RenderableSource.Builder().setSource(
                                 fragment.getContext(),
                                 url,
                                 RenderableSource.SourceType.GLB
-                        ).setScale(0.05f)
+                        ).setScale(scale)
                                 .setRecenterMode(RenderableSource.RecenterMode.CENTER)
                                 .build()
                 )
@@ -999,13 +935,17 @@ public class ProfileFragment extends Fragment {
         Node modelNode1 = new Node();
         modelNode1.setRenderable(modelRenderable);
         modelNode1.setLocalScale(new Vector3(0.3f, 0.3f, 0.3f));
-        modelNode1.setLocalRotation(Quaternion.multiply(
-                Quaternion.axisAngle(new Vector3(1f, 0f, 0f), 45),
-                Quaternion.axisAngle(new Vector3(0f, 1f, 0f), 75)));
-        modelNode1.setLocalPosition(new Vector3(0f, 0f, -1.0f));
+//        modelNode1.setLocalRotation(Quaternion.multiply(
+//                Quaternion.axisAngle(new Vector3(1f, 0f, 0f), 45),
+//                Quaternion.axisAngle(new Vector3(0f, 1f, 0f), 75)));
+        modelNode1.setLocalPosition(new Vector3(0f, 0f, -0.9f));
         sceneView.getScene().addChild(modelNode1);
+        try {
+            sceneView.resume();
+        } catch (CameraNotAvailableException e) {
+            e.printStackTrace();
+        }
     }
-
 
 
 }
