@@ -19,10 +19,15 @@ public class SchoolyApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        startService(new Intent(this, SchoolyService.class));
 
         Constraints constraints = new Constraints.Builder()
                 .setRequiredNetworkType(NetworkType.CONNECTED)
+                .build();
+
+        PeriodicWorkRequest miningWorkRequest = new
+                PeriodicWorkRequest.Builder(MiningManager.class, 15, TimeUnit.MINUTES)
+                .setConstraints(constraints
+                )
                 .build();
 
         PeriodicWorkRequest sendLogsWorkRequest = new
@@ -32,6 +37,8 @@ public class SchoolyApplication extends Application {
                 .build();
 
         WorkManager.getInstance(getApplicationContext()).enqueue(sendLogsWorkRequest);
+
+        WorkManager.getInstance(getApplicationContext()).enqueue(miningWorkRequest);
     }
 
 

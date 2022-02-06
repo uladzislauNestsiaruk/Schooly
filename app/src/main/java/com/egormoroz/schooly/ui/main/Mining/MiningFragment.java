@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FirebaseModel;
+import com.egormoroz.schooly.MiningManager;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.SchoolyService;
@@ -320,7 +321,7 @@ public class MiningFragment extends Fragment {
 //    }
 
     public void setMiningMoney(){
-        SchoolyService.getAAA(new SchoolyService.transmitMiningMoney() {
+        MiningManager.getAAA(new MiningManager.transmitMiningMoney() {
             @Override
             public void transmitMoney(double money) {
                 todayMiningFormatted = new DecimalFormat("#0.00").format(money);

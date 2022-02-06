@@ -28,6 +28,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.MainActivity;
+import com.egormoroz.schooly.MiningManager;
 import com.egormoroz.schooly.Nontification;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
@@ -91,7 +92,7 @@ public class MainFragment extends Fragment{
             public void onClick(View v) {
                 Intent i = new Intent(getActivity(), DialogsActivity.class);
                 startActivity(i);
- //               ((Activity) getActivity()).overridePendingTransition(0, 0);
+                //               ((Activity) getActivity()).overridePendingTransition(0, 0);
 //                Intent sceneViewerIntent = new Intent(Intent.ACTION_VIEW);
 //                Uri intentUri =
 //                        Uri.parse("https://arvr.google.com/scene-viewer/1.0").buildUpon()
@@ -162,7 +163,7 @@ public class MainFragment extends Fragment{
 //                        "com.instagram.android", stickerAssetUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
 //                if (activity.getPackageManager().resolveActivity(intent, 0) != null) {
 //                    activity.startActivityForResult(intent, 0);
- //               }
+                //               }
 
 // Instantiate implicit intent with ADD_TO_STORY action,
 // sticker asset, and background colors
@@ -254,7 +255,7 @@ public class MainFragment extends Fragment{
             }
         });
         todayMiningMain=view.findViewById(R.id.todayminingmain);
-        SchoolyService.getAAA(new SchoolyService.transmitMiningMoney() {
+        MiningManager.getAAA(new MiningManager.transmitMiningMoney() {
             @Override
             public void transmitMoney(double money) {
                 if(money!=-1) {
@@ -324,7 +325,7 @@ public class MainFragment extends Fragment{
             Intent shareIntent = new Intent();
             shareIntent.setAction(Intent.ACTION_SEND);
             shareIntent.setPackage("com.instagram.android");
-                shareIntent.putExtra(Intent.EXTRA_STREAM, "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/miners%2Ffims.png?alt=media&token=adafb44e-3ac1-43a3-bde6-6f7c4315ee0c");
+            shareIntent.putExtra(Intent.EXTRA_STREAM, "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/miners%2Ffims.png?alt=media&token=adafb44e-3ac1-43a3-bde6-6f7c4315ee0c");
             shareIntent.setType("image/jpeg");
             startActivity(shareIntent);
         } else {
