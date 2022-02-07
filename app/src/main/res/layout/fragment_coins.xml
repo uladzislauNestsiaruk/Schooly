@@ -33,7 +33,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/app_color"
                 android:fontFamily="@font/montserratblack"
-                android:textSize="16sp"
+                android:textSize="18sp"
                 android:layout_gravity="center_horizontal"
                 android:text="@string/oneTh"
                 />
@@ -44,7 +44,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/app_grey"
                 android:fontFamily="@font/montserrat_extrabold"
-                android:textSize="10sp"
+                android:textSize="12sp"
                 android:layout_gravity="center_horizontal"
                 android:text="@string/oneD"
                 />
@@ -72,7 +72,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/app_color"
                 android:fontFamily="@font/montserratblack"
-                android:textSize="16sp"
+                android:textSize="18sp"
                 android:layout_gravity="center_horizontal"
                 android:text="@string/twoTh"
                 />
@@ -83,7 +83,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/app_grey"
                 android:fontFamily="@font/montserrat_extrabold"
-                android:textSize="10sp"
+                android:textSize="12sp"
                 android:layout_gravity="center_horizontal"
                 android:text="@string/twoD"
                 />
@@ -111,7 +111,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/app_color"
                 android:fontFamily="@font/montserratblack"
-                android:textSize="16sp"
+                android:textSize="18sp"
                 android:layout_gravity="center_horizontal"
                 android:text="@string/fiveTh"
                 />
@@ -122,7 +122,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/app_grey"
                 android:fontFamily="@font/montserrat_extrabold"
-                android:textSize="10sp"
+                android:textSize="12sp"
                 android:layout_gravity="center_horizontal"
                 android:text="@string/fiveD"
                 />
@@ -162,7 +162,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/app_color"
                 android:fontFamily="@font/montserratblack"
-                android:textSize="16sp"
+                android:textSize="18sp"
                 android:layout_gravity="center_horizontal"
                 android:text="@string/sevenTh"
                 />
@@ -173,7 +173,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/app_grey"
                 android:fontFamily="@font/montserrat_extrabold"
-                android:textSize="10sp"
+                android:textSize="12sp"
                 android:layout_gravity="center_horizontal"
                 android:text="@string/sevenD"
                 />
@@ -201,7 +201,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/app_color"
                 android:fontFamily="@font/montserratblack"
-                android:textSize="16sp"
+                android:textSize="18sp"
                 android:layout_gravity="center_horizontal"
                 android:text="@string/tenTh"
                 />
@@ -212,7 +212,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/app_grey"
                 android:fontFamily="@font/montserrat_extrabold"
-                android:textSize="10sp"
+                android:textSize="12sp"
                 android:layout_gravity="center_horizontal"
                 android:text="@string/tenD"
                 />
@@ -240,7 +240,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/app_color"
                 android:fontFamily="@font/montserratblack"
-                android:textSize="16sp"
+                android:textSize="18sp"
                 android:layout_gravity="center_horizontal"
                 android:text="@string/twentyTh"
                 />
@@ -251,7 +251,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/app_grey"
                 android:fontFamily="@font/montserrat_extrabold"
-                android:textSize="10sp"
+                android:textSize="12sp"
                 android:layout_gravity="center_horizontal"
                 android:text="@string/twentyD"
                 />

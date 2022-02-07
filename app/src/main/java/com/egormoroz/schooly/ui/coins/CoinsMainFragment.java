@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -27,7 +28,13 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 public class CoinsMainFragment extends Fragment {
     private FirebaseModel firebaseModel = new FirebaseModel();
     LinearLayout oneLinear,twoLinear,fiveLinear
-            ,sevenLinear,tenLinear,twentyLineaer;
+            ,sevenLinear,tenLinear,twentyLinear;
+    TextView oneS,twoS,fiveS
+            ,sevenS,tenS,twentyS;
+    TextView oneD,twoD,fiveD
+            ,sevenD,tenD,twentyD;
+    ImageView oneImage,twoImage,fiveImage
+            ,sevenImage,tenImage,twentyImage;
 
     public static CoinsMainFragment newInstance() {
         return new CoinsMainFragment();
@@ -54,7 +61,67 @@ public class CoinsMainFragment extends Fragment {
         fiveLinear=view.findViewById(R.id.fiveThousand);
         sevenLinear=view.findViewById(R.id.sevenThousand);
         tenLinear=view.findViewById(R.id.tenThousand);
-        twentyLineaer=view.findViewById(R.id.twentyThousand);
+        twentyLinear=view.findViewById(R.id.twentyThousand);
+        oneS=view.findViewById(R.id.oneCoinsText);
+        twoS=view.findViewById(R.id.twoCoinsText);
+        fiveS=view.findViewById(R.id.fiveCoinsText);
+        sevenS=view.findViewById(R.id.sevenCoinsText);
+        tenS=view.findViewById(R.id.tenCoinsText);
+        twentyS=view.findViewById(R.id.twentyCoinsText);
+        oneD=view.findViewById(R.id.oneDollarText);
+        twoD=view.findViewById(R.id.twoDollarText);
+        fiveD=view.findViewById(R.id.fiveDollarText);
+        sevenD=view.findViewById(R.id.sevenDollarText);
+        tenD=view.findViewById(R.id.tenDollarText);
+        twentyD=view.findViewById(R.id.twentyDollarText);
+        oneImage=view.findViewById(R.id.oneCoinsImage);
+        twoImage=view.findViewById(R.id.twoCoinsImage);
+        fiveImage=view.findViewById(R.id.threeCoinsImage);
+        sevenImage=view.findViewById(R.id.sevenCoinsImage);
+        tenImage=view.findViewById(R.id.tenCoinsImage);
+        twentyImage=view.findViewById(R.id.twentyCoinsImage);
+        oneLinear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RecentMethods.setCurrentFragment(BuyCoinsFragment
+                        .newInstance(oneS.getText().toString(),oneD.getText().toString() ), getActivity());
+            }
+        });
+        twoLinear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RecentMethods.setCurrentFragment(BuyCoinsFragment
+                        .newInstance(twoS.getText().toString(),twoD.getText().toString() ), getActivity());
+            }
+        });
+        fiveLinear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RecentMethods.setCurrentFragment(BuyCoinsFragment
+                        .newInstance(fiveS.getText().toString(),fiveD.getText().toString() ), getActivity());
+            }
+        });
+        sevenLinear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RecentMethods.setCurrentFragment(BuyCoinsFragment
+                        .newInstance(sevenS.getText().toString(),sevenD.getText().toString() ), getActivity());
+            }
+        });
+        tenLinear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RecentMethods.setCurrentFragment(BuyCoinsFragment
+                        .newInstance(tenS.getText().toString(),tenD.getText().toString() ), getActivity());
+            }
+        });
+        twentyLinear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RecentMethods.setCurrentFragment(BuyCoinsFragment
+                        .newInstance(twentyS.getText().toString(),twentyD.getText().toString() ), getActivity());
+            }
+        });
     }
 
 }
