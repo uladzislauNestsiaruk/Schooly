@@ -224,5 +224,18 @@
     <string name="descriptipon">Описание:</string>
     <string name="noDescriptipon">Нет описания:(</string>
 
+    <string name="oneTh">1000</string>
+    <string name="twoTh">2000</string>
+    <string name="fiveTh">5000</string>
+    <string name="sevenTh">7500</string>
+    <string name="tenTh">10000</string>
+    <string name="twentyTh">20000</string>
+    <string name="oneD">$1.99</string>
+    <string name="twoD">$2.99</string>
+    <string name="fiveD">$8.99</string>
+    <string name="sevenD">$11.99</string>
+    <string name="tenD">$14.99</string>
+    <string name="twentyD">$19.99</string>
+
 
 </resources>

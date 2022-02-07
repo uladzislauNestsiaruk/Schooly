@@ -3,10 +3,261 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/bigLayout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="vffggg"
-        android:layout_centerInParent="true"/>
+        android:layout_marginTop="18dp"
+        android:layout_marginStart="18dp"
+        android:layout_marginEnd="18dp"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/oneThousand"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:padding="6dp">
+            
+            <ImageView
+                android:id="@+id/oneCoinsImage"
+                android:layout_width="96dp"
+                android:layout_height="96dp"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/corners14grey"/>
+
+            <TextView
+                android:id="@+id/oneCoinsText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/app_color"
+                android:fontFamily="@font/montserratblack"
+                android:textSize="16sp"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/oneTh"
+                />
+
+            <TextView
+                android:id="@+id/oneDollarText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/app_grey"
+                android:fontFamily="@font/montserrat_extrabold"
+                android:textSize="10sp"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/oneD"
+                />
+            
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/twoThousand"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:padding="6dp">
+
+            <ImageView
+                android:id="@+id/twoCoinsImage"
+                android:layout_width="96dp"
+                android:layout_height="96dp"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/corners14grey"/>
+
+            <TextView
+                android:id="@+id/twoCoinsText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/app_color"
+                android:fontFamily="@font/montserratblack"
+                android:textSize="16sp"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/twoTh"
+                />
+
+            <TextView
+                android:id="@+id/twoDollarText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/app_grey"
+                android:fontFamily="@font/montserrat_extrabold"
+                android:textSize="10sp"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/twoD"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/fiveThousand"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:padding="6dp">
+
+            <ImageView
+                android:id="@+id/threeCoinsImage"
+                android:layout_width="96dp"
+                android:layout_height="96dp"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/corners14grey"/>
+
+            <TextView
+                android:id="@+id/fiveCoinsText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/app_color"
+                android:fontFamily="@font/montserratblack"
+                android:textSize="16sp"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/fiveTh"
+                />
+
+            <TextView
+                android:id="@+id/fiveDollarText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/app_grey"
+                android:fontFamily="@font/montserrat_extrabold"
+                android:textSize="10sp"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/fiveD"
+                />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/bigLayoutTwo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="18dp"
+        android:layout_marginEnd="18dp"
+        android:layout_below="@+id/bigLayout"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/sevenThousand"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:padding="6dp">
+
+            <ImageView
+                android:id="@+id/sevenCoinsImage"
+                android:layout_width="96dp"
+                android:layout_height="96dp"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/corners14grey"/>
+
+            <TextView
+                android:id="@+id/sevenCoinsText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/app_color"
+                android:fontFamily="@font/montserratblack"
+                android:textSize="16sp"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/sevenTh"
+                />
+
+            <TextView
+                android:id="@+id/sevenDollarText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/app_grey"
+                android:fontFamily="@font/montserrat_extrabold"
+                android:textSize="10sp"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/sevenD"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/tenThousand"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:padding="6dp">
+
+            <ImageView
+                android:id="@+id/tenCoinsImage"
+                android:layout_width="96dp"
+                android:layout_height="96dp"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/corners14grey"/>
+
+            <TextView
+                android:id="@+id/tenCoinsText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/app_color"
+                android:fontFamily="@font/montserratblack"
+                android:textSize="16sp"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/tenTh"
+                />
+
+            <TextView
+                android:id="@+id/tenDollarText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/app_grey"
+                android:fontFamily="@font/montserrat_extrabold"
+                android:textSize="10sp"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/tenD"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/twentyThousand"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:padding="6dp">
+
+            <ImageView
+                android:id="@+id/twentyCoinsImage"
+                android:layout_width="96dp"
+                android:layout_height="96dp"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/corners14grey"/>
+
+            <TextView
+                android:id="@+id/twentyCoinsText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/app_color"
+                android:fontFamily="@font/montserratblack"
+                android:textSize="16sp"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/twentyTh"
+                />
+
+            <TextView
+                android:id="@+id/twentyDollarText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/app_grey"
+                android:fontFamily="@font/montserrat_extrabold"
+                android:textSize="10sp"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/twentyD"
+                />
+
+        </LinearLayout>
+
+    </LinearLayout>
 
 </RelativeLayout>

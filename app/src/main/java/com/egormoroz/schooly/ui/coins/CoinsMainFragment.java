@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -25,6 +26,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class CoinsMainFragment extends Fragment {
     private FirebaseModel firebaseModel = new FirebaseModel();
+    LinearLayout oneLinear,twoLinear,fiveLinear
+            ,sevenLinear,tenLinear,twentyLineaer;
 
     public static CoinsMainFragment newInstance() {
         return new CoinsMainFragment();
@@ -46,6 +49,12 @@ public class CoinsMainFragment extends Fragment {
     public void onViewCreated(@Nullable View view,@NonNull Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
 
+        oneLinear=view.findViewById(R.id.oneThousand);
+        twoLinear=view.findViewById(R.id.twoThousand);
+        fiveLinear=view.findViewById(R.id.fiveThousand);
+        sevenLinear=view.findViewById(R.id.sevenThousand);
+        tenLinear=view.findViewById(R.id.tenThousand);
+        twentyLineaer=view.findViewById(R.id.twentyThousand);
     }
 
 }
