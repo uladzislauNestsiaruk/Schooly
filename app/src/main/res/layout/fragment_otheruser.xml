@@ -271,6 +271,19 @@
 			android:layout_marginTop="8dp"
 			android:visibility="gone"/>
 
+		<TextView
+			android:id="@+id/blockedAccount"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_below="@id/mainlookview"
+			android:textSize="14sp"
+			android:text="@string/closeAccount"
+			android:textColor="@color/app_grey"
+			android:layout_centerHorizontal="true"
+			android:fontFamily="@font/montserrat_extrabold"
+			android:layout_marginTop="24dp"
+			android:visibility="gone"/>
+
 	</RelativeLayout>
 
 </ScrollView>

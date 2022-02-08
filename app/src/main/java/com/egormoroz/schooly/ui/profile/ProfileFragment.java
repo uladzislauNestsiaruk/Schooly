@@ -93,7 +93,7 @@ public class ProfileFragment extends Fragment {
     WardrobeAdapterProfile.ItemClickListener itemClickListenerWardrobe;
     TextView nickname,message,biographyTextView,looksCount,subscriptionsCount,subscribersCount,otherLooksCount,otherSubscriptionCount,
             otherSubscribersCount,createNewLookText,createNewLook,otherUserBiography,subscribeClose,subscribe,looksText
-            ,subscribeFirst,closeAccount,noClothes,buyClothesProfile,noLooksOther;
+            ,subscribeFirst,closeAccount,noClothes,buyClothesProfile,noLooksOther,blockedAccount;
     DatabaseReference user;
     WardrobeAdapterProfile.ItemClickListener itemClickListener;
    // SceneLoader scene;
@@ -108,7 +108,7 @@ public class ProfileFragment extends Fragment {
     Fragment fragment;
     private float[] backgroundColor = new float[]{0f, 0f, 0f, 1.0f};
     private Handler handler;
-    int a;
+    int a,profileCheckValue;
 
 
     @Override
@@ -404,7 +404,13 @@ public class ProfileFragment extends Fragment {
                         otherLooksCount=view.findViewById(R.id.looksCountOther);
                         otherSubscriptionCount=view.findViewById(R.id.subscriptionCountOther);
                         otherSubscribersCount=view.findViewById(R.id.subsCountOther);
+                        blockedAccount=view.findViewById(R.id.blockedAccount);
                         noLooksOther=view.findViewById(R.id.noLooksOther);
+                        if (info.getAccountType().equals("open")){
+                            checkOtherUserProfile();
+                        }else {
+                            profileCheckValue=3;
+                        }
                         setCountsOther();
                         if (message != null) {
                             message.setOnClickListener(new View.OnClickListener() {
@@ -424,10 +430,15 @@ public class ProfileFragment extends Fragment {
                                 query.addValueEventListener(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                        if (info.getAccountType().equals("open") || snapshot.exists()) {
+                                        if(profileCheckValue!=0){
+                                            Log.d("######", "v "+profileCheckValue);
+                                        if (profileCheckValue==2 || snapshot.exists()) {
                                             otherLooksCount = view.findViewById(R.id.looksCountOther);
                                             otherSubscriptionCount = view.findViewById(R.id.subscriptionCountOther);
                                             otherSubscribersCount = view.findViewById(R.id.subsCountOther);
+                                            closeAccount.setVisibility(View.GONE);
+                                            subscribeFirst.setVisibility(View.GONE);
+                                            blockedAccount.setVisibility(View.GONE);
                                             moreSquare.setOnClickListener(new View.OnClickListener() {
                                                 @Override
                                                 public void onClick(View v) {
@@ -634,10 +645,11 @@ public class ProfileFragment extends Fragment {
                                                     });
                                                 }
                                             });
-                                        } else {
+                                        } else if(profileCheckValue==3) {
                                             subscribeClose.setVisibility(View.VISIBLE);
                                             closeAccount.setVisibility(View.VISIBLE);
                                             subscribeFirst.setVisibility(View.VISIBLE);
+                                            blockedAccount.setVisibility(View.GONE);
                                             noLooksOther.setVisibility(View.GONE);
                                             subscribeFirst.setText("Подпишись на " + " " + info.getNick() + " !");
                                             message.setVisibility(View.GONE);
@@ -716,8 +728,51 @@ public class ProfileFragment extends Fragment {
                                                     }
                                                 }
                                             });
+                                        }else if(profileCheckValue==1) {
+                                            subscribeClose.setVisibility(View.VISIBLE);
+                                            subscribeClose.setBackgroundResource(R.drawable.corners10grey);
+                                            subscribeClose.setTextColor(Color.parseColor("#FEFEFE"));
+                                            blockedAccount.setVisibility(View.VISIBLE);
+                                            blockedAccount.setText(info.getNick()+" заблокировал тебя");
+                                            noLooksOther.setVisibility(View.GONE);
+                                            message.setVisibility(View.GONE);
+                                            closeAccount.setVisibility(View.GONE);
+                                            subscribeFirst.setVisibility(View.GONE);
+                                            subscribe.setVisibility(View.GONE);
+                                            looksText.setVisibility(View.GONE);
+                                            looksRecyclerOther.setVisibility(View.GONE);
+                                            moreSquare.setOnClickListener(new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View v) {
+                                                    PopupMenu popup = new PopupMenu(getActivity(), moreSquare);
+                                                    popup.getMenuInflater()
+                                                            .inflate(R.menu.other_user_menu, popup.getMenu());
+
+                                                    popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                                                        public boolean onMenuItemClick(MenuItem item) {
+                                                            String itemTitle= item.getTitle().toString().trim();
+
+                                                            Log.d("####", "hell"+itemTitle);
+                                                            int itemID=item.getItemId();
+                                                            switch(itemID){
+                                                                case R.id.one :
+                                                                    showDialog();
+                                                                    return true;
+                                                                case R.id.two:
+                                                                    RecentMethods.setCurrentFragment(ComplainFragment.newInstance(info.getNick()), getActivity());
+                                                                    return true;
+                                                                case R.id.three:
+                                                                    return true;
+                                                            }
+                                                            return true;
+                                                        }
+                                                    });
+
+                                                    popup.show();
+                                                }
+                                            });
                                         }
-                                    }
+                                    }}
 
 
                                     @Override
@@ -901,6 +956,31 @@ public class ProfileFragment extends Fragment {
                     looksRecyclerOther.setLayoutManager(new GridLayoutManager(getActivity(), 3));
                     looksRecyclerOther.setAdapter(looksAdapter);
                 }
+            }
+        });
+    }
+
+    public void checkOtherUserProfile(){
+        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+            @Override
+            public void PassUserNick(String nick) {
+                Query queryBlackList=firebaseModel.getUsersReference().child(info.getNick())
+                        .child("blackList").child(nick);
+                queryBlackList.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if(snapshot.exists()){
+                            profileCheckValue=1;
+                        }else {
+                            profileCheckValue=2;
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
             }
         });
     }

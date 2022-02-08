@@ -87,8 +87,31 @@ public class NontificationAdapter extends RecyclerView.Adapter<NontificationAdap
                                     firebaseModel.getReference().child("users")
                                             .child(nontification.getNick()).child("subscription")
                                             .child(nick).setValue(nick);
-                                    firebaseModel.getReference().child("users").child(nick).child("nontifications")
-                                            .child(nontification.getNick()).removeValue();
+                                    Query query=firebaseModel.getReference().child("users").child(nick).child("nontifications")
+                                            .child(nontification.getNick());
+                                    query.addValueEventListener(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                            for (DataSnapshot snap:snapshot.getChildren()){
+                                                Nontification nontification=new Nontification();
+                                                nontification.setNick(snap.child("nick").getValue(String.class));
+                                                nontification.setTypeDispatch(snap.child("typeDispatch").getValue(String.class));
+                                                nontification.setTypeView(snap.child("typeView").getValue(String.class));
+                                                nontification.setTimestamp(snap.child("timestamp").getValue(String.class));
+                                                nontification.setClothesName(snap.child("clothesName").getValue(String.class));
+                                                nontification.setClothesImage(snap.child("clothesImage").getValue(String.class));
+                                                nontification.setType(snap.child("type").getValue(String.class));
+                                                if (nontification.getTypeView().equals("запрос")){
+
+                                                }
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError error) {
+
+                                        }
+                                    });
                                     firebaseModel.getReference().child("users").child(nick).child("requests")
                                             .child(nontification.getNick()).removeValue();
                                     holder.addFriend.setText("Добавлен");

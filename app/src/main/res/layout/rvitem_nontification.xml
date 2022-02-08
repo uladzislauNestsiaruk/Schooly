@@ -29,7 +29,7 @@
         android:layout_marginStart="4dp"
         android:layout_marginTop="16dp"
         android:layout_toRightOf="@+id/userImage"
-        android:fontFamily="@font/montserrat_extrabold"
+        android:fontFamily="@font/montserrat_bold"
         android:textColor="@color/app_grey"
         android:textSize="18dp" />
 
@@ -42,15 +42,13 @@
             android:id="@+id/addFriend"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/addFr"
-            android:background="@drawable/corners14appcolor"
-            android:fontFamily="@font/montserrat_extrabold"
-            android:textColor="@color/white"
-            android:padding="8dp"
             android:layout_alignParentEnd="true"
-            android:layout_marginEnd="8dp"
-            android:textSize="16dp"
-            android:visibility="gone"/>
+            android:background="@drawable/corners10dpappcolor"
+            android:fontFamily="@font/montserrat_bold"
+            android:padding="8dp"
+            android:text="@string/addFr"
+            android:textColor="@color/white"
+            android:textSize="16dp" />
 
 
 
