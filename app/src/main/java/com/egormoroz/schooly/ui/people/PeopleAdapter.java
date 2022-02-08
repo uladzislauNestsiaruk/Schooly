@@ -57,12 +57,11 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.ViewHolder
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
-        final TextView usernickname,userLevel;
+        final TextView usernickname;
         ImageView userAvatar;
         ViewHolder(View itemView) {
             super(itemView);
             usernickname=itemView.findViewById(R.id.usernickname);
-            userLevel=itemView.findViewById(R.id.userlevel);
             userAvatar=itemView.findViewById(R.id.useravatar);
         }
     }

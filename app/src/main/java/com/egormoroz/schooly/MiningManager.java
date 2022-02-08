@@ -1,6 +1,7 @@
 package com.egormoroz.schooly;
 
 import android.content.Context;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.work.Worker;
@@ -46,6 +47,7 @@ public class MiningManager extends Worker {
                     @Override
                     public void GetTodayMining(double todayMiningFromBase) {
                         t=todayMiningFromBase;
+                        Log.d("g", "fucввввввввввввввввввввввk");
                     }
 
                 });
@@ -78,6 +80,7 @@ public class MiningManager extends Worker {
                                     long hours = ((timeGap - (1000 * 60 * 60 * 24 * days)) / (1000 * 60 * 60));
                                     min = (timeGap - (1000 * 60 * 60 * 24 * days) - (1000 * 60 * 60 * hours)) / (1000 * 60);
                                     minInGap=Double.valueOf(String.valueOf(min+hours*60+days*24*60));
+                                    Log.d("gool", "fuck");
                                     MiningMoneyGap();
                                 }
                             });
@@ -102,6 +105,7 @@ public class MiningManager extends Worker {
                                         while(true) {
                                             Thread.sleep(1000);
                                             miningMoneyFun();
+                                            Log.d("#####", "goofffffd");
                                         }
                                     } catch (InterruptedException e) {
                                     }
@@ -134,6 +138,7 @@ public class MiningManager extends Worker {
                         ArrayList<Miner> getActiveMinersArrayList=new ArrayList<>();
                         getActiveMinersArrayList=activeMinersFromBase;
                         if(getActiveMinersArrayList.size()==1) {
+                            Log.d("g", "f");
                             getFirstActiveMiner = getActiveMinersArrayList.get(0);
                             getInHourMinerFirst = getFirstActiveMiner.getInHour();
                             getFirstMinerInHour = Double.valueOf(String.valueOf(getInHourMinerFirst));

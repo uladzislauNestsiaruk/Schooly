@@ -18,23 +18,24 @@
         android:id="@+id/usernickname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
         android:layout_toRightOf="@+id/useravatar"
         android:fontFamily="@font/montserrat_extrabold"
         android:textColor="@color/app_color"
         android:textSize="16sp"
-        android:layout_marginStart="6dp"
+        android:layout_marginStart="8dp"
         android:layout_alignTop="@+id/useravatar"/>
 
-    <TextView
-        android:id="@+id/userlevel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="12sp"
-        android:textColor="@color/app_grey"
-        android:fontFamily="@font/montserrat_bold"
-        android:layout_below="@+id/usernickname"
-        android:layout_toRightOf="@+id/useravatar"
-        android:layout_marginStart="6dp"
-        />
+<!--    <TextView-->
+<!--        android:id="@+id/userlevel"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:textSize="12sp"-->
+<!--        android:textColor="@color/app_grey"-->
+<!--        android:fontFamily="@font/montserrat_bold"-->
+<!--        android:layout_below="@+id/usernickname"-->
+<!--        android:layout_toRightOf="@+id/useravatar"-->
+<!--        android:layout_marginStart="6dp"-->
+<!--        />-->
 
 </RelativeLayout>

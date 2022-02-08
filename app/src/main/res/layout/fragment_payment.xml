@@ -6,97 +6,119 @@
     android:layout_height="match_parent"
     tools:ignore="MissingDefaultResource">
 
-<!--    <ImageView-->
-<!--        android:id="@+id/back_coins"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginTop="16dp"-->
-<!--        android:layout_marginStart="24dp"-->
-<!--        android:src="@drawable/left_arrow"/>-->
+    <ImageView
+        android:id="@+id/back_coins"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="24dp"
+        android:src="@drawable/left_arrow"/>
 
-<!--    <TextView-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginStart="20dp"-->
-<!--        android:layout_marginTop="11dp"-->
-<!--        android:layout_toRightOf="@+id/back_coins"-->
-<!--        android:fontFamily="@font/montserrat_bold"-->
-<!--        android:text="@string/payment"-->
-<!--        android:textColor="@color/app_color"-->
-<!--        android:textSize="22sp" />-->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="11dp"
+        android:layout_toRightOf="@+id/back_coins"
+        android:fontFamily="@font/montserrat_bold"
+        android:text="@string/payment"
+        android:textColor="@color/app_color"
+        android:textSize="22sp" />
 
-<!--    <ImageView-->
-<!--        android:id="@+id/coinsImage"-->
-<!--        android:layout_width="128dp"-->
-<!--        android:layout_height="128dp"-->
-<!--        android:layout_below="@+id/back_coins"-->
-<!--        android:layout_marginStart="24dp"-->
-<!--        android:layout_marginTop="24sp"-->
-<!--        android:background="@drawable/corners14appcolor" />-->
+    <ImageView
+        android:id="@+id/coinsImage"
+        android:layout_width="128dp"
+        android:layout_height="128dp"
+        android:layout_below="@+id/back_coins"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24sp"
+        android:background="@drawable/corners14appcolor" />
 
-<!--    <TextView-->
-<!--        android:id="@+id/cutomerText"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:textSize="14sp"-->
-<!--        android:fontFamily="@font/montserrat_bold"-->
-<!--        android:textColor="@color/app_grey"-->
-<!--        android:layout_toRightOf="@+id/coinsImage"-->
-<!--        android:layout_marginStart="16sp"-->
-<!--        android:text="@string/customer"-->
-<!--        android:layout_alignTop="@+id/coinsImage"-->
-<!--        />-->
+    <TextView
+        android:id="@+id/cutomerText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/coinsImage"
+        android:layout_marginStart="16sp"
+        android:layout_toRightOf="@+id/coinsImage"
+        android:fontFamily="@font/montserrat_bold"
+        android:text="@string/customer"
+        android:textColor="@color/app_grey"
+        android:textSize="14sp" />
 
-<!--    <TextView-->
-<!--        android:id="@+id/cutomer"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:textSize="18sp"-->
-<!--        android:fontFamily="@font/montserrat_extrabold"-->
-<!--        android:textColor="@color/app_grey"-->
-<!--        android:layout_toRightOf="@+id/coinsImage"-->
-<!--        android:layout_marginStart="16sp"-->
-<!--        android:layout_below="@+id/cutomerText"-->
-<!--        android:layout_marginTop="4dp"-->
-<!--        />-->
+    <TextView
+        android:id="@+id/customer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:fontFamily="@font/montserrat_extrabold"
+        android:textColor="@color/app_color"
+        android:layout_toRightOf="@+id/coinsImage"
+        android:layout_marginStart="16sp"
+        android:layout_below="@+id/cutomerText"
+        android:layout_marginTop="2dp"
+        />
 
-<!--    <TextView-->
-<!--        android:id="@+id/purchaseText"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_below="@+id/customer"-->
-<!--        android:layout_marginStart="16sp"-->
-<!--        android:layout_toRightOf="@+id/coinsImage"-->
-<!--        android:fontFamily="@font/montserrat_bold"-->
-<!--        android:text="@string/purchase"-->
-<!--        android:textColor="@color/app_grey"-->
-<!--        android:textSize="14sp" />-->
+    <TextView
+        android:id="@+id/purchaseText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/customer"
+        android:layout_marginStart="16sp"
+        android:layout_toRightOf="@+id/coinsImage"
+        android:fontFamily="@font/montserrat_bold"
+        android:text="@string/purchase"
+        android:textColor="@color/app_grey"
+        android:textSize="14sp"
+        android:layout_marginTop="4dp"/>
 
-<!--    <TextView-->
-<!--        android:id="@+id/purchase"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:textSize="30sp"-->
-<!--        android:fontFamily="@font/montserrat_extrabold"-->
-<!--        android:textColor="@color/app_grey"-->
-<!--        android:layout_toRightOf="@+id/coinsImage"-->
-<!--        android:layout_marginStart="16sp"-->
-<!--        android:layout_below="@+id/purchaseText"-->
-<!--        android:layout_marginTop="4dp"-->
-<!--        />-->
+    <TextView
+        android:id="@+id/purchase"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="30sp"
+        android:fontFamily="@font/montserrat_extrabold"
+        android:textColor="@color/app_color"
+        android:layout_toRightOf="@+id/coinsImage"
+        android:layout_marginStart="16sp"
+        android:layout_below="@+id/purchaseText"
+        android:layout_marginTop="2dp"
+        />
 
-<!--    <TextView-->
-<!--        android:id="@+id/cardData"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:textSize="16sp"-->
-<!--        android:fontFamily="@font/montserrat_bold"-->
-<!--        android:textColor="@color/app_grey"-->
-<!--        android:layout_marginStart="24sp"-->
-<!--        android:text="@string/cardData"-->
-<!--        android:layout_below="@+id/coinsImage"-->
-<!--        android:layout_marginTop="24dp"-->
-<!--        />-->
+    <TextView
+        android:id="@+id/cardData"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/coinsImage"
+        android:layout_marginStart="24sp"
+        android:layout_marginTop="24dp"
+        android:fontFamily="@font/montserrat_bold"
+        android:text="@string/cardData"
+        android:textColor="@color/app_grey"
+        android:textSize="16sp" />
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="24dp"
+        android:background="@drawable/corners14appcolor">
+
+        <TextView
+            android:id="@+id/textAcceptPayment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:fontFamily="@font/montserrat_bold"
+            android:paddingTop="14dp"
+            android:paddingBottom="14dp"
+            android:text="Оплатить  $4.99"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+    </RelativeLayout>
 
 
 </RelativeLayout>

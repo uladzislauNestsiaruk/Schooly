@@ -404,6 +404,7 @@ public class ProfileFragment extends Fragment {
                         otherLooksCount=view.findViewById(R.id.looksCountOther);
                         otherSubscriptionCount=view.findViewById(R.id.subscriptionCountOther);
                         otherSubscribersCount=view.findViewById(R.id.subsCountOther);
+                        noLooksOther=view.findViewById(R.id.noLooksOther);
                         setCountsOther();
                         if (message != null) {
                             message.setOnClickListener(new View.OnClickListener() {
@@ -427,7 +428,6 @@ public class ProfileFragment extends Fragment {
                                             otherLooksCount = view.findViewById(R.id.looksCountOther);
                                             otherSubscriptionCount = view.findViewById(R.id.subscriptionCountOther);
                                             otherSubscribersCount = view.findViewById(R.id.subsCountOther);
-                                            noLooksOther=view.findViewById(R.id.noLooksOther);
                                             moreSquare.setOnClickListener(new View.OnClickListener() {
                                                 @Override
                                                 public void onClick(View v) {
@@ -638,6 +638,7 @@ public class ProfileFragment extends Fragment {
                                             subscribeClose.setVisibility(View.VISIBLE);
                                             closeAccount.setVisibility(View.VISIBLE);
                                             subscribeFirst.setVisibility(View.VISIBLE);
+                                            noLooksOther.setVisibility(View.GONE);
                                             subscribeFirst.setText("Подпишись на " + " " + info.getNick() + " !");
                                             message.setVisibility(View.GONE);
                                             subscribe.setVisibility(View.GONE);
@@ -671,6 +672,48 @@ public class ProfileFragment extends Fragment {
                                                     });
 
                                                     popup.show();
+                                                }
+                                            });
+                                            Query queryRequest=firebaseModel.getUsersReference().child(info.getNick())
+                                                    .child("requests").child(nick);
+                                            queryRequest.addValueEventListener(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                    if(snapshot.exists()){
+                                                        a=3;
+                                                        subscribeClose.setText("Запрошено");
+                                                        subscribeClose.setTextColor(Color.parseColor("#F3A2E5"));
+                                                        subscribeClose.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
+                                                    }
+                                                }
+
+                                                @Override
+                                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                                }
+                                            });
+                                            subscribeClose.setOnClickListener(new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View v) {
+                                                    if(a==3){
+                                                        firebaseModel.getUsersReference().child(info.getNick())
+                                                                .child("requests").child(nick).removeValue();
+                                                        subscribeClose.setText("Подписаться");
+                                                        subscribeClose.setTextColor(Color.parseColor("#FEFEFE"));
+                                                        subscribeClose.setBackgroundResource(R.drawable.corners10dpappcolor);
+                                                        a=0;
+                                                    }else {
+                                                        firebaseModel.getReference().child("users").child(info.getNick()).child("requests")
+                                                                .child(nick).setValue(nick);
+                                                        firebaseModel.getReference().child("users")
+                                                                .child(info.getNick()).child("nontifications")
+                                                                .child(nick).setValue(new Nontification(nick,"не отправлено","запрос"
+                                                                ,ServerValue.TIMESTAMP.toString()," "," ","не просмотрено"));
+                                                        subscribeClose.setText("Запрошено");
+                                                        subscribeClose.setTextColor(Color.parseColor("#F3A2E5"));
+                                                        subscribeClose.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
+                                                        a=0;
+                                                    }
                                                 }
                                             });
                                         }
