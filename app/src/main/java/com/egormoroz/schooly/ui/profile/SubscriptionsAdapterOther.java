@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -115,7 +116,6 @@ public class SubscriptionsAdapterOther extends RecyclerView.Adapter<Subscription
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
                                 if(snapshot.exists()){
                                     a=1;
-                                    Log.d("#####", "c  "+a);
 
                                 }else{
                                     a=2;
@@ -135,7 +135,6 @@ public class SubscriptionsAdapterOther extends RecyclerView.Adapter<Subscription
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
                                 if(snapshot.exists()){
                                     a=3;
-                                    Log.d("#####", "c  "+a);
 
                                 }
                             }
@@ -145,10 +144,42 @@ public class SubscriptionsAdapterOther extends RecyclerView.Adapter<Subscription
 
                             }
                         });
-                        Log.d("#####", "ff  "+a);
+                        Query queryBlackListOther=firebaseModel.getUsersReference().child(subscriber.getSub())
+                                .child("blackList").child(nick);
+                        queryBlackListOther.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                if(snapshot.exists()){
+                                    a=4;
+
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+                        Query queryBlackList=firebaseModel.getUsersReference().child(nick)
+                                .child("blackList").child(subscriber.getSub());
+                        queryBlackList.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                if(snapshot.exists()){
+                                    a=5;
+                                    holder.subscribe.setText("Pазблокировать");
+                                    holder.subscribe.setTextColor(Color.parseColor("#F3A2E5"));
+                                    holder.subscribe.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
                         if(a!=0) {
                             if (a == 2) {
-                                Log.d("#####", "ab  " + a);
                                 Query query1=firebaseModel.getUsersReference().child(subscriber.getSub())
                                         .child("accountType");
                                 query1.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -188,7 +219,6 @@ public class SubscriptionsAdapterOther extends RecyclerView.Adapter<Subscription
                                 });
                             }
                             if (a == 1) {
-                                Log.d("#####", "one  " + a);
                                 firebaseModel.getReference().child("users").child(nick).child("subscription")
                                         .child(subscriber.getSub()).removeValue();
                                 firebaseModel.getReference().child("users").child(subscriber.getSub()).child("subscribers")
@@ -207,6 +237,15 @@ public class SubscriptionsAdapterOther extends RecyclerView.Adapter<Subscription
                                 holder.subscribe.setBackgroundResource(R.drawable.corners10dpappcolor);
                                 a=0;
 
+                            }
+                            if (a == 4) {
+                                Toast.makeText(v.getContext(), "Пользователь заблокировал тебя", Toast.LENGTH_SHORT).show();
+                                a=0;
+                            }
+                            if (a == 5) {
+                                firebaseModel.getUsersReference().child(nick).child("blackList")
+                                        .child(subscriber.getSub()).removeValue();
+                                a=0;
                             }
                         }
                     }

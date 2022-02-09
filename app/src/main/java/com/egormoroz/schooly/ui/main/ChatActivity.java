@@ -69,7 +69,7 @@ public final class ChatActivity extends Activity {
     private ImageView userImage;
     FirebaseModel firebaseModel = new FirebaseModel();
 
-    ImageView back;
+    ImageView back,info;
     private DatabaseReference RootRef;
 
     private MediaRecorder recorder = null;
@@ -164,6 +164,7 @@ public final class ChatActivity extends Activity {
         userName = findViewById(R.id.custom_profile_name);
         userImage = findViewById(R.id.custom_profile_image);
         userLastSeen = findViewById(R.id.custom_user_last_seen);
+        info=findViewById(R.id.info);
 
         SendMessageButton = findViewById(R.id.send_message_btn);
         SendFilesButton = findViewById(R.id.send_files_btn);

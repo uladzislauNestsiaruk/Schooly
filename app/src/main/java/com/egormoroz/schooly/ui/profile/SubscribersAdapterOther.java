@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -146,6 +147,40 @@ public class SubscribersAdapterOther extends RecyclerView.Adapter<SubscribersAda
 
                             }
                         });
+                        Query queryBlackListOther=firebaseModel.getUsersReference().child(subscriber.getSub())
+                                .child("blackList").child(nick);
+                        queryBlackListOther.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                if(snapshot.exists()){
+                                    a=4;
+
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+                        Query queryBlackList=firebaseModel.getUsersReference().child(nick)
+                                .child("blackList").child(subscriber.getSub());
+                        queryBlackList.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                if(snapshot.exists()){
+                                    a=5;
+                                    holder.newSubscribe.setText("Pазблокировать");
+                                    holder.newSubscribe.setTextColor(Color.parseColor("#F3A2E5"));
+                                    holder.newSubscribe.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
                         Log.d("#####", "ff  "+a);
                         if(a!=0) {
                             if (a == 2) {
@@ -208,6 +243,15 @@ public class SubscribersAdapterOther extends RecyclerView.Adapter<SubscribersAda
                                 holder.newSubscribe.setBackgroundResource(R.drawable.corners10dpappcolor);
                                 a=0;
 
+                            }
+                            if (a == 4) {
+                                Toast.makeText(v.getContext(), "Пользователь заблокировал тебя", Toast.LENGTH_SHORT).show();
+                                a=0;
+                            }
+                            if (a == 5) {
+                                firebaseModel.getUsersReference().child(nick).child("blackList")
+                                        .child(subscriber.getSub()).removeValue();
+                                a=0;
                             }
                         }
                     }

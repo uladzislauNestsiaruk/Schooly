@@ -79,7 +79,12 @@ public class ChatsFragment extends Fragment
 
                                         if (dataSnapshot.exists()) {
                                             if (dataSnapshot.hasChild("LastMessage"))
-                                                holder.lastMeassage.setText(model.getLastMessage());
+                                                if (model.getLastMessage().length()<=16){
+                                                    holder.lastMeassage.setText(model.getLastMessage());
+                                                }else {
+                                                    String lastMessage=model.getLastMessage().substring(0, 16);
+                                                    holder.lastMeassage.setText(lastMessage+"...");
+                                                }
                                             holder.userName.setText(usersIDs);
                                             holder.lastTime.setText(model.getLastTime());
                                             holder.itemView.setOnClickListener(new View.OnClickListener() {
