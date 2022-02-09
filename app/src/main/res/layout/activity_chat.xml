@@ -88,6 +88,15 @@
             android:layout_marginEnd="4dp"
             android:layout_toLeftOf="@id/send_message_btn"
             android:src="@drawable/ic_voicemessage" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/messageLimit"
+            android:layout_centerInParent="true"
+            android:fontFamily="@font/montserrat_bold"
+            android:textColor="@color/white"
+            android:visibility="gone"/>
     </RelativeLayout>
 
 </RelativeLayout>

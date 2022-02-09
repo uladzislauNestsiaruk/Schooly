@@ -18,6 +18,7 @@ import android.media.MediaRecorder;
 import android.net.Uri;
 
 import com.egormoroz.schooly.Callbacks;
+import com.egormoroz.schooly.MainActivity;
 import com.egormoroz.schooly.RecentMethods;
 
 import android.os.Build;
@@ -36,6 +37,8 @@ import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.ui.chat.Message;
 import com.egormoroz.schooly.ui.chat.MessageAdapter;
+import com.egormoroz.schooly.ui.people.PeopleFragment;
+import com.egormoroz.schooly.ui.profile.ProfileFragment;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -44,6 +47,7 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -88,6 +92,7 @@ public final class ChatActivity extends Activity {
     private String checker = "", myUrl = "";
     private Uri fileUri;
     private StorageTask uploadTask;
+    int chatCheckValue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,6 +128,54 @@ public final class ChatActivity extends Activity {
 
             }
         });
+        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+            @Override
+            public void PassUserNick(String nick) {
+                Query query=firebaseModel.getUsersReference().child(messageReceiverName).child("blackList")
+                        .child(nick);
+                query.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if(snapshot.exists()){
+                            chatCheckValue=1;
+                        }
+                        else {
+                            chatCheckValue=-1;
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+                Query query2=firebaseModel.getUsersReference().child(nick).child("blackList")
+                        .child(messageReceiverName);
+                query2.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if(snapshot.exists()){
+                            chatCheckValue=2;
+                        }
+                        else {
+                            chatCheckValue=-1;
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+            }
+        });
+        if (chatCheckValue!=0 ){
+            if (chatCheckValue==-1){
+                ///////все окей//////
+            }else if (chatCheckValue==1 || chatCheckValue==2){
+                ///////отправка ограничена///////
+            }
+        }
         IntializeVoice();
         IntializeControllers();
 
@@ -162,6 +215,14 @@ public final class ChatActivity extends Activity {
         back = findViewById(R.id.backtoalldialogs);
 
         userName = findViewById(R.id.custom_profile_name);
+        userName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+                RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", messageReceiverName, PeopleFragment.newInstance()),
+                        getParent());
+            }
+        });
         userImage = findViewById(R.id.custom_profile_image);
         userLastSeen = findViewById(R.id.custom_user_last_seen);
         info=findViewById(R.id.info);

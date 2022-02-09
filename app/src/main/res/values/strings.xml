@@ -242,6 +242,8 @@
     <string name="purchase">Покупка:</string>
     <string name="cardData">Данные банковской карты:</string>
 
+    <string name="messageLimit">Отправка сообщений ограничена</string>
+
 
 
 </resources>
