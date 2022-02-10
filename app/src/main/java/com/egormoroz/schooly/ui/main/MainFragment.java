@@ -106,6 +106,14 @@ public class MainFragment extends Fragment{
 //                startActivity(intent);
             }
         });
+//        firebaseModel.getReference().child("users")
+//                .child("Spaccacrani").child("nontifications")
+//                .child("tyomaa6").setValue(new Nontification("tyomaa6","не отправлено","запрос"
+//                ,ServerValue.TIMESTAMP.toString()," "," ","не просмотрено"));
+//        firebaseModel.getReference().child("users")
+//                .child("Spaccacrani").child("nontifications")
+//                .child("tyomaa6").setValue(new Nontification("tyomaa6","не отправлено","одежда"
+//                ,ServerValue.TIMESTAMP.toString()," "," ","не просмотрено"));
 
 //        ArrayList<Reason> reasonsArrayList=new ArrayList<>();
 //        reasonsArrayList.add(new Reason("Мошенничество"));

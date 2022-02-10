@@ -5,14 +5,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/white">
 
-    <LinearLayout
-        android:id="@+id/frames"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        tools:ignore="InvalidId">
-
         <RelativeLayout
+            android:id="@+id/menu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical">
@@ -40,10 +34,11 @@
         </RelativeLayout>
 
         <RelativeLayout
+            android:id="@+id/searchLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:orientation="vertical">
+            android:layout_below="@+id/menu">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -57,12 +52,14 @@
                 android:paddingBottom="13dp">
 
                 <EditText
+                    android:id="@+id/editText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="start|center"
                     android:layout_marginStart="16dp"
                     android:layout_weight="10"
                     android:background="@null"
+                    android:textColor="@color/greysearch"
                     android:fontFamily="@font/montserrat_bold"
                     android:hint="@string/search"
                     android:textColorHint="@color/greysearch"
@@ -73,12 +70,15 @@
 
         </RelativeLayout>
 
+
+
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabschat"
             style="@style/AppTabLayout"
             android:layout_width="match_parent"
             android:layout_height="52dp"
             android:layout_marginTop="24dp"
+            android:layout_below="@+id/searchLayout"
             app:tabTextAppearance="@style/AppTabTextAppearance">
 
             <com.google.android.material.tabs.TabItem
@@ -96,13 +96,31 @@
 
         </com.google.android.material.tabs.TabLayout>
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/searchLayout"
+        android:layout_marginTop="4dp"
+        android:visibility="gone"/>
 
-    </LinearLayout>
+    <TextView
+        android:id="@+id/noChats"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:fontFamily="@font/montserrat_bold"
+        android:textColor="@color/app_grey"
+        android:textSize="16sp"
+        android:visibility="gone"/>
+
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/frcont"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="210dp" />
+
+
 
 </RelativeLayout>

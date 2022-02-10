@@ -82,7 +82,6 @@ public class PeopleFragment extends Fragment {
                                         } else {
                                             RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile, PeopleFragment.newInstance()),
                                                     getActivity());
-                                            Log.d("#####", "ddd");
                                         }
                                     }
                                 });
@@ -143,7 +142,6 @@ public class PeopleFragment extends Fragment {
                                                     if (userNameToProfile.equals(nick)) {
                                                         RecentMethods.setCurrentFragment(ProfileFragment.newInstance("user", nick, PeopleFragment.newInstance()), getActivity());
                                                     } else {
-                                                        Log.d("#####", "ddd");
                                                         RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile, PeopleFragment.newInstance()),
                                                                 getActivity());
                                                     }
@@ -177,19 +175,15 @@ public class PeopleFragment extends Fragment {
                                 String nickName = upa.getNick();
                                 String nick = nickName;
                                 int valueLetters = userName.length();
-                                Log.d("####", "un " + userName);
                                 nick = nick.toLowerCase();
                                 if (nick.length() < valueLetters) {
                                     if (nick.equals(userName))
                                         userFromBase.add(upa);
-                                    Log.d("####", "nb " + nick);
                                 } else {
                                     nick = nick.substring(0, valueLetters);
                                     if (nick.equals(userName))
                                         userFromBase.add(upa);
-                                    Log.d("####", "nb " + nick);
                                 }
-                                Log.d("####", "cc " + userFromBase);
 
                             }
                             PeopleAdapter peopleAdapter = new PeopleAdapter(userFromBase);
