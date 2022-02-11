@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -51,6 +52,9 @@ public class NontificationAdapter extends RecyclerView.Adapter<NontificationAdap
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Nontification nontification=listAdapter.get(position);
+        if (!nontification.getType().equals("запрос")){
+            holder.addFriend.setVisibility(View.GONE);
+        }
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @Override
             public void PassUserNick(String nick) {
@@ -61,7 +65,7 @@ public class NontificationAdapter extends RecyclerView.Adapter<NontificationAdap
                             Nontification nontification=nontifications.get(i);
                             if(nontification.getType().equals("не просмотрено")){
                                 firebaseModel.getUsersReference().child(nick).child("nontifications")
-                                        .child(nontification.getNick()).child("type")
+                                        .child(nontification.getUid()).child("type")
                                         .setValue("просмотрено");
                             }
                         }
@@ -87,8 +91,7 @@ public class NontificationAdapter extends RecyclerView.Adapter<NontificationAdap
                                     firebaseModel.getReference().child("users")
                                             .child(nontification.getNick()).child("subscription")
                                             .child(nick).setValue(nick);
-                                    Query query=firebaseModel.getReference().child("users").child(nick).child("nontifications")
-                                            .child(nontification.getNick());
+                                    Query query=firebaseModel.getReference().child("users").child(nick).child("nontifications");
                                     query.addValueEventListener(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -101,8 +104,11 @@ public class NontificationAdapter extends RecyclerView.Adapter<NontificationAdap
                                                 nontification.setClothesName(snap.child("clothesName").getValue(String.class));
                                                 nontification.setClothesImage(snap.child("clothesImage").getValue(String.class));
                                                 nontification.setType(snap.child("type").getValue(String.class));
+                                                nontification.setUid(snap.child("uid").getValue(String.class));
                                                 if (nontification.getTypeView().equals("запрос")){
-
+                                                    firebaseModel.getUsersReference().child(nick).child("nontifications")
+                                                            .child(nontification.getUid()).removeValue();
+                                                    Toast.makeText(v.getContext(), "Подписчик добавлен", Toast.LENGTH_SHORT).show();
                                                 }
                                             }
                                         }

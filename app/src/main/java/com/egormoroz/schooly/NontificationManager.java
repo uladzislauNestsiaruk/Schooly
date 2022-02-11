@@ -85,7 +85,7 @@ public class NontificationManager extends Worker {
                                         Log.d("####", "shiiiiiiiitttttttttttt");
                                         if(otherUserNickNonts.getTypeDispatch().equals("не отправлено")) {
                                             nontification(nickOther);
-                                            firebaseModel.getUsersReference().child(nick).child("nontifications").child(otherUserNickNonts.getNick())
+                                            firebaseModel.getUsersReference().child(nick).child("nontifications").child(otherUserNickNonts.getUid())
                                                     .child("typeDispatch").setValue("отправлено");
                                         }
                                     }

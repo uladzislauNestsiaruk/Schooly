@@ -52,6 +52,7 @@ import com.google.firebase.database.ServerValue;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class MainFragment extends Fragment{
 
@@ -106,14 +107,22 @@ public class MainFragment extends Fragment{
 //                startActivity(intent);
             }
         });
+        Random random = new Random();
+        int num1 =random.nextInt(1000000000);
+        int num2 =random.nextInt(1000000000);
+        String numToBase=String.valueOf(num1+num2);
+        int num3 =random.nextInt(1000000000);
+        int num4=random.nextInt(1000000000);
+        String numToBase1=String.valueOf(num3+num4);
+
 //        firebaseModel.getReference().child("users")
-//                .child("Spaccacrani").child("nontifications")
-//                .child("tyomaa6").setValue(new Nontification("tyomaa6","не отправлено","запрос"
-//                ,ServerValue.TIMESTAMP.toString()," "," ","не просмотрено"));
+//                .child("tyomaa6").child("nontifications")
+//                .child(numToBase).setValue(new Nontification("Spaccacrani","не отправлено","запрос"
+//                ,ServerValue.TIMESTAMP.toString()," "," ","не просмотрено",numToBase));
 //        firebaseModel.getReference().child("users")
-//                .child("Spaccacrani").child("nontifications")
-//                .child("tyomaa6").setValue(new Nontification("tyomaa6","не отправлено","одежда"
-//                ,ServerValue.TIMESTAMP.toString()," "," ","не просмотрено"));
+//                .child("tyomaa6").child("nontifications")
+//                .child(numToBase1).setValue(new Nontification("Spaccacrani","не отправлено","одежда"
+//                ,ServerValue.TIMESTAMP.toString()," "," ","не просмотрено",numToBase1));
 
 //        ArrayList<Reason> reasonsArrayList=new ArrayList<>();
 //        reasonsArrayList.add(new Reason("Мошенничество"));
@@ -202,7 +211,7 @@ public class MainFragment extends Fragment{
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @Override
             public void PassUserNick(String nick) {
-                firebaseModel.getReference().child("usersNicks").child("Spaccacrani").setValue(new UserPeopleAdapter("Spaccacrani", "5", "hello"));
+//                firebaseModel.getReference().child("usersNicks").child("Spaccacrani").setValue(new UserPeopleAdapter("Spaccacrani", "5", "hello"));
 //                firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").child("Jordan 1").setValue(new Clothes("shoes", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
 //                        ,120,"Jordan 1",0,123,"Schooly","dollar"," "));
 //                firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").child("Yeazzy").setValue(new Clothes("accessories", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"

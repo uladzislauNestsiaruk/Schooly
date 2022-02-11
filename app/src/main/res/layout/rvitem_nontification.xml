@@ -9,13 +9,14 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="16dp" />
+        android:layout_marginTop="16dp"
+        android:background="@drawable/corners14appcolor"/>
 
     <TextView
         android:id="@+id/otherUserNick"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/app_color"
+        android:textColor="@color/app_grey"
         android:textSize="18dp"
         android:fontFamily="@font/montserrat_extrabold"
         android:layout_toRightOf="@+id/userImage"

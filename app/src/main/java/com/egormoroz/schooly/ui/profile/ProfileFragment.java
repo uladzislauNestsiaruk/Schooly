@@ -82,6 +82,7 @@ import com.google.firebase.storage.StorageReference;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.function.Consumer;
 
 public class ProfileFragment extends Fragment {
@@ -591,10 +592,14 @@ public class ProfileFragment extends Fragment {
                                                                                         .child(info.getNick()).setValue(info.getNick());
                                                                                 firebaseModel.getReference().child("users").child(info.getNick()).child("subscribers")
                                                                                         .child(nick).setValue(nick);
+                                                                                Random random = new Random();
+                                                                                int num1 =random.nextInt(1000000000);
+                                                                                int num2 =random.nextInt(1000000000);
+                                                                                String numToBase=String.valueOf(num1+num2);
                                                                                 firebaseModel.getReference().child("users")
                                                                                         .child(info.getNick()).child("nontifications")
-                                                                                        .child(nick).setValue(new Nontification(nick,"не отправлено","обычный"
-                                                                                        ,ServerValue.TIMESTAMP.toString()," "," ","не просмотрено"));
+                                                                                        .child(numToBase).setValue(new Nontification(nick,"не отправлено","обычный"
+                                                                                        ,ServerValue.TIMESTAMP.toString()," "," ","не просмотрено",numToBase));
                                                                                 subscribe.setText("Отписаться");
                                                                                 subscribe.setTextColor(Color.parseColor("#F3A2E5"));
                                                                                 subscribe.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
@@ -602,10 +607,14 @@ public class ProfileFragment extends Fragment {
                                                                             }else {
                                                                                 firebaseModel.getReference().child("users").child(info.getNick()).child("requests")
                                                                                         .child(nick).setValue(nick);
+                                                                                Random random = new Random();
+                                                                                int num1 =random.nextInt(1000000000);
+                                                                                int num2 =random.nextInt(1000000000);
+                                                                                String numToBase=String.valueOf(num1+num2);
                                                                                 firebaseModel.getReference().child("users")
                                                                                         .child(info.getNick()).child("nontifications")
-                                                                                        .child(nick).setValue(new Nontification(nick,"не отправлено","запрос"
-                                                                                        ,ServerValue.TIMESTAMP.toString()," "," ","не просмотрено"));
+                                                                                        .child(numToBase).setValue(new Nontification(nick,"не отправлено","запрос"
+                                                                                        ,ServerValue.TIMESTAMP.toString()," "," ","не просмотрено",numToBase));
                                                                                 subscribe.setText("Запрошено");
                                                                                 subscribe.setTextColor(Color.parseColor("#F3A2E5"));
                                                                                 subscribe.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
@@ -717,10 +726,14 @@ public class ProfileFragment extends Fragment {
                                                     }else {
                                                         firebaseModel.getReference().child("users").child(info.getNick()).child("requests")
                                                                 .child(nick).setValue(nick);
+                                                        Random random = new Random();
+                                                        int num1 =random.nextInt(1000000000);
+                                                        int num2 =random.nextInt(1000000000);
+                                                        String numToBase=String.valueOf(num1+num2);
                                                         firebaseModel.getReference().child("users")
                                                                 .child(info.getNick()).child("nontifications")
-                                                                .child(nick).setValue(new Nontification(nick,"не отправлено","запрос"
-                                                                ,ServerValue.TIMESTAMP.toString()," "," ","не просмотрено"));
+                                                                .child(numToBase).setValue(new Nontification(nick,"не отправлено","запрос"
+                                                                ,ServerValue.TIMESTAMP.toString()," "," ","не просмотрено",numToBase));
                                                         subscribeClose.setText("Запрошено");
                                                         subscribeClose.setTextColor(Color.parseColor("#F3A2E5"));
                                                         subscribeClose.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);

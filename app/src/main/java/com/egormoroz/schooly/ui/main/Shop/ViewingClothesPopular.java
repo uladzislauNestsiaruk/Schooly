@@ -27,6 +27,8 @@ import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import java.util.Random;
+
 public class ViewingClothesPopular extends Fragment {
 
     public static ViewingClothesPopular newInstance() {
@@ -155,10 +157,14 @@ public class ViewingClothesPopular extends Fragment {
                                             if(clothesViewing.getCreator().equals("Schooly")){
 
                                             }else {
+                                                Random random = new Random();
+                                                int num1 =random.nextInt(1000000000);
+                                                int num2 =random.nextInt(1000000000);
+                                                String numToBase=String.valueOf(num1+num2);
                                                 firebaseModel.getReference().child("users")
                                                         .child(clothesViewing.getCreator()).child("nontifications")
-                                                        .child(nick).setValue(new Nontification(nick,"не отправлено","одежда"
-                                                        , ServerValue.TIMESTAMP.toString(),clothesViewing.getClothesTitle(),clothesViewing.getClothesImage(),"не просмотрено"));
+                                                        .child(numToBase).setValue(new Nontification(nick,"не отправлено","одежда"
+                                                        , ServerValue.TIMESTAMP.toString(),clothesViewing.getClothesTitle(),clothesViewing.getClothesImage(),"не просмотрено",numToBase));
                                             }
                                             Query query=firebaseModel.getUsersReference().child(nick).child("basket").
                                                     child(clothesViewing.getClothesTitle());

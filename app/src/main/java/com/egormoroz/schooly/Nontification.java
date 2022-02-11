@@ -9,9 +9,10 @@ public class Nontification {
     private String clothesName;
     private String clothesImage;
     private String type;
+    private String uid;
 
     public Nontification(String  nick,String typeDispatch,String typeView,String timestamp
-    ,String clothesName,String clothesImage,String type){
+    ,String clothesName,String clothesImage,String type,String uid){
         this.nick=nick;
         this.typeDispatch=typeDispatch;
         this.typeView=typeView;
@@ -19,6 +20,7 @@ public class Nontification {
         this.clothesImage=clothesImage;
         this.clothesName=clothesName;
         this.type=type;
+        this.uid=uid;
     }
     public Nontification(){
     }
@@ -77,6 +79,14 @@ public class Nontification {
 
     public void setType(String  type){
         this.type=type;
+    }
+
+    public String  getUid(){
+        return this.uid;
+    }
+
+    public void setUid(String  uid){
+        this.uid=uid;
     }
 }
 
