@@ -31,8 +31,12 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.Lifecycle;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FirebaseModel;
@@ -46,8 +50,13 @@ import com.egormoroz.schooly.Subscriber;
 import com.egormoroz.schooly.ui.Model.SceneViewModelActivity;
 import com.egormoroz.schooly.ui.main.ChatActivity;
 import com.egormoroz.schooly.ui.main.MainFragment;
+import com.egormoroz.schooly.ui.main.Shop.AccessoriesFragment;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
+import com.egormoroz.schooly.ui.main.Shop.ClothesFragment;
+import com.egormoroz.schooly.ui.main.Shop.HatsFragment;
 import com.egormoroz.schooly.ui.main.Shop.NewClothesAdapter;
+import com.egormoroz.schooly.ui.main.Shop.PopularFragment;
+import com.egormoroz.schooly.ui.main.Shop.ShoesFargment;
 import com.egormoroz.schooly.ui.main.Shop.ShopFragment;
 import com.egormoroz.schooly.ui.main.Shop.ViewingClothes;
 import com.egormoroz.schooly.ui.main.UserInformation;
@@ -61,6 +70,7 @@ import com.google.android.filament.Filament;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.tabs.TabLayout;
 import com.google.ar.core.exceptions.CameraNotAvailableException;
 import com.google.ar.sceneform.Node;
 import com.google.ar.sceneform.SceneView;
@@ -93,7 +103,7 @@ public class ProfileFragment extends Fragment {
     UserInformation info;
     WardrobeAdapterProfile.ItemClickListener itemClickListenerWardrobe;
     TextView nickname,message,biographyTextView,looksCount,subscriptionsCount,subscribersCount,otherLooksCount,otherSubscriptionCount,
-            otherSubscribersCount,createNewLookText,createNewLook,otherUserBiography,subscribeClose,subscribe,looksText
+            otherSubscribersCount,otherUserBiography,subscribeClose,subscribe,looksText
             ,subscribeFirst,closeAccount,noClothes,buyClothesProfile,noLooksOther,blockedAccount;
     DatabaseReference user;
     WardrobeAdapterProfile.ItemClickListener itemClickListener;
@@ -104,9 +114,12 @@ public class ProfileFragment extends Fragment {
    // ModelRenderer modelRenderer;
     RecyclerView looksRecycler,wardrobeRecycler,looksRecyclerOther;
     ImageView moreSquare,back,newLook;
-    int looksListSize,profileValue;
+    int profileValue;
     String sendNick;
     Fragment fragment;
+    ViewPager2 viewPager;
+    FragmentAdapter fragmentAdapter;
+    TabLayout tabLayout;
     private float[] backgroundColor = new float[]{0f, 0f, 0f, 1.0f};
     private Handler handler;
     int a,profileCheckValue;
@@ -265,6 +278,41 @@ public class ProfileFragment extends Fragment {
                         ((MainActivity) getActivity()).setCurrentFragment(EditingFragment.newInstance());
                     }
                 });
+                //////////////////////////////
+                viewPager=view.findViewById(R.id.viewPager);
+                tabLayout=view.findViewById(R.id.tabsprofile);
+
+                FragmentManager fm = getChildFragmentManager();
+                fragmentAdapter = new FragmentAdapter(fm, getLifecycle());
+                viewPager.setAdapter(fragmentAdapter);
+
+                tabLayout.addTab(tabLayout.newTab().setText("Образы"));
+                tabLayout.addTab(tabLayout.newTab().setText("Одежда"));
+
+                tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+                    @Override
+                    public void onTabSelected(TabLayout.Tab tab) {
+                        viewPager.setCurrentItem(tab.getPosition());
+                    }
+
+                    @Override
+                    public void onTabUnselected(TabLayout.Tab tab) {
+
+                    }
+
+                    @Override
+                    public void onTabReselected(TabLayout.Tab tab) {
+
+                    }
+                });
+
+
+                viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+                    @Override
+                    public void onPageSelected(int position) {
+                        tabLayout.selectTab(tabLayout.getTabAt(position));
+                    }
+                });
 
                 biographyTextView=view.findViewById(R.id.biography);
                 RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
@@ -308,32 +356,6 @@ public class ProfileFragment extends Fragment {
                 buyClothesProfile=view.findViewById(R.id.buyClothesProfile);
                 checkWardrobe();
                 //////////////////////////////////////
-                /////////////////LOOKS///////////////
-                createNewLook=view.findViewById(R.id.CreateYourLook);
-                createNewLookText=view.findViewById(R.id.textCreateYourLook);
-                looksRecycler=view.findViewById(R.id.looksRecycler);
-                looksRecycler.setLayoutManager(new GridLayoutManager(getActivity(), 2));
-                RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-                    @Override
-                    public void PassUserNick(String nick) {
-                        RecentMethods.getLooksList(nick, firebaseModel, new Callbacks.getLooksList() {
-                            @Override
-                            public void getLooksList(ArrayList<Look> look) {
-                                looksListSize=look.size();
-                                if (looksListSize==0){
-                                    createNewLookText.setVisibility(View.VISIBLE);
-                                    createNewLook.setVisibility(View.VISIBLE);
-                                    looksRecycler.setVisibility(View.GONE);
-                                }else {
-                                    LooksAdapter looksAdapter=new LooksAdapter(look);
-                                    looksRecycler.setLayoutManager(new GridLayoutManager(getActivity(), 3));
-                                    looksRecycler.setAdapter(looksAdapter);
-                                }
-                            }
-                        });
-                    }
-                });
-                ///////////////////////////////////////
 
                 handler = new Handler(getMainLooper());
           //      scene = new SceneLoader(this);
@@ -1079,6 +1101,30 @@ public class ProfileFragment extends Fragment {
             sceneView.resume();
         } catch (CameraNotAvailableException e) {
             e.printStackTrace();
+        }
+    }
+
+    public class FragmentAdapter extends FragmentStateAdapter {
+
+        public FragmentAdapter(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle) {
+            super(fragmentManager, lifecycle);
+        }
+        @NonNull
+        @Override
+        public Fragment createFragment ( int position){
+
+
+            switch (position) {
+                case 1:
+                    return new ClothesFragmentProfile();
+            }
+            return new LooksFragmentProfile();
+        }
+
+
+        @Override
+        public int getItemCount() {
+            return 2;
         }
     }
 

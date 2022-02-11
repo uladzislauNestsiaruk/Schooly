@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/looksRecycler"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:orientation="vertical"
+        android:scrollbars="none" />
+
+    <TextView
+        android:id="@+id/textCreateYourLook"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:fontFamily="@font/montserrat_bold"
+        android:textColor="@color/app_color"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="48dp"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/CreateYourLook"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/сreate"
+        android:textSize="18sp"
+        android:layout_below="@+id/textCreateYourLook"
+        android:fontFamily="@font/montserrat_extrabold"
+        android:textColor="@color/white"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/corners14appcolor"
+        android:paddingStart="14dp"
+        android:paddingEnd="14dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="130dp"
+        android:visibility="gone"/>
+</RelativeLayout>
