@@ -103,8 +103,8 @@ public class ProfileFragment extends Fragment {
     UserInformation info;
     WardrobeAdapterProfile.ItemClickListener itemClickListenerWardrobe;
     TextView nickname,message,biographyTextView,looksCount,subscriptionsCount,subscribersCount,otherLooksCount,otherSubscriptionCount,
-            otherSubscribersCount,otherUserBiography,subscribeClose,subscribe,looksText
-            ,subscribeFirst,closeAccount,noClothes,buyClothesProfile,noLooksOther,blockedAccount;
+            otherSubscribersCount,otherUserBiography,subscribeClose,subscribe
+            ,subscribeFirst,closeAccount,noClothes,buyClothesProfile,blockedAccount;
     DatabaseReference user;
     WardrobeAdapterProfile.ItemClickListener itemClickListener;
    // SceneLoader scene;
@@ -117,9 +117,10 @@ public class ProfileFragment extends Fragment {
     int profileValue;
     String sendNick;
     Fragment fragment;
-    ViewPager2 viewPager;
+    ViewPager2 viewPager,viewPagerOther;
     FragmentAdapter fragmentAdapter;
-    TabLayout tabLayout;
+    FragmentAdapterOther fragmentAdapterOther;
+    TabLayout tabLayout,tabLayoutOther;
     private float[] backgroundColor = new float[]{0f, 0f, 0f, 1.0f};
     private Handler handler;
     int a,profileCheckValue;
@@ -421,14 +422,13 @@ public class ProfileFragment extends Fragment {
                         subscribe=view.findViewById(R.id.addFriend);
                         subscribeFirst=view.findViewById(R.id.SubscribeFirst);
                         closeAccount=view.findViewById(R.id.closeAccount);
+                        tabLayoutOther=view.findViewById(R.id.tabsprofileother);
+                        viewPagerOther=view.findViewById(R.id.viewPagerOther);
                         moreSquare=view.findViewById(R.id.moresquare);
-                        looksRecyclerOther=view.findViewById(R.id.looksRecyclerOther);
-                        looksText=view.findViewById(R.id.looksText);
                         otherLooksCount=view.findViewById(R.id.looksCountOther);
                         otherSubscriptionCount=view.findViewById(R.id.subscriptionCountOther);
                         otherSubscribersCount=view.findViewById(R.id.subsCountOther);
                         blockedAccount=view.findViewById(R.id.blockedAccount);
-                        noLooksOther=view.findViewById(R.id.noLooksOther);
                         if (info.getAccountType().equals("open")){
                             checkOtherUserProfile();
                         }else {
@@ -454,7 +454,6 @@ public class ProfileFragment extends Fragment {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                                         if(profileCheckValue!=0){
-                                            Log.d("######", "v "+profileCheckValue);
                                         if (profileCheckValue==2 || snapshot.exists()) {
                                             otherLooksCount = view.findViewById(R.id.looksCountOther);
                                             otherSubscriptionCount = view.findViewById(R.id.subscriptionCountOther);
@@ -462,6 +461,38 @@ public class ProfileFragment extends Fragment {
                                             closeAccount.setVisibility(View.GONE);
                                             subscribeFirst.setVisibility(View.GONE);
                                             blockedAccount.setVisibility(View.GONE);
+
+                                            FragmentManager fm = getChildFragmentManager();
+                                            fragmentAdapterOther = new FragmentAdapterOther(fm, getLifecycle());
+                                            viewPagerOther.setAdapter(fragmentAdapterOther);
+
+                                            tabLayoutOther.addTab(tabLayoutOther.newTab().setText("Образы"));
+                                            tabLayoutOther.addTab(tabLayoutOther.newTab().setText("Одежда"));
+
+                                            tabLayoutOther.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+                                                @Override
+                                                public void onTabSelected(TabLayout.Tab tab) {
+                                                    viewPagerOther.setCurrentItem(tab.getPosition());
+                                                }
+
+                                                @Override
+                                                public void onTabUnselected(TabLayout.Tab tab) {
+
+                                                }
+
+                                                @Override
+                                                public void onTabReselected(TabLayout.Tab tab) {
+
+                                                }
+                                            });
+
+
+                                            viewPagerOther.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+                                                @Override
+                                                public void onPageSelected(int position) {
+                                                    tabLayoutOther.selectTab(tabLayoutOther.getTabAt(position));
+                                                }
+                                            });
                                             moreSquare.setOnClickListener(new View.OnClickListener() {
                                                 @Override
                                                 public void onClick(View v) {
@@ -521,7 +552,6 @@ public class ProfileFragment extends Fragment {
                                             });
                                             linearSubscriptions = view.findViewById(R.id.subscriptionLinear);
                                             linearSubscribers = view.findViewById(R.id.subscribersLinear);
-                                            checkLooksOther();
                                             linearSubscriptions.setOnClickListener(new View.OnClickListener() {
                                                 @Override
                                                 public void onClick(View v) {
@@ -681,12 +711,11 @@ public class ProfileFragment extends Fragment {
                                             closeAccount.setVisibility(View.VISIBLE);
                                             subscribeFirst.setVisibility(View.VISIBLE);
                                             blockedAccount.setVisibility(View.GONE);
-                                            noLooksOther.setVisibility(View.GONE);
+                                            tabLayoutOther.setVisibility(View.GONE);
+                                            viewPagerOther.setVisibility(View.GONE);
                                             subscribeFirst.setText("Подпишись на " + " " + info.getNick() + " !");
                                             message.setVisibility(View.GONE);
                                             subscribe.setVisibility(View.GONE);
-                                            looksText.setVisibility(View.GONE);
-                                            looksRecyclerOther.setVisibility(View.GONE);
                                             moreSquare.setOnClickListener(new View.OnClickListener() {
                                                 @Override
                                                 public void onClick(View v) {
@@ -769,13 +798,12 @@ public class ProfileFragment extends Fragment {
                                             subscribeClose.setTextColor(Color.parseColor("#FEFEFE"));
                                             blockedAccount.setVisibility(View.VISIBLE);
                                             blockedAccount.setText(info.getNick()+" заблокировал тебя");
-                                            noLooksOther.setVisibility(View.GONE);
                                             message.setVisibility(View.GONE);
+                                            tabLayoutOther.setVisibility(View.GONE);
+                                            viewPagerOther.setVisibility(View.GONE);
                                             closeAccount.setVisibility(View.GONE);
                                             subscribeFirst.setVisibility(View.GONE);
                                             subscribe.setVisibility(View.GONE);
-                                            looksText.setVisibility(View.GONE);
-                                            looksRecyclerOther.setVisibility(View.GONE);
                                             moreSquare.setOnClickListener(new View.OnClickListener() {
                                                 @Override
                                                 public void onClick(View v) {
@@ -979,21 +1007,6 @@ public class ProfileFragment extends Fragment {
         });
     }
 
-    public void checkLooksOther(){
-        RecentMethods.getLooksList(info.getNick(), firebaseModel, new Callbacks.getLooksList() {
-            @Override
-            public void getLooksList(ArrayList<Look> look) {
-                if (look.size()==0){
-                    noLooksOther.setVisibility(View.VISIBLE);
-                    looksRecyclerOther.setVisibility(View.GONE);
-                }else{
-                    LooksAdapter looksAdapter=new LooksAdapter(look);
-                    looksRecyclerOther.setLayoutManager(new GridLayoutManager(getActivity(), 3));
-                    looksRecyclerOther.setAdapter(looksAdapter);
-                }
-            }
-        });
-    }
 
     public void checkOtherUserProfile(){
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
@@ -1119,6 +1132,30 @@ public class ProfileFragment extends Fragment {
                     return new ClothesFragmentProfile();
             }
             return new LooksFragmentProfile();
+        }
+
+
+        @Override
+        public int getItemCount() {
+            return 2;
+        }
+    }
+
+    public class FragmentAdapterOther extends FragmentStateAdapter {
+
+        public FragmentAdapterOther(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle) {
+            super(fragmentManager, lifecycle);
+        }
+        @NonNull
+        @Override
+        public Fragment createFragment ( int position){
+
+
+            switch (position) {
+                case 1:
+                    return new ClothesFragmentProfileOther(info.getNick());
+            }
+            return new LooksFragmentProfileOther(info.getNick());
         }
 
 

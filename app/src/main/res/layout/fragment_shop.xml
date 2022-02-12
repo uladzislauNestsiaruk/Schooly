@@ -133,7 +133,7 @@
                 android:layout_below="@+id/searchclothes"
                 android:layout_marginTop="8dp"
                 app:tabMode="scrollable"
-                app:tabTextAppearance="@style/AppTabTextAppearanceShop"/>
+                app:tabTextAppearance="@style/AppTabTextAppearanceShop" />
 
 
             <androidx.viewpager2.widget.ViewPager2

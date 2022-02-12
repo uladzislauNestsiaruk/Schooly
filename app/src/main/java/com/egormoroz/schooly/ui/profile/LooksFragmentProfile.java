@@ -37,7 +37,7 @@ public class LooksFragmentProfile extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.viewpager_profile, container, false);
         BottomNavigationView bnv = getActivity().findViewById(R.id.bottomNavigationView);
-        bnv.setVisibility(bnv.GONE);
+        bnv.setVisibility(bnv.VISIBLE);
         firebaseModel.initAll();
 //        AppBarLayout abl = getActivity().findViewById(R.id.AppBarLayout);
 //        abl.setVisibility(abl.GONE);
@@ -52,7 +52,6 @@ public class LooksFragmentProfile extends Fragment {
         createNewLook=view.findViewById(R.id.CreateYourLook);
         createNewLookText=view.findViewById(R.id.textCreateYourLook);
         looksRecycler=view.findViewById(R.id.looksRecycler);
-        looksRecycler.setLayoutManager(new GridLayoutManager(getActivity(), 2));
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @Override
             public void PassUserNick(String nick) {

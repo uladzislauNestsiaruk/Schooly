@@ -20,6 +20,7 @@ public class UserInformation {
     private double todayMining=0;
     private String subscription;
     private String subscribers;
+    private String myClothes;
     private String queue;
     private String bio;
     private String accountType;

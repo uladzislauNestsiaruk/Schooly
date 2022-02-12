@@ -266,6 +266,7 @@ public class SettingsFragment extends Fragment {
                         }else {
                             firebaseModel.getUsersReference().child(nick)
                                     .child("accountType").setValue("open");
+                            /////////////
                         }
                     }
                 });
