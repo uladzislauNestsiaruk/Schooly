@@ -17,9 +17,11 @@ import androidx.fragment.app.Fragment;
 
 import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FirebaseModel;
+import com.egormoroz.schooly.Nontification;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.MainActivity;
 import com.egormoroz.schooly.R;
+import com.egormoroz.schooly.Subscriber;
 import com.egormoroz.schooly.ui.main.RegisrtationstartFragment;
 import com.egormoroz.schooly.ui.main.UserInformation;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -28,6 +30,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
 
 public class SettingsFragment extends Fragment {
 
@@ -266,12 +270,15 @@ public class SettingsFragment extends Fragment {
                         }else {
                             firebaseModel.getUsersReference().child(nick)
                                     .child("accountType").setValue("open");
-                            /////////////
+                            clearRequests();
+                            clearRequestsNonts();
                         }
                     }
                 });
             }
         });
+        
+
 
 
         ImageView imageView = view.findViewById(R.id.backtomainfromsettings);
@@ -370,6 +377,62 @@ public class SettingsFragment extends Fragment {
             @Override
             public void PassUserNick(String nick) {
                 userNick.setText(nick);
+            }
+        });
+    }
+
+    public void clearRequests(){
+        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+            @Override
+            public void PassUserNick(String nick) {
+                Query query=firebaseModel.getUsersReference().child(nick).child("requests");
+                query.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        ArrayList<Subscriber> subscribersList = new ArrayList<>();
+                        for (DataSnapshot snap:snapshot.getChildren()){
+                            Subscriber subscriber=new Subscriber();
+                            subscriber.setSub(snap.getValue(String.class));
+                            subscribersList.add(subscriber);
+                        }
+                        for (int i=0;i<subscribersList.size();i++){
+                            Subscriber requestSub=subscribersList.get(i);
+                            firebaseModel.getUsersReference().child(nick).child("requests")
+                                    .child(requestSub.getSub()).removeValue();
+                            Log.d("######", requestSub.getSub());
+                            firebaseModel.getReference().child("users").child(nick).child("subscribers")
+                                    .child(requestSub.getSub()).setValue(requestSub.getSub());
+                            firebaseModel.getReference().child("users").child(requestSub.getSub()).child("subscription")
+                                    .child(nick).setValue(nick);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+            }
+        });
+    }
+
+    public void clearRequestsNonts(){
+        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+            @Override
+            public void PassUserNick(String nick) {
+                RecentMethods.getNontificationsList(nick, firebaseModel, new Callbacks.getNontificationsList() {
+                    @Override
+                    public void getNontificationsList(ArrayList<Nontification> nontifications) {
+                        for (int i=0;i<nontifications.size();i++){
+                            Nontification nontification=nontifications.get(i);
+                            if(nontification.getTypeView().equals("запрос")){
+                                firebaseModel.getUsersReference().child(nick).child("nontifications")
+                                        .child(nontification.getUid()).child("typeView")
+                                        .setValue("обычный");
+                            }
+                        }
+                    }
+                });
             }
         });
     }
