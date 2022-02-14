@@ -39,6 +39,7 @@ import com.egormoroz.schooly.ui.Model.SceneViewModelActivity;
 import com.egormoroz.schooly.ui.main.CreateCharacter.CreateCharacterFragment;
 import com.egormoroz.schooly.ui.main.Mining.Miner;
 import com.egormoroz.schooly.ui.main.Mining.MiningFragment;
+import com.egormoroz.schooly.ui.main.MyClothes.MyClothesFragment;
 import com.egormoroz.schooly.ui.main.Nontifications.NontificationFragment;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
 import com.egormoroz.schooly.ui.main.Shop.NewClothesAdapter;
@@ -57,7 +58,7 @@ import java.util.Random;
 
 public class MainFragment extends Fragment{
 
-    TextView todayMiningMain,circleNontifications,circleChat;
+    TextView todayMiningMain,circleNontifications,circleChat,myClothes;
     private FirebaseModel firebaseModel = new FirebaseModel();
     ArrayList<Clothes> clothesArrayList=new ArrayList<Clothes>();
     ArrayList<Nontification > noViewedNonts=new ArrayList<>();
@@ -88,6 +89,14 @@ public class MainFragment extends Fragment{
     @Override
     public void onViewCreated(@Nullable View view,@NonNull Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
+
+        myClothes=view.findViewById(R.id.myClothes);
+        myClothes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RecentMethods.setCurrentFragment(MyClothesFragment.newInstance(), getActivity());
+            }
+        });
         ImageView chat=view.findViewById(R.id.chat);
         chat.setOnClickListener(new View.OnClickListener() {
             @Override

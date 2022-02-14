@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -28,7 +29,7 @@ import java.util.ArrayList;
 public class AcceptNewLook extends Fragment {
 
     FirebaseModel firebaseModel=new FirebaseModel();
-    TextView ready;
+    RelativeLayout publish;
 
     public static AcceptNewLook newInstance() {
         return new AcceptNewLook();
@@ -39,7 +40,7 @@ public class AcceptNewLook extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_acceptnewlook, container, false);
         BottomNavigationView bnv = getActivity().findViewById(R.id.bottomNavigationView);
-        bnv.setVisibility(bnv.VISIBLE);
+        bnv.setVisibility(bnv.GONE);
         firebaseModel.initAll();
 //        AppBarLayout abl = getActivity().findViewById(R.id.AppBarLayout);
 //        abl.setVisibility(abl.GONE);
@@ -49,6 +50,19 @@ public class AcceptNewLook extends Fragment {
     @Override
     public void onViewCreated(@Nullable View view,@NonNull Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
+
+        publish=view.findViewById(R.id.publish);
+        publish.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+                    @Override
+                    public void PassUserNick(String nick) {
+                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("user", nick, AcceptNewLook.newInstance()), getActivity());
+                    }
+                });
+            }
+        });
 
         ImageView backfromwardrobe=view.findViewById(R.id.back_toprofile);
         backfromwardrobe.setOnClickListener(new View.OnClickListener() {

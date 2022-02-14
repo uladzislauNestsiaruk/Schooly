@@ -1,0 +1,60 @@
+package com.egormoroz.schooly.ui.main.MyClothes;
+
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
+import com.egormoroz.schooly.Callbacks;
+import com.egormoroz.schooly.FirebaseModel;
+import com.egormoroz.schooly.MainActivity;
+import com.egormoroz.schooly.R;
+import com.egormoroz.schooly.RecentMethods;
+import com.egormoroz.schooly.ui.main.MainFragment;
+import com.egormoroz.schooly.ui.profile.Wardrobe.AcceptNewLook;
+import com.egormoroz.schooly.ui.profile.Wardrobe.CreateLookFragment;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+public class MyClothesFragment extends Fragment {
+
+    FirebaseModel firebaseModel=new FirebaseModel();
+
+    public static MyClothesFragment newInstance() {
+        return new MyClothesFragment();
+    }
+
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        View root = inflater.inflate(R.layout.fragment_myclothes, container, false);
+        BottomNavigationView bnv = getActivity().findViewById(R.id.bottomNavigationView);
+        bnv.setVisibility(bnv.VISIBLE);
+        firebaseModel.initAll();
+//        AppBarLayout abl = getActivity().findViewById(R.id.AppBarLayout);
+//        abl.setVisibility(abl.GONE);
+        return root;
+    }
+
+    @Override
+    public void onViewCreated(@Nullable View view,@NonNull Bundle savedInstanceState){
+        super.onViewCreated(view, savedInstanceState);
+
+        ImageView backtomain=view.findViewById(R.id.back_tomain);
+        backtomain.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+                    @Override
+                    public void PassUserNick(String nick) {
+                        RecentMethods.setCurrentFragment(MainFragment.newInstance(), getActivity());
+                    }
+                });
+            }
+        });
+    }
+}
