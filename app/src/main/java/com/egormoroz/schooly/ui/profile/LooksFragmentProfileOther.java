@@ -23,54 +23,54 @@ import java.util.ArrayList;
 
 public class LooksFragmentProfileOther extends Fragment {
 
-    RecyclerView looksRecyclerOther;
-    TextView noLooksOther;
-    FirebaseModel firebaseModel=new FirebaseModel();
-    int looksListSize;
-    String otherUserNick;
+  RecyclerView looksRecyclerOther;
+  TextView noLooksOther;
+  FirebaseModel firebaseModel=new FirebaseModel();
+  int looksListSize;
+  String otherUserNick;
 
-    public LooksFragmentProfileOther(String otherUserNick) {
-        this.otherUserNick = otherUserNick;
-    }
+  public LooksFragmentProfileOther(String otherUserNick) {
+    this.otherUserNick = otherUserNick;
+  }
 
-    public static LooksFragmentProfileOther newInstance(String otherUserNick) {
-        return new LooksFragmentProfileOther(otherUserNick);
-    }
+  public static LooksFragmentProfileOther newInstance(String otherUserNick) {
+    return new LooksFragmentProfileOther(otherUserNick);
+  }
 
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.viewpager_profileother, container, false);
-        BottomNavigationView bnv = getActivity().findViewById(R.id.bottomNavigationView);
-        bnv.setVisibility(bnv.VISIBLE);
-        firebaseModel.initAll();
+  @Override
+  public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                           @Nullable Bundle savedInstanceState) {
+    View root = inflater.inflate(R.layout.viewpager_profileother, container, false);
+    BottomNavigationView bnv = getActivity().findViewById(R.id.bottomNavigationView);
+    bnv.setVisibility(bnv.VISIBLE);
+    firebaseModel.initAll();
 //        AppBarLayout abl = getActivity().findViewById(R.id.AppBarLayout);
 //        abl.setVisibility(abl.GONE);
-        return root;
-    }
+    return root;
+  }
 
-    @Override
-    public void onViewCreated(@Nullable View view,@NonNull Bundle savedInstanceState){
-        super.onViewCreated(view, savedInstanceState);
-        noLooksOther=view.findViewById(R.id.noLooks);
-        looksRecyclerOther=view.findViewById(R.id.Recycler);
-        checkLooksOther();
-    }
+  @Override
+  public void onViewCreated(@Nullable View view,@NonNull Bundle savedInstanceState){
+    super.onViewCreated(view, savedInstanceState);
+    noLooksOther=view.findViewById(R.id.noLooks);
+    looksRecyclerOther=view.findViewById(R.id.Recycler);
+    checkLooksOther();
+  }
 
-    public void checkLooksOther(){
-        RecentMethods.getLooksList(otherUserNick, firebaseModel, new Callbacks.getLooksList() {
-            @Override
-            public void getLooksList(ArrayList<Look> look) {
-                if (look.size()==0){
-                    noLooksOther.setVisibility(View.VISIBLE);
-                    noLooksOther.setText("У "+otherUserNick+" нет образов :(");
-                    looksRecyclerOther.setVisibility(View.GONE);
-                }else{
-                    LooksAdapter looksAdapter=new LooksAdapter(look);
-                    looksRecyclerOther.setLayoutManager(new GridLayoutManager(getActivity(), 3));
-                    looksRecyclerOther.setAdapter(looksAdapter);
-                }
-            }
-        });
-    }
+  public void checkLooksOther(){
+    RecentMethods.getLooksList(otherUserNick, firebaseModel, new Callbacks.getLooksList() {
+      @Override
+      public void getLooksList(ArrayList<Look> look) {
+        if (look.size()==0){
+          noLooksOther.setVisibility(View.VISIBLE);
+          noLooksOther.setText("У "+otherUserNick+" нет образов :(");
+          looksRecyclerOther.setVisibility(View.GONE);
+        }else{
+          LooksAdapter looksAdapter=new LooksAdapter(look);
+          looksRecyclerOther.setLayoutManager(new GridLayoutManager(getActivity(), 3));
+          looksRecyclerOther.setAdapter(looksAdapter);
+        }
+      }
+    });
+  }
 }

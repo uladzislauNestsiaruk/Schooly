@@ -128,6 +128,12 @@ public class CreateLookFragment extends Fragment {
             }
         });
         ready=view.findViewById(R.id.ready);
+        ready.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RecentMethods.setCurrentFragment(AcceptNewLook.newInstance(), getActivity());
+            }
+        });
         ImageView backfromwardrobe=view.findViewById(R.id.back_toprofile);
         backfromwardrobe.setOnClickListener(new View.OnClickListener() {
             @Override

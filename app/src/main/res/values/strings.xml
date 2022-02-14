@@ -244,6 +244,9 @@
 
     <string name="messageLimit">Отправка сообщений ограничена</string>
 
+    <string name="schoolyPremium">Schooly Premium</string>
+    <string name="buyPremium">Купить подписку</string>
+
 
 
 </resources>
