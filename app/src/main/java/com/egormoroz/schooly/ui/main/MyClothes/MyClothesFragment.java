@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -30,6 +31,7 @@ public class MyClothesFragment extends Fragment {
 
     FirebaseModel firebaseModel=new FirebaseModel();
     RecyclerView recyclerMyClothes;
+    TextView createClothes;
     MyClothesAdapter.ItemClickListener itemClickListener;
 
     public static MyClothesFragment newInstance() {
@@ -54,6 +56,13 @@ public class MyClothesFragment extends Fragment {
 
         recyclerMyClothes=view.findViewById(R.id.recyclerMyClothes);
         getMyClothes();
+        createClothes=view.findViewById(R.id.createClothesButton);
+        createClothes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RecentMethods.setCurrentFragment(CreateClothesFragment.newInstance(), getActivity());
+            }
+        });
         ImageView backtomain=view.findViewById(R.id.back_tomain);
         backtomain.setOnClickListener(new View.OnClickListener() {
             @Override

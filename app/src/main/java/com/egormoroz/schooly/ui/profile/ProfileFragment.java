@@ -947,6 +947,14 @@ public class ProfileFragment extends Fragment {
                         firebaseModel.getUsersReference().child(nick)
                                 .child("blackList").child(info.getNick())
                                 .setValue(info.getNick());
+                        firebaseModel.getUsersReference().child(nick)
+                                .child("subscription").child(info.getNick()).removeValue();
+                        firebaseModel.getUsersReference().child(info.getNick())
+                                .child("subscribers").child(nick).removeValue();
+                        firebaseModel.getUsersReference().child(info.getNick())
+                                .child("subscription").child(nick).removeValue();
+                        firebaseModel.getUsersReference().child(nick)
+                                .child("subscribers").child(info.getNick()).removeValue();
                     }
                 });
                 dialog.dismiss();

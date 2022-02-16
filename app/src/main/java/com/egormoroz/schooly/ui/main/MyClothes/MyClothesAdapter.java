@@ -60,6 +60,13 @@ public class MyClothesAdapter extends RecyclerView.Adapter<MyClothesAdapter.View
         File file=new File(clothes.getClothesImage());
         storageReference.child("clothes").getFile(file);
         holder.clothesImage.setVisibility(View.VISIBLE);
+        holder.purchaseNumber.setText(String.valueOf(clothes.getPurchaseNumber()));
+        if (clothes.getCurrencyType().equals("dollar")){
+            holder.coinsImage.setVisibility(View.GONE);
+            holder.profit.setText("+"+String.valueOf(clothes.getClothesPrice()*clothes.getPurchaseToday())+"$");
+        }else {
+            holder.profit.setText("+"+String.valueOf(clothes.getClothesPrice()*clothes.getPurchaseToday()));
+        }
         holder.purchasesToday.setText(String.valueOf(clothes.getPurchaseToday()));
         if (clothes.getPurchaseNumber()==0){
             perCent=0;
@@ -67,7 +74,6 @@ public class MyClothesAdapter extends RecyclerView.Adapter<MyClothesAdapter.View
             perCent=clothes.getPurchaseToday()*100/clothes.getPurchaseNumber();
         }
         holder.perSentPurchase.setText("("+String.valueOf(perCent)+"%)");
-        holder.profit.setText("+"+String.valueOf(clothes.getClothesPrice()*clothes.getPurchaseToday()));
 //        if (clothes.getCurrencyType().equals("dollar")){
 //            holder.dollarImage.setVisibility(View.VISIBLE);
 //            holder.coinsImage.setVisibility(View.GONE);
@@ -90,7 +96,7 @@ public class MyClothesAdapter extends RecyclerView.Adapter<MyClothesAdapter.View
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView purchasesToday,clothesTitle,purchaseNumber,perSentPurchase,profit;
-        ImageView clothesImage,dollarImage,coinsImage;
+        ImageView clothesImage,coinsImage;
         ViewHolder(View itemView) {
             super(itemView);
             profit=itemView.findViewById(R.id.profit);
@@ -99,7 +105,6 @@ public class MyClothesAdapter extends RecyclerView.Adapter<MyClothesAdapter.View
             clothesImage=itemView.findViewById(R.id.clothesImage);
             clothesTitle=itemView.findViewById(R.id.clothesTitle);
             coinsImage=itemView.findViewById(R.id.coinsImage);
-            dollarImage=itemView.findViewById(R.id.dollarImage);
             purchaseNumber=itemView.findViewById(R.id.purchaseNumber);
         }
 

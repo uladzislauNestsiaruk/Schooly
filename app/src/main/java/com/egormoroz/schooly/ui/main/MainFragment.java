@@ -350,7 +350,7 @@ public class MainFragment extends Fragment{
                             int padding174inDp = (int) TypedValue.applyDimension(
                                     TypedValue.COMPLEX_UNIT_DIP, 174, getResources().getDisplayMetrics());
                             layoutParams.setMargins(padding24inDp, padding174inDp, 0, 0);
-                            layoutParams.addRule(RelativeLayout.BELOW, R.id.myClothes);
+                            layoutParams.addRule(RelativeLayout.BELOW, R.id.relativeClothes);
                             mining.setLayoutParams(layoutParams);
                             createClothes.setOnClickListener(new View.OnClickListener() {
                                 @Override
@@ -366,7 +366,7 @@ public class MainFragment extends Fragment{
                             int padding300inDp = (int) TypedValue.applyDimension(
                                     TypedValue.COMPLEX_UNIT_DIP, 300, getResources().getDisplayMetrics());
                             layoutParams1.setMargins(padding24inDp, padding300inDp, 0, 0);
-                            layoutParams1.addRule(RelativeLayout.BELOW, R.id.myClothes);
+                            layoutParams1.addRule(RelativeLayout.BELOW,R.id.relativeClothes);
                             mining.setLayoutParams(layoutParams1);
                             MyClothesAdapterMain myClothesAdapterMain=new MyClothesAdapterMain(allClothes,itemClickListenerMyClothes);
                             myClothesRecycler.setAdapter(myClothesAdapterMain);

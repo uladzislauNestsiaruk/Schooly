@@ -139,25 +139,32 @@
             android:scrollbars="none"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
-
-        <TextView
-            android:id="@+id/myClothes"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:id="@+id/relativeClothes"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/relativeshop"
             android:layout_marginStart="24dp"
-            android:layout_marginTop="283dp"
-            android:fontFamily="@font/montserratblack"
-            android:text="@string/myClothes"
-            android:textColor="@color/grey"
-            android:textSize="20sp" />
+            android:layout_marginTop="288dp">
+
+            <TextView
+                android:id="@+id/myClothes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/montserratblack"
+                android:text="@string/myClothes"
+                android:textColor="@color/grey"
+                android:layout_centerVertical="true"
+                android:textSize="20sp" />
+
+        </RelativeLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/mychlothesmain"
             android:layout_width="match_parent"
             android:layout_height="276dp"
-            android:layout_below="@+id/myClothes"
-            android:layout_marginTop="16dp"
+            android:layout_below="@+id/relativeClothes"
+            android:layout_marginTop="8dp"
             android:orientation="horizontal"
             android:scrollbars="none"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
@@ -166,7 +173,7 @@
             android:id="@+id/relativeFirstClothes"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/myClothes"
+            android:layout_below="@id/relativeClothes"
             android:layout_marginStart="24dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="24dp"
@@ -215,7 +222,7 @@
             android:id="@+id/mining"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/myClothes"
+            android:layout_below="@+id/relativeClothes"
             android:fontFamily="@font/montserratblack"
             android:text="@string/mining"
             android:textColor="@color/grey"

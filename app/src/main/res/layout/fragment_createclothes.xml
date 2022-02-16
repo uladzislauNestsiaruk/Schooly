@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/relativeMenu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp">
+
+        <ImageView
+            android:id="@+id/back_tomyclothes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="26dp"
+            android:src="@drawable/left_arrow"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="14dp"
+            android:layout_marginTop="11dp"
+            android:layout_toRightOf="@+id/back_tomyclothes"
+            android:fontFamily="@font/montserrat_bold"
+            android:text="@string/creatingClothes"
+            android:textColor="@color/app_color"
+            android:textSize="23sp" />
+
+    </RelativeLayout>
+
+</RelativeLayout>
