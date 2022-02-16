@@ -12,10 +12,13 @@ public class Clothes {
     private long timesTamp;
     private String creator;
     private String description;
+    String model;
+    long purchaseToday;
 
 
     public Clothes(String type, String  clothesImage, long clothesPrice,String clothesTitle
-            ,long purchaseNumber,long timesTamp,String creator,String currencyType,String description){
+            ,long purchaseNumber,long timesTamp,String creator,String currencyType,String description,
+                   String model,long purchaseToday){
         this.type=type;
         this.clothesImage=clothesImage;
         this.clothesPrice=clothesPrice;
@@ -25,6 +28,8 @@ public class Clothes {
         this.creator=creator;
         this.currencyType=currencyType;
         this.description=description;
+        this.model=model;
+        this.purchaseToday=purchaseToday;
     }
     public Clothes(){
     }
@@ -99,6 +104,22 @@ public class Clothes {
 
     public void setTimesTamp(long timesTamp){
         this.timesTamp=timesTamp;
+    }
+
+    public String getModel(){
+        return this.model;
+    }
+
+    public void setModel(String model){
+        this.model=model;
+    }
+
+    public long getPurchaseToday(){
+        return this.purchaseToday;
+    }
+
+    public void setPurchaseToday(long purchaseToday){
+        this.purchaseToday=purchaseToday;
     }
 
 }

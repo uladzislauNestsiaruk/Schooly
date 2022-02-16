@@ -23,6 +23,7 @@ import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.ui.main.ChatsFragment;
 import com.egormoroz.schooly.ui.main.EnterFragment;
 import com.egormoroz.schooly.ui.main.MainFragment;
+import com.egormoroz.schooly.ui.profile.ProfileFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -101,6 +102,21 @@ public class ViewingClothes extends Fragment {
                 clothesTitleCV.setText(clothes.getClothesTitle());
                 clothesPrise=clothes.getClothesPrice();
                 creator.setText(clothesViewing.getCreator());
+                creator.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+                            @Override
+                            public void PassUserNick(String nick) {
+                                if (clothesViewing.getCreator().equals(nick)) {
+                                    RecentMethods.setCurrentFragment(ProfileFragment.newInstance("user", nick, ViewingClothes.newInstance(fragment)), getActivity());
+                                }else {
+                                    RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", clothesViewing.getCreator(), ViewingClothes.newInstance(fragment)), getActivity());
+                                }
+                            }
+                        });
+                    }
+                });
                 if (clothesViewing.getDescription().trim().length()==0){
                     noDescription.setVisibility(View.VISIBLE);
                     description.setVisibility(View.GONE);

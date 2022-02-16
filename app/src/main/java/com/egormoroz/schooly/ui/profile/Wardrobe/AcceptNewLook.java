@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -30,6 +31,8 @@ public class AcceptNewLook extends Fragment {
 
     FirebaseModel firebaseModel=new FirebaseModel();
     RelativeLayout publish;
+    TextView lookPrice;
+    EditText descriptionLook;
 
     public static AcceptNewLook newInstance() {
         return new AcceptNewLook();
@@ -52,6 +55,8 @@ public class AcceptNewLook extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         publish=view.findViewById(R.id.publish);
+        lookPrice=view.findViewById(R.id.lookPrice);
+        descriptionLook=view.findViewById(R.id.addDescriptionEdit);
         publish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

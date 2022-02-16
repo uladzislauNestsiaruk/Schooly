@@ -27,6 +27,7 @@
             android:textSize="22sp" />
 
         <com.google.ar.sceneform.SceneView
+            android:id="@+id/sceneView"
             android:layout_width="match_parent"
             android:layout_height="320dp"
             android:layout_below="@+id/back_toprofile"
@@ -34,6 +35,63 @@
             android:layout_marginTop="16dp"
             android:layout_marginEnd="24dp"
             android:background="@color/lightPink" />
+
+        <TextView
+            android:id="@+id/lookPriceText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/sceneView"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="24dp"
+            android:text="@string/lookPrice"
+            android:fontFamily="@font/montserrat_bold"
+            android:textColor="@color/app_grey"/>
+
+        <RelativeLayout
+            android:id="@+id/relative"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/lookPriceText"
+            android:layout_marginTop="2dp"
+            android:layout_marginStart="24dp">
+
+            <TextView
+                android:id="@+id/lookPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/montserratblack"
+                android:text="1344"
+                android:textColor="@color/app_color"
+                android:textSize="24sp" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="4dp"
+                android:layout_toRightOf="@+id/lookPrice"
+                android:src="@drawable/ic_schoolycoin24dp" />
+        </RelativeLayout>
+
+        <EditText
+            android:id="@+id/addDescriptionEdit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/relative"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="24dp"
+            android:background="@drawable/corners14dpappcolor2dpstroke"
+            android:fontFamily="@font/montserrat_bold"
+            android:hint="@string/addDesk"
+            android:maxLines="8"
+            android:paddingStart="12dp"
+            android:paddingTop="12dp"
+            android:paddingEnd="12dp"
+            android:paddingBottom="100dp"
+            android:textColor="@color/app_grey"
+            android:textColorHint="@color/app_grey"
+            android:textSize="14sp" />
 
         <RelativeLayout
             android:id="@+id/publish"

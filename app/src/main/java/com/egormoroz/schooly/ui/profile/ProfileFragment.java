@@ -466,6 +466,8 @@ public class ProfileFragment extends Fragment {
                                             fragmentAdapterOther = new FragmentAdapterOther(fm, getLifecycle());
                                             viewPagerOther.setAdapter(fragmentAdapterOther);
 
+                                            Log.d("#####", "tab1");
+
                                             tabLayoutOther.addTab(tabLayoutOther.newTab().setText("Образы"));
                                             tabLayoutOther.addTab(tabLayoutOther.newTab().setText("Одежда"));
 
@@ -713,6 +715,7 @@ public class ProfileFragment extends Fragment {
                                             blockedAccount.setVisibility(View.GONE);
                                             tabLayoutOther.setVisibility(View.GONE);
                                             viewPagerOther.setVisibility(View.GONE);
+                                            Log.d("#####", "tab2");
                                             subscribeFirst.setText("Подпишись на " + " " + info.getNick() + " !");
                                             message.setVisibility(View.GONE);
                                             subscribe.setVisibility(View.GONE);
@@ -801,6 +804,7 @@ public class ProfileFragment extends Fragment {
                                             message.setVisibility(View.GONE);
                                             tabLayoutOther.setVisibility(View.GONE);
                                             viewPagerOther.setVisibility(View.GONE);
+                                            Log.d("#####", "tab3");
                                             closeAccount.setVisibility(View.GONE);
                                             subscribeFirst.setVisibility(View.GONE);
                                             subscribe.setVisibility(View.GONE);

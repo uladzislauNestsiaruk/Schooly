@@ -248,6 +248,19 @@
     <string name="buyPremium">Купить подписку</string>
     <string name="publish">Опубликовать</string>
 
+    <string name="purchases">Продажи</string>
+    <string name="today1">сегодня:</string>
+    <string name="profit">Прибыль(24h):</string>
+    <string name="total">Всего:</string>
+    <string name="lookPrice">Стоимость образа:</string>
+    <string name="addDesk">Добавить описание...</string>
+
+    <string name="sellClothesByDollars">Продавай одежду за реальные деньги</string>
+    <string name="moreCoinsMining">Увелич заработок с майнинга</string>
+    <string name="eightyPerSentFromClothes">Получай 80% с продажи одежды</string>
+    <string name="closePremium">Отмена подписки в любой момент</string>
+
+
 
 
 </resources>

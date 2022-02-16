@@ -26,6 +26,7 @@
         android:layout_below="@+id/clothesTitle"
         android:fontFamily="@font/montserrat_bold"
         android:text="@string/price"
+        android:textSize="12sp"
         android:textColor="@color/app_grey" />
 
    <ImageView
@@ -100,10 +101,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_toRightOf="@id/purchaseNumber"
-        android:src="@drawable/ic_bag"
         android:layout_marginStart="2dp"
-        android:layout_marginBottom="3dp" />
+        android:layout_marginBottom="3dp"
+        android:layout_toRightOf="@id/purchaseNumber"
+        android:src="@drawable/ic_bag" />
 
 
 </RelativeLayout>

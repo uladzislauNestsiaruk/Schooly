@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
+import com.egormoroz.schooly.ui.main.Shop.NewClothesAdapter;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
@@ -20,22 +21,22 @@ import com.squareup.picasso.Picasso;
 import java.io.File;
 import java.util.ArrayList;
 
-public class MyClothesAdapter extends RecyclerView.Adapter<MyClothesAdapter.ViewHolder> {
+public class MyClothesAdapterMain extends RecyclerView.Adapter<MyClothesAdapterMain.ViewHolder>{
 
     FirebaseModel firebaseModel=new FirebaseModel();
     ArrayList<Clothes> clothesArrayList;
     static Clothes clothes,trueClothes;
     FirebaseStorage storage = FirebaseStorage.getInstance();
     StorageReference storageReference=storage.getReference();
-    MyClothesAdapter.ItemClickListener itemClickListener;
+    MyClothesAdapterMain.ItemClickListener itemClickListener;
     double perCent;
 
-    public MyClothesAdapter(ArrayList<Clothes> clothesArrayList, MyClothesAdapter.ItemClickListener itemClickListener) {
+    public MyClothesAdapterMain(ArrayList<Clothes> clothesArrayList, MyClothesAdapterMain.ItemClickListener itemClickListener) {
         this.clothesArrayList= clothesArrayList;
         this.itemClickListener= itemClickListener;
     }
 
-    public static void singeClothesInfo(MyClothesAdapter.ItemClickListener itemClickListener){
+    public static void singeClothesInfo(MyClothesAdapterMain.ItemClickListener itemClickListener){
         itemClickListener.onItemClick(trueClothes);
     }
 
@@ -45,21 +46,22 @@ public class MyClothesAdapter extends RecyclerView.Adapter<MyClothesAdapter.View
 
     @NonNull
     @Override
-    public MyClothesAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
+    public MyClothesAdapterMain.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
         RelativeLayout v = (RelativeLayout) LayoutInflater.from(viewGroup.getContext()).
-                inflate(R.layout.rvitem_myclothesfrag, viewGroup, false);
-        MyClothesAdapter.ViewHolder viewHolder=new MyClothesAdapter.ViewHolder(v);
+                inflate(R.layout.rvitem_myclothes, viewGroup, false);
+        ViewHolder viewHolder=new ViewHolder(v);
         return viewHolder;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MyClothesAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull MyClothesAdapterMain.ViewHolder holder, int position) {
         firebaseModel.initAll();
         clothes=clothesArrayList.get(position);
         holder.clothesTitle.setText(clothes.getClothesTitle());
         File file=new File(clothes.getClothesImage());
         storageReference.child("clothes").getFile(file);
         holder.clothesImage.setVisibility(View.VISIBLE);
+        holder.purchaseNumber.setText(String.valueOf(clothes.getPurchaseNumber()));
         holder.purchasesToday.setText(String.valueOf(clothes.getPurchaseToday()));
         if (clothes.getPurchaseNumber()==0){
             perCent=0;

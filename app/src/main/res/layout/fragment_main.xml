@@ -152,6 +152,16 @@
             android:textColor="@color/grey"
             android:textSize="20sp" />
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/mychlothesmain"
+            android:layout_width="match_parent"
+            android:layout_height="276dp"
+            android:layout_below="@+id/myClothes"
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal"
+            android:scrollbars="none"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
         <RelativeLayout
             android:id="@+id/relativeFirstClothes"
             android:layout_width="match_parent"
@@ -161,7 +171,8 @@
             android:layout_marginTop="16dp"
             android:layout_marginEnd="24dp"
             android:layout_marginBottom="24dp"
-            android:background="@drawable/corners30appcolor">
+            android:background="@drawable/corners30appcolor"
+            android:visibility="gone">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -204,9 +215,7 @@
             android:id="@+id/mining"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/relativeFirstClothes"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="12dp"
+            android:layout_below="@+id/myClothes"
             android:fontFamily="@font/montserratblack"
             android:text="@string/mining"
             android:textColor="@color/grey"
@@ -241,8 +250,8 @@
                 android:layout_marginStart="30dp"
                 android:layout_marginTop="18dp"
                 android:indeterminate="true"
-                app:indicatorColor="@color/white"
-                android:visibility="gone"/>
+                android:visibility="gone"
+                app:indicatorColor="@color/white" />
 
             <TextView
                 android:id="@+id/todayminingmain"

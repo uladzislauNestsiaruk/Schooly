@@ -110,7 +110,7 @@ public class RecentMethods {
 
         UserInformation res = new UserInformation(nick, "unknown", user.getUid(),
                 "6", "unknown", "Helicopter", 1000
-                , "Miner", 1,100,0, "", "", "","","open","open","open","open");
+                , "Miner", 1,100,0, "", "", "","","open","open","open","open","");
         ref.child(nick).setValue(res);
         return nick.isEmpty();
     }
@@ -505,6 +505,8 @@ public class RecentMethods {
                     clothes.setCreator(snap.child("creator").getValue(String.class));
                     clothes.setCurrencyType(snap.child("currencyType").getValue(String.class));
                     clothes.setDescription(snap.child("description").getValue(String.class));
+                    clothes.setPurchaseToday(snap.child("purchaseToday").getValue(Long.class));
+                    clothes.setModel(snap.child("model").getValue(String.class));
                     clothesFromBase.add(clothes);
                 }
                 callback.getClothes(clothesFromBase);
@@ -534,6 +536,8 @@ public class RecentMethods {
                     clothes.setCreator(snap.child("creator").getValue(String.class));
                     clothes.setCurrencyType(snap.child("currencyType").getValue(String.class));
                     clothes.setDescription(snap.child("description").getValue(String.class));
+                    clothes.setPurchaseToday(snap.child("purchaseToday").getValue(Long.class));
+                    clothes.setModel(snap.child("model").getValue(String.class));
                     clothesFromBase.add(clothes);
                 }
                 callback.getClothes(clothesFromBase);
@@ -695,6 +699,8 @@ public class RecentMethods {
                     clothes.setCreator(snap.child("creator").getValue(String.class));
                     clothes.setCurrencyType(snap.child("currencyType").getValue(String.class));
                     clothes.setDescription(snap.child("description").getValue(String.class));
+                    clothes.setPurchaseToday(snap.child("purchaseToday").getValue(Long.class));
+                    clothes.setModel(snap.child("model").getValue(String.class));
                     clothesFromBase.add(clothes);
                 }
                 callback.getClothes(clothesFromBase);
@@ -726,6 +732,8 @@ public class RecentMethods {
                     clothes.setCurrencyType(snap.child("currencyType").getValue(String.class));
                     clothes.setCreator(snap.child("creator").getValue(String.class));
                     clothes.setDescription(snap.child("description").getValue(String.class));
+                    clothes.setPurchaseToday(snap.child("purchaseToday").getValue(Long.class));
+                    clothes.setModel(snap.child("model").getValue(String.class));
                    clothesFromBase.add(clothes);
                 }
                 callback.getClothes(clothesFromBase);
@@ -1203,6 +1211,40 @@ public class RecentMethods {
 
 
     }
+
+    ///////////////////MY CLOTHES//////////////////
+    public static void getMyClothes(String nick,FirebaseModel firebaseModel,Callbacks.GetClothes callback){
+        firebaseModel.initAll();
+        Query query=firebaseModel.getUsersReference().child(nick)
+                .child("myClothes");
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                ArrayList<Clothes> clothesFromBase=new ArrayList<>();
+                for (DataSnapshot snap : snapshot.getChildren()) {
+                    Clothes clothes = new Clothes();
+                    clothes.setClothesImage(snap.child("clothesImage").getValue(String.class));
+                    clothes.setClothesPrice(snap.child("clothesPrice").getValue(Long.class));
+                    clothes.setPurchaseNumber(snap.child("purchaseNumber").getValue(Long.class));
+                    clothes.setClothesType(snap.child("clothesType").getValue(String.class));
+                    clothes.setClothesTitle(snap.child("clothesTitle").getValue(String.class));
+                    clothes.setCreator(snap.child("creator").getValue(String.class));
+                    clothes.setCurrencyType(snap.child("currencyType").getValue(String.class));
+                    clothes.setDescription(snap.child("description").getValue(String.class));
+                    clothes.setPurchaseToday(snap.child("purchaseToday").getValue(Long.class));
+                    clothes.setModel(snap.child("model").getValue(String.class));
+                    clothesFromBase.add(clothes);
+                }
+                callback.getClothes(clothesFromBase);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+    //////////////////////////////////////////
 
     public static void setState (String state, String nick, FirebaseModel firebaseModel){
         firebaseModel.initAll();

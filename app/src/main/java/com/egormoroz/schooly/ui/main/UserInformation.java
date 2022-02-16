@@ -151,6 +151,13 @@ public class UserInformation {
         this.queue = queue;
     }
 
+    public String getMyClothes(){
+        return this.myClothes;
+    }
+    public void setMyClothes(String myClothes){
+        this.myClothes = myClothes;
+    }
+
     public String getBio(){
         return this.bio;
     }
@@ -172,7 +179,7 @@ public class UserInformation {
                            String gender, long age,String miners,long level,long money,double todayMining,
                            String subscription, String subscribers, String queue,String bio,
                            String accountType,String chatsNontsType,
-                           String groupChatsNontsType,String profileNontsType) {
+                           String groupChatsNontsType,String profileNontsType,String myClothes) {
         this.Nick = nick;
         this.uid = uid;
         this.phone = phone;
@@ -192,6 +199,7 @@ public class UserInformation {
         this.chatsNontsType=chatsNontsType;
         this.groupChatsNontsType=groupChatsNontsType;
         this.profileNontsType=profileNontsType;
+        this.myClothes=myClothes;
     }
 
 }

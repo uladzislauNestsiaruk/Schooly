@@ -70,8 +70,6 @@ public class NewClothesAdapter extends RecyclerView.Adapter<NewClothesAdapter.Vi
   }
 
 
-
-
   @NotNull
   @Override
   public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {

@@ -12,10 +12,12 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -39,6 +41,7 @@ import com.egormoroz.schooly.ui.Model.SceneViewModelActivity;
 import com.egormoroz.schooly.ui.main.CreateCharacter.CreateCharacterFragment;
 import com.egormoroz.schooly.ui.main.Mining.Miner;
 import com.egormoroz.schooly.ui.main.Mining.MiningFragment;
+import com.egormoroz.schooly.ui.main.MyClothes.MyClothesAdapterMain;
 import com.egormoroz.schooly.ui.main.MyClothes.MyClothesFragment;
 import com.egormoroz.schooly.ui.main.Nontifications.NontificationFragment;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
@@ -58,16 +61,18 @@ import java.util.Random;
 
 public class MainFragment extends Fragment{
 
-    TextView todayMiningMain,circleNontifications,circleChat,myClothes;
+    TextView todayMiningMain,circleNontifications,circleChat,myClothes,createClothes,mining;
     private FirebaseModel firebaseModel = new FirebaseModel();
     ArrayList<Clothes> clothesArrayList=new ArrayList<Clothes>();
     ArrayList<Nontification > noViewedNonts=new ArrayList<>();
     ArrayList<Clothes> popularClothesArrayList=new ArrayList<Clothes>();
     private UserInformation userData = new UserInformation();
-    RecyclerView clothesRecyclerMain;
+    RecyclerView clothesRecyclerMain,myClothesRecycler;
+    RelativeLayout relativeFirstLayout;
     NewClothesAdapter.ItemClickListener itemClickListener;
     private static final int NOTIFY_ID = 101;
     CircularProgressIndicator circularProgressIndicator;
+    MyClothesAdapterMain.ItemClickListener itemClickListenerMyClothes;
 
     private static final String CHANNEL_ID = "Tyomaa channel";
 
@@ -90,6 +95,10 @@ public class MainFragment extends Fragment{
     public void onViewCreated(@Nullable View view,@NonNull Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
 
+        myClothesRecycler=view.findViewById(R.id.mychlothesmain);
+        relativeFirstLayout=view.findViewById(R.id.relativeFirstClothes);
+        createClothes=view.findViewById(R.id.createClothes);
+        getMyClothes();
         myClothes=view.findViewById(R.id.myClothes);
         myClothes.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -222,18 +231,22 @@ public class MainFragment extends Fragment{
             @Override
             public void PassUserNick(String nick) {
 //                firebaseModel.getReference().child("usersNicks").child("Spaccacrani").setValue(new UserPeopleAdapter("Spaccacrani", "5", "hello"));
+//                firebaseModel.getUsersReference().child("tyomaa6").child("myClothes").child("Jordan 1").setValue(new Clothes("shoes", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
+//                        ,120,"Jordan 1",0,123,"Schooly","dollar"," ","",0));
 //                firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").child("Jordan 1").setValue(new Clothes("shoes", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
-//                        ,120,"Jordan 1",0,123,"Schooly","dollar"," "));
+//                        ,120,"Jordan 1",0,123,"Schooly","dollar"," ","",0));
+//                firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").child("Jordan 1").setValue(new Clothes("shoes", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
+//                        ,120,"Jordan 1",0,123,"tyomaaa6","dollar"," ","",0));
 //                firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").child("Yeazzy").setValue(new Clothes("accessories", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
-//                        ,120,"Yeazzy",0,123,"Schooly","coin","great model"));
+//                        ,120,"Yeazzy",0,123,"Schooly","coin","great model","",0));
 //                firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").child("Y-3").setValue(new Clothes("hats", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
-//                        ,120,"Y-3",0,123,"Schooly","coin"," "));
+//                        ,120,"Y-3",0,123,"Schooly","coin"," ","",0));
 //                firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").child("Prada").setValue(new Clothes("clothes", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
-//                        ,120,"Prada",0,123,"Schooly","coin"," "));
+//                        ,120,"Prada",0,123,"Schooly","coin"," ","",0));
 //                firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").child("Raf Simons").setValue(new Clothes("shoes", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
-//                        ,120,"Raf Simons",0,123,"Schooly","coin"," "));
+//                        ,120,"Raf Simons",0,123,"Schooly","coin"," ","",0));
 //                firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").child("Martins").setValue(new Clothes("shoes", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
-//                        ,120,"Martins",0,123,"Schooly","coin"," "));
+//                        ,120,"Martins",0,123,"Schooly","coin"," ","",0));
 
             }
         });
@@ -245,7 +258,7 @@ public class MainFragment extends Fragment{
             }
         });
 
-        TextView mining=view.findViewById(R.id.mining);
+        mining=view.findViewById(R.id.mining);
         mining.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -318,6 +331,50 @@ public class MainFragment extends Fragment{
             }
         });
 
+    }
+
+    public void getMyClothes(){
+        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+            @Override
+            public void PassUserNick(String nick) {
+                RecentMethods.getMyClothes(nick, firebaseModel, new Callbacks.GetClothes() {
+                    @Override
+                    public void getClothes(ArrayList<Clothes> allClothes) {
+                        if(allClothes.size()==0){
+                            relativeFirstLayout.setVisibility(View.VISIBLE);
+                            myClothesRecycler.setVisibility(View.GONE);
+                            RelativeLayout.LayoutParams layoutParams= new RelativeLayout.LayoutParams
+                                    (RelativeLayout.LayoutParams.WRAP_CONTENT , RelativeLayout.LayoutParams.WRAP_CONTENT);
+                            int padding24inDp = (int) TypedValue.applyDimension(
+                                    TypedValue.COMPLEX_UNIT_DIP, 24, getResources().getDisplayMetrics());
+                            int padding174inDp = (int) TypedValue.applyDimension(
+                                    TypedValue.COMPLEX_UNIT_DIP, 174, getResources().getDisplayMetrics());
+                            layoutParams.setMargins(padding24inDp, padding174inDp, 0, 0);
+                            layoutParams.addRule(RelativeLayout.BELOW, R.id.myClothes);
+                            mining.setLayoutParams(layoutParams);
+                            createClothes.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    RecentMethods.setCurrentFragment(MyClothesFragment.newInstance(), getActivity());
+                                }
+                            });
+                        }else {
+                            RelativeLayout.LayoutParams layoutParams1= new RelativeLayout.LayoutParams
+                                    (RelativeLayout.LayoutParams.WRAP_CONTENT , RelativeLayout.LayoutParams.WRAP_CONTENT);
+                            int padding24inDp = (int) TypedValue.applyDimension(
+                                    TypedValue.COMPLEX_UNIT_DIP, 24, getResources().getDisplayMetrics());
+                            int padding300inDp = (int) TypedValue.applyDimension(
+                                    TypedValue.COMPLEX_UNIT_DIP, 300, getResources().getDisplayMetrics());
+                            layoutParams1.setMargins(padding24inDp, padding300inDp, 0, 0);
+                            layoutParams1.addRule(RelativeLayout.BELOW, R.id.myClothes);
+                            mining.setLayoutParams(layoutParams1);
+                            MyClothesAdapterMain myClothesAdapterMain=new MyClothesAdapterMain(allClothes,itemClickListenerMyClothes);
+                            myClothesRecycler.setAdapter(myClothesAdapterMain);
+                        }
+                    }
+                });
+            }
+        });
     }
 
     private void createNotificationChannel() {
