@@ -170,6 +170,15 @@ public class ViewingClothesPopular extends Fragment {
                                             firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes")
                                                     .child(clothesViewing.getClothesTitle()).child("purchaseNumber")
                                                     .setValue(clothesViewing.getPurchaseNumber()+1);
+                                            firebaseModel.getReference().child(clothesViewing.getCreator()).child("myClothes").
+                                                    child(clothesViewing.getClothesTitle()).child("purchaseNumber")
+                                                    .setValue(clothesViewing.getPurchaseNumber()+1);
+                                            firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes")
+                                                    .child(clothesViewing.getClothesTitle()).child("purchaseToday")
+                                                    .setValue(clothesViewing.getPurchaseToday()+1);
+                                            firebaseModel.getReference().child(clothesViewing.getCreator()).child("myClothes").
+                                                    child(clothesViewing.getClothesTitle()).child("purchaseToday")
+                                                    .setValue(clothesViewing.getPurchaseToday()+1);
                                             if(clothesViewing.getCreator().equals("Schooly")){
 
                                             }else {

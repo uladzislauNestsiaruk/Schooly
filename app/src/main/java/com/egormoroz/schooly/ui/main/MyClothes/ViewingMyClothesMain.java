@@ -36,18 +36,21 @@ public class ViewingMyClothesMain extends Fragment {
     }
 
 
-    TextView clothesPriceCV, clothesTitleCV, schoolyCoinCV, buyClothesBottom, purchaseNumber, creator, description, noDescription;
-    ImageView clothesImageCV, backToShop, coinsImage, dollarImage, inBasket, notInBasket;
+    TextView  clothesTitleCV, description, noDescription,purchaseToday,purchaseAll,profitToday,profitAll
+            ,perSentToday,perSentAll;
+    ImageView clothesImageCV, backToShop, coinsImage,coinsImageAll;
     long schoolyCoins, clothesPrise;
     RelativeLayout checkBasket;
     int a = 0;
     Clothes clothesViewing;
     private FirebaseModel firebaseModel = new FirebaseModel();
+    NewClothesAdapter.ViewHolder viewHolder;
+    double perCent;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_viewingclothes, container, false);
+        View root = inflater.inflate(R.layout.fragment_viewingmyclothes, container, false);
         BottomNavigationView bnv = getActivity().findViewById(R.id.bottomNavigationView);
         bnv.setVisibility(bnv.GONE);
         firebaseModel.initAll();
@@ -58,21 +61,19 @@ public class ViewingMyClothesMain extends Fragment {
     @Override
     public void onViewCreated(@Nullable View view, @NonNull Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        schoolyCoinCV = view.findViewById(R.id.schoolycoincvfrag);
         clothesImageCV = view.findViewById(R.id.clothesImagecv);
-        inBasket = view.findViewById(R.id.inBasketClothes);
-        notInBasket = view.findViewById(R.id.notInBasketClothes);
         coinsImage = view.findViewById(R.id.coinsImage);
+        coinsImageAll = view.findViewById(R.id.coinsImageAll);
         noDescription = view.findViewById(R.id.noDescription);
-        dollarImage = view.findViewById(R.id.dollarImage);
         clothesTitleCV = view.findViewById(R.id.clothesTitlecv);
         description = view.findViewById(R.id.description);
-        creator = view.findViewById(R.id.creator);
-        checkBasket = view.findViewById(R.id.checkBasket);
-        clothesPriceCV = view.findViewById(R.id.clothesPricecv);
         backToShop = view.findViewById(R.id.back_toshop);
-        buyClothesBottom = view.findViewById(R.id.buyClothesBottom);
-        purchaseNumber = view.findViewById(R.id.purchaseNumberViewing);
+        purchaseToday=view.findViewById(R.id.purchasesToday);
+        purchaseAll=view.findViewById(R.id.purchasesAll);
+        profitToday=view.findViewById(R.id.profit);
+        profitAll=view.findViewById(R.id.profitAll);
+        perSentToday=view.findViewById(R.id.perSentPurchase);
+        perSentAll=view.findViewById(R.id.perSentPurchaseAll);
         backToShop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -84,39 +85,33 @@ public class ViewingMyClothesMain extends Fragment {
             @Override
             public void onItemClick(Clothes clothes) {
                 clothesViewing = clothes;
-                clothesPriceCV.setText(String.valueOf(clothes.getClothesPrice()));
                 clothesTitleCV.setText(clothes.getClothesTitle());
+                purchaseToday.setText(String.valueOf(clothesViewing.getPurchaseToday()));
+                purchaseAll.setText(String.valueOf(clothesViewing.getPurchaseNumber()));
+                if (clothesViewing.getCurrencyType().equals("dollar")){
+                    coinsImage.setVisibility(View.GONE);
+                    coinsImageAll.setVisibility(View.GONE);
+                    profitToday.setText("+"+String.valueOf(clothesViewing.getClothesPrice()*clothesViewing.getPurchaseToday())+"$");
+                    profitAll.setText("+"+String.valueOf(clothesViewing.getPurchaseNumber()*clothesViewing.getClothesPrice())+"$");
+                }else {
+                    profitToday.setText("+"+String.valueOf(clothesViewing.getClothesPrice()*clothesViewing.getPurchaseToday()));
+                    profitAll.setText("+"+String.valueOf(clothesViewing.getPurchaseNumber()*clothesViewing.getClothesPrice()));
+                }
+                if (clothesViewing.getPurchaseNumber()==0){
+                    perCent=0;
+                }else {
+                    perCent=clothesViewing.getPurchaseToday()*100/clothesViewing.getPurchaseNumber();
+                }
+                perSentToday.setText("("+String.valueOf(perCent)+"%)");
                 clothesPrise = clothes.getClothesPrice();
-                creator.setText(clothesViewing.getCreator());
-                creator.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-                            @Override
-                            public void PassUserNick(String nick) {
-                                if (clothesViewing.getCreator().equals(nick)) {
-                                    RecentMethods.setCurrentFragment(ProfileFragment.newInstance("user", nick, ViewingClothes.newInstance(fragment)), getActivity());
-                                } else {
-                                    RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", clothesViewing.getCreator(), ViewingClothes.newInstance(fragment)), getActivity());
-                                }
-                            }
-                        });
-                    }
-                });
+                Picasso.get().load(clothesViewing.getClothesImage()).into(clothesImageCV);
                 if (clothesViewing.getDescription().trim().length() == 0) {
                     noDescription.setVisibility(View.VISIBLE);
                     description.setVisibility(View.GONE);
                 } else {
                     description.setText(clothesViewing.getDescription());
                 }
-                purchaseNumber.setText(String.valueOf(clothesViewing.getPurchaseNumber()));
-                Picasso.get().load(clothes.getClothesImage()).into(clothesImageCV);
-                if (clothesViewing.getCurrencyType().equals("dollar")) {
-                    dollarImage.setVisibility(View.VISIBLE);
-                    coinsImage.setVisibility(View.GONE);
-                }
             }
         });
     }
 }
-

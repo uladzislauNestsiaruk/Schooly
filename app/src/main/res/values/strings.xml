@@ -250,6 +250,10 @@
 
     <string name="purchases">Продажи</string>
     <string name="today1">сегодня:</string>
+    <string name="purchasestoday">Продажи сегодня:</string>
+    <string name="profittoday">Прибыль за сегодня:</string>
+    <string name="allpurchases">Общие продажи:</string>
+    <string name="allprofit">Общая прибыль:</string>
     <string name="profit">Прибыль(24h):</string>
     <string name="total">Всего:</string>
     <string name="lookPrice">Стоимость образа:</string>
@@ -263,6 +267,8 @@
     <string name="createClothes">Создать одежду</string>
 
     <string name="creatingClothes">Создание одежды</string>
+
+    <string name="statistics">Статистика:</string>
 
 
 

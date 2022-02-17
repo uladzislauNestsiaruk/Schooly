@@ -27,11 +27,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/clothesTitle"
+        android:layout_marginTop="8dp"
         android:fontFamily="@font/montserrat_bold"
         android:text="@string/purchases"
-        android:textSize="14sp"
-        android:layout_marginTop="8dp"
-        android:textColor="@color/app_grey" />
+        android:textColor="@color/app_grey"
+        android:textSize="14sp" />
 
     <TextView
         android:id="@+id/purchaseToday1"
