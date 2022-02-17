@@ -41,8 +41,11 @@ import com.egormoroz.schooly.ui.Model.SceneViewModelActivity;
 import com.egormoroz.schooly.ui.main.CreateCharacter.CreateCharacterFragment;
 import com.egormoroz.schooly.ui.main.Mining.Miner;
 import com.egormoroz.schooly.ui.main.Mining.MiningFragment;
+import com.egormoroz.schooly.ui.main.MyClothes.MyClothesAdapter;
 import com.egormoroz.schooly.ui.main.MyClothes.MyClothesAdapterMain;
 import com.egormoroz.schooly.ui.main.MyClothes.MyClothesFragment;
+import com.egormoroz.schooly.ui.main.MyClothes.ViewingMyClothes;
+import com.egormoroz.schooly.ui.main.MyClothes.ViewingMyClothesMain;
 import com.egormoroz.schooly.ui.main.Nontifications.NontificationFragment;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
 import com.egormoroz.schooly.ui.main.Shop.NewClothesAdapter;
@@ -71,6 +74,7 @@ public class MainFragment extends Fragment{
     RelativeLayout relativeFirstLayout;
     NewClothesAdapter.ItemClickListener itemClickListener;
     private static final int NOTIFY_ID = 101;
+    RelativeLayout relativeShop,relativeMining,relativeMyClothes;
     CircularProgressIndicator circularProgressIndicator;
     MyClothesAdapterMain.ItemClickListener itemClickListenerMyClothes;
 
@@ -99,13 +103,21 @@ public class MainFragment extends Fragment{
         relativeFirstLayout=view.findViewById(R.id.relativeFirstClothes);
         createClothes=view.findViewById(R.id.createClothes);
         getMyClothes();
-        myClothes=view.findViewById(R.id.myClothes);
-        myClothes.setOnClickListener(new View.OnClickListener() {
+        relativeMyClothes=view.findViewById(R.id.relativeClothes);
+        relativeMining=view.findViewById(R.id.relativeMining);
+        relativeShop=view.findViewById(R.id.relativeshop);
+        relativeMyClothes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 RecentMethods.setCurrentFragment(MyClothesFragment.newInstance(), getActivity());
             }
         });
+        itemClickListenerMyClothes=new MyClothesAdapterMain.ItemClickListener() {
+            @Override
+            public void onItemClick(Clothes clothes) {
+                RecentMethods.setCurrentFragment(ViewingMyClothesMain.newInstance(MainFragment.newInstance()), getActivity());
+            }
+        };
         ImageView chat=view.findViewById(R.id.chat);
         chat.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -250,16 +262,15 @@ public class MainFragment extends Fragment{
 
             }
         });
-        TextView shop=view.findViewById(R.id.shop);
-        shop.setOnClickListener(new View.OnClickListener() {
+
+        relativeShop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ((MainActivity)getActivity()).setCurrentFragment((ShopFragment.newInstance()));
             }
         });
 
-        mining=view.findViewById(R.id.mining);
-        mining.setOnClickListener(new View.OnClickListener() {
+        relativeMining.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 RecentMethods.setCurrentFragment(MiningFragment.newInstanse(), getActivity());
@@ -351,7 +362,7 @@ public class MainFragment extends Fragment{
                                     TypedValue.COMPLEX_UNIT_DIP, 174, getResources().getDisplayMetrics());
                             layoutParams.setMargins(padding24inDp, padding174inDp, 0, 0);
                             layoutParams.addRule(RelativeLayout.BELOW, R.id.relativeClothes);
-                            mining.setLayoutParams(layoutParams);
+                            relativeMining.setLayoutParams(layoutParams);
                             createClothes.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
@@ -366,8 +377,8 @@ public class MainFragment extends Fragment{
                             int padding300inDp = (int) TypedValue.applyDimension(
                                     TypedValue.COMPLEX_UNIT_DIP, 300, getResources().getDisplayMetrics());
                             layoutParams1.setMargins(padding24inDp, padding300inDp, 0, 0);
-                            layoutParams1.addRule(RelativeLayout.BELOW,R.id.relativeClothes);
-                            mining.setLayoutParams(layoutParams1);
+                            layoutParams1.addRule(RelativeLayout.BELOW,R.id.relativeClothes );
+                            relativeMining.setLayoutParams(layoutParams1);
                             MyClothesAdapterMain myClothesAdapterMain=new MyClothesAdapterMain(allClothes,itemClickListenerMyClothes);
                             myClothesRecycler.setAdapter(myClothesAdapterMain);
                         }

@@ -91,8 +91,17 @@
                 android:layout_marginBottom="8dp"
                 android:fontFamily="@font/montserratblack"
                 android:text="@string/shop"
-                android:textColor="@color/grey"
+                android:textColor="@color/app_grey"
                 android:textSize="20sp" />
+
+            <ImageView
+                android:id="@+id/arrowShop"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="16dp"
+                android:layout_toRightOf="@+id/shop"
+                android:src="@drawable/ic_rightarrowgrey" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -151,11 +160,20 @@
                 android:id="@+id/myClothes"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
                 android:fontFamily="@font/montserratblack"
                 android:text="@string/myClothes"
-                android:textColor="@color/grey"
-                android:layout_centerVertical="true"
+                android:textColor="@color/app_grey"
                 android:textSize="20sp" />
+
+            <ImageView
+                android:id="@+id/arrowMyClothes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="8dp"
+                android:layout_toRightOf="@+id/myClothes"
+                android:src="@drawable/ic_rightarrowgrey" />
 
         </RelativeLayout>
 
@@ -164,7 +182,7 @@
             android:layout_width="match_parent"
             android:layout_height="276dp"
             android:layout_below="@+id/relativeClothes"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="10dp"
             android:orientation="horizontal"
             android:scrollbars="none"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
@@ -218,20 +236,37 @@
 
         </RelativeLayout>
 
-        <TextView
-            android:id="@+id/mining"
+        <RelativeLayout
+            android:id="@+id/relativeMining"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/relativeClothes"
-            android:fontFamily="@font/montserratblack"
-            android:text="@string/mining"
-            android:textColor="@color/grey"
-            android:textSize="20sp" />
+            android:layout_below="@+id/relativeClothes">
+
+            <TextView
+                android:id="@+id/mining"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/montserratblack"
+                android:text="@string/mining"
+                android:textColor="@color/app_grey"
+                android:textSize="20sp" />
+
+            <ImageView
+                android:id="@+id/arrowMyMining"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="8dp"
+                android:layout_toRightOf="@+id/mining"
+                android:src="@drawable/ic_rightarrowgrey" />
+
+        </RelativeLayout>
+
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/mining"
+            android:layout_below="@+id/relativeMining"
             android:layout_marginStart="24dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="24dp"

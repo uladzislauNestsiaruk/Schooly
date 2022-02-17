@@ -11,13 +11,11 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
-import com.egormoroz.schooly.ui.main.MainFragment;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
 import com.egormoroz.schooly.ui.main.Shop.NewClothesAdapter;
 import com.egormoroz.schooly.ui.main.Shop.ViewingClothes;
@@ -25,18 +23,15 @@ import com.egormoroz.schooly.ui.profile.ProfileFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
-
-public class ViewingMyClothes extends Fragment {
-
+public class ViewingMyClothesMain extends Fragment {
     Fragment fragment;
 
-    public ViewingMyClothes(Fragment fragment) {
+    public ViewingMyClothesMain(Fragment fragment) {
         this.fragment = fragment;
     }
 
-    public static ViewingMyClothes newInstance(Fragment fragment) {
-        return new ViewingMyClothes(fragment);
+    public static ViewingMyClothesMain newInstance(Fragment fragment) {
+        return new ViewingMyClothesMain(fragment);
 
     }
 
@@ -48,7 +43,6 @@ public class ViewingMyClothes extends Fragment {
     int a = 0;
     Clothes clothesViewing;
     private FirebaseModel firebaseModel = new FirebaseModel();
-    NewClothesAdapter.ViewHolder viewHolder;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -86,7 +80,7 @@ public class ViewingMyClothes extends Fragment {
             }
         });
 
-        MyClothesAdapter.singeClothesInfo(new MyClothesAdapter.ItemClickListener() {
+        MyClothesAdapterMain.singeClothesInfo(new MyClothesAdapterMain.ItemClickListener() {
             @Override
             public void onItemClick(Clothes clothes) {
                 clothesViewing = clothes;
@@ -125,3 +119,4 @@ public class ViewingMyClothes extends Fragment {
         });
     }
 }
+

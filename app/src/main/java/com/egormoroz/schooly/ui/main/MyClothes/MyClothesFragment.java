@@ -63,6 +63,12 @@ public class MyClothesFragment extends Fragment {
                 RecentMethods.setCurrentFragment(CreateClothesFragment.newInstance(), getActivity());
             }
         });
+        itemClickListener=new MyClothesAdapter.ItemClickListener() {
+            @Override
+            public void onItemClick(Clothes clothes) {
+                RecentMethods.setCurrentFragment(ViewingMyClothes.newInstance(MyClothesFragment.newInstance()), getActivity());
+            }
+        };
         ImageView backtomain=view.findViewById(R.id.back_tomain);
         backtomain.setOnClickListener(new View.OnClickListener() {
             @Override
