@@ -51,7 +51,7 @@ public class LooksFragmentProfile extends Fragment {
 
         createNewLook=view.findViewById(R.id.CreateYourLook);
         createNewLookText=view.findViewById(R.id.textCreateYourLook);
-        looksRecycler=view.findViewById(R.id.looksRecycler);
+        looksRecycler=view.findViewById(R.id.Recycler);
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @Override
             public void PassUserNick(String nick) {

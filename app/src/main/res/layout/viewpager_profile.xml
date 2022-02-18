@@ -5,13 +5,14 @@
 
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/looksRecycler"
+        android:id="@+id/Recycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerInParent="true"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginStart="3dp"
+        android:layout_marginEnd="3dp"
+        android:paddingTop="16dp"
+        android:clipToPadding="false"
         android:orientation="vertical"
         android:scrollbars="none" />
 

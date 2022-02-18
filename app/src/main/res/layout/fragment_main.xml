@@ -142,6 +142,9 @@
             android:id="@+id/newchlothesinshop"
             android:layout_width="match_parent"
             android:layout_height="262dp"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:clipToPadding="false"
             android:layout_below="@+id/relativeshop"
             android:layout_marginTop="16dp"
             android:orientation="horizontal"
@@ -184,6 +187,9 @@
             android:layout_below="@+id/relativeClothes"
             android:layout_marginTop="10dp"
             android:orientation="horizontal"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:clipToPadding="false"
             android:scrollbars="none"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 

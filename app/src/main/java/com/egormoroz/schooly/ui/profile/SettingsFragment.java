@@ -301,25 +301,6 @@ public class SettingsFragment extends Fragment {
                 RecentMethods.setCurrentFragment(BlackListFragment.newInstance(), getActivity());
             }
         });
-
-        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-            @Override
-            public void PassUserNick(String nick) {
-                Query query1=firebaseModel.getUsersReference().child(nick)
-                        .child("number");
-                query1.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        userNumber.setText(snapshot.getValue(String.class));
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-            }
-        });
         userNick=view.findViewById(R.id.userNick);
         userNumber=view.findViewById(R.id.userNumber);
 
@@ -332,7 +313,11 @@ public class SettingsFragment extends Fragment {
                 query1.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        userNumber.setText(snapshot.getValue(String.class));
+                        if(snapshot.getValue(String.class).equals("unknown")) {
+                            userNumber.setText("Вход через Google Play");
+                        }else {
+                            userNumber.setText(snapshot.getValue(String.class));
+                        }
                     }
 
                     @Override
@@ -351,7 +336,18 @@ public class SettingsFragment extends Fragment {
                 query.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        userPassword.setText(snapshot.getValue(String.class));
+                        if(snapshot.getValue(String.class).equals("unknown")) {
+                            userPassword.setText("Вход через Google Play");
+                            changePassword.setVisibility(View.GONE);
+                        }else {
+                            userPassword.setText(snapshot.getValue(String.class));
+                            changePassword.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    RecentMethods.setCurrentFragment(PasswordFragment.newInstance(), getActivity());
+                                }
+                            });
+                        }
                     }
 
                     @Override
@@ -362,12 +358,6 @@ public class SettingsFragment extends Fragment {
             }
         });
         changePassword=view.findViewById(R.id.changePassword);
-        changePassword.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                RecentMethods.setCurrentFragment(PasswordFragment.newInstance(), getActivity());
-            }
-        });
         viewNick();
 
     }

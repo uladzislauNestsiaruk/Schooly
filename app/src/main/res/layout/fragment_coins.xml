@@ -262,7 +262,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="260dp"
+        android:layout_height="266dp"
         android:layout_below="@+id/bigLayoutTwo"
         android:layout_marginStart="24dp"
         android:layout_marginTop="24dp"
@@ -304,7 +304,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/relative"
             android:layout_marginStart="12dp"
-            android:layout_marginTop="16dp">
+            android:layout_marginTop="20dp">
 
             <View
                 android:id="@+id/smallView"
@@ -320,9 +320,9 @@
                 android:layout_marginStart="4dp"
                 android:layout_toRightOf="@+id/smallView"
                 android:fontFamily="@font/montserrat_bold"
-                android:textSize="13sp"
                 android:text="@string/sellClothesByDollars"
-                android:textColor="@color/white" />
+                android:textColor="@color/white"
+                android:textSize="13sp" />
 
 
         </RelativeLayout>
@@ -349,9 +349,9 @@
                 android:layout_marginStart="4dp"
                 android:layout_toRightOf="@+id/smallView1"
                 android:fontFamily="@font/montserrat_bold"
-                android:textSize="13sp"
                 android:text="@string/moreCoinsMining"
-                android:textColor="@color/white" />
+                android:textColor="@color/white"
+                android:textSize="13sp" />
 
 
         </RelativeLayout>
@@ -379,8 +379,8 @@
                 android:layout_toRightOf="@+id/smallView2"
                 android:fontFamily="@font/montserrat_bold"
                 android:text="@string/eightyPerSentFromClothes"
-                android:textSize="13sp"
-                android:textColor="@color/white" />
+                android:textColor="@color/white"
+                android:textSize="13sp" />
 
         </RelativeLayout>
 
@@ -407,8 +407,8 @@
                 android:layout_toRightOf="@+id/smallView3"
                 android:fontFamily="@font/montserrat_bold"
                 android:text="@string/closePremium"
-                android:textSize="13sp"
-                android:textColor="@color/white" />
+                android:textColor="@color/white"
+                android:textSize="13sp" />
 
 
         </RelativeLayout>

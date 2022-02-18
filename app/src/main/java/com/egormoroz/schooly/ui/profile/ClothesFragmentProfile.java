@@ -1,6 +1,7 @@
 package com.egormoroz.schooly.ui.profile;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.egormoroz.schooly.Callbacks;
@@ -54,7 +56,7 @@ public class ClothesFragmentProfile extends Fragment {
 
         createNewLook=view.findViewById(R.id.CreateYourLook);
         createNewLookText=view.findViewById(R.id.textCreateYourLook);
-        looksRecycler=view.findViewById(R.id.looksRecycler);
+        looksRecycler=view.findViewById(R.id.Recycler);
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @Override
             public void PassUserNick(String nick) {
@@ -81,7 +83,13 @@ public class ClothesFragmentProfile extends Fragment {
                             createNewLookText.setText("Создай свою одежду!");
                             createNewLook.setVisibility(View.VISIBLE);
                             looksRecycler.setVisibility(View.GONE);
-                        }else {}
+                        }else {
+                            looksRecycler.setVisibility(View.VISIBLE);
+                            ClothesAdapter clothesAdapter=new ClothesAdapter(clothesFromBase);
+                            Log.d("#####", "dd  "+clothesFromBase);
+                            looksRecycler.setLayoutManager(new GridLayoutManager(getContext(), 3));
+                            looksRecycler.setAdapter(clothesAdapter);
+                        }
                     }
 
                     @Override
