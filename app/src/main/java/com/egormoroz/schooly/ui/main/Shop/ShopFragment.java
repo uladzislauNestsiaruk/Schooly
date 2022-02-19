@@ -113,12 +113,12 @@ public class ShopFragment extends Fragment {
                         }
                     };
                 }else if(editGetText.length()==0){
-                    Log.d("####", "ggg");
                     viewPager.setVisibility(View.VISIBLE);
                     searchRecycler.setVisibility(View.GONE);
                     tabLayout.setVisibility(View.VISIBLE);
                     tabLayout = view.findViewById(R.id.tabLayoutShop);
                     viewPager=view.findViewById(R.id.frcontshop);
+                    notFound.setVisibility(View.GONE);
                     FragmentManager fm = getChildFragmentManager();
                     fragmentAdapter = new FragmentAdapter(fm, getLifecycle());
                     viewPager.setAdapter(fragmentAdapter);
@@ -256,6 +256,7 @@ public class ShopFragment extends Fragment {
                     PopularClothesAdapter popularClothesAdapter=new PopularClothesAdapter(clothesFromBase,itemClickListenerPopular);
                     searchRecycler.setLayoutManager(new GridLayoutManager(getActivity(), 2));
                     searchRecycler.setAdapter(popularClothesAdapter);
+                    notFound.setVisibility(View.GONE);
                 }
             }
 

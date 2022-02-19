@@ -819,7 +819,6 @@ public class ProfileFragment extends Fragment {
                                                             public boolean onMenuItemClick(MenuItem item) {
                                                                 String itemTitle= item.getTitle().toString().trim();
 
-                                                                Log.d("####", "hell"+itemTitle);
                                                                 int itemID=item.getItemId();
                                                                 switch(itemID){
                                                                     case R.id.one :
@@ -829,6 +828,15 @@ public class ProfileFragment extends Fragment {
                                                                         RecentMethods.setCurrentFragment(ComplainFragment.newInstance(info.getNick()), getActivity());
                                                                         return true;
                                                                     case R.id.three:
+                                                                        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+                                                                            @Override
+                                                                            public void PassUserNick(String nick) {
+                                                                                firebaseModel.getUsersReference().child(nick).child("subscribers")
+                                                                                        .child(info.getNick()).removeValue();
+                                                                                firebaseModel.getUsersReference().child(info.getNick()).child("subscription")
+                                                                                        .child(nick).removeValue();
+                                                                            }
+                                                                        });
                                                                         return true;
                                                                 }
                                                                 return true;
