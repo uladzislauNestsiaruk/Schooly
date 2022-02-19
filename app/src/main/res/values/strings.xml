@@ -270,6 +270,11 @@
 
     <string name="statistics">Статистика:</string>
 
+    <string name="info">Информация</string>
+    <string name="disconnectNonts">Отключить уведомления</string>
+    <string name="deleteHistory">Отчистить историю</string>
+    <string name="material">Материалы диалога</string>
+
 
 
 

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/back_tochat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="22dp"
+            android:layout_marginTop="16dp"
+            android:src="@drawable/left_arrow" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="11dp"
+            android:layout_toRightOf="@+id/back_tochat"
+            android:fontFamily="@font/montserrat_bold"
+            android:text="@string/info"
+            android:textColor="@color/app_color"
+            android:textSize="20sp" />
+
+        <ImageView
+            android:id="@+id/userImage"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_below="@+id/back_tochat"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="32dp" />
+
+        <TextView
+            android:id="@+id/userNick"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/app_color"
+            android:textSize="22sp"
+            android:fontFamily="@font/montserrat_bold"
+            android:layout_below="@+id/userImage"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="16dp" />
+
+        <RelativeLayout
+            android:id="@+id/relativeDisconnect"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/userNick"
+            android:layout_marginTop="24dp">
+
+            <TextView
+                android:id="@+id/closeAccount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_centerVertical="true"
+                android:fontFamily="@font/montserrat_bold"
+                android:text="@string/disconnectNonts"
+                android:textColor="@color/app_grey"
+                android:textSize="16sp" />
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/nontsSwitch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginEnd="24dp" />
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/deleteHistory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat_bold"
+            android:text="@string/deleteHistory"
+            android:textColor="@color/app_grey"
+            android:layout_below="@+id/relativeDisconnect"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
+            android:textSize="16sp"/>
+
+        <TextView
+            android:id="@+id/dialogMaterial"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat_bold"
+            android:text="@string/material"
+            android:textColor="@color/app_grey"
+            android:layout_below="@+id/deleteHistory"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="32dp"
+            android:textSize="16sp"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/dialogMaterial"
+            android:layout_marginTop="8dp" />
+
+    </RelativeLayout>
+
+</androidx.core.widget.NestedScrollView>

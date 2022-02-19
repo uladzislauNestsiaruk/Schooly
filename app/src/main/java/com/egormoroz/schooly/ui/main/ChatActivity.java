@@ -226,6 +226,12 @@ public final class ChatActivity extends Activity {
         userImage = findViewById(R.id.custom_profile_image);
         userLastSeen = findViewById(R.id.custom_user_last_seen);
         info=findViewById(R.id.info);
+        info.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RecentMethods.setCurrentFragment(ChatInformationFragment.newInstance(messageReceiverName), getParent());
+            }
+        });
 
         SendMessageButton = findViewById(R.id.send_message_btn);
         SendFilesButton = findViewById(R.id.send_files_btn);
