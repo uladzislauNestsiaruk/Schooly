@@ -45,7 +45,7 @@ public class ChatInformationFragment extends Fragment {
     TextView otherUserNickView,deleteHistory;
     ImageView otherUserImage;
     String otherUserNick;
-    SwitchMaterial
+    SwitchMaterial nontsSwich;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -66,5 +66,6 @@ public class ChatInformationFragment extends Fragment {
         recyclerView=view.findViewById(R.id.recycler);
         deleteHistory=view.findViewById(R.id.deleteHistory);
         otherUserNickView.setText(otherUserNick);
+        nontsSwich=view.findViewById(R.id.nontsSwitch);
     }
 }
