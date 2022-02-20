@@ -17,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -38,6 +39,7 @@ import com.egormoroz.schooly.SchoolyService;
 
 import com.egormoroz.schooly.Subscriber;
 import com.egormoroz.schooly.ui.Model.SceneViewModelActivity;
+import com.egormoroz.schooly.ui.coins.CoinsMainFragment;
 import com.egormoroz.schooly.ui.main.CreateCharacter.CreateCharacterFragment;
 import com.egormoroz.schooly.ui.main.Mining.Miner;
 import com.egormoroz.schooly.ui.main.Mining.MiningFragment;
@@ -77,6 +79,7 @@ public class MainFragment extends Fragment{
     RelativeLayout relativeShop,relativeMining,relativeMyClothes;
     CircularProgressIndicator circularProgressIndicator;
     MyClothesAdapterMain.ItemClickListener itemClickListenerMyClothes;
+    LinearLayout coinsLinear;
 
     private static final String CHANNEL_ID = "Tyomaa channel";
 
@@ -102,6 +105,13 @@ public class MainFragment extends Fragment{
         myClothesRecycler=view.findViewById(R.id.mychlothesmain);
         relativeFirstLayout=view.findViewById(R.id.relativeFirstClothes);
         createClothes=view.findViewById(R.id.createClothes);
+        coinsLinear=view.findViewById(R.id.linearCoins);
+        coinsLinear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RecentMethods.setCurrentFragment(CoinsMainFragment.newInstance(), getActivity());
+            }
+        });
         getMyClothes();
         relativeMyClothes=view.findViewById(R.id.relativeClothes);
         relativeMining=view.findViewById(R.id.relativeMining);

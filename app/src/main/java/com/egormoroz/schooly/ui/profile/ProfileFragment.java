@@ -963,6 +963,7 @@ public class ProfileFragment extends Fragment {
                                 .child("subscription").child(nick).removeValue();
                         firebaseModel.getUsersReference().child(nick)
                                 .child("subscribers").child(info.getNick()).removeValue();
+                        Toast.makeText(getContext(), "Пользователь добавлен в черный список", Toast.LENGTH_SHORT).show();
                     }
                 });
                 dialog.dismiss();

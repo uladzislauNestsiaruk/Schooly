@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,6 +21,7 @@ import com.egormoroz.schooly.MainActivity;
 import com.egormoroz.schooly.Nontification;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
+import com.egormoroz.schooly.ui.coins.CoinsMainFragment;
 import com.egormoroz.schooly.ui.main.ChatsFragment;
 import com.egormoroz.schooly.ui.main.EnterFragment;
 import com.egormoroz.schooly.ui.main.MainFragment;
@@ -56,6 +58,7 @@ public class ViewingClothes extends Fragment {
     Clothes clothesViewing;
     private FirebaseModel firebaseModel = new FirebaseModel();
     NewClothesAdapter.ViewHolder viewHolder;
+    LinearLayout coinsLinear;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -87,6 +90,13 @@ public class ViewingClothes extends Fragment {
         backToShop=view.findViewById(R.id.back_toshop);
         buyClothesBottom=view.findViewById(R.id.buyClothesBottom);
         purchaseNumber=view.findViewById(R.id.purchaseNumberViewing);
+        coinsLinear=view.findViewById(R.id.linearCoins);
+        coinsLinear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RecentMethods.setCurrentFragment(CoinsMainFragment.newInstance(), getActivity());
+            }
+        });
         backToShop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

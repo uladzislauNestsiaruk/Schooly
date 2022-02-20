@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,6 +20,7 @@ import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.Nontification;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
+import com.egormoroz.schooly.ui.coins.CoinsMainFragment;
 import com.egormoroz.schooly.ui.profile.ProfileFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.database.DataSnapshot;
@@ -44,6 +46,7 @@ public class ViewingClothesBasket extends Fragment {
   Clothes clothesViewing;
   int a=0;
   private FirebaseModel firebaseModel = new FirebaseModel();
+  LinearLayout coinsLinear;
 
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -76,6 +79,13 @@ public class ViewingClothesBasket extends Fragment {
     backToShop=view.findViewById(R.id.back_toshop);
     buyClothesBottom=view.findViewById(R.id.buyClothesBottom);
     purchaseNumber=view.findViewById(R.id.purchaseNumberViewing);
+    coinsLinear=view.findViewById(R.id.linearCoins);
+    coinsLinear.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        RecentMethods.setCurrentFragment(CoinsMainFragment.newInstance(), getActivity());
+      }
+    });
     backToShop.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {

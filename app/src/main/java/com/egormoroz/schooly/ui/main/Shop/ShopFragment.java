@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -30,6 +31,7 @@ import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.MainActivity;
 import com.egormoroz.schooly.R;
+import com.egormoroz.schooly.ui.coins.CoinsMainFragment;
 import com.egormoroz.schooly.ui.main.ChatsFragment;
 import com.egormoroz.schooly.ui.main.DialogsActivity;
 import com.egormoroz.schooly.ui.main.GroupsFragment;
@@ -62,6 +64,7 @@ public class ShopFragment extends Fragment {
     TextView notFound;
     ArrayList<Clothes> searchClothesArrayList=new ArrayList<Clothes>();
     PopularClothesAdapter.ItemClickListener itemClickListenerPopular;
+    LinearLayout coinsLinear;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -85,6 +88,13 @@ public class ShopFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 ((MainActivity)getActivity()).setCurrentFragment(MainFragment.newInstance());
+            }
+        });
+        coinsLinear=view.findViewById(R.id.linearCoins);
+        coinsLinear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RecentMethods.setCurrentFragment(CoinsMainFragment.newInstance(), getActivity());
             }
         });
 
