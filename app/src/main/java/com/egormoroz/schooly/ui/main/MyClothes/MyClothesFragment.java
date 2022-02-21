@@ -31,6 +31,7 @@ public class MyClothesFragment extends Fragment {
 
     FirebaseModel firebaseModel=new FirebaseModel();
     RecyclerView recyclerMyClothes;
+    RelativeLayout createAndGet,getMoney,createClothesBig;
     TextView createClothes;
     MyClothesAdapter.ItemClickListener itemClickListener;
 
@@ -43,7 +44,7 @@ public class MyClothesFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_myclothes, container, false);
         BottomNavigationView bnv = getActivity().findViewById(R.id.bottomNavigationView);
-        bnv.setVisibility(bnv.VISIBLE);
+        bnv.setVisibility(bnv.GONE);
         firebaseModel.initAll();
 //        AppBarLayout abl = getActivity().findViewById(R.id.AppBarLayout);
 //        abl.setVisibility(abl.GONE);
@@ -56,13 +57,10 @@ public class MyClothesFragment extends Fragment {
 
         recyclerMyClothes=view.findViewById(R.id.recyclerMyClothes);
         getMyClothes();
+        createClothesBig=view.findViewById(R.id.createBigButtonRecycler);
+        createAndGet=view.findViewById(R.id.createAndGet);
+        getMoney=view.findViewById(R.id.getMoney);
         createClothes=view.findViewById(R.id.createClothesButton);
-        createClothes.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                RecentMethods.setCurrentFragment(CreateClothesFragment.newInstance(), getActivity());
-            }
-        });
         itemClickListener=new MyClothesAdapter.ItemClickListener() {
             @Override
             public void onItemClick(Clothes clothes) {
@@ -92,9 +90,30 @@ public class MyClothesFragment extends Fragment {
                     public void getClothes(ArrayList<Clothes> allClothes) {
                         if(allClothes.size()==0){
                             recyclerMyClothes.setVisibility(View.GONE);
+                            createAndGet.setVisibility(View.VISIBLE);
+                            getMoney.setVisibility(View.VISIBLE);
+                            createClothesBig.setVisibility(View.VISIBLE);
+                            createClothes.setVisibility(View.GONE);
+                            createClothesBig.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    RecentMethods.setCurrentFragment(CreateClothesFragment.newInstance(), getActivity());
+                                }
+                            });
                         }else {
+                            recyclerMyClothes.setVisibility(View.VISIBLE);
+                            createAndGet.setVisibility(View.GONE);
+                            getMoney.setVisibility(View.GONE);
+                            createClothesBig.setVisibility(View.GONE);
+                            createClothes.setVisibility(View.VISIBLE);
                             MyClothesAdapter myClothesAdapter=new MyClothesAdapter(allClothes,itemClickListener);
                             recyclerMyClothes.setAdapter(myClothesAdapter);
+                            createClothes.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    RecentMethods.setCurrentFragment(CreateClothesFragment.newInstance(), getActivity());
+                                }
+                            });
                         }
                     }
                 });

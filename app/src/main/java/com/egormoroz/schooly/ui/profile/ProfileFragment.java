@@ -488,13 +488,13 @@ public class ProfileFragment extends Fragment {
                                                     }
                                                 });
 
-
                                                 viewPagerOther.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
                                                     @Override
                                                     public void onPageSelected(int position) {
                                                         tabLayoutOther.selectTab(tabLayoutOther.getTabAt(position));
                                                     }
                                                 });
+
                                                 moreSquare.setOnClickListener(new View.OnClickListener() {
                                                     @Override
                                                     public void onClick(View v) {
