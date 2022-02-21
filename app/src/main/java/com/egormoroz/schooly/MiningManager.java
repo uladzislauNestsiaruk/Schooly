@@ -10,6 +10,7 @@ import androidx.work.WorkerParameters;
 import com.egormoroz.schooly.ui.main.Mining.Miner;
 import com.google.firebase.database.ServerValue;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class MiningManager extends Worker {
@@ -47,7 +48,6 @@ public class MiningManager extends Worker {
                     @Override
                     public void GetTodayMining(double todayMiningFromBase) {
                         t=todayMiningFromBase;
-                        Log.d("g", "fucввввввввввввввввввввввk");
                     }
 
                 });
@@ -102,6 +102,17 @@ public class MiningManager extends Worker {
                                 @Override
                                 public void run() {
                                     try {
+                                        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+                                            @Override
+                                            public void PassUserNick(String nick) {
+                                                RecentMethods.GetTodayMining(nick, firebaseModel, new Callbacks.GetTodayMining() {
+                                                    @Override
+                                                    public void GetTodayMining(double todayMiningFromBase) {
+                                                        todayMining=todayMiningFromBase;
+                                                    }
+                                                });
+                                            }
+                                        });
                                         while(true) {
                                             Thread.sleep(1000);
                                             miningMoneyFun();

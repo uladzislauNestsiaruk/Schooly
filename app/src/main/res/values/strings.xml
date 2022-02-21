@@ -260,7 +260,7 @@
     <string name="addDesk">Добавить описание...</string>
 
     <string name="sellClothesByDollars">Продавай одежду за реальные деньги</string>
-    <string name="moreCoinsMining">Увелич заработок с майнинга</string>
+    <string name="moreCoinsMining">Увеличь заработок с майнинга</string>
     <string name="eightyPerSentFromClothes">Получай 80% с продажи одежды</string>
     <string name="closePremium">Отмена подписки в любой момент</string>
 
@@ -277,6 +277,18 @@
 
     <string name="createAndGet">Создавай свою одежду и зарабатывай коины</string>
     <string name="getMoney">Получай от 60% с продаж модели</string>
+
+    <string name="before">Перед публикайией модели следует ознакимиться с</string>
+    <string name="criteria">критериями</string>
+    <string name="enterTitleText">Введи название одежды:</string>
+    <string name="addModelFile">Добавь файл модели:</string>
+    <string name="addModelImage">Добавь фото к модели:</string>
+    <string name="clothesType">Выбери тип одежды:</string>
+    <string name="currencyType">Тип валюты:</string>
+    <string name="clothesPrice">Введи цену одежды:</string>
+    <string name="wayToFile">Путь к файлу</string>
+    <string name="sendApplication">Отправить заявку</string>
+
 
 
 

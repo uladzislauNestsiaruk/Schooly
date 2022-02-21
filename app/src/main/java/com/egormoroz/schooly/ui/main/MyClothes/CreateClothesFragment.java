@@ -4,7 +4,12 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,6 +29,12 @@ import java.util.ArrayList;
 public class CreateClothesFragment extends Fragment {
 
     FirebaseModel firebaseModel=new FirebaseModel();
+    EditText editTextClothes,editClothesPrice,addDescriptionEdit;
+    ImageView addModelFile,addModelImage;
+    TextView modelWay;
+    RelativeLayout publish;
+    RadioGroup radioGroup;
+    RadioButton radioButton1,radioButton2,radioButton3,radioButton4;
 
     public static CreateClothesFragment newInstance() {
         return new CreateClothesFragment();
@@ -34,7 +45,7 @@ public class CreateClothesFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_createclothes, container, false);
         BottomNavigationView bnv = getActivity().findViewById(R.id.bottomNavigationView);
-        bnv.setVisibility(bnv.VISIBLE);
+        bnv.setVisibility(bnv.GONE);
         firebaseModel.initAll();
 //        AppBarLayout abl = getActivity().findViewById(R.id.AppBarLayout);
 //        abl.setVisibility(abl.GONE);
@@ -45,6 +56,18 @@ public class CreateClothesFragment extends Fragment {
     public void onViewCreated(@Nullable View view,@NonNull Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
 
+        editClothesPrice=view.findViewById(R.id.editClothesPrice);
+        editTextClothes=view.findViewById(R.id.editTextClothes);
+        addDescriptionEdit=view.findViewById(R.id.addDescriptionEdit);
+        addModelFile=view.findViewById(R.id.addModelFile);
+        addModelImage=view.findViewById(R.id.addModelImage);
+        modelWay=view.findViewById(R.id.modelWay);
+        publish=view.findViewById(R.id.publish);
+        radioGroup=view.findViewById(R.id.radioGroup);
+        radioButton1=view.findViewById(R.id.radio_button_1);
+        radioButton2=view.findViewById(R.id.radio_button_2);
+        radioButton3=view.findViewById(R.id.radio_button_3);
+        radioButton4=view.findViewById(R.id.radio_button_4);
         ImageView backtoMyClothes=view.findViewById(R.id.back_tomyclothes);
         backtoMyClothes.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -321,11 +321,16 @@ public class MiningFragment extends Fragment {
 //    }
 
     public void setMiningMoney(){
-        MiningManager.getAAA(new MiningManager.transmitMiningMoney() {
+        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @Override
-            public void transmitMoney(double money) {
-                todayMiningFormatted = new DecimalFormat("#0.00").format(money);
-                todayminingText.setText(todayMiningFormatted);
+            public void PassUserNick(String nick) {
+                RecentMethods.GetTodayMining(nick, firebaseModel, new Callbacks.GetTodayMining() {
+                    @Override
+                    public void GetTodayMining(double todayMiningFromBase) {
+                        todayMiningFormatted = new DecimalFormat("#0.00").format(todayMiningFromBase);
+                        todayminingText.setText(todayMiningFormatted);
+                    }
+                });
             }
         });
     }

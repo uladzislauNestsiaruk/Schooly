@@ -74,6 +74,7 @@ public class MainFragment extends Fragment{
     private UserInformation userData = new UserInformation();
     RecyclerView clothesRecyclerMain,myClothesRecycler;
     RelativeLayout relativeFirstLayout;
+    String todayMiningFormatted;
     NewClothesAdapter.ItemClickListener itemClickListener;
     private static final int NOTIFY_ID = 101;
     RelativeLayout relativeShop,relativeMining,relativeMyClothes;
@@ -316,13 +317,16 @@ public class MainFragment extends Fragment{
             }
         });
         todayMiningMain=view.findViewById(R.id.todayminingmain);
-        MiningManager.getAAA(new MiningManager.transmitMiningMoney() {
+        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @Override
-            public void transmitMoney(double money) {
-                if(money!=-1) {
-                    String todayMiningFormatted = new DecimalFormat("#0.00").format(money);
-                    todayMiningMain.setText(todayMiningFormatted);
-                }
+            public void PassUserNick(String nick) {
+                RecentMethods.GetTodayMining(nick, firebaseModel, new Callbacks.GetTodayMining() {
+                    @Override
+                    public void GetTodayMining(double todayMiningFromBase) {
+                        todayMiningFormatted = new DecimalFormat("#0.00").format(todayMiningFromBase);
+                        todayMiningMain.setText(todayMiningFormatted);
+                    }
+                });
             }
         });
         loadClothesFromBase();
