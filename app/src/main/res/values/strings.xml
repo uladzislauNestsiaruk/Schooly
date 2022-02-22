@@ -263,6 +263,7 @@
     <string name="moreCoinsMining">Увеличь заработок с майнинга</string>
     <string name="eightyPerSentFromClothes">Получай 80% с продажи одежды</string>
     <string name="closePremium">Отмена подписки в любой момент</string>
+    <string name="exclusive">Эксклюзивная одежда</string>
 
     <string name="createClothes">Создать одежду</string>
 
@@ -289,7 +290,13 @@
     <string name="wayToFile">Путь к файлу</string>
     <string name="sendApplication">Отправить заявку</string>
 
+    <string name="fitting">Примерка</string>
 
+    <string name="resale">Продать</string>
+    <string name="present">Подарить</string>
+
+    <string name="schoolyCoin">Schooly Coin</string>
+    <string name="dollar">Dollar(долько Premium)</string>
 
 
 

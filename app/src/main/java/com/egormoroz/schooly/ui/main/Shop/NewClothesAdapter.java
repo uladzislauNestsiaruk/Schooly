@@ -58,6 +58,7 @@ public class NewClothesAdapter extends RecyclerView.Adapter<NewClothesAdapter.Vi
   static Clothes clothes,trueClothes;
   ItemClickListener itemClickListener;
   static int pos;
+  String clothesPriceString;
 
 
   public NewClothesAdapter(ArrayList<Clothes> clothesArrayList,ItemClickListener itemClickListener) {
@@ -89,7 +90,26 @@ public class NewClothesAdapter extends RecyclerView.Adapter<NewClothesAdapter.Vi
     storageReference.child("clothes").getFile(file);
     holder.clothesImage.setVisibility(View.VISIBLE);
     holder.creator.setText(clothes.getCreator());
-    holder.purchaseNumber.setText(String.valueOf(clothes.getPurchaseNumber()));
+    clothesPriceString=String.valueOf(clothes.getPurchaseNumber());
+    if(clothes.getPurchaseNumber()<1000){
+      holder.purchaseNumber.setText(String.valueOf(clothes.getPurchaseNumber()));
+    }else if(clothes.getPurchaseNumber()>1000 && clothes.getPurchaseNumber()<10000){
+      holder.purchaseNumber.setText(clothesPriceString.substring(0, 1)+"."+clothesPriceString.substring(1, 2)+"K");
+    }
+    else if(clothes.getPurchaseNumber()>10000 && clothes.getPurchaseNumber()<100000){
+      holder.purchaseNumber.setText(clothesPriceString.substring(0, 2)+"."+clothesPriceString.substring(2,3)+"K");
+    }
+    else if(clothes.getPurchaseNumber()>10000 && clothes.getPurchaseNumber()<100000){
+      holder.purchaseNumber.setText(clothesPriceString.substring(0, 2)+"."+clothesPriceString.substring(2,3)+"K");
+    }else if(clothes.getPurchaseNumber()>100000 && clothes.getPurchaseNumber()<1000000){
+      holder.purchaseNumber.setText(clothesPriceString.substring(0, 3)+"K");
+    }
+    else if(clothes.getPurchaseNumber()>1000000 && clothes.getPurchaseNumber()<10000000){
+      holder.purchaseNumber.setText(clothesPriceString.substring(0, 1)+"KK");
+    }
+    else if(clothes.getPurchaseNumber()>10000000 && clothes.getPurchaseNumber()<100000000){
+      holder.purchaseNumber.setText(clothesPriceString.substring(0, 2)+"KK");
+    }
     if (clothes.getCurrencyType().equals("dollar")){
       holder.dollarImage.setVisibility(View.VISIBLE);
       holder.coinsImage.setVisibility(View.GONE);

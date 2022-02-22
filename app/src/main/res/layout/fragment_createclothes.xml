@@ -217,39 +217,43 @@
             android:id="@+id/currencyType"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/radioGroup"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
             android:fontFamily="@font/montserrat_bold"
             android:text="@string/currencyType"
-            android:layout_below="@+id/radioGroup"
-            android:layout_marginTop="24dp"
-            android:layout_marginStart="24dp"
             android:textColor="@color/app_grey"
             android:textSize="14sp" />
 
-        <ImageView
-            android:id="@+id/schoolycoin"
-            android:layout_width="wrap_content"
+        <RadioGroup
+            android:id="@+id/radioGroupCurrency"
+            android:checkedButton="@+id/radio_button_1"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/currencyType"
-            android:layout_marginStart="24dp"
             android:layout_marginTop="8dp"
-            android:src="@drawable/ic_schoolycoinpurple"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/currencyType"
-            android:layout_marginStart="6dp"
-            android:layout_marginTop="5dp"
-            android:layout_toRightOf="@+id/schoolycoin"
-            android:fontFamily="@font/montserrat_bold"
-            android:text="Schooly coin"
-            android:textColor="@color/app_color" />
+            android:layout_marginStart="20dp">
+            <RadioButton
+                android:id="@+id/schoolyCoinRadio"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColor="@color/app_grey"
+                android:fontFamily="@font/montserrat_bold"
+                android:text="@string/schoolyCoin"/>
+            <RadioButton
+                android:id="@+id/dollarRadio"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColor="@color/app_grey"
+                android:fontFamily="@font/montserrat_bold"
+                android:text="@string/dollar"/>
+        </RadioGroup>
 
         <TextView
             android:id="@+id/clothesPrice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/schoolycoin"
+            android:layout_below="@+id/radioGroupCurrency"
             android:layout_marginStart="24dp"
             android:layout_marginTop="24dp"
             android:fontFamily="@font/montserrat_bold"

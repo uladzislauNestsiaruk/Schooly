@@ -86,8 +86,7 @@ public class ClothesFragmentProfile extends Fragment {
                         }else {
                             looksRecycler.setVisibility(View.VISIBLE);
                             ClothesAdapter clothesAdapter=new ClothesAdapter(clothesFromBase);
-                            Log.d("#####", "dd  "+clothesFromBase);
-                            looksRecycler.setLayoutManager(new GridLayoutManager(getContext(), 3));
+                            looksRecycler.setLayoutManager(new GridLayoutManager(getContext(), 2));
                             looksRecycler.setAdapter(clothesAdapter);
                         }
                     }

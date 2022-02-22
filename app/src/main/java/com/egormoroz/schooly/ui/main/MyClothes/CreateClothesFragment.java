@@ -33,8 +33,8 @@ public class CreateClothesFragment extends Fragment {
     ImageView addModelFile,addModelImage;
     TextView modelWay;
     RelativeLayout publish;
-    RadioGroup radioGroup;
-    RadioButton radioButton1,radioButton2,radioButton3,radioButton4;
+    RadioGroup radioGroup,radioGroupCurrency;
+    RadioButton radioButton1,radioButton2,radioButton3,radioButton4,radioButtonCoin,radioButtonDollar;
 
     public static CreateClothesFragment newInstance() {
         return new CreateClothesFragment();
@@ -59,6 +59,7 @@ public class CreateClothesFragment extends Fragment {
         editClothesPrice=view.findViewById(R.id.editClothesPrice);
         editTextClothes=view.findViewById(R.id.editTextClothes);
         addDescriptionEdit=view.findViewById(R.id.addDescriptionEdit);
+        radioGroupCurrency=view.findViewById(R.id.radioGroupCurrency);
         addModelFile=view.findViewById(R.id.addModelFile);
         addModelImage=view.findViewById(R.id.addModelImage);
         modelWay=view.findViewById(R.id.modelWay);
@@ -68,6 +69,8 @@ public class CreateClothesFragment extends Fragment {
         radioButton2=view.findViewById(R.id.radio_button_2);
         radioButton3=view.findViewById(R.id.radio_button_3);
         radioButton4=view.findViewById(R.id.radio_button_4);
+        radioButtonCoin=view.findViewById(R.id.schoolyCoinRadio);
+        radioGroupCurrency=view.findViewById(R.id.dollarRadio);
         ImageView backtoMyClothes=view.findViewById(R.id.back_tomyclothes);
         backtoMyClothes.setOnClickListener(new View.OnClickListener() {
             @Override

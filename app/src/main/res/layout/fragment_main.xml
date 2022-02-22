@@ -142,13 +142,13 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/newchlothesinshop"
             android:layout_width="match_parent"
-            android:layout_height="262dp"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
-            android:clipToPadding="false"
+            android:layout_height="282dp"
             android:layout_below="@+id/relativeshop"
             android:layout_marginTop="16dp"
+            android:clipToPadding="false"
             android:orientation="horizontal"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
             android:scrollbars="none"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
@@ -158,7 +158,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/relativeshop"
             android:layout_marginStart="24dp"
-            android:layout_marginTop="288dp">
+            android:layout_marginTop="308dp">
 
             <TextView
                 android:id="@+id/myClothes"

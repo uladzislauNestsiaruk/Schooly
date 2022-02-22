@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -19,6 +20,7 @@ import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.MainActivity;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
+import com.egormoroz.schooly.ui.coins.CoinsMainFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
@@ -34,6 +36,7 @@ public class BasketFragment extends Fragment {
   RecyclerView basketRecycler;
   ArrayList<Clothes> clothesArrayList=new ArrayList<Clothes>();
   BasketAdapter.ItemClickListener onItemClick;
+  LinearLayout coinsLinear;
 
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -65,6 +68,13 @@ public class BasketFragment extends Fragment {
             schoolyCoin.setText(String.valueOf(money));
           }
         });
+      }
+    });
+    coinsLinear=view.findViewById(R.id.linearCoins);
+    coinsLinear.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        RecentMethods.setCurrentFragment(CoinsMainFragment.newInstance(), getActivity());
       }
     });
     numberOfClothes=view.findViewById(R.id.numberofclothes);

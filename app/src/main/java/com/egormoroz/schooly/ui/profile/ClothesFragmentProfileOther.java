@@ -9,6 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.egormoroz.schooly.Callbacks;
@@ -83,7 +84,10 @@ public class ClothesFragmentProfileOther extends Fragment {
                             noLooksOther.setText(otherUserNick+" не создавал свою одежду :(");
                             recyclerOther.setVisibility(View.GONE);
                         }else {
-
+                            recyclerOther.setVisibility(View.VISIBLE);
+                            ClothesAdapter clothesAdapter=new ClothesAdapter(clothesFromBase);
+                            recyclerOther.setLayoutManager(new GridLayoutManager(getContext(), 2));
+                            recyclerOther.setAdapter(clothesAdapter);
                         }
                     }
 

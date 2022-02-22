@@ -180,6 +180,8 @@ public class MiningFragment extends Fragment {
                                 if(activeMinersFromBase.size()==0) {
                                     emptyActiveMiners.setVisibility(View.VISIBLE);
                                     addActiveMiners.setVisibility(View.VISIBLE);
+                                    addActiveMiners.setOutlineAmbientShadowColor(Color.parseColor("#F3A2E5"));
+                                    addActiveMiners.setOutlineAmbientShadowColor(Color.parseColor("#F3A2E5"));
                                     addActiveMiners.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
@@ -328,7 +330,7 @@ public class MiningFragment extends Fragment {
                     @Override
                     public void GetTodayMining(double todayMiningFromBase) {
                         todayMiningFormatted = new DecimalFormat("#0.00").format(todayMiningFromBase);
-                        todayminingText.setText(todayMiningFormatted);
+                        todayminingText.setText("+"+todayMiningFormatted);
                     }
                 });
             }

@@ -50,7 +50,8 @@ public class ViewingClothes extends Fragment {
     }
 
 
-    TextView clothesPriceCV,clothesTitleCV,schoolyCoinCV,buyClothesBottom,purchaseNumber,creator,description,noDescription;
+    TextView clothesPriceCV,clothesTitleCV,schoolyCoinCV,buyClothesBottom
+            ,purchaseNumber,creator,description,noDescription,fittingClothes;
     ImageView clothesImageCV,backToShop,coinsImage,dollarImage,inBasket,notInBasket;
     long schoolyCoins,clothesPrise;
     RelativeLayout checkBasket;
@@ -91,6 +92,13 @@ public class ViewingClothes extends Fragment {
         buyClothesBottom=view.findViewById(R.id.buyClothesBottom);
         purchaseNumber=view.findViewById(R.id.purchaseNumberViewing);
         coinsLinear=view.findViewById(R.id.linearCoins);
+        fittingClothes=view.findViewById(R.id.fittingClothes);
+        fittingClothes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RecentMethods.setCurrentFragment(FittingFragment.newInstance(ViewingClothes.newInstance(fragment)), getActivity());
+            }
+        });
         coinsLinear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

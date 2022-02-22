@@ -110,7 +110,7 @@ public class RecentMethods {
 
         UserInformation res = new UserInformation(nick, "unknown", user.getUid(),
                 "6", "unknown", "Helicopter", 1000
-                , "Miner", 1,100,0, "", "", "","","open","open","open","open","");
+                , "Miner", 1,100,0, "", "", "","","open","open","open","open","","regular");
         ref.child(nick).setValue(res);
         return nick.isEmpty();
     }

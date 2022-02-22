@@ -56,6 +56,7 @@ public class PopularClothesAdapter extends RecyclerView.Adapter<PopularClothesAd
     StorageReference storageReference=storage.getReference();
     static Clothes clothes,trueClothes;
     ItemClickListener onClothesClick;
+    String clothesPriceString;
     static int pos;
 
     public PopularClothesAdapter(ArrayList<Clothes> clothesArrayList,ItemClickListener onClothesClick) {
@@ -81,7 +82,26 @@ public class PopularClothesAdapter extends RecyclerView.Adapter<PopularClothesAd
         holder.clothesPrice.setText(String.valueOf(clothes.getClothesPrice()));
         holder.clothesImage.setVisibility(View.VISIBLE);
         holder.creator.setText(clothes.getCreator());
-        holder.purchaseNumber.setText(String.valueOf(clothes.getPurchaseNumber()));
+        clothesPriceString=String.valueOf(clothes.getPurchaseNumber());
+        if(clothes.getPurchaseNumber()<1000){
+            holder.purchaseNumber.setText(String.valueOf(clothes.getPurchaseNumber()));
+        }else if(clothes.getPurchaseNumber()>1000 && clothes.getPurchaseNumber()<10000){
+            holder.purchaseNumber.setText(clothesPriceString.substring(0, 1)+"."+clothesPriceString.substring(1, 2)+"K");
+        }
+        else if(clothes.getPurchaseNumber()>10000 && clothes.getPurchaseNumber()<100000){
+            holder.purchaseNumber.setText(clothesPriceString.substring(0, 2)+"."+clothesPriceString.substring(2,3)+"K");
+        }
+        else if(clothes.getPurchaseNumber()>10000 && clothes.getPurchaseNumber()<100000){
+            holder.purchaseNumber.setText(clothesPriceString.substring(0, 2)+"."+clothesPriceString.substring(2,3)+"K");
+        }else if(clothes.getPurchaseNumber()>100000 && clothes.getPurchaseNumber()<1000000){
+            holder.purchaseNumber.setText(clothesPriceString.substring(0, 3)+"K");
+        }
+        else if(clothes.getPurchaseNumber()>1000000 && clothes.getPurchaseNumber()<10000000){
+            holder.purchaseNumber.setText(clothesPriceString.substring(0, 1)+"KK");
+        }
+        else if(clothes.getPurchaseNumber()>10000000 && clothes.getPurchaseNumber()<100000000){
+            holder.purchaseNumber.setText(clothesPriceString.substring(0, 2)+"KK");
+        }
         if (clothes.getCurrencyType().equals("dollar")){
             holder.dollarImage.setVisibility(View.VISIBLE);
             holder.coinsImage.setVisibility(View.GONE);

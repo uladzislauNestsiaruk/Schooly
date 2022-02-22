@@ -28,6 +28,7 @@ public class MyClothesAdapter extends RecyclerView.Adapter<MyClothesAdapter.View
     FirebaseStorage storage = FirebaseStorage.getInstance();
     StorageReference storageReference=storage.getReference();
     MyClothesAdapter.ItemClickListener itemClickListener;
+    String clothesPriceString;
     double perCent;
 
     public MyClothesAdapter(ArrayList<Clothes> clothesArrayList, MyClothesAdapter.ItemClickListener itemClickListener) {
@@ -60,7 +61,26 @@ public class MyClothesAdapter extends RecyclerView.Adapter<MyClothesAdapter.View
         File file=new File(clothes.getClothesImage());
         storageReference.child("clothes").getFile(file);
         holder.clothesImage.setVisibility(View.VISIBLE);
-        holder.purchaseNumber.setText(String.valueOf(clothes.getPurchaseNumber()));
+        clothesPriceString=String.valueOf(clothes.getPurchaseNumber());
+        if(clothes.getPurchaseNumber()<1000){
+            holder.purchaseNumber.setText(String.valueOf(clothes.getPurchaseNumber()));
+        }else if(clothes.getPurchaseNumber()>1000 && clothes.getPurchaseNumber()<10000){
+            holder.purchaseNumber.setText(clothesPriceString.substring(0, 1)+"."+clothesPriceString.substring(1, 2)+"K");
+        }
+        else if(clothes.getPurchaseNumber()>10000 && clothes.getPurchaseNumber()<100000){
+            holder.purchaseNumber.setText(clothesPriceString.substring(0, 2)+"."+clothesPriceString.substring(2,3)+"K");
+        }
+        else if(clothes.getPurchaseNumber()>10000 && clothes.getPurchaseNumber()<100000){
+            holder.purchaseNumber.setText(clothesPriceString.substring(0, 2)+"."+clothesPriceString.substring(2,3)+"K");
+        }else if(clothes.getPurchaseNumber()>100000 && clothes.getPurchaseNumber()<1000000){
+            holder.purchaseNumber.setText(clothesPriceString.substring(0, 3)+"K");
+        }
+        else if(clothes.getPurchaseNumber()>1000000 && clothes.getPurchaseNumber()<10000000){
+            holder.purchaseNumber.setText(clothesPriceString.substring(0, 1)+"KK");
+        }
+        else if(clothes.getPurchaseNumber()>10000000 && clothes.getPurchaseNumber()<100000000){
+            holder.purchaseNumber.setText(clothesPriceString.substring(0, 2)+"KK");
+        }
         if (clothes.getCurrencyType().equals("dollar")){
             holder.coinsImage.setVisibility(View.GONE);
             holder.profit.setText("+"+String.valueOf(clothes.getClothesPrice()*clothes.getPurchaseToday())+"$");

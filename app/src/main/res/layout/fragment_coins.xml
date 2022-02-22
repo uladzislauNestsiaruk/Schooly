@@ -262,7 +262,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="266dp"
+        android:layout_height="282dp"
         android:layout_below="@+id/bigLayoutTwo"
         android:layout_marginStart="24dp"
         android:layout_marginTop="24dp"
@@ -407,6 +407,35 @@
                 android:layout_toRightOf="@+id/smallView3"
                 android:fontFamily="@font/montserrat_bold"
                 android:text="@string/closePremium"
+                android:textColor="@color/white"
+                android:textSize="13sp" />
+
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/relativeExclusive3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/relativeSellClothes3"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="8dp">
+
+            <View
+                android:id="@+id/smallView4"
+                android:layout_width="4dp"
+                android:layout_height="4dp"
+                android:layout_centerVertical="true"
+                android:background="@drawable/corners" />
+
+            <TextView
+                android:id="@+id/exclusive"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_toRightOf="@+id/smallView4"
+                android:fontFamily="@font/montserrat_bold"
+                android:text="@string/exclusive"
                 android:textColor="@color/white"
                 android:textSize="13sp" />
 

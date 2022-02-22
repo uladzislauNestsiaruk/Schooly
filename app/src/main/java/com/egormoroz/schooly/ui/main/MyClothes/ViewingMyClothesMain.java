@@ -40,7 +40,7 @@ public class ViewingMyClothesMain extends Fragment {
             ,perSentToday,perSentAll;
     ImageView clothesImageCV, backToShop, coinsImage,coinsImageAll;
     long schoolyCoins, clothesPrise;
-    RelativeLayout checkBasket;
+    RelativeLayout checkBasket,resale,present;
     int a = 0;
     Clothes clothesViewing;
     private FirebaseModel firebaseModel = new FirebaseModel();
@@ -74,6 +74,8 @@ public class ViewingMyClothesMain extends Fragment {
         profitAll=view.findViewById(R.id.profitAll);
         perSentToday=view.findViewById(R.id.perSentPurchase);
         perSentAll=view.findViewById(R.id.perSentPurchaseAll);
+        resale=view.findViewById(R.id.resaleClothes);
+        present=view.findViewById(R.id.presentClothes);
         backToShop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

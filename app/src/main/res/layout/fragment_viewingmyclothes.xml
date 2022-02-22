@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
     <ImageView
         android:id="@+id/back_toshop"
@@ -140,9 +144,9 @@
                     android:id="@+id/profit"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
                     android:fontFamily="@font/montserratblack"
                     android:textColor="@color/green"
-                    android:layout_centerVertical="true"
                     android:textSize="30sp" />
 
                 <ImageView
@@ -241,17 +245,17 @@
 
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/descriptionText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/linear"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="52dp"
-        android:fontFamily="@font/montserrat_bold"
-        android:text="@string/descriptipon"
-        android:textColor="@color/app_grey"
-        android:textSize="12sp" />
+        <TextView
+            android:id="@+id/descriptionText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/linear"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="52dp"
+            android:fontFamily="@font/montserrat_bold"
+            android:text="@string/descriptipon"
+            android:textColor="@color/app_grey"
+            android:textSize="14sp" />
 
     <TextView
         android:id="@+id/description"
@@ -262,6 +266,7 @@
         android:textColor="@color/app_grey"
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"
+        android:paddingBottom="40dp"
         android:layout_marginTop="4dp"/>
 
     <TextView
@@ -274,11 +279,59 @@
         android:textColor="@color/app_grey"
         android:fontFamily="@font/montserrat_bold"
         android:text="@string/noDescriptipon"
+        android:paddingBottom="100dp"
         android:visibility="gone"/>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="32dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp">
 
+        <RelativeLayout
+            android:id="@+id/resaleClothes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/corners10appcolor2dpstroke">
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:fontFamily="@font/montserrat_bold"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:text="@string/resale"
+                android:textColor="@color/app_color" />
 
+        </RelativeLayout>
 
+        <RelativeLayout
+            android:id="@+id/presentClothes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/corners10appcolor2dpstroke"
+            android:layout_weight="1">
 
-</RelativeLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/montserrat_bold"
+                android:layout_centerInParent="true"
+                android:text="@string/present"
+                android:textColor="@color/app_color"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"/>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    </RelativeLayout>
+</ScrollView>
