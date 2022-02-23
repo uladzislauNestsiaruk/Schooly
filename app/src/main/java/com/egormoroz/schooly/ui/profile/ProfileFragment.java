@@ -108,7 +108,8 @@ public class ProfileFragment extends Fragment {
     DatabaseReference user;
     WardrobeAdapterProfile.ItemClickListener itemClickListener;
     // SceneLoader scene;
-    LinearLayout linearLooks,linearSubscribers,linearSubscriptions;
+    LinearLayout linearLooks,linearSubscribers,linearSubscriptions
+            ,linearLooksProfile,linearSubscribersProfile,linearSubscriptionsProfile;
     // ModelSurfaceView modelSurfaceView;
     SceneView mainLook, otherMainLook;
     // ModelRenderer modelRenderer;
@@ -331,13 +332,16 @@ public class ProfileFragment extends Fragment {
                 subscriptionsCount=view.findViewById(R.id.subscriptionsCount);
                 subscribersCount=view.findViewById(R.id.subscribersCount);
                 setCounts();
-                subscribersCount.setOnClickListener(new View.OnClickListener() {
+                linearLooksProfile=view.findViewById(R.id.linearLooksProfile);
+                linearSubscribersProfile=view.findViewById(R.id.subscribersLinearProfile);
+                linearSubscriptionsProfile=view.findViewById(R.id.subscriptionLinearProfile);
+                linearSubscribersProfile.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         RecentMethods.setCurrentFragment(SubscriberFragment.newInstance(), getActivity());
                     }
                 });
-                subscriptionsCount.setOnClickListener(new View.OnClickListener() {
+                linearSubscriptionsProfile.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         RecentMethods.setCurrentFragment(SubscriptionsFragment.newInstance(), getActivity());

@@ -70,7 +70,7 @@ public class CreateClothesFragment extends Fragment {
         radioButton3=view.findViewById(R.id.radio_button_3);
         radioButton4=view.findViewById(R.id.radio_button_4);
         radioButtonCoin=view.findViewById(R.id.schoolyCoinRadio);
-        radioGroupCurrency=view.findViewById(R.id.dollarRadio);
+        radioButtonDollar=view.findViewById(R.id.dollarRadio);
         ImageView backtoMyClothes=view.findViewById(R.id.back_tomyclothes);
         backtoMyClothes.setOnClickListener(new View.OnClickListener() {
             @Override

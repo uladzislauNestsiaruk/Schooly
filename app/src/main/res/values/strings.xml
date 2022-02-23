@@ -296,7 +296,9 @@
     <string name="present">Подарить</string>
 
     <string name="schoolyCoin">Schooly Coin</string>
-    <string name="dollar">Dollar(долько Premium)</string>
+    <string name="dollar">Dollar (только Premium)</string>
+
+    <string name="transferCoins">Перевести коины</string>
 
 
 

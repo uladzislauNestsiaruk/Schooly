@@ -39,8 +39,9 @@ public class ViewingClothesBasket extends Fragment {
   }
 
   NewClothesAdapter.ItemClickListener itemClickListener;
-  TextView clothesPriceCV,clothesTitleCV,schoolyCoinCV,buyClothesBottom,purchaseNumber,creator,description,noDescription;
-  ImageView clothesImageCV,backToShop,coinsImage,dollarImage,inBasket,notInBasket,fittingClothes;
+  TextView clothesPriceCV,clothesTitleCV,schoolyCoinCV,buyClothesBottom,purchaseNumber
+          ,creator,description,noDescription,fittingClothes;
+  ImageView clothesImageCV,backToShop,coinsImage,dollarImage,inBasket,notInBasket;
   long schoolyCoins,clothesPrise;
   RelativeLayout checkBasket;
   Clothes clothesViewing;

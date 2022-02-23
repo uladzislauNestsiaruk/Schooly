@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:scrollbars="none">
 
     <RelativeLayout
         android:id="@+id/relativeMenu"
@@ -227,7 +228,7 @@
 
         <RadioGroup
             android:id="@+id/radioGroupCurrency"
-            android:checkedButton="@+id/radio_button_1"
+            android:checkedButton="@+id/schoolyCoinRadio"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/currencyType"

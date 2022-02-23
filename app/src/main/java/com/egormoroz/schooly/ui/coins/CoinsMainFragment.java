@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -31,6 +32,7 @@ public class CoinsMainFragment extends Fragment {
             ,sevenLinear,tenLinear,twentyLinear;
     TextView oneS,twoS,fiveS
             ,sevenS,tenS,twentyS;
+    RelativeLayout transferMoney;
     TextView oneD,twoD,fiveD
             ,sevenD,tenD,twentyD;
     ImageView oneImage,twoImage,fiveImage
@@ -62,6 +64,7 @@ public class CoinsMainFragment extends Fragment {
         sevenLinear=view.findViewById(R.id.sevenThousand);
         tenLinear=view.findViewById(R.id.tenThousand);
         twentyLinear=view.findViewById(R.id.twentyThousand);
+        transferMoney=view.findViewById(R.id.transferMoney);
         oneS=view.findViewById(R.id.oneCoinsText);
         twoS=view.findViewById(R.id.twoCoinsText);
         fiveS=view.findViewById(R.id.fiveCoinsText);
@@ -80,6 +83,12 @@ public class CoinsMainFragment extends Fragment {
         sevenImage=view.findViewById(R.id.sevenCoinsImage);
         tenImage=view.findViewById(R.id.tenCoinsImage);
         twentyImage=view.findViewById(R.id.twentyCoinsImage);
+        transferMoney.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RecentMethods.setCurrentFragment(TransferMoneyFragment.newInstance(), getActivity());
+            }
+        });
         oneLinear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

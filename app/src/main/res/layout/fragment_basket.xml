@@ -73,7 +73,10 @@
         android:layout_below="@+id/numberofclothes"
         android:layout_marginTop="8dp"
         android:orientation="vertical"
+        android:clipToPadding="false"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
         android:scrollbars="none"
-        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"/>
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager" />
 
 </RelativeLayout>

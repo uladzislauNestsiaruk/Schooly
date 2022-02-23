@@ -15,7 +15,7 @@
             android:layout_height="wrap_content"
             android:textSize="20dp"
             android:textColor="@color/app_color"
-            android:fontFamily="@font/montserrat_bold"
+            android:fontFamily="@font/montserrat_extrabold"
             android:layout_marginTop="16dp"
             android:layout_marginStart="24dp"/>
 
@@ -56,89 +56,111 @@
             android:layout_marginStart="24dp"
             android:layout_marginTop="16dp"
             android:background="@drawable/corners2dpstrokeappcolor"
-            android:fontFamily="@font/montserrat_extrabold"
+            android:fontFamily="@font/montserrat_bold"
             android:padding="6dp"
             android:text="@string/redact"
             android:textColor="@color/app_grey" />
 
-        <TextView
-            android:id="@+id/subscribers"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/bigLinear1"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/redact"
-            android:layout_centerInParent="true"
-            android:layout_marginTop="50dp"
-            android:fontFamily="@font/montserrat_bold"
-            android:text="@string/susriders"
-            android:textColor="@color/app_grey"
-            android:textSize="12sp" />
+            android:layout_marginTop="24dp"
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/subscribersCount"
-            android:layout_width="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_below="@+id/redact"
-            android:layout_marginTop="18dp"
-            android:textSize="20sp"
-            android:textColor="@color/app_color"
-            android:fontFamily="@font/montserrat_extrabold"
-            android:layout_height="wrap_content"/>
+            <LinearLayout
+                android:id="@+id/linearLooksProfile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/looksCount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/redact"
-            android:layout_marginTop="18dp"
-            android:layout_marginEnd="70dp"
-            android:layout_toLeftOf="@+id/subscribers"
-            android:fontFamily="@font/montserrat_extrabold"
-            android:textColor="@color/app_color"
-            android:textSize="20sp" />
+                <TextView
+                    android:id="@+id/looksCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/montserratblack"
+                    android:textColor="@color/app_color"
+                    android:textSize="20sp" />
 
-        <TextView
-            android:id="@+id/subscriptionsCount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/redact"
-            android:layout_marginStart="82dp"
-            android:layout_marginTop="18dp"
-            android:layout_toRightOf="@+id/subscribers"
-            android:fontFamily="@font/montserrat_extrabold"
-            android:textColor="@color/app_color"
-            android:textSize="20sp" />
+                <TextView
+                    android:id="@+id/Other"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:text="@string/looks"
+                    android:textColor="@color/app_grey"
+                    android:textSize="12sp" />
+            </LinearLayout>
 
-        <TextView
-            android:id="@+id/looks"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/redact"
-            android:layout_marginTop="50dp"
-            android:layout_marginEnd="48dp"
-            android:layout_toLeftOf="@id/subscribers"
-            android:fontFamily="@font/montserrat_bold"
-            android:text="@string/looks"
-            android:textColor="@color/app_grey"
-            android:textSize="12sp" />
+            <LinearLayout
+                android:id="@+id/subscribersLinearProfile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="12dp"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/subscriptions"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/redact"
-            android:layout_marginStart="48dp"
-            android:layout_marginTop="50dp"
-            android:layout_toRightOf="@id/subscribers"
-            android:fontFamily="@font/montserrat_bold"
-            android:text="@string/subscriptions"
-            android:textColor="@color/app_grey"
-            android:textSize="12sp" />
+                <TextView
+                    android:id="@+id/subscribersCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/montserratblack"
+                    android:textColor="@color/app_color"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:text="@string/subscribers"
+                    android:textColor="@color/app_grey"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/subscriptionLinearProfile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="24dp"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/subscriptionsCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/montserratblack"
+                    android:gravity="center_horizontal"
+                    android:textColor="@color/app_color"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:gravity="center"
+                    android:text="@string/subscriptions"
+                    android:textColor="@color/app_grey"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+
 
         <com.google.ar.sceneform.SceneView
             android:id="@+id/mainlookview"
             android:layout_width="match_parent"
             android:layout_height="384dp"
-            android:layout_below="@+id/subscribers"
+            android:layout_below="@+id/bigLinear1"
             android:layout_marginStart="24dp"
             android:layout_marginTop="30dp"
             android:layout_marginEnd="24dp"
