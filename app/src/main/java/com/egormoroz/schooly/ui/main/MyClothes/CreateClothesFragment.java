@@ -34,7 +34,9 @@ public class CreateClothesFragment extends Fragment {
     TextView modelWay;
     RelativeLayout publish;
     RadioGroup radioGroup,radioGroupCurrency;
-    RadioButton radioButton1,radioButton2,radioButton3,radioButton4,radioButtonCoin,radioButtonDollar;
+    RadioButton radioButton1,radioButton2,radioButton3,radioButton4
+            ,radioButton5,radioButton6,radioButton7,radioButton8
+            ,radioButton9,radioButton10,radioButtonCoin,radioButtonDollar;
 
     public static CreateClothesFragment newInstance() {
         return new CreateClothesFragment();
@@ -69,6 +71,12 @@ public class CreateClothesFragment extends Fragment {
         radioButton2=view.findViewById(R.id.radio_button_2);
         radioButton3=view.findViewById(R.id.radio_button_3);
         radioButton4=view.findViewById(R.id.radio_button_4);
+        radioButton5=view.findViewById(R.id.radio_button_5);
+        radioButton6=view.findViewById(R.id.radio_button_6);
+        radioButton7=view.findViewById(R.id.radio_button_7);
+        radioButton8=view.findViewById(R.id.radio_button_8);
+        radioButton9=view.findViewById(R.id.radio_button_9);
+        radioButton10=view.findViewById(R.id.radio_button_10);
         radioButtonCoin=view.findViewById(R.id.schoolyCoinRadio);
         radioButtonDollar=view.findViewById(R.id.dollarRadio);
         ImageView backtoMyClothes=view.findViewById(R.id.back_tomyclothes);

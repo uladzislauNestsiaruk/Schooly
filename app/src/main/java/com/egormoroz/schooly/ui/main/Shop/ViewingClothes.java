@@ -60,6 +60,7 @@ public class ViewingClothes extends Fragment {
     private FirebaseModel firebaseModel = new FirebaseModel();
     NewClothesAdapter.ViewHolder viewHolder;
     LinearLayout coinsLinear;
+    String clothesPriceString;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -141,7 +142,26 @@ public class ViewingClothes extends Fragment {
                 }else {
                     description.setText(clothesViewing.getDescription());
                 }
-                purchaseNumber.setText(String.valueOf(clothesViewing.getPurchaseNumber()));
+                clothesPriceString=String.valueOf(clothes.getPurchaseNumber());
+                if(clothes.getPurchaseNumber()<1000){
+                    purchaseNumber.setText(String.valueOf(clothes.getPurchaseNumber()));
+                }else if(clothes.getPurchaseNumber()>1000 && clothes.getPurchaseNumber()<10000){
+                    purchaseNumber.setText(clothesPriceString.substring(0, 1)+"."+clothesPriceString.substring(1, 2)+"K");
+                }
+                else if(clothes.getPurchaseNumber()>10000 && clothes.getPurchaseNumber()<100000){
+                    purchaseNumber.setText(clothesPriceString.substring(0, 2)+"."+clothesPriceString.substring(2,3)+"K");
+                }
+                else if(clothes.getPurchaseNumber()>10000 && clothes.getPurchaseNumber()<100000){
+                    purchaseNumber.setText(clothesPriceString.substring(0, 2)+"."+clothesPriceString.substring(2,3)+"K");
+                }else if(clothes.getPurchaseNumber()>100000 && clothes.getPurchaseNumber()<1000000){
+                    purchaseNumber.setText(clothesPriceString.substring(0, 3)+"K");
+                }
+                else if(clothes.getPurchaseNumber()>1000000 && clothes.getPurchaseNumber()<10000000){
+                    purchaseNumber.setText(clothesPriceString.substring(0, 1)+"KK");
+                }
+                else if(clothes.getPurchaseNumber()>10000000 && clothes.getPurchaseNumber()<100000000){
+                    purchaseNumber.setText(clothesPriceString.substring(0, 2)+"KK");
+                }
                 Picasso.get().load(clothes.getClothesImage()).into(clothesImageCV);
                 if (clothesViewing.getCurrencyType().equals("dollar")){
                     dollarImage.setVisibility(View.VISIBLE);

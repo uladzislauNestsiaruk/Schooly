@@ -197,21 +197,63 @@
                 android:layout_height="match_parent"
                 android:textColor="@color/app_grey"
                 android:fontFamily="@font/montserrat_bold"
-                android:text="@string/clothes"/>
+                android:text="@string/pants"/>
             <RadioButton
                 android:id="@+id/radio_button_3"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:textColor="@color/app_grey"
                 android:fontFamily="@font/montserrat_bold"
-                android:text="@string/hats"/>
+                android:text="@string/shorts"/>
             <RadioButton
                 android:id="@+id/radio_button_4"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:textColor="@color/app_grey"
                 android:fontFamily="@font/montserrat_bold"
-                android:text="@string/accessories"/>
+                android:text="@string/belt"/>
+            <RadioButton
+                android:id="@+id/radio_button_5"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColor="@color/app_grey"
+                android:fontFamily="@font/montserrat_bold"
+                android:text="@string/tshirt"/>
+            <RadioButton
+                android:id="@+id/radio_button_6"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColor="@color/app_grey"
+                android:fontFamily="@font/montserrat_bold"
+                android:text="@string/shirt"/>
+            <RadioButton
+                android:id="@+id/radio_button_7"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColor="@color/app_grey"
+                android:fontFamily="@font/montserrat_bold"
+                android:text="@string/longsleeeve"/>
+            <RadioButton
+                android:id="@+id/radio_button_8"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColor="@color/app_grey"
+                android:fontFamily="@font/montserrat_bold"
+                android:text="@string/glasses"/>
+            <RadioButton
+                android:id="@+id/radio_button_9"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColor="@color/app_grey"
+                android:fontFamily="@font/montserrat_bold"
+                android:text="@string/cap"/>
+            <RadioButton
+                android:id="@+id/radio_button_10"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColor="@color/app_grey"
+                android:fontFamily="@font/montserrat_bold"
+                android:text="@string/panama"/>
         </RadioGroup>
 
         <TextView

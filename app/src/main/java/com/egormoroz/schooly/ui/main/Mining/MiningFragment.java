@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -22,6 +23,7 @@ import com.egormoroz.schooly.MiningManager;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.SchoolyService;
+import com.egormoroz.schooly.ui.coins.CoinsMainFragment;
 import com.egormoroz.schooly.ui.main.MainFragment;
 import com.egormoroz.schooly.ui.main.Shop.NewClothesAdapter;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -47,6 +49,7 @@ public class MiningFragment extends Fragment {
     double todayMining;
     Map<String,String> timeStamp;
     String todayMiningFormatted;
+    LinearLayout coinsLinear;
     TextView minerprice, schoolycoinminer, myminers, upgrade, todayminingText, morecoins,buy,numderOfActiveMiners,emptyActiveMiners,addActiveMiners;
     RecyclerView activeminersrecyclerview,weakminersrecyclerview,averageminersrecyclerview,strongminersrecyclerview;
     private static final String TAG = "###########";
@@ -78,6 +81,13 @@ public class MiningFragment extends Fragment {
                         Log.d("######", "suck "+moneyOriginal);
                     }
                 });
+            }
+        });
+        coinsLinear=view.findViewById(R.id.linearCoins);
+        coinsLinear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RecentMethods.setCurrentFragment(CoinsMainFragment.newInstance(), getActivity());
             }
         });
         myminers = view.findViewById(R.id.myminers);

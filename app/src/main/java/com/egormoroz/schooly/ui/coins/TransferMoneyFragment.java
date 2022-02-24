@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -32,6 +33,8 @@ public class TransferMoneyFragment extends Fragment {
     RecyclerView peopleRecyclerView;
     EditText searchUser;
     FirebaseModel firebaseModel=new FirebaseModel();
+    String userNameToProfile;
+    ImageView backToCoins;
 
     public static TransferMoneyFragment newInstance() {
         return new TransferMoneyFragment();
@@ -54,6 +57,13 @@ public class TransferMoneyFragment extends Fragment {
 
         peopleRecyclerView=view.findViewById(R.id.peoplerecycler);
         searchUser=view.findViewById(R.id.searchuser);
+        backToCoins=view.findViewById(R.id.backtocoins);
+        backToCoins.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RecentMethods.setCurrentFragment(CoinsMainFragment.newInstance(), getActivity());
+            }
+        });
         firebaseModel.initAll();
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @Override
@@ -61,8 +71,17 @@ public class TransferMoneyFragment extends Fragment {
                 RecentMethods.getSubscriptionList(nick, firebaseModel, new Callbacks.getFriendsList() {
                     @Override
                     public void getFriendsList(ArrayList<Subscriber> friends) {
-                        SubscriptionsAdapter subscriptionsAdapter = new SubscriptionsAdapter(friends);
-                        peopleRecyclerView.setAdapter(subscriptionsAdapter);
+                        TransferMoneyAdapter transferMoneyAdapter=new TransferMoneyAdapter(friends);
+                        peopleRecyclerView.setAdapter(transferMoneyAdapter);
+                        TransferMoneyAdapter.ItemClickListener itemClickListener=new TransferMoneyAdapter.ItemClickListener() {
+                            @Override
+                            public void onItemClick(View view, int position) {
+                                Subscriber user = transferMoneyAdapter.getItem(position);
+                                userNameToProfile=user.getSub();
+                                RecentMethods.setCurrentFragment(SendMoneyFragment.newInstance(userNameToProfile), getActivity());
+                            }
+                        };
+                        transferMoneyAdapter.setClickListener(itemClickListener);
                     }
                 });
             }

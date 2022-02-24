@@ -4,7 +4,7 @@
     android:layout_height="230dp"
     android:paddingStart="14dp"
     android:paddingEnd="14dp"
-    android:paddingTop="10dp"
+    android:paddingTop="4dp"
     android:layout_marginBottom="23dp"
     android:background="@drawable/corners"
     android:layout_marginStart="4dp"
@@ -17,7 +17,7 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:fontFamily="@font/montserrat_extrabold"
-      android:textSize="20sp"
+      android:textSize="18sp"
       android:textColor="@color/app_color"
       android:layout_marginTop="8dp"
       />

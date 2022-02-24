@@ -72,6 +72,7 @@
                     android:layout_marginStart="16dp"
                     android:layout_weight="10"
                     android:background="@null"
+                    android:maxLines="1"
                     android:fontFamily="@font/montserrat_bold"
                     android:hint="@string/search"
                     android:textColor="@color/app_grey"

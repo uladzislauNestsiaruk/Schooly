@@ -62,7 +62,6 @@ public class SubscribersAdapter extends RecyclerView.Adapter<SubscribersAdapter.
             @Override
             public void onClick(View view) {
                 if (clickListener != null) clickListener.onItemClick(view, position);
-                Log.d("#####", "fhjh");
             }
         });
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {

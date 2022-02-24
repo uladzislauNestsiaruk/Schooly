@@ -12,13 +12,14 @@ public class Clothes {
     private long timesTamp;
     private String creator;
     private String description;
+    private String bodyType;
     String model;
     long purchaseToday;
 
 
     public Clothes(String type, String  clothesImage, long clothesPrice,String clothesTitle
             ,long purchaseNumber,long timesTamp,String creator,String currencyType,String description,
-                   String model,long purchaseToday){
+                   String model,long purchaseToday,String bodyType){
         this.type=type;
         this.clothesImage=clothesImage;
         this.clothesPrice=clothesPrice;
@@ -30,6 +31,7 @@ public class Clothes {
         this.description=description;
         this.model=model;
         this.purchaseToday=purchaseToday;
+        this.bodyType=bodyType;
     }
     public Clothes(){
     }
@@ -120,6 +122,14 @@ public class Clothes {
 
     public void setPurchaseToday(long purchaseToday){
         this.purchaseToday=purchaseToday;
+    }
+
+    public String getBodyType(){
+        return this.bodyType;
+    }
+
+    public void setBodyType(String bodyType){
+        this.bodyType=bodyType;
     }
 
 }

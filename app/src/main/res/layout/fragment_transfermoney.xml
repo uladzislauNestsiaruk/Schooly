@@ -8,6 +8,25 @@
     tools:context=".ui.people.PeopleFragment"
     android:background="@color/white">
 
+    <ImageView
+        android:id="@+id/backtocoins"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="16dp"
+        android:src="@drawable/left_arrow" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="11dp"
+        android:layout_toRightOf="@+id/backtocoins"
+        android:fontFamily="@font/montserrat_bold"
+        android:text="@string/sendCoins"
+        android:textColor="@color/app_color"
+        android:textSize="22sp" />
+
     <EditText
         android:id="@+id/searchuser"
         android:layout_width="match_parent"
@@ -15,9 +34,11 @@
         android:layout_marginStart="24dp"
         android:layout_marginTop="24dp"
         android:layout_marginEnd="24dp"
+        android:layout_below="@+id/backtocoins"
         android:background="@drawable/corners12_2dpstrokeappcolor"
         android:fontFamily="@font/montserrat_bold"
         android:hint="@string/search"
+        android:maxLines="1"
         android:paddingStart="16sp"
         android:paddingTop="11dp"
         android:paddingBottom="11dp"
@@ -31,6 +52,6 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/searchuser"
         android:layout_marginTop="4dp"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
 </RelativeLayout>

@@ -140,7 +140,7 @@
             android:layout_below="@+id/relativeMenu"
             android:layout_marginTop="16dp"
             android:orientation="vertical"
-            android:paddingBottom="20dp"
+            android:paddingBottom="30dp"
             android:scrollbars="none"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 

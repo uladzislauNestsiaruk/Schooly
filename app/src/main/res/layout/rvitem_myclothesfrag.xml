@@ -9,9 +9,9 @@
     android:background="@drawable/corners"
     android:layout_marginStart="24dp"
     android:layout_marginEnd="24dp"
-    android:layout_marginBottom="18dp"
-    android:layout_marginTop="8dp"
-    android:elevation="12dp">
+    android:layout_marginBottom="24dp"
+    android:layout_marginTop="6dp"
+    android:elevation="10dp">
 
     <TextView
         android:id="@+id/clothesTitle"

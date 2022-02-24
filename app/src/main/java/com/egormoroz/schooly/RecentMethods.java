@@ -507,6 +507,7 @@ public class RecentMethods {
                     clothes.setDescription(snap.child("description").getValue(String.class));
                     clothes.setPurchaseToday(snap.child("purchaseToday").getValue(Long.class));
                     clothes.setModel(snap.child("model").getValue(String.class));
+                    clothes.setBodyType(snap.child("bodyType").getValue(String.class));
                     clothesFromBase.add(clothes);
                 }
                 callback.getClothes(clothesFromBase);
@@ -538,6 +539,7 @@ public class RecentMethods {
                     clothes.setDescription(snap.child("description").getValue(String.class));
                     clothes.setPurchaseToday(snap.child("purchaseToday").getValue(Long.class));
                     clothes.setModel(snap.child("model").getValue(String.class));
+                    clothes.setBodyType(snap.child("bodyType").getValue(String.class));
                     clothesFromBase.add(clothes);
                 }
                 callback.getClothes(clothesFromBase);
@@ -734,6 +736,7 @@ public class RecentMethods {
                     clothes.setDescription(snap.child("description").getValue(String.class));
                     clothes.setPurchaseToday(snap.child("purchaseToday").getValue(Long.class));
                     clothes.setModel(snap.child("model").getValue(String.class));
+                    clothes.setBodyType(snap.child("bodyType").getValue(String.class));
                    clothesFromBase.add(clothes);
                 }
                 callback.getClothes(clothesFromBase);

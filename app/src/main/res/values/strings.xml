@@ -57,6 +57,15 @@
 
     <string name="clothes">Одежда</string>
     <string name="shoes">Обувь</string>
+    <string name="pants">Штаны</string>
+    <string name="shorts">Шорты</string>
+    <string name="belt">Ремень</string>
+    <string name="tshirt">Майка</string>
+    <string name="shirt">Рубашка</string>
+    <string name="longsleeeve">Лонгслив</string>
+    <string name="glasses">Очки</string>
+    <string name="cap">Кепка</string>
+    <string name="panama">Панама</string>
     <string name="hats">Головные уборы</string>
     <string name="accessories">Аксессуары</string>
     <string name="inbasket">В корзину</string>
@@ -299,6 +308,8 @@
     <string name="dollar">Dollar (только Premium)</string>
 
     <string name="transferCoins">Перевести коины</string>
+
+    <string name="sendCoins">Перевод коинов</string>
 
 
 

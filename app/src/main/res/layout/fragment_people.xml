@@ -18,6 +18,7 @@
       android:background="@drawable/corners12_2dpstrokeappcolor"
       android:fontFamily="@font/montserrat_bold"
       android:hint="@string/search"
+      android:maxLines="1"
       android:paddingStart="16sp"
       android:paddingTop="11dp"
       android:paddingBottom="11dp"
