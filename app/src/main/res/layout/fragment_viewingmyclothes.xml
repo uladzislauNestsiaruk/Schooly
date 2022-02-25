@@ -57,13 +57,40 @@
         android:layout_marginTop="24dp"
         android:fontFamily="@font/montserratblack"
         android:textColor="@color/app_color"
-        android:textSize="24dp" />
+        android:textSize="24sp" />
+
+        <RelativeLayout
+            android:id="@+id/priceRelative"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/clothesTitlecv"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="8dp">
+
+            <TextView
+                android:id="@+id/clothesPricecv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/montserratblack"
+                android:textColor="@color/app_color"
+                android:layout_centerVertical="true"
+                android:textSize="17sp" />
+
+            <ImageView
+                android:id="@+id/coinImagePrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/clothesPricecv"
+                android:layout_marginStart="4dp"
+                android:src="@drawable/ic_schoolycoinpurple"/>
+        </RelativeLayout>
 
     <TextView
         android:id="@+id/statistics"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/clothesTitlecv"
+        android:layout_below="@+id/priceRelative"
         android:layout_marginTop="24dp"
         android:layout_marginStart="24dp"
         android:fontFamily="@font/montserrat_bold"

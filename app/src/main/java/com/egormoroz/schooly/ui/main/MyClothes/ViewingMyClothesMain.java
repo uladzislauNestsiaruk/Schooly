@@ -37,9 +37,9 @@ public class ViewingMyClothesMain extends Fragment {
 
 
     TextView  clothesTitleCV, description, noDescription,purchaseToday,purchaseAll,profitToday,profitAll
-            ,perSentToday,perSentAll;
-    ImageView clothesImageCV, backToShop, coinsImage,coinsImageAll;
-    long schoolyCoins, clothesPrise;
+            ,perSentToday,perSentAll,clothesPrice;
+    ImageView clothesImageCV, backToShop, coinsImage,coinsImageAll,coinsImagePurple;
+    long schoolyCoins;
     RelativeLayout checkBasket,resale,present;
     int a = 0;
     Clothes clothesViewing;
@@ -66,7 +66,9 @@ public class ViewingMyClothesMain extends Fragment {
         coinsImageAll = view.findViewById(R.id.coinsImageAll);
         noDescription = view.findViewById(R.id.noDescription);
         clothesTitleCV = view.findViewById(R.id.clothesTitlecv);
+        coinsImagePurple=view.findViewById(R.id.coinImagePrice);
         description = view.findViewById(R.id.description);
+        clothesPrice=view.findViewById(R.id.clothesPricecv);
         backToShop = view.findViewById(R.id.back_toshop);
         purchaseToday=view.findViewById(R.id.purchasesToday);
         purchaseAll=view.findViewById(R.id.purchasesAll);
@@ -91,11 +93,14 @@ public class ViewingMyClothesMain extends Fragment {
                 purchaseToday.setText(String.valueOf(clothesViewing.getPurchaseToday()));
                 purchaseAll.setText(String.valueOf(clothesViewing.getPurchaseNumber()));
                 if (clothesViewing.getCurrencyType().equals("dollar")){
+                    clothesPrice.setText("$"+String.valueOf(clothes.getClothesPrice()));
+                    coinsImagePurple.setVisibility(View.GONE);
                     coinsImage.setVisibility(View.GONE);
                     coinsImageAll.setVisibility(View.GONE);
                     profitToday.setText("+"+String.valueOf(clothesViewing.getClothesPrice()*clothesViewing.getPurchaseToday())+"$");
                     profitAll.setText("+"+String.valueOf(clothesViewing.getPurchaseNumber()*clothesViewing.getClothesPrice())+"$");
                 }else {
+                    clothesPrice.setText(String.valueOf(clothes.getClothesPrice()));
                     profitToday.setText("+"+String.valueOf(clothesViewing.getClothesPrice()*clothesViewing.getPurchaseToday()));
                     profitAll.setText("+"+String.valueOf(clothesViewing.getPurchaseNumber()*clothesViewing.getClothesPrice()));
                 }
@@ -105,7 +110,6 @@ public class ViewingMyClothesMain extends Fragment {
                     perCent=clothesViewing.getPurchaseToday()*100/clothesViewing.getPurchaseNumber();
                 }
                 perSentToday.setText("("+String.valueOf(perCent)+"%)");
-                clothesPrise = clothes.getClothesPrice();
                 Picasso.get().load(clothesViewing.getClothesImage()).into(clothesImageCV);
                 if (clothesViewing.getDescription().trim().length() == 0) {
                     noDescription.setVisibility(View.VISIBLE);

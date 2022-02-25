@@ -46,11 +46,23 @@
         android:textColorHint="@color/greysearch"
         android:textSize="15sp" />
 
+    <TextView
+        android:id="@+id/toWhom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/toWhom"
+        android:layout_below="@+id/searchuser"
+        android:textSize="26sp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="6dp"
+        android:fontFamily="@font/montserrat_bold"
+        android:textColor="@color/app_grey"/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/peoplerecycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/searchuser"
+        android:layout_below="@+id/toWhom"
         android:layout_marginTop="4dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
