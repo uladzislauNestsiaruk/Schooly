@@ -74,6 +74,13 @@ public class LooksFragmentProfile extends Fragment {
                             LooksAdapter looksAdapter=new LooksAdapter(look);
                             looksRecycler.setLayoutManager(new GridLayoutManager(getActivity(), 3));
                             looksRecycler.setAdapter(looksAdapter);
+                            LooksAdapter.ItemClickListener itemClickListener=new LooksAdapter.ItemClickListener() {
+                                @Override
+                                public void onItemClick(View view, int position) {
+
+                                }
+                            };
+                            looksAdapter.setClickListener(itemClickListener);
                         }
                     }
                 });

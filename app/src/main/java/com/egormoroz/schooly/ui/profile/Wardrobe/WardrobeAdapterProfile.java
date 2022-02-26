@@ -69,7 +69,7 @@ public class WardrobeAdapterProfile extends RecyclerView.Adapter<WardrobeAdapter
             @Override
             public void onClick(View v)
             {
-                RecentMethods.setCurrentFragment(WardrobeFragment.newInstance(), activity);
+
             }
         });
     }

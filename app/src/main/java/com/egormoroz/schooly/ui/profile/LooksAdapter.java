@@ -18,6 +18,7 @@ import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.Subscriber;
+import com.google.ar.sceneform.SceneView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.Query;
@@ -52,10 +53,13 @@ public class LooksAdapter extends RecyclerView.Adapter<LooksAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(@NonNull LooksAdapter.ViewHolder holder, int position) {
         Look look=listAdapter.get(position);
-        Picasso.get().load(look.getLookImage()).into(holder.lookImage);
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (clickListener != null) clickListener.onItemClick(view, position);
+            }
+        });
     }
-
-
 
     @Override
     public int getItemCount() {
@@ -63,10 +67,12 @@ public class LooksAdapter extends RecyclerView.Adapter<LooksAdapter.ViewHolder> 
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        final ImageView lookImage;
+        final SceneView lookScene;
+        TextView viewPurchase;
         ViewHolder(View itemView) {
             super(itemView);
-            lookImage=itemView.findViewById(R.id.lookImage);
+            lookScene=itemView.findViewById(R.id.lookScene);
+            viewPurchase=itemView.findViewById(R.id.viewPurchase);
 
         }
 

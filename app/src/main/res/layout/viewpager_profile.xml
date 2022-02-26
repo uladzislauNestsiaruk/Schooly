@@ -13,8 +13,10 @@
         android:paddingBottom="130dp"
         android:clipToPadding="false"
         android:orientation="vertical"
-        android:paddingTop="16dp"
-        android:scrollbars="none" />
+        android:paddingTop="4dp"
+        android:paddingStart="6dp"
+        android:paddingEnd="6dp"
+        android:scrollbars="none"/>
 
     <TextView
         android:id="@+id/textCreateYourLook"
