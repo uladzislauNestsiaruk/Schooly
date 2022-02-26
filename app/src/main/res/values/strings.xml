@@ -312,6 +312,9 @@
     <string name="sendCoins">Перевод коинов</string>
 
     <string name="toWhom">Кому:</string>
+    <string name="toWhomTransfer">Кому перевод:</string>
+    <string name="sum">Сумма:</string>
+    <string name="transfer">Перевести</string>
 
 
 </resources>

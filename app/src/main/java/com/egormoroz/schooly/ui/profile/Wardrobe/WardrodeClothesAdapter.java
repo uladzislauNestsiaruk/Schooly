@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -62,12 +63,10 @@ class WardrobeClothesAdapter extends RecyclerView.Adapter<WardrobeClothesAdapter
     holder.clothesImage.setVisibility(View.VISIBLE);
     holder.creator.setText(clothes.getCreator());
     Picasso.get().load(clothes.getClothesImage()).into(holder.clothesImage);
-    holder.itemView.setOnClickListener(new View.OnClickListener(){
+    holder.fittingClothes.setOnClickListener(new View.OnClickListener() {
       @Override
-      public void onClick(View v)
-      {
-        onClothesClick.onItemClick(clothesArrayListWardrobe.get(holder.getAdapterPosition()));
-        trueClothes=clothesArrayListWardrobe.get(holder.getAdapterPosition());
+      public void onClick(View v) {
+        Toast.makeText(v.getContext(), "Перевод выполнен", Toast.LENGTH_SHORT).show();
       }
     });
   }
@@ -81,12 +80,13 @@ class WardrobeClothesAdapter extends RecyclerView.Adapter<WardrobeClothesAdapter
 
   public class ViewHolder extends RecyclerView.ViewHolder {
     TextView clothesTitle,creator;
-    ImageView clothesImage;
+    ImageView clothesImage,fittingClothes;
     ViewHolder(View itemView) {
       super(itemView);
       clothesImage=itemView.findViewById(R.id.clothesImage);
       clothesTitle=itemView.findViewById(R.id.clothesTitle);
       creator=itemView.findViewById(R.id.creator);
+      fittingClothes=itemView.findViewById(R.id.fittingClothes);
     }
 
 

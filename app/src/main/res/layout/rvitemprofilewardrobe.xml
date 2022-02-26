@@ -16,7 +16,7 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/montserrat_extrabold"
         android:textColor="@color/app_color"
-        android:textSize="20sp" />
+        android:textSize="18sp" />
 
 
     <ImageView
@@ -29,7 +29,7 @@
         android:id="@+id/creator"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="16sp"
+        android:textSize="14sp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:textColor="@color/app_color"

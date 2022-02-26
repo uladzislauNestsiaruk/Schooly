@@ -17,7 +17,7 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:fontFamily="@font/montserrat_extrabold"
-      android:textSize="20sp"
+      android:textSize="18sp"
       android:textColor="@color/app_color"
       />
 
@@ -28,11 +28,19 @@
       android:layout_height="150dp"
       android:layout_below="@+id/clothesTitle" />
 
+  <ImageView
+      android:id="@+id/fittingClothes"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_alignParentEnd="true"
+      android:layout_marginTop="8dp"
+      android:src="@drawable/ic_schoolycoinpurple"/>
+
   <TextView
       android:id="@+id/creator"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:textSize="16sp"
+      android:textSize="14sp"
       android:layout_alignParentBottom="true"
       android:layout_alignParentEnd="true"
       android:textColor="@color/app_color"

@@ -34,7 +34,7 @@ public class TransferMoneyFragment extends Fragment {
     EditText searchUser;
     FirebaseModel firebaseModel=new FirebaseModel();
     String userNameToProfile;
-    ImageView backToCoins;
+    ImageView backToCoins,transferHistory;
 
     public static TransferMoneyFragment newInstance() {
         return new TransferMoneyFragment();
@@ -58,6 +58,7 @@ public class TransferMoneyFragment extends Fragment {
         peopleRecyclerView=view.findViewById(R.id.peoplerecycler);
         searchUser=view.findViewById(R.id.searchuser);
         backToCoins=view.findViewById(R.id.backtocoins);
+        transferHistory=view.findViewById(R.id.transferHistory);
         backToCoins.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
