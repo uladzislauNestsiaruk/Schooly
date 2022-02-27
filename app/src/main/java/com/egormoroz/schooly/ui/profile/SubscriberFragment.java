@@ -133,25 +133,20 @@ public class SubscriberFragment extends Fragment {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
                                 ArrayList<Subscriber> userFromBase = new ArrayList<>();
-                                Log.d("####", "un " + userName);
                                 for (DataSnapshot snap : snapshot.getChildren()) {
                                     Subscriber subscriber = new Subscriber();
                                     subscriber.setSub(snap.getValue(String.class));
                                     String nick = subscriber.getSub();
                                     int valueLetters = userName.length();
-                                    Log.d("####", "un " + userName);
                                     nick = nick.toLowerCase();
                                     if (nick.length() < valueLetters) {
                                         if (nick.equals(userName))
                                             userFromBase.add(subscriber);
-                                        Log.d("####", "nb " + nick);
                                     } else {
                                         nick = nick.substring(0, valueLetters);
                                         if (nick.equals(userName))
                                             userFromBase.add(subscriber);
-                                        Log.d("####", "nb " + nick);
                                     }
-                                    Log.d("####", "cc " + userFromBase);
 
                                 }
                                 SubscribersAdapter subscribersAdapter = new SubscribersAdapter(userFromBase);
@@ -162,7 +157,7 @@ public class SubscriberFragment extends Fragment {
                                             public void onItemClick(View view, int position) {
                                                 Subscriber subscriber = subscribersAdapter.getItem(position);
                                                 userNameToProfile = subscriber.getSub();
-                                                Log.d("###", "n " + userNameToProfile);
+
                                                 RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile,SubscriberFragment.newInstance()),
                                                         getActivity());
                                             }
