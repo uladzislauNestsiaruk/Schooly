@@ -315,6 +315,9 @@
     <string name="toWhomTransfer">Кому перевод:</string>
     <string name="sum">Сумма:</string>
     <string name="transfer">Перевести</string>
+    <string name="transferHistory">История переводов</string>
+    <string name="plusCoins">Поступление</string>
+    <string name="notransfer">Нет совершенных переводов</string>
 
 
 </resources>

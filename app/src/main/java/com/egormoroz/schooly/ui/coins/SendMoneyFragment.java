@@ -15,14 +15,17 @@ import androidx.fragment.app.Fragment;
 
 import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FirebaseModel;
+import com.egormoroz.schooly.Nontification;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.Subscriber;
 import com.egormoroz.schooly.ui.profile.ComplainFragmentToBase;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.database.ServerValue;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class SendMoneyFragment extends Fragment {
 
@@ -97,6 +100,16 @@ public class SendMoneyFragment extends Fragment {
                                 firebaseModel.getUsersReference().child(nick).child("money")
                                         .setValue(moneyBase-sumLong);
                                 Toast.makeText(getContext(), "Перевод выполнен", Toast.LENGTH_SHORT).show();
+                                Random random = new Random();
+                                long num =random.nextInt(1000000000);
+                                firebaseModel.getUsersReference().child(otherUserNick).child("transferHistory")
+                                        .child(String.valueOf(num)).setValue(new Transfer(sumLong, nick, "from"));
+                                firebaseModel.getUsersReference().child(nick).child("transferHistory")
+                                        .child(String.valueOf(num)).setValue(new Transfer(sumLong, otherUserNick, "to"));
+                                firebaseModel.getReference().child("users")
+                                        .child(otherUserNick).child("nontifications")
+                                        .child(String.valueOf(num)).setValue(new Nontification(nick,"не отправлено","перевод"
+                                        , ServerValue.TIMESTAMP.toString()," "," ","не просмотрено",String.valueOf(sumLong)));
                                 RecentMethods.setCurrentFragment(TransferMoneyFragment.newInstance(), getActivity());
                             }
                         });

@@ -360,6 +360,12 @@ public class ProfileFragment extends Fragment {
                 noClothes=view.findViewById(R.id.noClothesText);
                 buyClothesProfile=view.findViewById(R.id.buyClothesProfile);
                 checkWardrobe();
+                itemClickListenerWardrobe=new WardrobeAdapterProfile.ItemClickListener() {
+                    @Override
+                    public void onItemClick(Clothes clothes) {
+                        RecentMethods.setCurrentFragment(WardrobeFragment.newInstance(), getActivity());
+                    }
+                };
                 //////////////////////////////////////
 
                 handler = new Handler(getMainLooper());

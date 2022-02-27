@@ -67,9 +67,8 @@ public class WardrobeAdapterProfile extends RecyclerView.Adapter<WardrobeAdapter
         Picasso.get().load(clothes.getClothesImage()).into(holder.clothesImage);
         holder.itemView.setOnClickListener(new View.OnClickListener(){
             @Override
-            public void onClick(View v)
-            {
-
+            public void onClick(View v) {
+                onClothesClick.onItemClick(clothesArrayListWardrobe.get(holder.getAdapterPosition()));
             }
         });
     }

@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="166dp"
-    android:layout_height="212dp"
-    android:padding="8dp"
+    android:layout_width="168dp"
+    android:layout_height="224dp"
+    android:paddingTop="8dp"
+    android:paddingBottom="4dp"
+    android:paddingEnd="12dp"
+    android:paddingStart="12dp"
     android:background="@drawable/corners"
     android:layout_marginStart="8dp"
     android:layout_marginEnd="8dp"
@@ -21,8 +24,8 @@
 
     <ImageView
         android:id="@+id/clothesImage"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
+        android:layout_width="match_parent"
+        android:layout_height="168dp"
         android:layout_below="@+id/clothesTitle" />
 
     <TextView

@@ -129,6 +129,8 @@ public class NontificationAdapter extends RecyclerView.Adapter<NontificationAdap
                     holder.otherUserNick.setText(nontification.getNick()+" подписался на тебя");
                 }else if(nontification.getTypeView().equals("одежда")) {
                     holder.otherUserNick.setText(nontification.getNick()+" купил у тебя "+nontification.getClothesName());
+                }else if (nontification.getTypeView().equals("перевод")){
+                    holder.otherUserNick.setText(nontification.getNick()+" перевел тебе "+nontification.getUid()+"коина");
                 }
             }
         });

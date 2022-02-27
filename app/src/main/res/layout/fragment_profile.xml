@@ -221,13 +221,13 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerProfileToWardrobe"
             android:layout_width="match_parent"
-            android:layout_height="242dp"
+            android:layout_height="256dp"
             android:layout_below="@+id/shielf"
             android:layout_marginTop="4dp"
+            android:clipToPadding="false"
             android:orientation="horizontal"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
-            android:clipToPadding="false"
             android:scrollbars="none"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
@@ -237,7 +237,7 @@
             android:layout_width="match_parent"
             android:layout_below="@+id/shielf"
             android:layout_height="52dp"
-            android:layout_marginTop="256dp"
+            android:layout_marginTop="260dp"
             app:tabTextAppearance="@style/AppTabTextAppearance"/>
 
         <androidx.viewpager2.widget.ViewPager2
