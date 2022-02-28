@@ -17,6 +17,8 @@ import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
+import com.egormoroz.schooly.ui.main.Shop.ShopFragment;
+import com.egormoroz.schooly.ui.main.Shop.ViewingClothes;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -31,13 +33,16 @@ public class ClothesFragmentProfileOther extends Fragment {
     TextView noLooksOther;
     FirebaseModel firebaseModel=new FirebaseModel();
     String otherUserNick;
+    ClothesAdapterOther.ItemClickListener itemClickListener;
+    Fragment fragment;
 
-    public ClothesFragmentProfileOther(String otherUserNick) {
+    public ClothesFragmentProfileOther(String otherUserNick,Fragment fragment) {
         this.otherUserNick = otherUserNick;
+        this.fragment=fragment;
     }
 
-    public static ClothesFragmentProfileOther newInstance(String otherUserNick) {
-        return new ClothesFragmentProfileOther(otherUserNick);
+    public static ClothesFragmentProfileOther newInstance(String otherUserNick,Fragment fragment) {
+        return new ClothesFragmentProfileOther(otherUserNick,fragment);
     }
 
     @Override
@@ -58,6 +63,17 @@ public class ClothesFragmentProfileOther extends Fragment {
 
         noLooksOther=view.findViewById(R.id.noLooks);
         recyclerOther=view.findViewById(R.id.Recycler);
+        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+            @Override
+            public void PassUserNick(String nick) {
+                itemClickListener=new ClothesAdapterOther.ItemClickListener() {
+                    @Override
+                    public void onItemClick(Clothes clothes) {
+                        RecentMethods.setCurrentFragment(ViewingClothes.newInstance(ProfileFragment.newInstance("other", otherUserNick, fragment)), getActivity());
+                    }
+                };
+            }
+        });
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @Override
             public void PassUserNick(String nick) {
@@ -85,7 +101,7 @@ public class ClothesFragmentProfileOther extends Fragment {
                             recyclerOther.setVisibility(View.GONE);
                         }else {
                             recyclerOther.setVisibility(View.VISIBLE);
-                            ClothesAdapter clothesAdapter=new ClothesAdapter(clothesFromBase);
+                            ClothesAdapterOther clothesAdapter=new ClothesAdapterOther(clothesFromBase,itemClickListener);
                             recyclerOther.setLayoutManager(new GridLayoutManager(getContext(), 2));
                             recyclerOther.setAdapter(clothesAdapter);
                         }

@@ -322,5 +322,7 @@
     <string name="plusCoins">Поступление</string>
     <string name="notransfer">Нет совершенных переводов</string>
 
+    <string name="coins">Коины</string>
+
 
 </resources>

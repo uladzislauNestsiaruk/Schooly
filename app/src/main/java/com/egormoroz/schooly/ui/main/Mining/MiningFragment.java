@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -23,6 +24,7 @@ import com.egormoroz.schooly.MiningManager;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.SchoolyService;
+import com.egormoroz.schooly.ui.coins.CoinsFragmentSecond;
 import com.egormoroz.schooly.ui.coins.CoinsMainFragment;
 import com.egormoroz.schooly.ui.main.MainFragment;
 import com.egormoroz.schooly.ui.main.Shop.NewClothesAdapter;
@@ -87,7 +89,7 @@ public class MiningFragment extends Fragment {
         coinsLinear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(CoinsMainFragment.newInstance(), getActivity());
+                RecentMethods.setCurrentFragment(CoinsFragmentSecond.newInstance(MiningFragment.newInstanse()), getActivity());
             }
         });
         myminers = view.findViewById(R.id.myminers);
@@ -234,8 +236,8 @@ public class MiningFragment extends Fragment {
 
         TextView text=dialog.findViewById(R.id.acceptText);
 
-        TextView no=dialog.findViewById(R.id.no);
-        TextView yes=dialog.findViewById(R.id.yes);
+        RelativeLayout no=dialog.findViewById(R.id.no);
+        RelativeLayout yes=dialog.findViewById(R.id.yes);
 
 
         no.setOnClickListener(new View.OnClickListener() {

@@ -21,15 +21,14 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
-public class ClothesAdapter extends RecyclerView.Adapter<ClothesAdapter.ViewHolder> {
-
+public class ClothesAdapterOther extends RecyclerView.Adapter<ClothesAdapterOther.ViewHolder> {
     ArrayList<Clothes> listAdapter;
     private FirebaseModel firebaseModel = new FirebaseModel();
     String clothesPriceString;
     static Clothes clothes,trueClothes;
-    ClothesAdapter.ItemClickListener itemClickListener;
+    ClothesAdapterOther.ItemClickListener itemClickListener;
 
-    public ClothesAdapter(ArrayList<Clothes> listAdapter,ClothesAdapter.ItemClickListener itemClickListener) {
+    public ClothesAdapterOther(ArrayList<Clothes> listAdapter,ClothesAdapterOther.ItemClickListener itemClickListener) {
         this.listAdapter = listAdapter;
         this.itemClickListener=itemClickListener;
     }
@@ -37,16 +36,16 @@ public class ClothesAdapter extends RecyclerView.Adapter<ClothesAdapter.ViewHold
 
     @NotNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
+    public ClothesAdapterOther.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
         RelativeLayout v = (RelativeLayout) LayoutInflater.from(viewGroup.getContext()).
                 inflate(R.layout.rvitem_clothesprofile, viewGroup, false);
-        ViewHolder viewHolder=new ViewHolder(v);
+        ClothesAdapterOther.ViewHolder viewHolder=new ClothesAdapterOther.ViewHolder(v);
         firebaseModel.initAll();
         return viewHolder;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ClothesAdapterOther.ViewHolder holder, int position) {
         Clothes clothes=listAdapter.get(position);
         Log.d("#####", "ddq  ");
         holder.clothesTitle.setText(clothes.getClothesTitle());
@@ -112,7 +111,7 @@ public class ClothesAdapter extends RecyclerView.Adapter<ClothesAdapter.ViewHold
         return listAdapter.get(id);
     }
 
-    public static void singeClothesInfo(ClothesAdapter.ItemClickListener itemClickListener){
+    public static void singeClothesInfo(ClothesAdapterOther.ItemClickListener itemClickListener){
         itemClickListener.onItemClick(trueClothes);
     }
 
@@ -120,4 +119,3 @@ public class ClothesAdapter extends RecyclerView.Adapter<ClothesAdapter.ViewHold
         void onItemClick( Clothes clothes);
     }
 }
-

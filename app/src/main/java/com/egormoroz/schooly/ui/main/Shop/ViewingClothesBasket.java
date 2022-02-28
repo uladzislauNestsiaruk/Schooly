@@ -20,7 +20,9 @@ import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.Nontification;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
+import com.egormoroz.schooly.ui.coins.CoinsFragmentSecond;
 import com.egormoroz.schooly.ui.coins.CoinsMainFragment;
+import com.egormoroz.schooly.ui.main.Mining.MiningFragment;
 import com.egormoroz.schooly.ui.profile.ProfileFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.database.DataSnapshot;
@@ -92,7 +94,7 @@ public class ViewingClothesBasket extends Fragment {
     coinsLinear.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        RecentMethods.setCurrentFragment(CoinsMainFragment.newInstance(), getActivity());
+        RecentMethods.setCurrentFragment(CoinsFragmentSecond.newInstance(ViewingClothesBasket.newInstance()), getActivity());
       }
     });
     backToShop.setOnClickListener(new View.OnClickListener() {
@@ -328,6 +330,7 @@ public class ViewingClothesBasket extends Fragment {
             });
           }else{
             Toast.makeText(getContext(), "Не хватает коинов", Toast.LENGTH_SHORT).show();
+            RecentMethods.setCurrentFragment(CoinsFragmentSecond.newInstance(ViewingClothesBasket.newInstance()),getActivity());
           }
         }
       }

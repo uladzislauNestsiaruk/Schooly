@@ -23,6 +23,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -944,8 +945,8 @@ public class ProfileFragment extends Fragment {
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
         TextView complainTitle = dialog.findViewById(R.id.complainText);
-        TextView no=dialog.findViewById(R.id.no);
-        TextView yes=dialog.findViewById(R.id.yes);
+        RelativeLayout no=dialog.findViewById(R.id.no);
+        RelativeLayout yes=dialog.findViewById(R.id.yes);
 
         complainTitle.setText("Заблокировать "+info.getNick()+"?");
 
@@ -1184,7 +1185,7 @@ public class ProfileFragment extends Fragment {
 
             switch (position) {
                 case 1:
-                    return new ClothesFragmentProfileOther(info.getNick());
+                    return new ClothesFragmentProfileOther(info.getNick(),fragment);
             }
             return new LooksFragmentProfileOther(info.getNick());
         }

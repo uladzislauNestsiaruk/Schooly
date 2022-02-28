@@ -21,6 +21,9 @@ import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.ui.main.GenderFragment;
 import com.egormoroz.schooly.ui.main.MainFragment;
+import com.egormoroz.schooly.ui.main.MyClothes.MyClothesAdapter;
+import com.egormoroz.schooly.ui.main.MyClothes.MyClothesFragment;
+import com.egormoroz.schooly.ui.main.MyClothes.ViewingMyClothes;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.database.DataSnapshot;
@@ -34,6 +37,7 @@ public class ClothesFragmentProfile extends Fragment {
 
     RecyclerView looksRecycler;
     TextView createNewLookText,createNewLook;
+    ClothesAdapter.ItemClickListener itemClickListener;
     FirebaseModel firebaseModel=new FirebaseModel();
 
     public static ClothesFragmentProfile newInstance() {
@@ -54,6 +58,18 @@ public class ClothesFragmentProfile extends Fragment {
     public void onViewCreated(@Nullable View view,@NonNull Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
 
+
+        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+            @Override
+            public void PassUserNick(String nick) {
+                itemClickListener=new ClothesAdapter.ItemClickListener() {
+                    @Override
+                    public void onItemClick(Clothes clothes) {
+                        RecentMethods.setCurrentFragment(ClothesViewingProfile.newInstance(ProfileFragment.newInstance("user",nick,ClothesFragmentProfile.newInstance())), getActivity());
+                    }
+                };
+            }
+        });
         createNewLook=view.findViewById(R.id.CreateYourLook);
         createNewLookText=view.findViewById(R.id.textCreateYourLook);
         looksRecycler=view.findViewById(R.id.Recycler);
@@ -85,7 +101,7 @@ public class ClothesFragmentProfile extends Fragment {
                             looksRecycler.setVisibility(View.GONE);
                         }else {
                             looksRecycler.setVisibility(View.VISIBLE);
-                            ClothesAdapter clothesAdapter=new ClothesAdapter(clothesFromBase);
+                            ClothesAdapter clothesAdapter=new ClothesAdapter(clothesFromBase,itemClickListener);
                             looksRecycler.setLayoutManager(new GridLayoutManager(getContext(), 2));
                             looksRecycler.setAdapter(clothesAdapter);
                         }

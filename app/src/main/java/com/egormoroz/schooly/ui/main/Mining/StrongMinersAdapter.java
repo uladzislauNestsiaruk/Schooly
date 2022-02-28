@@ -93,6 +93,7 @@ public class StrongMinersAdapter extends RecyclerView.Adapter<StrongMinersAdapte
                                         @Override
                                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                                             if(snapshot.exists()){
+                                                Toast.makeText(v.getContext(), "Майнер куплен", Toast.LENGTH_SHORT).show();
                                             }else{
                                                 int pos=holder.getAdapterPosition();
                                                 RecentMethods.GetMoneyFromBase(nick, firebaseModel, new Callbacks.MoneyFromBase() {

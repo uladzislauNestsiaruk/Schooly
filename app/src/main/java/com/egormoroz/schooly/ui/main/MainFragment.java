@@ -39,6 +39,7 @@ import com.egormoroz.schooly.SchoolyService;
 
 import com.egormoroz.schooly.Subscriber;
 import com.egormoroz.schooly.ui.Model.SceneViewModelActivity;
+import com.egormoroz.schooly.ui.coins.CoinsFragmentSecond;
 import com.egormoroz.schooly.ui.coins.CoinsMainFragment;
 import com.egormoroz.schooly.ui.main.CreateCharacter.CreateCharacterFragment;
 import com.egormoroz.schooly.ui.main.Mining.Miner;
@@ -110,7 +111,7 @@ public class MainFragment extends Fragment{
         coinsLinear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(CoinsMainFragment.newInstance(), getActivity());
+                RecentMethods.setCurrentFragment(CoinsFragmentSecond.newInstance(MainFragment.newInstance()), getActivity());
             }
         });
         getMyClothes();

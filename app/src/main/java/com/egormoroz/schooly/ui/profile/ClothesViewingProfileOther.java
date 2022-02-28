@@ -1,7 +1,6 @@
-package com.egormoroz.schooly.ui.main.Shop;
+package com.egormoroz.schooly.ui.profile;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,9 +20,10 @@ import com.egormoroz.schooly.Nontification;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.ui.coins.CoinsFragmentSecond;
-import com.egormoroz.schooly.ui.coins.CoinsMainFragment;
-import com.egormoroz.schooly.ui.main.Mining.MiningFragment;
-import com.egormoroz.schooly.ui.profile.ProfileFragment;
+import com.egormoroz.schooly.ui.main.Shop.Clothes;
+import com.egormoroz.schooly.ui.main.Shop.FittingFragment;
+import com.egormoroz.schooly.ui.main.Shop.NewClothesAdapter;
+import com.egormoroz.schooly.ui.main.Shop.ViewingClothes;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -34,22 +34,28 @@ import com.squareup.picasso.Picasso;
 
 import java.util.Random;
 
-public class ViewingClothesPopular extends Fragment {
+public class ClothesViewingProfileOther extends Fragment {
 
-    public static ViewingClothesPopular newInstance() {
-        return new ViewingClothesPopular();
+    Fragment fragment;
+
+    public ClothesViewingProfileOther(Fragment fragment) {
+        this.fragment = fragment;
+    }
+
+    public static ClothesViewingProfileOther newInstance(Fragment fragment) {
+        return new ClothesViewingProfileOther(fragment);
 
     }
 
-    PopularClothesAdapter.ItemClickListener itemClickListener;
-    TextView clothesPriceCV,clothesTitleCV,schoolyCoinCV,buyClothesBottom,purchaseNumber
-            ,creator,description,noDescription,fittingClothes;
+    TextView clothesPriceCV,clothesTitleCV,schoolyCoinCV,buyClothesBottom
+            ,purchaseNumber,creator,description,noDescription,fittingClothes;
     ImageView clothesImageCV,backToShop,coinsImage,dollarImage,inBasket,notInBasket;
     long schoolyCoins,clothesPrise;
     RelativeLayout checkBasket;
-    Clothes clothesViewing;
     int a=0;
+    Clothes clothesViewing;
     private FirebaseModel firebaseModel = new FirebaseModel();
+    NewClothesAdapter.ViewHolder viewHolder;
     LinearLayout coinsLinear;
     String clothesPriceString;
 
@@ -68,14 +74,6 @@ public class ViewingClothesPopular extends Fragment {
     public void onViewCreated(@Nullable View view,@NonNull Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
         getCoins();
-        checkClothes();
-        if (a==2 || a==0){
-            checkIfBuy();
-        }
-        if (a!=3 && a!=0){
-            checkClothes();
-        }
-        checkClothesOnBuy();
         schoolyCoinCV=view.findViewById(R.id.schoolycoincvfrag);
         clothesImageCV=view.findViewById(R.id.clothesImagecv);
         inBasket=view.findViewById(R.id.inBasketClothes);
@@ -96,22 +94,23 @@ public class ViewingClothesPopular extends Fragment {
         fittingClothes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(FittingFragment.newInstance(ViewingClothesPopular.newInstance()), getActivity());
+                RecentMethods.setCurrentFragment(FittingFragment.newInstance(ViewingClothes.newInstance(fragment)), getActivity());
             }
         });
         coinsLinear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(CoinsFragmentSecond.newInstance(ViewingClothesPopular.newInstance()), getActivity());
+                RecentMethods.setCurrentFragment(CoinsFragmentSecond.newInstance(ViewingClothes.newInstance(fragment)), getActivity());
             }
         });
         backToShop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(ShopFragment.newInstance(), getActivity());
+                RecentMethods.setCurrentFragment(fragment, getActivity());
             }
         });
-        PopularClothesAdapter.singeClothesInfo(new PopularClothesAdapter.ItemClickListener() {
+
+        ClothesAdapterOther.singeClothesInfo(new ClothesAdapterOther.ItemClickListener() {
             @Override
             public void onItemClick(Clothes clothes) {
                 clothesViewing=clothes;
@@ -126,15 +125,15 @@ public class ViewingClothesPopular extends Fragment {
                             @Override
                             public void PassUserNick(String nick) {
                                 if (clothesViewing.getCreator().equals(nick)) {
-                                    RecentMethods.setCurrentFragment(ProfileFragment.newInstance("user", nick, ViewingClothesPopular.newInstance()), getActivity());
+                                    RecentMethods.setCurrentFragment(ProfileFragment.newInstance("user", nick, ViewingClothes.newInstance(fragment)), getActivity());
                                 }else {
-                                    RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", clothesViewing.getCreator(), ViewingClothesPopular.newInstance()), getActivity());
+                                    RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", clothesViewing.getCreator(), ViewingClothes.newInstance(fragment)), getActivity());
                                 }
                             }
                         });
                     }
                 });
-                if (clothesViewing.getDescription().length()==0){
+                if (clothesViewing.getDescription().trim().length()==0){
                     noDescription.setVisibility(View.VISIBLE);
                     description.setVisibility(View.GONE);
                 }else {
@@ -167,8 +166,16 @@ public class ViewingClothesPopular extends Fragment {
                 }
             }
         });
+        checkClothes();
+        if (a==2 || a==0){
+            checkIfBuy();
+        }
         buyClothes();
         putInBasket();
+        if (a!=3 && a!=0){
+            checkClothes();
+        }
+        checkClothesOnBuy();
     }
 
     public void getCoins(){
@@ -180,6 +187,29 @@ public class ViewingClothesPopular extends Fragment {
                     public void GetMoneyFromBase(long money) {
                         schoolyCoins=money;
                         schoolyCoinCV.setText(String.valueOf(money));
+                    }
+                });
+            }
+        });
+    }
+
+    public void checkIfBuy(){
+        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+            @Override
+            public void PassUserNick(String nick) {
+                Query query2=firebaseModel.getUsersReference().child(nick).child("clothes")
+                        .child(clothesViewing.getClothesTitle());
+                query2.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if(snapshot.exists()){
+                            a=3;
+                        }else {}
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
                     }
                 });
             }
@@ -269,7 +299,7 @@ public class ViewingClothesPopular extends Fragment {
                         });
                     }else{
                         Toast.makeText(getContext(), "Не хватает коинов", Toast.LENGTH_SHORT).show();
-                        RecentMethods.setCurrentFragment(CoinsFragmentSecond.newInstance(ViewingClothesPopular.newInstance()), getActivity());
+                        RecentMethods.setCurrentFragment(CoinsFragmentSecond.newInstance(ViewingClothes.newInstance(fragment)), getActivity());
                     }
                 }
             }
@@ -343,42 +373,18 @@ public class ViewingClothesPopular extends Fragment {
         });
     }
 
-    public void checkIfBuy(){
+    public void checkClothesOnBuy(){
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @Override
             public void PassUserNick(String nick) {
-                Query query2=firebaseModel.getUsersReference().child(nick).child("clothes")
-                        .child(clothesViewing.getClothesTitle());
-                query2.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if(snapshot.exists()){
-                            a=3;
-
-                        }else {}
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-            }
-        });
-    }
-
-    public void checkClothesOnBuy() {
-        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-            @Override
-            public void PassUserNick(String nick) {
-                Query query = firebaseModel.getUsersReference().child(nick).child("clothes")
+                Query query=firebaseModel.getUsersReference().child(nick).child("clothes")
                         .child(String.valueOf(clothesViewing.getClothesTitle()));
                 query.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if (snapshot.exists()) {
+                        if(snapshot.exists()){
                             buyClothesBottom.setText("Куплено");
-                        } else {
+                        }else {
                             buyClothesBottom.setText("Купить");
                         }
                     }
