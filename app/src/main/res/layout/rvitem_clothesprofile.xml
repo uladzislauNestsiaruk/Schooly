@@ -9,7 +9,7 @@
     android:layout_marginStart="4dp"
     android:layout_marginEnd="4dp"
     android:layout_marginTop="4dp"
-    android:elevation="10dp">
+    android:elevation="8dp">
 
     <TextView
         android:id="@+id/clothesTitle"

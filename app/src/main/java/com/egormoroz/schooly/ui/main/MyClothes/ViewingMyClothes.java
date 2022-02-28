@@ -42,8 +42,8 @@ public class ViewingMyClothes extends Fragment {
 
 
     TextView  clothesTitleCV, description, noDescription,purchaseToday,purchaseAll,profitToday,profitAll
-            ,perSentToday,perSentAll;
-    ImageView clothesImageCV, backToShop, coinsImage,coinsImageAll;
+            ,perSentToday,perSentAll,clothesPrice;
+    ImageView clothesImageCV, backToShop, coinsImage,coinsImageAll,coinsImagePurple;
     long schoolyCoins, clothesPrise;
     RelativeLayout checkBasket;
     int a = 0;
@@ -74,6 +74,8 @@ public class ViewingMyClothes extends Fragment {
         description = view.findViewById(R.id.description);
         backToShop = view.findViewById(R.id.back_toshop);
         purchaseToday=view.findViewById(R.id.purchasesToday);
+        coinsImagePurple=view.findViewById(R.id.coinImagePrice);
+        clothesPrice=view.findViewById(R.id.clothesPricecv);
         purchaseAll=view.findViewById(R.id.purchasesAll);
         profitToday=view.findViewById(R.id.profit);
         profitAll=view.findViewById(R.id.profitAll);
@@ -94,11 +96,14 @@ public class ViewingMyClothes extends Fragment {
                 purchaseToday.setText(String.valueOf(clothesViewing.getPurchaseToday()));
                 purchaseAll.setText(String.valueOf(clothesViewing.getPurchaseNumber()));
                 if (clothesViewing.getCurrencyType().equals("dollar")){
+                    clothesPrice.setText("$"+String.valueOf(clothes.getClothesPrice()));
+                    coinsImagePurple.setVisibility(View.GONE);
                     coinsImage.setVisibility(View.GONE);
                     coinsImageAll.setVisibility(View.GONE);
                     profitToday.setText("+"+String.valueOf(clothesViewing.getClothesPrice()*clothesViewing.getPurchaseToday())+"$");
                     profitAll.setText("+"+String.valueOf(clothesViewing.getPurchaseNumber()*clothesViewing.getClothesPrice())+"$");
                 }else {
+                    clothesPrice.setText(String.valueOf(clothes.getClothesPrice()));
                    profitToday.setText("+"+String.valueOf(clothesViewing.getClothesPrice()*clothesViewing.getPurchaseToday()));
                     profitAll.setText("+"+String.valueOf(clothesViewing.getPurchaseNumber()*clothesViewing.getClothesPrice()));
                 }

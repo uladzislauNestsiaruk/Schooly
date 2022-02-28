@@ -254,6 +254,30 @@
                 android:textColor="@color/app_grey"
                 android:fontFamily="@font/montserrat_bold"
                 android:text="@string/panama"/>
+
+            <RadioButton
+                android:id="@+id/radio_button_11"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColor="@color/app_grey"
+                android:fontFamily="@font/montserrat_bold"
+                android:text="@string/skirt"/>
+
+            <RadioButton
+                android:id="@+id/radio_button_12"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColor="@color/app_grey"
+                android:fontFamily="@font/montserrat_bold"
+                android:text="@string/top"/>
+
+            <RadioButton
+                android:id="@+id/radio_button_13"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColor="@color/app_grey"
+                android:fontFamily="@font/montserrat_bold"
+                android:text="@string/bag"/>
         </RadioGroup>
 
         <TextView

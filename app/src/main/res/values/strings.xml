@@ -66,6 +66,9 @@
     <string name="glasses">Очки</string>
     <string name="cap">Кепка</string>
     <string name="panama">Панама</string>
+    <string name="skirt">Юбка</string>
+    <string name="top">Топ</string>
+    <string name="bag">Сумка через плечо</string>
     <string name="hats">Головные уборы</string>
     <string name="accessories">Аксессуары</string>
     <string name="inbasket">В корзину</string>

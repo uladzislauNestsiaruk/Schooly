@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,7 +43,8 @@ public class ComplainFragmentToBase extends Fragment {
 
     FirebaseModel firebaseModel=new FirebaseModel();
     RecyclerView recyclerView;
-    TextView reasonText,sendReason;
+    TextView reasonText;
+    RelativeLayout sendReason;
     ImageView back;
     String reasonTextString,otherUserNick,descriptionText;
     EditText addDescriptionEdit;
