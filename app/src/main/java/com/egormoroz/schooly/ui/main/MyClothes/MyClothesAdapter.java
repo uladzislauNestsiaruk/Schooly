@@ -28,7 +28,7 @@ public class MyClothesAdapter extends RecyclerView.Adapter<MyClothesAdapter.View
     FirebaseStorage storage = FirebaseStorage.getInstance();
     StorageReference storageReference=storage.getReference();
     MyClothesAdapter.ItemClickListener itemClickListener;
-    String clothesPriceString;
+    String clothesPriceString,profitTodayString,purchaseTodayString;
     double perCent;
 
     public MyClothesAdapter(ArrayList<Clothes> clothesArrayList, MyClothesAdapter.ItemClickListener itemClickListener) {
@@ -81,13 +81,83 @@ public class MyClothesAdapter extends RecyclerView.Adapter<MyClothesAdapter.View
         else if(clothes.getPurchaseNumber()>10000000 && clothes.getPurchaseNumber()<100000000){
             holder.purchaseNumber.setText(clothesPriceString.substring(0, 2)+"KK");
         }
+        profitTodayString=String.valueOf(clothes.getClothesPrice()*clothes.getPurchaseToday());
         if (clothes.getCurrencyType().equals("dollar")){
             holder.coinsImage.setVisibility(View.GONE);
             holder.profit.setText("+"+String.valueOf(clothes.getClothesPrice()*clothes.getPurchaseToday())+"$");
+            if(clothes.getClothesPrice()*clothes.getPurchaseToday()<1000){
+                holder.profit.setText("+"+profitTodayString+"$");
+            }else if(clothes.getClothesPrice()*clothes.getPurchaseToday()>1000
+                    && clothes.getClothesPrice()*clothes.getPurchaseToday()<10000){
+                holder.profit.setText("+"+profitTodayString.substring(0, 1)+"."+profitTodayString.substring(1, 2)+"K"+"$");
+            }
+            else if(clothes.getClothesPrice()*clothes.getPurchaseToday()>10000 &&
+                    clothes.getClothesPrice()*clothes.getPurchaseToday()<100000){
+                holder.profit.setText("+"+profitTodayString.substring(0, 2)+"."+profitTodayString.substring(2,3)+"K"+"$");
+            }
+            else if(clothes.getClothesPrice()*clothes.getPurchaseToday()>10000 &&
+                    clothes.getClothesPrice()*clothes.getPurchaseToday()<100000){
+                holder.profit.setText("+"+profitTodayString.substring(0, 2)+"."+profitTodayString.substring(2,3)+"K"+"$");
+            }else if(clothes.getClothesPrice()*clothes.getPurchaseToday()>100000 &&
+                    clothes.getClothesPrice()*clothes.getPurchaseToday()<1000000){
+                holder.profit.setText("+"+profitTodayString.substring(0, 3)+"K"+"$");
+            }
+            else if(clothes.getClothesPrice()*clothes.getPurchaseToday()>1000000 &&
+                    clothes.getClothesPrice()*clothes.getPurchaseToday()<10000000){
+                holder.profit.setText("+"+profitTodayString.substring(0, 1)+"KK"+"$");
+            }
+            else if(clothes.getClothesPrice()*clothes.getPurchaseToday()>10000000 &&
+                    clothes.getClothesPrice()*clothes.getPurchaseToday()<100000000){
+                holder.profit.setText("+"+profitTodayString.substring(0, 2)+"KK"+"$");
+            }
         }else {
             holder.profit.setText("+"+String.valueOf(clothes.getClothesPrice()*clothes.getPurchaseToday()));
+            if(clothes.getClothesPrice()*clothes.getPurchaseToday()<1000){
+                holder.profit.setText("+"+profitTodayString);
+            }else if(clothes.getClothesPrice()*clothes.getPurchaseToday()>1000
+                    && clothes.getClothesPrice()*clothes.getPurchaseToday()<10000){
+                holder.profit.setText("+"+profitTodayString.substring(0, 1)+"."+profitTodayString.substring(1, 2)+"K");
+            }
+            else if(clothes.getClothesPrice()*clothes.getPurchaseToday()>10000 &&
+                    clothes.getClothesPrice()*clothes.getPurchaseToday()<100000){
+                holder.profit.setText("+"+profitTodayString.substring(0, 2)+"."+profitTodayString.substring(2,3)+"K");
+            }
+            else if(clothes.getClothesPrice()*clothes.getPurchaseToday()>10000 &&
+                    clothes.getClothesPrice()*clothes.getPurchaseToday()<100000){
+                holder.profit.setText("+"+profitTodayString.substring(0, 2)+"."+profitTodayString.substring(2,3)+"K");
+            }else if(clothes.getClothesPrice()*clothes.getPurchaseToday()>100000 &&
+                    clothes.getClothesPrice()*clothes.getPurchaseToday()<1000000){
+                holder.profit.setText("+"+profitTodayString.substring(0, 3)+"K");
+            }
+            else if(clothes.getClothesPrice()*clothes.getPurchaseToday()>1000000 &&
+                    clothes.getClothesPrice()*clothes.getPurchaseToday()<10000000){
+                holder.profit.setText("+"+profitTodayString.substring(0, 1)+"KK");
+            }
+            else if(clothes.getClothesPrice()*clothes.getPurchaseToday()>10000000 &&
+                    clothes.getClothesPrice()*clothes.getPurchaseToday()<100000000){
+                holder.profit.setText("+"+profitTodayString.substring(0, 2)+"KK");
+            }
         }
-        holder.purchasesToday.setText(String.valueOf(clothes.getPurchaseToday()));
+        purchaseTodayString=String.valueOf(clothes.getPurchaseToday());
+        if(clothes.getPurchaseToday()<1000){
+            holder.purchasesToday.setText(String.valueOf(clothes.getPurchaseToday()));
+        }else if(clothes.getPurchaseToday()>1000 && clothes.getPurchaseToday()<10000){
+            holder.purchasesToday.setText(purchaseTodayString.substring(0, 1)+"."+clothesPriceString.substring(1, 2)+"K");
+        }
+        else if(clothes.getPurchaseToday()>10000 && clothes.getPurchaseToday()<100000){
+            holder.purchasesToday.setText(purchaseTodayString.substring(0, 2)+"."+clothesPriceString.substring(2,3)+"K");
+        }
+        else if(clothes.getPurchaseToday()>10000 && clothes.getPurchaseToday()<100000){
+            holder.purchasesToday.setText(purchaseTodayString.substring(0, 2)+"."+clothesPriceString.substring(2,3)+"K");
+        }else if(clothes.getPurchaseToday()>100000 && clothes.getPurchaseToday()<1000000){
+            holder.purchasesToday.setText(purchaseTodayString.substring(0, 3)+"K");
+        }
+        else if(clothes.getPurchaseToday()>1000000 && clothes.getPurchaseToday()<10000000){
+            holder.purchasesToday.setText(purchaseTodayString.substring(0, 1)+"KK");
+        }
+        else if(clothes.getPurchaseToday()>10000000 && clothes.getPurchaseToday()<100000000){
+            holder.purchasesToday.setText(purchaseTodayString.substring(0, 2)+"KK");
+        }
         if (clothes.getPurchaseNumber()==0){
             perCent=0;
         }else {

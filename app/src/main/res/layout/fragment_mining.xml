@@ -29,7 +29,7 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_marginStart="20dp"
-          android:layout_marginTop="11dp"
+          android:layout_marginTop="10dp"
           android:layout_toRightOf="@+id/backtomainfrommining"
           android:fontFamily="@font/montserrat_bold"
           android:text="@string/mining"
@@ -58,7 +58,7 @@
         android:layout_marginStart="24dp"
         android:layout_marginTop="26dp"
         android:layout_marginEnd="24dp"
-        android:background="@drawable/corners30appcolor">
+        android:background="@drawable/corners20appcolor">
 
       <TextView
           android:id="@+id/today"
@@ -84,7 +84,7 @@
           android:textSize="40sp" />
 
       <TextView
-          android:id="@+id/morecoins"
+          android:id="@+id/getMore"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_alignParentEnd="true"

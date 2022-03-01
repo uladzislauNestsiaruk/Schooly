@@ -67,7 +67,7 @@ import java.util.Random;
 
 public class MainFragment extends Fragment{
 
-    TextView todayMiningMain,circleNontifications,circleChat,myClothes,createClothes,mining;
+    TextView todayMiningMain,circleNontifications,circleChat,myClothes,createClothes,mining,getMore;
     private FirebaseModel firebaseModel = new FirebaseModel();
     ArrayList<Clothes> clothesArrayList=new ArrayList<Clothes>();
     ArrayList<Nontification > noViewedNonts=new ArrayList<>();
@@ -108,6 +108,13 @@ public class MainFragment extends Fragment{
         relativeFirstLayout=view.findViewById(R.id.relativeFirstClothes);
         createClothes=view.findViewById(R.id.createClothes);
         coinsLinear=view.findViewById(R.id.linearCoins);
+        getMore=view.findViewById(R.id.getMore);
+        getMore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RecentMethods.setCurrentFragment(MoreMoneyFragment.newInstance(MainFragment.newInstance()), getActivity());
+            }
+        });
         coinsLinear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -202,41 +209,41 @@ public class MainFragment extends Fragment{
         });
         circularProgressIndicator=view.findViewById(R.id.miningIndicator);
 
-        TextView getMore=view.findViewById(R.id.getMore);
-        getMore.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                Uri stickerAssetUri =  Uri.parse("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/miners%2Ffimw.png?alt=media&token=9798e9ea-15a0-4ef2-869b-63ce4dc95b78");
-//                String sourceApplication = "com.egormoroz.schooly";
+//        TextView getMore=view.findViewById(R.id.getMore);
+//        getMore.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+////                Uri stickerAssetUri =  Uri.parse("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/miners%2Ffimw.png?alt=media&token=9798e9ea-15a0-4ef2-869b-63ce4dc95b78");
+////                String sourceApplication = "com.egormoroz.schooly";
+////
+////                Intent intent = new Intent("com.instagram.share.ADD_TO_STORY");
+////                intent.putExtra("source_application", sourceApplication);
+////
+////                intent.setType("image/*");
+////                intent.putExtra("interactive_asset_uri", stickerAssetUri);
+////                intent.putExtra("top_background_color", "#33FF33");
+////                intent.putExtra("bottom_background_color", "#FF00FF");
+////
+////// Instantiate activity and verify it will resolve implicit intent
+////                Activity activity = getActivity();
+////                activity.grantUriPermission(
+////                        "com.instagram.android", stickerAssetUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
+////                if (activity.getPackageManager().resolveActivity(intent, 0) != null) {
+////                    activity.startActivityForResult(intent, 0);
+//                //               }
 //
-//                Intent intent = new Intent("com.instagram.share.ADD_TO_STORY");
-//                intent.putExtra("source_application", sourceApplication);
-//
-//                intent.setType("image/*");
-//                intent.putExtra("interactive_asset_uri", stickerAssetUri);
-//                intent.putExtra("top_background_color", "#33FF33");
-//                intent.putExtra("bottom_background_color", "#FF00FF");
-//
-//// Instantiate activity and verify it will resolve implicit intent
-//                Activity activity = getActivity();
-//                activity.grantUriPermission(
-//                        "com.instagram.android", stickerAssetUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
-//                if (activity.getPackageManager().resolveActivity(intent, 0) != null) {
-//                    activity.startActivityForResult(intent, 0);
-                //               }
-
-// Instantiate implicit intent with ADD_TO_STORY action,
-// sticker asset, and background colors
-//                Intent intent = new Intent(Intent.ACTION_SEND);
-//                intent.putExtra("source_application", sourceApplication);
-//
-//                intent.setType("image/jpg");
-//                intent.putExtra("interactive_asset_uri", stickerAssetUri);
-//
-//// Instantiate activity and verify it will resolve implicit intent
-//                startActivity(intent);
-            }
-        });
+//// Instantiate implicit intent with ADD_TO_STORY action,
+//// sticker asset, and background colors
+////                Intent intent = new Intent(Intent.ACTION_SEND);
+////                intent.putExtra("source_application", sourceApplication);
+////
+////                intent.setType("image/jpg");
+////                intent.putExtra("interactive_asset_uri", stickerAssetUri);
+////
+////// Instantiate activity and verify it will resolve implicit intent
+////                startActivity(intent);
+//            }
+//        });
         ImageView nontifications=view.findViewById(R.id.nontification);
         nontifications.setOnClickListener(new View.OnClickListener() {
             @Override

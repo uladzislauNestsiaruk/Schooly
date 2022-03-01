@@ -117,7 +117,9 @@ public class ProfileFragment extends Fragment {
     RecyclerView looksRecycler,wardrobeRecycler,looksRecyclerOther;
     ImageView moreSquare,back,newLook;
     int profileValue;
-    String sendNick;
+    String sendNick,looksCountString,subscriptionsCountString,subscribersCountString
+            ,otherLooksCountString,otherSubscriptionCountString,
+            otherSubscribersCountString;
     Fragment fragment;
     ViewPager2 viewPager,viewPagerOther;
     FragmentAdapter fragmentAdapter;
@@ -912,13 +914,63 @@ public class ProfileFragment extends Fragment {
                 RecentMethods.getSubscriptionList(nick, firebaseModel, new Callbacks.getFriendsList() {
                     @Override
                     public void getFriendsList(ArrayList<Subscriber> friends) {
-                        subscriptionsCount.setText(String.valueOf(friends.size()));
+                        subscriptionsCountString=String.valueOf(friends.size());
+                        if(Long.valueOf(subscriptionsCountString)<1000){
+                            subscriptionsCount.setText(subscriptionsCountString);
+                        }else if(Long.valueOf(subscriptionsCountString)>1000
+                                && Long.valueOf(subscriptionsCountString)<10000){
+                            subscriptionsCount.setText(subscriptionsCountString.substring(0, 1)+"."+subscriptionsCountString.substring(1, 2)+"K");
+                        }
+                        else if(Long.valueOf(subscriptionsCountString)>10000 &&
+                                Long.valueOf(subscriptionsCountString)<100000){
+                            subscriptionsCount.setText(subscriptionsCountString.substring(0, 2)+"."+subscriptionsCountString.substring(2,3)+"K");
+                        }
+                        else if(Long.valueOf(subscriptionsCountString)>10000 &&
+                                Long.valueOf(subscriptionsCountString)<100000){
+                            subscriptionsCount.setText(subscriptionsCountString.substring(0, 2)+"."+subscriptionsCountString.substring(2,3)+"K");
+                        }else if(Long.valueOf(subscriptionsCountString)>100000 &&
+                                Long.valueOf(subscriptionsCountString)<1000000){
+                            subscriptionsCount.setText(subscriptionsCountString.substring(0, 3)+"K");
+                        }
+                        else if(Long.valueOf(subscriptionsCountString)>1000000 &&
+                                Long.valueOf(subscriptionsCountString)<10000000){
+                            subscriptionsCount.setText(subscriptionsCountString.substring(0, 1)+"KK");
+                        }
+                        else if(Long.valueOf(subscriptionsCountString)>10000000 &&
+                                Long.valueOf(subscriptionsCountString)<100000000){
+                            subscriptionsCount.setText(subscriptionsCountString.substring(0, 2)+"KK");
+                        }
                     }
                 });
                 RecentMethods.getSubscribersList(nick, firebaseModel, new Callbacks.getSubscribersList() {
                     @Override
                     public void getSubscribersList(ArrayList<Subscriber> subscribers) {
-                        subscribersCount.setText(String.valueOf(subscribers.size()));
+                        subscribersCountString=String.valueOf(subscribers.size());
+                        if(Long.valueOf(subscribersCountString)<1000){
+                            subscribersCount.setText(subscriptionsCountString);
+                        }else if(Long.valueOf(subscribersCountString)>1000
+                                && Long.valueOf(subscribersCountString)<10000){
+                            subscribersCount.setText(subscribersCountString.substring(0, 1)+"."+subscribersCountString.substring(1, 2)+"K");
+                        }
+                        else if(Long.valueOf(subscribersCountString)>10000 &&
+                                Long.valueOf(subscribersCountString)<100000){
+                            subscribersCount.setText(subscribersCountString.substring(0, 2)+"."+subscribersCountString.substring(2,3)+"K");
+                        }
+                        else if(Long.valueOf(subscribersCountString)>10000 &&
+                                Long.valueOf(subscribersCountString)<100000){
+                            subscribersCount.setText(subscribersCountString.substring(0, 2)+"."+subscribersCountString.substring(2,3)+"K");
+                        }else if(Long.valueOf(subscribersCountString)>100000 &&
+                                Long.valueOf(subscribersCountString)<1000000){
+                            subscribersCount.setText(subscribersCountString.substring(0, 3)+"K");
+                        }
+                        else if(Long.valueOf(subscribersCountString)>1000000 &&
+                                Long.valueOf(subscribersCountString)<10000000){
+                            subscribersCount.setText(subscribersCountString.substring(0, 1)+"KK");
+                        }
+                        else if(Long.valueOf(subscribersCountString)>10000000 &&
+                                Long.valueOf(subscribersCountString)<100000000){
+                            subscribersCount.setText(subscribersCountString.substring(0, 2)+"KK");
+                        }
                     }
                 });
                 Query query2=firebaseModel.getUsersReference().child(nick).
@@ -1015,13 +1067,63 @@ public class ProfileFragment extends Fragment {
         RecentMethods.getSubscriptionList(info.getNick(), firebaseModel, new Callbacks.getFriendsList() {
             @Override
             public void getFriendsList(ArrayList<Subscriber> friends) {
-                otherSubscriptionCount.setText(String.valueOf(friends.size()));
+                otherSubscriptionCountString=String.valueOf(friends.size());
+                if(Long.valueOf(otherSubscriptionCountString)<1000){
+                    otherSubscriptionCount.setText(otherSubscriptionCountString);
+                }else if(Long.valueOf(otherSubscriptionCountString)>1000
+                        && Long.valueOf(otherSubscriptionCountString)<10000){
+                    otherSubscriptionCount.setText(otherSubscriptionCountString.substring(0, 1)+"."+otherSubscriptionCountString.substring(1, 2)+"K");
+                }
+                else if(Long.valueOf(otherSubscriptionCountString)>10000 &&
+                        Long.valueOf(otherSubscriptionCountString)<100000){
+                    otherSubscriptionCount.setText(otherSubscriptionCountString.substring(0, 2)+"."+otherSubscriptionCountString.substring(2,3)+"K");
+                }
+                else if(Long.valueOf(otherSubscriptionCountString)>10000 &&
+                        Long.valueOf(otherSubscriptionCountString)<100000){
+                    otherSubscriptionCount.setText(otherSubscriptionCountString.substring(0, 2)+"."+otherSubscriptionCountString.substring(2,3)+"K");
+                }else if(Long.valueOf(otherSubscriptionCountString)>100000 &&
+                        Long.valueOf(otherSubscriptionCountString)<1000000){
+                    otherSubscriptionCount.setText(otherSubscriptionCountString.substring(0, 3)+"K");
+                }
+                else if(Long.valueOf(otherSubscriptionCountString)>1000000 &&
+                        Long.valueOf(otherSubscriptionCountString)<10000000){
+                    otherSubscriptionCount.setText(otherSubscriptionCountString.substring(0, 1)+"KK");
+                }
+                else if(Long.valueOf(otherSubscriptionCountString)>10000000 &&
+                        Long.valueOf(otherSubscriptionCountString)<100000000){
+                    otherSubscriptionCount.setText(otherSubscriptionCountString.substring(0, 2)+"KK");
+                }
             }
         });
         RecentMethods.getSubscribersList(info.getNick(), firebaseModel, new Callbacks.getSubscribersList() {
             @Override
             public void getSubscribersList(ArrayList<Subscriber> subscribers) {
-                otherSubscribersCount.setText(String.valueOf(subscribers.size()));
+                otherSubscribersCountString=String.valueOf(subscribers.size());
+                if(Long.valueOf(otherSubscribersCountString)<1000){
+                    otherSubscribersCount.setText(otherSubscribersCountString);
+                }else if(Long.valueOf(otherSubscribersCountString)>1000
+                        && Long.valueOf(otherSubscribersCountString)<10000){
+                    otherSubscribersCount.setText(otherSubscribersCountString.substring(0, 1)+"."+otherSubscribersCountString.substring(1, 2)+"K");
+                }
+                else if(Long.valueOf(otherSubscribersCountString)>10000 &&
+                        Long.valueOf(otherSubscribersCountString)<100000){
+                    otherSubscribersCount.setText(otherSubscribersCountString.substring(0, 2)+"."+otherSubscribersCountString.substring(2,3)+"K");
+                }
+                else if(Long.valueOf(otherSubscribersCountString)>10000 &&
+                        Long.valueOf(otherSubscribersCountString)<100000){
+                    otherSubscribersCount.setText(otherSubscribersCountString.substring(0, 2)+"."+otherSubscribersCountString.substring(2,3)+"K");
+                }else if(Long.valueOf(otherSubscribersCountString)>100000 &&
+                        Long.valueOf(otherSubscribersCountString)<1000000){
+                    otherSubscribersCount.setText(otherSubscribersCountString.substring(0, 3)+"K");
+                }
+                else if(Long.valueOf(otherSubscribersCountString)>1000000 &&
+                        Long.valueOf(otherSubscribersCountString)<10000000){
+                    otherSubscribersCount.setText(otherSubscribersCountString.substring(0, 1)+"KK");
+                }
+                else if(Long.valueOf(otherSubscribersCountString)>10000000 &&
+                        Long.valueOf(otherSubscribersCountString)<100000000){
+                    otherSubscribersCount.setText(otherSubscribersCountString.substring(0, 2)+"KK");
+                }
             }
         });
         Query query2=firebaseModel.getUsersReference().child(info.getNick()).

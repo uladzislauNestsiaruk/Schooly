@@ -48,7 +48,6 @@ public class ClothesAdapter extends RecyclerView.Adapter<ClothesAdapter.ViewHold
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Clothes clothes=listAdapter.get(position);
-        Log.d("#####", "ddq  ");
         holder.clothesTitle.setText(clothes.getClothesTitle());
         holder.clothesPrise.setText(String.valueOf(clothes.getClothesPrice()));
         clothesPriceString=String.valueOf(clothes.getPurchaseNumber());

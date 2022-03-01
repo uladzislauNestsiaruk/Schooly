@@ -92,6 +92,9 @@ public class ClothesFragmentProfile extends Fragment {
                             clothes.setCreator(snap.child("creator").getValue(String.class));
                             clothes.setCurrencyType(snap.child("currencyType").getValue(String.class));
                             clothes.setDescription(snap.child("description").getValue(String.class));
+                            clothes.setPurchaseToday(snap.child("purchaseToday").getValue(Long.class));
+                            clothes.setBodyType(snap.child("bodyType").getValue(String.class));
+                            clothes.setModel(snap.child("model").getValue(String.class));
                             clothesFromBase.add(clothes);
                         }
                         if (clothesFromBase.size()==0){

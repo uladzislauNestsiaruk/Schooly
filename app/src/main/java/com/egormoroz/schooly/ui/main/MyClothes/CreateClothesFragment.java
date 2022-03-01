@@ -1,5 +1,6 @@
 package com.egormoroz.schooly.ui.main.MyClothes;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,6 +35,7 @@ public class CreateClothesFragment extends Fragment {
     TextView modelWay;
     RelativeLayout publish;
     RadioGroup radioGroup,radioGroupCurrency;
+    private String checker = "";
     RadioButton radioButton1,radioButton2,radioButton3,radioButton4
             ,radioButton5,radioButton6,radioButton7,radioButton8
             ,radioButton9,radioButton10,radioButton11
@@ -83,6 +85,16 @@ public class CreateClothesFragment extends Fragment {
         radioButton13=view.findViewById(R.id.radio_button_13);
         radioButtonCoin=view.findViewById(R.id.schoolyCoinRadio);
         radioButtonDollar=view.findViewById(R.id.dollarRadio);
+        addModelImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                checker = "image";
+                Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                intent.setType("image/*");
+                startActivityForResult(intent, 443);
+            }
+        });
         ImageView backtoMyClothes=view.findViewById(R.id.back_tomyclothes);
         backtoMyClothes.setOnClickListener(new View.OnClickListener() {
             @Override

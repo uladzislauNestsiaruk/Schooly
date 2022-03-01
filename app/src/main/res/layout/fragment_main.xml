@@ -278,7 +278,7 @@
             android:layout_marginTop="16dp"
             android:layout_marginEnd="24dp"
             android:layout_marginBottom="130dp"
-            android:background="@drawable/corners30appcolor">
+            android:background="@drawable/corners20appcolor">
 
             <TextView
                 android:id="@+id/today"

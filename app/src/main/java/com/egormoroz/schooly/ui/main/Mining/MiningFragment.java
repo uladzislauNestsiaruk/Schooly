@@ -27,6 +27,7 @@ import com.egormoroz.schooly.SchoolyService;
 import com.egormoroz.schooly.ui.coins.CoinsFragmentSecond;
 import com.egormoroz.schooly.ui.coins.CoinsMainFragment;
 import com.egormoroz.schooly.ui.main.MainFragment;
+import com.egormoroz.schooly.ui.main.MoreMoneyFragment;
 import com.egormoroz.schooly.ui.main.Shop.NewClothesAdapter;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -52,7 +53,8 @@ public class MiningFragment extends Fragment {
     Map<String,String> timeStamp;
     String todayMiningFormatted;
     LinearLayout coinsLinear;
-    TextView minerprice, schoolycoinminer, myminers, upgrade, todayminingText, morecoins,buy,numderOfActiveMiners,emptyActiveMiners,addActiveMiners;
+    TextView minerprice, schoolycoinminer, myminers, upgrade, todayminingText
+            , getMore,buy,numderOfActiveMiners,emptyActiveMiners,addActiveMiners;
     RecyclerView activeminersrecyclerview,weakminersrecyclerview,averageminersrecyclerview,strongminersrecyclerview;
     private static final String TAG = "###########";
     WeakMinersAdapter.ItemClickListener itemClickListener;
@@ -106,13 +108,19 @@ public class MiningFragment extends Fragment {
                 RecentMethods.setCurrentFragment(MainFragment.newInstance(), getActivity());
             }
         });
+        getMore=view.findViewById(R.id.getMore);
+        getMore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RecentMethods.setCurrentFragment(MoreMoneyFragment.newInstance(MiningFragment.newInstanse()), getActivity());
+            }
+        });
         activeminersrecyclerview = view.findViewById(R.id.activeminersrecyclerview);
         schoolycoinminer = view.findViewById(R.id.schoolycoin);
         todayminingText = view.findViewById(R.id.todaymining);
         numderOfActiveMiners=view.findViewById(R.id.numbersactiveminers);
         buy=view.findViewById(R.id.buy);
         addActiveMiners=view.findViewById(R.id.addActiveMiner);
-        morecoins = view.findViewById(R.id.morecoins);
         emptyActiveMiners=view.findViewById(R.id.emptyMiners);
 
 
