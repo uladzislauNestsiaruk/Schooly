@@ -21,6 +21,7 @@ import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.ui.main.GenderFragment;
 import com.egormoroz.schooly.ui.main.MainFragment;
+import com.egormoroz.schooly.ui.main.MyClothes.CreateClothesFragment;
 import com.egormoroz.schooly.ui.main.MyClothes.MyClothesAdapter;
 import com.egormoroz.schooly.ui.main.MyClothes.MyClothesFragment;
 import com.egormoroz.schooly.ui.main.MyClothes.ViewingMyClothes;
@@ -101,6 +102,17 @@ public class ClothesFragmentProfile extends Fragment {
                             createNewLookText.setVisibility(View.VISIBLE);
                             createNewLookText.setText("Создай свою одежду!");
                             createNewLook.setVisibility(View.VISIBLE);
+                            RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+                                @Override
+                                public void PassUserNick(String nick) {
+                                    createNewLook.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            RecentMethods.setCurrentFragment(CreateClothesFragment.newInstance(ProfileFragment.newInstance("user", nick, ClothesFragmentProfile.newInstance())), getActivity());
+                                        }
+                                    });
+                                }
+                            });
                             looksRecycler.setVisibility(View.GONE);
                         }else {
                             looksRecycler.setVisibility(View.VISIBLE);

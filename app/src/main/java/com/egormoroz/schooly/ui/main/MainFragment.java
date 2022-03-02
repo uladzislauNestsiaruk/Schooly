@@ -44,6 +44,7 @@ import com.egormoroz.schooly.ui.coins.CoinsMainFragment;
 import com.egormoroz.schooly.ui.main.CreateCharacter.CreateCharacterFragment;
 import com.egormoroz.schooly.ui.main.Mining.Miner;
 import com.egormoroz.schooly.ui.main.Mining.MiningFragment;
+import com.egormoroz.schooly.ui.main.MyClothes.CreateClothesFragment;
 import com.egormoroz.schooly.ui.main.MyClothes.MyClothesAdapter;
 import com.egormoroz.schooly.ui.main.MyClothes.MyClothesAdapterMain;
 import com.egormoroz.schooly.ui.main.MyClothes.MyClothesFragment;
@@ -67,15 +68,16 @@ import java.util.Random;
 
 public class MainFragment extends Fragment{
 
-    TextView todayMiningMain,circleNontifications,circleChat,myClothes,createClothes,mining,getMore;
+    TextView todayMiningMain,circleNontifications,circleChat,myClothes,mining,getMore;
     private FirebaseModel firebaseModel = new FirebaseModel();
     ArrayList<Clothes> clothesArrayList=new ArrayList<Clothes>();
     ArrayList<Nontification > noViewedNonts=new ArrayList<>();
     ArrayList<Clothes> popularClothesArrayList=new ArrayList<Clothes>();
     private UserInformation userData = new UserInformation();
     RecyclerView clothesRecyclerMain,myClothesRecycler;
-    RelativeLayout relativeFirstLayout;
+    RelativeLayout relativeFirstLayout,createClothes;
     String todayMiningFormatted;
+    int myClothesListSize;
     NewClothesAdapter.ItemClickListener itemClickListener;
     private static final int NOTIFY_ID = 101;
     RelativeLayout relativeShop,relativeMining,relativeMyClothes;
@@ -125,10 +127,23 @@ public class MainFragment extends Fragment{
         relativeMyClothes=view.findViewById(R.id.relativeClothes);
         relativeMining=view.findViewById(R.id.relativeMining);
         relativeShop=view.findViewById(R.id.relativeshop);
+        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+            @Override
+            public void PassUserNick(String nick) {
+                RecentMethods.getMyClothes(nick, firebaseModel, new Callbacks.GetClothes() {
+                    @Override
+                    public void getClothes(ArrayList<Clothes> allClothes) {
+                        myClothesListSize=allClothes.size();
+                    }
+                });
+            }
+        });
         relativeMyClothes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(MyClothesFragment.newInstance(), getActivity());
+                if(myClothesListSize>-1) {
+                    RecentMethods.setCurrentFragment(MyClothesFragment.newInstance(myClothesListSize), getActivity());
+                }
             }
         });
         itemClickListenerMyClothes=new MyClothesAdapterMain.ItemClickListener() {
@@ -376,31 +391,13 @@ public class MainFragment extends Fragment{
                         if(allClothes.size()==0){
                             relativeFirstLayout.setVisibility(View.VISIBLE);
                             myClothesRecycler.setVisibility(View.GONE);
-                            RelativeLayout.LayoutParams layoutParams= new RelativeLayout.LayoutParams
-                                    (RelativeLayout.LayoutParams.WRAP_CONTENT , RelativeLayout.LayoutParams.WRAP_CONTENT);
-                            int padding24inDp = (int) TypedValue.applyDimension(
-                                    TypedValue.COMPLEX_UNIT_DIP, 24, getResources().getDisplayMetrics());
-                            int padding174inDp = (int) TypedValue.applyDimension(
-                                    TypedValue.COMPLEX_UNIT_DIP, 174, getResources().getDisplayMetrics());
-                            layoutParams.setMargins(padding24inDp, padding174inDp, 0, 0);
-                            layoutParams.addRule(RelativeLayout.BELOW, R.id.relativeClothes);
-                            relativeMining.setLayoutParams(layoutParams);
                             createClothes.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    RecentMethods.setCurrentFragment(MyClothesFragment.newInstance(), getActivity());
+                                    RecentMethods.setCurrentFragment(CreateClothesFragment.newInstance(MainFragment.newInstance()), getActivity());
                                 }
                             });
                         }else {
-                            RelativeLayout.LayoutParams layoutParams1= new RelativeLayout.LayoutParams
-                                    (RelativeLayout.LayoutParams.WRAP_CONTENT , RelativeLayout.LayoutParams.WRAP_CONTENT);
-                            int padding24inDp = (int) TypedValue.applyDimension(
-                                    TypedValue.COMPLEX_UNIT_DIP, 24, getResources().getDisplayMetrics());
-                            int padding300inDp = (int) TypedValue.applyDimension(
-                                    TypedValue.COMPLEX_UNIT_DIP, 300, getResources().getDisplayMetrics());
-                            layoutParams1.setMargins(padding24inDp, padding300inDp, 0, 0);
-                            layoutParams1.addRule(RelativeLayout.BELOW,R.id.relativeClothes );
-                            relativeMining.setLayoutParams(layoutParams1);
                             MyClothesAdapterMain myClothesAdapterMain=new MyClothesAdapterMain(allClothes,itemClickListenerMyClothes);
                             myClothesRecycler.setAdapter(myClothesAdapterMain);
                         }

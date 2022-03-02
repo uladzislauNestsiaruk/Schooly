@@ -44,7 +44,7 @@ public class NontificationAdapter extends RecyclerView.Adapter<NontificationAdap
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
         RelativeLayout v = (RelativeLayout) LayoutInflater.from(viewGroup.getContext()).
                 inflate(R.layout.rvitem_nontification, viewGroup, false);
-       ViewHolder viewHolder=new ViewHolder(v);
+        ViewHolder viewHolder=new ViewHolder(v);
         firebaseModel.initAll();
         return viewHolder;
     }
@@ -79,6 +79,7 @@ public class NontificationAdapter extends RecyclerView.Adapter<NontificationAdap
                 if(nontification.getTypeView().equals("запрос")) {
                     holder.otherUserNick.setText(nontification.getNick()+" хочет подписаться на тебя");
                     holder.addFriend.setVisibility(View.VISIBLE);
+                    holder.addFriend.setText("Добавить");
                     holder.addFriend.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -131,6 +132,16 @@ public class NontificationAdapter extends RecyclerView.Adapter<NontificationAdap
                     holder.otherUserNick.setText(nontification.getNick()+" купил у тебя "+nontification.getClothesName());
                 }else if (nontification.getTypeView().equals("перевод")){
                     holder.otherUserNick.setText(nontification.getNick()+" перевел тебе "+nontification.getUid()+"коина");
+                }else if (nontification.getTypeView().equals("запросодежда")){
+                    holder.otherUserNick.setText("Пришел ответ на публикацию "+nontification.getClothesName());
+                    holder.addFriend.setVisibility(View.VISIBLE);
+                    holder.addFriend.setText("Перейти");
+                    holder.addFriend.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                        }
+                    });
                 }
             }
         });

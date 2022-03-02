@@ -322,7 +322,24 @@
     <string name="plusCoins">Поступление</string>
     <string name="notransfer">Нет совершенных переводов</string>
 
+    <string name="gotocreate">Перейти к созданию</string>
+
     <string name="coins">Коины</string>
+
+    <string name="uniqueClothes">Создавай уникальные и неповторимые модели</string>
+    <string name="eightyPerCent">Получай до 80% от стоимости одежды с продажи</string>
+    <string name="giveClothes">Дари одежду друзьям</string>
+    <string name="earn">Зарабатывай реальные деньги и Schooly-коины</string>
+
+    <string name="ten">+10%</string>
+    <string name="twenty">+20%</string>
+    <string name="fifty">+50%</string>
+    <string name="toSum">к сумме, намайненной</string>
+    <string name="forDay">за день</string>
+
+    <string name="buyfor1">Купить за 1.99$</string>
+    <string name="buyfor2">Купить за 2.99$</string>
+    <string name="buyfor5">Купить за 4.99$</string>
 
 
 </resources>

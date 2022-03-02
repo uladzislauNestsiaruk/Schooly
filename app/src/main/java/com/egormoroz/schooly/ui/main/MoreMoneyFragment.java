@@ -42,6 +42,7 @@ public class MoreMoneyFragment extends Fragment {
 
     ImageView back;
     private FirebaseModel firebaseModel = new FirebaseModel();
+    RelativeLayout buyOne,buyTwo,buyThree;
 
 
     @Override
@@ -59,6 +60,9 @@ public class MoreMoneyFragment extends Fragment {
     public void onViewCreated(@Nullable View view,@NonNull Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
 
+        buyOne=view.findViewById(R.id.buy);
+        buyTwo=view.findViewById(R.id.buy2);
+        buyThree=view.findViewById(R.id.buy3);
         back=view.findViewById(R.id.back);
         back.setOnClickListener(new View.OnClickListener() {
             @Override

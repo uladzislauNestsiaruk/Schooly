@@ -1,6 +1,7 @@
 package com.egormoroz.schooly.ui.main.MyClothes;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,12 +32,19 @@ public class MyClothesFragment extends Fragment {
 
     FirebaseModel firebaseModel=new FirebaseModel();
     RecyclerView recyclerMyClothes;
-    RelativeLayout createAndGet,getMoney,createClothesBig;
+    RelativeLayout createAndGet,getMoney,createClothesBig,relativeFirstClothes;
     TextView createClothes;
     MyClothesAdapter.ItemClickListener itemClickListener;
 
-    public static MyClothesFragment newInstance() {
-        return new MyClothesFragment();
+    int clothesListSize;
+
+    public MyClothesFragment(int clothesListSize) {
+        this.clothesListSize = clothesListSize;
+    }
+
+    public static MyClothesFragment newInstance(int clothesListSize) {
+        return new MyClothesFragment(clothesListSize);
+
     }
 
     @Override
@@ -56,15 +64,13 @@ public class MyClothesFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         recyclerMyClothes=view.findViewById(R.id.recyclerMyClothes);
-        getMyClothes();
         createClothesBig=view.findViewById(R.id.createBigButtonRecycler);
-        createAndGet=view.findViewById(R.id.createAndGet);
-        getMoney=view.findViewById(R.id.getMoney);
         createClothes=view.findViewById(R.id.createClothesButton);
+        relativeFirstClothes=view.findViewById(R.id.relativeFirstClothes);
         itemClickListener=new MyClothesAdapter.ItemClickListener() {
             @Override
             public void onItemClick(Clothes clothes) {
-                RecentMethods.setCurrentFragment(ViewingMyClothes.newInstance(MyClothesFragment.newInstance()), getActivity());
+                RecentMethods.setCurrentFragment(ViewingMyClothes.newInstance(MyClothesFragment.newInstance(clothesListSize)), getActivity());
             }
         };
         ImageView backtomain=view.findViewById(R.id.back_tomain);
@@ -79,45 +85,45 @@ public class MyClothesFragment extends Fragment {
                 });
             }
         });
+        getMyClothes();
     }
 
     public void getMyClothes(){
-        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-            @Override
-            public void PassUserNick(String nick) {
-                RecentMethods.getMyClothes(nick, firebaseModel, new Callbacks.GetClothes() {
-                    @Override
-                    public void getClothes(ArrayList<Clothes> allClothes) {
-                        if(allClothes.size()==0){
-                            recyclerMyClothes.setVisibility(View.GONE);
-                            createAndGet.setVisibility(View.VISIBLE);
-                            getMoney.setVisibility(View.VISIBLE);
-                            createClothesBig.setVisibility(View.VISIBLE);
-                            createClothes.setVisibility(View.GONE);
-                            createClothesBig.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    RecentMethods.setCurrentFragment(CreateClothesFragment.newInstance(), getActivity());
-                                }
-                            });
-                        }else {
-                            recyclerMyClothes.setVisibility(View.VISIBLE);
-                            createAndGet.setVisibility(View.GONE);
-                            getMoney.setVisibility(View.GONE);
-                            createClothesBig.setVisibility(View.GONE);
-                            createClothes.setVisibility(View.VISIBLE);
+        Log.d("####", "cl  "+clothesListSize);
+        if(clothesListSize==0){
+            recyclerMyClothes.setVisibility(View.GONE);
+            createClothesBig.setVisibility(View.VISIBLE);
+            relativeFirstClothes.setVisibility(View.VISIBLE);
+            createClothes.setVisibility(View.GONE);
+            createClothesBig.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    RecentMethods.setCurrentFragment(CreateClothesFragment.newInstance(MyClothesFragment.newInstance(clothesListSize)), getActivity());
+                }
+            });
+        }else {
+            recyclerMyClothes.setVisibility(View.VISIBLE);
+            createClothesBig.setVisibility(View.GONE);
+            relativeFirstClothes.setVisibility(View.GONE);
+            createClothes.setVisibility(View.VISIBLE);
+            RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+                @Override
+                public void PassUserNick(String nick) {
+                    RecentMethods.getMyClothes(nick, firebaseModel, new Callbacks.GetClothes() {
+                        @Override
+                        public void getClothes(ArrayList<Clothes> allClothes) {
                             MyClothesAdapter myClothesAdapter=new MyClothesAdapter(allClothes,itemClickListener);
                             recyclerMyClothes.setAdapter(myClothesAdapter);
-                            createClothes.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    RecentMethods.setCurrentFragment(CreateClothesFragment.newInstance(), getActivity());
-                                }
-                            });
                         }
-                    }
-                });
-            }
-        });
+                    });
+                }
+            });
+            createClothes.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    RecentMethods.setCurrentFragment(CreateClothesFragment.newInstance(MyClothesFragment.newInstance(clothesListSize)), getActivity());
+                }
+            });
+        }
     }
 }

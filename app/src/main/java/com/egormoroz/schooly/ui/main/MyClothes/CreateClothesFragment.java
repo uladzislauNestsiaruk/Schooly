@@ -41,8 +41,15 @@ public class CreateClothesFragment extends Fragment {
             ,radioButton9,radioButton10,radioButton11
             ,radioButton12,radioButton13,radioButtonCoin,radioButtonDollar;
 
-    public static CreateClothesFragment newInstance() {
-        return new CreateClothesFragment();
+    Fragment fragment;
+
+    public CreateClothesFragment(Fragment fragment) {
+        this.fragment = fragment;
+    }
+
+    public static CreateClothesFragment newInstance(Fragment fragment) {
+        return new CreateClothesFragment(fragment);
+
     }
 
     @Override
@@ -102,7 +109,7 @@ public class CreateClothesFragment extends Fragment {
                 RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
                     @Override
                     public void PassUserNick(String nick) {
-                        RecentMethods.setCurrentFragment(MyClothesFragment.newInstance(), getActivity());
+                        RecentMethods.setCurrentFragment(fragment, getActivity());
                     }
                 });
             }
