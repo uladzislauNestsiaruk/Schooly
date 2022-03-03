@@ -14,12 +14,12 @@
 
     <TextView
         android:id="@+id/clothesTitle"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="30dp"
         android:fontFamily="@font/montserrat_extrabold"
-        android:textSize="18sp"
         android:textColor="@color/app_color"
-        />
+        android:textSize="18sp" />
 
 
     <ImageView
@@ -27,7 +27,7 @@
         android:layout_width="match_parent"
         android:layout_height="170dp"
         android:layout_marginTop="12dp"
-        android:layout_below="@+id/clothesTitle" />
+        android:layout_below="@+id/clothesTitle"  />
 
     <ImageView
         android:id="@+id/fittingClothes"
