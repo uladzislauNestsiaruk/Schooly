@@ -456,8 +456,8 @@ public class ProfileFragment extends Fragment {
                                 }
                             });
                         }
+
                         loadModels(Uri.parse("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Funtitled.glb?alt=media&token=657b45d7-a84b-4f2a-89f4-a699029401f7"), otherMainLook, ProfileFragment.this, 0.25f);
-                        Log.d("######", "v "+profileValue);
                         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
                             @Override
                             public void PassUserNick(String nick) {
@@ -475,14 +475,20 @@ public class ProfileFragment extends Fragment {
                                                 subscribeFirst.setVisibility(View.GONE);
                                                 blockedAccount.setVisibility(View.GONE);
 
-                                                FragmentManager fm = getChildFragmentManager();
-                                                fragmentAdapterOther = new FragmentAdapterOther(fm, getLifecycle());
-                                                viewPagerOther.setAdapter(fragmentAdapterOther);
 
-                                                Log.d("#####", "tab1");
+                                                if(getActivity()!=null && isAdded()) {
+                                                    FragmentManager fm = getChildFragmentManager();
+                                                    fragmentAdapterOther = new FragmentAdapterOther(fm, getLifecycle());
+                                                    viewPagerOther.setAdapter(fragmentAdapterOther);
+                                                }
 
-                                                tabLayoutOther.addTab(tabLayoutOther.newTab().setText("Образы"));
-                                                tabLayoutOther.addTab(tabLayoutOther.newTab().setText("Одежда"));
+
+                                                if(tabLayoutOther.getTabCount()==2){
+
+                                                }else {
+                                                    tabLayoutOther.addTab(tabLayoutOther.newTab().setText("Образы"));
+                                                    tabLayoutOther.addTab(tabLayoutOther.newTab().setText("Одежда"));
+                                                }
 
                                                 tabLayoutOther.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
                                                     @Override
@@ -537,14 +543,12 @@ public class ProfileFragment extends Fragment {
                                                                                     @Override
                                                                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                                                                         if(snapshot.exists()){
-                                                                                            Log.d("#####", "peace of shit");
                                                                                             firebaseModel.getUsersReference().child(nick)
                                                                                                     .child("subscribers").child(info.getNick()).removeValue();
                                                                                             firebaseModel.getUsersReference().child(info.getNick())
                                                                                                     .child("subscription").child(nick).removeValue();
                                                                                             Toast.makeText(getContext(), "Пользователь удален из подписчиков", Toast.LENGTH_SHORT).show();
                                                                                         }else {
-                                                                                            Log.d("#####", "suck my dick");
                                                                                             Toast.makeText(getContext(), "Пользователь не подписан на тебя", Toast.LENGTH_SHORT).show();
                                                                                         }
                                                                                     }
@@ -721,14 +725,14 @@ public class ProfileFragment extends Fragment {
                                                         });
                                                     }
                                                 });
-                                            } else if(profileCheckValue==3) {
+                                            }
+                                            else if(profileCheckValue==3) {
                                                 subscribeClose.setVisibility(View.VISIBLE);
                                                 closeAccount.setVisibility(View.VISIBLE);
                                                 subscribeFirst.setVisibility(View.VISIBLE);
                                                 blockedAccount.setVisibility(View.GONE);
                                                 tabLayoutOther.setVisibility(View.GONE);
                                                 viewPagerOther.setVisibility(View.GONE);
-                                                Log.d("#####", "tab2");
                                                 subscribeFirst.setText("Подпишись на " + " " + info.getNick() + " !");
                                                 message.setVisibility(View.GONE);
                                                 subscribe.setVisibility(View.GONE);
@@ -808,7 +812,8 @@ public class ProfileFragment extends Fragment {
                                                         }
                                                     }
                                                 });
-                                            }else if(profileCheckValue==1) {
+                                            }
+                                            else if(profileCheckValue==1) {
                                                 subscribeClose.setVisibility(View.VISIBLE);
                                                 subscribeClose.setBackgroundResource(R.drawable.corners10grey);
                                                 subscribeClose.setTextColor(Color.parseColor("#FEFEFE"));
