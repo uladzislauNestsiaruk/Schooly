@@ -341,5 +341,13 @@
     <string name="buyfor2">Купить за 2.99$</string>
     <string name="buyfor5">Купить за 4.99$</string>
 
+    <string name="criterias">Критерии</string>
+
+    <string name="noClothesTitle">Название не введено</string>
+
+    <string name="noFile">Добавь файл модели</string>
+    <string name="noPhoto">Добавь фото модели</string>
+    <string name="noSum">Введи цену одежды</string>
+
 
 </resources>

@@ -180,14 +180,6 @@ public class MainFragment extends Fragment{
         int num4=random.nextInt(1000000000);
         String numToBase1=String.valueOf(num3+num4);
 
-//        firebaseModel.getReference().child("users")
-//                .child("tyomaa6").child("nontifications")
-//                .child(numToBase).setValue(new Nontification("Spaccacrani","не отправлено","запрос"
-//                ,ServerValue.TIMESTAMP.toString()," "," ","не просмотрено",numToBase));
-//        firebaseModel.getReference().child("users")
-//                .child("tyomaa6").child("nontifications")
-//                .child(numToBase1).setValue(new Nontification("Spaccacrani","не отправлено","одежда"
-//                ,ServerValue.TIMESTAMP.toString()," "," ","не просмотрено",numToBase1));
 
 //        ArrayList<Reason> reasonsArrayList=new ArrayList<>();
 //        reasonsArrayList.add(new Reason("Мошенничество"));
