@@ -651,6 +651,7 @@ public class ProfileFragment extends Fragment {
                                                                 });
                                                                 Log.d("#####", "ff  "+a);
                                                                 if(a!=0) {
+                                                                    Log.d("#####", "abc  " + a);
                                                                     if (a == 2) {
                                                                         Log.d("#####", "ab  " + a);
                                                                         Query query1=firebaseModel.getUsersReference().child(info.getNick())

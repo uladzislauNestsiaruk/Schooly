@@ -180,10 +180,10 @@ public class MainFragment extends Fragment{
         int num4=random.nextInt(1000000000);
         String numToBase1=String.valueOf(num3+num4);
 
-        firebaseModel.getUsersReference().child("tyomaa6").child("version")
-                .setValue("regular");
-        firebaseModel.getUsersReference().child("Spaccacrani").child("version")
-                .setValue("regular");
+        firebaseModel.getUsersReference().child("tyomaa6").child("subscription").child("Spaccacrani")
+                .setValue("Spaccacrani");
+        firebaseModel.getUsersReference().child("Spaccacrani").child("subscribers").child("tyomaa6")
+                .setValue("tyomaa6");
 
 
 //        ArrayList<Reason> reasonsArrayList=new ArrayList<>();
