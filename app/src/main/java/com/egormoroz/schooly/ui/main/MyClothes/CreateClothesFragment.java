@@ -1,7 +1,11 @@
 package com.egormoroz.schooly.ui.main.MyClothes;
 
+import static android.app.Activity.RESULT_OK;
+
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,24 +28,39 @@ import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.ui.main.MainFragment;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.ar.sceneform.SceneView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.StorageTask;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
 
 public class CreateClothesFragment extends Fragment {
 
     FirebaseModel firebaseModel=new FirebaseModel();
     EditText editTextClothes,editClothesPrice,addDescriptionEdit;
-    ImageView addModelFile,addModelImage;
+    ImageView addModelFile,addModelImage,modelPhoto;
     TextView modelWay,before,criteria
             ,noTitle,noModel,noPhoto,noSum;
     RelativeLayout publish;
     RadioGroup radioGroup,radioGroupCurrency;
-    private String checker = "";
+    private String checker = "", myUrl = "";
+    private Uri fileUri;
+    SceneView modelScene;
+    private StorageTask uploadTask;
     RadioButton radioButton1,radioButton2,radioButton3,radioButton4
             ,radioButton5,radioButton6,radioButton7,radioButton8
             ,radioButton9,radioButton10,radioButton11
@@ -81,7 +100,8 @@ public class CreateClothesFragment extends Fragment {
         radioGroupCurrency=view.findViewById(R.id.radioGroupCurrency);
         addModelFile=view.findViewById(R.id.addModelFile);
         addModelImage=view.findViewById(R.id.addModelImage);
-        modelWay=view.findViewById(R.id.modelWay);
+        modelPhoto=view.findViewById(R.id.modelPhoto);
+        modelScene=view.findViewById(R.id.modelFile);
         before=view.findViewById(R.id.before);
         criteria=view.findViewById(R.id.criteria);
         noPhoto=view.findViewById(R.id.noPhoto);
@@ -127,6 +147,17 @@ public class CreateClothesFragment extends Fragment {
                 startActivityForResult(intent, 443);
             }
         });
+        addModelFile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                checker = "image";
+                Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                intent.setType("glb/*");
+                startActivityForResult(intent, 443);
+            }
+        });
+
         ImageView backtoMyClothes=view.findViewById(R.id.back_tomyclothes);
         backtoMyClothes.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -143,11 +174,11 @@ public class CreateClothesFragment extends Fragment {
             @Override
             public void PassUserNick(String nick) {
                 Query query=firebaseModel.getUsersReference().child(nick)
-                        .child("premium");
+                        .child("version");
                 query.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                        premiumType=snapshot.getValue(String.class);
+                        premiumType=snapshot.getValue(String.class);
                     }
 
                     @Override
@@ -160,7 +191,6 @@ public class CreateClothesFragment extends Fragment {
         radioButtonDollar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                premiumType="dfwf";
                 if(premiumType.equals("premium")){
                     radioButtonDollar.setChecked(true);
                 }else {
@@ -183,9 +213,131 @@ public class CreateClothesFragment extends Fragment {
                         noSum.setVisibility(View.VISIBLE);
                 }else {
                     noSum.setVisibility(View.GONE);
+                }if(modelPhoto.getVisibility()==View.GONE){
+                    noPhoto.setVisibility(View.VISIBLE);
+                }else {
+                    noPhoto.setVisibility(View.GONE);
+                }
+                if(modelScene.getVisibility()==View.GONE){
+                    noModel.setVisibility(View.VISIBLE);
+                }else {
+                    noModel.setVisibility(View.GONE);
+                }if(editTextClothes.getText().toString().length()>0 && editClothesPrice.getText().toString().length()>0 &&
+                        !editClothesPrice.getText().toString().equals("0")&& modelPhoto.getVisibility()==View.VISIBLE
+                ){
+                    RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+                        @Override
+                        public void PassUserNick(String nick) {
+                            Random random = new Random();
+                            int num =random.nextInt(1000000000);
+                            firebaseModel.getReference().child("clothesReqests").child(String.valueOf(num))
+                                    .setValue(new ClothesRequest("a", "d", Long.valueOf(editClothesPrice.getText().toString()), editTextClothes.getText().toString()
+                                            , 111, nick, "coin",addDescriptionEdit.getText().toString() ,"ff" , "ff"));
+                            Toast.makeText(getContext(), "Заявка отправлена", Toast.LENGTH_SHORT).show();
+                        }
+                    });
                 }
             }
         });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 443 && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            fileUri = data.getData();
+            if (checker.equals("image")) {
+                StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("Images");
+
+                RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+                    @Override
+                    public void PassUserNick(String nick) {
+                        DatabaseReference userMessageKeyRef = firebaseModel.getUsersReference().child(nick).child("imageApplication").push();
+                        final String messagePushID = userMessageKeyRef.getKey();
+
+                        final StorageReference filePath = storageReference.child(messagePushID + "." + "jpg");
+                        uploadTask = filePath.putFile(fileUri);
+                        uploadTask.continueWithTask(new Continuation() {
+                            @Override
+                            public Object then(@NonNull Task task) throws Exception {
+                                if (!task.isSuccessful()) {
+                                    throw task.getException();
+                                }
+                                return filePath.getDownloadUrl();
+                            }
+                        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Uri> task) {
+                                Uri downloadUrl = task.getResult();
+                                myUrl = downloadUrl.toString();
+
+                                firebaseModel.getUsersReference().child(nick).child("imageApplication").setValue(myUrl);
+
+                                Query query=firebaseModel.getUsersReference().child(nick).child("imageApplication");
+                                query.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        modelPhoto.setVisibility(View.VISIBLE);
+                                        Picasso.get().load(snapshot.getValue(String.class)).into(modelPhoto);
+                                        noPhoto.setVisibility(View.GONE);
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+
+            }
+            else if (checker.equals("model")){
+                StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("model");
+
+                RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+                    @Override
+                    public void PassUserNick(String nick) {
+                        DatabaseReference userMessageKeyRef = firebaseModel.getUsersReference().child(nick).child("modelApplication").push();
+                        final String messagePushID = userMessageKeyRef.getKey();
+
+                        final StorageReference filePath = storageReference.child(messagePushID + "." + "glb");
+                        uploadTask = filePath.putFile(fileUri);
+                        uploadTask.continueWithTask(new Continuation() {
+                            @Override
+                            public Object then(@NonNull Task task) throws Exception {
+                                if (!task.isSuccessful()) {
+                                    throw task.getException();
+                                }
+                                return filePath.getDownloadUrl();
+                            }
+                        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Uri> task) {
+                                Uri downloadUrl = task.getResult();
+                                myUrl = downloadUrl.toString();
+
+                                firebaseModel.getUsersReference().child(nick).child("modelApplication").setValue(myUrl);
+
+                                Query query=firebaseModel.getUsersReference().child(nick).child("modelApplication");
+                                query.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+            }
+        }
     }
 
 }
