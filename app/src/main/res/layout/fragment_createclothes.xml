@@ -291,7 +291,7 @@
                 android:layout_height="match_parent"
                 android:textColor="@color/app_grey"
                 android:fontFamily="@font/montserrat_bold"
-                android:text="@string/longsleeeve"/>
+                android:text="@string/longsleeve"/>
             <RadioButton
                 android:id="@+id/radio_button_8"
                 android:layout_width="match_parent"

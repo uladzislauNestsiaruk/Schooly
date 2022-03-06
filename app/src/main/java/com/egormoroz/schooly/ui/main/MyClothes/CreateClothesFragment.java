@@ -28,6 +28,7 @@ import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.ui.main.MainFragment;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
+import com.egormoroz.schooly.ui.profile.ComplainFragment;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -67,7 +68,7 @@ public class CreateClothesFragment extends Fragment {
             ,radioButton12,radioButton13,radioButtonCoin,radioButtonDollar;
 
     Fragment fragment;
-    String premiumType;
+    String premiumType,modelApplication,imageApplication,currencyType,bodyType,type;
 
     public CreateClothesFragment(Fragment fragment) {
         this.fragment = fragment;
@@ -230,9 +231,73 @@ public class CreateClothesFragment extends Fragment {
                         public void PassUserNick(String nick) {
                             Random random = new Random();
                             int num =random.nextInt(1000000000);
+                            int radioButtonID = radioGroup.getCheckedRadioButtonId();
+                            switch(radioButtonID){
+                                case R.id.radio_button_1:
+                                    bodyType="foot";
+                                    type="shoes";
+                                    break;
+                                case R.id.radio_button_2:
+                                    bodyType="pants";
+                                    type="clothes";
+                                    break;
+                                case R.id.radio_button_3:
+                                    bodyType="shorts";
+                                    type="clothes";
+                                    break;
+                                case R.id.radio_button_4:
+                                    bodyType="belt";
+                                    type="clothes";
+                                    break;
+                                case R.id.radio_button_5:
+                                    bodyType="tshirt";
+                                    type="clothes";
+                                    break;
+                                case R.id.radio_button_6:
+                                    bodyType="shirt";
+                                    type="clothes";
+                                    break;
+                                case R.id.radio_button_7:
+                                    bodyType="longsleeve";
+                                    type="clothes";
+                                    break;
+                                case R.id.radio_button_8:
+                                    bodyType="glasses";
+                                    type="accessories";
+                                    break;
+                                case R.id.radio_button_9:
+                                    bodyType="cap";
+                                    type="hats";
+                                    break;
+                                case R.id.radio_button_10:
+                                    bodyType="panama";
+                                    type="hats";
+                                    break;
+                                case R.id.radio_button_11:
+                                    bodyType="skirt";
+                                    type="clothes";
+                                    break;
+                                case R.id.radio_button_12:
+                                    bodyType="top";
+                                    type="clothes";
+                                    break;
+                                case R.id.radio_button_13:
+                                    bodyType="bag";
+                                    type="accessories";
+                                    break;
+                            }
+                            int idCurrency=radioGroupCurrency.getCheckedRadioButtonId();
+                            switch(idCurrency){
+                                case R.id.schoolyCoinRadio:
+                                    currencyType="coin";
+                                    break;
+                                case R.id.dollarRadio:
+                                    currencyType="dollar";
+                                    break;
+                            }
                             firebaseModel.getReference().child("clothesReqests").child(String.valueOf(num))
-                                    .setValue(new ClothesRequest("a", "d", Long.valueOf(editClothesPrice.getText().toString()), editTextClothes.getText().toString()
-                                            , 111, nick, "coin",addDescriptionEdit.getText().toString() ,"ff" , "ff"));
+                                    .setValue(new ClothesRequest(type, imageApplication, Long.valueOf(editClothesPrice.getText().toString()), editTextClothes.getText().toString()
+                                            , 111, nick, currencyType,addDescriptionEdit.getText().toString() ,modelApplication , bodyType));
                             Toast.makeText(getContext(), "Заявка отправлена", Toast.LENGTH_SHORT).show();
                         }
                     });
@@ -278,6 +343,7 @@ public class CreateClothesFragment extends Fragment {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                                         modelPhoto.setVisibility(View.VISIBLE);
+                                        imageApplication=snapshot.getValue(String.class);
                                         Picasso.get().load(snapshot.getValue(String.class)).into(modelPhoto);
                                         noPhoto.setVisibility(View.GONE);
                                     }
@@ -324,7 +390,7 @@ public class CreateClothesFragment extends Fragment {
                                 query.addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-
+                                        modelApplication=snapshot.getValue(String.class);
                                     }
 
                                     @Override
