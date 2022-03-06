@@ -606,6 +606,41 @@ public class ProfileFragment extends Fragment {
                                                         });
                                                     }
                                                 });
+                                                Query query=firebaseModel.getUsersReference().child(nick)
+                                                        .child("subscription").child(info.getNick());
+                                                query.addValueEventListener(new ValueEventListener() {
+                                                    @Override
+                                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                        if(snapshot.exists()){
+                                                            a=1;
+
+                                                        }else{
+                                                            a=2;
+
+                                                        }
+                                                    }
+
+                                                    @Override
+                                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                                    }
+                                                });
+                                                Query queryRequest=firebaseModel.getUsersReference().child(info.getNick())
+                                                        .child("requests").child(nick);
+                                                queryRequest.addValueEventListener(new ValueEventListener() {
+                                                    @Override
+                                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                        if(snapshot.exists()){
+                                                            a=3;
+
+                                                        }
+                                                    }
+
+                                                    @Override
+                                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                                    }
+                                                });
 
                                                 subscribe.setOnClickListener(new View.OnClickListener() {
                                                     @Override
@@ -613,46 +648,10 @@ public class ProfileFragment extends Fragment {
                                                         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
                                                             @Override
                                                             public void PassUserNick(String nick) {
-                                                                Query query=firebaseModel.getUsersReference().child(nick)
-                                                                        .child("subscription").child(info.getNick());
-                                                                query.addValueEventListener(new ValueEventListener() {
-                                                                    @Override
-                                                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                                        if(snapshot.exists()){
-                                                                            a=1;
-                                                                            Log.d("#####", "c  "+a);
-
-                                                                        }else{
-                                                                            a=2;
-
-                                                                        }
-                                                                    }
-
-                                                                    @Override
-                                                                    public void onCancelled(@NonNull DatabaseError error) {
-
-                                                                    }
-                                                                });
-                                                                Query queryRequest=firebaseModel.getUsersReference().child(info.getNick())
-                                                                        .child("requests").child(nick);
-                                                                queryRequest.addValueEventListener(new ValueEventListener() {
-                                                                    @Override
-                                                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                                        if(snapshot.exists()){
-                                                                            a=3;
-
-                                                                        }
-                                                                    }
-
-                                                                    @Override
-                                                                    public void onCancelled(@NonNull DatabaseError error) {
-
-                                                                    }
-                                                                });
                                                                 Log.d("#####", "ff  "+a);
                                                                 if(a!=0) {
                                                                     Log.d("#####", "abc  " + a);
-                                                                    if (a == 2) {
+                                                                    if (a == 2){
                                                                         Log.d("#####", "ab  " + a);
                                                                         Query query1=firebaseModel.getUsersReference().child(info.getNick())
                                                                                 .child("accountType");
@@ -789,6 +788,7 @@ public class ProfileFragment extends Fragment {
                                                     @Override
                                                     public void onClick(View v) {
                                                         if(a==3){
+                                                            Log.d("#####", "ffwd  "+a);
                                                             firebaseModel.getUsersReference().child(info.getNick())
                                                                     .child("requests").child(nick).removeValue();
                                                             subscribeClose.setText("Подписаться");
@@ -953,7 +953,7 @@ public class ProfileFragment extends Fragment {
                     public void getSubscribersList(ArrayList<Subscriber> subscribers) {
                         subscribersCountString=String.valueOf(subscribers.size());
                         if(Long.valueOf(subscribersCountString)<1000){
-                            subscribersCount.setText(subscriptionsCountString);
+                            subscribersCount.setText(subscribersCountString);
                         }else if(Long.valueOf(subscribersCountString)>1000
                                 && Long.valueOf(subscribersCountString)<10000){
                             subscribersCount.setText(subscribersCountString.substring(0, 1)+"."+subscribersCountString.substring(1, 2)+"K");
