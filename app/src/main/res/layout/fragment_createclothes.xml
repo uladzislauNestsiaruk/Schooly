@@ -166,6 +166,7 @@
                 android:layout_below="@+id/addModelFile"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="16dp"
+                android:background="@color/white"
                 android:visibility="gone" />
 
 

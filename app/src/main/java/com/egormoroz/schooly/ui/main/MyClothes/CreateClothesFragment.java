@@ -4,6 +4,7 @@ import static android.app.Activity.RESULT_OK;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,21 +20,23 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
-import com.egormoroz.schooly.ui.main.MainFragment;
-import com.egormoroz.schooly.ui.main.Shop.Clothes;
-import com.egormoroz.schooly.ui.profile.ComplainFragment;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.ar.core.exceptions.CameraNotAvailableException;
+import com.google.ar.sceneform.Node;
 import com.google.ar.sceneform.SceneView;
+import com.google.ar.sceneform.assets.RenderableSource;
+import com.google.ar.sceneform.math.Vector3;
+import com.google.ar.sceneform.rendering.ModelRenderable;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -44,10 +47,8 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Random;
+import java.util.function.Consumer;
 
 public class CreateClothesFragment extends Fragment {
 
@@ -112,13 +113,13 @@ public class CreateClothesFragment extends Fragment {
         before.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(FragmentCriteria.newInstance(), getActivity());
+                RecentMethods.setCurrentFragment(CriteriaFragment.newInstance(fragment), getActivity());
             }
         });
         criteria.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(FragmentCriteria.newInstance(), getActivity());
+                RecentMethods.setCurrentFragment(CriteriaFragment.newInstance(fragment), getActivity());
             }
         });
         publish=view.findViewById(R.id.publish);
@@ -151,10 +152,9 @@ public class CreateClothesFragment extends Fragment {
         addModelFile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                checker = "image";
+                checker = "model";
                 Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 intent.setAction(Intent.ACTION_GET_CONTENT);
-                intent.setType("glb/*");
                 startActivityForResult(intent, 443);
             }
         });
@@ -225,6 +225,7 @@ public class CreateClothesFragment extends Fragment {
                     noModel.setVisibility(View.GONE);
                 }if(editTextClothes.getText().toString().length()>0 && editClothesPrice.getText().toString().length()>0 &&
                         !editClothesPrice.getText().toString().equals("0")&& modelPhoto.getVisibility()==View.VISIBLE
+                        && modelScene.getVisibility()==View.VISIBLE
                 ){
                     RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
                         @Override
@@ -390,7 +391,11 @@ public class CreateClothesFragment extends Fragment {
                                 query.addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        modelScene.setVisibility(View.VISIBLE);
+                                        Log.d("####", "ok");
                                         modelApplication=snapshot.getValue(String.class);
+                                        loadModels(Uri.parse(modelApplication), modelScene, CreateClothesFragment.this, 0.25f);
+                                        noModel.setVisibility(View.GONE);
                                     }
 
                                     @Override
@@ -403,6 +408,44 @@ public class CreateClothesFragment extends Fragment {
                     }
                 });
             }
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public void loadModels(Uri url, SceneView sceneView, Fragment fragment, float scale) {
+        ModelRenderable.builder()
+                .setSource(
+                        fragment.getContext(), new RenderableSource.Builder().setSource(
+                                fragment.getContext(),
+                                url,
+                                RenderableSource.SourceType.GLB
+                        ).setScale(scale)
+                                .setRecenterMode(RenderableSource.RecenterMode.CENTER)
+                                .build()
+                )
+                .setRegistryId(url)
+                .build()
+                .thenAccept(new Consumer<ModelRenderable>() {
+                    @Override
+                    public void accept(ModelRenderable modelRenderable) {
+                        addNode(modelRenderable, sceneView);
+                    }
+                });
+    }
+
+    public void addNode(ModelRenderable modelRenderable, SceneView sceneView) {
+        Node modelNode1 = new Node();
+        modelNode1.setRenderable(modelRenderable);
+        modelNode1.setLocalScale(new Vector3(0.3f, 0.3f, 0.3f));
+//        modelNode1.setLocalRotation(Quaternion.multiply(
+//                Quaternion.axisAngle(new Vector3(1f, 0f, 0f), 45),
+//                Quaternion.axisAngle(new Vector3(0f, 1f, 0f), 75)));
+        modelNode1.setLocalPosition(new Vector3(0f, 0f, -0.9f));
+        sceneView.getScene().addChild(modelNode1);
+        try {
+            sceneView.resume();
+        } catch (CameraNotAvailableException e) {
+            e.printStackTrace();
         }
     }
 

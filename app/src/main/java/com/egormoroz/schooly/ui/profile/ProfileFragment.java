@@ -448,7 +448,6 @@ public class ProfileFragment extends Fragment {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                                         if(profileCheckValue!=0){
-                                            Log.d("#####", "ok");
                                             circularProgressIndicator.setVisibility(View.GONE);
                                             otherUserBiography=view.findViewById(R.id.otheruserbiography);
                                             subscribeClose=view.findViewById(R.id.subscribeClose);
@@ -481,7 +480,7 @@ public class ProfileFragment extends Fragment {
                                                 blockedAccount.setVisibility(View.GONE);
 
 
-                                                if(getActivity()!=null && isAdded()) {
+                                                if(getActivity()!=null && isAdded()){
                                                     FragmentManager fm = getChildFragmentManager();
                                                     fragmentAdapterOther = new FragmentAdapterOther(fm, getLifecycle());
                                                     viewPagerOther.setAdapter(fragmentAdapterOther);
@@ -601,6 +600,10 @@ public class ProfileFragment extends Fragment {
                                                                     subscribe.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
                                                                     subscribe.setTextColor(Color.parseColor("#F3A2E5"));
                                                                     subscribe.setText("Отписаться");
+                                                                }else {
+                                                                    subscribe.setText("Подписаться");
+                                                                    subscribe.setTextColor(Color.parseColor("#FFFEFE"));
+                                                                    subscribe.setBackgroundResource(R.drawable.corners10dpappcolor);
                                                                 }
                                                             }
 
@@ -653,11 +656,8 @@ public class ProfileFragment extends Fragment {
                                                         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
                                                             @Override
                                                             public void PassUserNick(String nick) {
-                                                                Log.d("#####", "ff  "+a);
                                                                 if(a!=0) {
-                                                                    Log.d("#####", "abc  " + a);
                                                                     if (a == 2){
-                                                                        Log.d("#####", "ab  " + a);
                                                                         Query query1=firebaseModel.getUsersReference().child(info.getNick())
                                                                                 .child("accountType");
                                                                         query1.addListenerForSingleValueEvent(new ValueEventListener() {
