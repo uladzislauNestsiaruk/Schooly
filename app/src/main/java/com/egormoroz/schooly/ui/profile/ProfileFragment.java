@@ -71,6 +71,7 @@ import com.google.android.filament.Filament;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.progressindicator.CircularProgressIndicator;
 import com.google.android.material.tabs.TabLayout;
 import com.google.ar.core.exceptions.CameraNotAvailableException;
 import com.google.ar.sceneform.Node;
@@ -102,6 +103,7 @@ public class ProfileFragment extends Fragment {
     Context profileContext, context;
     String type,nicknameCallback;
     UserInformation info;
+    CircularProgressIndicator circularProgressIndicator;
     WardrobeAdapterProfile.ItemClickListener itemClickListenerWardrobe;
     TextView nickname,message,biographyTextView,looksCount,subscriptionsCount,subscribersCount,otherLooksCount,otherSubscriptionCount,
             otherSubscribersCount,otherUserBiography,subscribeClose,subscribe
@@ -418,43 +420,22 @@ public class ProfileFragment extends Fragment {
                         info.setQueue(snapshot.child("queue").getValue(String.class));
                         info.setAccountType(snapshot.child("accountType").getValue(String.class));
                         info.setBio(snapshot.child("bio").getValue(String.class));
-                        nickname.setText(info.getNick());
+                        nickname.setText(sendNick);
                         sendNickString=info.getNick();
+                        circularProgressIndicator=view.findViewById(R.id.profileIndicator);
                         user = firebaseModel.getUsersReference().child(info.getNick());
-                        otherUserBiography=view.findViewById(R.id.otheruserbiography);
-                        subscribeClose=view.findViewById(R.id.subscribeClose);
                         back=view.findViewById(R.id.back);
+                        moreSquare=view.findViewById(R.id.moresquare);
                         back.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 RecentMethods.setCurrentFragment(fragment, getActivity());
                             }
                         });
-                        otherMainLook = view.findViewById(R.id.mainlookview);
-                        otherUserBiography.setText(info.getBio());
-                        subscribe=view.findViewById(R.id.addFriend);
-                        subscribeFirst=view.findViewById(R.id.SubscribeFirst);
-                        closeAccount=view.findViewById(R.id.closeAccount);
-                        tabLayoutOther=view.findViewById(R.id.tabsprofileother);
-                        viewPagerOther=view.findViewById(R.id.viewPagerOther);
-                        moreSquare=view.findViewById(R.id.moresquare);
-                        otherLooksCount=view.findViewById(R.id.looksCountOther);
-                        otherSubscriptionCount=view.findViewById(R.id.subscriptionCountOther);
-                        otherSubscribersCount=view.findViewById(R.id.subsCountOther);
-                        blockedAccount=view.findViewById(R.id.blockedAccount);
                         if (info.getAccountType().equals("open")){
                             checkOtherUserProfile();
                         }else {
                             profileCheckValue=3;
-                        }
-                        setCountsOther();
-                        if (message != null) {
-                            message.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    open();
-                                }
-                            });
                         }
 
                         loadModels(Uri.parse("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Funtitled.glb?alt=media&token=657b45d7-a84b-4f2a-89f4-a699029401f7"), otherMainLook, ProfileFragment.this, 0.25f);
@@ -467,6 +448,30 @@ public class ProfileFragment extends Fragment {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                                         if(profileCheckValue!=0){
+                                            Log.d("#####", "ok");
+                                            circularProgressIndicator.setVisibility(View.GONE);
+                                            otherUserBiography=view.findViewById(R.id.otheruserbiography);
+                                            subscribeClose=view.findViewById(R.id.subscribeClose);
+                                            otherMainLook = view.findViewById(R.id.mainlookview);
+                                            otherUserBiography.setText(info.getBio());
+                                            subscribe=view.findViewById(R.id.addFriend);
+                                            subscribeFirst=view.findViewById(R.id.SubscribeFirst);
+                                            closeAccount=view.findViewById(R.id.closeAccount);
+                                            tabLayoutOther=view.findViewById(R.id.tabsprofileother);
+                                            viewPagerOther=view.findViewById(R.id.viewPagerOther);
+                                            otherLooksCount=view.findViewById(R.id.looksCountOther);
+                                            otherSubscriptionCount=view.findViewById(R.id.subscriptionCountOther);
+                                            otherSubscribersCount=view.findViewById(R.id.subsCountOther);
+                                            blockedAccount=view.findViewById(R.id.blockedAccount);
+                                            setCountsOther();
+                                            if (message != null) {
+                                                message.setOnClickListener(new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View v) {
+                                                        open();
+                                                    }
+                                                });
+                                            }
                                             if (profileCheckValue==2 || snapshot.exists()) {
                                                 otherLooksCount = view.findViewById(R.id.looksCountOther);
                                                 otherSubscriptionCount = view.findViewById(R.id.subscriptionCountOther);
