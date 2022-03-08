@@ -41,7 +41,7 @@ public class ViewingMyClothesMain extends Fragment {
             ,perSentToday,perSentAll,clothesPrice;
     ImageView clothesImageCV, backToShop, coinsImage,coinsImageAll,coinsImagePurple;
     long schoolyCoins;
-    RelativeLayout checkBasket,resale,present;
+    RelativeLayout checkBasket,resale,presentClothes;
     String clothesPriceString,purchaseTodayString,profitTodayString,profitAllString;
     int a = 0;
     Clothes clothesViewing;
@@ -77,9 +77,9 @@ public class ViewingMyClothesMain extends Fragment {
         profitToday=view.findViewById(R.id.profit);
         profitAll=view.findViewById(R.id.profitAll);
         perSentToday=view.findViewById(R.id.perSentPurchase);
+        presentClothes=view.findViewById(R.id.presentClothes);
         perSentAll=view.findViewById(R.id.perSentPurchaseAll);
         resale=view.findViewById(R.id.resaleClothes);
-        present=view.findViewById(R.id.presentClothes);
         backToShop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -91,6 +91,12 @@ public class ViewingMyClothesMain extends Fragment {
             @Override
             public void onItemClick(Clothes clothes) {
                 clothesViewing = clothes;
+                presentClothes.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        RecentMethods.setCurrentFragment(PresentClothesFragment.newInstance(clothesViewing,ViewingMyClothesMain.newInstance(fragment)), getActivity());
+                    }
+                });
                 clothesTitleCV.setText(clothes.getClothesTitle());
                 purchaseTodayString=String.valueOf(clothesViewing.getPurchaseToday());
                 if(clothes.getPurchaseToday()<1000){

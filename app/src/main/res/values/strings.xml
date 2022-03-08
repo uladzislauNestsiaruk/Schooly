@@ -349,5 +349,8 @@
     <string name="noPhoto">Добавь фото модели</string>
     <string name="noSum">Введи цену одежды</string>
 
+    <string name="presentClothes">Подарить</string>
+    <string name="presentClothesText">Подарить одежду</string>
+
 
 </resources>

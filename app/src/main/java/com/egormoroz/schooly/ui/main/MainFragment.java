@@ -363,12 +363,10 @@ public class MainFragment extends Fragment{
                         for(int i=0;i<clothesArrayList.size();i++){
                             Clothes cl=clothesArrayList.get(i);
                             popularClothesArrayList.add(cl);
-                            Log.d("######", "x "+popularClothesArrayList);
 //                            if (cl.getPurchaseNumber()==1){
 //                                firebaseModel.getReference("AppData/Clothes/Popular").setValue()
 //                            }
                         }
-                        Log.d("#####", "size  "+clothesArrayList);
                         NewClothesAdapter newClothesAdapter=new NewClothesAdapter(popularClothesArrayList,itemClickListener);
                         clothesRecyclerMain.setAdapter(newClothesAdapter);
                     }
@@ -395,6 +393,7 @@ public class MainFragment extends Fragment{
                                 }
                             });
                         }else {
+                            relativeFirstLayout.setVisibility(View.GONE);
                             MyClothesAdapterMain myClothesAdapterMain=new MyClothesAdapterMain(allClothes,itemClickListenerMyClothes);
                             myClothesRecycler.setAdapter(myClothesAdapterMain);
                         }
