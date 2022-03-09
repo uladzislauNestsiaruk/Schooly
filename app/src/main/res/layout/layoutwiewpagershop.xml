@@ -14,18 +14,24 @@
       android:textColor="@color/app_grey"
       android:textSize="18dp" />
 
+  <com.egormoroz.schooly.NestedScrollableHost
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_below="@+id/newnew"
+      android:layout_marginTop="12dp">
+
   <androidx.recyclerview.widget.RecyclerView
       android:id="@+id/newchlothesinshop"
       android:layout_width="match_parent"
       android:layout_height="282dp"
-      android:layout_below="@+id/newnew"
-      android:layout_marginTop="12dp"
       android:clipToPadding="false"
       android:orientation="horizontal"
       android:paddingStart="16dp"
       android:paddingEnd="16dp"
       android:scrollbars="none"
       app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+  </com.egormoroz.schooly.NestedScrollableHost>
 
   <TextView
       android:id="@+id/popular"

@@ -22,7 +22,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="14dp"
-            android:layout_marginTop="11dp"
+            android:layout_marginTop="10dp"
             android:layout_toRightOf="@+id/back_tomyclothes"
             android:fontFamily="@font/montserrat_bold"
             android:text="@string/creatingClothes"
@@ -60,15 +60,16 @@
                 android:textSize="14sp" />
 
             <TextView
+                android:id="@+id/criteria"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/before"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="-4dp"
+                android:layout_marginEnd="60dp"
                 android:layout_toRightOf="@+id/qq"
                 android:fontFamily="@font/montserrat_extrabold"
                 android:text="@string/criteria"
-                android:layout_below="@+id/before"
-                android:layout_marginEnd="60dp"
-                android:layout_marginTop="-4dp"
-                android:layout_marginStart="24dp"
                 android:textColor="@color/app_color"
                 android:textSize="14sp" />
 
@@ -78,13 +79,26 @@
             android:id="@+id/enterTitleText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/beforeShareRelative"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="8dp"
             android:fontFamily="@font/montserrat_bold"
             android:text="@string/enterTitleText"
-            android:layout_below="@+id/beforeShareRelative"
-            android:layout_marginTop="8dp"
-            android:layout_marginStart="24dp"
             android:textColor="@color/app_grey"
             android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/noEnterTitleText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/enterTitleText"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="1dp"
+            android:fontFamily="@font/montserrat_bold"
+            android:text="@string/noClothesTitle"
+            android:textColor="#EA4646"
+            android:textSize="11sp"
+            android:visibility="gone"/>
 
         <EditText
             android:id="@+id/editTextClothes"
@@ -105,70 +119,116 @@
             android:textColorHint="@color/app_grey"
             android:textSize="14sp" />
 
-        <TextView
-            android:id="@+id/addModelFileText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/montserrat_bold"
-            android:text="@string/addModelFile"
-            android:layout_below="@+id/editTextClothes"
-            android:layout_marginTop="24dp"
-            android:layout_marginStart="24dp"
-            android:textColor="@color/app_grey"
-            android:textSize="14sp" />
-
-        <ImageView
-            android:id="@+id/addModelFile"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/addModelFileText"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="16dp"
-            android:src="@drawable/ic_addfile" />
-
-        <TextView
-            android:id="@+id/modelWay"
+        <RelativeLayout
+            android:id="@+id/modelFileRelative"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/addModelFile"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="24dp"
-            android:background="@drawable/corners10appcolor2dpstroke"
-            android:fontFamily="@font/montserrat_bold"
-            android:paddingStart="8dp"
-            android:paddingTop="8dp"
-            android:paddingEnd="8dp"
-            android:paddingBottom="8dp"
-            android:text="@string/wayToFile"
-            android:textColor="@color/app_grey" />
+            android:layout_below="@+id/editTextClothes"
+            android:layout_marginTop="24dp">
 
-        <TextView
-            android:id="@+id/addImage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/montserrat_bold"
-            android:text="@string/addModelImage"
-            android:layout_below="@+id/modelWay"
-            android:layout_marginTop="24dp"
-            android:layout_marginStart="24dp"
-            android:textColor="@color/app_grey"
-            android:textSize="14sp" />
+            <TextView
+                android:id="@+id/addModelFileText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:fontFamily="@font/montserrat_bold"
+                android:text="@string/addModelFile"
+                android:textColor="@color/app_grey"
+                android:textSize="14sp" />
 
-        <ImageView
-            android:id="@+id/addModelImage"
-            android:layout_width="wrap_content"
+            <TextView
+                android:id="@+id/noFile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/addModelFileText"
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="-1dp"
+                android:fontFamily="@font/montserrat_bold"
+                android:text="@string/noFile"
+                android:textColor="#EA4646"
+                android:textSize="11sp"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/addModelFile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/addModelFileText"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="20dp"
+                android:src="@drawable/ic_addfile" />
+
+            <com.google.ar.sceneform.SceneView
+                android:id="@+id/modelFile"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_below="@+id/addModelFile"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="16dp"
+                android:background="@color/white"
+                android:visibility="gone" />
+
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/photoRelative"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/addImage"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="16dp"
-            android:src="@drawable/ic_addfile" />
+            android:layout_below="@+id/modelFileRelative"
+            android:layout_marginTop="24dp">
+
+            <TextView
+                android:id="@+id/addImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:fontFamily="@font/montserrat_bold"
+                android:text="@string/addModelImage"
+                android:textColor="@color/app_grey"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/noPhoto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/addImage"
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="-1dp"
+                android:fontFamily="@font/montserrat_bold"
+                android:text="@string/noPhoto"
+                android:textColor="#EA4646"
+                android:textSize="11sp"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/addModelImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/addImage"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="20dp"
+                android:src="@drawable/ic_addfile" />
+
+            <ImageView
+                android:id="@+id/modelPhoto"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_below="@+id/addModelImage"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="16dp"
+                android:visibility="gone" />
+
+        </RelativeLayout>
+
 
         <TextView
             android:id="@+id/clothesType"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/addModelImage"
+            android:layout_below="@+id/photoRelative"
             android:layout_marginStart="24dp"
             android:layout_marginTop="24dp"
             android:fontFamily="@font/montserrat_bold"
@@ -232,7 +292,7 @@
                 android:layout_height="match_parent"
                 android:textColor="@color/app_grey"
                 android:fontFamily="@font/montserrat_bold"
-                android:text="@string/longsleeeve"/>
+                android:text="@string/longsleeve"/>
             <RadioButton
                 android:id="@+id/radio_button_8"
                 android:layout_width="match_parent"
@@ -328,6 +388,19 @@
             android:textColor="@color/app_grey"
             android:textSize="14sp" />
 
+        <TextView
+            android:id="@+id/noSum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/clothesPrice"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="0dp"
+            android:fontFamily="@font/montserrat_bold"
+            android:text="@string/noSum"
+            android:textColor="#EA4646"
+            android:textSize="11sp"
+            android:visibility="gone"/>
+
         <EditText
             android:id="@+id/editClothesPrice"
             android:layout_width="match_parent"
@@ -339,6 +412,7 @@
             android:background="@drawable/corners14dpappcolor2dpstroke"
             android:fontFamily="@font/montserrat_bold"
             android:maxLines="1"
+            android:inputType="numberDecimal"
             android:paddingStart="12dp"
             android:paddingTop="12dp"
             android:paddingEnd="12dp"

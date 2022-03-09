@@ -3,6 +3,7 @@ package com.egormoroz.schooly.ui.main.Shop;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -12,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.egormoroz.schooly.Callbacks;
@@ -62,7 +64,6 @@ public class PopularFragment extends Fragment {
             @Override
             public void onItemClick(Clothes clothes) {
                 ((MainActivity)getActivity()).setCurrentFragment(ViewingClothes.newInstance(ShopFragment.newInstance()));
-                Log.d("######","ccc  "+clothes.getClothesTitle());
             }
         };
         itemClickListenerPopular=new PopularClothesAdapter.ItemClickListener() {

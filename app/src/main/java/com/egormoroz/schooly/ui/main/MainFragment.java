@@ -180,14 +180,11 @@ public class MainFragment extends Fragment{
         int num4=random.nextInt(1000000000);
         String numToBase1=String.valueOf(num3+num4);
 
-//        firebaseModel.getReference().child("users")
-//                .child("tyomaa6").child("nontifications")
-//                .child(numToBase).setValue(new Nontification("Spaccacrani","не отправлено","запрос"
-//                ,ServerValue.TIMESTAMP.toString()," "," ","не просмотрено",numToBase));
-//        firebaseModel.getReference().child("users")
-//                .child("tyomaa6").child("nontifications")
-//                .child(numToBase1).setValue(new Nontification("Spaccacrani","не отправлено","одежда"
-//                ,ServerValue.TIMESTAMP.toString()," "," ","не просмотрено",numToBase1));
+        firebaseModel.getUsersReference().child("tyomaa6").child("subscription").child("Spaccacrani")
+                .setValue("Spaccacrani");
+        firebaseModel.getUsersReference().child("Spaccacrani").child("subscribers").child("tyomaa6")
+                .setValue("tyomaa6");
+
 
 //        ArrayList<Reason> reasonsArrayList=new ArrayList<>();
 //        reasonsArrayList.add(new Reason("Мошенничество"));
@@ -366,12 +363,10 @@ public class MainFragment extends Fragment{
                         for(int i=0;i<clothesArrayList.size();i++){
                             Clothes cl=clothesArrayList.get(i);
                             popularClothesArrayList.add(cl);
-                            Log.d("######", "x "+popularClothesArrayList);
 //                            if (cl.getPurchaseNumber()==1){
 //                                firebaseModel.getReference("AppData/Clothes/Popular").setValue()
 //                            }
                         }
-                        Log.d("#####", "size  "+clothesArrayList);
                         NewClothesAdapter newClothesAdapter=new NewClothesAdapter(popularClothesArrayList,itemClickListener);
                         clothesRecyclerMain.setAdapter(newClothesAdapter);
                     }
@@ -398,6 +393,7 @@ public class MainFragment extends Fragment{
                                 }
                             });
                         }else {
+                            relativeFirstLayout.setVisibility(View.GONE);
                             MyClothesAdapterMain myClothesAdapterMain=new MyClothesAdapterMain(allClothes,itemClickListenerMyClothes);
                             myClothesRecycler.setAdapter(myClothesAdapterMain);
                         }

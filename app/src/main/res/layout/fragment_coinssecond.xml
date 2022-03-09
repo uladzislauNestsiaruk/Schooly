@@ -49,7 +49,7 @@
                     android:layout_width="96dp"
                     android:layout_height="96dp"
                     android:layout_gravity="center_horizontal"
-                    android:background="@drawable/corners14grey"/>
+                    android:src="@drawable/coins1"/>
 
                 <TextView
                     android:id="@+id/oneCoinsText"
@@ -88,7 +88,7 @@
                     android:layout_width="96dp"
                     android:layout_height="96dp"
                     android:layout_gravity="center_horizontal"
-                    android:background="@drawable/corners14grey"/>
+                    android:src="@drawable/coins2"/>
 
                 <TextView
                     android:id="@+id/twoCoinsText"
@@ -127,7 +127,7 @@
                     android:layout_width="96dp"
                     android:layout_height="96dp"
                     android:layout_gravity="center_horizontal"
-                    android:background="@drawable/corners14grey"/>
+                    android:src="@drawable/coins3"/>
 
                 <TextView
                     android:id="@+id/fiveCoinsText"
@@ -178,7 +178,7 @@
                     android:layout_width="96dp"
                     android:layout_height="96dp"
                     android:layout_gravity="center_horizontal"
-                    android:background="@drawable/corners14grey"/>
+                    android:src="@drawable/coins4"/>
 
                 <TextView
                     android:id="@+id/sevenCoinsText"
@@ -217,7 +217,7 @@
                     android:layout_width="96dp"
                     android:layout_height="96dp"
                     android:layout_gravity="center_horizontal"
-                    android:background="@drawable/corners14grey"/>
+                    android:src="@drawable/coins5"/>
 
                 <TextView
                     android:id="@+id/tenCoinsText"
@@ -256,7 +256,7 @@
                     android:layout_width="96dp"
                     android:layout_height="96dp"
                     android:layout_gravity="center_horizontal"
-                    android:background="@drawable/corners14grey"/>
+                    android:src="@drawable/coins6"/>
 
                 <TextView
                     android:id="@+id/twentyCoinsText"
