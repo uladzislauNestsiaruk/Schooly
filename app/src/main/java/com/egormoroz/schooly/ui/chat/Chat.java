@@ -4,15 +4,25 @@ public class Chat {
     private String name = "";
     private String LastTime = "";
     private String LastMessage = "";
+    private String type = "";
 
-    public Chat (String name, String LastTime, String LastMessage){
+    public Chat (String name, String LastTime, String LastMessage, String type){
         this.name = name;
         this.LastTime = LastTime;
         this.LastMessage = LastMessage;
+        this.type = type;
     }
 
     public Chat() {
 
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getName () {return  this.name;}
@@ -26,4 +36,5 @@ public class Chat {
     public String getLastTime () {return  this.LastTime;}
 
     public void setLastTime (String time) {this.LastTime = time;}
+
 }

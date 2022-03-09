@@ -63,8 +63,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:textColor="@color/app_grey"
+        android:layout_marginEnd="24dp"
         android:fontFamily="@font/montserrat_bold"
-        android:layout_marginEnd="24dp"/>
+        android:textColor="@color/app_grey" />
 
 </RelativeLayout>

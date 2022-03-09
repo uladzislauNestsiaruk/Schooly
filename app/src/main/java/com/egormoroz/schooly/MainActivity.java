@@ -95,7 +95,6 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
-        //   getDialogs();
     }
 
     @Override

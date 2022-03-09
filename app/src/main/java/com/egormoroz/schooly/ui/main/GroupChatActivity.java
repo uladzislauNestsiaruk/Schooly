@@ -449,13 +449,13 @@ public final class GroupChatActivity extends Activity {
 
         switch (type) {
             case "text":
-                firebaseModel.getUsersReference().child("Groups").child(messageSenderName).child("LastMessage").setValue(Message);
+                firebaseModel.getUsersReference().child("Groups").child(messageSenderName).child("LastMessage").setValue(messageSenderName + ":" + Message);
                 break;
             case "voice":
-                firebaseModel.getUsersReference().child("Groups").child(messageSenderName).child("LastMessage").setValue("Голосовое сообщение");
+                firebaseModel.getUsersReference().child("Groups").child(messageSenderName).child("LastMessage").setValue(messageSenderName + ":Голосовое сообщение");
                 break;
             case "image":
-                firebaseModel.getUsersReference().child("Groups").child(messageSenderName).child("LastMessage").setValue("Фотография");
+                firebaseModel.getUsersReference().child("Groups").child(messageSenderName).child("LastMessage").setValue(messageSenderName + ":Фотография");
                 break;
         }
         Calendar calendar = Calendar.getInstance();

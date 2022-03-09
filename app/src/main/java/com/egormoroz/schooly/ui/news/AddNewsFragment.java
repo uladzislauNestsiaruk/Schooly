@@ -128,7 +128,8 @@ public class AddNewsFragment extends Fragment {
                                 reference.updateChildren(newsBodyDetails).addOnCompleteListener(new OnCompleteListener() {
                                     @Override
                                     public void onComplete(@NonNull Task task) {
-
+                                        text.setText("");
+                                        sendNews.setVisibility(View.GONE);
                                     }
                                 });
                                 firebaseDatabase.getReference("news").child(newsPushID).child("TimeMill").setValue(calendar.getTimeInMillis() * -1);

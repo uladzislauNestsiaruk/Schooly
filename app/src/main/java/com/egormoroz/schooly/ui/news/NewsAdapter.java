@@ -1,8 +1,6 @@
 package com.egormoroz.schooly.ui.news;
 
-import android.annotation.SuppressLint;
-import android.os.Build;
-import android.util.Log;
+import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +17,6 @@ import com.egormoroz.schooly.RecentMethods;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
@@ -32,6 +29,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
     public static String newsId, likeWord;
     FirebaseModel firebaseModel = new FirebaseModel();
     long value;
+    Activity activity;
 
 
     public NewsAdapter(List<NewsItem> newsList) {
@@ -103,6 +101,15 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
                         });
                     }
                 });
+
+
+                holder.comment.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        RecentMethods.setCurrentFragment(NewsFragment.newInstance(), NewsFragment.newInstance().getActivity());
+                    }
+                });
+
             }
         });
     }

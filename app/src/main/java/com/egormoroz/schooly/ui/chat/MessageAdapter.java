@@ -44,7 +44,7 @@ import me.jagar.chatvoiceplayerlibrary.VoicePlayerView;
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageViewHolder> {
     private List<Message> userMessagesList;
     private DatabaseReference usersRef;
-    private String messageSenderId = "", messageReceiverId = "";
+    private String messageSenderNick = "", messageReceiverNick = "";
     private String fromUserID;
     private DatabaseReference reference;
     private String messageID;
@@ -53,24 +53,24 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
     public MessageAdapter(List<Message> userMessagesList, String messageSenderId, String messageReceiverId ) {
         this.userMessagesList = userMessagesList;
-        this.messageSenderId = messageSenderId;
-        this.messageReceiverId = messageReceiverId;
+        this.messageSenderNick = messageSenderId;
+        this.messageReceiverNick = messageReceiverId;
     }
 
     public MessageAdapter(List<Message> userMessagesList, String messageSenderId) {
         this.userMessagesList = userMessagesList;
-        this.messageSenderId = messageSenderId;
+        this.messageSenderNick = messageSenderId;
     }
 
 
     public static class MessageViewHolder extends RecyclerView.ViewHolder {
         public TextView senderMessageText, receiverMessageText, senderMessageTime, receiverMessageTime, senderTimeVoice;
         public CircleImageView receiverProfileImage;
+        public RecyclerView outMessage, inMessage, outVoice;
         public ImageView messageSenderPicture, senderPlay, senderPause;
         public ImageView messageReceiverPicture;
         public SeekBar  senderSeekBar;
-        public static VoicePlayerView voicePlayerView;
-        public static VoicePlayerView voicePlayerViewReceiver;
+
 
         private void handleShowView(View view) {
             if (getAdapterPosition() > X - 1) {
@@ -83,6 +83,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         public MessageViewHolder(@NonNull View itemView) {
             super(itemView);
             handleShowView(itemView);
+            outMessage = itemView.findViewById(R.id.textMessageOutcoming);
+            inMessage = itemView.findViewById(R.id.textMessageIncoming);
             //receiverMessageTime = itemView.findViewById(R.id.receiver_time);
             senderMessageTime = itemView.findViewById(R.id.sender_time);
             senderMessageText = (TextView) itemView.findViewById(R.id.sender_message_text);
@@ -94,7 +96,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             senderPause = itemView.findViewById(R.id.imgPause);
             senderSeekBar = itemView.findViewById(R.id.seekBar);
             senderTimeVoice = itemView.findViewById(R.id.txtTime);
-
+            outVoice = itemView.findViewById(R.id.outcomingVoice);
         }
     }
 
@@ -104,7 +106,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     public MessageViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext())
                 .inflate(R.layout.custom_messages_layout, viewGroup, false);
-        reference = FirebaseDatabase.getInstance().getReference("users").child(messageSenderId).child("Chats").child(messageReceiverId).child("Messages");
+        reference = FirebaseDatabase.getInstance().getReference("users").child(messageSenderNick).child("Chats").child(messageReceiverNick).child("Messages");
         usersRef = FirebaseDatabase.getInstance().getReference().child("users");
         return new MessageViewHolder(view);
     }
@@ -135,97 +137,100 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
             }
         });
-//
 
-        messageViewHolder.receiverMessageText.setVisibility(View.GONE);
-//      messageViewHolder.receiverProfileImage.setVisibility(View.GONE);
-        messageViewHolder.senderMessageText.setVisibility(View.GONE);
+        messageViewHolder.outMessage.setVisibility(View.GONE);
+        messageViewHolder.inMessage.setVisibility(View.GONE);
+        messageViewHolder.outVoice.setVisibility(View.GONE);
         messageViewHolder.messageSenderPicture.setVisibility(View.GONE);
         messageViewHolder.messageReceiverPicture.setVisibility(View.GONE);
-//        messageViewHolder.senderPause.setVisibility(View.GONE);
-//        messageViewHolder.senderSeekBar.setVisibility(View.GONE);
-//        messageViewHolder.senderPlay.setVisibility(View.GONE);
-//        messageViewHolder.senderTimeVoice.setVisibility(View.GONE);
 
-        if (fromMessageType.equals("text")) {
-            if (fromUserID.equals(messageSenderId)) {
-                messageViewHolder.senderMessageText.setVisibility(View.VISIBLE);
-                messageViewHolder.senderMessageText.setText(messages.getMessage());
-                messageViewHolder.senderMessageTime.setText(messages.getTime());
-            } else {
+
+        switch (fromMessageType) {
+            case "text":
+                if (fromUserID.equals(messageSenderNick)) {
+                    messageViewHolder.outMessage.setVisibility(View.VISIBLE);
+                    messageViewHolder.senderMessageText.setText(messages.getMessage());
+                    messageViewHolder.senderMessageTime.setText(messages.getTime());
+                } else {
 //                messageViewHolder.receiverProfileImage.setVisibility(View.VISIBLE);
-                messageViewHolder.receiverMessageText.setVisibility(View.VISIBLE);
-                messageViewHolder.receiverMessageText.setText(messages.getMessage());
-                messageViewHolder.receiverMessageTime.setText(messages.getTime());
-            }
-        } else if (fromMessageType.equals("image")) {
-            if (fromUserID.equals(messageSenderId)) {
-                messageViewHolder.messageSenderPicture.setVisibility(View.VISIBLE);
-                Picasso.get().load(messages.getMessage()).into(messageViewHolder.messageSenderPicture);
-
-            } else {
-//                messageViewHolder.receiverProfileImage.setVisibility(View.VISIBLE);
-                messageViewHolder.messageReceiverPicture.setVisibility(View.VISIBLE);
-                Picasso.get().load(messages.getMessage()).into(messageViewHolder.messageReceiverPicture);
-            }
-        } else if (fromMessageType.equals("pdf") || fromMessageType.equals("docx")) {
-            if (fromUserID.equals(messageSenderId)) {
-                messageViewHolder.messageSenderPicture.setVisibility(View.VISIBLE);
-                messageViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(userMessagesList.get(position).getMessage()));
-                        messageViewHolder.itemView.getContext().startActivity(intent);
-                    }
-                });
-
-            } else {
-                messageViewHolder.receiverProfileImage.setVisibility(View.VISIBLE);
-                messageViewHolder.messageReceiverPicture.setVisibility(View.VISIBLE);
-            }
-        } else if (fromMessageType.equals("voice")) {
-            if (fromUserID.equals(messageSenderId)) {
-//                messageViewHolder.senderPause.setVisibility(View.VISIBLE);
-//                messageViewHolder.senderSeekBar.setVisibility(View.VISIBLE);
-//                messageViewHolder.senderPlay.setVisibility(View.VISIBLE);
-//                messageViewHolder.senderTimeVoice.setVisibility(View.VISIBLE);
-//                VoicePlayer.getInstance(messageViewHolder.itemView.getContext()).init(messages.getMessage(),messageViewHolder.senderPlay, messageViewHolder.senderPause, messageViewHolder.senderSeekBar, messageViewHolder.senderTimeVoice);
-
-
-//                MessageViewHolder.voicePlayerView.setAudio(messages.getMessage());
-//                MessageViewHolder.voicePlayerView.setVisibility(View.VISIBLE);
-            }
-        } else {
-//            MessageViewHolder.voicePlayerViewReceiver.setAudio(messages.getMessage());
-//            MessageViewHolder.voicePlayerViewReceiver.setVisibility(View.VISIBLE);
-        }
-
-        if (fromUserID.equals(messageSenderId)) {
-
-            messageViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                    Map<String, String> messageTextBody = new HashMap<>();
-                    messageTextBody.put("message", null);
-                    messageTextBody.put("type", null);
-                    messageTextBody.put("from", null);
-                    messageTextBody.put("to", null);
-                    messageTextBody.put("time", null);
-                    messageTextBody.put("messageID", null);
-
-
-                    Map<String, Object> messageBodyDetails = new HashMap<String, Object>();
-                    messageBodyDetails.put(reference + "/" + userMessagesList.get(position).getMessageID(), messageTextBody);
-                    reference.updateChildren(messageBodyDetails).addOnCompleteListener(new OnCompleteListener() {
+                    messageViewHolder.inMessage.setVisibility(View.VISIBLE);
+                    messageViewHolder.receiverMessageText.setText(messages.getMessage());
+                    messageViewHolder.receiverMessageTime.setText(messages.getTime());
+                }
+                break;
+            case "image":
+                if (fromUserID.equals(messageSenderNick)) {
+                    messageViewHolder.messageSenderPicture.setVisibility(View.VISIBLE);
+                    Picasso.get().load(messages.getMessage()).into(messageViewHolder.messageSenderPicture);
+                    messageViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                         @Override
-                        public void onComplete(@NonNull Task task) {
-                                delete(position);
+                        public void onClick(View view) {
+                            Intent intent = new Intent(messageViewHolder.itemView.getContext(), ImageViewerActivity.class);
+                            intent.putExtra("url", userMessagesList.get(position).getMessage());
+                            messageViewHolder.itemView.getContext().startActivity(intent);
+                            notifyDataSetChanged();
+                        }
+                    });
+
+                } else {
+                    messageViewHolder.receiverProfileImage.setVisibility(View.VISIBLE);
+                    messageViewHolder.messageReceiverPicture.setVisibility(View.VISIBLE);
+                    Picasso.get().load(messages.getMessage()).into(messageViewHolder.messageReceiverPicture);
+                    messageViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent intent = new Intent(messageViewHolder.itemView.getContext(), ImageViewerActivity.class);
+                            intent.putExtra("url", userMessagesList.get(position).getMessage());
+                            messageViewHolder.itemView.getContext().startActivity(intent);
+                            notifyDataSetChanged();
                         }
                     });
                 }
-            });
+                break;
+            case "pdf":
+
+            case "docx":
+                if (fromUserID.equals(messageSenderNick)) {
+                    messageViewHolder.messageSenderPicture.setVisibility(View.VISIBLE);
+                    messageViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(userMessagesList.get(position).getMessage()));
+                            messageViewHolder.itemView.getContext().startActivity(intent);
+                            notifyDataSetChanged();
+                        }
+                    });
+
+                } else {
+                    messageViewHolder.receiverProfileImage.setVisibility(View.VISIBLE);
+                    messageViewHolder.messageReceiverPicture.setVisibility(View.VISIBLE);
+                }
+                break;
+            case "voice":
+                if (fromUserID.equals(messageSenderNick)) {
+                    messageViewHolder.outVoice.setVisibility(View.VISIBLE);
+                    VoicePlayer.getInstance(messageViewHolder.itemView.getContext()).init(messages.getMessage(), messageViewHolder.senderPlay, messageViewHolder.senderPause, messageViewHolder.senderSeekBar, messageViewHolder.senderTimeVoice);
+//                VoicePlayer.getInstance(messageViewHolder.itemView.getContext()).init(messages.getMessage(),messageViewHolder.senderPlay, messageViewHolder.senderPause, messageViewHolder.senderSeekBar, messageViewHolder.senderTimeVoice);
+                }
+                break;
         }
+        
+        messageViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (fromUserID.equals(messageSenderNick)) {
+                    FirebaseDatabase.getInstance().getReference("users")
+                            .child(messageSenderNick)
+                            .child("Chats").child(messageReceiverNick).child("Messages")
+                            .child(userMessagesList.get(position).getMessageID()).removeValue();
+                    FirebaseDatabase.getInstance().getReference("users")
+                            .child(messageReceiverNick)
+                            .child("Chats").child(messageSenderNick).child("Messages")
+                            .child(userMessagesList.get(position).getMessageID()).removeValue();
+                    delete(position);
+                }
+            }
+        });
     }
 
 

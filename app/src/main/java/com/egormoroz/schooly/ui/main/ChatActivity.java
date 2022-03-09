@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -169,18 +170,28 @@ public final class ChatActivity extends Activity {
                 });
             }
         });
-        if (chatCheckValue!=0 ){
-            if (chatCheckValue==-1){
-                ///////все окей//////
-            }else if (chatCheckValue==1 || chatCheckValue==2){
-                ///////отправка ограничена///////
-            }
-        }
+
         IntializeVoice();
         IntializeControllers();
-
+        if (chatCheckValue != 0 ){
+            if (chatCheckValue == -1){
+                ///////все окей//////
+            }else if (chatCheckValue == 1 || chatCheckValue == 2){
+                MessageInputText.setText("Невозможно отправить сообщение");
+                SendFilesButton.setVisibility(View.GONE);
+                SendMessageButton.setVisibility(View.GONE);
+            }
+        }
         userMessagesList.scrollToPosition(userMessagesList.getAdapter().getItemCount());
         userName.setText(messageReceiverName);
+        info.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent chatIntent = new Intent(getContext(), ChatInformationFrgment.class);
+                chatIntent.putExtra("othNick", messageReceiverName);
+                RecentMethods.setCurrentFragment(ChatInformationFrgment.newInstance(), ChatActivity.this);
+            }
+        });
         Picasso.get().load(messageReceiverImage).placeholder(R.drawable.corners14).into(userImage);
 
         SendMessageButton.setOnClickListener(new View.OnClickListener() {
@@ -225,13 +236,7 @@ public final class ChatActivity extends Activity {
         });
         userImage = findViewById(R.id.custom_profile_image);
         userLastSeen = findViewById(R.id.custom_user_last_seen);
-        info=findViewById(R.id.info);
-        info.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                RecentMethods.setCurrentFragment(ChatInformationFragment.newInstance(messageReceiverName), getParent());
-            }
-        });
+;
 
         SendMessageButton = findViewById(R.id.send_message_btn);
         SendFilesButton = findViewById(R.id.send_files_btn);
@@ -575,17 +580,19 @@ public final class ChatActivity extends Activity {
 
        switch (type) {
            case "text":
+               addType("text");
                firebaseModel.getUsersReference().child(messageSenderName).child("Chats").child(messageReceiverName).child("LastMessage").setValue(Message);
                firebaseModel.getUsersReference().child(messageReceiverName).child("Chats").child(messageSenderName).child("LastMessage").setValue(Message);
                break;
            case "voice":
+               addType("voice");
                firebaseModel.getUsersReference().child(messageSenderName).child("Chats").child(messageReceiverName).child("LastMessage").setValue("Голосовое сообщение");
                firebaseModel.getUsersReference().child(messageReceiverName).child("Chats").child(messageSenderName).child("LastMessage").setValue("Голосовое сообщение");
                break;
            case "image":
                firebaseModel.getUsersReference().child(messageSenderName).child("Chats").child(messageReceiverName).child("LastMessage").setValue("Фотография");
                firebaseModel.getUsersReference().child(messageReceiverName).child("Chats").child(messageSenderName).child("LastMessage").setValue("Фотография");
-
+               addType("image");
                break;
        }
        Calendar calendar = Calendar.getInstance();
@@ -606,6 +613,30 @@ public final class ChatActivity extends Activity {
                 value[0] = value[0] + 1;
                 dataSnapshot.getRef().setValue(value[0]);}
                 else dataSnapshot.getRef().setValue(0);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+
+
+        });
+    }
+
+
+
+    public void addType(String type) {
+        final long[] value = new long[1];
+        DatabaseReference ref = firebaseModel.getUsersReference().child(messageReceiverName).child("Chats").child(messageSenderName).child(type);
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()){
+                    value[0] = (long) dataSnapshot.getValue();
+                    value[0] = value[0] + 1;
+                    dataSnapshot.getRef().setValue(value[0]);}
+                else dataSnapshot.getRef().setValue(1);
             }
 
             @Override
