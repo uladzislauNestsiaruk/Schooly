@@ -30,7 +30,7 @@ import java.util.ArrayList;
 public class NontificationAdapter extends RecyclerView.Adapter<NontificationAdapter.ViewHolder>  {
 
     ArrayList<Nontification> listAdapter;
-    private ItemClickListener clickListener;
+    private NontificationAdapter.ItemClickListener clickListener;
     private FirebaseModel firebaseModel = new FirebaseModel();
     String accountType;
 
@@ -139,7 +139,16 @@ public class NontificationAdapter extends RecyclerView.Adapter<NontificationAdap
                     holder.addFriend.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-
+                            if (clickListener != null) clickListener.onItemClick(v, position);
+                        }
+                    });
+                }
+                else if (nontification.getTypeView().equals("подарок")){
+                    holder.otherUserNick.setText(nontification.getNick()+" подарил тебе "+nontification.getClothesName()+" !!!");
+                    holder.addFriend.setVisibility(View.GONE);
+                    holder.addFriend.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
                         }
                     });
                 }
@@ -172,7 +181,7 @@ public class NontificationAdapter extends RecyclerView.Adapter<NontificationAdap
         return listAdapter.get(id);
     }
 
-    void setClickListener(ItemClickListener itemClickListener) {
+    void setClickListener(NontificationAdapter.ItemClickListener itemClickListener) {
         this.clickListener = itemClickListener;
     }
 

@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
         IsEntered();
         FirebaseUser mFirebaseUser = AuthenticationBase.getCurrentUser();
         if(mFirebaseUser != null) {
-            currentUserID = mFirebaseUser.getUid(); //Do what you need to do with the id
+            currentUserID = mFirebaseUser.getUid();
         }
         ///////////
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);

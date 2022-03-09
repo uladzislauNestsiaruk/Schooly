@@ -1,10 +1,12 @@
 package com.egormoroz.schooly.ui.main.MyClothes;
 
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -13,6 +15,7 @@ import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.Subscriber;
 import com.egormoroz.schooly.ui.coins.TransferMoneyAdapter;
+import com.google.firebase.database.Query;
 
 import java.util.ArrayList;
 
@@ -43,7 +46,7 @@ public class PresentClothesAdapter  extends RecyclerView.Adapter<PresentClothesA
         holder.presentClothes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (clickListener != null) clickListener.onItemClick(view, position);
+                    if (clickListener != null) clickListener.onItemClick(view, position);
             }
         });
     }

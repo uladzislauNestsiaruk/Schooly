@@ -352,5 +352,9 @@
     <string name="presentClothes">Подарить</string>
     <string name="presentClothesText">Подарить одежду</string>
 
+    <string name="request">Запрос</string>
+
+    <string name="totalProfitText">Общая прибыль за сегодня:</string>
+
 
 </resources>

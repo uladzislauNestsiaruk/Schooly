@@ -6,6 +6,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FirebaseModel;
+import com.egormoroz.schooly.Nontification;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.Subscriber;
@@ -37,9 +39,11 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class PresentClothesFragment extends Fragment {
 
@@ -207,9 +211,31 @@ public class PresentClothesFragment extends Fragment {
                 RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
                     @Override
                     public void PassUserNick(String nick) {
-                        firebaseModel.getUsersReference().child(userNameToProfile).child("clothes")
-                                .child(clothes.getClothesTitle()).setValue(clothes);
-                        Toast.makeText(getContext(), "Подарок отправлен", Toast.LENGTH_SHORT).show();
+                        Query query=firebaseModel.getUsersReference().child(userNameToProfile)
+                                .child("clothes").child(clothes.getClothesTitle());
+                        query.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                if(snapshot.exists()){
+                                    Toast.makeText(getContext(), "У "+userNameToProfile+" уже есть этот предмет одежды" , Toast.LENGTH_SHORT).show();
+                                }else {
+                                    firebaseModel.getUsersReference().child(userNameToProfile).child("clothes")
+                                            .child(clothes.getClothesTitle()).setValue(clothes);
+                                    String numToBase=firebaseModel.getReference().child("users")
+                                            .child(userNameToProfile).child("nontifications").push().getKey();
+                                    firebaseModel.getReference().child("users")
+                                            .child(userNameToProfile).child("nontifications")
+                                            .child(numToBase).setValue(new Nontification(nick,"не отправлено","подарок"
+                                            , ServerValue.TIMESTAMP.toString(),clothes.getClothesTitle(),clothes.getClothesImage(),"не просмотрено",numToBase));
+                                    Toast.makeText(getContext(), "Подарок отправлен", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
                     }
                 });
                 dialog.dismiss();

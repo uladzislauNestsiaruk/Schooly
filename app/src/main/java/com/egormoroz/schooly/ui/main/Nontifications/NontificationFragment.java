@@ -76,6 +76,13 @@ public class NontificationFragment extends Fragment {
                         }
                         NontificationAdapter nontificationAdapter=new NontificationAdapter(nontifications);
                         nontsRecyclerView.setAdapter(nontificationAdapter);
+                        NontificationAdapter.ItemClickListener itemClickListener=new NontificationAdapter.ItemClickListener() {
+                            @Override
+                            public void onItemClick(View view, int position) {
+                                RecentMethods.setCurrentFragment(ClothesRequestFragment.newInstance(NontificationFragment.newInstance()), getActivity());
+                            }
+                        };
+                        nontificationAdapter.setClickListener(itemClickListener);
                     }
                 });
             }

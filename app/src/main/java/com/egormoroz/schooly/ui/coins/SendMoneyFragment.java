@@ -87,7 +87,7 @@ public class SendMoneyFragment extends Fragment {
                     Toast.makeText(getContext(), "Укажите сумму перевода", Toast.LENGTH_SHORT).show();
                 }else {
                     sumLong=Long.valueOf(sumText);
-                    if(sumText.equals("0")){
+                    if(sumLong==0){
                         Toast.makeText(getContext(), "Сумма перевода должна быть больше нуля", Toast.LENGTH_SHORT).show();
                     }else if(sumLong>moneyBase){
                         Toast.makeText(getContext(), "Недостаточно средств для перевода", Toast.LENGTH_SHORT).show();
