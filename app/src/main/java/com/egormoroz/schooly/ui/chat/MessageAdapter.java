@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
@@ -66,7 +67,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     public static class MessageViewHolder extends RecyclerView.ViewHolder {
         public TextView senderMessageText, receiverMessageText, senderMessageTime, receiverMessageTime, senderTimeVoice;
         public CircleImageView receiverProfileImage;
-        public RecyclerView outMessage, inMessage, outVoice;
+        public RelativeLayout outMessage, inMessage, outVoice, inVoice;
         public ImageView messageSenderPicture, senderPlay, senderPause;
         public ImageView messageReceiverPicture;
         public SeekBar  senderSeekBar;
@@ -85,6 +86,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             handleShowView(itemView);
             outMessage = itemView.findViewById(R.id.textMessageOutcoming);
             inMessage = itemView.findViewById(R.id.textMessageIncoming);
+            inVoice = itemView.findViewById(R.id.incomingVoice);
             //receiverMessageTime = itemView.findViewById(R.id.receiver_time);
             senderMessageTime = itemView.findViewById(R.id.sender_time);
             senderMessageText = (TextView) itemView.findViewById(R.id.sender_message_text);
@@ -141,6 +143,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         messageViewHolder.outMessage.setVisibility(View.GONE);
         messageViewHolder.inMessage.setVisibility(View.GONE);
         messageViewHolder.outVoice.setVisibility(View.GONE);
+        messageViewHolder.inVoice.setVisibility(View.GONE);
         messageViewHolder.messageSenderPicture.setVisibility(View.GONE);
         messageViewHolder.messageReceiverPicture.setVisibility(View.GONE);
 

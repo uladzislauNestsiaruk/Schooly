@@ -5,9 +5,12 @@
     android:layout_height="wrap_content">
 
     <RelativeLayout
-        android:id="@+id/textMessageOutcoming"
+        android:id="@+id/textMessageIncoming"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="110dp"
+        android:layout_marginBottom="4dp"
+        android:layout_marginTop="4dp"
         android:background="@drawable/cornerstextmessagesfromother">
 
 
@@ -17,7 +20,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_marginLeft="3dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
             android:padding="10dp"
             android:textColor="@android:color/white"
             android:textSize="14sp"
@@ -33,24 +37,28 @@
             android:layout_alignParentEnd="true"
             android:layout_marginBottom="4dp"
             android:layout_marginEnd="4dp"
+            android:paddingBottom="8dp"
             android:textColor="@color/white"
             />
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/textMessageIncoming"
+        android:id="@+id/textMessageOutcoming"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="110dp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="4dp"
+        android:layout_marginTop="4dp"
         android:background="@drawable/cornerstextmessagesfromme">
 
         <TextView
             android:id="@+id/sender_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
+            android:layout_alignEnd="@+id/sender_message_text"
+            android:layout_alignBottom="@+id/sender_message_text"
             android:layout_marginEnd="4dp"
-            android:layout_marginBottom="4dp"
             android:fontFamily="@font/montserrat_bold"
             android:textColor="@color/white"
             android:textSize="10sp" />
@@ -59,8 +67,9 @@
             android:id="@+id/sender_message_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
+            android:paddingBottom="2dp"
             android:fontFamily="@font/montserrat_bold"
             android:padding="10dp"
             android:textColor="@color/white"
@@ -163,12 +172,12 @@
         android:id="@+id/message_sender_image_view"
         android:layout_width="150dp"
         android:layout_height="150dp"
-        android:background="@drawable/cornerstextmessagesfromme"
         android:layout_alignParentEnd="true"
         android:layout_marginStart="5dp"
         android:layout_marginTop="5dp"
         android:layout_marginEnd="5dp"
         android:layout_marginBottom="5dp"
+        android:background="@drawable/cornerstextmessagesfromme"
         android:scaleType="centerCrop" />
 
 

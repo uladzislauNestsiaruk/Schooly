@@ -47,8 +47,10 @@ public class MainActivity extends AppCompatActivity {
         firebaseModel.initAll();
         ///////////Authorization block
         IsEntered();
-        currentUserID =AuthenticationBase.getCurrentUser().getUid();
-        Log.d("######",currentUserID);
+        FirebaseUser mFirebaseUser = AuthenticationBase.getCurrentUser();
+        if(mFirebaseUser != null) {
+            currentUserID = mFirebaseUser.getUid(); //Do what you need to do with the id
+        }
         ///////////
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {

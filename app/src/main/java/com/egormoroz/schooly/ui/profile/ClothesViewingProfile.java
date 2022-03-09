@@ -17,6 +17,7 @@ import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.ui.main.MyClothes.MyClothesAdapter;
+import com.egormoroz.schooly.ui.main.MyClothes.PresentClothesFragment;
 import com.egormoroz.schooly.ui.main.MyClothes.ViewingMyClothes;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
 import com.egormoroz.schooly.ui.main.Shop.NewClothesAdapter;
@@ -41,7 +42,7 @@ public class ClothesViewingProfile extends Fragment {
             ,perSentToday,perSentAll,clothesPrice;
     ImageView clothesImageCV, backToShop, coinsImage,coinsImageAll,coinsImagePurple;
     long schoolyCoins, clothesPrise;
-    RelativeLayout checkBasket;
+    RelativeLayout checkBasket,presentClothes;
     int a = 0;
     Clothes clothesViewing;
     private FirebaseModel firebaseModel = new FirebaseModel();
@@ -76,6 +77,7 @@ public class ClothesViewingProfile extends Fragment {
         purchaseAll=view.findViewById(R.id.purchasesAll);
         profitToday=view.findViewById(R.id.profit);
         profitAll=view.findViewById(R.id.profitAll);
+        presentClothes=view.findViewById(R.id.presentClothes);
         perSentToday=view.findViewById(R.id.perSentPurchase);
         perSentAll=view.findViewById(R.id.perSentPurchaseAll);
         backToShop.setOnClickListener(new View.OnClickListener() {
@@ -89,6 +91,12 @@ public class ClothesViewingProfile extends Fragment {
             @Override
             public void onItemClick(Clothes clothes) {
                 clothesViewing = clothes;
+                presentClothes.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        RecentMethods.setCurrentFragment(PresentClothesFragment.newInstance(clothesViewing,ClothesViewingProfile.newInstance(fragment)), getActivity());
+                    }
+                });
                 clothesTitleCV.setText(clothes.getClothesTitle());
                 purchaseTodayString=String.valueOf(clothesViewing.getPurchaseToday());
                 if(clothes.getPurchaseToday()<1000){

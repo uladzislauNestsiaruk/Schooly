@@ -188,8 +188,19 @@ public final class ChatActivity extends Activity {
             @Override
             public void onClick(View view) {
                 Intent chatIntent = new Intent(getContext(), ChatInformationFrgment.class);
-                chatIntent.putExtra("othNick", messageReceiverName);
-                RecentMethods.setCurrentFragment(ChatInformationFrgment.newInstance(), ChatActivity.this);
+                Query query=firebaseModel.getUsersReference().child(messageReceiverName)
+                        .child("nick");
+                query.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        RecentMethods.setCurrentFragment(ChatInformationFrgment.newInstance(snapshot.getValue(String.class)), ChatActivity.this);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
             }
         });
         Picasso.get().load(messageReceiverImage).placeholder(R.drawable.corners14).into(userImage);
@@ -222,7 +233,7 @@ public final class ChatActivity extends Activity {
     }
 
     private void IntializeControllers() {
-
+        info = findViewById(R.id.info);
         back = findViewById(R.id.backtoalldialogs);
 
         userName = findViewById(R.id.custom_profile_name);

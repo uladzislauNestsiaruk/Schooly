@@ -17,6 +17,7 @@ import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
+import com.egormoroz.schooly.ui.profile.ComplainFragmentToBase;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -32,13 +33,17 @@ public class ChatInformationFrgment extends Fragment {
     SwitchMaterial switchMaterial;
     FirebaseModel firebaseModel;
     boolean checkType;
-    String photoNumber, othUserNick, messageNumber, voiceNumber;
+    String photoNumber, otherUserNick, messageNumber, voiceNumber;
     public ChatInformationFrgment() {
     }
 
 
-    public static ChatInformationFrgment newInstance() {
-        return new ChatInformationFrgment();
+    public ChatInformationFrgment(String otherUserNick) {
+        this.otherUserNick = otherUserNick;
+    }
+
+    public static ChatInformationFrgment newInstance(String otherUserNick) {
+        return new ChatInformationFrgment(otherUserNick);
     }
 
 
@@ -64,12 +69,12 @@ public class ChatInformationFrgment extends Fragment {
         Bundle data = intentReceived.getExtras();
 
         if (data != null) {
-            othUserNick = data.getString("othNick");
+
         }
         else {
-            othUserNick = "Unnamed";
+
         }
-        nick.setText(othUserNick);
+        nick.setText(otherUserNick);
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @Override
             public void PassUserNick(String nick) {
@@ -132,7 +137,7 @@ public class ChatInformationFrgment extends Fragment {
                             public void onClick(View view) {
                                 Intent chatIntent = new Intent(getContext(), ChatActivity.class);
                                 chatIntent.putExtra("curUser", nick);
-                                chatIntent.putExtra("othUser", othUserNick);
+                                chatIntent.putExtra("othUser", otherUserNick);
                                 //   chatIntent.putExtra("visit_image", retImage[0]);
                                 startActivity(chatIntent);
                             }
@@ -145,7 +150,7 @@ public class ChatInformationFrgment extends Fragment {
                 RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
                     @Override
                     public void PassUserNick(String nick) {
-                        deleteChat(nick, othUserNick);
+                        deleteChat(nick, otherUserNick);
                     }
                 });
             }
