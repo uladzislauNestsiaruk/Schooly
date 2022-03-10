@@ -541,12 +541,12 @@ public class ProfileFragment extends Fragment {
                                                                         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
                                                                             @Override
                                                                             public void PassUserNick(String nick) {
-                                                                                Query query3=firebaseModel.getUsersReference().child(nick)
-                                                                                        .child("subscribers").child(info.getNick());
+                                                                                Query query3=firebaseModel.getUsersReference().child(sendNick)
+                                                                                        .child("subscription").child(nick);
                                                                                 query3.addValueEventListener(new ValueEventListener() {
                                                                                     @Override
                                                                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                                                                        if(snapshot.exists()){
+                                                                                        if(dataSnapshot.exists()){
                                                                                             firebaseModel.getUsersReference().child(nick)
                                                                                                     .child("subscribers").child(info.getNick()).removeValue();
                                                                                             firebaseModel.getUsersReference().child(info.getNick())
@@ -762,6 +762,27 @@ public class ProfileFragment extends Fragment {
                                                                         RecentMethods.setCurrentFragment(ComplainFragment.newInstance(info.getNick()), getActivity());
                                                                         return true;
                                                                     case R.id.three:
+                                                                        Query query3=firebaseModel.getUsersReference().child(sendNick)
+                                                                                .child("subscription").child(nick);
+                                                                        query3.addValueEventListener(new ValueEventListener() {
+                                                                            @Override
+                                                                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                                                if(dataSnapshot.exists()){
+                                                                                    firebaseModel.getUsersReference().child(nick)
+                                                                                            .child("subscribers").child(info.getNick()).removeValue();
+                                                                                    firebaseModel.getUsersReference().child(info.getNick())
+                                                                                            .child("subscription").child(nick).removeValue();
+                                                                                    Toast.makeText(getContext(), "Пользователь удален из подписчиков", Toast.LENGTH_SHORT).show();
+                                                                                }else {
+                                                                                    Toast.makeText(getContext(), "Пользователь не подписан на тебя", Toast.LENGTH_SHORT).show();
+                                                                                }
+                                                                            }
+
+                                                                            @Override
+                                                                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                                                            }
+                                                                        });
                                                                         return true;
                                                                 }
                                                                 return true;
@@ -855,10 +876,27 @@ public class ProfileFragment extends Fragment {
                                                                         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
                                                                             @Override
                                                                             public void PassUserNick(String nick) {
-                                                                                firebaseModel.getUsersReference().child(nick).child("subscribers")
-                                                                                        .child(info.getNick()).removeValue();
-                                                                                firebaseModel.getUsersReference().child(info.getNick()).child("subscription")
-                                                                                        .child(nick).removeValue();
+                                                                                Query query3=firebaseModel.getUsersReference().child(sendNick)
+                                                                                        .child("subscription").child(nick);
+                                                                                query3.addValueEventListener(new ValueEventListener() {
+                                                                                    @Override
+                                                                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                                                        if(dataSnapshot.exists()){
+                                                                                            firebaseModel.getUsersReference().child(nick)
+                                                                                                    .child("subscribers").child(info.getNick()).removeValue();
+                                                                                            firebaseModel.getUsersReference().child(info.getNick())
+                                                                                                    .child("subscription").child(nick).removeValue();
+                                                                                            Toast.makeText(getContext(), "Пользователь удален из подписчиков", Toast.LENGTH_SHORT).show();
+                                                                                        }else {
+                                                                                            Toast.makeText(getContext(), "Пользователь не подписан на тебя", Toast.LENGTH_SHORT).show();
+                                                                                        }
+                                                                                    }
+
+                                                                                    @Override
+                                                                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                                                                    }
+                                                                                });
                                                                             }
                                                                         });
                                                                         return true;
@@ -1046,6 +1084,7 @@ public class ProfileFragment extends Fragment {
 
         dialog.show();
     }
+
 
     public void checkWardrobe(){
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {

@@ -23,6 +23,7 @@ public class UserInformation {
     private String myClothes;
     private String queue;
     private String bio;
+    private String looks;
     private String accountType;
     private String version;
     public UserInformation(){
@@ -84,6 +85,14 @@ public class UserInformation {
 
     public void setMiners(String miners){
         this.miners=miners;
+    }
+
+    public String getLooks(){
+        return looks;
+    }
+
+    public void setLooks(String looks){
+        this.looks=looks;
     }
 
     public long getLevel() {
@@ -188,7 +197,8 @@ public class UserInformation {
                            String gender, long age,String miners,long level,long money,double todayMining,
                            String subscription, String subscribers, String queue,String bio,
                            String accountType,String chatsNontsType,
-                           String groupChatsNontsType,String profileNontsType,String myClothes,String version) {
+                           String groupChatsNontsType,String profileNontsType,String myClothes,String version,
+                           String looks) {
         this.Nick = nick;
         this.uid = uid;
         this.phone = phone;
@@ -210,6 +220,7 @@ public class UserInformation {
         this.profileNontsType=profileNontsType;
         this.myClothes=myClothes;
         this.version=version;
+        this.looks=looks;
     }
 
 }
