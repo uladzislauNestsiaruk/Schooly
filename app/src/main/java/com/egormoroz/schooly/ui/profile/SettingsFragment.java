@@ -41,7 +41,8 @@ public class SettingsFragment extends Fragment {
     }
 
     FirebaseModel firebaseModel=new FirebaseModel();
-    TextView  userNick,userNumber,userPassword,changePassword,blackList,exitAccout;
+    TextView  userNick,userNumber,userPassword,changePassword,blackList,exitAccout,
+            dataProtect,rules,support;
     String userNickString;
     SwitchMaterial privateAccountSwitch,chatsSwitch,groupChatsSwitch,profileSwitch;
     boolean checkType;
@@ -63,7 +64,30 @@ public class SettingsFragment extends Fragment {
         chatsSwitch=view.findViewById(R.id.chatsSwitch);
         groupChatsSwitch=view.findViewById(R.id.groupChatsSwitch);
         profileSwitch=view.findViewById(R.id.profileSwitch);
+        dataProtect=view.findViewById(R.id.dataProtect);
+        rules=view.findViewById(R.id.rules);
+        support=view.findViewById(R.id.support);
 
+        dataProtect.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        rules.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        support.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @Override
             public void PassUserNick(String nick) {

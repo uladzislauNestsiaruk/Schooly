@@ -69,6 +69,14 @@ public class LooksFragmentProfileOther extends Fragment {
           LooksAdapter looksAdapter=new LooksAdapter(look);
           looksRecyclerOther.setLayoutManager(new GridLayoutManager(getActivity(), 3));
           looksRecyclerOther.setAdapter(looksAdapter);
+          LooksAdapter.ItemClickListener itemClickListener=new LooksAdapter.ItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+              RecentMethods.setCurrentFragment(ViewingLookFragment.newInstance(ProfileFragment.
+                      newInstance("user", otherUserNick, LooksFragmentProfile.newInstance())), getActivity());
+            }
+          };
+          looksAdapter.setClickListener(itemClickListener);
         }
       }
     });

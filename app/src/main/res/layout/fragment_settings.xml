@@ -237,106 +237,54 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="24dp" />
 
-        <RelativeLayout
-            android:id="@+id/relativeProtect"
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/help"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/profileSwitch"
-            android:layout_marginTop="30dp"
+            android:layout_below="@+id/profile"
             android:layout_marginStart="24dp"
-            android:layout_marginEnd="24dp"
-            android:background="@drawable/corners30appcolor">
+            android:layout_marginTop="28dp"
+            android:fontFamily="@font/montserrat_extrabold"
+            android:text="@string/help"
+            android:textColor="@color/app_grey"
+            android:textSize="18sp" />
 
-            <ImageView
-                android:id="@+id/imageUsersData"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"/>
-
-            <TextView
-                android:id="@+id/dataProtrct"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:text="@string/dataProtect"
-                android:textColor="@color/app_color"
-                android:background="@drawable/corners14"
-                android:layout_marginTop="96dp"
-                android:padding="10dp"
-                android:layout_marginBottom="16dp"
-                android:textSize="16sp"
-                android:fontFamily="@font/montserrat_extrabold"/>
-
-
-    </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/relativeRules"
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/dataProtect"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/relativeProtect"
-            android:layout_marginTop="30dp"
+            android:layout_below="@+id/help"
             android:layout_marginStart="24dp"
-            android:layout_marginEnd="24dp"
-            android:layout_marginBottom="24dp"
-            android:background="@drawable/corners30appcolor">
-
-            <ImageView
-                android:id="@+id/imageRules"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"/>
-
-            <TextView
-                android:id="@+id/reles"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:text="@string/rules"
-                android:textColor="@color/app_color"
-                android:background="@drawable/corners14"
-                android:layout_marginTop="96dp"
-                android:padding="10dp"
-                android:layout_marginBottom="16dp"
-                android:textSize="16sp"
-                android:fontFamily="@font/montserrat_extrabold"/>
+            android:layout_marginTop="20dp"
+            android:fontFamily="@font/montserrat_bold"
+            android:text="@string/dataProtect"
+            android:textColor="@color/app_grey"
+            android:textSize="14sp" />
 
 
-        </RelativeLayout>
+        <TextView
+            android:id="@+id/rules"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/dataProtect"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="20dp"
+            android:fontFamily="@font/montserrat_bold"
+            android:text="@string/rules"
+            android:textColor="@color/app_grey"
+            android:textSize="14sp" />
 
-        <RelativeLayout
+        <TextView
             android:id="@+id/support"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/relativeRules"
+            android:layout_below="@+id/rules"
             android:layout_marginStart="24dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginEnd="24dp"
-            android:layout_marginBottom="24dp"
-            android:background="@drawable/corners30appcolor">
-
-            <ImageView
-                android:id="@+id/imageSupport"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true" />
-
-            <TextView
-                android:id="@+id/supportText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="96dp"
-                android:layout_marginBottom="16dp"
-                android:background="@drawable/corners14"
-                android:fontFamily="@font/montserrat_extrabold"
-                android:padding="10dp"
-                android:text="@string/support"
-                android:textColor="@color/app_color"
-                android:textSize="16sp" />
-
-
-        </RelativeLayout>
+            android:layout_marginTop="20dp"
+            android:fontFamily="@font/montserrat_bold"
+            android:text="@string/support"
+            android:textColor="@color/app_grey"
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/exitAccount"
@@ -344,10 +292,10 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/support"
             android:layout_marginStart="24dp"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="24dp"
             android:fontFamily="@font/montserrat_bold"
             android:text="@string/exitAccount"
-            android:textColor="@color/rednonts"
+            android:textColor="#EA4646"
             android:textSize="16sp" />
 
         <TextView

@@ -40,13 +40,13 @@
 <!--        android:textColor="@color/app_grey"-->
 <!--        android:textSize="14sp" />-->
 
-    <ImageView
-        android:id="@+id/clothesImagecv"
-        android:layout_width="170dp"
-        android:layout_height="170dp"
-        android:layout_below="@+id/back_toshop"
-        android:layout_marginTop="36dp"
-        android:layout_centerHorizontal="true"/>
+        <ImageView
+            android:id="@+id/clothesImagecv"
+            android:layout_width="170dp"
+            android:layout_height="170dp"
+            android:layout_below="@+id/back_toshop"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="36dp" />
 
     <TextView
         android:id="@+id/clothesTitlecv"
@@ -102,7 +102,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/statistics"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="16dp"
         android:layout_marginStart="40dp"
         android:layout_marginEnd="24dp">
 

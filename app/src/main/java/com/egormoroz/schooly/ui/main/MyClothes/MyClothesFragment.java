@@ -37,10 +37,11 @@ public class MyClothesFragment extends Fragment {
     FirebaseModel firebaseModel=new FirebaseModel();
     RecyclerView recyclerMyClothes;
     RelativeLayout createAndGet,getMoney,createClothesBig,relativeFirstClothes,createClothes;
-    TextView totalProfitText,totalProfit;
+    TextView totalProfitText,totalProfit,clothes,totalPurchaseText,totalPurchase;
     MyClothesAdapter.ItemClickListener itemClickListener;
-    long totalProfitLong;
-    String totalProfitString;
+    long totalProfitLong,totalPurchaseLong;
+    String totalProfitString,totalPurchaseString;
+    ImageView schoolyCoin;
 
 
     int clothesListSize;
@@ -75,6 +76,10 @@ public class MyClothesFragment extends Fragment {
         createClothes=view.findViewById(R.id.createClothesButton);
         totalProfitText=view.findViewById(R.id.totalProfitText);
         totalProfit=view.findViewById(R.id.totalProfit);
+        totalPurchaseText=view.findViewById(R.id.totalPurchaseText);
+        totalPurchase=view.findViewById(R.id.totalPurchase);
+        schoolyCoin=view.findViewById(R.id.schoolycoinGreen);
+        clothes=view.findViewById(R.id.clothes);
         relativeFirstClothes=view.findViewById(R.id.relativeFirstClothes);
         itemClickListener=new MyClothesAdapter.ItemClickListener() {
             @Override
@@ -102,6 +107,10 @@ public class MyClothesFragment extends Fragment {
             recyclerMyClothes.setVisibility(View.GONE);
             totalProfitText.setVisibility(View.GONE);
             totalProfit.setVisibility(View.GONE);
+            totalPurchaseText.setVisibility(View.GONE);
+            totalPurchase.setVisibility(View.GONE);
+            schoolyCoin.setVisibility(View.GONE);
+            clothes.setVisibility(View.GONE);
             createClothesBig.setVisibility(View.VISIBLE);
             relativeFirstClothes.setVisibility(View.VISIBLE);
             createClothes.setVisibility(View.GONE);
@@ -116,6 +125,7 @@ public class MyClothesFragment extends Fragment {
             createClothesBig.setVisibility(View.GONE);
             relativeFirstClothes.setVisibility(View.GONE);
             createClothes.setVisibility(View.VISIBLE);
+            clothes.setText("Одежда "+String.valueOf(clothesListSize)+":");
             RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
                 @Override
                 public void PassUserNick(String nick) {
@@ -135,10 +145,12 @@ public class MyClothesFragment extends Fragment {
                                         clothes.setPurchaseToday(snap.child("purchaseToday").getValue(Long.class));
                                         clothes.setClothesPrice(snap.child("clothesPrice").getValue(Long.class));
                                         totalProfitLong+=clothes.getPurchaseToday()*clothes.getClothesPrice();
+                                        totalPurchaseLong+=clothes.getPurchaseToday();
                                     }
                                     totalProfitString=String.valueOf(totalProfitLong);
+                                    totalPurchaseString=String.valueOf(totalPurchaseLong);
                                     if(totalProfitLong<1000){
-                                        totalProfit.setText("+"+String.valueOf(totalProfitLong));
+                                        totalProfit.setText("+"+totalProfitString);
                                     }else if(totalProfitLong>1000 && totalProfitLong<10000){
                                         totalProfit.setText("+"+totalProfitString.substring(0, 1)+"."+totalProfitString.substring(1, 2)+"K");
                                     }
@@ -155,6 +167,26 @@ public class MyClothesFragment extends Fragment {
                                     }
                                     else if(totalProfitLong>10000000 && totalProfitLong<100000000){
                                         totalProfit.setText("+"+totalProfitString.substring(0, 2)+"KK");
+                                    }
+                                    //////////////////////////////////////
+                                    if(totalPurchaseLong<1000){
+                                        totalPurchase.setText(totalPurchaseString);
+                                    }else if(totalPurchaseLong>1000 && totalPurchaseLong<10000){
+                                        totalPurchase.setText(totalPurchaseString.substring(0, 1)+"."+totalPurchaseString.substring(1, 2)+"K");
+                                    }
+                                    else if(totalPurchaseLong>10000 && totalPurchaseLong<100000){
+                                        totalPurchase.setText(totalPurchaseString.substring(0, 2)+"."+totalPurchaseString.substring(2,3)+"K");
+                                    }
+                                    else if(totalPurchaseLong>10000 && totalPurchaseLong<100000){
+                                        totalPurchase.setText(totalPurchaseString.substring(0, 2)+"."+totalPurchaseString.substring(2,3)+"K");
+                                    }else if(totalPurchaseLong>100000 && totalPurchaseLong<1000000){
+                                        totalPurchase.setText(totalPurchaseString.substring(0, 3)+"K");
+                                    }
+                                    else if(totalPurchaseLong>1000000 && totalPurchaseLong<10000000){
+                                        totalPurchase.setText(totalPurchaseString.substring(0, 1)+"KK");
+                                    }
+                                    else if(totalPurchaseLong>10000000 && totalPurchaseLong<100000000){
+                                        totalPurchase.setText(totalPurchaseString.substring(0, 2)+"KK");
                                     }
                                 }
 

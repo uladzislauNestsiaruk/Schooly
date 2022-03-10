@@ -77,7 +77,8 @@ public class LooksFragmentProfile extends Fragment {
                             LooksAdapter.ItemClickListener itemClickListener=new LooksAdapter.ItemClickListener() {
                                 @Override
                                 public void onItemClick(View view, int position) {
-
+                                    RecentMethods.setCurrentFragment(ViewingLookFragment.newInstance(ProfileFragment.
+                                            newInstance("user", nick, LooksFragmentProfile.newInstance())), getActivity());
                                 }
                             };
                             looksAdapter.setClickListener(itemClickListener);

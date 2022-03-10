@@ -295,8 +295,10 @@
     <string name="criteria">критериями</string>
     <string name="enterTitleText">Введи название одежды:</string>
     <string name="addModelFile">Добавь файл модели:</string>
+    <string name="modelFile">Файл модели:</string>
     <string name="addModelImage">Добавь фото модели:</string>
     <string name="clothesType">Выбери тип одежды:</string>
+    <string name="clothesTypeText">Тип одежды:</string>
     <string name="currencyType">Тип валюты:</string>
     <string name="clothesPrice">Введи цену одежды:</string>
     <string name="wayToFile">Путь к файлу</string>
@@ -355,6 +357,14 @@
     <string name="request">Запрос</string>
 
     <string name="totalProfitText">Общая прибыль за сегодня:</string>
+    <string name="totalPurchaseText">Общая продажи за сегодня:</string>
+    <string name="clothes2">Одежда:</string>
+
+    <string name="help">ПОМОЩЬ</string>
+
+    <string name="requestAnswer">Ответ на заявку:</string>
+    <string name="reasonAnswer">Причина отказа:</string>
+    <string name="adding">Добавление:</string>
 
 
 </resources>

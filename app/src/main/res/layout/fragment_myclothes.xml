@@ -40,33 +40,72 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/relativeMenu"
-            android:layout_marginTop="24dp"
             android:layout_marginStart="24dp"
-            android:textColor="@color/app_grey"
+            android:layout_marginTop="24dp"
             android:fontFamily="@font/montserrat_bold"
-            android:text="@string/totalProfitText"/>
+            android:text="@string/totalProfitText"
+            android:textColor="@color/app_grey" />
 
-        <TextView
-            android:id="@+id/totalProfit"
+        <RelativeLayout
+            android:id="@+id/relativeTotalProfit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/totalProfitText"
-            android:layout_marginStart="24dp"
+            android:layout_marginStart="24dp">
+
+
+         <TextView
+            android:id="@+id/totalProfit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:textColor="@color/green"
             android:textSize="40sp"
+            android:fontFamily="@font/montserratblack"
+             android:layout_centerVertical="true"/>
+
+            <ImageView
+                android:id="@+id/schoolycoinGreen"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="2dp"
+                android:layout_marginTop="14dp"
+                android:layout_toRightOf="@+id/totalProfit"
+                android:src="@drawable/ic_schoolycoin38dpgreen" />
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/totalPurchaseText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/relativeTotalProfit"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="12dp"
+            android:fontFamily="@font/montserrat_bold"
+            android:text="@string/totalPurchaseText"
+            android:textColor="@color/app_grey" />
+
+        <TextView
+            android:id="@+id/totalPurchase"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/app_color"
+            android:textSize="26sp"
+            android:layout_marginStart="24dp"
+            android:layout_below="@id/totalPurchaseText"
             android:fontFamily="@font/montserratblack" />
 
         <RelativeLayout
             android:id="@+id/createClothesButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/totalProfit"
+            android:layout_below="@+id/totalPurchase"
             android:layout_marginStart="24dp"
             android:layout_marginTop="24dp"
             android:layout_marginEnd="24dp"
-            android:elevation="8dp"
             android:layout_marginBottom="20dp"
-            android:background="@drawable/corners14appcolor">
+            android:background="@drawable/corners14appcolor"
+            android:elevation="8dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -80,6 +119,29 @@
                 android:textSize="18sp" />
 
         </RelativeLayout>
+
+        <TextView
+            android:id="@+id/clothes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/createClothesButton"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="10dp"
+            android:fontFamily="@font/montserrat_bold"
+            android:textColor="@color/app_grey"
+            android:textSize="16dp" />
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerMyClothes"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/clothes"
+            android:layout_marginTop="8dp"
+            android:orientation="vertical"
+            android:paddingBottom="30dp"
+            android:scrollbars="none"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
         <RelativeLayout
             android:id="@+id/relativeFirstClothes"
@@ -263,17 +325,6 @@
 
 
         </RelativeLayout>
-
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerMyClothes"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/createClothesButton"
-            android:orientation="vertical"
-            android:paddingBottom="30dp"
-            android:scrollbars="none"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
     </RelativeLayout>
 </androidx.core.widget.NestedScrollView>
