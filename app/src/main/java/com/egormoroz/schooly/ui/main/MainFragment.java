@@ -29,6 +29,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.egormoroz.schooly.Callbacks;
+import com.egormoroz.schooly.ClothesRequest;
 import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.MainActivity;
 import com.egormoroz.schooly.MiningManager;
@@ -130,6 +131,16 @@ public class MainFragment extends Fragment{
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @Override
             public void PassUserNick(String nick) {
+                String uid=firebaseModel.getUsersReference().child(nick).child("clothesRequest")
+                        .push().getKey();
+//                firebaseModel.getUsersReference().child(nick).child("clothesRequest")
+//                        .child("-MxuHf_f26Lr39Vx2Tx8").setValue(new ClothesRequest("shoes", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
+//                , 100, "Jordan 1", 123, nick, "coin", "d", " https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Funtitled.glb?alt=media&token=657b45d7-a84b-4f2a-89f4-a699029401f7"
+//                , "shoes", "okey", "no", "no", "-MxuHf_f26Lr39Vx2Tx8"));
+//                firebaseModel.getReference().child("users")
+//                        .child(nick).child("nontifications")
+//                        .child("-MxuHf_f26Lr39Vx2Tx8").setValue(new Nontification(nick,"не отправлено","запросодежда"
+//                        ,ServerValue.TIMESTAMP.toString()," "," ","не просмотрено","-MxuHf_f26Lr39Vx2Tx8"));
                 RecentMethods.getMyClothes(nick, firebaseModel, new Callbacks.GetClothes() {
                     @Override
                     public void getClothes(ArrayList<Clothes> allClothes) {
@@ -276,20 +287,21 @@ public class MainFragment extends Fragment{
 //                firebaseModel.getReference().child("usersNicks").child("Spaccacrani").setValue(new UserPeopleAdapter("Spaccacrani", "5", "hello"));
 //                firebaseModel.getUsersReference().child("tyomaa6").child("myClothes").child("Jordan 6").setValue(new Clothes("shoes", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
 //                        ,220,"Jordan 6",0,123,"tyomaa6","coin"," ","",0,"foot"));
+//                String uid=firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").push().getKey();
+//                firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").child("-MxuHf_f26Lr39Vx2Tx8").setValue(new Clothes("shoes", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
+//                        ,120,"Jordan 1",0,123,"Schooly","dollar"," ","",0,"foot","-MxuHf_f26Lr39Vx2Tx8"));
 //                firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").child("Jordan 1").setValue(new Clothes("shoes", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
-//                        ,120,"Jordan 1",0,123,"Schooly","dollar"," ","",0,"foot"));
-//                firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").child("Jordan 1").setValue(new Clothes("shoes", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
-//                        ,120,"Jordan 1",0,123,"tyomaaa6","dollar"," ","",0,"foot"));
+//                        ,120,"Jordan 1",0,123,"tyomaaa6","dollar"," ","",0,"foot",uid));
 //                firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").child("Yeazzy").setValue(new Clothes("accessories", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
-//                        ,120,"Yeazzy",0,123,"Schooly","coin","great model","",0,"watches"));
+//                        ,120,"Yeazzy",0,123,"Schooly","coin","great model","",0,"watches",uid));
 //                firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").child("Y-3").setValue(new Clothes("hats", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
-//                        ,120,"Y-3",0,123,"Schooly","coin"," ","",0,"hat"));
+//                        ,120,"Y-3",0,123,"Schooly","coin"," ","",0,"hat",uid));
 //                firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").child("Prada").setValue(new Clothes("clothes", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
-//                        ,120,"Prada",0,123,"Schooly","coin"," ","",0,"t-shirt"));
+//                        ,120,"Prada",0,123,"Schooly","coin"," ","",0,"t-shirt",uid));
 //                firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").child("Raf Simons").setValue(new Clothes("shoes", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
-//                        ,120,"Raf Simons",0,123,"Schooly","coin"," ","",0,"foot"));
+//                        ,120,"Raf Simons",0,123,"Schooly","coin"," ","",0,"foot",uid));
 //                firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").child("Martins").setValue(new Clothes("shoes", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
-//                        ,120,"Martins",0,123,"Schooly","coin"," ","",0,"foot"));
+//                        ,120,"Martins",0,123,"Schooly","coin"," ","",0,"foot",uid));
 
             }
         });

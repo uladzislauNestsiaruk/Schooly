@@ -10,12 +10,13 @@ public class ClothesRequest {
     private String creator;
     private String description;
     private String bodyType;
+    private String uid;
     String model;
 
 
     public ClothesRequest(String type, String  clothesImage, long clothesPrice,String clothesTitle
             ,long timesTamp,String creator,String currencyType,String description,
-                          String model,String bodyType){
+                          String model,String bodyType,String uid){
         this.type=type;
         this.clothesImage=clothesImage;
         this.clothesPrice=clothesPrice;
@@ -26,6 +27,7 @@ public class ClothesRequest {
         this.description=description;
         this.model=model;
         this.bodyType=bodyType;
+        this.uid= uid;
 
     }
     public ClothesRequest(){
@@ -109,5 +111,13 @@ public class ClothesRequest {
 
     public void setBodyType(String bodyType){
         this.bodyType=bodyType;
+    }
+
+    public String getUid(){
+        return this.uid;
+    }
+
+    public void setUid(String uid){
+        this.uid=uid;
     }
 }

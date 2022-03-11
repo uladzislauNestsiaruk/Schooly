@@ -131,7 +131,8 @@ public class CreateLookFragment extends Fragment {
         ready.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(AcceptNewLook.newInstance(), getActivity());
+                RecentMethods.setCurrentFragment(AcceptNewLook.newInstance("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Funtitled.glb?alt=media&token=657b45d7-a84b-4f2a-89f4-a699029401f7")
+                        , getActivity());
             }
         });
         ImageView backfromwardrobe=view.findViewById(R.id.back_toprofile);
@@ -141,7 +142,8 @@ public class CreateLookFragment extends Fragment {
                 RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
                     @Override
                     public void PassUserNick(String nick) {
-                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("user", nick,CreateLookFragment.newInstance()), getActivity());
+                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("user", nick,CreateLookFragment.newInstance())
+                                , getActivity());
                     }
                 });
             }

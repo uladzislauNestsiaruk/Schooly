@@ -298,7 +298,7 @@ public class CreateClothesFragment extends Fragment {
                             }
                             firebaseModel.getReference().child("clothesReqests").child(String.valueOf(num))
                                     .setValue(new ClothesRequest(type, imageApplication, Long.valueOf(editClothesPrice.getText().toString()), editTextClothes.getText().toString()
-                                            , 111, nick, currencyType,addDescriptionEdit.getText().toString() ,modelApplication , bodyType));
+                                            , 111, nick, currencyType,addDescriptionEdit.getText().toString() ,modelApplication , bodyType,"-MxuHf_f26Lr39Vx2Tx8"));
                             Toast.makeText(getContext(), "Заявка отправлена", Toast.LENGTH_SHORT).show();
                         }
                     });
@@ -392,7 +392,6 @@ public class CreateClothesFragment extends Fragment {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                                         modelScene.setVisibility(View.VISIBLE);
-                                        Log.d("####", "ok");
                                         modelApplication=snapshot.getValue(String.class);
                                         loadModels(Uri.parse(modelApplication), modelScene, CreateClothesFragment.this, 0.25f);
                                         noModel.setVisibility(View.GONE);

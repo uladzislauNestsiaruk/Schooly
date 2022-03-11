@@ -22,7 +22,7 @@
         android:layout_marginTop="11dp"
         android:layout_toRightOf="@+id/back"
         android:fontFamily="@font/montserrat_bold"
-        android:text="@string/request"
+        android:text="@string/requestAnswerMain"
         android:textColor="@color/app_color"
         android:textSize="22sp" />
 
@@ -35,26 +35,50 @@
             android:layout_marginTop="24dp" />
 
         <TextView
-            android:id="@+id/clothesTitlecv"
+            android:id="@+id/clothesTitleText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/back"
-            android:layout_centerHorizontal="true"
             android:layout_marginTop="24dp"
+            android:layout_toRightOf="@+id/clothesImagecv"
+            android:layout_marginStart="16dp"
+            android:fontFamily="@font/montserrat_bold"
+            android:text="@string/title"
+            android:textColor="@color/app_grey"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/clothesTitlecv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/clothesTitleText"
             android:layout_toRightOf="@+id/clothesImagecv"
             android:layout_marginStart="16dp"
             android:fontFamily="@font/montserratblack"
             android:textColor="@color/app_color"
             android:textSize="24sp" />
 
+        <TextView
+            android:id="@+id/clothesPriceText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/clothesTitlecv"
+            android:layout_toRightOf="@+id/clothesImagecv"
+            android:layout_marginStart="16dp"
+            android:fontFamily="@font/montserrat_bold"
+            android:text="@string/price"
+            android:textColor="@color/app_grey"
+            android:textSize="14sp"
+            android:layout_marginTop="4dp"/>
+
     <RelativeLayout
         android:id="@+id/priceRelative"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/clothesTitlecv"
+        android:layout_below="@+id/clothesPriceText"
         android:layout_toRightOf="@+id/clothesImagecv"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp">
+        android:layout_marginTop="2dp">
 
         <TextView
             android:id="@+id/clothesPricecv"
@@ -79,10 +103,9 @@
             android:id="@+id/clothesTypeText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/priceRelative"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="12dp"
-            android:layout_toRightOf="@+id/clothesImagecv"
+            android:layout_below="@+id/clothesImagecv"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
             android:fontFamily="@font/montserrat_bold"
             android:text="@string/clothesTypeText"
             android:textColor="@color/app_grey"
@@ -93,9 +116,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/clothesTypeText"
-            android:layout_toRightOf="@+id/clothesImagecv"
-            android:layout_marginStart="16dp"
-            android:fontFamily="@font/montserrat_bold"
+            android:layout_marginStart="24dp"
+            android:fontFamily="@font/montserrat_extrabold"
             android:textColor="@color/app_color"
             android:textSize="18sp" />
 
@@ -103,7 +125,7 @@
             android:id="@+id/fileText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/clothesImagecv"
+            android:layout_below="@+id/clothesType"
             android:layout_marginTop="24dp"
             android:layout_marginStart="24dp"
             android:fontFamily="@font/montserrat_bold"
@@ -115,6 +137,7 @@
             android:id="@+id/sceneView"
             android:layout_width="150dp"
             android:layout_height="150dp"
+            android:background="@color/white"
             android:layout_below="@id/fileText"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="16dp" />
@@ -138,8 +161,8 @@
             android:layout_below="@+id/resultText"
             android:layout_marginTop="8dp"
             android:layout_marginStart="24dp"
-            android:fontFamily="@font/montserrat_bold"
-            android:textSize="22sp"/>
+            android:fontFamily="@font/montserrat_extrabold"
+            android:textSize="18sp"/>
 
         <TextView
             android:id="@+id/reasonText"

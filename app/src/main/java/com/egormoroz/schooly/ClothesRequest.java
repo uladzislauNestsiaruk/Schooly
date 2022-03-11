@@ -13,13 +13,14 @@ public class ClothesRequest {
     private String creator;
     private String description;
     private String bodyType;
+    private String uid;
     String model;
 
 
     public ClothesRequest(String type, String  clothesImage, long clothesPrice,String clothesTitle
             ,long timesTamp,String creator,String currencyType,String description,
                           String model,String bodyType,String result, String reason,
-                                  String reasonDescription){
+                                  String reasonDescription,String uid){
         this.type=type;
         this.clothesImage=clothesImage;
         this.clothesPrice=clothesPrice;
@@ -33,6 +34,7 @@ public class ClothesRequest {
         this.result=result;
         this.reason=reason;
         this.reasonDescription=reasonDescription;
+        this.uid=uid;
 
     }
     public ClothesRequest(){
@@ -68,6 +70,14 @@ public class ClothesRequest {
 
     public void setClothesTitle(String clothesTitle){
         this.clothesTitle=clothesTitle;
+    }
+
+    public String getUid(){
+        return this.uid;
+    }
+
+    public void setUid(String uid){
+        this.uid=uid;
     }
 
     public String getCreator(){

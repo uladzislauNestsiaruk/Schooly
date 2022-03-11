@@ -12,6 +12,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.egormoroz.schooly.ui.main.Mining.Miner;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
 import com.egormoroz.schooly.ui.main.UserInformation;
+import com.egormoroz.schooly.ui.news.NewsItem;
 import com.egormoroz.schooly.ui.profile.Look;
 import com.egormoroz.schooly.ui.profile.Reason;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -510,6 +511,7 @@ public class RecentMethods {
                     clothes.setPurchaseToday(snap.child("purchaseToday").getValue(Long.class));
                     clothes.setModel(snap.child("model").getValue(String.class));
                     clothes.setBodyType(snap.child("bodyType").getValue(String.class));
+                    clothes.setUid(snap.child("uid").getValue(String.class));
                     clothesFromBase.add(clothes);
                 }
                 callback.getClothes(clothesFromBase);
@@ -542,6 +544,7 @@ public class RecentMethods {
                     clothes.setPurchaseToday(snap.child("purchaseToday").getValue(Long.class));
                     clothes.setModel(snap.child("model").getValue(String.class));
                     clothes.setBodyType(snap.child("bodyType").getValue(String.class));
+                    clothes.setUid(snap.child("uid").getValue(String.class));
                     clothesFromBase.add(clothes);
                 }
                 callback.getClothes(clothesFromBase);
@@ -705,6 +708,7 @@ public class RecentMethods {
                     clothes.setDescription(snap.child("description").getValue(String.class));
                     clothes.setPurchaseToday(snap.child("purchaseToday").getValue(Long.class));
                     clothes.setModel(snap.child("model").getValue(String.class));
+                    clothes.setUid(snap.child("uid").getValue(String.class));
                     clothesFromBase.add(clothes);
                 }
                 callback.getClothes(clothesFromBase);
@@ -739,6 +743,7 @@ public class RecentMethods {
                     clothes.setPurchaseToday(snap.child("purchaseToday").getValue(Long.class));
                     clothes.setModel(snap.child("model").getValue(String.class));
                     clothes.setBodyType(snap.child("bodyType").getValue(String.class));
+                    clothes.setUid(snap.child("uid").getValue(String.class));
                    clothesFromBase.add(clothes);
                 }
                 callback.getClothes(clothesFromBase);
@@ -1079,14 +1084,17 @@ public class RecentMethods {
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                ArrayList<Look> lookList = new ArrayList<>();
+                ArrayList<NewsItem> lookList = new ArrayList<>();
                 for (DataSnapshot snap:snapshot.getChildren()){
-                    Look look=new Look();
-                    look.setNick(snap.child("nick").getValue(String.class));
-                    look.setLookImage(snap.child("lookImage").getValue(String.class));
-                    look.setPostTime(snap.child("postTime").getValue(String.class));
-                    look.setLookID(snap.child("lookID").getValue(String.class));
-                    lookList.add(look);
+                    NewsItem newsItem=new NewsItem();
+                    newsItem.setImageUrl(snap.child("ImageUrl").getValue(String.class));
+                    newsItem.setLookPrice(snap.child("lookPrice").getValue(Long.class));
+                    newsItem.setItem_description(snap.child("item_description").getValue(String.class));
+                    newsItem.setNewsId(snap.child("newsId").getValue(String.class));
+                    newsItem.setLikesCount(snap.child("likes_count").getValue(String.class));
+                    newsItem.setViewCount(snap.child("viewCount").getValue(Long.class));
+                    newsItem.setPostTime(snap.child("postTime").getValue(String.class));
+                    lookList.add(newsItem);
                 }
                 callback.getLooksList(lookList);
             }

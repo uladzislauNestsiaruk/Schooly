@@ -116,23 +116,23 @@ public class NewsFragment extends Fragment {
                 query.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if (snapshot.exists()) {
-                            remoteImages.add(new NewsItem(data.child("imageUrl").getValue().toString(),
-                                    data.child("itemDescription").getValue().toString(),
-                                    data.child("likesCount").getValue().toString(),
-                                    data.child("newsID").getValue().toString()));
-                            viewPager2.setAdapter(new NewsAdapter(remoteImages));
-
-                            viewPager2.setOffscreenPageLimit(3);
-                        } else if (nick.equals(username))
-                            remoteImages.add(new NewsItem(data.child("imageUrl").getValue().toString(),
-                                    data.child("itemDescription").getValue().toString(),
-                                    data.child("likesCount").getValue().toString(),
-                                    data.child("newsID").getValue().toString()));
-                        viewPager2.setAdapter(new NewsAdapter(remoteImages));
-
-                        Log.d("news", String.valueOf(remoteImages.size()));
-                        viewPager2.setOffscreenPageLimit(3);
+//                        if (snapshot.exists()) {
+//                            remoteImages.add(new NewsItem(data.child("imageUrl").getValue().toString(),
+//                                    data.child("itemDescription").getValue().toString(),
+//                                    data.child("likesCount").getValue().toString(),
+//                                    data.child("newsID").getValue().toString()));
+//                            viewPager2.setAdapter(new NewsAdapter(remoteImages));
+//
+//                            viewPager2.setOffscreenPageLimit(3);
+//                        } else if (nick.equals(username))
+//                            remoteImages.add(new NewsItem(data.child("imageUrl").getValue().toString(),
+//                                    data.child("itemDescription").getValue().toString(),
+//                                    data.child("likesCount").getValue().toString(),
+//                                    data.child("newsID").getValue().toString()));
+//                        viewPager2.setAdapter(new NewsAdapter(remoteImages));
+//
+//                        Log.d("news", String.valueOf(remoteImages.size()));
+//                        viewPager2.setOffscreenPageLimit(3);
                     }
 
                     @Override
@@ -150,14 +150,14 @@ public class NewsFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.equals("open")) {
-                    remoteImages.add(new NewsItem(data.child("imageUrl").getValue().toString(),
-                            data.child("itemDescription").getValue().toString(),
-                            data.child("likesCount").getValue().toString(),
-                            data.child("newsID").getValue().toString()));
-                    viewPager2.setAdapter(new NewsAdapter(remoteImages));
-
-                    Log.d("news", String.valueOf(remoteImages.size()));
-                    viewPager2.setOffscreenPageLimit(3);
+//                    remoteImages.add(new NewsItem(data.child("imageUrl").getValue().toString(),
+//                            data.child("itemDescription").getValue().toString(),
+//                            data.child("likesCount").getValue().toString(),
+//                            data.child("newsID").getValue().toString()));
+//                    viewPager2.setAdapter(new NewsAdapter(remoteImages));
+//
+//                    Log.d("news", String.valueOf(remoteImages.size()));
+//                    viewPager2.setOffscreenPageLimit(3);
                 }
             }
 

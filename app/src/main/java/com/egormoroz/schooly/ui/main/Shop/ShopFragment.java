@@ -251,6 +251,7 @@ public class ShopFragment extends Fragment {
                     clothes.setPurchaseToday(snap.child("purchaseToday").getValue(Long.class));
                     clothes.setModel(snap.child("model").getValue(String.class));
                     clothes.setBodyType(snap.child("bodyType").getValue(String.class));
+                    clothes.setUid(snap.child("uid").getValue(String.class));
                     String clothesTitle=clothes.getClothesTitle();
                     String title=clothesTitle;
                     int valueLetters=editTextText.length();

@@ -16,6 +16,7 @@ import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
+import com.egormoroz.schooly.ui.news.NewsItem;
 import com.egormoroz.schooly.ui.profile.Wardrobe.CreateLookFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -57,7 +58,7 @@ public class LooksFragmentProfile extends Fragment {
             public void PassUserNick(String nick) {
                 RecentMethods.getLooksList(nick, firebaseModel, new Callbacks.getLooksList() {
                     @Override
-                    public void getLooksList(ArrayList<Look> look) {
+                    public void getLooksList(ArrayList<NewsItem> look) {
                         looksListSize=look.size();
                         if (looksListSize==0){
                             createNewLookText.setVisibility(View.VISIBLE);

@@ -18,6 +18,8 @@ import com.egormoroz.schooly.Nontification;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.Subscriber;
+import com.egormoroz.schooly.ui.main.Shop.Clothes;
+import com.egormoroz.schooly.ui.main.Shop.NewClothesAdapter;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.Query;
@@ -33,6 +35,7 @@ public class NontificationAdapter extends RecyclerView.Adapter<NontificationAdap
     private NontificationAdapter.ItemClickListener clickListener;
     private FirebaseModel firebaseModel = new FirebaseModel();
     String accountType;
+    static String clothesUid;
 
     public  NontificationAdapter(ArrayList<Nontification> listAdapter) {
         this.listAdapter = listAdapter;
@@ -139,7 +142,7 @@ public class NontificationAdapter extends RecyclerView.Adapter<NontificationAdap
                     holder.addFriend.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            if (clickListener != null) clickListener.onItemClick(v, position);
+                            if (clickListener != null) clickListener.onItemClick(nontification.getUid());
                         }
                     });
                 }
@@ -173,7 +176,7 @@ public class NontificationAdapter extends RecyclerView.Adapter<NontificationAdap
 
         @Override
         public void onClick(View view) {
-            if (clickListener != null) clickListener.onItemClick(view, getAdapterPosition());
+            if (clickListener != null) clickListener.onItemClick("Jordan 1");
         }
     }
 
@@ -185,7 +188,11 @@ public class NontificationAdapter extends RecyclerView.Adapter<NontificationAdap
         this.clickListener = itemClickListener;
     }
 
+    public static void singeClothesInfo(NontificationAdapter.ItemClickListener itemClickListener){
+        itemClickListener.onItemClick(clothesUid);
+    }
+
     public interface ItemClickListener {
-        void onItemClick(View view, int position);
+        void onItemClick( String clothesUid);
     }
 }

@@ -18,6 +18,7 @@ import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.Subscriber;
+import com.egormoroz.schooly.ui.news.NewsItem;
 import com.google.ar.sceneform.SceneView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -31,11 +32,11 @@ import java.util.ArrayList;
 
 public class LooksAdapter extends RecyclerView.Adapter<LooksAdapter.ViewHolder> {
 
-    ArrayList<Look> listAdapter;
+    ArrayList<NewsItem> listAdapter;
     private LooksAdapter.ItemClickListener clickListener;
     private FirebaseModel firebaseModel = new FirebaseModel();
 
-    public LooksAdapter(ArrayList<Look> listAdapter) {
+    public LooksAdapter(ArrayList<NewsItem> listAdapter) {
         this.listAdapter = listAdapter;
     }
 
@@ -52,7 +53,7 @@ public class LooksAdapter extends RecyclerView.Adapter<LooksAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull LooksAdapter.ViewHolder holder, int position) {
-        Look look=listAdapter.get(position);
+        NewsItem  newsItem=listAdapter.get(position);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -82,7 +83,7 @@ public class LooksAdapter extends RecyclerView.Adapter<LooksAdapter.ViewHolder> 
         }
     }
 
-    Look getItem(int id) {
+    NewsItem getItem(int id) {
         return listAdapter.get(id);
     }
 

@@ -18,6 +18,8 @@ import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
+import com.egormoroz.schooly.ui.main.Shop.ViewingClothes;
+import com.egormoroz.schooly.ui.news.NewsItem;
 import com.egormoroz.schooly.ui.profile.Look;
 import com.egormoroz.schooly.ui.profile.LooksAdapter;
 import com.egormoroz.schooly.ui.profile.LooksFragmentProfileOther;
@@ -34,8 +36,15 @@ public class AcceptNewLook extends Fragment {
     TextView lookPrice;
     EditText descriptionLook;
 
-    public static AcceptNewLook newInstance() {
-        return new AcceptNewLook();
+    String model;
+
+    public AcceptNewLook(String model) {
+        this.model = model;
+    }
+
+    public static AcceptNewLook newInstance(String model) {
+        return new AcceptNewLook(model);
+
     }
 
     @Override
@@ -63,7 +72,11 @@ public class AcceptNewLook extends Fragment {
                 RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
                     @Override
                     public void PassUserNick(String nick) {
-                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("user", nick, AcceptNewLook.newInstance()), getActivity());
+                        String lookId=firebaseModel.getUsersReference().child(nick).child("looks").push().getKey();
+                        firebaseModel.getUsersReference().child(nick).child("looks").child(lookId)
+                                .setValue(new NewsItem(model, descriptionLook.getText().toString(), "0", lookId,
+                                        "", "", 1200, 0,""));
+                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("user", nick, AcceptNewLook.newInstance("")), getActivity());
                     }
                 });
             }

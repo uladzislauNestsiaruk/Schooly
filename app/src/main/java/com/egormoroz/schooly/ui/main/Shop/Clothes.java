@@ -14,12 +14,13 @@ public class Clothes {
     private String description;
     private String bodyType;
     String model;
+    String uid;
     long purchaseToday;
 
 
     public Clothes(String type, String  clothesImage, long clothesPrice,String clothesTitle
             ,long purchaseNumber,long timesTamp,String creator,String currencyType,String description,
-                   String model,long purchaseToday,String bodyType){
+                   String model,long purchaseToday,String bodyType,String uid){
         this.type=type;
         this.clothesImage=clothesImage;
         this.clothesPrice=clothesPrice;
@@ -32,6 +33,7 @@ public class Clothes {
         this.model=model;
         this.purchaseToday=purchaseToday;
         this.bodyType=bodyType;
+        this.uid=uid;
     }
     public Clothes(){
     }
@@ -130,6 +132,14 @@ public class Clothes {
 
     public void setBodyType(String bodyType){
         this.bodyType=bodyType;
+    }
+
+    public String getUid(){
+        return this.uid;
+    }
+
+    public void setUid(String uid){
+        this.uid=uid;
     }
 
 }
