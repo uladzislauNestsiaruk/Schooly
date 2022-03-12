@@ -33,6 +33,7 @@
             android:fontFamily="@font/montserrat_extrabold"
             android:textColor="@color/app_color"
             android:textSize="11sp"
+            android:layout_marginBottom="2dp"
             android:layout_centerVertical="true"
             android:layout_toRightOf="@+id/play"
             android:layout_marginStart="2dp"/>

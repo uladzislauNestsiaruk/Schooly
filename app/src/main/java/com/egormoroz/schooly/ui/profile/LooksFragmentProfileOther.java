@@ -67,12 +67,12 @@ public class LooksFragmentProfileOther extends Fragment {
           noLooksOther.setText("У "+otherUserNick+" нет образов :(");
           looksRecyclerOther.setVisibility(View.GONE);
         }else{
-          LooksAdapter looksAdapter=new LooksAdapter(look);
+          LooksAdapter looksAdapter=new LooksAdapter(look,LooksFragmentProfileOther.newInstance(otherUserNick));
           looksRecyclerOther.setLayoutManager(new GridLayoutManager(getActivity(), 3));
           looksRecyclerOther.setAdapter(looksAdapter);
           LooksAdapter.ItemClickListener itemClickListener=new LooksAdapter.ItemClickListener() {
             @Override
-            public void onItemClick(View view, int position) {
+            public void onItemClick(NewsItem newsItem) {
               RecentMethods.setCurrentFragment(ViewingLookFragment.newInstance(ProfileFragment.
                       newInstance("user", otherUserNick, LooksFragmentProfile.newInstance())), getActivity());
             }

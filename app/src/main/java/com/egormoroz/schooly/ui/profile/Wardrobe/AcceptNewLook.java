@@ -75,7 +75,7 @@ public class AcceptNewLook extends Fragment {
                         String lookId=firebaseModel.getUsersReference().child(nick).child("looks").push().getKey();
                         firebaseModel.getUsersReference().child(nick).child("looks").child(lookId)
                                 .setValue(new NewsItem(model, descriptionLook.getText().toString(), "0", lookId,
-                                        "", "", 1200, 0,""));
+                                        "", "", 1200, 0,"",nick));
                         RecentMethods.setCurrentFragment(ProfileFragment.newInstance("user", nick, AcceptNewLook.newInstance("")), getActivity());
                     }
                 });

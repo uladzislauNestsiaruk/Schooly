@@ -11,4 +11,86 @@
         android:layout_marginTop="16dp"
         android:src="@drawable/left_arrow" />
 
+    <TextView
+        android:id="@+id/nick"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_toRightOf="@+id/back"
+        android:fontFamily="@font/montserrat_bold"
+        android:textColor="@color/app_color"
+        android:textSize="22sp" />
+
+    <com.google.ar.sceneform.SceneView
+        android:id="@+id/sceneView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="40dp"
+        android:layout_above="@+id/comment"
+        android:layout_below="@+id/back"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginTop="84dp"
+        android:background="@color/white" />
+
+    <RelativeLayout
+        android:id="@+id/relativeLike"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/comment"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="24dp">
+
+        <ImageView
+            android:id="@+id/like"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_heart40dp" />
+
+        <TextView
+            android:id="@+id/likesCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/like"
+            android:fontFamily="@font/montserrat_extrabold"
+            android:textColor="@color/app_grey" />
+
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/comment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_chat40dp"
+        android:layout_alignParentEnd="true"
+        android:layout_above="@+id/send"
+        android:layout_marginBottom="40dp"
+        android:layout_marginEnd="24dp"
+        />
+
+    <ImageView
+        android:id="@+id/send"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="24dp"
+        android:src="@drawable/ic_send40dp" />
+
+    <TextView
+        android:id="@+id/description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="24dp"
+        android:layout_toLeftOf="@+id/send"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="24dp"
+        android:textColor="@color/app_grey"
+        android:fontFamily="@font/montserrat_bold"/>
+
 </RelativeLayout>

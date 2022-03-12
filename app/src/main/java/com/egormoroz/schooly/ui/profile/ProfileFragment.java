@@ -61,6 +61,7 @@ import com.egormoroz.schooly.ui.main.Shop.ShoesFargment;
 import com.egormoroz.schooly.ui.main.Shop.ShopFragment;
 import com.egormoroz.schooly.ui.main.Shop.ViewingClothes;
 import com.egormoroz.schooly.ui.main.UserInformation;
+import com.egormoroz.schooly.ui.news.NewsItem;
 import com.egormoroz.schooly.ui.people.PeopleFragment;
 import com.egormoroz.schooly.ui.people.UserPeopleAdapter;
 import com.egormoroz.schooly.ui.profile.Wardrobe.CreateLookFragment;
@@ -1023,11 +1024,24 @@ public class ProfileFragment extends Fragment {
                     }
                 });
                 Query query2=firebaseModel.getUsersReference().child(nick).
-                        child("looksCount");
+                        child("looks");
                 query2.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        looksCount.setText(String.valueOf(snapshot.getValue(Long.class)));
+                        ArrayList<NewsItem> lookList = new ArrayList<>();
+                        for (DataSnapshot snap:snapshot.getChildren()){
+                            NewsItem newsItem=new NewsItem();
+                            newsItem.setImageUrl(snap.child("ImageUrl").getValue(String.class));
+                            newsItem.setLookPrice(snap.child("lookPrice").getValue(Long.class));
+                            newsItem.setItem_description(snap.child("item_description").getValue(String.class));
+                            newsItem.setNewsId(snap.child("newsId").getValue(String.class));
+                            newsItem.setLikesCount(snap.child("likes_count").getValue(String.class));
+                            newsItem.setViewCount(snap.child("viewCount").getValue(Long.class));
+                            newsItem.setPostTime(snap.child("postTime").getValue(String.class));
+                            newsItem.setNick(snap.child("nick").getValue(String.class));
+                            lookList.add(newsItem);
+                        }
+                        looksCount.setText(String.valueOf(lookList.size()));
                     }
 
                     @Override
@@ -1177,11 +1191,24 @@ public class ProfileFragment extends Fragment {
             }
         });
         Query query2=firebaseModel.getUsersReference().child(info.getNick()).
-                child("looksCount");
+                child("looks");
         query2.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                otherLooksCount.setText(String.valueOf(snapshot.getValue(Long.class)));
+                ArrayList<NewsItem> lookList = new ArrayList<>();
+                for (DataSnapshot snap:snapshot.getChildren()){
+                    NewsItem newsItem=new NewsItem();
+                    newsItem.setImageUrl(snap.child("ImageUrl").getValue(String.class));
+                    newsItem.setLookPrice(snap.child("lookPrice").getValue(Long.class));
+                    newsItem.setItem_description(snap.child("item_description").getValue(String.class));
+                    newsItem.setNewsId(snap.child("newsId").getValue(String.class));
+                    newsItem.setLikesCount(snap.child("likes_count").getValue(String.class));
+                    newsItem.setViewCount(snap.child("viewCount").getValue(Long.class));
+                    newsItem.setPostTime(snap.child("postTime").getValue(String.class));
+                    newsItem.setNick(snap.child("nick").getValue(String.class));
+                    lookList.add(newsItem);
+                }
+                otherLooksCount.setText(String.valueOf(lookList.size()));
             }
 
             @Override

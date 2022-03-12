@@ -1,6 +1,7 @@
 package com.egormoroz.schooly.ui.profile;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -72,12 +73,12 @@ public class LooksFragmentProfile extends Fragment {
                                 }
                             });
                         }else {
-                            LooksAdapter looksAdapter=new LooksAdapter(look);
+                            LooksAdapter looksAdapter=new LooksAdapter(look,LooksFragmentProfile.newInstance());
                             looksRecycler.setLayoutManager(new GridLayoutManager(getActivity(), 3));
                             looksRecycler.setAdapter(looksAdapter);
                             LooksAdapter.ItemClickListener itemClickListener=new LooksAdapter.ItemClickListener() {
                                 @Override
-                                public void onItemClick(View view, int position) {
+                                public void onItemClick(NewsItem newsItem) {
                                     RecentMethods.setCurrentFragment(ViewingLookFragment.newInstance(ProfileFragment.
                                             newInstance("user", nick, LooksFragmentProfile.newInstance())), getActivity());
                                 }

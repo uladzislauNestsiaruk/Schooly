@@ -1087,13 +1087,14 @@ public class RecentMethods {
                 ArrayList<NewsItem> lookList = new ArrayList<>();
                 for (DataSnapshot snap:snapshot.getChildren()){
                     NewsItem newsItem=new NewsItem();
-                    newsItem.setImageUrl(snap.child("ImageUrl").getValue(String.class));
+                    newsItem.setImageUrl(snap.child("imageUrl").getValue(String.class));
                     newsItem.setLookPrice(snap.child("lookPrice").getValue(Long.class));
                     newsItem.setItem_description(snap.child("item_description").getValue(String.class));
                     newsItem.setNewsId(snap.child("newsId").getValue(String.class));
                     newsItem.setLikesCount(snap.child("likes_count").getValue(String.class));
                     newsItem.setViewCount(snap.child("viewCount").getValue(Long.class));
                     newsItem.setPostTime(snap.child("postTime").getValue(String.class));
+                    newsItem.setNick(snap.child("nick").getValue(String.class));
                     lookList.add(newsItem);
                 }
                 callback.getLooksList(lookList);
