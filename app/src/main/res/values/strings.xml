@@ -366,6 +366,7 @@
     <string name="requestAnswer">Ответ на заявку:</string>
     <string name="reasonAnswer">Причина отказа:</string>
     <string name="adding">Добавление:</string>
+    <string name="clothesCreators">Создатели одежды</string>
 
 
 </resources>

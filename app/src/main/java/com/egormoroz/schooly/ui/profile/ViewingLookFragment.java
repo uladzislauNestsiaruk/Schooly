@@ -34,8 +34,8 @@ import java.util.function.Consumer;
 public class ViewingLookFragment extends Fragment {
 
     FirebaseModel firebaseModel=new FirebaseModel();
-    ImageView back,like,comment,send;
-    TextView nick,description,likesCount;
+    ImageView back,like,comment,send,schoolyCoin;
+    TextView nick,description,likesCount,lookPrice,lookPriceDollar,clothesCreator;
     SceneView sceneView;
 
 
@@ -70,8 +70,18 @@ public class ViewingLookFragment extends Fragment {
         like=view.findViewById(R.id.like);
         comment=view.findViewById(R.id.comment);
         description=view.findViewById(R.id.description);
+        schoolyCoin=view.findViewById(R.id.schoolyCoin);
+        clothesCreator=view.findViewById(R.id.clothesCreator);
+        clothesCreator.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
         likesCount=view.findViewById(R.id.likesCount);
         sceneView=view.findViewById(R.id.sceneView);
+        lookPrice=view.findViewById(R.id.lookPrice);
+        lookPriceDollar=view.findViewById(R.id.lookPriceDollar);
         nick=view.findViewById(R.id.nick);
         send=view.findViewById(R.id.send);
         back.setOnClickListener(new View.OnClickListener() {
@@ -83,11 +93,21 @@ public class ViewingLookFragment extends Fragment {
         LooksAdapter.lookInfo(new LooksAdapter.ItemClickListener() {
             @Override
             public void onItemClick(NewsItem newsItem) {
-                Log.d("###", "g "+newsItem.getViewCount());
                 loadModels(Uri.parse(newsItem.getImageUrl()), sceneView, ViewingLookFragment.this, 0.25f);
                 nick.setText(newsItem.getNick());
                 likesCount.setText(newsItem.getLikes_count());
                 description.setText(newsItem.getItem_description());
+                if (newsItem.getLookPriceDollar()==0){
+                    lookPriceDollar.setVisibility(View.GONE);
+                }else{
+                    lookPriceDollar.setText(" + "+String.valueOf(newsItem.getLookPriceDollar())+"$");
+                }
+                if(newsItem.getLookPrice()==0){
+                    schoolyCoin.setVisibility(View.GONE);
+                    lookPrice.setVisibility(View.GONE);
+                }else {
+                    lookPrice.setText(String.valueOf(newsItem.getLookPrice()));
+                }
             }
         });
     }

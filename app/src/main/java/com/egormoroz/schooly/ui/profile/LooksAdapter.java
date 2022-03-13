@@ -1,5 +1,6 @@
 package com.egormoroz.schooly.ui.profile;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
@@ -10,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -47,6 +49,7 @@ public class LooksAdapter extends RecyclerView.Adapter<LooksAdapter.ViewHolder> 
     private FirebaseModel firebaseModel = new FirebaseModel();
     static  NewsItem newsItemToViewing;
     Fragment fragment;
+    View view;
 
     public LooksAdapter(ArrayList<NewsItem> listAdapter,Fragment fragment) {
         this.listAdapter = listAdapter;
@@ -68,7 +71,7 @@ public class LooksAdapter extends RecyclerView.Adapter<LooksAdapter.ViewHolder> 
     public void onBindViewHolder(@NonNull LooksAdapter.ViewHolder holder, int position) {
         NewsItem  newsItem=listAdapter.get(position);
         newsItemToViewing=newsItem;
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
+        holder.lookScene.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (clickListener != null) clickListener.onItemClick(listAdapter.get(holder.getAdapterPosition()));
@@ -76,7 +79,7 @@ public class LooksAdapter extends RecyclerView.Adapter<LooksAdapter.ViewHolder> 
             }
         });
         holder.viewPurchase.setText(String.valueOf(newsItem.getViewCount()));
-//        loadModels(Uri.parse(newsItem.getImageUrl()), holder.lookScene,fragment , 0.25f);
+        loadModels(Uri.parse(newsItem.getImageUrl()), holder.lookScene,holder.lookScene.getContext() , 0.25f);
 
     }
 
@@ -119,11 +122,11 @@ public class LooksAdapter extends RecyclerView.Adapter<LooksAdapter.ViewHolder> 
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public void loadModels(Uri url, SceneView sceneView, Fragment fragment, float scale) {
+    public void loadModels(Uri url, SceneView sceneView, Context context, float scale) {
         ModelRenderable.builder()
                 .setSource(
-                        fragment.getContext(), new RenderableSource.Builder().setSource(
-                                fragment.getContext(),
+                        context, new RenderableSource.Builder().setSource(
+                                context,
                                 url,
                                 RenderableSource.SourceType.GLB
                         ).setScale(scale)

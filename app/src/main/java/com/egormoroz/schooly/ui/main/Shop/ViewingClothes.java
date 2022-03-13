@@ -203,7 +203,7 @@ public class ViewingClothes extends Fragment {
             @Override
             public void PassUserNick(String nick) {
                 Query query2=firebaseModel.getUsersReference().child(nick).child("clothes")
-                        .child(clothesViewing.getClothesTitle());
+                        .child(clothesViewing.getUid());
                 query2.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -233,7 +233,7 @@ public class ViewingClothes extends Fragment {
                             @Override
                             public void PassUserNick(String nick) {
                                 Query query=firebaseModel.getUsersReference().child(nick).child("clothes")
-                                        .child(String.valueOf(clothesViewing.getClothesTitle()));
+                                        .child(String.valueOf(clothesViewing.getUid()));
                                 query.addValueEventListener(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -241,18 +241,18 @@ public class ViewingClothes extends Fragment {
                                             Toast.makeText(getContext(), "Предмет куплен", Toast.LENGTH_SHORT).show();
                                         }else {
                                             firebaseModel.getUsersReference().child(nick).child("clothes")
-                                                    .child(clothesViewing.getClothesTitle()).setValue(clothesViewing);
+                                                    .child(clothesViewing.getUid()).setValue(clothesViewing);
                                             firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes")
-                                                    .child(clothesViewing.getClothesTitle()).child("purchaseNumber")
+                                                    .child(clothesViewing.getUid()).child("purchaseNumber")
                                                     .setValue(clothesViewing.getPurchaseNumber()+1);
                                             firebaseModel.getReference().child(clothesViewing.getCreator()).child("myClothes").
-                                                    child(clothesViewing.getClothesTitle()).child("purchaseNumber")
+                                                    child(clothesViewing.getUid()).child("purchaseNumber")
                                                     .setValue(clothesViewing.getPurchaseNumber()+1);
                                             firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes")
-                                                    .child(clothesViewing.getClothesTitle()).child("purchaseToday")
+                                                    .child(clothesViewing.getUid()).child("purchaseToday")
                                                     .setValue(clothesViewing.getPurchaseToday()+1);
                                             firebaseModel.getReference().child(clothesViewing.getCreator()).child("myClothes").
-                                                    child(clothesViewing.getClothesTitle()).child("purchaseToday")
+                                                    child(clothesViewing.getUid()).child("purchaseToday")
                                                     .setValue(clothesViewing.getPurchaseToday()+1);
                                             if(clothesViewing.getCreator().equals("Schooly")){
 
@@ -267,13 +267,13 @@ public class ViewingClothes extends Fragment {
                                                         , ServerValue.TIMESTAMP.toString(),clothesViewing.getClothesTitle(),clothesViewing.getClothesImage(),"не просмотрено",numToBase));
                                             }
                                             Query query=firebaseModel.getUsersReference().child(nick).child("basket").
-                                                    child(clothesViewing.getClothesTitle());
+                                                    child(clothesViewing.getUid());
                                             query.addValueEventListener(new ValueEventListener() {
                                                 @Override
                                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                                                     if(snapshot.exists()){
                                                         firebaseModel.getUsersReference().child(nick).child("basket")
-                                                                .child(clothesViewing.getClothesTitle()).removeValue();
+                                                                .child(clothesViewing.getUid()).removeValue();
                                                     }else{
                                                     }
                                                 }
@@ -319,7 +319,7 @@ public class ViewingClothes extends Fragment {
                     @Override
                     public void PassUserNick(String nick) {
                         Query query=firebaseModel.getUsersReference().child(nick).child("clothes")
-                                .child(clothesViewing.getClothesTitle());
+                                .child(clothesViewing.getUid());
                         query.addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -337,10 +337,10 @@ public class ViewingClothes extends Fragment {
                         if(a!=0 && a!=3){
                             if(a==1){
                                 firebaseModel.getUsersReference().child(nick).child("basket")
-                                        .child(clothesViewing.getClothesTitle()).removeValue();
+                                        .child(clothesViewing.getUid()).removeValue();
                             }else if (a==2){
                                 firebaseModel.getUsersReference().child(nick).child("basket")
-                                        .child(clothesViewing.getClothesTitle()).setValue(clothesViewing);
+                                        .child(clothesViewing.getUid()).setValue(clothesViewing);
                             }
                         }
                     }
@@ -354,7 +354,7 @@ public class ViewingClothes extends Fragment {
             @Override
             public void PassUserNick(String nick) {
                 Query query=firebaseModel.getUsersReference().child(nick).child("basket").
-                        child(String.valueOf(clothesViewing.getClothesTitle()));
+                        child(String.valueOf(clothesViewing.getUid()));
                 query.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -383,7 +383,7 @@ public class ViewingClothes extends Fragment {
             @Override
             public void PassUserNick(String nick) {
                 Query query=firebaseModel.getUsersReference().child(nick).child("clothes")
-                        .child(String.valueOf(clothesViewing.getClothesTitle()));
+                        .child(String.valueOf(clothesViewing.getUid()));
                 query.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {

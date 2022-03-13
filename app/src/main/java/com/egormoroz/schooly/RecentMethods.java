@@ -1095,6 +1095,7 @@ public class RecentMethods {
                     newsItem.setViewCount(snap.child("viewCount").getValue(Long.class));
                     newsItem.setPostTime(snap.child("postTime").getValue(String.class));
                     newsItem.setNick(snap.child("nick").getValue(String.class));
+                    newsItem.setLookPriceDollar(snap.child("lookPriceDollar").getValue(Long.class));
                     lookList.add(newsItem);
                 }
                 callback.getLooksList(lookList);

@@ -119,7 +119,7 @@ public class NewClothesAdapter extends RecyclerView.Adapter<NewClothesAdapter.Vi
       @Override
       public void PassUserNick(String nick) {
         Query query=firebaseModel.getUsersReference().child(nick).child("clothes")
-                .child(clothes.getClothesTitle());
+                .child(clothes.getUid());
         query.addValueEventListener(new ValueEventListener() {
           @Override
           public void onDataChange(@NonNull DataSnapshot snapshot) {

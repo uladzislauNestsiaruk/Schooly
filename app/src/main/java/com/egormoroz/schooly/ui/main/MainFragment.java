@@ -288,8 +288,8 @@ public class MainFragment extends Fragment{
 //                firebaseModel.getUsersReference().child("tyomaa6").child("myClothes").child("Jordan 6").setValue(new Clothes("shoes", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
 //                        ,220,"Jordan 6",0,123,"tyomaa6","coin"," ","",0,"foot"));
 //                String uid=firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").push().getKey();
-//                firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").child("-MxuHf_f26Lr39Vx2Tx8").setValue(new Clothes("shoes", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
-//                        ,120,"Jordan 1",0,123,"Schooly","dollar"," ","",0,"foot","-MxuHf_f26Lr39Vx2Tx8"));
+//                firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").child("-MxuHf_f26Lrr39Vx2Tx8").setValue(new Clothes("shoes", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
+//                        ,120,"Jordan 1",0,123,"Schooly","dollar"," ","",0,"foot","-MxuHf_f26Lrr39Vx2Tx8"));
 //                firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").child("Jordan 1").setValue(new Clothes("shoes", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
 //                        ,120,"Jordan 1",0,123,"tyomaaa6","dollar"," ","",0,"foot",uid));
 //                firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").child("Yeazzy").setValue(new Clothes("accessories", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"

@@ -3,16 +3,16 @@ package com.egormoroz.schooly.ui.news;
 import android.widget.ImageView;
 
 public class NewsItem {
-    public String item_description, likes_count, newsId,postTime,nick,
+    private String item_description, likes_count, newsId,postTime,nick,
             comments,clothesCreators,ImageUrl;
-    private   long lookPrice,viewCount;
+    private   long lookPrice,lookPriceDollar,viewCount;
 
     public NewsItem(){
 
     }
 
     public NewsItem(String ImageUrl, String item_description, String likes_count, String newsId,
-    String comments,String clothesCreators,long lookPrice,long viewCount,String postTime,String nick){
+    String comments,String clothesCreators,long lookPrice,long viewCount,String postTime,String nick,long lookPriceDollar){
         this.ImageUrl = ImageUrl;
         this.likes_count = likes_count;
         this.item_description = item_description;
@@ -23,6 +23,7 @@ public class NewsItem {
         this.viewCount=viewCount;
         this.postTime=postTime;
         this.nick=nick;
+        this.lookPriceDollar=lookPriceDollar;
     }
 
     public String getImageUrl (){
@@ -94,5 +95,13 @@ public class NewsItem {
 
     public void setNick(String nick) {
         this.nick = nick;
+    }
+
+    public long getLookPriceDollar (){
+        return  this.lookPriceDollar;
+    }
+
+    public void setLookPriceDollar(long lookPriceDollar) {
+        this.lookPriceDollar = lookPriceDollar;
     }
 }

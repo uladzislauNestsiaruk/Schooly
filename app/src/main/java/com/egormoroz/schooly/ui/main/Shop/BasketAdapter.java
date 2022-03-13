@@ -69,7 +69,7 @@ public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.ViewHolder
     holder.creator.setText(clothes.getCreator());
     Picasso.get().load(clothes.getClothesImage()).into(holder.clothesImage);
     Query query=firebaseModel.getReference().child("AppData").child("Clothes")
-            .child("AllClothes").child(clothes.getClothesTitle());
+            .child("AllClothes").child(clothes.getUid());
     query.addValueEventListener(new ValueEventListener() {
       @Override
       public void onDataChange(@NonNull DataSnapshot snapshot) {
