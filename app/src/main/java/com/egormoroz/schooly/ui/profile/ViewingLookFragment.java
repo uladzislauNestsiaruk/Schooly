@@ -37,6 +37,7 @@ public class ViewingLookFragment extends Fragment {
     ImageView back,like,comment,send,schoolyCoin;
     TextView nick,description,likesCount,lookPrice,lookPriceDollar,clothesCreator;
     SceneView sceneView;
+    String likesCountString,lookPriceString,lookPriceDollarString;
 
 
     Fragment fragment;
@@ -95,18 +96,77 @@ public class ViewingLookFragment extends Fragment {
             public void onItemClick(NewsItem newsItem) {
                 loadModels(Uri.parse(newsItem.getImageUrl()), sceneView, ViewingLookFragment.this, 0.25f);
                 nick.setText(newsItem.getNick());
-                likesCount.setText(newsItem.getLikes_count());
+                likesCountString=String.valueOf(newsItem.getLikes_count());
+                long likesCountLong=Long.valueOf(newsItem.getLikes_count());
+                if(likesCountLong<1000){
+                    likesCount.setText(String.valueOf(likesCountLong));
+                }else if(likesCountLong>1000 && likesCountLong<10000){
+                    likesCount.setText(likesCountString.substring(0, 1)+"."+likesCountString.substring(1, 2)+"K");
+                }
+                else if(likesCountLong>10000 && likesCountLong<100000){
+                    likesCount.setText(likesCountString.substring(0, 2)+"."+likesCountString.substring(2,3)+"K");
+                }
+                else if(likesCountLong>10000 && likesCountLong<100000){
+                    likesCount.setText(likesCountString.substring(0, 2)+"."+likesCountString.substring(2,3)+"K");
+                }else if(likesCountLong>100000 && likesCountLong<1000000){
+                    likesCount.setText(likesCountString.substring(0, 3)+"K");
+                }
+                else if(likesCountLong>1000000 && likesCountLong<10000000){
+                    likesCount.setText(likesCountString.substring(0, 1)+"KK");
+                }
+                else if(likesCountLong>10000000 && likesCountLong<100000000){
+                    likesCount.setText(likesCountString.substring(0, 2)+"KK");
+                }
                 description.setText(newsItem.getItem_description());
                 if (newsItem.getLookPriceDollar()==0){
                     lookPriceDollar.setVisibility(View.GONE);
                 }else{
                     lookPriceDollar.setText(" + "+String.valueOf(newsItem.getLookPriceDollar())+"$");
+                    lookPriceDollarString=String.valueOf(newsItem.getLookPriceDollar());
+                    if(newsItem.getLookPriceDollar()<1000){
+                        lookPriceDollar.setText(" + "+lookPriceDollarString+"$");
+                    }else if(newsItem.getLookPriceDollar()>1000 && newsItem.getLookPriceDollar()<10000){
+                        lookPriceDollar.setText(" + "+lookPriceDollarString.substring(0, 1)+"."+lookPriceDollarString.substring(1, 2)+"K"+"$");
+                    }
+                    else if(newsItem.getLookPriceDollar()>10000 && newsItem.getLookPriceDollar()<100000){
+                        lookPriceDollar.setText(" + "+lookPriceDollarString.substring(0, 2)+"."+lookPriceDollarString.substring(2,3)+"K"+"$");
+                    }
+                    else if(newsItem.getLookPriceDollar()>10000 && newsItem.getLookPriceDollar()<100000){
+                        lookPriceDollar.setText(" + "+lookPriceDollarString.substring(0, 2)+"."+lookPriceDollarString.substring(2,3)+"K"+"$");
+                    }else if(newsItem.getLookPriceDollar()>100000 && newsItem.getLookPriceDollar()<1000000){
+                        lookPriceDollar.setText(" + "+lookPriceDollarString.substring(0, 3)+"K"+"$");
+                    }
+                    else if(newsItem.getLookPriceDollar()>1000000 && newsItem.getLookPriceDollar()<10000000){
+                        lookPriceDollar.setText(" + "+lookPriceDollarString.substring(0, 1)+"KK"+"$");
+                    }
+                    else if(newsItem.getLookPriceDollar()>10000000 && newsItem.getLookPriceDollar()<100000000){
+                        lookPriceDollar.setText(" + "+lookPriceDollarString.substring(0, 2)+"KK"+"$");
+                    }
                 }
                 if(newsItem.getLookPrice()==0){
                     schoolyCoin.setVisibility(View.GONE);
                     lookPrice.setVisibility(View.GONE);
                 }else {
-                    lookPrice.setText(String.valueOf(newsItem.getLookPrice()));
+                    lookPriceString=String.valueOf(newsItem.getLookPrice());
+                    if(newsItem.getLookPrice()<1000){
+                        lookPrice.setText(String.valueOf(lookPriceString));
+                    }else if(newsItem.getLookPrice()>1000 && newsItem.getLookPrice()<10000){
+                        lookPrice.setText(lookPriceString.substring(0, 1)+"."+lookPriceString.substring(1, 2)+"K");
+                    }
+                    else if(newsItem.getLookPrice()>10000 && newsItem.getLookPrice()<100000){
+                        lookPrice.setText(lookPriceString.substring(0, 2)+"."+lookPriceString.substring(2,3)+"K");
+                    }
+                    else if(newsItem.getLookPrice()>10000 && newsItem.getLookPrice()<100000){
+                        lookPrice.setText(lookPriceString.substring(0, 2)+"."+lookPriceString.substring(2,3)+"K");
+                    }else if(newsItem.getLookPrice()>100000 && newsItem.getLookPrice()<1000000){
+                        lookPrice.setText(lookPriceString.substring(0, 3)+"K");
+                    }
+                    else if(newsItem.getLookPrice()>1000000 && newsItem.getLookPrice()<10000000){
+                        lookPrice.setText(lookPriceString.substring(0, 1)+"KK");
+                    }
+                    else if(newsItem.getLookPrice()>10000000 && newsItem.getLookPrice()<100000000){
+                        lookPrice.setText(lookPriceString.substring(0, 2)+"KK");
+                    }
                 }
             }
         });

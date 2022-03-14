@@ -1,0 +1,66 @@
+package com.egormoroz.schooly.ui.profile.Wardrobe;
+
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.egormoroz.schooly.FirebaseModel;
+import com.egormoroz.schooly.R;
+import com.egormoroz.schooly.ui.main.Shop.Clothes;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
+
+public class ConstituentsAdapter extends RecyclerView.Adapter<ConstituentsAdapter.ViewHolder> {
+
+    ArrayList<Clothes> clothesArrayList;
+    private FirebaseModel firebaseModel = new FirebaseModel();
+    FirebaseStorage storage = FirebaseStorage.getInstance();
+    StorageReference storageReference=storage.getReference();
+
+    public ConstituentsAdapter(ArrayList<Clothes> clothesArrayList) {
+        this.clothesArrayList= clothesArrayList;
+    }
+    @NonNull
+    @Override
+    public ConstituentsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
+        RelativeLayout v = (RelativeLayout) LayoutInflater.from(viewGroup.getContext()).
+                inflate(R.layout.rvitem_lookconsistuents, viewGroup, false);
+        ViewHolder viewHolder=new ViewHolder(v);
+        return viewHolder;
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull ConstituentsAdapter.ViewHolder holder, int position) {
+        Clothes clothes=clothesArrayList.get(position);
+        holder.clothesPrice.setText(String.valueOf(clothes.getClothesPrice()));
+        Picasso.get().load(clothes.getClothesImage()).into(holder.clothesImage);
+        holder.clothesTitle.setText(clothes.getClothesTitle());
+    }
+
+    @Override
+    public int getItemCount() {
+        return clothesArrayList.size();
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        TextView clothesTitle,clothesPrice;
+        ImageView clothesImage;
+        ViewHolder(View itemView) {
+            super(itemView);
+            clothesImage=itemView.findViewById(R.id.clothesImagecv);
+            clothesTitle=itemView.findViewById(R.id.clothesTitlecv);
+            clothesPrice=itemView.findViewById(R.id.clothesPricecv);
+        }
+
+
+    }
+}

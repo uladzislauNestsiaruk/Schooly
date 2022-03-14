@@ -50,6 +50,7 @@ public class LooksAdapter extends RecyclerView.Adapter<LooksAdapter.ViewHolder> 
     static  NewsItem newsItemToViewing;
     Fragment fragment;
     View view;
+    String viewLookCount;
 
     public LooksAdapter(ArrayList<NewsItem> listAdapter,Fragment fragment) {
         this.listAdapter = listAdapter;
@@ -78,7 +79,26 @@ public class LooksAdapter extends RecyclerView.Adapter<LooksAdapter.ViewHolder> 
                 newsItemToViewing=listAdapter.get(holder.getAdapterPosition());
             }
         });
-        holder.viewPurchase.setText(String.valueOf(newsItem.getViewCount()));
+        viewLookCount=String.valueOf(newsItem.getViewCount());
+        if(newsItem.getViewCount()<1000){
+            holder.viewPurchase.setText(String.valueOf(newsItem.getViewCount()));
+        }else if(newsItem.getViewCount()>1000 && newsItem.getViewCount()<10000){
+            holder.viewPurchase.setText(viewLookCount.substring(0, 1)+"."+viewLookCount.substring(1, 2)+"K");
+        }
+        else if(newsItem.getViewCount()>10000 && newsItem.getViewCount()<100000){
+            holder.viewPurchase.setText(viewLookCount.substring(0, 2)+"."+viewLookCount.substring(2,3)+"K");
+        }
+        else if(newsItem.getViewCount()>10000 && newsItem.getViewCount()<100000){
+            holder.viewPurchase.setText(viewLookCount.substring(0, 2)+"."+viewLookCount.substring(2,3)+"K");
+        }else if(newsItem.getViewCount()>100000 && newsItem.getViewCount()<1000000){
+            holder.viewPurchase.setText(viewLookCount.substring(0, 3)+"K");
+        }
+        else if(newsItem.getViewCount()>1000000 && newsItem.getViewCount()<10000000){
+            holder.viewPurchase.setText(viewLookCount.substring(0, 1)+"KK");
+        }
+        else if(newsItem.getViewCount()>10000000 && newsItem.getViewCount()<100000000){
+            holder.viewPurchase.setText(viewLookCount.substring(0, 2)+"KK");
+        }
         loadModels(Uri.parse(newsItem.getImageUrl()), holder.lookScene,holder.lookScene.getContext() , 0.25f);
 
     }

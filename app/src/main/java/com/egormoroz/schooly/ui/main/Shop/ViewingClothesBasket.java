@@ -32,6 +32,8 @@ import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Random;
 
 public class ViewingClothesBasket extends Fragment {
@@ -287,10 +289,13 @@ public class ViewingClothesBasket extends Fragment {
                         int num1 =random.nextInt(1000000000);
                         int num2 =random.nextInt(1000000000);
                         String numToBase=String.valueOf(num1+num2);
+                        Date date = new Date();
+                        SimpleDateFormat formatter = new SimpleDateFormat("EEE, MMM dd hh:mm a");
+                        String dateAndTime = formatter.format(date);
                         firebaseModel.getReference().child("users")
                                 .child(clothesViewing.getCreator()).child("nontifications")
                                 .child(numToBase).setValue(new Nontification(nick,"не отправлено","одежда"
-                                , ServerValue.TIMESTAMP.toString(),clothesViewing.getUid(),clothesViewing.getClothesImage(),"не просмотрено",numToBase));
+                                , dateAndTime,clothesViewing.getUid(),clothesViewing.getClothesImage(),"не просмотрено",numToBase));
                       }
                       Query query=firebaseModel.getUsersReference().child(nick).child("basket").
                               child(clothesViewing.getUid());

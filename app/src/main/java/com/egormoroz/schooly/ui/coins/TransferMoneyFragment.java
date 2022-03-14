@@ -23,6 +23,7 @@ import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.Subscriber;
 import com.egormoroz.schooly.ui.main.CreateCharacter.BodyFragment;
 import com.egormoroz.schooly.ui.main.CreateCharacter.CharacterAdapter;
+import com.egormoroz.schooly.ui.main.Shop.ViewingClothes;
 import com.egormoroz.schooly.ui.main.UserInformation;
 import com.egormoroz.schooly.ui.people.PeopleAdapter;
 import com.egormoroz.schooly.ui.profile.ProfileFragment;
@@ -45,10 +46,17 @@ public class TransferMoneyFragment extends Fragment {
     FirebaseModel firebaseModel=new FirebaseModel();
     String userNameToProfile,userName;;
     ImageView backToCoins,transferHistory;
-    TextView emptySubscriptionList;
+    TextView emptySubscriptionList,emptySearchSubscriptionList;
 
-    public static TransferMoneyFragment newInstance() {
-        return new TransferMoneyFragment();
+    Fragment fragment;
+
+    public TransferMoneyFragment(Fragment fragment) {
+        this.fragment = fragment;
+    }
+
+    public static TransferMoneyFragment newInstance(Fragment fragment) {
+        return new TransferMoneyFragment(fragment);
+
     }
 
     @Override
@@ -70,17 +78,18 @@ public class TransferMoneyFragment extends Fragment {
         searchUser=view.findViewById(R.id.searchuser);
         backToCoins=view.findViewById(R.id.backtocoins);
         emptySubscriptionList=view.findViewById(R.id.emptySubscriptionList);
+        emptySearchSubscriptionList=view.findViewById(R.id.emptySearchSubscriptionList);
         transferHistory=view.findViewById(R.id.transferHistory);
         transferHistory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(TransferHistoryFragment.newInstance(), getActivity());
+                RecentMethods.setCurrentFragment(TransferHistoryFragment.newInstance(fragment), getActivity());
             }
         });
         backToCoins.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(CoinsMainFragment.newInstance(), getActivity());
+                RecentMethods.setCurrentFragment(fragment, getActivity());
             }
         });
         firebaseModel.initAll();
@@ -92,8 +101,10 @@ public class TransferMoneyFragment extends Fragment {
                     public void getFriendsList(ArrayList<Subscriber> friends) {
                         if (friends.size()==0){
                             emptySubscriptionList.setVisibility(View.VISIBLE);
+                            peopleRecyclerView.setVisibility(View.GONE);
                         }else {
                             emptySubscriptionList.setVisibility(View.GONE);
+                            peopleRecyclerView.setVisibility(View.VISIBLE);
                             TransferMoneyAdapter transferMoneyAdapter = new TransferMoneyAdapter(friends);
                             peopleRecyclerView.setAdapter(transferMoneyAdapter);
                             TransferMoneyAdapter.ItemClickListener itemClickListener = new TransferMoneyAdapter.ItemClickListener() {
@@ -101,7 +112,7 @@ public class TransferMoneyFragment extends Fragment {
                                 public void onItemClick(View view, int position) {
                                     Subscriber user = transferMoneyAdapter.getItem(position);
                                     userNameToProfile = user.getSub();
-                                    RecentMethods.setCurrentFragment(SendMoneyFragment.newInstance(userNameToProfile), getActivity());
+                                    RecentMethods.setCurrentFragment(SendMoneyFragment.newInstance(userNameToProfile,fragment), getActivity());
                                 }
                             };
                             transferMoneyAdapter.setClickListener(itemClickListener);
@@ -147,17 +158,24 @@ public class TransferMoneyFragment extends Fragment {
                                     }
 
                                 }
-                                TransferMoneyAdapter transferMoneyAdapter=new TransferMoneyAdapter(userFromBase);
-                                peopleRecyclerView.setAdapter(transferMoneyAdapter);
-                                TransferMoneyAdapter.ItemClickListener itemClickListener=new TransferMoneyAdapter.ItemClickListener() {
-                                    @Override
-                                    public void onItemClick(View view, int position) {
-                                        Subscriber user = transferMoneyAdapter.getItem(position);
-                                        userNameToProfile=user.getSub();
-                                        RecentMethods.setCurrentFragment(SendMoneyFragment.newInstance(userNameToProfile), getActivity());
-                                    }
-                                };
-                                transferMoneyAdapter.setClickListener(itemClickListener);
+                                if (userFromBase.size() == 0) {
+                                    emptySearchSubscriptionList.setVisibility(View.VISIBLE);
+                                    peopleRecyclerView.setVisibility(View.GONE);
+                                }else{
+                                    emptySearchSubscriptionList.setVisibility(View.GONE);
+                                    peopleRecyclerView.setVisibility(View.VISIBLE);
+                                    TransferMoneyAdapter transferMoneyAdapter=new TransferMoneyAdapter(userFromBase);
+                                    peopleRecyclerView.setAdapter(transferMoneyAdapter);
+                                    TransferMoneyAdapter.ItemClickListener itemClickListener=new TransferMoneyAdapter.ItemClickListener() {
+                                        @Override
+                                        public void onItemClick(View view, int position) {
+                                            Subscriber user = transferMoneyAdapter.getItem(position);
+                                            userNameToProfile=user.getSub();
+                                            RecentMethods.setCurrentFragment(SendMoneyFragment.newInstance(userNameToProfile,fragment), getActivity());
+                                        }
+                                    };
+                                    transferMoneyAdapter.setClickListener(itemClickListener);
+                                }
                             }
 
                             @Override

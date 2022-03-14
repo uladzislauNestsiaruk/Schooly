@@ -211,6 +211,7 @@
     <string name="emptyBlackList">Черный список пуст</string>
     <string name="emptySubscribersList">Скажи всем, чтобы подписались не тебя!</string>
     <string name="emptySubscriptionList">Подпишись на других пользователей!</string>
+    <string name="emptySearchSubscriptionList">Для того, чтобы перевести коины другому пользователю, необходимо быть на него подписаным</string>
     <string name="emptySubscriptionListOther">Нет подписок:(</string>
     <string name="emptySubscribersListOther">Нет подписчиков:(</string>
 
@@ -367,6 +368,8 @@
     <string name="reasonAnswer">Причина отказа:</string>
     <string name="adding">Добавление:</string>
     <string name="clothesCreators">Создатели одежды</string>
+
+    <string name="lookConstituents">Составляющие образа:</string>
 
 
 </resources>

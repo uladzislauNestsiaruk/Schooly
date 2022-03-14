@@ -24,7 +24,9 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.database.ServerValue;
 
 import java.lang.reflect.Field;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Random;
 
 public class SendMoneyFragment extends Fragment {
@@ -36,13 +38,15 @@ public class SendMoneyFragment extends Fragment {
     RelativeLayout transfer;
 
     FirebaseModel firebaseModel=new FirebaseModel();
+    Fragment fragment;
 
-    public SendMoneyFragment(String otherUserNick) {
+    public SendMoneyFragment(String otherUserNick,Fragment fragment) {
         this.otherUserNick = otherUserNick;
+        this.fragment=fragment;
     }
 
-    public static SendMoneyFragment newInstance(String otherUserNick) {
-        return new SendMoneyFragment(otherUserNick);
+    public static SendMoneyFragment newInstance(String otherUserNick,Fragment fragment) {
+        return new SendMoneyFragment(otherUserNick,fragment);
     }
 
     @Override
@@ -102,15 +106,20 @@ public class SendMoneyFragment extends Fragment {
                                 Toast.makeText(getContext(), "Перевод выполнен", Toast.LENGTH_SHORT).show();
                                 Random random = new Random();
                                 long num =random.nextInt(1000000000);
+                                Date date = new Date();
+                                SimpleDateFormat formatter = new SimpleDateFormat("EEE, MMM dd hh:mm a");
+                                String dateAndTime = formatter.format(date);
                                 firebaseModel.getUsersReference().child(otherUserNick).child("transferHistory")
                                         .child(String.valueOf(num)).setValue(new Transfer(sumLong, nick, "from"));
                                 firebaseModel.getUsersReference().child(nick).child("transferHistory")
                                         .child(String.valueOf(num)).setValue(new Transfer(sumLong, otherUserNick, "to"));
+                                String uid=firebaseModel.getReference().child("users")
+                                        .child(otherUserNick).child("nontifications").push().getKey();
                                 firebaseModel.getReference().child("users")
                                         .child(otherUserNick).child("nontifications")
-                                        .child(String.valueOf(num)).setValue(new Nontification(nick,"не отправлено","перевод"
-                                        , ServerValue.TIMESTAMP.toString()," "," ","не просмотрено",String.valueOf(sumLong)));
-                                RecentMethods.setCurrentFragment(TransferMoneyFragment.newInstance(), getActivity());
+                                        .child(uid).setValue(new Nontification(nick,"не отправлено","перевод"
+                                        , dateAndTime," "," ","не просмотрено",String.valueOf(sumLong)));
+                                RecentMethods.setCurrentFragment(TransferMoneyFragment.newInstance(fragment), getActivity());
                             }
                         });
                     }
@@ -121,7 +130,7 @@ public class SendMoneyFragment extends Fragment {
         backToCoins.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(TransferMoneyFragment.newInstance(), getActivity());
+                RecentMethods.setCurrentFragment(TransferMoneyFragment.newInstance(SendMoneyFragment.newInstance(otherUserNick,fragment)), getActivity());
             }
         });
 

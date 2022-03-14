@@ -35,9 +35,15 @@ public class TransferHistoryFragment extends Fragment {
     FirebaseModel firebaseModel=new FirebaseModel();
     ImageView backToCoins;
     TextView noTransfer;
+    Fragment fragment;
 
-    public static TransferHistoryFragment newInstance() {
-        return new TransferHistoryFragment();
+    public TransferHistoryFragment(Fragment fragment) {
+        this.fragment = fragment;
+    }
+
+    public static TransferHistoryFragment newInstance(Fragment fragment) {
+        return new TransferHistoryFragment(fragment);
+
     }
 
     @Override
@@ -61,7 +67,7 @@ public class TransferHistoryFragment extends Fragment {
         backToCoins.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(TransferMoneyFragment.newInstance(), getActivity());
+                RecentMethods.setCurrentFragment(TransferMoneyFragment.newInstance(fragment), getActivity());
             }
         });
         firebaseModel.initAll();

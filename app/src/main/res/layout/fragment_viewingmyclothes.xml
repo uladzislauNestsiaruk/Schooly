@@ -48,16 +48,16 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="36dp" />
 
-    <TextView
-        android:id="@+id/clothesTitlecv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/clothesImagecv"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="24dp"
-        android:fontFamily="@font/montserratblack"
-        android:textColor="@color/app_color"
-        android:textSize="24sp" />
+        <TextView
+            android:id="@+id/clothesTitlecv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/clothesImagecv"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="24dp"
+            android:fontFamily="@font/montserratblack"
+            android:textColor="@color/app_color"
+            android:textSize="24sp" />
 
         <RelativeLayout
             android:id="@+id/priceRelative"
@@ -80,10 +80,10 @@
                 android:id="@+id/coinImagePrice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
+                android:layout_marginStart="2dp"
+                android:layout_marginTop="6dp"
                 android:layout_toRightOf="@+id/clothesPricecv"
-                android:layout_marginStart="4dp"
-                android:src="@drawable/ic_schoolycoinpurple"/>
+                android:src="@drawable/ic_schoolycoinpurple" />
         </RelativeLayout>
 
     <TextView
@@ -308,7 +308,7 @@
         android:textColor="@color/app_grey"
         android:fontFamily="@font/montserrat_bold"
         android:text="@string/noDescriptipon"
-        android:paddingBottom="100dp"
+        android:paddingBottom="110dp"
         android:visibility="gone"/>
 
     <LinearLayout

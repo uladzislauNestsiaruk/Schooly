@@ -86,7 +86,7 @@ public class CoinsMainFragment extends Fragment {
         transferMoney.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(TransferMoneyFragment.newInstance(), getActivity());
+                RecentMethods.setCurrentFragment(TransferMoneyFragment.newInstance(CoinsMainFragment.newInstance()), getActivity());
             }
         });
         oneLinear.setOnClickListener(new View.OnClickListener() {

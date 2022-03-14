@@ -37,10 +37,10 @@ public class MyClothesFragment extends Fragment {
     FirebaseModel firebaseModel=new FirebaseModel();
     RecyclerView recyclerMyClothes;
     RelativeLayout createAndGet,getMoney,createClothesBig,relativeFirstClothes,createClothes;
-    TextView totalProfitText,totalProfit,clothes,totalPurchaseText,totalPurchase;
+    TextView totalProfitText,totalProfit,totalProfitDollar,clothes,totalPurchaseText,totalPurchase;
     MyClothesAdapter.ItemClickListener itemClickListener;
-    long totalProfitLong,totalPurchaseLong;
-    String totalProfitString,totalPurchaseString;
+    long totalProfitLong,totalPurchaseLong,totalProfitDollarLong;
+    String totalProfitString,totalPurchaseString,totalProfitDollarString;
     ImageView schoolyCoin;
 
 
@@ -78,6 +78,7 @@ public class MyClothesFragment extends Fragment {
         totalProfit=view.findViewById(R.id.totalProfit);
         totalPurchaseText=view.findViewById(R.id.totalPurchaseText);
         totalPurchase=view.findViewById(R.id.totalPurchase);
+        totalProfitDollar=view.findViewById(R.id.totalProfitDollar);
         schoolyCoin=view.findViewById(R.id.schoolycoinGreen);
         clothes=view.findViewById(R.id.clothes);
         relativeFirstClothes=view.findViewById(R.id.relativeFirstClothes);
@@ -144,30 +145,71 @@ public class MyClothesFragment extends Fragment {
                                         Clothes clothes = new Clothes();
                                         clothes.setPurchaseToday(snap.child("purchaseToday").getValue(Long.class));
                                         clothes.setClothesPrice(snap.child("clothesPrice").getValue(Long.class));
-                                        totalProfitLong+=clothes.getPurchaseToday()*clothes.getClothesPrice();
+                                        clothes.setCurrencyType(snap.child("currencyType").getValue(String.class));
+                                        if (clothes.getCurrencyType().equals("dollar")){
+                                            totalProfitDollarLong+=clothes.getPurchaseToday()*clothes.getClothesPrice();
+                                        }else {
+                                            totalProfitLong+=clothes.getPurchaseToday()*clothes.getClothesPrice();
+                                        }
                                         totalPurchaseLong+=clothes.getPurchaseToday();
                                     }
-                                    totalProfitString=String.valueOf(totalProfitLong);
-                                    totalPurchaseString=String.valueOf(totalPurchaseLong);
-                                    if(totalProfitLong<1000){
-                                        totalProfit.setText("+"+totalProfitString);
-                                    }else if(totalProfitLong>1000 && totalProfitLong<10000){
-                                        totalProfit.setText("+"+totalProfitString.substring(0, 1)+"."+totalProfitString.substring(1, 2)+"K");
+                                    if(totalPurchaseLong==0 || totalProfitDollarLong==0){
+                                        totalProfitDollar.setVisibility(View.GONE);
                                     }
-                                    else if(totalProfitLong>10000 && totalProfitLong<100000){
-                                        totalProfit.setText("+"+totalProfitString.substring(0, 2)+"."+totalProfitString.substring(2,3)+"K");
+                                    if(totalProfitLong==0 && totalProfitDollarLong>0){
+                                        totalProfit.setVisibility(View.GONE);
+                                        schoolyCoin.setVisibility(View.GONE);
+                                        totalProfitDollarString = String.valueOf(totalProfitDollarLong);
+                                        if (totalProfitDollarLong < 1000) {
+                                            totalProfitDollar.setText("+" + totalProfitDollarString+"$");
+                                        } else if (totalProfitDollarLong > 1000 && totalProfitDollarLong < 10000) {
+                                            totalProfitDollar.setText("+" + totalProfitDollarString.substring(0, 1) + "." + totalProfitDollarString.substring(1, 2) + "K"+"$");
+                                        } else if (totalProfitDollarLong > 10000 && totalProfitDollarLong < 100000) {
+                                            totalProfitDollar.setText("+" + totalProfitDollarString.substring(0, 2) + "." + totalProfitDollarString.substring(2, 3) + "K"+"$");
+                                        } else if (totalProfitDollarLong > 10000 && totalProfitDollarLong < 100000) {
+                                            totalProfitDollar.setText("+" + totalProfitDollarString.substring(0, 2) + "." + totalProfitDollarString.substring(2, 3) + "K"+"$");
+                                        } else if (totalProfitDollarLong > 100000 && totalProfitDollarLong < 1000000) {
+                                            totalProfitDollar.setText("+" + totalProfitDollarString.substring(0, 3) + "K"+"$");
+                                        } else if (totalProfitDollarLong > 1000000 && totalProfitDollarLong < 10000000) {
+                                            totalProfitDollar.setText("+" + totalProfitDollarString.substring(0, 1) + "KK"+"$");
+                                        } else if (totalProfitDollarLong > 10000000 && totalProfitDollarLong < 100000000) {
+                                            totalProfitDollar.setText("+" + totalProfitDollarString.substring(0, 2) + "KK"+"$");
+                                        }
+                                    }else{
+                                        totalProfitDollarString = String.valueOf(totalProfitDollarLong);
+                                        if (totalProfitDollarLong < 1000) {
+                                            totalProfitDollar.setText(" + " + totalProfitDollarString+"$");
+                                        } else if (totalProfitDollarLong > 1000 && totalProfitDollarLong < 10000) {
+                                            totalProfitDollar.setText(" + " + totalProfitDollarString.substring(0, 1) + "." + totalProfitDollarString.substring(1, 2) + "K"+"$");
+                                        } else if (totalProfitDollarLong > 10000 && totalProfitDollarLong < 100000) {
+                                            totalProfitDollar.setText(" + " + totalProfitDollarString.substring(0, 2) + "." + totalProfitDollarString.substring(2, 3) + "K"+"$");
+                                        } else if (totalProfitDollarLong > 10000 && totalProfitDollarLong < 100000) {
+                                            totalProfitDollar.setText(" + " + totalProfitDollarString.substring(0, 2) + "." + totalProfitDollarString.substring(2, 3) + "K"+"$");
+                                        } else if (totalProfitDollarLong > 100000 && totalProfitDollarLong < 1000000) {
+                                            totalProfitDollar.setText(" + " + totalProfitDollarString.substring(0, 3) + "K"+"$");
+                                        } else if (totalProfitDollarLong > 1000000 && totalProfitDollarLong < 10000000) {
+                                            totalProfitDollar.setText(" + " + totalProfitDollarString.substring(0, 1) + "KK"+"$");
+                                        } else if (totalProfitDollarLong > 10000000 && totalProfitDollarLong < 100000000) {
+                                            totalProfitDollar.setText(" + " + totalProfitDollarString.substring(0, 2) + "KK"+"$");
+                                        }
                                     }
-                                    else if(totalProfitLong>10000 && totalProfitLong<100000){
-                                        totalProfit.setText("+"+totalProfitString.substring(0, 2)+"."+totalProfitString.substring(2,3)+"K");
-                                    }else if(totalProfitLong>100000 && totalProfitLong<1000000){
-                                        totalProfit.setText("+"+totalProfitString.substring(0, 3)+"K");
-                                    }
-                                    else if(totalProfitLong>1000000 && totalProfitLong<10000000){
-                                        totalProfit.setText("+"+totalProfitString.substring(0, 1)+"KK");
-                                    }
-                                    else if(totalProfitLong>10000000 && totalProfitLong<100000000){
-                                        totalProfit.setText("+"+totalProfitString.substring(0, 2)+"KK");
-                                    }
+                                        totalProfitString = String.valueOf(totalProfitLong);
+                                        totalPurchaseString = String.valueOf(totalPurchaseLong);
+                                        if (totalProfitLong < 1000) {
+                                            totalProfit.setText("+" + totalProfitString);
+                                        } else if (totalProfitLong > 1000 && totalProfitLong < 10000) {
+                                            totalProfit.setText("+" + totalProfitString.substring(0, 1) + "." + totalProfitString.substring(1, 2) + "K");
+                                        } else if (totalProfitLong > 10000 && totalProfitLong < 100000) {
+                                            totalProfit.setText("+" + totalProfitString.substring(0, 2) + "." + totalProfitString.substring(2, 3) + "K");
+                                        } else if (totalProfitLong > 10000 && totalProfitLong < 100000) {
+                                            totalProfit.setText("+" + totalProfitString.substring(0, 2) + "." + totalProfitString.substring(2, 3) + "K");
+                                        } else if (totalProfitLong > 100000 && totalProfitLong < 1000000) {
+                                            totalProfit.setText("+" + totalProfitString.substring(0, 3) + "K");
+                                        } else if (totalProfitLong > 1000000 && totalProfitLong < 10000000) {
+                                            totalProfit.setText("+" + totalProfitString.substring(0, 1) + "KK");
+                                        } else if (totalProfitLong > 10000000 && totalProfitLong < 100000000) {
+                                            totalProfit.setText("+" + totalProfitString.substring(0, 2) + "KK");
+                                        }
                                     //////////////////////////////////////
                                     if(totalPurchaseLong<1000){
                                         totalPurchase.setText(totalPurchaseString);
