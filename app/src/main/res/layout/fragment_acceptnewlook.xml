@@ -5,7 +5,8 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:paddingBottom="24dp">
 
         <ImageView
             android:id="@+id/back_toprofile"
@@ -60,17 +61,26 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/montserratblack"
-                android:text="1344"
                 android:textColor="@color/app_color"
                 android:textSize="24sp" />
 
             <ImageView
+                android:id="@+id/schoolyCoin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
                 android:layout_marginTop="7dp"
                 android:layout_toRightOf="@+id/lookPrice"
                 android:src="@drawable/ic_schoolycoin24dp" />
+
+            <TextView
+                android:id="@+id/lookPriceDollar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/montserratblack"
+                android:layout_toRightOf="@+id/schoolyCoin"
+                android:textColor="@color/app_color"
+                android:textSize="24sp" />
         </RelativeLayout>
 
         <TextView
@@ -84,12 +94,11 @@
             android:text="@string/lookConstituents"
             android:textColor="@color/app_grey" />
 
-        <RelativeLayout
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/constituentsRecycler"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/lookConstituentsText"
-            />
+            android:layout_below="@+id/lookConstituentsText" />
 
         <EditText
             android:id="@+id/addDescriptionEdit"
@@ -119,7 +128,6 @@
             android:layout_alignParentBottom="true"
             android:layout_marginStart="24dp"
             android:layout_marginEnd="24dp"
-            android:layout_marginBottom="16dp"
             android:layout_marginTop="24dp"
             android:background="@drawable/corners14appcolor">
 

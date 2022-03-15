@@ -41,9 +41,14 @@ public class ConstituentsAdapter extends RecyclerView.Adapter<ConstituentsAdapte
     @Override
     public void onBindViewHolder(@NonNull ConstituentsAdapter.ViewHolder holder, int position) {
         Clothes clothes=clothesArrayList.get(position);
-        holder.clothesPrice.setText(String.valueOf(clothes.getClothesPrice()));
         Picasso.get().load(clothes.getClothesImage()).into(holder.clothesImage);
         holder.clothesTitle.setText(clothes.getClothesTitle());
+        if (clothes.getCurrencyType().equals("dollar")){
+            holder.clothesPrice.setText(String.valueOf(clothes.getClothesPrice())+"$");
+            holder.schoolyCoin.setVisibility(View.GONE);
+        }else{
+            holder.clothesPrice.setText(String.valueOf(clothes.getClothesPrice()));
+        }
     }
 
     @Override
@@ -53,12 +58,13 @@ public class ConstituentsAdapter extends RecyclerView.Adapter<ConstituentsAdapte
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView clothesTitle,clothesPrice;
-        ImageView clothesImage;
+        ImageView clothesImage,schoolyCoin;
         ViewHolder(View itemView) {
             super(itemView);
             clothesImage=itemView.findViewById(R.id.clothesImagecv);
             clothesTitle=itemView.findViewById(R.id.clothesTitlecv);
             clothesPrice=itemView.findViewById(R.id.clothesPricecv);
+            schoolyCoin=itemView.findViewById(R.id.coinImagePrice);
         }
 
 

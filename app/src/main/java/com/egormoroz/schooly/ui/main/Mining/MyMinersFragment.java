@@ -55,7 +55,6 @@ public class MyMinersFragment extends Fragment {
         recyclerviewMining=view.findViewById(R.id.recyclerviewmyminers);
         useMiner=view.findViewById(R.id.use);
         emptyMyMiners=view.findViewById(R.id.emptyMyMiners);
-        Log.d("#####","Изображение установлено");
     }
 
     public void GetMyMinersFromBase(){

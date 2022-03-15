@@ -141,15 +141,44 @@
             android:textColor="@color/app_grey"
             android:textSize="16dp" />
 
+        <LinearLayout
+            android:id="@+id/linearsearch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_below="@+id/clothes"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="24dp"
+            android:background="@drawable/corners12_2dpstrokeappcolor"
+            android:orientation="horizontal"
+            android:paddingTop="13dp"
+            android:paddingBottom="13dp">
+
+            <EditText
+                android:id="@+id/searchMyClothes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start|center"
+                android:layout_marginStart="16dp"
+                android:layout_weight="10"
+                android:background="@null"
+                android:maxLines="1"
+                android:fontFamily="@font/montserrat_bold"
+                android:hint="@string/searchMyClothes"
+                android:textColor="@color/app_grey"
+                android:textColorHint="@color/greysearch"
+                android:textSize="15sp" />
+
+        </LinearLayout>
+
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerMyClothes"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/clothes"
+            android:layout_below="@+id/linearsearch"
             android:layout_marginTop="8dp"
             android:orientation="vertical"
-            android:paddingBottom="30dp"
             android:scrollbars="none"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 

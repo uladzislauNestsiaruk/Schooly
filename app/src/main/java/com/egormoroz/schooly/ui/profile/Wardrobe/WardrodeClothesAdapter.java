@@ -13,8 +13,10 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
+import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
 import com.egormoroz.schooly.ui.main.Shop.NewClothesAdapter;
 import com.google.firebase.storage.FirebaseStorage;
@@ -69,6 +71,13 @@ class WardrobeClothesAdapter extends RecyclerView.Adapter<WardrobeClothesAdapter
                 holder.fittingClothes.setVisibility(View.GONE);
                 holder.activeFittingClothes.setVisibility(View.VISIBLE);
                 Toast.makeText(v.getContext(), "Предмет надет", Toast.LENGTH_SHORT).show();
+                RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+                    @Override
+                    public void PassUserNick(String nick) {
+                        firebaseModel.getUsersReference().child(nick).child("lookClothes")
+                                .child(clothes.getUid()).setValue(clothes);
+                    }
+                });
             }
         });
     }

@@ -212,22 +212,26 @@ public class PresentClothesFragment extends Fragment {
                     @Override
                     public void PassUserNick(String nick) {
                         Query query=firebaseModel.getUsersReference().child(userNameToProfile)
-                                .child("clothes").child(clothes.getClothesTitle());
+                                .child("clothes").child(clothes.getUid());
                         query.addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                if(snapshot.exists()){
-                                    Toast.makeText(getContext(), "У "+userNameToProfile+" уже есть этот предмет одежды" , Toast.LENGTH_SHORT).show();
+                                if(snapshot.equals(null)){
+
                                 }else {
-                                    firebaseModel.getUsersReference().child(userNameToProfile).child("clothes")
-                                            .child(clothes.getClothesTitle()).setValue(clothes);
-                                    String numToBase=firebaseModel.getReference().child("users")
-                                            .child(userNameToProfile).child("nontifications").push().getKey();
-                                    firebaseModel.getReference().child("users")
-                                            .child(userNameToProfile).child("nontifications")
-                                            .child(numToBase).setValue(new Nontification(nick,"не отправлено","подарок"
-                                            , ServerValue.TIMESTAMP.toString(),clothes.getClothesTitle(),clothes.getClothesImage(),"не просмотрено",numToBase));
-                                    Toast.makeText(getContext(), "Подарок отправлен", Toast.LENGTH_SHORT).show();
+                                    if (snapshot.exists()) {
+                                        Toast.makeText(getContext(), "У " + userNameToProfile + " уже есть этот предмет одежды", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        firebaseModel.getUsersReference().child(userNameToProfile).child("clothes")
+                                                .child(clothes.getUid()).setValue(clothes);
+                                        String numToBase = firebaseModel.getReference().child("users")
+                                                .child(userNameToProfile).child("nontifications").push().getKey();
+                                        firebaseModel.getReference().child("users")
+                                                .child(userNameToProfile).child("nontifications")
+                                                .child(numToBase).setValue(new Nontification(nick, "не отправлено", "подарок"
+                                                , ServerValue.TIMESTAMP.toString(), clothes.getClothesTitle(), clothes.getClothesImage(), "не просмотрено", numToBase));
+                                        Toast.makeText(getContext(), "Подарок отправлен", Toast.LENGTH_SHORT).show();
+                                    }
                                 }
                             }
 

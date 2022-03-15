@@ -1248,6 +1248,7 @@ public class RecentMethods {
                     clothes.setDescription(snap.child("description").getValue(String.class));
                     clothes.setPurchaseToday(snap.child("purchaseToday").getValue(Long.class));
                     clothes.setModel(snap.child("model").getValue(String.class));
+                    clothes.setUid(snap.child("uid").getValue(String.class));
                     clothesFromBase.add(clothes);
                 }
                 callback.getClothes(clothesFromBase);

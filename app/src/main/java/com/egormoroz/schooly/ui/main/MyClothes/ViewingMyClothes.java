@@ -103,16 +103,17 @@ public class ViewingMyClothes extends Fragment {
                 });
                 clothesTitleCV.setText(clothes.getClothesTitle());
                 purchaseTodayString=String.valueOf(clothesViewing.getPurchaseToday());
+                Log.d("###", "h "+purchaseTodayString);
                 if(clothes.getPurchaseToday()<1000){
                     purchaseToday.setText(String.valueOf(clothes.getPurchaseToday()));
                 }else if(clothes.getPurchaseToday()>1000 && clothes.getPurchaseToday()<10000){
-                    purchaseToday.setText(purchaseTodayString.substring(0, 1)+"."+clothesPriceString.substring(1, 2)+"K");
+                    purchaseToday.setText(purchaseTodayString.substring(0, 1)+"."+purchaseTodayString.substring(1, 2)+"K");
                 }
                 else if(clothes.getPurchaseToday()>10000 && clothes.getPurchaseToday()<100000){
-                    purchaseToday.setText(purchaseTodayString.substring(0, 2)+"."+clothesPriceString.substring(2,3)+"K");
+                    purchaseToday.setText(purchaseTodayString.substring(0, 2)+"."+purchaseTodayString.substring(2,3)+"K");
                 }
                 else if(clothes.getPurchaseToday()>10000 && clothes.getPurchaseToday()<100000){
-                    purchaseToday.setText(purchaseTodayString.substring(0, 2)+"."+clothesPriceString.substring(2,3)+"K");
+                    purchaseToday.setText(purchaseTodayString.substring(0, 2)+"."+purchaseTodayString.substring(2,3)+"K");
                 }else if(clothes.getPurchaseToday()>100000 && clothes.getPurchaseToday()<1000000){
                     purchaseToday.setText(purchaseTodayString.substring(0, 3)+"K");
                 }

@@ -6,6 +6,7 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -42,6 +43,7 @@ public class MyClothesFragment extends Fragment {
     long totalProfitLong,totalPurchaseLong,totalProfitDollarLong;
     String totalProfitString,totalPurchaseString,totalProfitDollarString;
     ImageView schoolyCoin;
+    EditText searchMyClothes;
 
 
     int clothesListSize;
@@ -75,6 +77,7 @@ public class MyClothesFragment extends Fragment {
         createClothesBig=view.findViewById(R.id.createBigButtonRecycler);
         createClothes=view.findViewById(R.id.createClothesButton);
         totalProfitText=view.findViewById(R.id.totalProfitText);
+        searchMyClothes=view.findViewById(R.id.searchMyClothes);
         totalProfit=view.findViewById(R.id.totalProfit);
         totalPurchaseText=view.findViewById(R.id.totalPurchaseText);
         totalPurchase=view.findViewById(R.id.totalPurchase);

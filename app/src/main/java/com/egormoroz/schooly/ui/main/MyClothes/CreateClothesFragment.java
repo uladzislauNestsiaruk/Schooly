@@ -2,7 +2,10 @@ package com.egormoroz.schooly.ui.main.MyClothes;
 
 import static android.app.Activity.RESULT_OK;
 
+import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -302,6 +305,8 @@ public class CreateClothesFragment extends Fragment {
                             Toast.makeText(getContext(), "Заявка отправлена", Toast.LENGTH_SHORT).show();
                         }
                     });
+                }else {
+                    showDialog();
                 }
             }
         });
@@ -408,6 +413,25 @@ public class CreateClothesFragment extends Fragment {
                 });
             }
         }
+    }
+
+    public void showDialog() {
+
+        final Dialog dialog = new Dialog(getContext());
+        dialog.setContentView(R.layout.dialog_fulldata);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        RelativeLayout yes=dialog.findViewById(R.id.yes);
+
+
+        yes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
