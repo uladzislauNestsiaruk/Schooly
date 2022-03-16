@@ -96,6 +96,7 @@ public class ClothesFragmentProfile extends Fragment {
                             clothes.setPurchaseToday(snap.child("purchaseToday").getValue(Long.class));
                             clothes.setBodyType(snap.child("bodyType").getValue(String.class));
                             clothes.setModel(snap.child("model").getValue(String.class));
+                            clothes.setUid(snap.child("uid").getValue(String.class));
                             clothesFromBase.add(clothes);
                         }
                         if (clothesFromBase.size()==0){

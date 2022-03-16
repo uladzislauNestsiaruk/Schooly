@@ -374,6 +374,7 @@
     <string name="good">Хорошо</string>
     <string name="allFields">Необходимо заполнить все поля:)</string>
     <string name="searchMyClothes">Поиск моей одежды</string>
+    <string name="noMyClothes">Не удалось найти одежду:(</string>
 
 
 </resources>

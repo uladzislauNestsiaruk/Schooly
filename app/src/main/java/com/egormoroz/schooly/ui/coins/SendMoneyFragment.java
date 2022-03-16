@@ -130,7 +130,7 @@ public class SendMoneyFragment extends Fragment {
         backToCoins.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(TransferMoneyFragment.newInstance(SendMoneyFragment.newInstance(otherUserNick,fragment)), getActivity());
+                RecentMethods.setCurrentFragment(TransferMoneyFragment.newInstance(fragment), getActivity());
             }
         });
 

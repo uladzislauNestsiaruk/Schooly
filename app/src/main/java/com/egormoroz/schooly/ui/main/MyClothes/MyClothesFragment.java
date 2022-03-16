@@ -1,6 +1,8 @@
 package com.egormoroz.schooly.ui.main.MyClothes;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -14,6 +16,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.egormoroz.schooly.Callbacks;
@@ -23,6 +26,8 @@ import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.ui.main.MainFragment;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
+import com.egormoroz.schooly.ui.main.Shop.PopularClothesAdapter;
+import com.egormoroz.schooly.ui.main.Shop.ViewingClothesPopular;
 import com.egormoroz.schooly.ui.profile.Wardrobe.AcceptNewLook;
 import com.egormoroz.schooly.ui.profile.Wardrobe.CreateLookFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -38,10 +43,11 @@ public class MyClothesFragment extends Fragment {
     FirebaseModel firebaseModel=new FirebaseModel();
     RecyclerView recyclerMyClothes;
     RelativeLayout createAndGet,getMoney,createClothesBig,relativeFirstClothes,createClothes;
-    TextView totalProfitText,totalProfit,totalProfitDollar,clothes,totalPurchaseText,totalPurchase;
+    TextView totalProfitText,totalProfit,totalProfitDollar,clothes,totalPurchaseText
+            ,totalPurchase,notFound;
     MyClothesAdapter.ItemClickListener itemClickListener;
     long totalProfitLong,totalPurchaseLong,totalProfitDollarLong;
-    String totalProfitString,totalPurchaseString,totalProfitDollarString;
+    String totalProfitString,totalPurchaseString,totalProfitDollarString,editGetText;
     ImageView schoolyCoin;
     EditText searchMyClothes;
 
@@ -79,6 +85,7 @@ public class MyClothesFragment extends Fragment {
         totalProfitText=view.findViewById(R.id.totalProfitText);
         searchMyClothes=view.findViewById(R.id.searchMyClothes);
         totalProfit=view.findViewById(R.id.totalProfit);
+        notFound=view.findViewById(R.id.noClothes);
         totalPurchaseText=view.findViewById(R.id.totalPurchaseText);
         totalPurchase=view.findViewById(R.id.totalPurchase);
         totalProfitDollar=view.findViewById(R.id.totalProfitDollar);
@@ -99,6 +106,42 @@ public class MyClothesFragment extends Fragment {
                     @Override
                     public void PassUserNick(String nick) {
                         RecentMethods.setCurrentFragment(MainFragment.newInstance(), getActivity());
+                    }
+                });
+            }
+        });
+        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+            @Override
+            public void PassUserNick(String nick) {
+                searchMyClothes.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        editGetText=searchMyClothes.getText().toString();
+                        editGetText=editGetText.toLowerCase();
+                        if (editGetText.length()>0) {
+                            searchMyClothes.setVisibility(View.VISIBLE);
+                            searchMyClothes(editGetText);
+                        }else if(editGetText.length()==0){
+                            recyclerMyClothes.setVisibility(View.VISIBLE);
+                            notFound.setVisibility(View.GONE);
+                            RecentMethods.getMyClothes(nick, firebaseModel, new Callbacks.GetClothes() {
+                                @Override
+                                public void getClothes(ArrayList<Clothes> allClothes) {
+                                    MyClothesAdapter myClothesAdapter=new MyClothesAdapter(allClothes,itemClickListener);
+                                    recyclerMyClothes.setAdapter(myClothesAdapter);
+                                }
+                            });
+                        }
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+
                     }
                 });
             }
@@ -251,5 +294,62 @@ public class MyClothesFragment extends Fragment {
                 }
             });
         }
+    }
+
+    public void searchMyClothes(String editTextText){
+        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+            @Override
+            public void PassUserNick(String nick) {
+                Query query = firebaseModel.getUsersReference().child(nick)
+                        .child("myClothes");
+                query.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        ArrayList<Clothes> clothesFromBase = new ArrayList<>();
+                        for (DataSnapshot snap : snapshot.getChildren()) {
+                            Clothes clothes = new Clothes();
+                            clothes.setClothesImage(snap.child("clothesImage").getValue(String.class));
+                            clothes.setClothesPrice(snap.child("clothesPrice").getValue(Long.class));
+                            clothes.setPurchaseNumber(snap.child("purchaseNumber").getValue(Long.class));
+                            clothes.setClothesType(snap.child("clothesType").getValue(String.class));
+                            clothes.setClothesTitle(snap.child("clothesTitle").getValue(String.class));
+                            clothes.setCreator(snap.child("creator").getValue(String.class));
+                            clothes.setCurrencyType(snap.child("currencyType").getValue(String.class));
+                            clothes.setDescription(snap.child("description").getValue(String.class));
+                            clothes.setPurchaseToday(snap.child("purchaseToday").getValue(Long.class));
+                            clothes.setModel(snap.child("model").getValue(String.class));
+                            clothes.setBodyType(snap.child("bodyType").getValue(String.class));
+                            clothes.setUid(snap.child("uid").getValue(String.class));
+                            String clothesTitle = clothes.getClothesTitle();
+                            String title = clothesTitle;
+                            int valueLetters = editTextText.length();
+                            title = title.toLowerCase();
+                            if (title.length() < valueLetters) {
+                                if (title.equals(editTextText))
+                                    clothesFromBase.add(clothes);
+                            } else {
+                                title = title.substring(0, valueLetters);
+                                if (title.equals(editTextText))
+                                    clothesFromBase.add(clothes);
+                            }
+                        }
+                        if (clothesFromBase.size() == 0) {
+                            recyclerMyClothes.setVisibility(View.GONE);
+                            notFound.setVisibility(View.VISIBLE);
+                        } else {
+                            recyclerMyClothes.setVisibility(View.VISIBLE);
+                            MyClothesAdapter myClothesAdapter=new MyClothesAdapter(clothesFromBase,itemClickListener);
+                            recyclerMyClothes.setAdapter(myClothesAdapter);
+                            notFound.setVisibility(View.GONE);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+            }
+        });
     }
 }
