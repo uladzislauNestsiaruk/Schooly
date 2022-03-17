@@ -76,11 +76,11 @@
                 android:id="@+id/totalProfitDollar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/green"
-                android:textSize="40sp"
+                android:layout_centerVertical="true"
                 android:layout_toRightOf="@+id/schoolycoinGreen"
                 android:fontFamily="@font/montserratblack"
-                android:layout_centerVertical="true"/>
+                android:textColor="@color/green"
+                android:textSize="40sp" />
 
         </RelativeLayout>
 
