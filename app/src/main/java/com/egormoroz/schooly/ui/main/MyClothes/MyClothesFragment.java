@@ -224,19 +224,19 @@ public class MyClothesFragment extends Fragment {
                                     }else{
                                         totalProfitDollarString = String.valueOf(totalProfitDollarLong);
                                         if (totalProfitDollarLong < 1000) {
-                                            totalProfitDollar.setText(" + " + totalProfitDollarString+"$");
+                                            totalProfitDollar.setText("+" + totalProfitDollarString+"$");
                                         } else if (totalProfitDollarLong > 1000 && totalProfitDollarLong < 10000) {
-                                            totalProfitDollar.setText(" + " + totalProfitDollarString.substring(0, 1) + "." + totalProfitDollarString.substring(1, 2) + "K"+"$");
+                                            totalProfitDollar.setText("+" + totalProfitDollarString.substring(0, 1) + "." + totalProfitDollarString.substring(1, 2) + "K"+"$");
                                         } else if (totalProfitDollarLong > 10000 && totalProfitDollarLong < 100000) {
-                                            totalProfitDollar.setText(" + " + totalProfitDollarString.substring(0, 2) + "." + totalProfitDollarString.substring(2, 3) + "K"+"$");
+                                            totalProfitDollar.setText("+" + totalProfitDollarString.substring(0, 2) + "." + totalProfitDollarString.substring(2, 3) + "K"+"$");
                                         } else if (totalProfitDollarLong > 10000 && totalProfitDollarLong < 100000) {
-                                            totalProfitDollar.setText(" + " + totalProfitDollarString.substring(0, 2) + "." + totalProfitDollarString.substring(2, 3) + "K"+"$");
+                                            totalProfitDollar.setText("+" + totalProfitDollarString.substring(0, 2) + "." + totalProfitDollarString.substring(2, 3) + "K"+"$");
                                         } else if (totalProfitDollarLong > 100000 && totalProfitDollarLong < 1000000) {
-                                            totalProfitDollar.setText(" + " + totalProfitDollarString.substring(0, 3) + "K"+"$");
+                                            totalProfitDollar.setText("+" + totalProfitDollarString.substring(0, 3) + "K"+"$");
                                         } else if (totalProfitDollarLong > 1000000 && totalProfitDollarLong < 10000000) {
-                                            totalProfitDollar.setText(" + " + totalProfitDollarString.substring(0, 1) + "KK"+"$");
+                                            totalProfitDollar.setText("+" + totalProfitDollarString.substring(0, 1) + "KK"+"$");
                                         } else if (totalProfitDollarLong > 10000000 && totalProfitDollarLong < 100000000) {
-                                            totalProfitDollar.setText(" + " + totalProfitDollarString.substring(0, 2) + "KK"+"$");
+                                            totalProfitDollar.setText("+" + totalProfitDollarString.substring(0, 2) + "KK"+"$");
                                         }
                                     }
                                         totalProfitString = String.valueOf(totalProfitLong);

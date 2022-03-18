@@ -60,8 +60,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/green"
             android:textSize="40sp"
-            android:fontFamily="@font/montserratblack"
-             android:layout_centerVertical="true"/>
+            android:fontFamily="@font/montserratblack" />
 
             <ImageView
                 android:id="@+id/schoolycoinGreen"
@@ -76,8 +75,7 @@
                 android:id="@+id/totalProfitDollar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_toRightOf="@+id/schoolycoinGreen"
+                android:layout_below="@id/totalProfit"
                 android:fontFamily="@font/montserratblack"
                 android:textColor="@color/green"
                 android:textSize="40sp" />
