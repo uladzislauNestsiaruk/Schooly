@@ -61,7 +61,11 @@ import com.egormoroz.schooly.ui.profile.ComplainFragment;
 import com.egormoroz.schooly.ui.profile.Reason;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.progressindicator.CircularProgressIndicator;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ServerValue;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -85,6 +89,7 @@ public class MainFragment extends Fragment{
     CircularProgressIndicator circularProgressIndicator;
     MyClothesAdapterMain.ItemClickListener itemClickListenerMyClothes;
     LinearLayout coinsLinear;
+    long totalProfitLong,totalPurchaseLong,totalProfitDollarLong;
 
     private static final String CHANNEL_ID = "Tyomaa channel";
 
@@ -147,14 +152,6 @@ public class MainFragment extends Fragment{
                         myClothesListSize=allClothes.size();
                     }
                 });
-            }
-        });
-        relativeMyClothes.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(myClothesListSize>-1) {
-                    RecentMethods.setCurrentFragment(MyClothesFragment.newInstance(myClothesListSize), getActivity());
-                }
             }
         });
         itemClickListenerMyClothes=new MyClothesAdapterMain.ItemClickListener() {
@@ -392,10 +389,43 @@ public class MainFragment extends Fragment{
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @Override
             public void PassUserNick(String nick) {
-                RecentMethods.getMyClothes(nick, firebaseModel, new Callbacks.GetClothes() {
+                Query query=firebaseModel.getUsersReference().child(nick)
+                        .child("myClothes");
+                query.addValueEventListener(new ValueEventListener() {
                     @Override
-                    public void getClothes(ArrayList<Clothes> allClothes) {
-                        if(allClothes.size()==0){
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        ArrayList<Clothes> clothesFromBase=new ArrayList<>();
+                        for (DataSnapshot snap : snapshot.getChildren()) {
+                            Clothes clothes = new Clothes();
+                            clothes.setClothesImage(snap.child("clothesImage").getValue(String.class));
+                            clothes.setClothesPrice(snap.child("clothesPrice").getValue(Long.class));
+                            clothes.setPurchaseNumber(snap.child("purchaseNumber").getValue(Long.class));
+                            clothes.setClothesType(snap.child("clothesType").getValue(String.class));
+                            clothes.setClothesTitle(snap.child("clothesTitle").getValue(String.class));
+                            clothes.setCreator(snap.child("creator").getValue(String.class));
+                            clothes.setCurrencyType(snap.child("currencyType").getValue(String.class));
+                            clothes.setDescription(snap.child("description").getValue(String.class));
+                            clothes.setPurchaseToday(snap.child("purchaseToday").getValue(Long.class));
+                            clothes.setModel(snap.child("model").getValue(String.class));
+                            clothes.setUid(snap.child("uid").getValue(String.class));
+                            clothesFromBase.add(clothes);
+                            if (clothes.getCurrencyType().equals("dollar")){
+                                totalProfitDollarLong+=clothes.getPurchaseToday()*clothes.getClothesPrice();
+                            }else {
+                                totalProfitLong+=clothes.getPurchaseToday()*clothes.getClothesPrice();
+                            }
+                            totalPurchaseLong+=clothes.getPurchaseToday();
+                        }
+                        relativeMyClothes.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                if(myClothesListSize>-1) {
+                                    RecentMethods.setCurrentFragment(MyClothesFragment.newInstance(myClothesListSize
+                                            ,totalProfitLong,totalPurchaseLong,totalProfitDollarLong), getActivity());
+                                }
+                            }
+                        });
+                        if(clothesFromBase.size()==0){
                             relativeFirstLayout.setVisibility(View.VISIBLE);
                             myClothesRecycler.setVisibility(View.GONE);
                             createClothes.setOnClickListener(new View.OnClickListener() {
@@ -406,9 +436,14 @@ public class MainFragment extends Fragment{
                             });
                         }else {
                             relativeFirstLayout.setVisibility(View.GONE);
-                            MyClothesAdapterMain myClothesAdapterMain=new MyClothesAdapterMain(allClothes,itemClickListenerMyClothes);
+                            MyClothesAdapterMain myClothesAdapterMain=new MyClothesAdapterMain(clothesFromBase,itemClickListenerMyClothes);
                             myClothesRecycler.setAdapter(myClothesAdapterMain);
                         }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
                     }
                 });
             }

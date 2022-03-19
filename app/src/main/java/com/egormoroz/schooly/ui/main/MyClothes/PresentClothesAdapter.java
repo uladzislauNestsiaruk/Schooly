@@ -11,11 +11,19 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FirebaseModel;
+import com.egormoroz.schooly.Nontification;
 import com.egormoroz.schooly.R;
+import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.Subscriber;
 import com.egormoroz.schooly.ui.coins.TransferMoneyAdapter;
+import com.egormoroz.schooly.ui.main.Shop.Clothes;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ServerValue;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -24,9 +32,12 @@ public class PresentClothesAdapter  extends RecyclerView.Adapter<PresentClothesA
     ArrayList<Subscriber> listAdapter;
     private PresentClothesAdapter.ItemClickListener clickListener;
     private FirebaseModel firebaseModel = new FirebaseModel();
+    int alreadyHave=0;
+    Clothes clothes;
 
-    public  PresentClothesAdapter(ArrayList<Subscriber> listAdapter) {
+    public  PresentClothesAdapter(ArrayList<Subscriber> listAdapter,Clothes clothes) {
         this.listAdapter = listAdapter;
+        this.clothes=clothes;
     }
 
     @NonNull
@@ -46,7 +57,31 @@ public class PresentClothesAdapter  extends RecyclerView.Adapter<PresentClothesA
         holder.presentClothes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                    if (clickListener != null) clickListener.onItemClick(view, position);
+                RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+                    @Override
+                    public void PassUserNick(String nick) {
+                        Query query=firebaseModel.getUsersReference().child(subscriber.getSub())
+                                .child("clothes").child(clothes.getUid());
+                        query.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    if (snapshot.exists()) {
+                                        alreadyHave=1;
+                                    } else {
+                                        alreadyHave=2;
+                                    }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+                        if(alreadyHave>0){
+                            if (clickListener != null) clickListener.onItemClick(alreadyHave, position);
+                        }
+                    }
+                });
             }
         });
     }
@@ -66,7 +101,7 @@ public class PresentClothesAdapter  extends RecyclerView.Adapter<PresentClothesA
 
         @Override
         public void onClick(View view) {
-            if (clickListener != null) clickListener.onItemClick(view, getAdapterPosition());
+            if (clickListener != null) clickListener.onItemClick(alreadyHave, getAdapterPosition());
         }
     }
 
@@ -79,6 +114,6 @@ public class PresentClothesAdapter  extends RecyclerView.Adapter<PresentClothesA
     }
 
     public interface ItemClickListener {
-        void onItemClick(View view, int position);
+        void onItemClick(int alreadyHave, int position);
     }
 }

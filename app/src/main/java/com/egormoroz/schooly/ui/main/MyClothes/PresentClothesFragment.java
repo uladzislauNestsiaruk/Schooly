@@ -104,14 +104,14 @@ public class PresentClothesFragment extends Fragment {
                             emptySubscriptionList.setVisibility(View.VISIBLE);
                         }else {
                             emptySubscriptionList.setVisibility(View.GONE);
-                            PresentClothesAdapter presentClothesAdapter = new PresentClothesAdapter(friends);
+                            PresentClothesAdapter presentClothesAdapter = new PresentClothesAdapter(friends,clothes);
                             peopleRecyclerView.setAdapter(presentClothesAdapter);
                             PresentClothesAdapter.ItemClickListener itemClickListener = new PresentClothesAdapter.ItemClickListener() {
                                 @Override
-                                public void onItemClick(View view, int position) {
+                                public void onItemClick(int alreadyHave, int position) {
                                     Subscriber user = presentClothesAdapter.getItem(position);
                                     userNameToProfile = user.getSub();
-                                    showDialog();
+                                    showDialog(alreadyHave);
                                 }
                             };
                             presentClothesAdapter.setClickListener(itemClickListener);
@@ -157,14 +157,14 @@ public class PresentClothesFragment extends Fragment {
                                     }
 
                                 }
-                                PresentClothesAdapter presentClothesAdapter=new PresentClothesAdapter(userFromBase);
+                                PresentClothesAdapter presentClothesAdapter=new PresentClothesAdapter(userFromBase,clothes);
                                 peopleRecyclerView.setAdapter(presentClothesAdapter);
                                 PresentClothesAdapter.ItemClickListener itemClickListener=new PresentClothesAdapter.ItemClickListener() {
                                     @Override
-                                    public void onItemClick(View view, int position) {
+                                    public void onItemClick(int alreadyHave,int position) {
                                         Subscriber user = presentClothesAdapter.getItem(position);
                                         userNameToProfile=user.getSub();
-                                        showDialog();
+                                        showDialog(alreadyHave);
                                     }
                                 };
                                 presentClothesAdapter.setClickListener(itemClickListener);
@@ -185,7 +185,7 @@ public class PresentClothesFragment extends Fragment {
         });
     }
 
-    public void showDialog(){
+    public void showDialog(int alreadyHave){
 
         final Dialog dialog = new Dialog(getContext());
         dialog.setContentView(R.layout.buy_miner_dialog);
@@ -211,35 +211,19 @@ public class PresentClothesFragment extends Fragment {
                 RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
                     @Override
                     public void PassUserNick(String nick) {
-                        Query query=firebaseModel.getUsersReference().child(userNameToProfile)
-                                .child("clothes").child(clothes.getUid());
-                        query.addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                if(snapshot.equals(null)){
-
-                                }else {
-                                    if (snapshot.exists()) {
-                                        Toast.makeText(getContext(), "У " + userNameToProfile + " уже есть этот предмет одежды", Toast.LENGTH_SHORT).show();
-                                    } else {
-                                        firebaseModel.getUsersReference().child(userNameToProfile).child("clothes")
-                                                .child(clothes.getUid()).setValue(clothes);
-                                        String numToBase = firebaseModel.getReference().child("users")
-                                                .child(userNameToProfile).child("nontifications").push().getKey();
-                                        firebaseModel.getReference().child("users")
-                                                .child(userNameToProfile).child("nontifications")
-                                                .child(numToBase).setValue(new Nontification(nick, "не отправлено", "подарок"
-                                                , ServerValue.TIMESTAMP.toString(), clothes.getClothesTitle(), clothes.getClothesImage(), "не просмотрено", numToBase));
-                                        Toast.makeText(getContext(), "Подарок отправлен", Toast.LENGTH_SHORT).show();
-                                    }
-                                }
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
-
-                            }
-                        });
+                        if (alreadyHave==1) {
+                            Toast.makeText(getContext(), "У " + userNameToProfile + " уже есть этот предмет одежды", Toast.LENGTH_SHORT).show();
+                        } else {
+                            firebaseModel.getUsersReference().child(userNameToProfile).child("clothes")
+                                    .child(clothes.getUid()).setValue(clothes);
+                            String numToBase = firebaseModel.getReference().child("users")
+                                    .child(userNameToProfile).child("nontifications").push().getKey();
+                            firebaseModel.getReference().child("users")
+                                    .child(userNameToProfile).child("nontifications")
+                                    .child(numToBase).setValue(new Nontification(nick, "не отправлено", "подарок"
+                                    , ServerValue.TIMESTAMP.toString(), clothes.getClothesTitle(), clothes.getClothesImage(), "не просмотрено", numToBase));
+                            Toast.makeText(getContext(), "Подарок отправлен", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 });
                 dialog.dismiss();
