@@ -1,10 +1,17 @@
 package com.egormoroz.schooly;
 
+import com.google.firebase.database.Exclude;
+import com.google.firebase.database.ServerValue;
+
+import java.util.HashMap;
+import java.util.Map;
+
 public class Nontification {
 
     private String nick;
     private String typeDispatch;
     private String typeView;
+//    private HashMap<String, Object> timestamp;
     private String timestamp;
     private String clothesName;
     private String clothesImage;
@@ -16,7 +23,9 @@ public class Nontification {
         this.nick=nick;
         this.typeDispatch=typeDispatch;
         this.typeView=typeView;
-        this.timestamp=timestamp;
+        HashMap<String, Object> timestampObj = new HashMap<String, Object>();
+        timestampObj.put("date", ServerValue.TIMESTAMP);
+        this.timestamp = timestamp;
         this.clothesImage=clothesImage;
         this.clothesName=clothesName;
         this.type=type;
@@ -52,10 +61,26 @@ public class Nontification {
     public String  getTimestamp(){
         return this.timestamp;
     }
-
     public void setTimestamp(String  timestamp){
         this.timestamp=timestamp;
     }
+
+//    public HashMap<String, Object> getTimestamp() {
+//        //If there is a dateCreated object already, then return that
+//        if (timestamp != null) {
+//            return timestamp;
+//        }
+//        //Otherwise make a new object set to ServerValue.TIMESTAMP
+//        HashMap<String, Object> dateCreatedObj = new HashMap<String, Object>();
+//        dateCreatedObj.put("date", ServerValue.TIMESTAMP);
+//        return dateCreatedObj;
+//    }
+//
+//    @Exclude
+//    public long getDateCreatedLong() {
+//        return (long)timestamp.get("date");
+//    }
+
 
     public String  getClothesImage(){
         return this.clothesImage;

@@ -145,7 +145,7 @@ public class MainFragment extends Fragment{
 //                firebaseModel.getReference().child("users")
 //                        .child(nick).child("nontifications")
 //                        .child("-MxuHf_f26Lr39Vx2Tx8").setValue(new Nontification(nick,"не отправлено","запросодежда"
-//                        ,ServerValue.TIMESTAMP.toString()," "," ","не просмотрено","-MxuHf_f26Lr39Vx2Tx8"));
+//                        ,""," "," ","не просмотрено","-MxuHf_f26Lr39Vx2Tx8"));
                 RecentMethods.getMyClothes(nick, firebaseModel, new Callbacks.GetClothes() {
                     @Override
                     public void getClothes(ArrayList<Clothes> allClothes) {
@@ -188,10 +188,10 @@ public class MainFragment extends Fragment{
         int num4=random.nextInt(1000000000);
         String numToBase1=String.valueOf(num3+num4);
 
-        firebaseModel.getUsersReference().child("tyomaa6").child("subscription").child("Spaccacrani")
-                .setValue("Spaccacrani");
-        firebaseModel.getUsersReference().child("Spaccacrani").child("subscribers").child("tyomaa6")
-                .setValue("tyomaa6");
+//        firebaseModel.getUsersReference().child("tyomaa6").child("subscription").child("Spaccacrani")
+//                .setValue("Spaccacrani");
+//        firebaseModel.getUsersReference().child("Spaccacrani").child("subscribers").child("tyomaa6")
+//                .setValue("tyomaa6");
 
 
 //        ArrayList<Reason> reasonsArrayList=new ArrayList<>();

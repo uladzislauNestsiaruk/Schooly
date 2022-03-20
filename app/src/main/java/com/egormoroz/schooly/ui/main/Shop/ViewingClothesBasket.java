@@ -295,7 +295,7 @@ public class ViewingClothesBasket extends Fragment {
                         firebaseModel.getReference().child("users")
                                 .child(clothesViewing.getCreator()).child("nontifications")
                                 .child(numToBase).setValue(new Nontification(nick,"не отправлено","одежда"
-                                , dateAndTime,clothesViewing.getUid(),clothesViewing.getClothesImage(),"не просмотрено",numToBase));
+                                , "",clothesViewing.getUid(),clothesViewing.getClothesImage(),"не просмотрено",numToBase));
                       }
                       Query query=firebaseModel.getUsersReference().child(nick).child("basket").
                               child(clothesViewing.getUid());

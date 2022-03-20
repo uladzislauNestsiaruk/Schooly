@@ -30,6 +30,8 @@ import org.jetbrains.annotations.NotNull;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 public class SubscribersAdapter extends RecyclerView.Adapter<SubscribersAdapter.ViewHolder>  {
@@ -211,17 +213,14 @@ public class SubscribersAdapter extends RecyclerView.Adapter<SubscribersAdapter.
                                                     .child(subscriber.getSub()).setValue(subscriber.getSub());
                                             firebaseModel.getReference().child("users").child(subscriber.getSub()).child("subscribers")
                                                     .child(nick).setValue(nick);
-                                            Random random = new Random();
-                                            int num1 =random.nextInt(1000000000);
-                                            int num2 =random.nextInt(1000000000);
-                                            String numToBase=String.valueOf(num1+num2);
-                                            Date date = new Date();
-                                            SimpleDateFormat formatter = new SimpleDateFormat("EEE, MMM dd hh:mm a");
-                                            String dateAndTime = formatter.format(date);
+                                            String numToBase=firebaseModel.getReference().child("users")
+                                                    .child(subscriber.getSub()).child("nontifications")
+                                                    .push().getKey();
+                                            Map<String,String> timestamp=new HashMap<>();
                                             firebaseModel.getReference().child("users")
                                                     .child(subscriber.getSub()).child("nontifications")
                                                     .child(numToBase).setValue(new Nontification(nick,"не отправлено","обычный"
-                                                    ,dateAndTime," "," ","не просмотрено",numToBase));
+                                                    ,""," "," ","не просмотрено",numToBase));
                                             holder.addFriend.setText("Отписаться");
                                             holder.addFriend.setTextColor(Color.parseColor("#F3A2E5"));
                                             holder.addFriend.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
@@ -229,17 +228,16 @@ public class SubscribersAdapter extends RecyclerView.Adapter<SubscribersAdapter.
                                         }else {
                                             firebaseModel.getReference().child("users").child(subscriber.getSub()).child("requests")
                                                     .child(nick).setValue(nick);
-                                            Random random = new Random();
-                                            int num1 =random.nextInt(1000000000);
-                                            int num2 =random.nextInt(1000000000);
-                                            String numToBase=String.valueOf(num1+num2);
+                                            String numToBase=firebaseModel.getReference().child("users")
+                                                    .child(subscriber.getSub()).child("nontifications")
+                                                    .push().getKey();
                                             Date date = new Date();
                                             SimpleDateFormat formatter = new SimpleDateFormat("EEE, MMM dd hh:mm a");
                                             String dateAndTime = formatter.format(date);
                                             firebaseModel.getReference().child("users")
                                                     .child(subscriber.getSub()).child("nontifications")
                                                     .child(numToBase).setValue(new Nontification(nick,"не отправлено","запрос"
-                                                    ,dateAndTime.toString()," "," ","не просмотрено",numToBase));
+                                                    ,""," "," ","не просмотрено",numToBase));
                                             holder.addFriend.setText("Запрошено");
                                             holder.addFriend.setTextColor(Color.parseColor("#F3A2E5"));
                                             holder.addFriend.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);

@@ -209,7 +209,7 @@
     <string name="putAway">Убрать</string>
     <string name="putAwayDone">Убран</string>
     <string name="emptyBlackList">Черный список пуст</string>
-    <string name="emptySubscribersList">Скажи всем, чтобы подписались не тебя!</string>
+    <string name="emptySubscribersList">Нет подписчиков</string>
     <string name="emptySubscriptionList">Подпишись на других пользователей!</string>
     <string name="emptySearchSubscriptionList">Для того, чтобы перевести коины другому пользователю, необходимо быть на него подписаным</string>
     <string name="emptySubscriptionListOther">Нет подписок:(</string>
@@ -375,6 +375,7 @@
     <string name="allFields">Необходимо заполнить все поля:)</string>
     <string name="searchMyClothes">Поиск моей одежды</string>
     <string name="noMyClothes">Не удалось найти одежду:(</string>
+    <string name="share">Поделиться</string>
 
 
 </resources>

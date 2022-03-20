@@ -104,21 +104,18 @@ public class SendMoneyFragment extends Fragment {
                                 firebaseModel.getUsersReference().child(nick).child("money")
                                         .setValue(moneyBase-sumLong);
                                 Toast.makeText(getContext(), "Перевод выполнен", Toast.LENGTH_SHORT).show();
-                                Random random = new Random();
-                                long num =random.nextInt(1000000000);
-                                Date date = new Date();
-                                SimpleDateFormat formatter = new SimpleDateFormat("EEE, MMM dd hh:mm a");
-                                String dateAndTime = formatter.format(date);
+                                String num=firebaseModel.getUsersReference().child(otherUserNick).child("transferHistory")
+                                        .push().getKey();
                                 firebaseModel.getUsersReference().child(otherUserNick).child("transferHistory")
-                                        .child(String.valueOf(num)).setValue(new Transfer(sumLong, nick, "from"));
+                                        .child(num).setValue(new Transfer(sumLong, nick, "from"));
                                 firebaseModel.getUsersReference().child(nick).child("transferHistory")
-                                        .child(String.valueOf(num)).setValue(new Transfer(sumLong, otherUserNick, "to"));
+                                        .child(num).setValue(new Transfer(sumLong, otherUserNick, "to"));
                                 String uid=firebaseModel.getReference().child("users")
                                         .child(otherUserNick).child("nontifications").push().getKey();
                                 firebaseModel.getReference().child("users")
                                         .child(otherUserNick).child("nontifications")
                                         .child(uid).setValue(new Nontification(nick,"не отправлено","перевод"
-                                        , dateAndTime," "," ","не просмотрено",String.valueOf(sumLong)));
+                                        , ""," "," ","не просмотрено",String.valueOf(sumLong)));
                                 RecentMethods.setCurrentFragment(TransferMoneyFragment.newInstance(fragment), getActivity());
                             }
                         });

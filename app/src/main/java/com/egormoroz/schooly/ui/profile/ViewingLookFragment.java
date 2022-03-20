@@ -3,10 +3,13 @@ package com.egormoroz.schooly.ui.profile;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -14,29 +17,42 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
+import com.egormoroz.schooly.Subscriber;
 import com.egormoroz.schooly.ui.main.MyClothes.CreateClothesFragment;
 import com.egormoroz.schooly.ui.main.MyClothes.CriteriaFragment;
 import com.egormoroz.schooly.ui.news.NewsItem;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.ar.core.exceptions.CameraNotAvailableException;
 import com.google.ar.sceneform.Node;
 import com.google.ar.sceneform.SceneView;
 import com.google.ar.sceneform.assets.RenderableSource;
 import com.google.ar.sceneform.math.Vector3;
 import com.google.ar.sceneform.rendering.ModelRenderable;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.function.Consumer;
 
 public class ViewingLookFragment extends Fragment {
 
     FirebaseModel firebaseModel=new FirebaseModel();
-    ImageView back,like,comment,send,schoolyCoin;
-    TextView nick,description,likesCount,lookPrice,lookPriceDollar,clothesCreator;
+    ImageView back,like,comment,send,schoolyCoin,cross;
+    TextView nick,description,likesCount,lookPrice,lookPriceDollar,clothesCreator,emptyList;
     SceneView sceneView;
+    EditText editText;
+    RecyclerView recyclerView;
+    String userNameToProfile,userName;
     String likesCountString,lookPriceString,lookPriceDollarString;
 
 
@@ -97,6 +113,12 @@ public class ViewingLookFragment extends Fragment {
                 loadModels(Uri.parse(newsItem.getImageUrl()), sceneView, ViewingLookFragment.this, 0.25f);
                 nick.setText(newsItem.getNick());
                 likesCountString=String.valueOf(newsItem.getLikes_count());
+                send.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showBottomSheetDialog();
+                    }
+                });
                 long likesCountLong=Long.valueOf(newsItem.getLikes_count());
                 if(likesCountLong<1000){
                     likesCount.setText(String.valueOf(likesCountLong));
@@ -194,6 +216,47 @@ public class ViewingLookFragment extends Fragment {
         });
     }
 
+    private void showBottomSheetDialog() {
+
+        final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(getContext());
+        bottomSheetDialog.setContentView(R.layout.bottom_sheet_dialog_layout);
+
+        editText=bottomSheetDialog.findViewById(R.id.searchuser);
+        recyclerView=bottomSheetDialog.findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        cross=bottomSheetDialog.findViewById(R.id.cross);
+        emptyList=bottomSheetDialog.findViewById(R.id.emptySubscribersList);
+
+        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+            @Override
+            public void PassUserNick(String nick) {
+                RecentMethods.getSubscriptionList(nick, firebaseModel, new Callbacks.getFriendsList() {
+                    @Override
+                    public void getFriendsList(ArrayList<Subscriber> friends) {
+                        if (friends.size()==0){
+                            emptyList.setVisibility(View.VISIBLE);
+                            recyclerView.setVisibility(View.GONE);
+                        }else {
+                            SendLookAdapter sendLookAdapter = new SendLookAdapter(friends);
+                            recyclerView.setAdapter(sendLookAdapter);
+                        }
+                    }
+                });
+            }
+        });
+
+        cross.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bottomSheetDialog.dismiss();
+            }
+        });
+
+        initUserEnter();
+
+        bottomSheetDialog.show();
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void loadModels(Uri url, SceneView sceneView, Fragment fragment, float scale) {
         ModelRenderable.builder()
@@ -230,5 +293,63 @@ public class ViewingLookFragment extends Fragment {
         } catch (CameraNotAvailableException e) {
             e.printStackTrace();
         }
+    }
+
+    public void initUserEnter() {
+        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+            @Override
+            public void PassUserNick(String nick) {
+                editText.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                        userName = String.valueOf(editText.getText()).trim();
+                        userName = userName.toLowerCase();
+                        Query query = firebaseModel.getUsersReference().child(nick).child("subscription");
+                        query.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                ArrayList<Subscriber> userFromBase = new ArrayList<>();
+                                for (DataSnapshot snap : snapshot.getChildren()) {
+                                    Subscriber subscriber = new Subscriber();
+                                    subscriber.setSub(snap.getValue(String.class));
+                                    String nick = subscriber.getSub();
+                                    int valueLetters = userName.length();
+                                    nick = nick.toLowerCase();
+                                    if (nick.length() < valueLetters) {
+                                        if (nick.equals(userName))
+                                            userFromBase.add(subscriber);
+                                    } else {
+                                        nick = nick.substring(0, valueLetters);
+                                        if (nick.equals(userName))
+                                            userFromBase.add(subscriber);
+                                    }
+
+                                }
+                                SendLookAdapter sendLookAdapter = new SendLookAdapter(userFromBase);
+                                recyclerView.setAdapter(sendLookAdapter);
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable editable) {
+                        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+                            @Override
+                            public void PassUserNick(String nick) {
+                            }
+                        });
+                    }
+                });
+            }
+        });
     }
 }

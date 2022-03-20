@@ -197,17 +197,16 @@ public class SubscriptionsAdapter extends RecyclerView.Adapter<SubscriptionsAdap
                                                     .child(subscriber.getSub()).setValue(subscriber.getSub());
                                             firebaseModel.getReference().child("users").child(subscriber.getSub()).child("subscribers")
                                                     .child(nick).setValue(nick);
-                                            Random random = new Random();
-                                            int num1 =random.nextInt(1000000000);
-                                            int num2 =random.nextInt(1000000000);
-                                            String numToBase=String.valueOf(num1+num2);
+                                            String numToBase=firebaseModel.getReference().child("users")
+                                                    .child(subscriber.getSub()).child("nontifications")
+                                                    .push().getKey();
                                             Date date = new Date();
                                             SimpleDateFormat formatter = new SimpleDateFormat("EEE, MMM dd hh:mm a");
                                             String dateAndTime = formatter.format(date);
                                             firebaseModel.getReference().child("users")
                                                     .child(subscriber.getSub()).child("nontifications")
                                                     .child(numToBase).setValue(new Nontification(nick,"не отправлено","обычный"
-                                                    ,dateAndTime," "," ","не просмотрено",numToBase));
+                                                    ,""," "," ","не просмотрено",numToBase));
                                             holder.unsubscribe.setText("Отписаться");
                                             holder.unsubscribe.setTextColor(Color.parseColor("#F3A2E5"));
                                             holder.unsubscribe.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
@@ -215,17 +214,16 @@ public class SubscriptionsAdapter extends RecyclerView.Adapter<SubscriptionsAdap
                                         }else {
                                             firebaseModel.getReference().child("users").child(subscriber.getSub()).child("requests")
                                                     .child(nick).setValue(nick);
-                                            Random random = new Random();
-                                            int num1 =random.nextInt(1000000000);
-                                            int num2 =random.nextInt(1000000000);
-                                            String numToBase=String.valueOf(num1+num2);
+                                            String numToBase=firebaseModel.getReference().child("users")
+                                                    .child(subscriber.getSub()).child("nontifications")
+                                                    .push().getKey();
                                             Date date = new Date();
                                             SimpleDateFormat formatter = new SimpleDateFormat("EEE, MMM dd hh:mm a");
                                             String dateAndTime = formatter.format(date);
                                             firebaseModel.getReference().child("users")
                                                     .child(subscriber.getSub()).child("nontifications")
                                                     .child(numToBase).setValue(new Nontification(nick,"не отправлено","запрос"
-                                                    ,dateAndTime," "," ","не просмотрено",numToBase));
+                                                    ,""," "," ","не просмотрено",numToBase));
                                             holder.unsubscribe.setText("Запрошено");
                                             holder.unsubscribe.setTextColor(Color.parseColor("#F3A2E5"));
                                             holder.unsubscribe.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
