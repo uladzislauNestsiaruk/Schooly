@@ -120,8 +120,18 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void hasGoogleUserCallback(boolean hasThisUser) {
                         if(hasThisUser) {
-                            Log.d("########", "current user: " + user.getEmail());
-                            setCurrentFragment(MainFragment.newInstance());
+                            RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+                                @Override
+                                public void PassUserNick(String nick) {
+                                    RecentMethods.GetMoneyFromBase(nick, firebaseModel, new Callbacks.MoneyFromBase() {
+                                        @Override
+                                        public void GetMoneyFromBase(long money) {
+                                            Log.d("########", "current user: " + user.getEmail());
+                                            setCurrentFragment(MainFragment.newInstance());
+                                        }
+                                    });
+                                }
+                            });
                         }
                         else
                             RegistrationOrEnter();

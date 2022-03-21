@@ -1,5 +1,7 @@
 package com.egormoroz.schooly.ui.profile;
 
+import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,19 +16,21 @@ import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.Subscriber;
 import com.egormoroz.schooly.ui.coins.TransferMoneyAdapter;
+import com.egormoroz.schooly.ui.main.Shop.NewClothesAdapter;
 
 import java.util.ArrayList;
 
 public class SendLookAdapter extends RecyclerView.Adapter<SendLookAdapter.ViewHolder> {
     ArrayList<Subscriber> listAdapter;
-    private SendLookAdapter.ItemClickListener clickListener;
     private FirebaseModel firebaseModel = new FirebaseModel();
+    SendLookAdapter.ItemClickListener itemClickListener;
     long subscriptionsCount,subscribersCount;
     boolean check=false;
     int a=0;
 
-    public  SendLookAdapter(ArrayList<Subscriber> listAdapter) {
+    public  SendLookAdapter(ArrayList<Subscriber> listAdapter,ItemClickListener itemClickListener) {
         this.listAdapter = listAdapter;
+        this.itemClickListener=itemClickListener;
     }
 
     @NonNull
@@ -46,7 +50,15 @@ public class SendLookAdapter extends RecyclerView.Adapter<SendLookAdapter.ViewHo
         holder.send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                if(holder.send.getText().equals("Отправить")){
+                    holder.send.setText("Открыть чат");
+                    holder.send.setTextColor(Color.parseColor("#F3A2E5"));
+                    holder.send.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
+                    Log.d("###","f");
+                    itemClickListener.onItemClick(subscriber.getSub(),"send");
+                }else {
+                   itemClickListener.onItemClick(subscriber.getSub(),"chat");
+                }
             }
         });
     }
@@ -56,7 +68,7 @@ public class SendLookAdapter extends RecyclerView.Adapter<SendLookAdapter.ViewHo
         return listAdapter.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class ViewHolder extends RecyclerView.ViewHolder {
         final TextView otherUserNick,send;
         ImageView userImage;
         ViewHolder(View itemView) {
@@ -65,11 +77,6 @@ public class SendLookAdapter extends RecyclerView.Adapter<SendLookAdapter.ViewHo
             send=itemView.findViewById(R.id.send);
             userImage=itemView.findViewById(R.id.userImage);
         }
-
-        @Override
-        public void onClick(View view) {
-            if (clickListener != null) clickListener.onItemClick(view, getAdapterPosition());
-        }
     }
 
     Subscriber getItem(int id) {
@@ -77,10 +84,10 @@ public class SendLookAdapter extends RecyclerView.Adapter<SendLookAdapter.ViewHo
     }
 
     void setClickListener(SendLookAdapter.ItemClickListener itemClickListener) {
-        this.clickListener = itemClickListener;
+        this.itemClickListener = itemClickListener;
     }
 
     public interface ItemClickListener {
-        void onItemClick(View view, int position);
+        void onItemClick(String otherUserNick,String type);
     }
 }

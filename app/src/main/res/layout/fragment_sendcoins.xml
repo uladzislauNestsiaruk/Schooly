@@ -23,14 +23,37 @@
         android:textSize="22sp" />
 
     <TextView
+        android:id="@+id/balanceText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/backtocoins"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="24dp"
+        android:textSize="13sp"
+        android:text="@string/balance"
+        android:fontFamily="@font/montserrat_bold"
+        android:textColor="@color/app_grey"/>
+
+
+    <TextView
+        android:id="@+id/balance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/balanceText"
+        android:layout_centerHorizontal="true"
+        android:textSize="24sp"
+        android:fontFamily="@font/montserrat_extrabold"
+        android:textColor="@color/app_color"/>
+
+    <TextView
         android:id="@+id/toWhomText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="14sp"
         android:textColor="@color/app_grey"
         android:text="@string/toWhomTransfer"
-        android:layout_below="@+id/backtocoins"
-        android:layout_marginTop="54dp"
+        android:layout_below="@+id/balance"
+        android:layout_marginTop="24dp"
         android:fontFamily="@font/montserrat_bold"
         android:layout_marginStart="24dp"/>
 

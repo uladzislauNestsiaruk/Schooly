@@ -54,6 +54,7 @@ public class ViewingLookFragment extends Fragment {
     RecyclerView recyclerView;
     String userNameToProfile,userName;
     String likesCountString,lookPriceString,lookPriceDollarString;
+    SendLookAdapter.ItemClickListener itemClickListener;
 
 
     Fragment fragment;
@@ -214,6 +215,7 @@ public class ViewingLookFragment extends Fragment {
                 }
             }
         });
+
     }
 
     private void showBottomSheetDialog() {
@@ -224,8 +226,18 @@ public class ViewingLookFragment extends Fragment {
         editText=bottomSheetDialog.findViewById(R.id.searchuser);
         recyclerView=bottomSheetDialog.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        cross=bottomSheetDialog.findViewById(R.id.cross);
         emptyList=bottomSheetDialog.findViewById(R.id.emptySubscribersList);
+
+        itemClickListener=new SendLookAdapter.ItemClickListener() {
+            @Override
+            public void onItemClick(String otherUserNick, String type) {
+                if(type.equals("send")){
+                    Log.d("###", type);
+                }else {
+                    Log.d("####", type);
+                }
+            }
+        };
 
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @Override
@@ -237,18 +249,11 @@ public class ViewingLookFragment extends Fragment {
                             emptyList.setVisibility(View.VISIBLE);
                             recyclerView.setVisibility(View.GONE);
                         }else {
-                            SendLookAdapter sendLookAdapter = new SendLookAdapter(friends);
+                            SendLookAdapter sendLookAdapter = new SendLookAdapter(friends,itemClickListener);
                             recyclerView.setAdapter(sendLookAdapter);
                         }
                     }
                 });
-            }
-        });
-
-        cross.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                bottomSheetDialog.dismiss();
             }
         });
 
@@ -329,7 +334,7 @@ public class ViewingLookFragment extends Fragment {
                                     }
 
                                 }
-                                SendLookAdapter sendLookAdapter = new SendLookAdapter(userFromBase);
+                                SendLookAdapter sendLookAdapter = new SendLookAdapter(userFromBase,itemClickListener);
                                 recyclerView.setAdapter(sendLookAdapter);
                             }
 

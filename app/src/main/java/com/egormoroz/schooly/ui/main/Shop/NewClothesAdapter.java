@@ -144,7 +144,6 @@ public class NewClothesAdapter extends RecyclerView.Adapter<NewClothesAdapter.Vi
           public void onDataChange(@NonNull DataSnapshot snapshot) {
             if(snapshot.exists()){
               holder.ifBuy.setVisibility(View.VISIBLE);
-              Log.d("####", "help");
             }
           }
 
@@ -188,22 +187,5 @@ public class NewClothesAdapter extends RecyclerView.Adapter<NewClothesAdapter.Vi
     }
 
 
-  }
-
-  static class SpaceItemDecoration extends RecyclerView.ItemDecoration {
-
-    @Override
-    public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-      int margin = 24;
-      int space = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, margin, view.getResources().getDisplayMetrics());
-      if(parent.getChildAdapterPosition(view) == 0){
-        outRect.left = margin;
-        outRect.bottom = 0;
-      }
-      if(parent.getChildAdapterPosition(view) == 4){
-        outRect.right = space;
-        outRect.bottom = 0;
-      }
-    }
   }
 }

@@ -32,7 +32,7 @@ import java.util.Random;
 public class SendMoneyFragment extends Fragment {
 
     ImageView backToCoins;
-    TextView otherUserNickText,sum;
+    TextView otherUserNickText,sum,balance;
     String otherUserNick,sumText;
     long moneyBase,moneyBaseOther,sumLong;
     RelativeLayout transfer;
@@ -64,6 +64,7 @@ public class SendMoneyFragment extends Fragment {
         firebaseModel.initAll();
         otherUserNickText=view.findViewById(R.id.toWhomTransfer);
         sum=view.findViewById(R.id.sum);
+        balance=view.findViewById(R.id. balance);
         otherUserNickText.setText(otherUserNick);
         transfer=view.findViewById(R.id.createBigButtonRecycler);
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
@@ -73,6 +74,7 @@ public class SendMoneyFragment extends Fragment {
                     @Override
                     public void GetMoneyFromBase(long money) {
                         moneyBase=money;
+                        balance.setText(String.valueOf(money));
                     }
                 });
             }

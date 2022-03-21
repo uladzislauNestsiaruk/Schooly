@@ -376,6 +376,7 @@
     <string name="searchMyClothes">Поиск моей одежды</string>
     <string name="noMyClothes">Не удалось найти одежду:(</string>
     <string name="share">Поделиться</string>
+    <string name="balance">Баланс:</string>
 
 
 </resources>
