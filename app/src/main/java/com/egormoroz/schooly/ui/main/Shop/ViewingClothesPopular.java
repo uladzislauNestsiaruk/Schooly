@@ -1,10 +1,13 @@
 package com.egormoroz.schooly.ui.main.Shop;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -14,17 +17,22 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.Nontification;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
+import com.egormoroz.schooly.Subscriber;
 import com.egormoroz.schooly.ui.coins.CoinsFragmentSecond;
 import com.egormoroz.schooly.ui.coins.CoinsMainFragment;
 import com.egormoroz.schooly.ui.main.Mining.MiningFragment;
 import com.egormoroz.schooly.ui.profile.ProfileFragment;
+import com.egormoroz.schooly.ui.profile.SendLookAdapter;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.Query;
@@ -33,6 +41,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Random;
 
@@ -46,7 +55,7 @@ public class ViewingClothesPopular extends Fragment {
     PopularClothesAdapter.ItemClickListener itemClickListener;
     TextView clothesPriceCV,clothesTitleCV,schoolyCoinCV,buyClothesBottom,purchaseNumber
             ,creator,description,noDescription,fittingClothes;
-    ImageView clothesImageCV,backToShop,coinsImage,dollarImage,inBasket,notInBasket;
+    ImageView clothesImageCV,backToShop,coinsImage,dollarImage,inBasket,notInBasket,send;
     long schoolyCoins,clothesPrise;
     RelativeLayout checkBasket;
     Clothes clothesViewing;
@@ -54,6 +63,11 @@ public class ViewingClothesPopular extends Fragment {
     private FirebaseModel firebaseModel = new FirebaseModel();
     LinearLayout coinsLinear;
     String clothesPriceString;
+    RecyclerView recyclerView;
+    SendLookAdapter.ItemClickListener itemClickListenerSendClothes;
+    TextView emptyList;
+    EditText editText;
+    String userName;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -87,6 +101,7 @@ public class ViewingClothesPopular extends Fragment {
         dollarImage=view.findViewById(R.id.dollarImage);
         clothesTitleCV=view.findViewById(R.id.clothesTitlecv);
         description=view.findViewById(R.id.description);
+        send=view.findViewById(R.id.send);
         creator=view.findViewById(R.id.creator);
         checkBasket=view.findViewById(R.id.checkBasket);
         clothesPriceCV=view.findViewById(R.id.clothesPricecv);
@@ -99,6 +114,12 @@ public class ViewingClothesPopular extends Fragment {
             @Override
             public void onClick(View v) {
                 RecentMethods.setCurrentFragment(FittingFragment.newInstance(ViewingClothesPopular.newInstance()), getActivity());
+            }
+        });
+        send.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showBottomSheetDialog();
             }
         });
         coinsLinear.setOnClickListener(new View.OnClickListener() {
@@ -391,6 +412,108 @@ public class ViewingClothesPopular extends Fragment {
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
 
+                    }
+                });
+            }
+        });
+    }
+
+    private void showBottomSheetDialog() {
+
+        final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(getContext());
+        bottomSheetDialog.setContentView(R.layout.bottom_sheet_dialog_layout);
+
+        editText=bottomSheetDialog.findViewById(R.id.searchuser);
+        recyclerView=bottomSheetDialog.findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        emptyList=bottomSheetDialog.findViewById(R.id.emptySubscribersList);
+
+        itemClickListenerSendClothes=new SendLookAdapter.ItemClickListener() {
+            @Override
+            public void onItemClick(String otherUserNick, String type) {
+                if(type.equals("send")){
+                    Log.d("###", type);
+                }else {
+                    Log.d("####", type);
+                }
+            }
+        };
+
+        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+            @Override
+            public void PassUserNick(String nick) {
+                RecentMethods.getSubscriptionList(nick, firebaseModel, new Callbacks.getFriendsList() {
+                    @Override
+                    public void getFriendsList(ArrayList<Subscriber> friends) {
+                        if (friends.size()==0){
+                            emptyList.setVisibility(View.VISIBLE);
+                            recyclerView.setVisibility(View.GONE);
+                        }else {
+                            SendLookAdapter sendLookAdapter = new SendLookAdapter(friends,itemClickListenerSendClothes);
+                            recyclerView.setAdapter(sendLookAdapter);
+                        }
+                    }
+                });
+            }
+        });
+
+        initUserEnter();
+
+        bottomSheetDialog.show();
+    }
+
+    public void initUserEnter() {
+        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+            @Override
+            public void PassUserNick(String nick) {
+                editText.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                        userName = String.valueOf(editText.getText()).trim();
+                        userName = userName.toLowerCase();
+                        Query query = firebaseModel.getUsersReference().child(nick).child("subscription");
+                        query.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                ArrayList<Subscriber> userFromBase = new ArrayList<>();
+                                for (DataSnapshot snap : snapshot.getChildren()) {
+                                    Subscriber subscriber = new Subscriber();
+                                    subscriber.setSub(snap.getValue(String.class));
+                                    String nick = subscriber.getSub();
+                                    int valueLetters = userName.length();
+                                    nick = nick.toLowerCase();
+                                    if (nick.length() < valueLetters) {
+                                        if (nick.equals(userName))
+                                            userFromBase.add(subscriber);
+                                    } else {
+                                        nick = nick.substring(0, valueLetters);
+                                        if (nick.equals(userName))
+                                            userFromBase.add(subscriber);
+                                    }
+
+                                }
+                                SendLookAdapter sendLookAdapter = new SendLookAdapter(userFromBase,itemClickListenerSendClothes);
+                                recyclerView.setAdapter(sendLookAdapter);
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable editable) {
+                        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+                            @Override
+                            public void PassUserNick(String nick) {
+                            }
+                        });
                     }
                 });
             }

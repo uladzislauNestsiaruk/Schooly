@@ -72,7 +72,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/shopText"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="28sp"
+        android:layout_marginTop="27sp"
         android:layout_marginEnd="24dp"
         android:src="@drawable/ic_bag" />
 
@@ -125,29 +125,16 @@
         android:textColor="@color/app_color"
         android:textSize="13dp" />
 
-    <RelativeLayout
-        android:id="@+id/checkBasket"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toLeftOf="@+id/fittingClothes"
-        android:layout_below="@+id/clothesImagecv"
-        android:layout_marginEnd="8dp"
-        android:layout_marginTop="16dp">
 
     <ImageView
-        android:id="@+id/inBasketClothes"
+        android:id="@+id/send"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_inbasket"
-        android:visibility="gone"/>
-
-        <ImageView
-            android:id="@+id/notInBasketClothes"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_notinbasket" />
-
-    </RelativeLayout>
+        android:layout_below="@+id/clothesImagecv"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_toLeftOf="@+id/fittingClothes"
+        android:src="@drawable/ic_sendviewingclothes" />
 
     <TextView
         android:id="@+id/descriptionText"
@@ -188,8 +175,8 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginEnd="32dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="24dp"
         android:layout_alignParentBottom="true"
@@ -204,6 +191,7 @@
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="16dp"
             android:background="@drawable/corners14dpwhite"
+            android:elevation="18dp"
             android:fontFamily="@font/montserratblack"
             android:paddingStart="25dp"
             android:paddingTop="12dp"
@@ -211,8 +199,7 @@
             android:paddingBottom="12dp"
             android:text="@string/buy"
             android:textColor="@color/app_color"
-            android:textSize="18sp"
-            android:elevation="18dp"/>
+            android:textSize="18sp" />
 
         <ImageView
             android:id="@+id/coinsImage"
@@ -230,6 +217,30 @@
             android:layout_centerVertical="true"
             android:layout_marginStart="20dp"
             android:visibility="gone"/>
+
+        <RelativeLayout
+            android:id="@+id/checkBasket"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/buyClothesBottom"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="16dp">
+
+            <ImageView
+                android:id="@+id/inBasketClothes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_inbasket"
+                android:visibility="gone"/>
+
+            <ImageView
+                android:id="@+id/notInBasketClothes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_notinbasket" />
+
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/clothesPricecv"

@@ -54,32 +54,37 @@ public class PresentClothesAdapter  extends RecyclerView.Adapter<PresentClothesA
     public void onBindViewHolder(@NonNull PresentClothesAdapter.ViewHolder holder, int position) {
         Subscriber subscriber=listAdapter.get(position);
         holder.otherUserNick.setText(subscriber.getSub());
-        holder.presentClothes.setOnClickListener(new View.OnClickListener() {
+        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @Override
-            public void onClick(View view) {
-                RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+            public void PassUserNick(String nick) {
+                Query query=firebaseModel.getUsersReference().child(subscriber.getSub())
+                        .child("clothes").child(clothes.getUid());
+                query.addValueEventListener(new ValueEventListener() {
                     @Override
-                    public void PassUserNick(String nick) {
-                        Query query=firebaseModel.getUsersReference().child(subscriber.getSub())
-                                .child("clothes").child(clothes.getUid());
-                        query.addValueEventListener(new ValueEventListener() {
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if (snapshot.exists()) {
+                            alreadyHave=1;
+                        } else {
+                            alreadyHave=2;
+                        }
+                        holder.presentClothes.setOnClickListener(new View.OnClickListener() {
                             @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                    if (snapshot.exists()) {
-                                        alreadyHave=1;
-                                    } else {
-                                        alreadyHave=2;
+                            public void onClick(View view) {
+                                RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+                                    @Override
+                                    public void PassUserNick(String nick) {
+                                        if(alreadyHave>0){
+                                            if (clickListener != null) clickListener.onItemClick(alreadyHave, position);
+                                        }
                                     }
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
-
+                                });
                             }
                         });
-                        if(alreadyHave>0){
-                            if (clickListener != null) clickListener.onItemClick(alreadyHave, position);
-                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
                     }
                 });
             }

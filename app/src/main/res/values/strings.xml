@@ -377,6 +377,7 @@
     <string name="noMyClothes">Не удалось найти одежду:(</string>
     <string name="share">Поделиться</string>
     <string name="balance">Баланс:</string>
+    <string name="shareProfile">Поделиться этим профилем</string>
 
 
 </resources>
