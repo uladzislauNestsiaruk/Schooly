@@ -187,10 +187,10 @@
             android:layout_height="276dp"
             android:layout_below="@+id/relativeClothes"
             android:layout_marginTop="10dp"
+            android:clipToPadding="false"
             android:orientation="horizontal"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
-            android:clipToPadding="false"
             android:scrollbars="none"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
@@ -211,7 +211,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
-                android:layout_marginTop="30dp">
+                android:layout_marginTop="24dp">
 
                 <View
                     android:id="@+id/smallView"
@@ -241,7 +241,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/relativeSellClothes"
                 android:layout_marginStart="12dp"
-                android:layout_marginTop="8dp">
+                android:layout_marginTop="10dp">
 
                 <View
                     android:id="@+id/smallView1"
@@ -270,7 +270,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/relativeSellClothes1"
                 android:layout_marginStart="12dp"
-                android:layout_marginTop="8dp">
+                android:layout_marginTop="10dp">
 
                 <View
                     android:id="@+id/smallView2"
@@ -298,7 +298,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/relativeSellClothes2"
                 android:layout_marginStart="12dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="10dp"
                 android:visibility="gone">
 
                 <View
@@ -328,7 +328,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/relativeSellClothes3"
                 android:layout_marginStart="12dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginEnd="20dp">
 
                 <View

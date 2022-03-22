@@ -283,23 +283,36 @@ public class MainFragment extends Fragment{
             @Override
             public void PassUserNick(String nick) {
 //                firebaseModel.getReference().child("usersNicks").child("Spaccacrani").setValue(new UserPeopleAdapter("Spaccacrani", "5", "hello"));
-                String uid=firebaseModel.getUsersReference().child("tyomaa6").child("myClothes").push().getKey();
+//                String uid=firebaseModel.getUsersReference().child("tyomaa6").child("myClothes").push().getKey();
 //                firebaseModel.getUsersReference().child("tyomaa6").child("myClothes").child(uid).setValue(new Clothes("shoes", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
-//                        ,220,"Jordan 6",0,123,"tyomaa6","coin"," ","",0,"foot",uid));
- //               String uid=firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").push().getKey();
-//                firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").child("-MxuHf_f26Lrr39Vx2Tx8").setValue(new Clothes("shoes", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
-//                        ,120,"Jordan 1",0,123,"Schooly","dollar"," ","",0,"foot","-MxuHf_f26Lrr39Vx2Tx8"));
-//                firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").child("Jordan 1").setValue(new Clothes("shoes", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
-//                        ,120,"Jordan 1",0,123,"tyomaaa6","dollar"," ","",0,"foot",uid));
- //               firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").child(uid).setValue(new Clothes("accessories", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
- //                       ,120,"Yeazzy",0,123,"Schooly","coin","great model","",0,"watches",uid));
- //               firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").child(uid).setValue(new Clothes("hats", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
- //                       ,120,"Y-3",0,123,"Schooly","coin"," ","",0,"hat",uid));
- //               firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").child(uid).setValue(new Clothes("clothes", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500",120,"Prada",0,123,"Schooly","coin"," ","",0,"t-shirt",uid));
-//              firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").child(uid).setValue(new Clothes("shoes", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
- //                       ,120,"Raf Simons",0,123,"Schooly","coin"," ","",0,"foot",uid));
- //               firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").child(uid).setValue(new Clothes("shoes", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
- //                       ,120,"Martins",0,123,"Schooly","coin"," ","",0,"foot",uid));
+//                        ,220,"Blazer",344,123,"tyomaa6","coin"," ","",72,"foot",uid,"exclusive"));
+//                String uid=firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").push().getKey();
+//                String uid1=firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").push().getKey();
+//                String uid2=firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").push().getKey();
+//                String uid3=firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").push().getKey();
+//                String uid4=firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").push().getKey();
+//                String uid5=firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").push().getKey();
+//                String uid6=firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").push().getKey();
+//                String uid7=firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").push().getKey();
+//                String uid8=firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").push().getKey();
+//                firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").child(uid).setValue(new Clothes("shoes", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
+//                        ,120,"Jordan 1",0,123,"Schooly","dollar"," ","",0,"foot",uid,"no"));
+//                firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").child(uid1).setValue(new Clothes("shoes", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
+//                        ,120,"Jordan 1",0,123,"tyomaaa6","dollar"," ","",0,"foot",uid1,"exclusive"));
+//                firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").child(uid2).setValue(new Clothes("accessories", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
+//                        ,120,"Yeazzy",0,123,"Schooly","coin","great model","",0,"watches",uid2,"no"));
+//                firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").child(uid6).setValue(new Clothes("hats", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
+//                        ,120,"Y-3",0,123,"Schooly","coin"," ","",0,"hat",uid6,"no"));
+//                firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").child(uid3).setValue(new Clothes("clothes", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
+//                        ,120,"Prada",0,123,"Schooly","coin"," ","",0,"t-shirt",uid3,"no"));
+//              firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").child(uid4).setValue(new Clothes("shoes", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
+//                        ,120,"Raf Simons",0,123,"Schooly","coin"," ","",0,"foot",uid4,"exclusive"));
+//                firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").child(uid5).setValue(new Clothes("shoes", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
+//                        ,120,"Martins",0,123,"Schooly","coin"," ","",0,"foot",uid5,"no"));
+//                firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").child(uid7).setValue(new Clothes("clothes", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
+//                        ,120,"Blazer",0,123,"Schooly","coin"," ","",0,"foot",uid7,"no"));
+//                firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").child(uid8).setValue(new Clothes("clothes", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
+//                        ,120,"Christian Dior",0,123,"Schooly","coin"," ","",0,"foot",uid8,"no"));
 
             }
         });

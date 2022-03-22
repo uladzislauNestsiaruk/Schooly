@@ -11,12 +11,13 @@ public class ClothesRequest {
     private String description;
     private String bodyType;
     private String uid;
+    private String exclusive;
     String model;
 
 
     public ClothesRequest(String type, String  clothesImage, long clothesPrice,String clothesTitle
             ,long timesTamp,String creator,String currencyType,String description,
-                          String model,String bodyType,String uid){
+                          String model,String bodyType,String uid,String exclusive){
         this.type=type;
         this.clothesImage=clothesImage;
         this.clothesPrice=clothesPrice;
@@ -28,6 +29,7 @@ public class ClothesRequest {
         this.model=model;
         this.bodyType=bodyType;
         this.uid= uid;
+        this.exclusive=exclusive;
 
     }
     public ClothesRequest(){
@@ -119,5 +121,13 @@ public class ClothesRequest {
 
     public void setUid(String uid){
         this.uid=uid;
+    }
+
+    public String getExclusive(){
+        return this.exclusive;
+    }
+
+    public void setExclusive(String exclusive){
+        this.exclusive=exclusive;
     }
 }

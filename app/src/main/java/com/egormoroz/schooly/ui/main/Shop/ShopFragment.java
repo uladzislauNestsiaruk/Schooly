@@ -55,15 +55,15 @@ public class ShopFragment extends Fragment {
     }
 
     FirebaseModel firebaseModel=new FirebaseModel();
-    TextView coinsshop;
+    TextView coinsshop,notFound;
     private ViewPager2 viewPager;
     FragmentAdapter fragmentAdapter;
     ImageView basket;
+    String version;
     EditText searchClothes;
     static String editGetText;
     RecyclerView searchRecycler;
     TabLayout tabLayout;
-    TextView notFound;
     ArrayList<Clothes> searchClothesArrayList=new ArrayList<Clothes>();
     PopularClothesAdapter.ItemClickListener itemClickListenerPopular;
     LinearLayout coinsLinear;
@@ -99,7 +99,23 @@ public class ShopFragment extends Fragment {
                 RecentMethods.setCurrentFragment(CoinsFragmentSecond.newInstance(ShopFragment.newInstance()), getActivity());
             }
         });
+        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+            @Override
+            public void PassUserNick(String nick) {
+                Query query=firebaseModel.getUsersReference().child(nick).child("version");
+                query.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        version=snapshot.getValue(String.class);
+                    }
 
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+            }
+        });
         searchRecycler=view.findViewById(R.id.searchRecycler);
         notFound=view.findViewById(R.id.notFound);
         searchClothes=view.findViewById(R.id.searchClothes);
@@ -136,6 +152,7 @@ public class ShopFragment extends Fragment {
                     viewPager.setAdapter(fragmentAdapter);
 
                     tabLayout.addTab(tabLayout.newTab().setText("Главная"));
+                    tabLayout.addTab(tabLayout.newTab().setText("Эксклюзивная"));
                     tabLayout.addTab(tabLayout.newTab().setText("Обувь"));
                     tabLayout.addTab(tabLayout.newTab().setText("Одежда"));
                     tabLayout.addTab(tabLayout.newTab().setText("Головные уборы"));
@@ -191,6 +208,7 @@ public class ShopFragment extends Fragment {
         viewPager.setAdapter(fragmentAdapter);
 
         tabLayout.addTab(tabLayout.newTab().setText("Главная"));
+        tabLayout.addTab(tabLayout.newTab().setText("Эксклюзивная"));
         tabLayout.addTab(tabLayout.newTab().setText("Обувь"));
         tabLayout.addTab(tabLayout.newTab().setText("Одежда"));
         tabLayout.addTab(tabLayout.newTab().setText("Головные уборы"));
@@ -252,6 +270,7 @@ public class ShopFragment extends Fragment {
                     clothes.setModel(snap.child("model").getValue(String.class));
                     clothes.setBodyType(snap.child("bodyType").getValue(String.class));
                     clothes.setUid(snap.child("uid").getValue(String.class));
+                    clothes.setExclusive(snap.child("exclusive").getValue(String.class));
                     String clothesTitle=clothes.getClothesTitle();
                     String title=clothesTitle;
                     int valueLetters=editTextText.length();
@@ -312,19 +331,21 @@ public class ShopFragment extends Fragment {
         public FragmentAdapter(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle) {
             super(fragmentManager, lifecycle);
         }
+
         @NonNull
         @Override
         public Fragment createFragment ( int position){
 
-
             switch (position) {
                 case 1:
-                    return new ShoesFargment();
+                    return new ExclusiveFragment(version);
                 case 2:
-                    return new ClothesFragment();
+                    return new ShoesFargment();
                 case 3:
-                    return new HatsFragment();
+                    return new ClothesFragment();
                 case 4:
+                    return new HatsFragment();
+                case 5:
                     return new AccessoriesFragment();
             }
             return new PopularFragment();
@@ -333,7 +354,7 @@ public class ShopFragment extends Fragment {
 
         @Override
         public int getItemCount() {
-            return 5;
+            return 6;
         }
     }
 

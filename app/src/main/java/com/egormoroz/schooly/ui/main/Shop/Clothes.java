@@ -13,6 +13,7 @@ public class Clothes {
     private String creator;
     private String description;
     private String bodyType;
+    private String exclusive;
     String model;
     String uid;
     long purchaseToday;
@@ -20,7 +21,7 @@ public class Clothes {
 
     public Clothes(String type, String  clothesImage, long clothesPrice,String clothesTitle
             ,long purchaseNumber,long timesTamp,String creator,String currencyType,String description,
-                   String model,long purchaseToday,String bodyType,String uid){
+                   String model,long purchaseToday,String bodyType,String uid,String exclusive){
         this.type=type;
         this.clothesImage=clothesImage;
         this.clothesPrice=clothesPrice;
@@ -34,6 +35,7 @@ public class Clothes {
         this.purchaseToday=purchaseToday;
         this.bodyType=bodyType;
         this.uid=uid;
+        this.exclusive=exclusive;
     }
     public Clothes(){
     }
@@ -140,6 +142,14 @@ public class Clothes {
 
     public void setUid(String uid){
         this.uid=uid;
+    }
+
+    public String getExclusive(){
+        return this.exclusive;
+    }
+
+    public void setExclusive(String exclusive){
+        this.exclusive=exclusive;
     }
 
 }

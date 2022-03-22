@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -50,6 +51,7 @@ public class MyClothesFragment extends Fragment {
     String totalProfitString,totalPurchaseString,totalProfitDollarString,editGetText;
     ImageView schoolyCoin;
     EditText searchMyClothes;
+    LinearLayout linearSearch;
 
 
     int clothesListSize;
@@ -90,6 +92,7 @@ public class MyClothesFragment extends Fragment {
         totalProfitText=view.findViewById(R.id.totalProfitText);
         searchMyClothes=view.findViewById(R.id.searchMyClothes);
         totalProfit=view.findViewById(R.id.totalProfit);
+        linearSearch=view.findViewById(R.id.linearsearch);
         notFound=view.findViewById(R.id.noClothes);
         totalPurchaseText=view.findViewById(R.id.totalPurchaseText);
         totalPurchase=view.findViewById(R.id.totalPurchase);
@@ -163,8 +166,10 @@ public class MyClothesFragment extends Fragment {
             totalProfit.setVisibility(View.GONE);
             totalPurchaseText.setVisibility(View.GONE);
             totalPurchase.setVisibility(View.GONE);
+            linearSearch.setVisibility(View.GONE);
             schoolyCoin.setVisibility(View.GONE);
             clothes.setVisibility(View.GONE);
+            searchMyClothes.setVisibility(View.GONE);
             createClothesBig.setVisibility(View.VISIBLE);
             relativeFirstClothes.setVisibility(View.VISIBLE);
             createClothes.setVisibility(View.GONE);
@@ -246,6 +251,7 @@ public class MyClothesFragment extends Fragment {
                             clothes.setModel(snap.child("model").getValue(String.class));
                             clothes.setBodyType(snap.child("bodyType").getValue(String.class));
                             clothes.setUid(snap.child("uid").getValue(String.class));
+                            clothes.setExclusive(snap.child("exclusive").getValue(String.class));
                             String clothesTitle = clothes.getClothesTitle();
                             String title = clothesTitle;
                             int valueLetters = editTextText.length();

@@ -61,7 +61,7 @@ public class CreateClothesFragment extends Fragment {
     TextView modelWay,before,criteria
             ,noTitle,noModel,noPhoto,noSum;
     RelativeLayout publish;
-    RadioGroup radioGroup,radioGroupCurrency;
+    RadioGroup radioGroup,radioGroupCurrency,radioGroupExclusive;
     private String checker = "", myUrl = "";
     private Uri fileUri;
     SceneView modelScene;
@@ -69,10 +69,11 @@ public class CreateClothesFragment extends Fragment {
     RadioButton radioButton1,radioButton2,radioButton3,radioButton4
             ,radioButton5,radioButton6,radioButton7,radioButton8
             ,radioButton9,radioButton10,radioButton11
-            ,radioButton12,radioButton13,radioButtonCoin,radioButtonDollar;
+            ,radioButton12,radioButton13,radioButtonCoin,radioButtonDollar
+            ,radioButtonExclusiveYes,radioButtonExclusiveNo;
 
     Fragment fragment;
-    String premiumType,modelApplication,imageApplication,currencyType,bodyType,type;
+    String premiumType,modelApplication,imageApplication,currencyType,bodyType,type,exclusiveType;
 
     public CreateClothesFragment(Fragment fragment) {
         this.fragment = fragment;
@@ -106,6 +107,9 @@ public class CreateClothesFragment extends Fragment {
         addModelFile=view.findViewById(R.id.addModelFile);
         addModelImage=view.findViewById(R.id.addModelImage);
         modelPhoto=view.findViewById(R.id.modelPhoto);
+        radioGroupExclusive=view.findViewById(R.id.radioGroupExclusive);
+        radioButtonExclusiveYes=view.findViewById(R.id.radioButtonExclusiveYes);
+        radioButtonExclusiveNo=view.findViewById(R.id.radioButtonExclusiveNo);
         modelScene=view.findViewById(R.id.modelFile);
         before=view.findViewById(R.id.before);
         criteria=view.findViewById(R.id.criteria);
@@ -299,9 +303,19 @@ public class CreateClothesFragment extends Fragment {
                                     currencyType="dollar";
                                     break;
                             }
-                            firebaseModel.getReference().child("clothesReqests").child(String.valueOf(num))
+                            int idExclusive=radioGroupExclusive.getCheckedRadioButtonId();
+                            switch(idExclusive){
+                                case R.id.radioButtonExclusiveYes:
+                                    exclusiveType="exclusive";
+                                    break;
+                                case R.id.radioButtonExclusiveNo:
+                                    exclusiveType="no";
+                                    break;
+                            }
+                            String uid=firebaseModel.getReference().child("clothesReqests").push().getKey();
+                            firebaseModel.getReference().child("clothesReqests").child(uid)
                                     .setValue(new ClothesRequest(type, imageApplication, Long.valueOf(editClothesPrice.getText().toString()), editTextClothes.getText().toString()
-                                            , 111, nick, currencyType,addDescriptionEdit.getText().toString() ,modelApplication , bodyType,"-MxuHf_f26Lr39Vx2Tx8"));
+                                            , 111, nick, currencyType,addDescriptionEdit.getText().toString() ,modelApplication , bodyType,uid,exclusiveType));
                             Toast.makeText(getContext(), "Заявка отправлена", Toast.LENGTH_SHORT).show();
                         }
                     });

@@ -513,6 +513,7 @@ public class RecentMethods {
                     clothes.setModel(snap.child("model").getValue(String.class));
                     clothes.setBodyType(snap.child("bodyType").getValue(String.class));
                     clothes.setUid(snap.child("uid").getValue(String.class));
+                    clothes.setExclusive(snap.child("exclusive").getValue(String.class));
                     clothesFromBase.add(clothes);
                 }
                 callback.getClothes(clothesFromBase);
@@ -546,6 +547,7 @@ public class RecentMethods {
                     clothes.setModel(snap.child("model").getValue(String.class));
                     clothes.setBodyType(snap.child("bodyType").getValue(String.class));
                     clothes.setUid(snap.child("uid").getValue(String.class));
+                    clothes.setExclusive(snap.child("exclusive").getValue(String.class));
                     clothesFromBase.add(clothes);
                 }
                 callback.getClothes(clothesFromBase);
@@ -710,6 +712,7 @@ public class RecentMethods {
                     clothes.setPurchaseToday(snap.child("purchaseToday").getValue(Long.class));
                     clothes.setModel(snap.child("model").getValue(String.class));
                     clothes.setUid(snap.child("uid").getValue(String.class));
+                    clothes.setExclusive(snap.child("exclusive").getValue(String.class));
                     clothesFromBase.add(clothes);
                 }
                 callback.getClothes(clothesFromBase);
@@ -745,6 +748,7 @@ public class RecentMethods {
                     clothes.setModel(snap.child("model").getValue(String.class));
                     clothes.setBodyType(snap.child("bodyType").getValue(String.class));
                     clothes.setUid(snap.child("uid").getValue(String.class));
+                    clothes.setExclusive(snap.child("exclusive").getValue(String.class));
                    clothesFromBase.add(clothes);
                 }
                 callback.getClothes(clothesFromBase);
