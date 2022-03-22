@@ -379,7 +379,8 @@
     <string name="balance">Баланс:</string>
     <string name="shareProfile">Поделиться этим профилем</string>
     <string name="exclusiveText">Эксклюзивная одежда:</string>
-    <string name="noExclusive">Для просмотра премиум одежды необходимо быть подписаным на Schooly-премиум</string>
+    <string name="noExclusive">Для просмотра премиум одежды необходимо быть подписаным на Schooly Premium</string>
+    <string name="noClothesInBasket">Нет одежды в корзине:(</string>
 
 
 </resources>

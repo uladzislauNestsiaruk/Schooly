@@ -9,8 +9,8 @@
     android:background="@drawable/corners"
     android:layout_marginStart="4dp"
     android:layout_marginEnd="4dp"
-    android:layout_marginTop="4dp"
-    android:elevation="10dp">
+    android:layout_marginTop="-7dp"
+    android:elevation="8dp">
 
   <TextView
       android:id="@+id/clothesTitle"
@@ -60,7 +60,7 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_below="@+id/price"
-      android:layout_marginTop="6dp"
+      android:layout_marginTop="5dp"
       android:src="@drawable/ic_schoolycoinpurple" />
 
   <ImageView

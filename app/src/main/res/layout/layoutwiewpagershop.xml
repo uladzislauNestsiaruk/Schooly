@@ -51,6 +51,7 @@
       android:layout_height="match_parent"
       android:layout_below="@+id/popular"
       android:layout_marginTop="16dp"
+      android:paddingTop="10dp"
       android:clipToPadding="false"
       android:orientation="vertical"
       android:paddingStart="16dp"

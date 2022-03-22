@@ -66,14 +66,56 @@
         android:textColor="@color/app_grey"
         android:fontFamily="@font/montserrat_bold"/>
 
+    <LinearLayout
+        android:id="@+id/searchclothes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="16dp"
+        android:layout_below="@id/numberofclothes"
+        android:layout_marginEnd="24dp"
+        android:background="@drawable/corners12_2dpstrokeappcolor"
+        android:orientation="horizontal"
+        android:paddingTop="11dp"
+        android:paddingBottom="11dp">
+
+        <EditText
+            android:id="@+id/searchClothes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start|center"
+            android:layout_marginStart="16dp"
+            android:layout_weight="10"
+            android:maxLines="1"
+            android:background="@null"
+            android:fontFamily="@font/montserrat_bold"
+            android:hint="@string/searchitem"
+            android:textColor="@color/greysearch"
+            android:textColorHint="@color/greysearch"
+            android:textSize="13sp" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/notFound"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="360dp"
+        android:fontFamily="@font/montserrat_bold"
+        android:textSize="16sp"
+        android:textColor="@color/app_grey"
+        android:text="@string/noClothesInBasket"
+        android:visibility="gone"/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/basketrecycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/numberofclothes"
-        android:layout_marginTop="8dp"
-        android:orientation="vertical"
+        android:layout_below="@+id/searchclothes"
+        android:layout_marginTop="10dp"
+        android:paddingTop="14dp"
         android:clipToPadding="false"
+        android:orientation="vertical"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
         android:scrollbars="none"

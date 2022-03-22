@@ -84,7 +84,8 @@ public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.ViewHolder
             clothesAll.setClothesTitle(snapshot.child("clothesTitle").getValue(String.class));
             clothesAll.setCurrencyType(snapshot.child("currencyType").getValue(String.class));
             clothesAll.setCreator(snapshot.child("creator").getValue(String.class));
-            if(clothesAll.getCreator().equals(clothes.getCreator())&&clothesAll.getClothesImage().equals(clothes.getClothesImage())){
+            clothesAll.setUid(snapshot.child("uid").getValue(String.class));
+            if(clothesAll.getUid().equals(clothes.getUid())){
               holder.purchaseNumber.setText(String.valueOf(clothesAll.getPurchaseNumber()));
             }
 
