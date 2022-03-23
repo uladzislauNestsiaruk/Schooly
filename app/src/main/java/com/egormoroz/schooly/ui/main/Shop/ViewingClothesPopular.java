@@ -316,7 +316,7 @@ public class ViewingClothesPopular extends Fragment {
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
                                 if(snapshot.exists()){
                                     a=3;
-                                    Toast.makeText(getContext(), "Предмет куплен", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getContext(), "Предмет уже куплен", Toast.LENGTH_SHORT).show();
                                 }else {}
                             }
 

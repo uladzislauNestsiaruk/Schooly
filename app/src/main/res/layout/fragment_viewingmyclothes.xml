@@ -273,6 +273,15 @@
     </LinearLayout>
 
 
+        <ImageView
+            android:id="@+id/send"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/linear"
+            android:layout_marginTop="36dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="24dp"
+            android:src="@drawable/ic_sendviewingclothes" />
 
         <TextView
             android:id="@+id/descriptionText"

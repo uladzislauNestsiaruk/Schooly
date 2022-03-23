@@ -69,25 +69,15 @@ public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.ViewHolder
     holder.creator.setText(clothes.getCreator());
     Picasso.get().load(clothes.getClothesImage()).into(holder.clothesImage);
     Query query=firebaseModel.getReference().child("AppData").child("Clothes")
-            .child("AllClothes").child(clothes.getUid());
+            .child("AllClothes").child(clothes.getUid()).child("purchaseNumber");
     query.addValueEventListener(new ValueEventListener() {
       @Override
       public void onDataChange(@NonNull DataSnapshot snapshot) {
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
           @Override
           public void PassUserNick(String nick) {
-            Clothes clothesAll = new Clothes();
-            clothesAll.setClothesImage(snapshot.child("clothesImage").getValue(String.class));
-            clothesAll.setClothesPrice(snapshot.child("clothesPrice").getValue(Long.class));
-            clothesAll.setPurchaseNumber(snapshot.child("purchaseNumber").getValue(Long.class));
-            clothesAll.setClothesType(snapshot.child("clothesType").getValue(String.class));
-            clothesAll.setClothesTitle(snapshot.child("clothesTitle").getValue(String.class));
-            clothesAll.setCurrencyType(snapshot.child("currencyType").getValue(String.class));
-            clothesAll.setCreator(snapshot.child("creator").getValue(String.class));
-            clothesAll.setUid(snapshot.child("uid").getValue(String.class));
-            if(clothesAll.getUid().equals(clothes.getUid())){
-              holder.purchaseNumber.setText(String.valueOf(clothesAll.getPurchaseNumber()));
-            }
+              Log.d("####", "n "+clothes.getPurchaseNumber());
+              holder.purchaseNumber.setText(String.valueOf(snapshot.getValue(Long.class)));
 
           }
         });
