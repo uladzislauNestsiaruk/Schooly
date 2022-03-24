@@ -16,16 +16,48 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginTop="28dp"
-        android:textColor="@color/app_grey"
-        android:text="@string/share"
         android:fontFamily="@font/montserrat_bold"
-        android:textSize="20sp"/>
+        android:text="@string/share"
+        android:textColor="@color/app_grey"
+        android:textSize="20sp" />
+
+    <View
+        android:id="@+id/view1"
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:layout_below="@+id/share"
+        android:background="@color/tl_color"
+        android:layout_marginTop="8dp"/>
+
+    <EditText
+        android:id="@+id/message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/view1"
+        android:hint="@string/writeMessage"
+        android:layout_marginStart="24dp"
+        android:paddingBottom="14dp"
+        android:paddingTop="14dp"
+        android:maxLines="4"
+        android:layout_marginEnd="24dp"
+        android:textColor="@color/app_grey"
+        android:textColorHint="@color/app_grey"
+        android:fontFamily="@font/montserrat_bold"
+        android:textSize="14sp"
+        android:background="@null"/>
+
+    <View
+        android:id="@+id/view2"
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:layout_below="@+id/message"
+        android:background="@color/tl_color" />
 
     <EditText
         android:id="@+id/searchuser"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/share"
+        android:layout_below="@+id/view2"
         android:layout_marginStart="24dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="24dp"

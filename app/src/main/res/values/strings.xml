@@ -381,6 +381,7 @@
     <string name="exclusiveText">Эксклюзивная одежда:</string>
     <string name="noExclusive">Для просмотра премиум одежды необходимо быть подписаным на Schooly Premium</string>
     <string name="noClothesInBasket">Нет одежды в корзине:(</string>
+    <string name="writeMessage">Введи сообщение...</string>
 
 
 </resources>

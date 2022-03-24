@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:paddingBottom="24dp">
 
     <ImageView
         android:id="@+id/back_toshop"
@@ -15,17 +16,27 @@
         android:layout_marginTop="16dp"
         android:src="@drawable/left_arrow" />
 
-    <TextView
-        android:id="@+id/shopText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="11dp"
-        android:layout_toRightOf="@+id/back_toshop"
-        android:fontFamily="@font/montserrat_bold"
-        android:text="@string/myClothes"
-        android:textColor="@color/app_color"
-        android:textSize="22sp" />
+        <TextView
+            android:id="@+id/shopText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="11dp"
+            android:layout_toRightOf="@+id/back_toshop"
+            android:fontFamily="@font/montserrat_bold"
+            android:text="@string/myClothes"
+            android:textColor="@color/app_color"
+            android:textSize="22sp" />
+
+        <ImageView
+            android:id="@+id/send"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/priceRelative"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="24dp"
+            android:src="@drawable/ic_sendviewingclothes" />
 
 <!--    <TextView-->
 <!--        android:id="@+id/purchaseNumberViewing"-->
@@ -46,7 +57,7 @@
             android:layout_height="170dp"
             android:layout_below="@+id/back_toshop"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="36dp" />
+            android:layout_marginTop="16dp" />
 
         <TextView
             android:id="@+id/clothesTitlecv"
@@ -71,9 +82,9 @@
                 android:id="@+id/clothesPricecv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
                 android:fontFamily="@font/montserratblack"
                 android:textColor="@color/app_color"
-                android:layout_centerVertical="true"
                 android:textSize="17sp" />
 
             <ImageView
@@ -86,16 +97,16 @@
                 android:src="@drawable/ic_schoolycoinpurple" />
         </RelativeLayout>
 
-    <TextView
-        android:id="@+id/statistics"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/priceRelative"
-        android:layout_marginTop="24dp"
-        android:layout_marginStart="24dp"
-        android:fontFamily="@font/montserrat_bold"
-        android:text="@string/statistics"
-        android:textColor="@color/app_grey"/>
+        <TextView
+            android:id="@+id/statistics"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/send"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="16dp"
+            android:fontFamily="@font/montserrat_bold"
+            android:text="@string/statistics"
+            android:textColor="@color/app_grey" />
 
     <LinearLayout
         android:id="@+id/linear"
@@ -273,23 +284,13 @@
     </LinearLayout>
 
 
-        <ImageView
-            android:id="@+id/send"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/linear"
-            android:layout_marginTop="36dp"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="24dp"
-            android:src="@drawable/ic_sendviewingclothes" />
-
         <TextView
             android:id="@+id/descriptionText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/linear"
             android:layout_marginStart="24dp"
-            android:layout_marginTop="52dp"
+            android:layout_marginTop="24dp"
             android:fontFamily="@font/montserrat_bold"
             android:text="@string/descriptipon"
             android:textColor="@color/app_grey"
@@ -325,7 +326,6 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="32dp"
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp">
 
@@ -372,4 +372,4 @@
     </LinearLayout>
 
     </RelativeLayout>
-</ScrollView>
+</androidx.core.widget.NestedScrollView>
