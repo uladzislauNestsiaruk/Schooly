@@ -382,6 +382,10 @@
     <string name="noExclusive">Для просмотра премиум одежды необходимо быть подписаным на Schooly Premium</string>
     <string name="noClothesInBasket">Нет одежды в корзине:(</string>
     <string name="writeMessage">Введи сообщение...</string>
+    <string name="instagram">Инстаграм</string>
+    <string name="story">Story</string>
+    <string name="telegram">Телеграм</string>
+    <string name="elseways">Еще</string>
 
 
 </resources>

@@ -35,6 +35,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
@@ -42,7 +43,10 @@ import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 public class ViewingClothesPopular extends Fragment {
@@ -66,8 +70,9 @@ public class ViewingClothesPopular extends Fragment {
     RecyclerView recyclerView;
     SendLookAdapter.ItemClickListener itemClickListenerSendClothes;
     TextView emptyList;
-    EditText editText;
-    String userName;
+    EditText editText,messageEdit;
+    String userName,otherUserNickString;
+    LinearLayout linearElse,linearTelegram,linearInstagram;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -427,17 +432,66 @@ public class ViewingClothesPopular extends Fragment {
         recyclerView=bottomSheetDialog.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         emptyList=bottomSheetDialog.findViewById(R.id.emptySubscribersList);
+        linearElse=bottomSheetDialog.findViewById(R.id.linearElse);
+        linearTelegram=bottomSheetDialog.findViewById(R.id.linearTelegram);
+        linearInstagram=bottomSheetDialog.findViewById(R.id.linearInstagram);
+        editText=bottomSheetDialog.findViewById(R.id.message);
 
-        itemClickListenerSendClothes=new SendLookAdapter.ItemClickListener() {
+        linearElse.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemClick(String otherUserNick, String type) {
-                if(type.equals("send")){
-                    Log.d("###", type);
-                }else {
-                    Log.d("####", type);
-                }
+            public void onClick(View v) {
+
             }
-        };
+        });
+
+        linearTelegram.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+        linearInstagram.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+            @Override
+            public void PassUserNick(String nick) {
+                itemClickListenerSendClothes=new SendLookAdapter.ItemClickListener() {
+                    @Override
+                    public void onItemClick(String otherUserNick, String type) {
+                        if(type.equals("send")){
+                            String messageText = messageEdit.getText().toString();
+
+                            String messageSenderRef = otherUserNick + "/Chats/" + nick + "/Messages";
+                            String messageReceiverRef = nick + "/Chats/" + otherUserNick+ "/Messages";
+                            otherUserNickString=otherUserNick;
+
+                            DatabaseReference userMessageKeyRef = firebaseModel.getUsersReference().child(nick).child("Chats").child(otherUserNick).child("Messages").push();
+                            String messagePushID = userMessageKeyRef.getKey();
+
+                            Map<String, String> messageTextBody = new HashMap<>();
+                            messageTextBody.put("message", messageText);
+                            messageTextBody.put("type", "text");
+                            messageTextBody.put("from", nick);
+                            messageTextBody.put("to", otherUserNick);
+                            messageTextBody.put("time", RecentMethods.getCurrentTime());
+                            messageTextBody.put("messageID", messagePushID);
+                            addLastMessage("text", messageText);
+
+                            Map<String, Object> messageBodyDetails = new HashMap<String, Object>();
+                            messageBodyDetails.put(messageSenderRef + "/" + messagePushID, messageTextBody);
+                            messageBodyDetails.put(messageReceiverRef + "/" + messagePushID, messageTextBody);
+                        }else {
+                            Log.d("####", type);
+                        }
+                    }
+                };
+            }
+        });
+
 
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @Override
@@ -515,6 +569,63 @@ public class ViewingClothesPopular extends Fragment {
                             }
                         });
                     }
+                });
+            }
+        });
+    }
+
+    private void addLastMessage(String type, String Message){
+        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+            @Override
+            public void PassUserNick(String nick) {
+                switch (type) {
+                    case "text":
+                        addType("text");
+                        firebaseModel.getUsersReference().child(nick).child("Chats").child(otherUserNickString).child("LastMessage").setValue(Message);
+                        firebaseModel.getUsersReference().child(otherUserNickString).child("Chats").child(nick).child("LastMessage").setValue(Message);
+                        break;
+                    case "voice":
+                        addType("voice");
+                        firebaseModel.getUsersReference().child(nick).child("Chats").child(otherUserNickString).child("LastMessage").setValue("Голосовое сообщение");
+                        firebaseModel.getUsersReference().child(otherUserNickString).child("Chats").child(nick).child("LastMessage").setValue("Голосовое сообщение");
+                        break;
+                    case "image":
+                        firebaseModel.getUsersReference().child(nick).child("Chats").child(otherUserNickString).child("LastMessage").setValue("Фотография");
+                        firebaseModel.getUsersReference().child(otherUserNickString).child("Chats").child(nick).child("LastMessage").setValue("Фотография");
+                        addType("image");
+                        break;
+                }
+                Calendar calendar = Calendar.getInstance();
+                firebaseModel.getUsersReference().child(nick).child("Chats").child(otherUserNickString).child("LastTime").setValue(RecentMethods.getCurrentTime());
+                firebaseModel.getUsersReference().child(otherUserNickString).child("Chats").child(nick).child("LastTime").setValue(RecentMethods.getCurrentTime());
+                firebaseModel.getUsersReference().child(nick).child("Chats").child(otherUserNickString).child("TimeMill").setValue(calendar.getTimeInMillis() * -1);
+                firebaseModel.getUsersReference().child(otherUserNickString).child("Chats").child(nick).child("TimeMill").setValue(calendar.getTimeInMillis() * -1);
+            }
+        });
+    }
+
+    public void addType(String type) {
+        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+            @Override
+            public void PassUserNick(String nick) {
+                final long[] value = new long[1];
+                DatabaseReference ref = firebaseModel.getUsersReference().child(otherUserNickString).child("Chats").child(nick).child(type);
+                ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists()){
+                            value[0] = (long) dataSnapshot.getValue();
+                            value[0] = value[0] + 1;
+                            dataSnapshot.getRef().setValue(value[0]);}
+                        else dataSnapshot.getRef().setValue(1);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+
+
                 });
             }
         });
