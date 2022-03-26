@@ -354,19 +354,12 @@
 
         <RadioGroup
             android:id="@+id/radioGroupExclusive"
-            android:checkedButton="@+id/schoolyCoinRadio"
+            android:checkedButton="@+id/radioButtonExclusiveNo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/exclusive"
             android:layout_marginTop="8dp"
             android:layout_marginStart="20dp">
-            <RadioButton
-                android:id="@+id/radioButtonExclusiveYes"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:textColor="@color/app_grey"
-                android:fontFamily="@font/montserrat_bold"
-                android:text="@string/yes"/>
             <RadioButton
                 android:id="@+id/radioButtonExclusiveNo"
                 android:layout_width="match_parent"
@@ -374,6 +367,13 @@
                 android:textColor="@color/app_grey"
                 android:fontFamily="@font/montserrat_bold"
                 android:text="@string/no"/>
+            <RadioButton
+                android:id="@+id/radioButtonExclusiveYes"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColor="@color/app_grey"
+                android:fontFamily="@font/montserrat_bold"
+                android:text="@string/yes"/>
         </RadioGroup>
 
         <TextView

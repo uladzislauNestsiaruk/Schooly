@@ -34,6 +34,7 @@ import com.egormoroz.schooly.ui.news.NewsItem;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.ar.core.exceptions.CameraNotAvailableException;
 import com.google.ar.sceneform.Node;
@@ -57,7 +58,7 @@ public class ViewingLookFragment extends Fragment {
 
     FirebaseModel firebaseModel=new FirebaseModel();
     ImageView back,like,comment,send,schoolyCoin,cross;
-    TextView nick,description,likesCount,lookPrice,lookPriceDollar,clothesCreator,emptyList;
+    TextView nick,description,likesCount,lookPrice,lookPriceDollar,clothesCreator,emptyList,comments;
     SceneView sceneView;
     LinearLayout linearElse,linearTelegram,linearInstagram;
     EditText editText,messageEdit;
@@ -124,6 +125,12 @@ public class ViewingLookFragment extends Fragment {
                 loadModels(Uri.parse(newsItem.getImageUrl()), sceneView, ViewingLookFragment.this, 0.25f);
                 nick.setText(newsItem.getNick());
                 likesCountString=String.valueOf(newsItem.getLikes_count());
+                comment.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showBottomSheetDialogComments();
+                    }
+                });
                 send.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -226,6 +233,23 @@ public class ViewingLookFragment extends Fragment {
             }
         });
 
+    }
+
+    private void showBottomSheetDialogComments() {
+
+        final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(getContext());
+        bottomSheetDialog.setContentView(R.layout.bottom_sheet_dialog_comment);
+
+        editText=bottomSheetDialog.findViewById(R.id.commentEdit);
+        recyclerView=bottomSheetDialog.findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        emptyList=bottomSheetDialog.findViewById(R.id.emptyCommentsList);
+        editText=bottomSheetDialog.findViewById(R.id.message);
+        comments=bottomSheetDialog.findViewById(R.id.comments);
+        comments.setText("Комментарии:");
+        bottomSheetDialog.getBehavior().setPeekHeight(700);
+
+        bottomSheetDialog.show();
     }
 
     private void showBottomSheetDialog() {
