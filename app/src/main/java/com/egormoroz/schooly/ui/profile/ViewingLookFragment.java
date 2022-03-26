@@ -247,7 +247,7 @@ public class ViewingLookFragment extends Fragment {
         editText=bottomSheetDialog.findViewById(R.id.message);
         comments=bottomSheetDialog.findViewById(R.id.comments);
         comments.setText("Комментарии:");
-        bottomSheetDialog.getBehavior().setPeekHeight(700);
+        bottomSheetDialog.getBehavior().setState(BottomSheetBehavior.STATE_EXPANDED);
 
         bottomSheetDialog.show();
     }
