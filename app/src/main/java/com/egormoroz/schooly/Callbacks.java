@@ -3,6 +3,7 @@ package com.egormoroz.schooly;
 import com.egormoroz.schooly.ui.main.Mining.Miner;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
 import com.egormoroz.schooly.ui.main.UserInformation;
+import com.egormoroz.schooly.ui.news.Comment;
 import com.egormoroz.schooly.ui.news.NewsItem;
 import com.egormoroz.schooly.ui.profile.Look;
 import com.egormoroz.schooly.ui.profile.Reason;
@@ -72,6 +73,9 @@ public class Callbacks {
     }
     public interface getSubscribersList{
         default void getSubscribersList(ArrayList<Subscriber> subscribers){}
+    }
+    public interface getCommentsList{
+        default void getCommentsList(ArrayList<Comment> comment){}
     }
     public interface getNontificationsList{
         default void getNontificationsList(ArrayList<Nontification> nontifications){}

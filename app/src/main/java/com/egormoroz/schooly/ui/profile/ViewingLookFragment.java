@@ -30,6 +30,8 @@ import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.Subscriber;
 import com.egormoroz.schooly.ui.main.MyClothes.CreateClothesFragment;
 import com.egormoroz.schooly.ui.main.MyClothes.CriteriaFragment;
+import com.egormoroz.schooly.ui.news.Comment;
+import com.egormoroz.schooly.ui.news.CommentAdapter;
 import com.egormoroz.schooly.ui.news.NewsItem;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -58,10 +60,13 @@ public class ViewingLookFragment extends Fragment {
 
     FirebaseModel firebaseModel=new FirebaseModel();
     ImageView back,like,comment,send,schoolyCoin,cross;
-    TextView nick,description,likesCount,lookPrice,lookPriceDollar,clothesCreator,emptyList,comments;
+    TextView nick,description,likesCount,lookPrice,lookPriceDollar,clothesCreator
+            ,emptyList,comments,sendComment;
     SceneView sceneView;
+    String editGetText;
     LinearLayout linearElse,linearTelegram,linearInstagram;
     EditText editText,messageEdit;
+    RecyclerView commentsRecycler;
     RecyclerView recyclerView;
     String userNameToProfile,userName,otherUserNickString;
     String likesCountString,lookPriceString,lookPriceDollarString;
@@ -128,7 +133,7 @@ public class ViewingLookFragment extends Fragment {
                 comment.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        showBottomSheetDialogComments();
+                        showBottomSheetDialogComments(newsItem);
                     }
                 });
                 send.setOnClickListener(new View.OnClickListener() {
@@ -235,7 +240,7 @@ public class ViewingLookFragment extends Fragment {
 
     }
 
-    private void showBottomSheetDialogComments() {
+    private void showBottomSheetDialogComments(NewsItem newsItem) {
 
         final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(getContext());
         bottomSheetDialog.setContentView(R.layout.bottom_sheet_dialog_comment);
@@ -244,10 +249,61 @@ public class ViewingLookFragment extends Fragment {
         recyclerView=bottomSheetDialog.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         emptyList=bottomSheetDialog.findViewById(R.id.emptyCommentsList);
-        editText=bottomSheetDialog.findViewById(R.id.message);
         comments=bottomSheetDialog.findViewById(R.id.comments);
         comments.setText("Комментарии:");
+        sendComment=bottomSheetDialog.findViewById(R.id.send);
         bottomSheetDialog.getBehavior().setState(BottomSheetBehavior.STATE_EXPANDED);
+        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+            @Override
+            public void PassUserNick(String nick) {
+                RecentMethods.getCommentsList(nick, newsItem.getNewsId(), firebaseModel, new Callbacks.getCommentsList() {
+                    @Override
+                    public void getCommentsList(ArrayList<Comment> comment) {
+                        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                        CommentAdapter commentAdapter=new CommentAdapter(comment);
+                        recyclerView.setAdapter(commentAdapter);
+                    }
+                });
+            }
+        });
+
+        editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                editGetText=editText.getText().toString();
+                if (editGetText.length()==0){
+                    sendComment.setVisibility(View.GONE);
+                }else {
+                    sendComment.setVisibility(View.VISIBLE);
+                    sendComment.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+                                @Override
+                                public void PassUserNick(String nick) {
+                                    String commentId=firebaseModel.getUsersReference().child(newsItem.getNick()).child("looks")
+                                            .child(newsItem.getNewsId()).child("comments").push().getKey();
+                                    firebaseModel.getUsersReference().child(newsItem.getNick()).child("looks")
+                                            .child(newsItem.getNewsId()).child("comments").child(commentId)
+                                            .setValue(new Comment(editText.getText().toString(), 0, commentId,"0",nick,"image","comment"));
+                                    editText.getText().clear();
+                                }
+                            });
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
 
         bottomSheetDialog.show();
     }

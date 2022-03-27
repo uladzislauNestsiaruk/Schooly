@@ -211,6 +211,7 @@
     <string name="emptyBlackList">Черный список пуст</string>
     <string name="emptySubscribersList">Нет комментариев</string>
     <string name="writeComment">Напиши комментарий...</string>
+    <string name="sendComment">ОТПР.</string>
     <string name="emptyCommentsList">Нет подписчиков</string>
     <string name="emptySubscriptionList">Подпишись на других пользователей!</string>
     <string name="emptySearchSubscriptionList">Для того, чтобы перевести коины другому пользователю, необходимо быть на него подписаным</string>
@@ -368,6 +369,7 @@
 
     <string name="requestAnswer">Ответ на заявку:</string>
     <string name="reasonAnswer">Причина отказа:</string>
+    <string name="answer">Ответить</string>
     <string name="adding">Добавление:</string>
     <string name="clothesCreators">Создатели одежды</string>
 

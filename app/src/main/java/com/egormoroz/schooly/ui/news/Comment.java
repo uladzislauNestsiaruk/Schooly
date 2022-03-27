@@ -1,22 +1,23 @@
 package com.egormoroz.schooly.ui.news;
 
 public class Comment {
-    private String text, likes_count, commentId,postTime,nick,
-            comments,clothesCreators,image;
-    private   long lookPrice,lookPriceDollar,viewCount;
+    private String text,  commentId,postTime,nick,
+            comments,type,image;
+    private   long likes_count;
 
     public Comment(){
 
     }
 
-    public Comment( String text, String likes_count, String commentId,
-                    String postTime,String nick,String image){
+    public Comment( String text, long likes_count, String commentId,
+                    String postTime,String nick,String image,String type){
         this.image = image;
         this.likes_count = likes_count;
         this.text = text;
         this.commentId = commentId;
         this.postTime=postTime;
         this.nick=nick;
+        this.type=type;
     }
 
     public String getImage (){
@@ -35,11 +36,11 @@ public class Comment {
         this.text = text;
     }
 
-    public String getLikes_count (){
+    public long getLikes_count (){
         return  this.likes_count;
     }
 
-    public void setLikesCount(String likes_count) {
+    public void setLikesCount(long likes_count) {
         this.likes_count = likes_count;
     }
 
@@ -69,11 +70,10 @@ public class Comment {
         this.nick = nick;
     }
 
-    public long getLookPriceDollar (){
-        return  this.lookPriceDollar;
+    public String getType() {return this.type;}
+
+    public void setType(String type) {
+        this.type = type;
     }
 
-    public void setLookPriceDollar(long lookPriceDollar) {
-        this.lookPriceDollar = lookPriceDollar;
-    }
 }

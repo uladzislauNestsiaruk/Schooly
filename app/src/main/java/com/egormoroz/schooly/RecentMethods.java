@@ -12,6 +12,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.egormoroz.schooly.ui.main.Mining.Miner;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
 import com.egormoroz.schooly.ui.main.UserInformation;
+import com.egormoroz.schooly.ui.news.Comment;
 import com.egormoroz.schooly.ui.news.NewsItem;
 import com.egormoroz.schooly.ui.profile.Look;
 import com.egormoroz.schooly.ui.profile.Reason;
@@ -1221,6 +1222,31 @@ public class RecentMethods {
                 }
                 Log.d("###", "name2"+subscribersList);
                 callback.getFriendsList(subscribersList);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
+    }
+
+    public static void getCommentsList(String nickName,String newsId, FirebaseModel model, Callbacks.getCommentsList callback){
+        model.initAll();
+        Query query=model.getUsersReference().child(nickName).child("looks")
+                .child(newsId).child("comments");
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                ArrayList<Comment> commentsList = new ArrayList<>();
+                for (DataSnapshot snap:snapshot.getChildren()){
+                    Comment comment=new Comment();
+                    comment=snap.getValue(Comment.class);
+                    commentsList.add(comment);
+                }
+                callback.getCommentsList(commentsList);
             }
 
             @Override
