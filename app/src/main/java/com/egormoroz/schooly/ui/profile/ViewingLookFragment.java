@@ -30,9 +30,13 @@ import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.Subscriber;
 import com.egormoroz.schooly.ui.main.MyClothes.CreateClothesFragment;
 import com.egormoroz.schooly.ui.main.MyClothes.CriteriaFragment;
+import com.egormoroz.schooly.ui.main.Shop.Clothes;
 import com.egormoroz.schooly.ui.news.Comment;
 import com.egormoroz.schooly.ui.news.CommentAdapter;
 import com.egormoroz.schooly.ui.news.NewsItem;
+import com.egormoroz.schooly.ui.news.ViewingClothesNews;
+import com.egormoroz.schooly.ui.profile.Wardrobe.AcceptNewLook;
+import com.egormoroz.schooly.ui.profile.Wardrobe.ConstituentsAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -71,6 +75,7 @@ public class ViewingLookFragment extends Fragment {
     String userNameToProfile,userName,otherUserNickString;
     String likesCountString,lookPriceString,lookPriceDollarString;
     SendLookAdapter.ItemClickListener itemClickListener;
+    ConstituentsAdapter.ItemClickListener itemClickListenerClothes;
 
 
     Fragment fragment;
@@ -322,8 +327,22 @@ public class ViewingLookFragment extends Fragment {
 
         final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(getContext());
         bottomSheetDialog.setContentView(R.layout.bottom_sheet_dialog_clothescreators);
-
+        itemClickListenerClothes=new ConstituentsAdapter.ItemClickListener() {
+            @Override
+            public void onItemClick(Clothes clothes) {
+                bottomSheetDialog.dismiss();
+                RecentMethods.setCurrentFragment(ViewingClothesNews.newInstance(ViewingLookFragment.newInstance(fragment)), getActivity());
+            }
+        };
         clothesCreatorsRecycler=bottomSheetDialog.findViewById(R.id.recyclerView);
+        RecentMethods.getLookClothes(newsItem.getNick(), newsItem.getNewsId(), firebaseModel, new Callbacks.getLookClothes() {
+            @Override
+            public void getLookClothes(ArrayList<Clothes> clothesArrayList) {
+                ConstituentsAdapter constituentsAdapter=new ConstituentsAdapter(clothesArrayList,itemClickListenerClothes);
+                clothesCreatorsRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
+                clothesCreatorsRecycler.setAdapter(constituentsAdapter);
+            }
+        });
 
         bottomSheetDialog.show();
     }

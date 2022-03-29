@@ -133,7 +133,6 @@ public class NewClothesAdapter extends RecyclerView.Adapter<NewClothesAdapter.Vi
       holder.dollarImage.setVisibility(View.VISIBLE);
       holder.coinsImage.setVisibility(View.GONE);
     }
-    Log.d("####", "help0000");
     RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
       @Override
       public void PassUserNick(String nick) {

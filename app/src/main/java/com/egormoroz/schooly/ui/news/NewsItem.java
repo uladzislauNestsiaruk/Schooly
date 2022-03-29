@@ -2,23 +2,28 @@ package com.egormoroz.schooly.ui.news;
 
 import android.widget.ImageView;
 
+import com.egormoroz.schooly.ui.main.Shop.Clothes;
+
+import java.util.ArrayList;
+
 public class NewsItem {
     private String item_description, likes_count, newsId,postTime,nick,
             comments,clothesCreators,ImageUrl;
     private   long lookPrice,lookPriceDollar,viewCount;
+    private ArrayList<Clothes> clothesArrayList;
 
     public NewsItem(){
 
     }
 
     public NewsItem(String ImageUrl, String item_description, String likes_count, String newsId,
-    String comments,String clothesCreators,long lookPrice,long viewCount,String postTime,String nick,long lookPriceDollar){
+    String comments,ArrayList<Clothes> clothesArrayList,long lookPrice,long viewCount,String postTime,String nick,long lookPriceDollar){
         this.ImageUrl = ImageUrl;
         this.likes_count = likes_count;
         this.item_description = item_description;
         this.newsId = newsId;
         this.comments=comments;
-        this.clothesCreators=clothesCreators;
+        this.clothesArrayList=clothesArrayList;
         this.lookPrice=lookPrice;
         this.viewCount=viewCount;
         this.postTime=postTime;
@@ -65,10 +70,10 @@ public class NewsItem {
         this.comments = comments;
     }
 
-    public String getClothesCreators() {return this.clothesCreators;}
+    public ArrayList<Clothes> getClothesCreators() {return this.clothesArrayList;}
 
-    public void setClothesCreators(String clothesCreators) {
-        this.clothesCreators = clothesCreators;
+    public void setClothesCreators(ArrayList<Clothes> clothesArrayList) {
+        this.clothesArrayList = clothesArrayList;
     }
 
     public long getLookPrice (){

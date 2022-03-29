@@ -89,6 +89,7 @@ public class PopularFragment extends Fragment {
                             long purchaseNumber=cl.getPurchaseNumber();
 
                         }
+                        Log.d("ttttt", "t"+itemClickListener);
                         NewClothesAdapter newClothesAdapter=new NewClothesAdapter(newClothesArrayList,itemClickListener);
                         clothes.setAdapter(newClothesAdapter);
                     }

@@ -77,6 +77,9 @@ public class Callbacks {
     public interface getCommentsList{
         default void getCommentsList(ArrayList<Comment> comment){}
     }
+    public interface getLookClothes{
+        default void getLookClothes(ArrayList<Clothes> clothesArrayList){}
+    }
     public interface getNontificationsList{
         default void getNontificationsList(ArrayList<Nontification> nontifications){}
     }

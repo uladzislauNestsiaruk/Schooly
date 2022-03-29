@@ -25,6 +25,7 @@ import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
 import com.egormoroz.schooly.ui.main.Shop.ViewingClothes;
 import com.egormoroz.schooly.ui.news.NewsItem;
+import com.egormoroz.schooly.ui.news.ViewingClothesNews;
 import com.egormoroz.schooly.ui.profile.Look;
 import com.egormoroz.schooly.ui.profile.LooksAdapter;
 import com.egormoroz.schooly.ui.profile.LooksFragmentProfileOther;
@@ -49,6 +50,7 @@ public class AcceptNewLook extends Fragment {
     long lookPriceLong,lookPriceDollarLong;
     String lookPriceString,lookPriceDollarString;
     String model;
+    ConstituentsAdapter.ItemClickListener itemClickListener;
 
     public AcceptNewLook(String model) {
         this.model = model;
@@ -81,21 +83,13 @@ public class AcceptNewLook extends Fragment {
         descriptionLook=view.findViewById(R.id.addDescriptionEdit);
         recyclerView=view.findViewById(R.id.constituentsRecycler);
         schoolyCoin=view.findViewById(R.id.schoolyCoin);
-        publish.setOnClickListener(new View.OnClickListener() {
+
+        itemClickListener=new ConstituentsAdapter.ItemClickListener() {
             @Override
-            public void onClick(View v) {
-                RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-                    @Override
-                    public void PassUserNick(String nick) {
-                        String lookId=firebaseModel.getUsersReference().child(nick).child("looks").push().getKey();
-                        firebaseModel.getUsersReference().child(nick).child("looks").child(lookId)
-                                .setValue(new NewsItem(model, descriptionLook.getText().toString(), "0", lookId,
-                                        "", "", 1200, 0,"",nick,0));
-                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("user", nick, AcceptNewLook.newInstance("")), getActivity());
-                    }
-                });
+            public void onItemClick(Clothes clothes) {
+                RecentMethods.setCurrentFragment(ViewingClothesNews.newInstance(AcceptNewLook.newInstance(model)), getActivity());
             }
-        });
+        };
 
         ImageView backfromwardrobe=view.findViewById(R.id.back_toprofile);
         backfromwardrobe.setOnClickListener(new View.OnClickListener() {
@@ -145,9 +139,24 @@ public class AcceptNewLook extends Fragment {
                         if(lookPriceDollarLong>0 || lookPriceLong>0){
                             setTextInLookPrice();
                         }
-                        ConstituentsAdapter constituentsAdapter=new ConstituentsAdapter(lookClothesFromBase);
+                        ConstituentsAdapter constituentsAdapter=new ConstituentsAdapter(lookClothesFromBase,itemClickListener);
                         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
                         recyclerView.setAdapter(constituentsAdapter);
+                        publish.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+                                    @Override
+                                    public void PassUserNick(String nick) {
+                                        String lookId=firebaseModel.getUsersReference().child(nick).child("looks").push().getKey();
+                                        firebaseModel.getUsersReference().child(nick).child("looks").child(lookId)
+                                                .setValue(new NewsItem(model, descriptionLook.getText().toString(), "0", lookId,
+                                                        "", lookClothesFromBase, 1200, 0,"",nick,0));
+                                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("user", nick, AcceptNewLook.newInstance("")), getActivity());
+                                    }
+                                });
+                            }
+                        });
                     }
 
                     @Override

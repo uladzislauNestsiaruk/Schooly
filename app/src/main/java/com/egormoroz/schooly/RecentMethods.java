@@ -1258,6 +1258,29 @@ public class RecentMethods {
 
     }
 
+    public static void getLookClothes(String nick,String uid,FirebaseModel firebaseModel,Callbacks.getLookClothes callback){
+        firebaseModel.initAll();
+        Query query=firebaseModel.getUsersReference().child(nick).child("looks").child(uid)
+                .child("clothesCreators");
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                ArrayList<Clothes> clothesArrayList=new ArrayList<>();
+                for(DataSnapshot snap:snapshot.getChildren()){
+                    Clothes clothes=new Clothes();
+                    clothes=snap.getValue(Clothes.class);
+                    clothesArrayList.add(clothes);
+            }
+                callback.getLookClothes(clothesArrayList);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
     ///////////////////MY CLOTHES//////////////////
     public static void getMyClothes(String nick,FirebaseModel firebaseModel,Callbacks.GetClothes callback){
         firebaseModel.initAll();
