@@ -90,7 +90,7 @@
         android:layout_above="@+id/comment"
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="24dp"
-        android:layout_marginBottom="24dp">
+        android:layout_marginBottom="14dp">
 
         <ImageView
             android:id="@+id/like"
@@ -102,8 +102,8 @@
             android:id="@+id/likesCount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
             android:layout_below="@+id/like"
+            android:layout_centerHorizontal="true"
             android:fontFamily="@font/montserrat_extrabold"
             android:textColor="@color/app_grey" />
 
@@ -113,22 +113,33 @@
         android:id="@+id/comment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_chat40dp"
-        android:layout_alignParentEnd="true"
         android:layout_above="@+id/send"
-        android:layout_marginBottom="40dp"
+        android:layout_alignParentEnd="true"
         android:layout_marginEnd="24dp"
-        />
+        android:layout_marginBottom="26dp"
+        android:src="@drawable/ic_chat40dp" />
 
     <ImageView
         android:id="@+id/send"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/options"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="26dp"
+        android:src="@drawable/ic_send40dp" />
+
+    <ImageView
+        android:id="@+id/options"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
         android:layout_marginEnd="24dp"
         android:layout_marginBottom="24dp"
-        android:src="@drawable/ic_send40dp" />
+        android:src="@drawable/ic_options" />
+
+
 
     <TextView
         android:id="@+id/clothesCreator"

@@ -63,9 +63,9 @@ import java.util.function.Consumer;
 public class ViewingLookFragment extends Fragment {
 
     FirebaseModel firebaseModel=new FirebaseModel();
-    ImageView back,like,comment,send,schoolyCoin,cross;
+    ImageView back,like,comment,send,schoolyCoin,cross,options;
     TextView nick,description,likesCount,lookPrice,lookPriceDollar,clothesCreator
-            ,emptyList,comments,sendComment,noComment;
+            ,emptyList,comments,sendComment,noComment,save,complain;
     SceneView sceneView;
     String editGetText;
     LinearLayout linearElse,linearTelegram,linearInstagram;
@@ -114,6 +114,7 @@ public class ViewingLookFragment extends Fragment {
         likesCount=view.findViewById(R.id.likesCount);
         sceneView=view.findViewById(R.id.sceneView);
         lookPrice=view.findViewById(R.id.lookPrice);
+        options=view.findViewById(R.id.options);
         lookPriceDollar=view.findViewById(R.id.lookPriceDollar);
         nick=view.findViewById(R.id.nick);
         send=view.findViewById(R.id.send);
@@ -138,7 +139,13 @@ public class ViewingLookFragment extends Fragment {
                 send.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        showBottomSheetDialog();
+                        showBottomSheetDialog(newsItem);
+                    }
+                });
+                options.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showBottomSheetDialogLookOptions(newsItem);
                     }
                 });
                 clothesCreator.setOnClickListener(new View.OnClickListener() {
@@ -347,7 +354,39 @@ public class ViewingLookFragment extends Fragment {
         bottomSheetDialog.show();
     }
 
-    private void showBottomSheetDialog() {
+    private void showBottomSheetDialogLookOptions(NewsItem newsItem) {
+
+        final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(getContext());
+        bottomSheetDialog.setContentView(R.layout.bottom_sheet_dialog_lookoptions);
+
+        save=bottomSheetDialog.findViewById(R.id.save);
+        complain=bottomSheetDialog.findViewById(R.id.complain);
+
+        save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+                    @Override
+                    public void PassUserNick(String nick) {
+                        firebaseModel.getUsersReference().child(nick).child("saved").child(newsItem.getNewsId())
+                                .setValue(newsItem);
+                        Toast.makeText(getContext(), "Образ сохранен", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
+
+        complain.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        bottomSheetDialog.show();
+    }
+
+    private void showBottomSheetDialog(NewsItem newsItem) {
 
         final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(getContext());
         bottomSheetDialog.setContentView(R.layout.bottom_sheet_dialog_layout);

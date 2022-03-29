@@ -1081,8 +1081,28 @@ public class RecentMethods {
 
             }
         });
+    }
 
+    public static void getSavedLooks(String nickName, FirebaseModel model, Callbacks.getSavedLook callback){
+        model.initAll();
+        Query query=model.getUsersReference().child(nickName).child("saved");
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                ArrayList<NewsItem> savedArrayList = new ArrayList<>();
+                for (DataSnapshot snap:snapshot.getChildren()){
+                    NewsItem newsItem=new NewsItem();
+                    newsItem=snap.getValue(NewsItem.class);
+                    savedArrayList.add(newsItem);
+                }
+                callback.getSavedLook(savedArrayList);
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
     public static void getLooksList(String nickName, FirebaseModel model, Callbacks.getLooksList callback){
         model.initAll();

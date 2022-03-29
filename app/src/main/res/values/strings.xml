@@ -201,6 +201,8 @@
     <string name="noLooksOther">У пользователя нет образов(</string>
 
     <string name="block">Заблокировать</string>
+    <string name="save">Сохранить</string>
+    <string name="saved">Сохраненное</string>
     <string name="complain">Пожаловаться</string>
     <string name="deleteSubscriber">Удалить подписчика</string>
 
@@ -209,6 +211,7 @@
     <string name="putAway">Убрать</string>
     <string name="putAwayDone">Убран</string>
     <string name="emptyBlackList">Черный список пуст</string>
+    <string name="noSaved">Нет сохраненных образов</string>
     <string name="emptySubscribersList">Нет комментариев</string>
     <string name="writeComment">Напиши комментарий...</string>
     <string name="sendComment">ОТПР.</string>

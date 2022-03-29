@@ -74,6 +74,9 @@ public class Callbacks {
     public interface getSubscribersList{
         default void getSubscribersList(ArrayList<Subscriber> subscribers){}
     }
+    public interface getSavedLook{
+        default void getSavedLook(ArrayList<NewsItem> newsItems){}
+    }
     public interface getCommentsList{
         default void getCommentsList(ArrayList<Comment> comment){}
     }

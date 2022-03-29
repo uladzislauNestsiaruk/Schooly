@@ -151,13 +151,25 @@
             android:layout_marginEnd="24dp" />
 
         <TextView
+            android:id="@+id/saved"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/closeAccount"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="20dp"
+            android:fontFamily="@font/montserrat_bold"
+            android:text="@string/saved"
+            android:textColor="@color/app_grey"
+            android:textSize="16sp" />
+
+        <TextView
             android:id="@+id/blackList"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/blackList"
             android:textColor="@color/app_grey"
             android:textSize="16sp"
-            android:layout_below="@id/closeAccount"
+            android:layout_below="@id/saved"
             android:layout_marginTop="20dp"
             android:fontFamily="@font/montserrat_bold"
             android:layout_marginStart="24dp"/>

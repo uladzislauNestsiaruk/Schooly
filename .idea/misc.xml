@@ -224,6 +224,7 @@
         <entry key="..\:/Users/User/Downloads/Schooly_NEW13.12true/app/src/main/res/layout/rvitemwardrobe.xml" value="0.23731884057971014" />
         <entry key="..\:/Users/User/Downloads/Schooly_NEW15.03/app/src/main/res/drawable/cormers10lightgrey.xml" value="0.25833333333333336" />
         <entry key="..\:/Users/User/Downloads/Schooly_NEW15.03/app/src/main/res/drawable/corners10grey.xml" value="0.25833333333333336" />
+        <entry key="..\:/Users/User/Downloads/Schooly_NEW15.03/app/src/main/res/drawable/corners10lightgrey.xml" value="0.26296296296296295" />
         <entry key="..\:/Users/User/Downloads/Schooly_NEW15.03/app/src/main/res/drawable/cornersnontsred.xml" value="0.2611111111111111" />
         <entry key="..\:/Users/User/Downloads/Schooly_NEW15.03/app/src/main/res/drawable/cornerstoolbar.xml" value="0.262037037037037" />
         <entry key="..\:/Users/User/Downloads/Schooly_NEW15.03/app/src/main/res/drawable/cornerstop14dpwhite.xml" value="0.2611111111111111" />
@@ -240,12 +241,14 @@
         <entry key="..\:/Users/User/Downloads/Schooly_NEW15.03/app/src/main/res/layout/bottom_sheet_dialog_clothescreators.xml" value="0.20380434782608695" />
         <entry key="..\:/Users/User/Downloads/Schooly_NEW15.03/app/src/main/res/layout/bottom_sheet_dialog_comment.xml" value="0.176" />
         <entry key="..\:/Users/User/Downloads/Schooly_NEW15.03/app/src/main/res/layout/bottom_sheet_dialog_layout.xml" value="0.2" />
+        <entry key="..\:/Users/User/Downloads/Schooly_NEW15.03/app/src/main/res/layout/bottom_sheet_dialog_lookinfo.xml" value="0.213768115942029" />
         <entry key="..\:/Users/User/Downloads/Schooly_NEW15.03/app/src/main/res/layout/bottom_sheet_dialog_profile.xml" value="0.2" />
         <entry key="..\:/Users/User/Downloads/Schooly_NEW15.03/app/src/main/res/layout/dialog_fulldata.xml" value="0.2151268115942029" />
         <entry key="..\:/Users/User/Downloads/Schooly_NEW15.03/app/src/main/res/layout/dialog_item_layout.xml" value="0.20969202898550723" />
         <entry key="..\:/Users/User/Downloads/Schooly_NEW15.03/app/src/main/res/layout/dialog_layout_blacklist.xml" value="0.12158054711246201" />
         <entry key="..\:/Users/User/Downloads/Schooly_NEW15.03/app/src/main/res/layout/fragment_acceptnewlook.xml" value="0.12158054711246201" />
         <entry key="..\:/Users/User/Downloads/Schooly_NEW15.03/app/src/main/res/layout/fragment_basket.xml" value="0.264" />
+        <entry key="..\:/Users/User/Downloads/Schooly_NEW15.03/app/src/main/res/layout/fragment_blacklist.xml" value="0.21603260869565216" />
         <entry key="..\:/Users/User/Downloads/Schooly_NEW15.03/app/src/main/res/layout/fragment_clothescreators.xml" value="0.152" />
         <entry key="..\:/Users/User/Downloads/Schooly_NEW15.03/app/src/main/res/layout/fragment_clothesrequest.xml" value="0.12360688956433637" />
         <entry key="..\:/Users/User/Downloads/Schooly_NEW15.03/app/src/main/res/layout/fragment_coins.xml" value="0.2105978260869565" />
@@ -256,7 +259,9 @@
         <entry key="..\:/Users/User/Downloads/Schooly_NEW15.03/app/src/main/res/layout/fragment_otheruser.xml" value="0.1" />
         <entry key="..\:/Users/User/Downloads/Schooly_NEW15.03/app/src/main/res/layout/fragment_people.xml" value="0.213768115942029" />
         <entry key="..\:/Users/User/Downloads/Schooly_NEW15.03/app/src/main/res/layout/fragment_profile.xml" value="0.12360688956433637" />
+        <entry key="..\:/Users/User/Downloads/Schooly_NEW15.03/app/src/main/res/layout/fragment_saved.xml" value="0.21603260869565216" />
         <entry key="..\:/Users/User/Downloads/Schooly_NEW15.03/app/src/main/res/layout/fragment_sendcoins.xml" value="0.2" />
+        <entry key="..\:/Users/User/Downloads/Schooly_NEW15.03/app/src/main/res/layout/fragment_settings.xml" value="0.21603260869565216" />
         <entry key="..\:/Users/User/Downloads/Schooly_NEW15.03/app/src/main/res/layout/fragment_shop.xml" value="0.12360688956433637" />
         <entry key="..\:/Users/User/Downloads/Schooly_NEW15.03/app/src/main/res/layout/fragment_subscribers.xml" value="0.213768115942029" />
         <entry key="..\:/Users/User/Downloads/Schooly_NEW15.03/app/src/main/res/layout/fragment_viewingclothes.xml" value="0.264" />

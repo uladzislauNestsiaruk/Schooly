@@ -42,7 +42,7 @@ public class SettingsFragment extends Fragment {
 
     FirebaseModel firebaseModel=new FirebaseModel();
     TextView  userNick,userNumber,userPassword,changePassword,blackList,exitAccout,
-            dataProtect,rules,support;
+            dataProtect,rules,support,saved;
     String userNickString;
     SwitchMaterial privateAccountSwitch,chatsSwitch,groupChatsSwitch,profileSwitch;
     boolean checkType;
@@ -66,6 +66,13 @@ public class SettingsFragment extends Fragment {
         profileSwitch=view.findViewById(R.id.profileSwitch);
         dataProtect=view.findViewById(R.id.dataProtect);
         rules=view.findViewById(R.id.rules);
+        saved=view.findViewById(R.id.saved);
+        saved.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RecentMethods.setCurrentFragment(SavedFragment.newInstance(), getActivity());
+            }
+        });
         support=view.findViewById(R.id.support);
 
         dataProtect.setOnClickListener(new View.OnClickListener() {
