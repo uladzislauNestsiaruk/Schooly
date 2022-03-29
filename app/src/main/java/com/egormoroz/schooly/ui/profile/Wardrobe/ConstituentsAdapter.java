@@ -49,6 +49,7 @@ public class ConstituentsAdapter extends RecyclerView.Adapter<ConstituentsAdapte
         }else{
             holder.clothesPrice.setText(String.valueOf(clothes.getClothesPrice()));
         }
+        holder.nick.setText(clothes.getCreator());
     }
 
     @Override
@@ -57,7 +58,7 @@ public class ConstituentsAdapter extends RecyclerView.Adapter<ConstituentsAdapte
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView clothesTitle,clothesPrice;
+        TextView clothesTitle,clothesPrice,nick;
         ImageView clothesImage,schoolyCoin;
         ViewHolder(View itemView) {
             super(itemView);
@@ -65,6 +66,7 @@ public class ConstituentsAdapter extends RecyclerView.Adapter<ConstituentsAdapte
             clothesTitle=itemView.findViewById(R.id.clothesTitlecv);
             clothesPrice=itemView.findViewById(R.id.clothesPricecv);
             schoolyCoin=itemView.findViewById(R.id.coinImagePrice);
+            nick=itemView.findViewById(R.id.nick);
         }
 
 

@@ -61,12 +61,12 @@ public class ViewingLookFragment extends Fragment {
     FirebaseModel firebaseModel=new FirebaseModel();
     ImageView back,like,comment,send,schoolyCoin,cross;
     TextView nick,description,likesCount,lookPrice,lookPriceDollar,clothesCreator
-            ,emptyList,comments,sendComment;
+            ,emptyList,comments,sendComment,noComment;
     SceneView sceneView;
     String editGetText;
     LinearLayout linearElse,linearTelegram,linearInstagram;
     EditText editText,messageEdit;
-    RecyclerView commentsRecycler;
+    RecyclerView commentsRecycler,clothesCreatorsRecycler;
     RecyclerView recyclerView;
     String userNameToProfile,userName,otherUserNickString;
     String likesCountString,lookPriceString,lookPriceDollarString;
@@ -106,12 +106,6 @@ public class ViewingLookFragment extends Fragment {
         description=view.findViewById(R.id.description);
         schoolyCoin=view.findViewById(R.id.schoolyCoin);
         clothesCreator=view.findViewById(R.id.clothesCreator);
-        clothesCreator.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
         likesCount=view.findViewById(R.id.likesCount);
         sceneView=view.findViewById(R.id.sceneView);
         lookPrice=view.findViewById(R.id.lookPrice);
@@ -140,6 +134,12 @@ public class ViewingLookFragment extends Fragment {
                     @Override
                     public void onClick(View v) {
                         showBottomSheetDialog();
+                    }
+                });
+                clothesCreator.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showBottomSheetDialogClothesCreators(newsItem);
                     }
                 });
                 long likesCountLong=Long.valueOf(newsItem.getLikes_count());
@@ -251,22 +251,10 @@ public class ViewingLookFragment extends Fragment {
         emptyList=bottomSheetDialog.findViewById(R.id.emptyCommentsList);
         comments=bottomSheetDialog.findViewById(R.id.comments);
         comments.setText("Комментарии:");
+        noComment=bottomSheetDialog.findViewById(R.id.noComment);
         sendComment=bottomSheetDialog.findViewById(R.id.send);
         bottomSheetDialog.getBehavior().setState(BottomSheetBehavior.STATE_EXPANDED);
-        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-            @Override
-            public void PassUserNick(String nick) {
-                RecentMethods.getCommentsList(nick, newsItem.getNewsId(), firebaseModel, new Callbacks.getCommentsList() {
-                    @Override
-                    public void getCommentsList(ArrayList<Comment> comment) {
-                        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-                        CommentAdapter commentAdapter=new CommentAdapter(comment);
-                        recyclerView.setAdapter(commentAdapter);
-                    }
-                });
-            }
-        });
-
+        loadComments(newsItem);
         editText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -292,6 +280,7 @@ public class ViewingLookFragment extends Fragment {
                                             .child(newsItem.getNewsId()).child("comments").child(commentId)
                                             .setValue(new Comment(editText.getText().toString(), 0, commentId,"0",nick,"image","comment"));
                                     editText.getText().clear();
+                                    loadComments(newsItem);
                                 }
                             });
                         }
@@ -304,6 +293,37 @@ public class ViewingLookFragment extends Fragment {
 
             }
         });
+
+        bottomSheetDialog.show();
+    }
+
+    public void loadComments(NewsItem newsItem){
+        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+            @Override
+            public void PassUserNick(String nick) {
+                RecentMethods.getCommentsList(nick, newsItem.getNewsId(), firebaseModel, new Callbacks.getCommentsList() {
+                    @Override
+                    public void getCommentsList(ArrayList<Comment> comment) {
+                        if(comment.size()==0){
+                            noComment.setVisibility(View.VISIBLE);
+                        }else {
+                            noComment.setVisibility(View.GONE);
+                            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                            CommentAdapter commentAdapter = new CommentAdapter(comment);
+                            recyclerView.setAdapter(commentAdapter);
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    private void showBottomSheetDialogClothesCreators(NewsItem newsItem) {
+
+        final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(getContext());
+        bottomSheetDialog.setContentView(R.layout.bottom_sheet_dialog_clothescreators);
+
+        clothesCreatorsRecycler=bottomSheetDialog.findViewById(R.id.recyclerView);
 
         bottomSheetDialog.show();
     }

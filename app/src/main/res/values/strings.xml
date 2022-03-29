@@ -372,6 +372,7 @@
     <string name="answer">Ответить</string>
     <string name="adding">Добавление:</string>
     <string name="clothesCreators">Создатели одежды</string>
+    <string name="clothesCreators2">Создатели одежды:</string>
 
     <string name="lookConstituents">Составляющие образа:</string>
 
@@ -390,6 +391,7 @@
     <string name="story">Story</string>
     <string name="telegram">Телеграм</string>
     <string name="elseways">Еще</string>
+    <string name="noComment">Нет комментариев:(</string>
 
 
 </resources>

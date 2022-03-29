@@ -214,7 +214,7 @@ public class ShopFragment extends Fragment {
         tabLayout.addTab(tabLayout.newTab().setText("Головные уборы"));
         tabLayout.addTab(tabLayout.newTab().setText("Акскссуары"));
 
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener(){
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
@@ -238,6 +238,7 @@ public class ShopFragment extends Fragment {
                 tabLayout.selectTab(tabLayout.getTabAt(position));
             }
         });
+
 
         basket=view.findViewById(R.id.basket);
         basket.setOnClickListener(new View.OnClickListener() {
