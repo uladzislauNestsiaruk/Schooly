@@ -184,7 +184,7 @@
         android:id="@+id/emptySubscribersList"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/emptySubscribersList"
+        android:text="@string/emptySubscriptionList"
         android:layout_centerInParent="true"
         android:layout_marginTop="350dp"
         android:textColor="@color/app_color"

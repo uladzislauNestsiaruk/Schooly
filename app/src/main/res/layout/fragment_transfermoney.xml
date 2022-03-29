@@ -5,7 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="@color/white"
+    android:overScrollMode="never">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -71,13 +72,14 @@
         android:fontFamily="@font/montserrat_extrabold"
         android:textColor="@color/app_grey"/>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/peoplerecycler"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/toWhom"
-        android:layout_marginTop="4dp"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/peoplerecycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/toWhom"
+            android:layout_marginTop="4dp"
+            android:overScrollMode="never"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
         <TextView
             android:id="@+id/emptySubscriptionList"

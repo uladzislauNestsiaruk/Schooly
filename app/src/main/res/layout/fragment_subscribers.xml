@@ -46,16 +46,14 @@
         android:textSize="15sp" />
 
 
-
-
     <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/subscribersRecycler"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/searchuser"
+        android:id="@+id/subscribersRecycler"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/searchuser"
         android:layout_marginTop="12dp"
-                android:scrollbars="none"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+        android:scrollbars="none"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
     <TextView
                 android:id="@+id/emptySubscribersList"

@@ -212,7 +212,7 @@
     <string name="putAwayDone">Убран</string>
     <string name="emptyBlackList">Черный список пуст</string>
     <string name="noSaved">Нет сохраненных образов</string>
-    <string name="emptySubscribersList">Нет комментариев</string>
+    <string name="emptySubscribersList">Нет подписчиков:(</string>
     <string name="writeComment">Напиши комментарий...</string>
     <string name="sendComment">ОТПР.</string>
     <string name="emptyCommentsList">Нет подписчиков</string>

@@ -32,6 +32,7 @@
       android:layout_height="match_parent"
       android:layout_below="@+id/searchuser"
       android:layout_marginTop="4dp"
-      app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+      android:overScrollMode="never"
+      app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
 </RelativeLayout>

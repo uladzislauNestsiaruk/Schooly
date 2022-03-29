@@ -45,14 +45,15 @@
         android:textColorHint="@color/greysearch"
         android:textSize="15sp" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/friendsRecycler"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/searchuser"
-            android:layout_marginTop="12dp"
-            android:scrollbars="none"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/friendsRecycler"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/searchuser"
+        android:layout_marginTop="12dp"
+        android:scrollbars="none"
+        android:overScrollMode="never"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
     <TextView
         android:id="@+id/emptySubscriptionList"
