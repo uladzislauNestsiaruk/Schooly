@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,6 +36,7 @@ import com.egormoroz.schooly.ui.news.Comment;
 import com.egormoroz.schooly.ui.news.CommentAdapter;
 import com.egormoroz.schooly.ui.news.NewsItem;
 import com.egormoroz.schooly.ui.news.ViewingClothesNews;
+import com.egormoroz.schooly.ui.people.PeopleFragment;
 import com.egormoroz.schooly.ui.profile.Wardrobe.AcceptNewLook;
 import com.egormoroz.schooly.ui.profile.Wardrobe.ConstituentsAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -58,6 +60,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 import java.util.function.Consumer;
 
 public class ViewingLookFragment extends Fragment {
@@ -65,17 +68,20 @@ public class ViewingLookFragment extends Fragment {
     FirebaseModel firebaseModel=new FirebaseModel();
     ImageView back,like,comment,send,schoolyCoin,cross,options;
     TextView nick,description,likesCount,lookPrice,lookPriceDollar,clothesCreator
-            ,emptyList,comments,sendComment,noComment,save,complain;
+            ,emptyList,comments,sendComment,noComment,save,complain,complainOtherUserText
+            ,reasonText;
     SceneView sceneView;
     String editGetText;
     LinearLayout linearElse,linearTelegram,linearInstagram;
-    EditText editText,messageEdit;
-    RecyclerView commentsRecycler,clothesCreatorsRecycler;
+    EditText editText,messageEdit,addDescriptionEdit;
+    RecyclerView commentsRecycler,clothesCreatorsRecycler,complainRecycler;
     RecyclerView recyclerView;
     String userNameToProfile,userName,otherUserNickString;
-    String likesCountString,lookPriceString,lookPriceDollarString;
+    String likesCountString,lookPriceString,lookPriceDollarString,reasonTextString,descriptionText;;
     SendLookAdapter.ItemClickListener itemClickListener;
     ConstituentsAdapter.ItemClickListener itemClickListenerClothes;
+    ComplainAdapter.ItemClickListener itemClickListenerComplain;
+    RelativeLayout sendReason;
 
 
     Fragment fragment;
@@ -309,6 +315,67 @@ public class ViewingLookFragment extends Fragment {
         bottomSheetDialog.show();
     }
 
+    private void showBottomSheetDialogComplain(NewsItem newsItem) {
+
+        final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(getContext());
+        bottomSheetDialog.setContentView(R.layout.bottom_sheet_dialog_complain);
+
+        complainOtherUserText=bottomSheetDialog.findViewById(R.id.complainOtherUserText);
+        complainRecycler=bottomSheetDialog.findViewById(R.id.reasonsRecycler);
+
+        complainOtherUserText.setText(newsItem.getNick());
+
+        itemClickListenerComplain=new ComplainAdapter.ItemClickListener() {
+            @Override
+            public void onItemClick(Reason reason) {
+                showBottomSheetDialogComplainToBase(newsItem,reason);
+                bottomSheetDialog.dismiss();
+            }
+        };
+        RecentMethods.getComplainReasonList(firebaseModel, new Callbacks.getComplainReasonsList() {
+            @Override
+            public void getComplainReasonsList(ArrayList<Reason> reason) {
+                ComplainAdapter complainAdapter=new ComplainAdapter(reason,itemClickListenerComplain);
+                complainRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
+                complainRecycler.setAdapter(complainAdapter);
+            }
+        });
+
+        bottomSheetDialog.show();
+    }
+
+    private void showBottomSheetDialogComplainToBase(NewsItem newsItem,Reason reason) {
+
+        final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(getContext());
+        bottomSheetDialog.setContentView(R.layout.bottom_sheet_dialog_complaintobase);
+
+        reasonText=bottomSheetDialog.findViewById(R.id.reasonText);
+        sendReason=bottomSheetDialog.findViewById(R.id.sendReasons);
+        addDescriptionEdit=bottomSheetDialog.findViewById(R.id.addDescriptionEdit);
+
+        reasonTextString=reason.getReason();
+        reasonText.setText(reasonTextString);
+        sendReason.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+                    @Override
+                    public void PassUserNick(String nick) {
+                        descriptionText=addDescriptionEdit.getText().toString();
+                        String uid=firebaseModel.getReference().child("complains").push().getKey();
+                        firebaseModel.getReference().child("complains").child(uid)
+                                .setValue(new Complain(nick,newsItem.getNick(), reasonTextString,descriptionText));
+                        Toast.makeText(getContext(), "Жалоба отправлена", Toast.LENGTH_SHORT).show();
+                        bottomSheetDialog.dismiss();
+                    }
+                });
+            }
+        });
+
+
+        bottomSheetDialog.show();
+    }
+
     public void loadComments(NewsItem newsItem){
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @Override
@@ -379,7 +446,8 @@ public class ViewingLookFragment extends Fragment {
         complain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                showBottomSheetDialogComplain(newsItem);
+                bottomSheetDialog.dismiss();
             }
         });
 

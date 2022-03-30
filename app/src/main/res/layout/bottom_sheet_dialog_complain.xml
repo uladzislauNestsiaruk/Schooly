@@ -3,31 +3,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/backtoOtherUser"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="16dp"
-        android:src="@drawable/left_arrow" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="11dp"
-        android:layout_toRightOf="@+id/backtoOtherUser"
-        android:fontFamily="@font/montserrat_bold"
-        android:text="@string/toComplain"
-        android:textColor="@color/app_color"
-        android:textSize="22sp" />
+    <View
+        android:layout_width="40dp"
+        android:layout_height="4dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="14dp"
+        android:background="@drawable/corners10lightgrey" />
 
     <TextView
         android:id="@+id/textReasonComplain"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="80dp"
+        android:layout_marginTop="46dp"
         android:fontFamily="@font/montserrat_bold"
         android:text="@string/complainReason"
         android:textColor="@color/app_grey"
@@ -48,8 +36,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:overScrollMode="never"
+        android:paddingBottom="32dp"
         android:layout_below="@+id/complainOtherUserText"
-        android:layout_marginTop="36dp" />
-
+        android:layout_marginTop="24dp" />
 
 </RelativeLayout>

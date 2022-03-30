@@ -68,14 +68,14 @@ public class ViewingClothes extends Fragment {
 
 
     TextView clothesPriceCV,clothesTitleCV,schoolyCoinCV,buyClothesBottom
-            ,purchaseNumber,creator,description,noDescription,fittingClothes;
+            ,purchaseNumber,creator,description,noDescription,fittingClothes
+            ,emptyList;
     ImageView clothesImageCV,backToShop,coinsImage,dollarImage,inBasket,notInBasket,send;
     long schoolyCoins,clothesPrise;
     RelativeLayout checkBasket;
     int a=0;
     RecyclerView recyclerView;
     SendLookAdapter.ItemClickListener itemClickListener;
-    TextView emptyList;
     EditText editText,messageEdit;
     String userName;
     LinearLayout linearElse,linearTelegram,linearInstagram;

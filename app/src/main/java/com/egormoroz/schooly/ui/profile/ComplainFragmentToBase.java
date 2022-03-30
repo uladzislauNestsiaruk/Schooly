@@ -81,9 +81,8 @@ public class ComplainFragmentToBase extends Fragment {
                     @Override
                     public void PassUserNick(String nick) {
                         descriptionText=addDescriptionEdit.getText().toString();
-                        Random random = new Random();
-                        int num =random.nextInt(1000000000);
-                        firebaseModel.getReference().child("complains").child(String.valueOf(num))
+                        String uid=firebaseModel.getReference().child("complains").push().getKey();
+                        firebaseModel.getReference().child("complains").child(uid)
                                 .setValue(new Complain(nick,otherUserNick, reasonTextString,descriptionText));
                         Toast.makeText(getContext(), "Жалоба отправлена", Toast.LENGTH_SHORT).show();
                         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
