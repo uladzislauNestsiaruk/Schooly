@@ -19,6 +19,7 @@ import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.Subscriber;
 import com.egormoroz.schooly.ui.main.UserInformation;
+import com.egormoroz.schooly.ui.profile.Wardrobe.CreateLookFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
@@ -29,8 +30,17 @@ public  class BlackListFragment extends Fragment {
     ImageView back;
     TextView emptyList;
 
-    public static BlackListFragment newInstance() {
-        return new BlackListFragment();
+    String type;
+    Fragment fragment;
+
+    public BlackListFragment(String type,Fragment fragment) {
+        this.type = type;
+        this.fragment=fragment;
+    }
+
+    public static BlackListFragment newInstance(String type, Fragment fragment) {
+        return new BlackListFragment(type,fragment);
+
     }
 
     @Override
@@ -52,7 +62,7 @@ public  class BlackListFragment extends Fragment {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(SettingsFragment.newInstance(),getActivity());
+                RecentMethods.setCurrentFragment(SettingsFragment.newInstance(type,fragment),getActivity());
             }
         });
 

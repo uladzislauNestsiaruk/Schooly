@@ -19,6 +19,7 @@ import com.egormoroz.schooly.MainActivity;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.ui.main.UserInformation;
+import com.egormoroz.schooly.ui.profile.Wardrobe.CreateLookFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -27,8 +28,17 @@ import com.google.firebase.database.ValueEventListener;
 
 public class PasswordFragment extends Fragment {
 
-    public static PasswordFragment newInstance() {
-        return new PasswordFragment();
+    String type;
+    Fragment fragment;
+
+    public PasswordFragment(String type,Fragment fragment) {
+        this.type = type;
+        this.fragment=fragment;
+    }
+
+    public static PasswordFragment newInstance(String type, Fragment fragment) {
+        return new PasswordFragment(type,fragment);
+
     }
 
     FirebaseModel firebaseModel=new FirebaseModel();
@@ -74,7 +84,7 @@ public class PasswordFragment extends Fragment {
         backToSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(SettingsFragment.newInstance(), getActivity());
+                RecentMethods.setCurrentFragment(SettingsFragment.newInstance(type,fragment), getActivity());
             }
         });
         next=view.findViewById(R.id.next);

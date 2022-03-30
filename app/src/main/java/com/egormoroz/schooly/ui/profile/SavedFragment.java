@@ -20,6 +20,7 @@ import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.Subscriber;
 import com.egormoroz.schooly.ui.news.NewsItem;
+import com.egormoroz.schooly.ui.profile.Wardrobe.CreateLookFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
@@ -31,8 +32,17 @@ public class SavedFragment extends Fragment {
     ImageView back;
     TextView emptyList;
 
-    public static SavedFragment newInstance() {
-        return new SavedFragment();
+    String type;
+    Fragment fragment;
+
+    public SavedFragment(String type,Fragment fragment) {
+        this.type = type;
+        this.fragment=fragment;
+    }
+
+    public static SavedFragment newInstance(String type, Fragment fragment) {
+        return new SavedFragment(type,fragment);
+
     }
 
     @Override
@@ -54,7 +64,7 @@ public class SavedFragment extends Fragment {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(SettingsFragment.newInstance(),getActivity());
+                RecentMethods.setCurrentFragment(SettingsFragment.newInstance(type,fragment),getActivity());
             }
         });
 
@@ -68,13 +78,13 @@ public class SavedFragment extends Fragment {
                             emptyList.setVisibility(View.VISIBLE);
                             recyclerView.setVisibility(View.GONE);
                         }else {
-                            LooksAdapter looksAdapter=new LooksAdapter(newsItems, SavedFragment.newInstance());
+                            LooksAdapter looksAdapter=new LooksAdapter(newsItems, SavedFragment.newInstance(type,fragment));
                             recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
                             recyclerView.setAdapter(looksAdapter);
                             LooksAdapter.ItemClickListener itemClickListener=new LooksAdapter.ItemClickListener() {
                                 @Override
                                 public void onItemClick(NewsItem newsItem) {
-                                    RecentMethods.setCurrentFragment(ViewingLookFragment.newInstance(SavedFragment.newInstance()), getActivity());
+                                    RecentMethods.setCurrentFragment(ViewingLookFragment.newInstance(SavedFragment.newInstance(type,fragment)), getActivity());
                                 }
                             };
                             looksAdapter.setClickListener(itemClickListener);

@@ -146,7 +146,7 @@ public class ViewingClothesBasket extends Fragment {
                             @Override
                             public void PassUserNick(String nick) {
                                 if (clothesViewing.getCreator().equals(nick)) {
-                                    RecentMethods.setCurrentFragment(ProfileFragment.newInstance("user", nick, ViewingClothesBasket.newInstance()), getActivity());
+                                    RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback", nick, ViewingClothesBasket.newInstance()), getActivity());
                                 }else {
                                     RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", clothesViewing.getCreator(), ViewingClothesBasket.newInstance()), getActivity());
                                 }

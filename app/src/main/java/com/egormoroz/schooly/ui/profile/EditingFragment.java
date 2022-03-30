@@ -21,6 +21,7 @@ import com.egormoroz.schooly.MainActivity;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.ui.main.UserInformation;
+import com.egormoroz.schooly.ui.profile.Wardrobe.CreateLookFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -32,8 +33,17 @@ public class EditingFragment extends Fragment {
     EditText nickEdit,bioEdit;
     String nickname;
     TextView agree;
-    public static EditingFragment newInstance() {
-        return new EditingFragment();
+    String type;
+    Fragment fragment;
+
+    public EditingFragment(String type,Fragment fragment) {
+        this.type = type;
+        this.fragment=fragment;
+    }
+
+    public static EditingFragment newInstance(String type, Fragment fragment) {
+        return new EditingFragment(type,fragment);
+
     }
 
     @Override
@@ -58,7 +68,7 @@ public class EditingFragment extends Fragment {
                 RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
                     @Override
                     public void PassUserNick(String nick) {
-                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("user", nick,EditingFragment.newInstance()), getActivity());
+                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance(type, nick,fragment), getActivity());
                     }
                 });
             }

@@ -30,8 +30,17 @@ public class LooksFragmentProfile extends Fragment {
     FirebaseModel firebaseModel=new FirebaseModel();
     int looksListSize;
 
-    public static LooksFragmentProfile newInstance() {
-        return new LooksFragmentProfile();
+    String type;
+    Fragment fragment;
+
+    public LooksFragmentProfile(String type,Fragment fragment) {
+        this.type = type;
+        this.fragment=fragment;
+    }
+
+    public static LooksFragmentProfile newInstance(String type,Fragment fragment) {
+        return new LooksFragmentProfile(type,fragment);
+
     }
 
     @Override
@@ -69,18 +78,18 @@ public class LooksFragmentProfile extends Fragment {
                             createNewLook.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    RecentMethods.setCurrentFragment(CreateLookFragment.newInstance(), getActivity());
+                                    RecentMethods.setCurrentFragment(CreateLookFragment.newInstance(type,fragment), getActivity());
                                 }
                             });
                         }else {
-                            LooksAdapter looksAdapter=new LooksAdapter(look,LooksFragmentProfile.newInstance());
+                            LooksAdapter looksAdapter=new LooksAdapter(look,LooksFragmentProfile.newInstance(type,fragment));
                             looksRecycler.setLayoutManager(new GridLayoutManager(getActivity(), 3));
                             looksRecycler.setAdapter(looksAdapter);
                             LooksAdapter.ItemClickListener itemClickListener=new LooksAdapter.ItemClickListener() {
                                 @Override
                                 public void onItemClick(NewsItem newsItem) {
                                     RecentMethods.setCurrentFragment(ViewingLookFragment.newInstance(ProfileFragment.
-                                            newInstance("user", nick, LooksFragmentProfile.newInstance())), getActivity());
+                                            newInstance(type, nick, LooksFragmentProfile.newInstance(type,fragment))), getActivity());
                                 }
                             };
                             looksAdapter.setClickListener(itemClickListener);

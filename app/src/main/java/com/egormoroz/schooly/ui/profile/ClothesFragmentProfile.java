@@ -41,8 +41,18 @@ public class ClothesFragmentProfile extends Fragment {
     ClothesAdapter.ItemClickListener itemClickListener;
     FirebaseModel firebaseModel=new FirebaseModel();
 
-    public static ClothesFragmentProfile newInstance() {
-        return new ClothesFragmentProfile();
+    Fragment fragment;
+    String type;
+
+
+    public ClothesFragmentProfile(String type,Fragment fragment) {
+        this.fragment = fragment;
+        this.type = type;
+    }
+
+    public static ClothesFragmentProfile newInstance(String type,Fragment fragment) {
+        return new ClothesFragmentProfile(type,fragment);
+
     }
 
     @Override
@@ -66,7 +76,7 @@ public class ClothesFragmentProfile extends Fragment {
                 itemClickListener=new ClothesAdapter.ItemClickListener() {
                     @Override
                     public void onItemClick(Clothes clothes) {
-                        RecentMethods.setCurrentFragment(ClothesViewingProfile.newInstance(ProfileFragment.newInstance("user",nick,ClothesFragmentProfile.newInstance())), getActivity());
+                        RecentMethods.setCurrentFragment(ClothesViewingProfile.newInstance(type,ProfileFragment.newInstance(type,nick,ClothesFragmentProfile.newInstance(type,fragment))), getActivity());
                     }
                 };
             }
@@ -109,7 +119,7 @@ public class ClothesFragmentProfile extends Fragment {
                                     createNewLook.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
-                                            RecentMethods.setCurrentFragment(CreateClothesFragment.newInstance(ProfileFragment.newInstance("user", nick, ClothesFragmentProfile.newInstance())), getActivity());
+                                            RecentMethods.setCurrentFragment(CreateClothesFragment.newInstance(ProfileFragment.newInstance("user", nick, ClothesFragmentProfile.newInstance(type,fragment))), getActivity());
                                         }
                                     });
                                 }

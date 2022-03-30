@@ -51,8 +51,17 @@ import java.util.ArrayList;
 import java.util.function.Consumer;
 
 public class WardrobeFragment extends Fragment {
-    public static WardrobeFragment newInstance() {
-        return new WardrobeFragment();
+    String type;
+    Fragment fragment;
+
+    public WardrobeFragment(String type,Fragment fragment) {
+        this.type = type;
+        this.fragment=fragment;
+    }
+
+    public static WardrobeFragment newInstance(String type,Fragment fragment) {
+        return new WardrobeFragment(type,fragment);
+
     }
     ArrayList<Clothes> clothesArrayListWardrobe=new ArrayList<Clothes>();
     FirebaseModel firebaseModel=new FirebaseModel();
@@ -153,7 +162,7 @@ public class WardrobeFragment extends Fragment {
                 RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
                     @Override
                     public void PassUserNick(String nick) {
-                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("user", nick,WardrobeFragment.newInstance()), getActivity());
+                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance(type, nick,fragment), getActivity());
                     }
                 });
             }
@@ -266,14 +275,14 @@ public class WardrobeFragment extends Fragment {
             switch (position)
             {
                 case 1 :
-                    return new WardrobeClothes();
+                    return new WardrobeClothes(type,fragment);
                 case 2 :
-                    return new WardrobeHats();
+                    return new WardrobeHats(type,fragment);
                 case 3 :
-                    return new WardrobeAccessories();
+                    return new WardrobeAccessories(type,fragment);
             }
 
-            return new WardrobeShoes();
+            return new WardrobeShoes(type,fragment);
         }
 
         @Override

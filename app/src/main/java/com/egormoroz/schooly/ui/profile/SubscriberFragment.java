@@ -26,6 +26,7 @@ import com.egormoroz.schooly.ui.main.Nontifications.NontificationAdapter;
 import com.egormoroz.schooly.ui.main.UserInformation;
 import com.egormoroz.schooly.ui.people.PeopleAdapter;
 import com.egormoroz.schooly.ui.people.UserPeopleAdapter;
+import com.egormoroz.schooly.ui.profile.Wardrobe.CreateLookFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -42,8 +43,17 @@ public class SubscriberFragment extends Fragment {
     String userNameToProfile,userName;
     EditText searchUser;
 
-    public static SubscriberFragment newInstance() {
-        return new SubscriberFragment();
+    String type;
+    Fragment fragment;
+
+    public SubscriberFragment(String type,Fragment fragment) {
+        this.type = type;
+        this.fragment=fragment;
+    }
+
+    public static SubscriberFragment newInstance(String type, Fragment fragment) {
+        return new SubscriberFragment(type,fragment);
+
     }
 
     @Override
@@ -68,7 +78,7 @@ public class SubscriberFragment extends Fragment {
                 RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
                     @Override
                     public void PassUserNick(String nick) {
-                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("user",nick,SubscriberFragment.newInstance()),getActivity());
+                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance(type,nick,fragment),getActivity());
                     }
                 });
             }
@@ -96,9 +106,9 @@ public class SubscriberFragment extends Fragment {
                                                     Subscriber user = subscribersAdapter.getItem(position);
                                                     userNameToProfile=user.getSub();
                                                     if(userNameToProfile.equals(nick)){
-                                                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("user",nick,SubscriberFragment.newInstance()),getActivity());
+                                                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback",nick,fragment),getActivity());
                                                     }else {
-                                                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile,SubscriberFragment.newInstance()),
+                                                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile,SubscriberFragment.newInstance(type,fragment)),
                                                                 getActivity());
                                                     }
                                                 }
@@ -158,7 +168,7 @@ public class SubscriberFragment extends Fragment {
                                                 Subscriber subscriber = subscribersAdapter.getItem(position);
                                                 userNameToProfile = subscriber.getSub();
 
-                                                RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile,SubscriberFragment.newInstance()),
+                                                RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile,SubscriberFragment.newInstance(type,fragment)),
                                                         getActivity());
                                             }
                                         };

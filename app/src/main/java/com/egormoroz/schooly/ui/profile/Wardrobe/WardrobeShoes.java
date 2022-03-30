@@ -24,8 +24,17 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import java.util.ArrayList;
 
 public class WardrobeShoes extends Fragment {
-    public static WardrobeFragment newInstance() {
-        return new WardrobeFragment();
+    String type;
+    Fragment fragment;
+
+    public WardrobeShoes(String type,Fragment fragment) {
+        this.type = type;
+        this.fragment=fragment;
+    }
+
+    public static WardrobeShoes newInstance(String type,Fragment fragment) {
+        return new WardrobeShoes(type,fragment);
+
     }
     FirebaseModel firebaseModel=new FirebaseModel();
     ArrayList<Clothes> clothesArrayListWardrobe=new ArrayList<Clothes>();
@@ -54,7 +63,7 @@ public class WardrobeShoes extends Fragment {
         itemClickListener=new WardrobeClothesAdapter.ItemClickListener() {
             @Override
             public void onItemClick(Clothes clothes) {
-                RecentMethods.setCurrentFragment(ViewingClothesWardrobe.newInstance(), getActivity());
+                RecentMethods.setCurrentFragment(ViewingClothesWardrobe.newInstance(type,fragment), getActivity());
             }
         };
         buyToShop=view.findViewById(R.id.buyToShop);

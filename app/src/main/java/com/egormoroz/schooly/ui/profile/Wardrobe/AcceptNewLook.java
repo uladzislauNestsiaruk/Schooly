@@ -51,13 +51,17 @@ public class AcceptNewLook extends Fragment {
     String lookPriceString,lookPriceDollarString;
     String model;
     ConstituentsAdapter.ItemClickListener itemClickListener;
+    String type;
+    Fragment fragment;
 
-    public AcceptNewLook(String model) {
+    public AcceptNewLook(String model,String type,Fragment fragment) {
         this.model = model;
+        this.type = type;
+        this.fragment=fragment;
     }
 
-    public static AcceptNewLook newInstance(String model) {
-        return new AcceptNewLook(model);
+    public static AcceptNewLook newInstance(String model,String type,Fragment fragment) {
+        return new AcceptNewLook(model,type,fragment);
 
     }
 
@@ -87,7 +91,7 @@ public class AcceptNewLook extends Fragment {
         itemClickListener=new ConstituentsAdapter.ItemClickListener() {
             @Override
             public void onItemClick(Clothes clothes) {
-                RecentMethods.setCurrentFragment(ViewingClothesNews.newInstance(AcceptNewLook.newInstance(model)), getActivity());
+                RecentMethods.setCurrentFragment(ViewingClothesNews.newInstance(AcceptNewLook.newInstance(model,type,fragment)), getActivity());
             }
         };
 
@@ -98,7 +102,7 @@ public class AcceptNewLook extends Fragment {
                 RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
                     @Override
                     public void PassUserNick(String nick) {
-                        RecentMethods.setCurrentFragment(CreateLookFragment.newInstance(), getActivity());
+                        RecentMethods.setCurrentFragment(CreateLookFragment.newInstance(type,fragment), getActivity());
                     }
                 });
             }
@@ -152,7 +156,7 @@ public class AcceptNewLook extends Fragment {
                                         firebaseModel.getUsersReference().child(nick).child("looks").child(lookId)
                                                 .setValue(new NewsItem(model, descriptionLook.getText().toString(), "0", lookId,
                                                         "", lookClothesFromBase, 1200, 0,"",nick,0));
-                                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("user", nick, AcceptNewLook.newInstance("")), getActivity());
+                                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance(type, nick, fragment), getActivity());
                                     }
                                 });
                             }

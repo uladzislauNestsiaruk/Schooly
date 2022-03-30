@@ -74,7 +74,7 @@ public class LooksFragmentProfileOther extends Fragment {
             @Override
             public void onItemClick(NewsItem newsItem) {
               RecentMethods.setCurrentFragment(ViewingLookFragment.newInstance(ProfileFragment.
-                      newInstance("user", otherUserNick, LooksFragmentProfile.newInstance())), getActivity());
+                      newInstance("other", otherUserNick, LooksFragmentProfileOther.newInstance(otherUserNick))), getActivity());
             }
           };
           looksAdapter.setClickListener(itemClickListener);

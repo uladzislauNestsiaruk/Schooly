@@ -29,6 +29,7 @@ import com.egormoroz.schooly.ui.main.MyClothes.PresentClothesFragment;
 import com.egormoroz.schooly.ui.main.MyClothes.ViewingMyClothes;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
 import com.egormoroz.schooly.ui.main.Shop.NewClothesAdapter;
+import com.egormoroz.schooly.ui.profile.Wardrobe.WardrobeAccessories;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.firebase.database.DataSnapshot;
@@ -46,13 +47,16 @@ import java.util.Map;
 public class ClothesViewingProfile extends Fragment {
 
     Fragment fragment;
+    String type;
 
-    public ClothesViewingProfile(Fragment fragment) {
+
+    public ClothesViewingProfile(String type,Fragment fragment) {
         this.fragment = fragment;
+        this.type = type;
     }
 
-    public static ClothesViewingProfile newInstance(Fragment fragment) {
-        return new ClothesViewingProfile(fragment);
+    public static ClothesViewingProfile newInstance(String type,Fragment fragment) {
+        return new ClothesViewingProfile(type,fragment);
 
     }
 
@@ -126,7 +130,7 @@ public class ClothesViewingProfile extends Fragment {
                 presentClothes.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        RecentMethods.setCurrentFragment(PresentClothesFragment.newInstance(clothesViewing,ClothesViewingProfile.newInstance(fragment)), getActivity());
+                        RecentMethods.setCurrentFragment(PresentClothesFragment.newInstance(clothesViewing,ClothesViewingProfile.newInstance(type,fragment)), getActivity());
                     }
                 });
                 clothesTitleCV.setText(clothes.getClothesTitle());

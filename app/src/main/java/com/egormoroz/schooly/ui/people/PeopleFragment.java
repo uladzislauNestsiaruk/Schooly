@@ -78,7 +78,7 @@ public class PeopleFragment extends Fragment {
                                     @Override
                                     public void PassUserNick(String nick) {
                                         if (userNameToProfile.equals(nick)) {
-                                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("user", nick, PeopleFragment.newInstance()), getActivity());
+                                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback", nick, PeopleFragment.newInstance()), getActivity());
                                         } else {
                                             RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile, PeopleFragment.newInstance()),
                                                     getActivity());
@@ -141,7 +141,7 @@ public class PeopleFragment extends Fragment {
                                                 @Override
                                                 public void PassUserNick(String nick) {
                                                     if (userNameToProfile.equals(nick)) {
-                                                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("user", nick, PeopleFragment.newInstance()), getActivity());
+                                                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback", nick, PeopleFragment.newInstance()), getActivity());
                                                     } else {
                                                         RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile, PeopleFragment.newInstance()),
                                                                 getActivity());

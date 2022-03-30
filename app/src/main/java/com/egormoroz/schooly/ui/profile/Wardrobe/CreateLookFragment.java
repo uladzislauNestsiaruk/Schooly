@@ -25,6 +25,7 @@ import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
+import com.egormoroz.schooly.ui.main.Shop.ViewingClothes;
 import com.egormoroz.schooly.ui.profile.ProfileFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.tabs.TabLayout;
@@ -45,8 +46,17 @@ public class CreateLookFragment extends Fragment {
     ImageView acceptNewLook;
     TextView notFound,ready;
     WardrobeClothesAdapter.ItemClickListener itemClickListener;
-    public static CreateLookFragment newInstance() {
-        return new CreateLookFragment();
+    String type;
+    Fragment fragment;
+
+    public CreateLookFragment(String type,Fragment fragment) {
+        this.type = type;
+        this.fragment=fragment;
+    }
+
+    public static CreateLookFragment newInstance(String type,Fragment fragment) {
+        return new CreateLookFragment(type,fragment);
+
     }
 
     @Override
@@ -131,7 +141,8 @@ public class CreateLookFragment extends Fragment {
         ready.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(AcceptNewLook.newInstance("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Funtitled.glb?alt=media&token=657b45d7-a84b-4f2a-89f4-a699029401f7")
+                RecentMethods.setCurrentFragment(AcceptNewLook.newInstance("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Funtitled.glb?alt=media&token=657b45d7-a84b-4f2a-89f4-a699029401f7"
+                        ,type,fragment)
                         , getActivity());
             }
         });
@@ -142,7 +153,7 @@ public class CreateLookFragment extends Fragment {
                 RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
                     @Override
                     public void PassUserNick(String nick) {
-                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("user", nick,CreateLookFragment.newInstance())
+                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance(type, nick,fragment)
                                 , getActivity());
                     }
                 });
@@ -250,14 +261,14 @@ public class CreateLookFragment extends Fragment {
             switch (position)
             {
                 case 1 :
-                    return new WardrobeClothes();
+                    return new WardrobeClothes(type,fragment);
                 case 2 :
-                    return new WardrobeHats();
+                    return new WardrobeHats(type,fragment);
                 case 3 :
-                    return new WardrobeAccessories();
+                    return new WardrobeAccessories(type,fragment);
             }
 
-            return new WardrobeShoes();
+            return new WardrobeShoes(type,fragment);
         }
 
         @Override

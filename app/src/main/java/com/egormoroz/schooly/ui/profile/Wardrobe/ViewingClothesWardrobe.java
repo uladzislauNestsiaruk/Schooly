@@ -20,8 +20,16 @@ import com.google.firebase.database.DataSnapshot;
 import com.squareup.picasso.Picasso;
 
 public class ViewingClothesWardrobe extends Fragment {
-  public static ViewingClothesWardrobe newInstance() {
-    return new ViewingClothesWardrobe();
+  String type;
+  Fragment fragment;
+
+  public ViewingClothesWardrobe(String type,Fragment fragment) {
+    this.type = type;
+    this.fragment=fragment;
+  }
+
+  public static ViewingClothesWardrobe newInstance(String type,Fragment fragment) {
+    return new ViewingClothesWardrobe(type,fragment);
 
   }
 
@@ -53,7 +61,7 @@ public class ViewingClothesWardrobe extends Fragment {
     backToShop.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        RecentMethods.setCurrentFragment(WardrobeFragment.newInstance(), getActivity());
+        RecentMethods.setCurrentFragment(WardrobeFragment.newInstance(type,fragment), getActivity());
       }
     });
 

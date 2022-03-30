@@ -24,6 +24,7 @@ import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.Subscriber;
 import com.egormoroz.schooly.ui.main.RegisrtationstartFragment;
 import com.egormoroz.schooly.ui.main.UserInformation;
+import com.egormoroz.schooly.ui.profile.Wardrobe.CreateLookFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.firebase.database.DataSnapshot;
@@ -36,8 +37,17 @@ import java.util.ArrayList;
 public class SettingsFragment extends Fragment {
 
 
-    public static SettingsFragment newInstance() {
-        return new SettingsFragment();
+    String type;
+    Fragment fragment;
+
+    public SettingsFragment(String type,Fragment fragment) {
+        this.type = type;
+        this.fragment=fragment;
+    }
+
+    public static SettingsFragment newInstance(String type, Fragment fragment) {
+        return new SettingsFragment(type,fragment);
+
     }
 
     FirebaseModel firebaseModel=new FirebaseModel();
@@ -70,7 +80,7 @@ public class SettingsFragment extends Fragment {
         saved.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(SavedFragment.newInstance(), getActivity());
+                RecentMethods.setCurrentFragment(SavedFragment.newInstance(type,fragment), getActivity());
             }
         });
         support=view.findViewById(R.id.support);
@@ -319,7 +329,7 @@ public class SettingsFragment extends Fragment {
                 RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
                     @Override
                     public void PassUserNick(String nick) {
-                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("user", nick,SettingsFragment.newInstance()), getActivity());
+                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance(type, nick,fragment), getActivity());
                     }
                 });
             }
@@ -329,7 +339,7 @@ public class SettingsFragment extends Fragment {
         blackList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(BlackListFragment.newInstance(), getActivity());
+                RecentMethods.setCurrentFragment(BlackListFragment.newInstance(type,fragment), getActivity());
             }
         });
         userNick=view.findViewById(R.id.userNick);
@@ -375,7 +385,7 @@ public class SettingsFragment extends Fragment {
                             changePassword.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    RecentMethods.setCurrentFragment(PasswordFragment.newInstance(), getActivity());
+                                    RecentMethods.setCurrentFragment(PasswordFragment.newInstance(type,fragment), getActivity());
                                 }
                             });
                         }
