@@ -141,7 +141,7 @@ public class ClothesViewingProfileOther extends Fragment {
             public void onItemClick(Clothes clothes) {
                 clothesViewing=clothes;
                 clothesPriceCV.setText(String.valueOf(clothes.getClothesPrice()));
-                clothesTitleCV.setText(clothes.getUid());
+                clothesTitleCV.setText(clothes.getClothesTitle());
                 clothesPrise=clothes.getClothesPrice();
                 creator.setText(clothesViewing.getCreator());
                 creator.setOnClickListener(new View.OnClickListener() {
@@ -153,7 +153,7 @@ public class ClothesViewingProfileOther extends Fragment {
                                 if (clothesViewing.getCreator().equals(nick)) {
                                     RecentMethods.setCurrentFragment(ProfileFragment.newInstance("user", nick, ViewingClothes.newInstance(fragment)), getActivity());
                                 }else {
-                                    RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", clothesViewing.getCreator(), ViewingClothes.newInstance(fragment)), getActivity());
+                                    RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", clothesViewing.getCreator(), ClothesViewingProfileOther.newInstance(fragment)), getActivity());
                                 }
                             }
                         });
