@@ -375,17 +375,19 @@ public class ClothesViewingProfileOther extends Fragment {
             @Override
             public void PassUserNick(String nick) {
                 Query query=firebaseModel.getUsersReference().child(nick).child("basket").
-                        child(String.valueOf(clothesViewing.getClothesTitle()));
+                        child(String.valueOf(clothesViewing.getUid()));
                 query.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         if(snapshot.exists()){
                             a=1;
+                            Log.d("####","o");
                             inBasket.setVisibility(View.VISIBLE);
                             notInBasket.setVisibility(View.GONE);
                         }else {
                             a=2;
                             inBasket.setVisibility(View.GONE);
+                            Log.d("####","k");
                             notInBasket.setVisibility(View.VISIBLE);
                         }
                     }

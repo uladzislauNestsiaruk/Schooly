@@ -369,6 +369,7 @@ public class ViewingClothes extends Fragment {
                             }
                         });
                         if(a!=0 && a!=3){
+                            Log.d("####","ok");
                             if(a==1){
                                 firebaseModel.getUsersReference().child(nick).child("basket")
                                         .child(clothesViewing.getUid()).removeValue();
