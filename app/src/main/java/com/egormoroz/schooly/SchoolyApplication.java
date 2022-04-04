@@ -30,13 +30,13 @@ public class SchoolyApplication extends Application {
                 )
                 .build();
 
-        PeriodicWorkRequest sendLogsWorkRequest = new
+        PeriodicWorkRequest notificationWorkRequest = new
                 PeriodicWorkRequest.Builder(NontificationManager.class, 15, TimeUnit.MINUTES)
                 .setConstraints(constraints
                 )
                 .build();
 
-        WorkManager.getInstance(getApplicationContext()).enqueue(sendLogsWorkRequest);
+//        WorkManager.getInstance(getApplicationContext()).enqueue(notificationWorkRequest);
 
         WorkManager.getInstance(getApplicationContext()).enqueue(miningWorkRequest);
     }

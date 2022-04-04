@@ -22,9 +22,12 @@ import com.egormoroz.schooly.ui.profile.ProfileFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -97,6 +100,34 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+
+
+        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+            @Override
+            public void PassUserNick(String nick) {
+                final DatabaseReference connectedRef = database.getReference(".info/connected");
+                connectedRef.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot snapshot) {
+                        boolean connected = snapshot.getValue(Boolean.class);
+                        if (connected) {
+                            firebaseModel.getUsersReference().child(nick).child("Status")
+                                    .setValue("Online");
+                        }else{
+                            Log.d("ddddd", "ok");
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError error) {
+                    }
+                });
+
+                DatabaseReference presenceRef = firebaseModel.getReference().child("users").child(nick).child("Status");
+                presenceRef.onDisconnect().setValue("Offline");
+            }
+        });
+
     }
 
     @Override

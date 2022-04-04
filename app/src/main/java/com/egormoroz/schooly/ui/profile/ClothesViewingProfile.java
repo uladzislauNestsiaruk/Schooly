@@ -1,5 +1,8 @@
 package com.egormoroz.schooly.ui.profile;
 
+import android.app.Dialog;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -65,7 +68,7 @@ public class ClothesViewingProfile extends Fragment {
             ,perSentToday,perSentAll,clothesPrice;
     ImageView clothesImageCV, backToShop, coinsImage,coinsImageAll,coinsImagePurple,send;
     long schoolyCoins, clothesPrise;
-    RelativeLayout checkBasket,presentClothes;
+    RelativeLayout checkBasket,presentClothes,resaleClothes;
     int a = 0;
     RecyclerView recyclerView;
     SendLookAdapter.ItemClickListener itemClickListener;
@@ -103,6 +106,13 @@ public class ClothesViewingProfile extends Fragment {
         purchaseToday=view.findViewById(R.id.purchasesToday);
         coinsImagePurple=view.findViewById(R.id.coinImagePrice);
         clothesPrice=view.findViewById(R.id.clothesPricecv);
+        resaleClothes=view.findViewById(R.id.resaleClothes);
+        resaleClothes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDialog();
+            }
+        });
         send=view.findViewById(R.id.send);
         send.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -520,5 +530,24 @@ public class ClothesViewingProfile extends Fragment {
                 });
             }
         });
+    }
+
+    public void showDialog(){
+
+        final Dialog dialog = new Dialog(getContext());
+        dialog.setContentView(R.layout.dialog_layout_sell_clothes);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        RelativeLayout sellRelative=dialog.findViewById(R.id.sellRelative);
+
+
+        sellRelative.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
     }
 }

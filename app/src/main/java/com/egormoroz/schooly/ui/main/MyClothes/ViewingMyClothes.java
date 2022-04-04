@@ -1,5 +1,8 @@
 package com.egormoroz.schooly.ui.main.MyClothes;
 
+import android.app.Dialog;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -25,6 +28,7 @@ import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.Subscriber;
 import com.egormoroz.schooly.ui.main.MainFragment;
+import com.egormoroz.schooly.ui.main.Mining.Miner;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
 import com.egormoroz.schooly.ui.main.Shop.NewClothesAdapter;
 import com.egormoroz.schooly.ui.main.Shop.ViewingClothes;
@@ -62,7 +66,7 @@ public class ViewingMyClothes extends Fragment {
             ,perSentToday,perSentAll,clothesPrice;
     ImageView clothesImageCV, backToShop, coinsImage,coinsImageAll,coinsImagePurple,send;
     long schoolyCoins, clothesPrise;
-    RelativeLayout checkBasket,presentClothes;
+    RelativeLayout checkBasket,presentClothes,resaleClothes;
     int a = 0;
     RecyclerView recyclerView;
     SendLookAdapter.ItemClickListener itemClickListener;
@@ -106,6 +110,13 @@ public class ViewingMyClothes extends Fragment {
         profitAll=view.findViewById(R.id.profitAll);
         perSentToday=view.findViewById(R.id.perSentPurchase);
         perSentAll=view.findViewById(R.id.perSentPurchaseAll);
+        resaleClothes=view.findViewById(R.id.resaleClothes);
+        resaleClothes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDialog();
+            }
+        });
         send=view.findViewById(R.id.send);
         send.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -315,7 +326,7 @@ public class ViewingMyClothes extends Fragment {
         linearElse=bottomSheetDialog.findViewById(R.id.linearElse);
         linearTelegram=bottomSheetDialog.findViewById(R.id.linearTelegram);
         linearInstagram=bottomSheetDialog.findViewById(R.id.linearInstagram);
-        editText=bottomSheetDialog.findViewById(R.id.message);
+        messageEdit=bottomSheetDialog.findViewById(R.id.message);
 
         linearElse.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -519,5 +530,24 @@ public class ViewingMyClothes extends Fragment {
                 });
             }
         });
+    }
+
+    public void showDialog(){
+
+        final Dialog dialog = new Dialog(getContext());
+        dialog.setContentView(R.layout.dialog_layout_sell_clothes);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        RelativeLayout sellRelative=dialog.findViewById(R.id.sellRelative);
+
+
+        sellRelative.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
     }
 }

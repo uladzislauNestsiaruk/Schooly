@@ -1,7 +1,9 @@
 package com.egormoroz.schooly.ui.main.Shop;
 
+import android.content.SharedPreferences;
 import android.media.TimedText;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -18,6 +20,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Lifecycle;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -245,8 +248,15 @@ public class ShopFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 RecentMethods.setCurrentFragment(BasketFragment.newInstance(), getActivity());
+                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putInt("Name",tabLayout.getSelectedTabPosition());
+                editor.apply();
             }
         });
+        SharedPreferences preferences1 = PreferenceManager.getDefaultSharedPreferences(getContext());
+        int name = preferences1.getInt("Name", 0);
+        Log.d("ooo", "f "+name);
 
     }
 
@@ -294,6 +304,8 @@ public class ShopFragment extends Fragment {
                     searchRecycler.setAdapter(popularClothesAdapter);
                     notFound.setVisibility(View.GONE);
                 }
+
+
             }
 
             @Override

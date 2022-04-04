@@ -450,7 +450,7 @@ public class ViewingClothes extends Fragment {
         linearElse=bottomSheetDialog.findViewById(R.id.linearElse);
         linearTelegram=bottomSheetDialog.findViewById(R.id.linearTelegram);
         linearInstagram=bottomSheetDialog.findViewById(R.id.linearInstagram);
-        editText=bottomSheetDialog.findViewById(R.id.message);
+        messageEdit=bottomSheetDialog.findViewById(R.id.message);
 
         linearElse.setOnClickListener(new View.OnClickListener() {
             @Override

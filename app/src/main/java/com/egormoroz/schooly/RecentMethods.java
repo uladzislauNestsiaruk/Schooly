@@ -172,6 +172,8 @@ public class RecentMethods {
                     userData.setQueue(snapshot.child("queue").getValue(String.class));
 //                    userData.setSubscribers(snapshot.child("subscribers").getValue(String.class));
                     userData.setSubscription(snapshot.child("subscription").getValue(String.class));
+                    userData.setmoney(snapshot.child("money").getValue(Long.class));
+                    userData.setTodayMining(snapshot.child("todayMining").getValue(Double.class));
                     data.add(userData);
                 }
                 callback.LoadData(data);

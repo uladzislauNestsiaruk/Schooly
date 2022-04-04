@@ -132,12 +132,6 @@ public class SubscriptionsFragment extends Fragment {
                     public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                         userName = String.valueOf(searchUser.getText()).trim();
                         userName = userName.toLowerCase();
-                        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-                            @Override
-                            public void PassUserNick(String nick) {
-
-                            }
-                        });
                         Query query = firebaseModel.getUsersReference().child(nick).child("subscription");
                         query.addValueEventListener(new ValueEventListener() {
                             @Override

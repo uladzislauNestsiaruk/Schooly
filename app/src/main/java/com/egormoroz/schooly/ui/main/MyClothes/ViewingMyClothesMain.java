@@ -1,5 +1,8 @@
 package com.egormoroz.schooly.ui.main.MyClothes;
 
+import android.app.Dialog;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -116,6 +119,12 @@ public class ViewingMyClothesMain extends Fragment {
             @Override
             public void onClick(View v) {
                 RecentMethods.setCurrentFragment(fragment, getActivity());
+            }
+        });
+        resale.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDialog();
             }
         });
 
@@ -313,7 +322,7 @@ public class ViewingMyClothesMain extends Fragment {
         linearElse=bottomSheetDialog.findViewById(R.id.linearElse);
         linearTelegram=bottomSheetDialog.findViewById(R.id.linearTelegram);
         linearInstagram=bottomSheetDialog.findViewById(R.id.linearInstagram);
-        editText=bottomSheetDialog.findViewById(R.id.message);
+        messageEdit=bottomSheetDialog.findViewById(R.id.message);
 
         linearElse.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -507,5 +516,24 @@ public class ViewingMyClothesMain extends Fragment {
                 });
             }
         });
+    }
+
+    public void showDialog(){
+
+        final Dialog dialog = new Dialog(getContext());
+        dialog.setContentView(R.layout.dialog_layout_sell_clothes);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        RelativeLayout sellRelative=dialog.findViewById(R.id.sellRelative);
+
+
+        sellRelative.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
     }
 }
