@@ -56,7 +56,7 @@ public class WeakMinersAdapter extends RecyclerView.Adapter<WeakMinersAdapter.Vi
         firebaseModel.initAll();
         Miner miner=listAdapterMiner.get(position);
         holder.minerPrice.setText(String.valueOf(miner.getMinerPrice()));
-        holder.inHour.setText(String.valueOf(miner.getInHour()+" в час"));
+        holder.inHour.setText("+"+String.valueOf(miner.getInHour()+"S в час"));
         String minerPriceText= (String) holder.minerPrice.getText();
         holder.minerImage.setVisibility(View.VISIBLE);
         Picasso.get().load(miner.getMinerImage()).into(holder.minerImage);

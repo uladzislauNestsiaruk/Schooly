@@ -51,7 +51,7 @@ public class MyMinersAdapter extends RecyclerView.Adapter<MyMinersAdapter.ViewHo
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Miner miner=listAdapter.get(position);
-        holder.inHour.setText(String.valueOf(miner.getInHour()));
+        holder.inHour.setText("+"+String.valueOf(miner.getInHour())+"S");
         holder.minerImage.setVisibility(View.VISIBLE);
         Picasso.get().load(miner.getMinerImage()).into(holder.minerImage);
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {

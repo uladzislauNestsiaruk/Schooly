@@ -46,7 +46,7 @@ public class ActiveMinersAdapter extends RecyclerView.Adapter<ActiveMinersAdapte
     public void onBindViewHolder(ViewHolder holder, int position) {
         firebaseModel.initAll();
         Miner miner=listAdapterActivaMiner.get(holder.getAdapterPosition());
-        holder.inHour.setText(String.valueOf(miner.getInHour()));
+        holder.inHour.setText("+"+String.valueOf(miner.getInHour())+"S");
         holder.minerImage.setVisibility(View.VISIBLE);
         Picasso.get().load(miner.getMinerImage()).into(holder.minerImage);
         holder.putAway.setOnClickListener(new View.OnClickListener() {
@@ -57,7 +57,7 @@ public class ActiveMinersAdapter extends RecyclerView.Adapter<ActiveMinersAdapte
                     public void PassUserNick(String nick) {
                         firebaseModel.getUsersReference().child(nick)
                                 .child("activeMiners").child(String.valueOf(miner.getMinerPrice())).removeValue();
-                        holder.putAway.setText("Убран");
+                        holder.putAway.setText("Не активен");
                     }
                 });
             }

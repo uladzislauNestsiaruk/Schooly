@@ -120,13 +120,13 @@ public class ClothesViewingProfileOther extends Fragment {
         fittingClothes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(FittingFragment.newInstance(ViewingClothes.newInstance(fragment)), getActivity());
+                RecentMethods.setCurrentFragment(FittingFragment.newInstance(ClothesViewingProfileOther.newInstance(fragment)), getActivity());
             }
         });
         coinsLinear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(CoinsFragmentSecond.newInstance(ViewingClothes.newInstance(fragment)), getActivity());
+                RecentMethods.setCurrentFragment(CoinsFragmentSecond.newInstance(ClothesViewingProfileOther.newInstance(fragment)), getActivity());
             }
         });
         backToShop.setOnClickListener(new View.OnClickListener() {

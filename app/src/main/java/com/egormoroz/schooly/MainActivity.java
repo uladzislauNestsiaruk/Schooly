@@ -7,10 +7,17 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.work.Constraints;
+import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.NetworkType;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
 
 import com.egormoroz.schooly.ui.coins.CoinsMainFragment;
 import com.egormoroz.schooly.ui.main.MainFragment;
@@ -19,17 +26,22 @@ import com.egormoroz.schooly.ui.main.UserInformation;
 import com.egormoroz.schooly.ui.news.NewsFragment;
 import com.egormoroz.schooly.ui.people.PeopleFragment;
 import com.egormoroz.schooly.ui.profile.ProfileFragment;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -40,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
     String time,timeNow;
     long a,d,min;
     double minInGap;
+    OneTimeWorkRequest miningWorkRequest;
     FirebaseModel firebaseModel=new FirebaseModel();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,9 +125,36 @@ public class MainActivity extends AppCompatActivity {
                         boolean connected = snapshot.getValue(Boolean.class);
                         if (connected) {
                             firebaseModel.getUsersReference().child(nick).child("Status")
-                                    .setValue("Online");
+                                    .setValue("Online").addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if(task.isSuccessful()){
+                                        WorkManager.getInstance(getApplicationContext()).cancelWorkById(miningWorkRequest.getId());
+                                        Log.d("AAA", "ddl");
+                                    }
+                                }
+                            });
+                            Constraints constraints = new Constraints.Builder()
+                                    .setRequiredNetworkType(NetworkType.CONNECTED)
+                                    .build();
+                            miningWorkRequest = new
+                                    OneTimeWorkRequest.Builder(MiningManager.class)
+                                    .setConstraints(constraints)
+                                    .build();
+
+                            WorkManager.getInstance(getApplicationContext()).enqueue(miningWorkRequest);
+
+                            DatabaseReference presenceRef = firebaseModel.getReference().child("users").child(nick).child("Status");
+                            presenceRef.onDisconnect().setValue("Offline").addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if(task.isSuccessful()){
+                                        WorkManager.getInstance(getApplicationContext()).cancelWorkById(miningWorkRequest.getId());
+                                        Log.d("AAA", "ddll");
+                                    }
+                                }
+                            });
                         }else{
-                            Log.d("ddddd", "ok");
                         }
                     }
 
@@ -122,11 +162,10 @@ public class MainActivity extends AppCompatActivity {
                     public void onCancelled(DatabaseError error) {
                     }
                 });
-
-                DatabaseReference presenceRef = firebaseModel.getReference().child("users").child(nick).child("Status");
-                presenceRef.onDisconnect().setValue("Offline");
             }
         });
+
+
 
     }
 

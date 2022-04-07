@@ -208,7 +208,7 @@ public class MiningFragment extends Fragment {
                                             RecentMethods.setCurrentFragment(MyMinersFragment.newInstanse(), getActivity());
                                         }
                                     });
-                                    emptyActiveMiners.setText("Добавь активные майнеры");
+                                    emptyActiveMiners.setText("Добавь активные майнеры!");
                                 }else {
                                     emptyActiveMiners.setVisibility(View.GONE);
                                     addActiveMiners.setVisibility(View.GONE);
