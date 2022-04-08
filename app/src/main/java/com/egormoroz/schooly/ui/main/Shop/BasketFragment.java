@@ -44,7 +44,7 @@ public class BasketFragment extends Fragment {
   ImageView backtoshop;
   RecyclerView basketRecycler;
   ArrayList<Clothes> clothesArrayList=new ArrayList<Clothes>();
-  BasketAdapter.ItemClickListener onItemClick;
+  static BasketAdapter.ItemClickListener onItemClick;
   static String editGetText;
   LinearLayout coinsLinear;
   EditText editText;
@@ -93,7 +93,18 @@ public class BasketFragment extends Fragment {
     numberOfClothes=view.findViewById(R.id.numberofclothes);
     basketRecycler=view.findViewById(R.id.basketrecycler);
     loadClothesFromBasket();
-    inViewingFrag();
+    onItemClick=new BasketAdapter.ItemClickListener() {
+      @Override
+      public void onItemClick(Clothes clothes) {
+        ((MainActivity)getActivity()).setCurrentFragment(ViewingClothesBasket.newInstance());
+      }
+    };
+    onItemClick=new BasketAdapter.ItemClickListener() {
+      @Override
+      public void onItemClick(Clothes clothes) {
+        ((MainActivity)getActivity()).setCurrentFragment(ViewingClothesBasket.newInstance());
+      }
+    };
     editText.addTextChangedListener(new TextWatcher() {
       @Override
       public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -146,15 +157,6 @@ public class BasketFragment extends Fragment {
         });
       }
     });
-  }
-
-  public void inViewingFrag(){
-    onItemClick=new BasketAdapter.ItemClickListener() {
-      @Override
-      public void onItemClick(Clothes clothes) {
-        ((MainActivity)getActivity()).setCurrentFragment(ViewingClothesBasket.newInstance());
-      }
-    };
   }
 
   public void loadSearchClothes(String editTextText){

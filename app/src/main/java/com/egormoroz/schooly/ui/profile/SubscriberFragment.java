@@ -97,6 +97,8 @@ public class SubscriberFragment extends Fragment {
                                     emptyList.setVisibility(View.VISIBLE);
                                     recyclerView.setVisibility(View.GONE);
                                 }else {
+                                    emptyList.setVisibility(View.GONE);
+                                    recyclerView.setVisibility(View.VISIBLE);
                                     SubscribersAdapter subscribersAdapter = new SubscribersAdapter(subscribers);
                                     recyclerView.setAdapter(subscribersAdapter);
                                     SubscribersAdapter.ItemClickListener clickListener =
@@ -159,20 +161,30 @@ public class SubscriberFragment extends Fragment {
                                     }
 
                                 }
-                                SubscribersAdapter subscribersAdapter = new SubscribersAdapter(userFromBase);
-                                recyclerView.setAdapter(subscribersAdapter);
-                                SubscribersAdapter.ItemClickListener clickListener =
-                                        new SubscribersAdapter.ItemClickListener() {
-                                            @Override
-                                            public void onItemClick(View view, int position) {
-                                                Subscriber subscriber = subscribersAdapter.getItem(position);
-                                                userNameToProfile = subscriber.getSub();
-
-                                                RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile,SubscriberFragment.newInstance(type,fragment)),
-                                                        getActivity());
-                                            }
-                                        };
-                                subscribersAdapter.setClickListener(clickListener);
+                                if (userFromBase.size()==0){
+                                    emptyList.setVisibility(View.VISIBLE);
+                                    recyclerView.setVisibility(View.GONE);
+                                }else {
+                                    emptyList.setVisibility(View.GONE);
+                                    recyclerView.setVisibility(View.VISIBLE);
+                                    SubscribersAdapter subscribersAdapter = new SubscribersAdapter(userFromBase);
+                                    recyclerView.setAdapter(subscribersAdapter);
+                                    SubscribersAdapter.ItemClickListener clickListener =
+                                            new SubscribersAdapter.ItemClickListener() {
+                                                @Override
+                                                public void onItemClick(View view, int position) {
+                                                    Subscriber user = subscribersAdapter.getItem(position);
+                                                    userNameToProfile=user.getSub();
+                                                    if(userNameToProfile.equals(nick)){
+                                                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback",nick,fragment),getActivity());
+                                                    }else {
+                                                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile,SubscriberFragment.newInstance(type,fragment)),
+                                                                getActivity());
+                                                    }
+                                                }
+                                            };
+                                    subscribersAdapter.setClickListener(clickListener);
+                                }
                             }
 
                             @Override

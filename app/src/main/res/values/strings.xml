@@ -216,7 +216,7 @@
     <string name="writeComment">Напиши комментарий...</string>
     <string name="sendComment">ОТПР.</string>
     <string name="emptyCommentsList">Нет подписчиков</string>
-    <string name="emptySubscriptionList">Подпишись на других пользователей!</string>
+    <string name="emptySubscriptionList">Пользователь не найден:(</string>
     <string name="emptySearchSubscriptionList">Для того, чтобы перевести коины другому пользователю, необходимо быть на него подписаным</string>
     <string name="emptySubscriptionListOther">Нет подписок:(</string>
     <string name="emptySubscribersListOther">Нет подписчиков:(</string>
@@ -415,6 +415,7 @@
     покупать заявляемую одежду только за реальные деньги. Ваша прибыть с продажи данной одежды
     будет тоже в реальной валюте</string>
     <string name="cantSellClothes">К сожалению, в данный момент эта функция недоступна. Она появится в следующих обновлениях:)</string>
+    <string name="buyClothes">Купить предмет?</string>
 
 
 

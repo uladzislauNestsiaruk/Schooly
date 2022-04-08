@@ -92,6 +92,8 @@ public class SubscriptionsFragment extends Fragment {
                                     emptyList.setVisibility(View.VISIBLE);
                                     recyclerView.setVisibility(View.GONE);
                                 }else {
+                                    emptyList.setVisibility(View.GONE);
+                                    recyclerView.setVisibility(View.VISIBLE);
                                     SubscriptionsAdapter subscriptionsAdapter = new SubscriptionsAdapter(friends);
                                     recyclerView.setAdapter(subscriptionsAdapter);
                                     SubscriptionsAdapter.ItemClickListener clickListener =
@@ -153,19 +155,30 @@ public class SubscriptionsFragment extends Fragment {
                                     }
 
                                 }
-                                SubscriptionsAdapter subscriptionsAdapter = new SubscriptionsAdapter(userFromBase);
-                                recyclerView.setAdapter(subscriptionsAdapter);
-                                SubscriptionsAdapter.ItemClickListener clickListener =
-                                        new SubscriptionsAdapter.ItemClickListener() {
-                                            @Override
-                                            public void onItemClick(View view, int position) {
-                                                Subscriber subscriber = subscriptionsAdapter.getItem(position);
-                                                userNameToProfile = subscriber.getSub();
-                                                RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile,SubscriptionsFragment.newInstance(type,fragment)),
-                                                        getActivity());
-                                            }
-                                        };
-                                subscriptionsAdapter.setClickListener(clickListener);
+                                if (userFromBase.size()==0){
+                                    emptyList.setVisibility(View.VISIBLE);
+                                    recyclerView.setVisibility(View.GONE);
+                                }else {
+                                    emptyList.setVisibility(View.GONE);
+                                    recyclerView.setVisibility(View.VISIBLE);
+                                    SubscriptionsAdapter subscriptionsAdapter = new SubscriptionsAdapter(userFromBase);
+                                    recyclerView.setAdapter(subscriptionsAdapter);
+                                    SubscriptionsAdapter.ItemClickListener clickListener =
+                                            new SubscriptionsAdapter.ItemClickListener() {
+                                                @Override
+                                                public void onItemClick(View view, int position) {
+                                                    Subscriber user = subscriptionsAdapter.getItem(position);
+                                                    userNameToProfile=user.getSub();
+                                                    if(userNameToProfile.equals(nick)){
+                                                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback",nick,fragment),getActivity());
+                                                    }else {
+                                                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile,SubscriptionsFragment.newInstance(type,fragment)),
+                                                                getActivity());
+                                                    }
+                                                }
+                                            };
+                                    subscriptionsAdapter.setClickListener(clickListener);
+                                }
                             }
 
                             @Override

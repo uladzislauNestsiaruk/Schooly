@@ -39,7 +39,7 @@ public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.ViewHolder
   FirebaseStorage storage = FirebaseStorage.getInstance();
   StorageReference storageReference=storage.getReference();
   static Clothes clothes,trueClothes;
-  ItemClickListener onClothesClick;
+  BasketAdapter.ItemClickListener onClothesClick;
   static int pos;
 
   public BasketAdapter(ArrayList<Clothes> clothesArrayList, ItemClickListener onClothesClick) {
@@ -76,7 +76,6 @@ public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.ViewHolder
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
           @Override
           public void PassUserNick(String nick) {
-              Log.d("####", "n "+clothes.getPurchaseNumber());
               holder.purchaseNumber.setText(String.valueOf(snapshot.getValue(Long.class)));
 
           }
