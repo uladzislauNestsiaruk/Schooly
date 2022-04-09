@@ -41,52 +41,52 @@ public class MiningManager extends Worker {
     @Override
     public Result doWork() {
         firebaseModel.initAll();
-        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-            @Override
-            public void PassUserNick(String nick) {
-                RecentMethods.GetTodayMining(nick, firebaseModel, new Callbacks.GetTodayMining() {
-                    @Override
-                    public void GetTodayMining(double todayMiningFromBase) {
-                        t=todayMiningFromBase;
-                    }
-                });
-            }
-        });
-        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-            @Override
-            public void PassUserNick(String nick) {
-                RecentMethods.GetActiveMiner(nick, firebaseModel, new Callbacks.GetActiveMiners() {
-                    @Override
-                    public void GetActiveMiners(ArrayList<Miner> activeMinersFromBase) {
-                        ArrayList<Miner> getActiveMinersArrayList=new ArrayList<>();
-                        getActiveMinersArrayList=activeMinersFromBase;
-                        if(getActiveMinersArrayList.size()>0) {
-                            firebaseModel.getUsersReference().child(nick).child("serverTimeNow")
-                                    .setValue(ServerValue.TIMESTAMP);
-                            RecentMethods.GetTimeStampNow(nick, firebaseModel, new Callbacks.GetTimesTamp() {
-                                @Override
-                                public void GetTimesTamp(long timesTamp) {
-                                    a = timesTamp;
-                                }
-                            });
-                            RecentMethods.GetTimesTamp(nick, firebaseModel, new Callbacks.GetTimesTamp() {
-                                @Override
-                                public void GetTimesTamp(long timesTamp) {
-                                    d = timesTamp;
-                                    long timeGap = a - d;
-                                    long days = (timeGap / (1000 * 60 * 60 * 24));
-                                    long hours = ((timeGap - (1000 * 60 * 60 * 24 * days)) / (1000 * 60 * 60));
-                                    min = (timeGap - (1000 * 60 * 60 * 24 * days) - (1000 * 60 * 60 * hours)) / (1000 * 60);
-                                    minInGap=Double.valueOf(String.valueOf(min+hours*60+days*24*60));
-                                    MiningMoneyGap();
-                                }
-                            });
-                        }else {
-                        }
-                    }
-                });
-            }
-        });
+//        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+//            @Override
+//            public void PassUserNick(String nick) {
+//                RecentMethods.GetTodayMining(nick, firebaseModel, new Callbacks.GetTodayMining() {
+//                    @Override
+//                    public void GetTodayMining(double todayMiningFromBase) {
+//                        t=todayMiningFromBase;
+//                    }
+//                });
+//            }
+//        });
+//        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+//            @Override
+//            public void PassUserNick(String nick) {
+//                RecentMethods.GetActiveMiner(nick, firebaseModel, new Callbacks.GetActiveMiners() {
+//                    @Override
+//                    public void GetActiveMiners(ArrayList<Miner> activeMinersFromBase) {
+//                        ArrayList<Miner> getActiveMinersArrayList=new ArrayList<>();
+//                        getActiveMinersArrayList=activeMinersFromBase;
+//                        if(getActiveMinersArrayList.size()>0) {
+//                            firebaseModel.getUsersReference().child(nick).child("serverTimeNow")
+//                                    .setValue(ServerValue.TIMESTAMP);
+//                            RecentMethods.GetTimeStampNow(nick, firebaseModel, new Callbacks.GetTimesTamp() {
+//                                @Override
+//                                public void GetTimesTamp(long timesTamp) {
+//                                    a = timesTamp;
+//                                }
+//                            });
+//                            RecentMethods.GetTimesTamp(nick, firebaseModel, new Callbacks.GetTimesTamp() {
+//                                @Override
+//                                public void GetTimesTamp(long timesTamp) {
+//                                    d = timesTamp;
+//                                    long timeGap = a - d;
+//                                    long days = (timeGap / (1000 * 60 * 60 * 24));
+//                                    long hours = ((timeGap - (1000 * 60 * 60 * 24 * days)) / (1000 * 60 * 60));
+//                                    min = (timeGap - (1000 * 60 * 60 * 24 * days) - (1000 * 60 * 60 * hours)) / (1000 * 60);
+//                                    minInGap=Double.valueOf(String.valueOf(min+hours*60+days*24*60));
+//                                    MiningMoneyGap();
+//                                }
+//                            });
+//                        }else {
+//                        }
+//                    }
+//                });
+//            }
+//        });
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @Override
             public void PassUserNick(String nick) {

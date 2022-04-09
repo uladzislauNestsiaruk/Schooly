@@ -51,8 +51,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/searchuser"
         android:layout_marginTop="12dp"
-        android:scrollbars="none"
         android:overScrollMode="never"
+        android:scrollbars="none"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
     <TextView

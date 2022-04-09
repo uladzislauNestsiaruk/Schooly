@@ -48,10 +48,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/correctType"
+            android:layout_centerHorizontal="true"
             android:layout_marginStart="24dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="24dp"
-            android:layout_centerHorizontal="true"
             android:src="@drawable/incorrecttype" />
 
         <ImageView
@@ -59,11 +59,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/incorrectImageClothesType"
+            android:layout_centerHorizontal="true"
             android:layout_marginStart="24dp"
             android:layout_marginTop="16dp"
-            android:layout_centerHorizontal="true"
             android:layout_marginEnd="24dp"
-            android:src="@drawable/correcttype" />
+            android:src="@drawable/ic_criteriaone" />
 
         <TextView
             android:id="@+id/correctPhoto"

@@ -183,7 +183,6 @@ public class SubscriptionsAdapter extends RecyclerView.Adapter<SubscriptionsAdap
 
                             }
                         });
-                        Log.d("#####", "ff  "+a);
                         if(a!=0) {
                             if (a == 2) {
                                 Log.d("#####", "ab  " + a);
@@ -264,6 +263,9 @@ public class SubscriptionsAdapter extends RecyclerView.Adapter<SubscriptionsAdap
                             if (a == 5) {
                                 firebaseModel.getUsersReference().child(nick).child("blackList")
                                         .child(subscriber.getSub()).removeValue();
+                                holder.unsubscribe.setText("Подписаться");
+                                holder.unsubscribe.setTextColor(Color.parseColor("#FFFEFE"));
+                                holder.unsubscribe.setBackgroundResource(R.drawable.corners10dpappcolor);
                                 a=0;
                             }
                         }

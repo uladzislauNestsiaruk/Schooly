@@ -257,6 +257,9 @@ public class SubscriptionsAdapterOther extends RecyclerView.Adapter<Subscription
                             if (a == 5) {
                                 firebaseModel.getUsersReference().child(nick).child("blackList")
                                         .child(subscriber.getSub()).removeValue();
+                                holder.subscribe.setText("Подписаться");
+                                holder.subscribe.setTextColor(Color.parseColor("#FFFEFE"));
+                                holder.subscribe.setBackgroundResource(R.drawable.corners10dpappcolor);
                                 a=0;
                             }
                         }

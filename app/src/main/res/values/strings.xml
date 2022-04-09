@@ -216,7 +216,7 @@
     <string name="writeComment">Напиши комментарий...</string>
     <string name="sendComment">ОТПР.</string>
     <string name="emptyCommentsList">Нет подписчиков</string>
-    <string name="emptySubscriptionList">Пользователь не найден:(</string>
+    <string name="emptySubscriptionList">Нет подписок:(</string>
     <string name="emptySearchSubscriptionList">Для того, чтобы перевести коины другому пользователю, необходимо быть на него подписаным</string>
     <string name="emptySubscriptionListOther">Нет подписок:(</string>
     <string name="emptySubscribersListOther">Нет подписчиков:(</string>
