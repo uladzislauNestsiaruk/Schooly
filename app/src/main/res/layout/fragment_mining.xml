@@ -164,6 +164,7 @@
         android:layout_below="@+id/workingminerstext"
         android:layout_marginTop="8dp"
         android:orientation="horizontal"
+        android:overScrollMode="never"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
 
@@ -241,6 +242,7 @@
         android:layout_marginTop="16dp"
         android:orientation="horizontal"
         android:scrollbars="none"
+        android:overScrollMode="never"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
     <TextView
@@ -262,6 +264,7 @@
         android:orientation="horizontal"
         android:layout_marginTop="16dp"
         android:scrollbars="none"
+        android:overScrollMode="never"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
     <TextView
@@ -283,6 +286,7 @@
         android:layout_marginTop="16dp"
         android:orientation="horizontal"
         android:scrollbars="none"
+        android:overScrollMode="never"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
 
