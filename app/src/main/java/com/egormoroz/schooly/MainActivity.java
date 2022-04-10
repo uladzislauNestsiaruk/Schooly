@@ -65,7 +65,10 @@ public class MainActivity extends AppCompatActivity {
         IsEntered();
         FirebaseUser mFirebaseUser = AuthenticationBase.getCurrentUser();
         if(mFirebaseUser != null) {
+            Log.d("AAA", "aaa");
             currentUserID = mFirebaseUser.getUid();
+        }else{
+            Log.d("AAA", "aaabbb");
         }
         ///////////
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
@@ -115,56 +118,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-            @Override
-            public void PassUserNick(String nick) {
-                final DatabaseReference connectedRef = database.getReference(".info/connected");
-                connectedRef.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot snapshot) {
-                        boolean connected = snapshot.getValue(Boolean.class);
-                        if (connected) {
-                            firebaseModel.getUsersReference().child(nick).child("Status")
-                                    .setValue("Online").addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if(task.isSuccessful()){
-                                        WorkManager.getInstance(getApplicationContext()).cancelWorkById(miningWorkRequest.getId());
-                                        Log.d("AAA", "ddl");
-                                    }
-                                }
-                            });
-                            Constraints constraints = new Constraints.Builder()
-                                    .setRequiredNetworkType(NetworkType.CONNECTED)
-                                    .build();
-                            miningWorkRequest = new
-                                    OneTimeWorkRequest.Builder(MiningManager.class)
-                                    .setConstraints(constraints)
-                                    .build();
-
-                            WorkManager.getInstance(getApplicationContext()).enqueue(miningWorkRequest);
-
-                            DatabaseReference presenceRef = firebaseModel.getReference().child("users").child(nick).child("Status");
-                            presenceRef.onDisconnect().setValue("Offline").addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if(task.isSuccessful()){
-                                        WorkManager.getInstance(getApplicationContext()).cancelWorkById(miningWorkRequest.getId());
-                                        Log.d("AAA", "ddll");
-                                    }
-                                }
-                            });
-                        }else{
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError error) {
-                    }
-                });
-            }
-        });
-
 
 
     }
@@ -190,14 +143,53 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void hasGoogleUserCallback(boolean hasThisUser) {
                         if(hasThisUser) {
+                            Log.d("AAA", "current user: " + user.getEmail());
+                            setCurrentFragment(MainFragment.newInstance());
                             RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
                                 @Override
                                 public void PassUserNick(String nick) {
-                                    RecentMethods.GetMoneyFromBase(nick, firebaseModel, new Callbacks.MoneyFromBase() {
+                                    final DatabaseReference connectedRef = database.getReference(".info/connected");
+                                    connectedRef.addValueEventListener(new ValueEventListener() {
                                         @Override
-                                        public void GetMoneyFromBase(long money) {
-                                            Log.d("########", "current user: " + user.getEmail());
-                                            setCurrentFragment(MainFragment.newInstance());
+                                        public void onDataChange(DataSnapshot snapshot) {
+                                            boolean connected = snapshot.getValue(Boolean.class);
+                                            if (connected) {
+                                                firebaseModel.getUsersReference().child(nick).child("Status")
+                                                        .setValue("Online").addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<Void> task) {
+                                                        if(task.isSuccessful()){
+                                                            WorkManager.getInstance(getApplicationContext()).cancelWorkById(miningWorkRequest.getId());
+                                                            Log.d("AAA", "ddl");
+                                                        }
+                                                    }
+                                                });
+                                                Constraints constraints = new Constraints.Builder()
+                                                        .setRequiredNetworkType(NetworkType.CONNECTED)
+                                                        .build();
+                                                miningWorkRequest = new
+                                                        OneTimeWorkRequest.Builder(MiningManager.class)
+                                                        .setConstraints(constraints)
+                                                        .build();
+
+                                                WorkManager.getInstance(getApplicationContext()).enqueue(miningWorkRequest);
+
+                                                DatabaseReference presenceRef = firebaseModel.getReference().child("users").child(nick).child("Status");
+                                                presenceRef.onDisconnect().setValue("Offline").addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<Void> task) {
+                                                        if(task.isSuccessful()){
+                                                            WorkManager.getInstance(getApplicationContext()).cancelWorkById(miningWorkRequest.getId());
+                                                            Log.d("AAA", "ddll");
+                                                        }
+                                                    }
+                                                });
+                                            }else{
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onCancelled(DatabaseError error) {
                                         }
                                     });
                                 }

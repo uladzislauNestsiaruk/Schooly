@@ -1,8 +1,15 @@
 package com.egormoroz.schooly.ui.main.MyClothes;
 
 import android.app.Dialog;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -15,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -44,6 +52,7 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ViewingMyClothesMain extends Fragment {
@@ -75,6 +84,7 @@ public class ViewingMyClothesMain extends Fragment {
     private FirebaseModel firebaseModel = new FirebaseModel();
     NewClothesAdapter.ViewHolder viewHolder;
     double perCent;
+    String TelegramName,InstagramName;
     LinearLayout linearElse,linearTelegram,linearInstagram;
 
     @Override
@@ -101,12 +111,6 @@ public class ViewingMyClothesMain extends Fragment {
         clothesPrice=view.findViewById(R.id.clothesPricecv);
         backToShop = view.findViewById(R.id.back_toshop);
         send=view.findViewById(R.id.send);
-        send.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showBottomSheetDialog();
-            }
-        });
         purchaseToday=view.findViewById(R.id.purchasesToday);
         purchaseAll=view.findViewById(R.id.purchasesAll);
         profitToday=view.findViewById(R.id.profit);
@@ -136,6 +140,12 @@ public class ViewingMyClothesMain extends Fragment {
                     @Override
                     public void onClick(View v) {
                         RecentMethods.setCurrentFragment(PresentClothesFragment.newInstance(clothesViewing,ViewingMyClothesMain.newInstance(fragment)), getActivity());
+                    }
+                });
+                send.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showBottomSheetDialog();
                     }
                 });
                 clothesTitleCV.setText(clothes.getClothesTitle());
@@ -327,20 +337,20 @@ public class ViewingMyClothesMain extends Fragment {
         linearElse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                intentMessage("hello");
             }
         });
 
         linearTelegram.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                intentMessageTelegram(Uri.parse(clothesViewing.getClothesImage()));
             }
         });
         linearInstagram.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                intentMessageInstagram("hello");
             }
         });
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
@@ -535,5 +545,52 @@ public class ViewingMyClothesMain extends Fragment {
         });
 
         dialog.show();
+    }
+
+    void intentMessageTelegram(Uri msg) {
+        TelegramName = "org.telegram.messenger";
+        Intent shareIntent = new Intent();
+        shareIntent.setAction(Intent.ACTION_SEND);
+        shareIntent.putExtra(Intent.EXTRA_STREAM, msg);
+        shareIntent.setType("image/jpg");
+        shareIntent.setPackage(TelegramName);
+        startActivity(Intent.createChooser(shareIntent, null));
+    }
+
+    void intentMessageInstagram(String msg) {
+        InstagramName = "com.instagram.android";
+        Intent myIntent = new Intent(Intent.ACTION_SEND);
+        myIntent.setType("text/plain");
+        myIntent.setPackage(InstagramName);
+        myIntent.putExtra(Intent.EXTRA_TEXT, msg);
+        getActivity().startActivity(Intent.createChooser(myIntent, "Share with"));
+    }
+
+    void intentMessage(String msg) {
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, msg);
+        sendIntent.setType("text/plain");
+
+        Intent shareIntent = Intent.createChooser(sendIntent, null);
+        startActivity(shareIntent);
+    }
+
+    private void shareInstagram(Uri uri) {
+        InstagramName = "com.instagram.android";
+        Intent feedIntent = new Intent(Intent.ACTION_SEND);
+        feedIntent.setType("image/*");
+        feedIntent.putExtra(Intent.EXTRA_STREAM, uri);
+        feedIntent.setPackage(InstagramName);
+
+        Intent storiesIntent = new Intent("com.instagram.share.ADD_TO_STORY");
+        storiesIntent.setDataAndType(uri, "image/*");
+        storiesIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+        getActivity().grantUriPermission(
+                InstagramName, uri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+        feedIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[]{storiesIntent});
+        startActivity(feedIntent);
     }
 }

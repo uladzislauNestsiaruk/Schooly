@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,7 +33,7 @@ public class EditingFragment extends Fragment {
     FirebaseModel firebaseModel=new FirebaseModel();
     EditText nickEdit,bioEdit;
     String nickname;
-    TextView agree;
+    RelativeLayout agree;
     String type;
     Fragment fragment;
 
@@ -109,13 +110,7 @@ public class EditingFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                agree.setVisibility(View.VISIBLE);
-                agree.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
 
-                    }
-                });
             }
 
             @Override
@@ -135,7 +130,7 @@ public class EditingFragment extends Fragment {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 agree.setVisibility(View.VISIBLE);
                 agree.setOnClickListener(new View.OnClickListener() {
-                    String bioText= String.valueOf(bioEdit.getText());
+                    String bioText= String.valueOf(bioEdit.getText().toString().trim());
                     public void onClick(View v) {
                         firebaseModel.getUsersReference().child(nickname).child("bio").setValue(bioText);
                         Toast.makeText(getContext(), "Изменения сохранены", Toast.LENGTH_SHORT).show();

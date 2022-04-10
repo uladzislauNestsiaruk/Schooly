@@ -118,6 +118,11 @@ public class MainFragment extends Fragment{
         createClothes=view.findViewById(R.id.createClothes);
         coinsLinear=view.findViewById(R.id.linearCoins);
         getMore=view.findViewById(R.id.getMore);
+//        firebaseModel.getReference().child("usersNicks").child("Vladcpp")
+//                .setValue(new UserPeopleAdapter("Vladcpp", "a", "я украинец"));
+//        firebaseModel.getReference().child("usersNicks").child("tyomaa6")
+//                .setValue(new UserPeopleAdapter("tyomaa6", "a", "ceo"));
+
         getMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -282,10 +287,12 @@ public class MainFragment extends Fragment{
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @Override
             public void PassUserNick(String nick) {
-//                firebaseModel.getReference().child("usersNicks").child("Spaccacrani").setValue(new UserPeopleAdapter("Spaccacrani", "5", "hello"));
+  //              firebaseModel.getReference().child("usersNicks").child("Spaccacrani").setValue(new UserPeopleAdapter("Spaccacrani", "5", "hello"));
 //                String uid=firebaseModel.getUsersReference().child("tyomaa6").child("myClothes").push().getKey();
-//                firebaseModel.getUsersReference().child("Spaccacrani").child("myClothes").child(uid).setValue(new Clothes("shoes", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
-//                        ,220,"Blazer",344,123,"Spaccacrani","coin"," ","",72,"foot",uid,"exclusive"));
+//                firebaseModel.getUsersReference().child("tyomaa6").child("myClothes").child(uid).setValue(new Clothes("shoes", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
+//                        ,220,"Blazer",344,123,"tyomaa6","coin"," ","",72,"foot",uid,"exclusive"));
+//                firebaseModel.getUsersReference().child("Vladcpp").child("myClothes").child(uid).setValue(new Clothes("shoes", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
+//                        ,220,"Blazer",344,123,"Vladcpp","coin"," ","",72,"foot",uid,"exclusive"));
 //                String uid=firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").push().getKey();
 //                String uid1=firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").push().getKey();
 //                String uid2=firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").push().getKey();

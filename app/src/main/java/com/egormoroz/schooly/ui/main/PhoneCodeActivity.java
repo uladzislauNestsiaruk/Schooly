@@ -13,6 +13,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import com.egormoroz.schooly.ErrorList;
+import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -57,6 +58,7 @@ public class PhoneCodeActivity extends AppCompatActivity {
         sendSMS();
         resendSMS();
         enterCode();
+        Log.d("AAA", "start");
     }
     //////////////////////// INITIALIZATION //////////////////
     public void initElements(){
@@ -67,13 +69,16 @@ public class PhoneCodeActivity extends AppCompatActivity {
         timerText = findViewById(R.id.time);
         errorText = findViewById(R.id.errorMessage);
         context = getBaseContext();
+        Log.d("AAA", "ok");
     }
     public void initData(){
         data = new Intent();
         phone = getIntent().getStringExtra("Phone");
+        Log.d("AAA", "okk");
     }
     public void initFirebase(){
         AuthenticationBase = FirebaseAuth.getInstance();
+        Log.d("AAA", "okk  "+FirebaseAuth.getInstance());
     }
     //////////////////////// TOOLS ///////////////////////////
     public void startTimer(){
@@ -105,9 +110,10 @@ public class PhoneCodeActivity extends AppCompatActivity {
             }
             @Override
             public void onVerificationFailed(@NonNull @NotNull FirebaseException e) {
-                Log.d(TAG, "Verification failed with: " + e);
+                Log.d("AAA", "Verification failed with: " + e);
                 data.putExtra("IsPhoneValid", false);
                 setResult(RESULT_OK, data);
+                Log.d("AAA", "o");
                 finish();
             }
             @Override
@@ -117,6 +123,7 @@ public class PhoneCodeActivity extends AppCompatActivity {
                 currentVerificationCode = verificationId;
                 currentResendToken = token;
                 startTimer();
+                Log.d("AAA", "okkk");
             }
         };
         phoneVerification(phone);
@@ -151,6 +158,7 @@ public class PhoneCodeActivity extends AppCompatActivity {
                 signInWithPhoneAuthCredential(credential);
             }
         });
+        Log.d("AAA", "okkkkk");
     }
     public void resendSMS(){
         resendCode.setOnClickListener(new View.OnClickListener() {
@@ -158,6 +166,7 @@ public class PhoneCodeActivity extends AppCompatActivity {
             public void onClick(View view) {
                 sendSMS();
                 startTimer();
+                Log.d("AAA", "okkkk");
             }
         });
     }
@@ -194,5 +203,11 @@ public class PhoneCodeActivity extends AppCompatActivity {
                         }
                     }
                 });
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d("AAA", "stop");
     }
 }

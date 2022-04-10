@@ -89,7 +89,7 @@
 
     <string name="editing">Редактиовать</string>
     <string name="changeface">Изменить лицо</string>
-    <string name="usernameediting">Никнейм</string>
+    <string name="usernameediting">Никнейм(смена недоступна)</string>
     <string name="bio">Описание</string>
     <string name="agree">Подтвердить</string>
 

@@ -39,8 +39,15 @@ public class SubscribesFragmentOther extends Fragment {
     TextView emptyList;
     EditText searchUser;
 
-    public static SubscribesFragmentOther newInstance() {
-        return new SubscribesFragmentOther();
+    Fragment fragment;
+
+    public SubscribesFragmentOther(Fragment fragment) {
+        this.fragment=fragment;
+    }
+
+    public static SubscribesFragmentOther newInstance( Fragment fragment) {
+        return new SubscribesFragmentOther(fragment);
+
     }
 
     @Override
@@ -62,7 +69,7 @@ public class SubscribesFragmentOther extends Fragment {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", otherUserNick,SubscribesFragmentOther.newInstance()),
+                RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", otherUserNick,fragment),
                         getActivity());
             }
         });
@@ -92,9 +99,9 @@ public class SubscribesFragmentOther extends Fragment {
                                                             Subscriber user = subscribersAdapter.getItem(position);
                                                             userNameToProfile = user.getSub();
                                                             if(userNameToProfile.equals(nick)){
-                                                                RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback",nick,SubscribesFragmentOther.newInstance()),getActivity());
+                                                                RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback",nick,SubscribesFragmentOther.newInstance(fragment)),getActivity());
                                                             }else {
-                                                                RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile,SubscribesFragmentOther.newInstance()),
+                                                                RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile,SubscribesFragmentOther.newInstance(fragment)),
                                                                         getActivity());
                                                             }
                                                         }
@@ -166,9 +173,9 @@ public class SubscribesFragmentOther extends Fragment {
                                                 @Override
                                                 public void PassUserNick(String nick) {
                                                     if(userNameToProfile.equals(nick)){
-                                                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback",nick,SubscribesFragmentOther.newInstance()),getActivity());
+                                                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback",nick,SubscribesFragmentOther.newInstance(fragment)),getActivity());
                                                     }else {
-                                                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile,SubscribesFragmentOther.newInstance()),
+                                                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile,SubscribesFragmentOther.newInstance(fragment)),
                                                                 getActivity());
                                                     }
                                                 }
