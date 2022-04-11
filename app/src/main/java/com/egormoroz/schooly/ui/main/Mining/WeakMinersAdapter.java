@@ -1,6 +1,10 @@
 package com.egormoroz.schooly.ui.main.Mining;
 
+import android.app.Dialog;
+import android.graphics.Color;
 import android.graphics.Rect;
+import android.graphics.drawable.ColorDrawable;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,9 +19,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FirebaseModel;
+import com.egormoroz.schooly.Nontification;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
+import com.egormoroz.schooly.ui.coins.CoinsFragmentSecond;
 import com.egormoroz.schooly.ui.main.Shop.NewClothesAdapter;
+import com.egormoroz.schooly.ui.main.Shop.ViewingClothes;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.Query;
@@ -26,7 +33,9 @@ import com.squareup.picasso.Picasso;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class WeakMinersAdapter extends RecyclerView.Adapter<WeakMinersAdapter.ViewHolder> {
 
@@ -35,6 +44,8 @@ public class WeakMinersAdapter extends RecyclerView.Adapter<WeakMinersAdapter.Vi
     private ItemClickListener clickListener;
     private FirebaseModel firebaseModel = new FirebaseModel();
     ItemClickListener itemClickListener;
+    int checkValue;
+    String userNick;
 
     public WeakMinersAdapter(ArrayList<Miner> listAdapter, ItemClickListener itemClickListener) {
         this.listAdapterMiner = listAdapter;
@@ -82,41 +93,36 @@ public class WeakMinersAdapter extends RecyclerView.Adapter<WeakMinersAdapter.Vi
 
                             }
                         });
-                        if (money<Long.valueOf(minerPriceText)){
-                            holder.buy.setBackgroundResource(R.drawable.corners14grey);
-                        }else {
-                            holder.buy.setBackgroundResource(R.drawable.corners14appcolor);
-                            holder.buy.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    Query query=firebaseModel.getUsersReference().child(nick).child("miners")
-                                            .child(String.valueOf(holder.getAdapterPosition())+"weak");
-                                    query.addValueEventListener(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                            if(snapshot.exists()){
-                                                Toast.makeText(v.getContext(), "Майнер куплен", Toast.LENGTH_SHORT).show();
-                                            }else{
-                                                int pos=holder.getAdapterPosition();
-                                                RecentMethods.GetMoneyFromBase(nick, firebaseModel, new Callbacks.MoneyFromBase() {
-                                                    @Override
-                                                    public void GetMoneyFromBase(long money) {
-                                                        if (money!=-1){
-                                                            itemClickListener.onItemClick(pos,miner,"weak",money);
-                                                        }
+                        holder.buy.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Query query=firebaseModel.getUsersReference().child(nick).child("miners")
+                                        .child(String.valueOf(holder.getAdapterPosition())+"weak");
+                                query.addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        if(snapshot.exists()){
+                                            Toast.makeText(v.getContext(), "Майнер куплен", Toast.LENGTH_SHORT).show();
+                                        }else{
+                                            int pos=holder.getAdapterPosition();
+                                            RecentMethods.GetMoneyFromBase(nick, firebaseModel, new Callbacks.MoneyFromBase() {
+                                                @Override
+                                                public void GetMoneyFromBase(long money) {
+                                                    if (money!=-1){
+                                                        itemClickListener.onItemClick(pos,miner,"weak",money);
                                                     }
-                                                });
-                                            }
+                                                }
+                                            });
                                         }
+                                    }
 
-                                        @Override
-                                        public void onCancelled(@NonNull DatabaseError error) {
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
 
-                                        }
-                                    });
-                                }
-                            });
-                        }
+                                    }
+                                });
+                            }
+                        });
                     }
                 });
             }
@@ -165,5 +171,26 @@ public class WeakMinersAdapter extends RecyclerView.Adapter<WeakMinersAdapter.Vi
             }
         }
 
+    }
+
+    public void showDialog(View v,String textInDialog){
+
+        final Dialog dialog = new Dialog(v.getContext());
+        dialog.setContentView(R.layout.dialog_layout);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        TextView text=dialog.findViewById(R.id.Text);
+        text.setText(textInDialog);
+        RelativeLayout relative=dialog.findViewById(R.id.Relative);
+
+
+        relative.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
     }
 }

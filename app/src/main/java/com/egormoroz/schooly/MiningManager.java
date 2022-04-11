@@ -146,7 +146,6 @@ public class MiningManager extends Worker {
                         ArrayList<Miner> getActiveMinersArrayList=new ArrayList<>();
                         getActiveMinersArrayList=activeMinersFromBase;
                         if(getActiveMinersArrayList.size()==1) {
-                            Log.d("g", "f");
                             getFirstActiveMiner = getActiveMinersArrayList.get(0);
                             getInHourMinerFirst = getFirstActiveMiner.getInHour();
                             getFirstMinerInHour = Double.valueOf(String.valueOf(getInHourMinerFirst));

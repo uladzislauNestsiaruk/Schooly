@@ -28,7 +28,8 @@
         android:textColor="@color/app_color"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="48dp"
-        android:visibility="gone"/>
+        android:visibility="gone"
+        android:overScrollMode="never"/>
 
     <TextView
         android:id="@+id/CreateYourLook"
@@ -47,6 +48,5 @@
         android:paddingBottom="10dp"
         android:layout_marginTop="12dp"
         android:layout_marginBottom="130dp"
-        android:visibility="gone"
-        android:overScrollMode="never"/>
+        android:visibility="gone" />
 </RelativeLayout>

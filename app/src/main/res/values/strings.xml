@@ -366,7 +366,7 @@
     <string name="title">Название:</string>
 
     <string name="totalProfitText">Общая прибыль за сегодня:</string>
-    <string name="totalPurchaseText">Общая продажи за сегодня:</string>
+    <string name="totalPurchaseText">Общие продажи за сегодня:</string>
     <string name="clothes2">Одежда:</string>
 
     <string name="help">ПОМОЩЬ</string>
@@ -416,6 +416,7 @@
     будет тоже в реальной валюте</string>
     <string name="cantSellClothes">К сожалению, в данный момент эта функция недоступна. Она появится в следующих обновлениях:)</string>
     <string name="buyClothes">Купить предмет?</string>
+    <string name="buyFirstMiner">Купи свой первый майнер!</string>
 
 
 

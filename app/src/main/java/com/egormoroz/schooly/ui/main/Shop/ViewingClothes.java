@@ -279,7 +279,7 @@ public class ViewingClothes extends Fragment {
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
                                 if(snapshot.exists()){
                                     a=3;
-//                                    Toast.makeText(getContext(), "Предмет уже куплен", Toast.LENGTH_SHORT).show();
+//                                    showDialogBasket("Предмет уже куплен");
                                 }else {}
                             }
 
@@ -535,6 +535,27 @@ public class ViewingClothes extends Fragment {
                 firebaseModel.getUsersReference().child(otherUserNickString).child("Chats").child(nick).child("TimeMill").setValue(calendar.getTimeInMillis() * -1);
             }
         });
+    }
+
+    public void showDialogBasket(String textInDialog){
+
+        final Dialog dialog = new Dialog(getActivity());
+        dialog.setContentView(R.layout.dialog_layout);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        TextView text=dialog.findViewById(R.id.Text);
+        text.setText(textInDialog);
+        RelativeLayout relative=dialog.findViewById(R.id.Relative);
+
+
+        relative.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
     }
 
     public void addType(String type) {

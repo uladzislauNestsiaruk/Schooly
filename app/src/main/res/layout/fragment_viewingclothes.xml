@@ -72,7 +72,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/shopText"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="27sp"
+        android:layout_marginTop="27dp"
         android:layout_marginEnd="24dp"
         android:src="@drawable/ic_bag" />
 
@@ -81,7 +81,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/shopText"
-        android:layout_marginTop="26dp"
+        android:layout_marginTop="23dp"
         android:layout_marginEnd="2dp"
         android:layout_toLeftOf="@+id/bag"
         android:fontFamily="@font/montserrat_bold"

@@ -139,19 +139,31 @@ public class MiningFragment extends Fragment {
         itemClickListener=new WeakMinersAdapter.ItemClickListener() {
             @Override
             public void onItemClick(int position,Miner miner,String type,long money) {
-                showDialog(position,miner,type,money);
+                if(money<miner.getMinerPrice()){
+                    showDialog("Не хватает коинов" );
+                }else{
+                    showDialog(position,miner,type,money);
+                }
             }
         };
         itemClickListenerStrong=new StrongMinersAdapter.ItemClickListener() {
             @Override
             public void onItemClick(int position, Miner miner, String type,long money) {
-                showDialog(position,miner,type,money);
+                if(money<miner.getMinerPrice()){
+                    showDialog("Не хватает коинов" );
+                }else{
+                    showDialog(position,miner,type,money);
+                }
             }
         };
         itemClickListenerAverage=new AverageMinersAdapter.ItemClickListener() {
             @Override
             public void onItemClick(int position, Miner miner, String type,long money) {
-                showDialog(position,miner,type,money);
+                if(money<miner.getMinerPrice()){
+                    showDialog("Не хватает коинов" );
+                }else{
+                    showDialog(position,miner,type,money);
+                }
             }
         };
     }
@@ -320,6 +332,27 @@ public class MiningFragment extends Fragment {
                         firebaseModel.getUsersReference().child(nick).child("money").setValue(money-miner.getMinerPrice());
                     }
                 });
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+    }
+
+    public void showDialog(String textInDialog){
+
+        final Dialog dialog = new Dialog(getContext());
+        dialog.setContentView(R.layout.dialog_layout);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        TextView text=dialog.findViewById(R.id.Text);
+        text.setText(textInDialog);
+        RelativeLayout relative=dialog.findViewById(R.id.Relative);
+
+
+        relative.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 dialog.dismiss();
             }
         });

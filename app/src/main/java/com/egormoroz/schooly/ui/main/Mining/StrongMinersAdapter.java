@@ -80,41 +80,36 @@ public class StrongMinersAdapter extends RecyclerView.Adapter<StrongMinersAdapte
 
                             }
                         });
-                        if (money<Long.valueOf(minerPriceText)){
-                            holder.buy.setBackgroundResource(R.drawable.corners14grey);
-                        }else {
-                            holder.buy.setBackgroundResource(R.drawable.corners14appcolor);
-                            holder.buy.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    Query query=firebaseModel.getUsersReference().child(nick).child("miners")
-                                            .child(String.valueOf(holder.getAdapterPosition())+"strong");
-                                    query.addValueEventListener(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                            if(snapshot.exists()){
-                                                Toast.makeText(v.getContext(), "Майнер куплен", Toast.LENGTH_SHORT).show();
-                                            }else{
-                                                int pos=holder.getAdapterPosition();
-                                                RecentMethods.GetMoneyFromBase(nick, firebaseModel, new Callbacks.MoneyFromBase() {
-                                                    @Override
-                                                    public void GetMoneyFromBase(long money) {
-                                                        if (money!=-1){
-                                                            itemClickListener.onItemClick(pos,miner,"strong",money);
-                                                        }
+                        holder.buy.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Query query=firebaseModel.getUsersReference().child(nick).child("miners")
+                                        .child(String.valueOf(holder.getAdapterPosition())+"strong");
+                                query.addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        if(snapshot.exists()){
+                                            Toast.makeText(v.getContext(), "Майнер куплен", Toast.LENGTH_SHORT).show();
+                                        }else{
+                                            int pos=holder.getAdapterPosition();
+                                            RecentMethods.GetMoneyFromBase(nick, firebaseModel, new Callbacks.MoneyFromBase() {
+                                                @Override
+                                                public void GetMoneyFromBase(long money) {
+                                                    if (money!=-1){
+                                                        itemClickListener.onItemClick(pos,miner,"strong",money);
                                                     }
-                                                });
-                                            }
+                                                }
+                                            });
                                         }
+                                    }
 
-                                        @Override
-                                        public void onCancelled(@NonNull DatabaseError error) {
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
 
-                                        }
-                                    });
-                                }
-                            });
-                        }
+                                    }
+                                });
+                            }
+                        });
                     }
                 });
             }

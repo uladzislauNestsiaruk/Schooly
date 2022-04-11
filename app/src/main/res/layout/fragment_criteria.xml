@@ -43,27 +43,16 @@
             android:textColor="@color/app_grey"
             android:textSize="18sp" />
 
-        <ImageView
-            android:id="@+id/incorrectImageClothesType"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/correctType"
-            android:layout_centerHorizontal="true"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="24dp"
-            android:src="@drawable/incorrecttype" />
-
-        <ImageView
-            android:id="@+id/correctImageClothesType"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/incorrectImageClothesType"
-            android:layout_centerHorizontal="true"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="24dp"
-            android:src="@drawable/ic_criteriaone" />
+<!--        <ImageView-->
+<!--            android:id="@+id/incorrectImageClothesType"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_below="@+id/correctType"-->
+<!--            android:layout_centerHorizontal="true"-->
+<!--            android:layout_marginStart="24dp"-->
+<!--            android:layout_marginTop="16dp"-->
+<!--            android:layout_marginEnd="24dp"-->
+<!--            android:src="@drawable/incorrecttype" />-->
 
         <TextView
             android:id="@+id/correctPhoto"
@@ -71,30 +60,13 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
             android:layout_marginEnd="24dp"
-            android:layout_below="@+id/correctImageClothesType"
+            android:layout_below="@+id/correctType"
             android:layout_marginTop="24dp"
             android:textColor="@color/app_grey"
             android:fontFamily="@font/montserrat_bold"
             android:textSize="18sp"
             android:text="@string/correctPhoto"/>
 
-        <ImageView
-            android:id="@+id/incorrectImageClothesPhoto"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/correctPhoto"
-            android:layout_marginTop="16dp"
-            android:layout_marginStart="24dp"
-            android:layout_marginEnd="24dp"/>
-
-        <ImageView
-            android:id="@+id/correctImageClothesPhoto"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/incorrectImageClothesPhoto"
-            android:layout_marginTop="16dp"
-            android:layout_marginStart="24dp"
-            android:layout_marginEnd="24dp"/>
 
         <TextView
             android:id="@+id/correctFormat"
@@ -102,7 +74,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
             android:layout_marginEnd="24dp"
-            android:layout_below="@+id/correctImageClothesPhoto"
+            android:layout_below="@+id/correctPhoto"
             android:layout_marginTop="24dp"
             android:textColor="@color/app_grey"
             android:fontFamily="@font/montserrat_bold"
@@ -161,22 +133,13 @@
             android:textSize="18sp"
             android:text="@string/plagiarism"/>
 
-        <ImageView
-            android:id="@+id/correctImagePlagiarism"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/plagiarism"
-            android:layout_marginTop="16dp"
-            android:layout_marginStart="24dp"
-            android:layout_marginEnd="24dp"/>
-
         <TextView
             android:id="@+id/clothesText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
             android:layout_marginEnd="24dp"
-            android:layout_below="@+id/correctImagePlagiarism"
+            android:layout_below="@+id/plagiarism"
             android:layout_marginTop="24dp"
             android:textColor="@color/app_grey"
             android:fontFamily="@font/montserrat_bold"

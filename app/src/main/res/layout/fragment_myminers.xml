@@ -45,7 +45,28 @@
         android:fontFamily="@font/montserrat_bold"
         android:layout_centerInParent="true"
         android:textColor="@color/app_grey"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        android:text="@string/buyFirstMiner"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/buyMiner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/buy"
+        android:textSize="18sp"
+        android:layout_below="@+id/emptyMyMiners"
+        android:fontFamily="@font/montserrat_extrabold"
+        android:textColor="@color/white"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/corners14appcolor"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="130dp"
+        android:visibility="gone"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerviewmyminers"
