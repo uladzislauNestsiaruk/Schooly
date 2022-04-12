@@ -88,7 +88,7 @@ public class ComplainFragmentToBase extends Fragment {
                         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
                             @Override
                             public void PassUserNick(String nick) {
-                                RecentMethods.setCurrentFragment(ProfileFragment.newInstance("user", nick, PeopleFragment.newInstance()), getActivity());
+                                RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", otherUserNick, PeopleFragment.newInstance()), getActivity());
                             }
                         });
                     }

@@ -260,7 +260,11 @@ public class ViewingClothes extends Fragment {
         buyClothesBottom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (a==3){
+                    showDialogAlreadyBuy("Предмет куплен");
+                }else {
                 showDialog();
+                }
             }
         });
     }
@@ -690,6 +694,27 @@ public class ViewingClothes extends Fragment {
                         RecentMethods.setCurrentFragment(CoinsFragmentSecond.newInstance(ViewingClothes.newInstance(fragment)), getActivity());
                     }
                 }
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+    }
+
+    public void showDialogAlreadyBuy(String textInDialog){
+
+        final Dialog dialog = new Dialog(getContext());
+        dialog.setContentView(R.layout.dialog_layout);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        TextView text=dialog.findViewById(R.id.Text);
+        text.setText(textInDialog);
+        RelativeLayout relative=dialog.findViewById(R.id.Relative);
+
+
+        relative.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 dialog.dismiss();
             }
         });

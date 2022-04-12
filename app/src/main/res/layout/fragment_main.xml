@@ -151,6 +151,7 @@
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
             android:scrollbars="none"
+            android:overScrollMode="never"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
         <RelativeLayout
@@ -193,6 +194,7 @@
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
             android:scrollbars="none"
+            android:overScrollMode="never"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
 
