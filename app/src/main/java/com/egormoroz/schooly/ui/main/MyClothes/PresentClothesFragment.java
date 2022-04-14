@@ -221,7 +221,7 @@ public class PresentClothesFragment extends Fragment {
                             firebaseModel.getReference().child("users")
                                     .child(userNameToProfile).child("nontifications")
                                     .child(numToBase).setValue(new Nontification(nick, "не отправлено", "подарок"
-                                    , "", clothes.getClothesTitle(), clothes.getClothesImage(), "не просмотрено", numToBase));
+                                    , "", clothes.getClothesTitle(), clothes.getClothesImage(), "не просмотрено", numToBase,0));
                             Toast.makeText(getContext(), "Подарок отправлен", Toast.LENGTH_SHORT).show();
                         }
                     }

@@ -226,7 +226,6 @@ public class ViewingClothesBasket extends Fragment {
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         if(snapshot.exists()){
                             a=3;
-                            Log.d("######", " cvvv  "+a);
                         }else {}
                     }
 
@@ -244,6 +243,7 @@ public class ViewingClothesBasket extends Fragment {
             @Override
             public void onClick(View v) {
                 if (a==3){
+                    Log.d("######", " cvvv  "+a);
                     showDialogAlreadyBuy("Предмет куплен");
                 }else {
                     showDialog();
@@ -616,7 +616,7 @@ public class ViewingClothesBasket extends Fragment {
                                                 firebaseModel.getReference().child("users")
                                                         .child(clothesViewing.getCreator()).child("nontifications")
                                                         .child(numToBase).setValue(new Nontification(nick,"не отправлено","одежда"
-                                                        , "",clothesViewing.getUid(),clothesViewing.getClothesImage(),"не просмотрено",numToBase));
+                                                        , "",clothesViewing.getUid(),clothesViewing.getClothesImage(),"не просмотрено",numToBase,0));
                                             }
                                             Query query=firebaseModel.getUsersReference().child(nick).child("basket").
                                                     child(clothesViewing.getUid());
@@ -654,6 +654,7 @@ public class ViewingClothesBasket extends Fragment {
                                 });
                             }
                         });
+                        a=3;
                     }else{
                         Toast.makeText(getContext(), "Не хватает коинов", Toast.LENGTH_SHORT).show();
                         RecentMethods.setCurrentFragment(CoinsFragmentSecond.newInstance(ViewingClothesBasket.newInstance()),getActivity());

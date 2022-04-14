@@ -196,6 +196,7 @@
         <entry key="..\:/Users/User/Downloads/Schooly_NEW11.04/app/src/main/res/layout/dialog_layout.xml" value="0.12360688956433637" />
         <entry key="..\:/Users/User/Downloads/Schooly_NEW11.04/app/src/main/res/layout/dialog_layout_sell_clothes.xml" value="0.2341485507246377" />
         <entry key="..\:/Users/User/Downloads/Schooly_NEW11.04/app/src/main/res/layout/dialog_present_clothes.xml" value="0.2341485507246377" />
+        <entry key="..\:/Users/User/Downloads/Schooly_NEW11.04/app/src/main/res/layout/fragment_basket.xml" value="0.12360688956433637" />
         <entry key="..\:/Users/User/Downloads/Schooly_NEW11.04/app/src/main/res/layout/fragment_criteria.xml" value="0.2341485507246377" />
         <entry key="..\:/Users/User/Downloads/Schooly_NEW11.04/app/src/main/res/layout/fragment_editing.xml" value="0.2341485507246377" />
         <entry key="..\:/Users/User/Downloads/Schooly_NEW11.04/app/src/main/res/layout/fragment_main.xml" value="0.12360688956433637" />
@@ -205,6 +206,9 @@
         <entry key="..\:/Users/User/Downloads/Schooly_NEW11.04/app/src/main/res/layout/fragment_reg.xml" value="0.12360688956433637" />
         <entry key="..\:/Users/User/Downloads/Schooly_NEW11.04/app/src/main/res/layout/fragment_registration.xml" value="0.12360688956433637" />
         <entry key="..\:/Users/User/Downloads/Schooly_NEW11.04/app/src/main/res/layout/fragment_viewingclothes.xml" value="0.4" />
+        <entry key="..\:/Users/User/Downloads/Schooly_NEW11.04/app/src/main/res/layout/rvitem_nontification.xml" value="0.2" />
+        <entry key="..\:/Users/User/Downloads/Schooly_NEW11.04/app/src/main/res/layout/rvitem_transermoney.xml" value="0.22056159420289856" />
+        <entry key="..\:/Users/User/Downloads/Schooly_NEW11.04/app/src/main/res/layout/rvitem_transferhistory.xml" value="0.22056159420289856" />
         <entry key="..\:/Users/User/Downloads/Schooly_NEW11.04/app/src/main/res/layout/viewpager_profile.xml" value="0.12360688956433637" />
         <entry key="..\:/Users/User/Downloads/Schooly_NEW11.04/app/src/main/res/layout/viewpager_profileother.xml" value="0.2296195652173913" />
         <entry key="..\:/Users/User/Downloads/Schooly_NEW12.01/app/src/main/res/layout/fragment_complain.xml" value="0.12" />

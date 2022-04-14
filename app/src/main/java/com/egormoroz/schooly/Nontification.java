@@ -11,15 +11,16 @@ public class Nontification {
     private String nick;
     private String typeDispatch;
     private String typeView;
-//    private HashMap<String, Object> timestamp;
+    //    private HashMap<String, Object> timestamp;
     private String timestamp;
     private String clothesName;
     private String clothesImage;
     private String type;
     private String uid;
+    double clothesProfit;
 
     public Nontification(String  nick,String typeDispatch,String typeView,String timestamp
-    ,String clothesName,String clothesImage,String type,String uid){
+            ,String clothesName,String clothesImage,String type,String uid,double clothesProfit){
         this.nick=nick;
         this.typeDispatch=typeDispatch;
         this.typeView=typeView;
@@ -30,6 +31,7 @@ public class Nontification {
         this.clothesName=clothesName;
         this.type=type;
         this.uid=uid;
+        this.clothesProfit=clothesProfit;
     }
     public Nontification(){
     }
@@ -112,6 +114,14 @@ public class Nontification {
 
     public void setUid(String  uid){
         this.uid=uid;
+    }
+
+    public double  getClothesProfit(){
+        return this.clothesProfit;
+    }
+
+    public void setClothesProfit(double  clothesProfit){
+        this.clothesProfit=clothesProfit;
     }
 }
 

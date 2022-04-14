@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -81,6 +82,8 @@ public class NontificationAdapter extends RecyclerView.Adapter<NontificationAdap
             @Override
             public void PassUserNick(String nick) {
                 if(nontification.getTypeView().equals("запрос")) {
+                    holder.otherUserNick.setVisibility(View.VISIBLE);
+                    holder.userImage.setVisibility(View.VISIBLE);
                     holder.otherUserNick.setText(nontification.getNick()+" хочет подписаться на тебя");
                     holder.addFriend.setVisibility(View.VISIBLE);
                     holder.addFriend.setText("Добавить");
@@ -131,12 +134,20 @@ public class NontificationAdapter extends RecyclerView.Adapter<NontificationAdap
                         }
                     });
                 }else if(nontification.getTypeView().equals("обычный")) {
+                    holder.otherUserNick.setVisibility(View.VISIBLE);
+                    holder.userImage.setVisibility(View.VISIBLE);
                     holder.otherUserNick.setText(nontification.getNick()+" подписался на тебя");
                 }else if(nontification.getTypeView().equals("одежда")) {
+                    holder.otherUserNick.setVisibility(View.VISIBLE);
+                    holder.userImage.setVisibility(View.VISIBLE);
                     holder.otherUserNick.setText(nontification.getNick()+" купил у тебя "+nontification.getClothesName());
                 }else if (nontification.getTypeView().equals("перевод")){
+                    holder.otherUserNick.setVisibility(View.VISIBLE);
+                    holder.userImage.setVisibility(View.VISIBLE);
                     holder.otherUserNick.setText(nontification.getNick()+" перевел тебе "+nontification.getUid()+"коина");
                 }else if (nontification.getTypeView().equals("запросодежда")){
+                    holder.otherUserNick.setVisibility(View.VISIBLE);
+                    holder.userImage.setVisibility(View.VISIBLE);
                     holder.otherUserNick.setText("Пришел ответ на публикацию "+nontification.getClothesName());
                     holder.addFriend.setVisibility(View.VISIBLE);
                     holder.addFriend.setText("Перейти");
@@ -148,6 +159,8 @@ public class NontificationAdapter extends RecyclerView.Adapter<NontificationAdap
                     });
                 }
                 else if (nontification.getTypeView().equals("подарок")){
+                    holder.otherUserNick.setVisibility(View.VISIBLE);
+                    holder.userImage.setVisibility(View.VISIBLE);
                     holder.otherUserNick.setText(nontification.getNick()+" подарил тебе "+nontification.getClothesName()+" !!!");
                     holder.addFriend.setVisibility(View.GONE);
                     holder.addFriend.setOnClickListener(new View.OnClickListener() {
@@ -155,6 +168,32 @@ public class NontificationAdapter extends RecyclerView.Adapter<NontificationAdap
                         public void onClick(View v) {
                         }
                     });
+                }
+                else if (nontification.getTypeView().equals("майнинг")){
+                    holder.imageCoins.setVisibility(View.VISIBLE);
+                    holder.fromWho.setVisibility(View.VISIBLE);
+                    holder.sum.setVisibility(View.VISIBLE);
+                    holder.type.setVisibility(View.VISIBLE);
+                    holder.remittanceTime.setVisibility(View.VISIBLE);
+                    holder.type.setText("Начисление");
+                    holder.fromWho.setText("Майнинг");
+                    holder.sum.setText("+"+String.valueOf(nontification.getClothesProfit()));
+                    holder.otherUserNick.setVisibility(View.GONE);
+                    holder.addFriend.setVisibility(View.GONE);
+                    holder.userImage.setVisibility(View.GONE);
+                }
+                else if (nontification.getTypeView().equals("одеждаприбыль")){
+                    holder.imageCoins.setVisibility(View.VISIBLE);
+                    holder.fromWho.setVisibility(View.VISIBLE);
+                    holder.sum.setVisibility(View.VISIBLE);
+                    holder.type.setVisibility(View.VISIBLE);
+                    holder.remittanceTime.setVisibility(View.VISIBLE);
+                    holder.type.setText("Начисление");
+                    holder.fromWho.setText("Одежда");
+                    holder.sum.setText("+"+String.valueOf(nontification.getClothesProfit()));
+                    holder.otherUserNick.setVisibility(View.GONE);
+                    holder.addFriend.setVisibility(View.GONE);
+                    holder.userImage.setVisibility(View.GONE);
                 }
             }
         });
@@ -168,11 +207,18 @@ public class NontificationAdapter extends RecyclerView.Adapter<NontificationAdap
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        final TextView otherUserNick,addFriend;
+        final TextView otherUserNick,addFriend,type,fromWho,sum,remittanceTime;
+        ImageView imageCoins,userImage;
         ViewHolder(View itemView) {
             super(itemView);
             otherUserNick = itemView.findViewById(R.id.otherUserNick);
             addFriend=itemView.findViewById(R.id.addFriend);
+            type=itemView.findViewById(R.id.type);
+            fromWho=itemView.findViewById(R.id.fromWho);
+            sum=itemView.findViewById(R.id.sum);
+            imageCoins=itemView.findViewById(R.id.image);
+            userImage=itemView.findViewById(R.id.userImage);
+            remittanceTime=itemView.findViewById(R.id.remittanceTime);
         }
 
         @Override

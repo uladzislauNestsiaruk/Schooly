@@ -117,7 +117,7 @@ public class SendMoneyFragment extends Fragment {
                                 firebaseModel.getReference().child("users")
                                         .child(otherUserNick).child("nontifications")
                                         .child(uid).setValue(new Nontification(nick,"не отправлено","перевод"
-                                        , ""," "," ","не просмотрено",String.valueOf(sumLong)));
+                                        , ""," "," ","не просмотрено",String.valueOf(sumLong),0));
                                 RecentMethods.setCurrentFragment(TransferMoneyFragment.newInstance(fragment), getActivity());
                             }
                         });

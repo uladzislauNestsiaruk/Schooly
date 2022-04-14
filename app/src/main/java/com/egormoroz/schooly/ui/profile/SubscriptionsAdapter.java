@@ -205,7 +205,7 @@ public class SubscriptionsAdapter extends RecyclerView.Adapter<SubscriptionsAdap
                                             firebaseModel.getReference().child("users")
                                                     .child(subscriber.getSub()).child("nontifications")
                                                     .child(numToBase).setValue(new Nontification(nick,"не отправлено","обычный"
-                                                    ,""," "," ","не просмотрено",numToBase));
+                                                    ,""," "," ","не просмотрено",numToBase,0));
                                             holder.unsubscribe.setText("Отписаться");
                                             holder.unsubscribe.setTextColor(Color.parseColor("#F3A2E5"));
                                             holder.unsubscribe.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
@@ -222,7 +222,7 @@ public class SubscriptionsAdapter extends RecyclerView.Adapter<SubscriptionsAdap
                                             firebaseModel.getReference().child("users")
                                                     .child(subscriber.getSub()).child("nontifications")
                                                     .child(numToBase).setValue(new Nontification(nick,"не отправлено","запрос"
-                                                    ,""," "," ","не просмотрено",numToBase));
+                                                    ,""," "," ","не просмотрено",numToBase,0));
                                             holder.unsubscribe.setText("Запрошено");
                                             holder.unsubscribe.setTextColor(Color.parseColor("#F3A2E5"));
                                             holder.unsubscribe.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);

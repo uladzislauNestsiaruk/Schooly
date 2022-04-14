@@ -1196,6 +1196,7 @@ public class RecentMethods {
                     nontification.setClothesImage(snap.child("clothesImage").getValue(String.class));
                     nontification.setType(snap.child("type").getValue(String.class));
                     nontification.setUid(snap.child("uid").getValue(String.class));
+                    nontification.setClothesProfit(snap.child("clothesProfit").getValue(Long.class));
                     nontificationArrayList.add(nontification);
                 }
                 callback.getNontificationsList(nontificationArrayList);
