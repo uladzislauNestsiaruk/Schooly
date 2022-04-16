@@ -8,6 +8,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -64,6 +65,15 @@ public class TransferHistoryFragment extends Fragment {
         backToCoins=view.findViewById(R.id.backtocoins);
         historyRecyclerView=view.findViewById(R.id.hisroryRecycler);
         noTransfer=view.findViewById(R.id.noTransfer);
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+
+                RecentMethods.setCurrentFragment(TransferMoneyFragment.newInstance(fragment), getActivity());
+            }
+        };
+
+        requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(), callback);
         backToCoins.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

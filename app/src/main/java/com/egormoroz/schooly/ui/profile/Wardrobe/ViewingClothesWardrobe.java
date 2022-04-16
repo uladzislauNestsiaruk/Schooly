@@ -7,14 +7,17 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
+import com.egormoroz.schooly.ui.profile.ProfileFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.database.DataSnapshot;
 import com.squareup.picasso.Picasso;
@@ -62,6 +65,21 @@ public class ViewingClothesWardrobe extends Fragment {
       @Override
       public void onClick(View v) {
         RecentMethods.setCurrentFragment(WardrobeFragment.newInstance(type,fragment), getActivity());
+      }
+    });
+
+    RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+      @Override
+      public void PassUserNick(String nick) {
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+          @Override
+          public void handleOnBackPressed() {
+
+            RecentMethods.setCurrentFragment(WardrobeFragment.newInstance(type, fragment), getActivity());
+          }
+        };
+
+        requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(), callback);
       }
     });
 

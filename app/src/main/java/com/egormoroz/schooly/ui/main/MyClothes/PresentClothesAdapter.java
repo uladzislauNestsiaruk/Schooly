@@ -66,23 +66,6 @@ public class PresentClothesAdapter  extends RecyclerView.Adapter<PresentClothesA
                         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
                             @Override
                             public void PassUserNick(String nick) {
-//                                firebaseModel.getUsersReference().child(subscriber.getSub())
-//                                        .child("clothes").child(clothes.getUid()).addValueEventListener(new ValueEventListener() {
-//                                    @Override
-//                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                                        Log.d("####", "ss ");
-//                                        if (snapshot.exists()) {
-//                                            alreadyHave=1;
-//                                        } else {
-//                                            alreadyHave=2;
-//                                        }
-//                                    }
-//
-//                                    @Override
-//                                    public void onCancelled(@NonNull DatabaseError error) {
-//
-//                                    }
-//                                });
                                 firebaseModel.getUsersReference().child(subscriber.getSub())
                                         .child("clothes").child(clothes.getUid()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                                     @Override

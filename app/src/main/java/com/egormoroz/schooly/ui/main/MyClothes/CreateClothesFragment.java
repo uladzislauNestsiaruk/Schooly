@@ -21,6 +21,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
@@ -100,6 +101,16 @@ public class CreateClothesFragment extends Fragment {
     public void onViewCreated(@Nullable View view,@NonNull Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
 
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+
+                RecentMethods.setCurrentFragment(fragment, getActivity());
+            }
+        };
+
+        requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(), callback);
+
         editClothesPrice=view.findViewById(R.id.editClothesPrice);
         editTextClothes=view.findViewById(R.id.editTextClothes);
         addDescriptionEdit=view.findViewById(R.id.addDescriptionEdit);
@@ -126,7 +137,7 @@ public class CreateClothesFragment extends Fragment {
         criteria.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(CriteriaFragment.newInstance(fragment), getActivity());
+                RecentMethods.setCurrentFragment(fragment, getActivity());
             }
         });
         publish=view.findViewById(R.id.publish);

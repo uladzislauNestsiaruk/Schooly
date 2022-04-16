@@ -109,7 +109,8 @@
                 android:paddingTop="11dp"
                 android:paddingBottom="11dp"
                 android:textColor="@color/app_color"
-                android:textSize="19sp" />
+                android:textSize="19sp"
+                android:autoLink="all"/>
 
 
             <RelativeLayout

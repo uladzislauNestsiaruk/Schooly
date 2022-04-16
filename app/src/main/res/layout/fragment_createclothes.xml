@@ -162,8 +162,8 @@
 
             <com.google.ar.sceneform.SceneView
                 android:id="@+id/modelFile"
-                android:layout_width="200dp"
-                android:layout_height="200dp"
+                android:layout_width="280dp"
+                android:layout_height="280dp"
                 android:layout_below="@+id/addModelFile"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="16dp"
@@ -215,8 +215,8 @@
 
             <ImageView
                 android:id="@+id/modelPhoto"
-                android:layout_width="200dp"
-                android:layout_height="200dp"
+                android:layout_width="280dp"
+                android:layout_height="280dp"
                 android:layout_below="@+id/addModelImage"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="16dp"
@@ -488,7 +488,8 @@
             android:paddingBottom="100dp"
             android:textColor="@color/app_grey"
             android:textColorHint="@color/app_grey"
-            android:textSize="14sp" />
+            android:textSize="14sp"
+            android:autoLink="all"/>
 
         <RelativeLayout
             android:id="@+id/publish"

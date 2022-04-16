@@ -136,12 +136,12 @@
 
         <com.google.ar.sceneform.SceneView
             android:id="@+id/sceneView"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:background="@color/white"
+            android:layout_width="225dp"
+            android:layout_height="225dp"
             android:layout_below="@id/fileText"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="16dp" />
+            android:layout_marginTop="16dp"
+            android:background="@color/white" />
 
         <TextView
             android:id="@+id/resultText"

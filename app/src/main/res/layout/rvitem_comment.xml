@@ -36,7 +36,8 @@
         android:layout_toRightOf="@+id/image"
         android:fontFamily="@font/montserrat_bold"
         android:textColor="@color/app_color"
-        android:textSize="16dp" />
+        android:textSize="16dp"
+        android:autoLink="all"/>
 
     <TextView
         android:id="@+id/postTime"

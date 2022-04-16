@@ -17,6 +17,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
@@ -128,6 +129,20 @@ public class ViewingLookFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 RecentMethods.setCurrentFragment(fragment,getActivity());
+            }
+        });
+        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+            @Override
+            public void PassUserNick(String nick) {
+                OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+                    @Override
+                    public void handleOnBackPressed() {
+
+                        RecentMethods.setCurrentFragment(fragment, getActivity());
+                    }
+                };
+
+                requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(), callback);
             }
         });
         LooksAdapter.lookInfo(new LooksAdapter.ItemClickListener() {

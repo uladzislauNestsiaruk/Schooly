@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -59,6 +60,15 @@ public  class BlackListFragment extends Fragment {
         recyclerView=view.findViewById(R.id.blackListRecycler);
         back=view.findViewById(R.id.back_tosettings);
         emptyList=view.findViewById(R.id.emptyBlackList);
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+
+                RecentMethods.setCurrentFragment(SettingsFragment.newInstance(type,fragment), getActivity());
+            }
+        };
+
+        requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(), callback);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

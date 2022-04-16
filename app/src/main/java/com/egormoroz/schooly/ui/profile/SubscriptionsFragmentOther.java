@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -69,6 +70,20 @@ public class SubscriptionsFragmentOther extends Fragment {
             public void onClick(View v) {
                 RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", otherUserNick,fragment),
                         getActivity());
+            }
+        });
+        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+            @Override
+            public void PassUserNick(String nick) {
+                OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+                    @Override
+                    public void handleOnBackPressed() {
+
+                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other",nick,fragment), getActivity());
+                    }
+                };
+
+                requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(), callback);
             }
         });
         ProfileFragment.sendNickToAdapter(new ProfileFragment.sendNick() {
