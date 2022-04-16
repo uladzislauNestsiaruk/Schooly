@@ -392,22 +392,17 @@ public class ViewingLookFragment extends Fragment {
     }
 
     public void loadComments(NewsItem newsItem){
-        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+        RecentMethods.getCommentsList(newsItem.getNick(), newsItem.getNewsId(), firebaseModel, new Callbacks.getCommentsList() {
             @Override
-            public void PassUserNick(String nick) {
-                RecentMethods.getCommentsList(nick, newsItem.getNewsId(), firebaseModel, new Callbacks.getCommentsList() {
-                    @Override
-                    public void getCommentsList(ArrayList<Comment> comment) {
-                        if(comment.size()==0){
-                            noComment.setVisibility(View.VISIBLE);
-                        }else {
-                            noComment.setVisibility(View.GONE);
-                            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-                            CommentAdapter commentAdapter = new CommentAdapter(comment);
-                            recyclerView.setAdapter(commentAdapter);
-                        }
-                    }
-                });
+            public void getCommentsList(ArrayList<Comment> comment) {
+                if(comment.size()==0){
+                    noComment.setVisibility(View.VISIBLE);
+                }else {
+                    noComment.setVisibility(View.GONE);
+                    recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                    CommentAdapter commentAdapter = new CommentAdapter(comment);
+                    recyclerView.setAdapter(commentAdapter);
+                }
             }
         });
     }

@@ -1,11 +1,15 @@
 <resources>
     <string name="app_name">Schooly</string>
 
-    <string name="hellosteve">Привет, я Стив</string>
-    <string name="belarus">from Belarus with love)</string>
+    <string name="hellosteve">Привет, я Стив!</string>
+    <string name="virtualSteve">Твой виртуальный помощник \nSchooly. Чтобы начать работу с\nприложением, нужно пройти\nнесколько простых шагов.\nПриступим!</string>
+    <string name="regOrEnter">Ты уже есть в Schooly? Если да, то войди \nв свой аккаунт, если нет, то \nрегистрируйся!</string>
+    <string name="regSteps">Пройди несколько простых \nшагов регистрации или\nиспользуй свой аккаунт \nв Google Play</string>
+    <string name="belarus">from Belarus, with love)</string>
+    <string name="enterFast">Скорее производи вход в\nприложение, а мне нужно\nнемного времени вспомнить,\nгде мы могли видеться</string>
     <string name="startregtext">Начнем регистрацию!</string>
     <string name="go1">Шаг 1</string>
-    <string name="whriteyournick">Введи свой ник</string>
+    <string name="whriteyournick">Придумай никнейм</string>
     <string name="go2">Шаг 2</string>
     <string name="writephone">Укажи свой номер телефона</string>
     <string name="go3">Шаг 3</string>

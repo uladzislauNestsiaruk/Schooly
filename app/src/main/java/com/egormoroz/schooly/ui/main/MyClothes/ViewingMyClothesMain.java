@@ -1,5 +1,6 @@
 package com.egormoroz.schooly.ui.main.MyClothes;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -568,12 +569,25 @@ public class ViewingMyClothesMain extends Fragment {
     }
 
     void intentMessageInstagram(String msg) {
-        InstagramName = "com.instagram.android";
-        Intent myIntent = new Intent(Intent.ACTION_SEND);
-        myIntent.setType("text/plain");
-        myIntent.setPackage(InstagramName);
-        myIntent.putExtra(Intent.EXTRA_TEXT, msg);
-        getActivity().startActivity(Intent.createChooser(myIntent, "Share with"));
+        Uri stickerAssetUri =  Uri.parse("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/miners%2Ffimw.png?alt=media&token=9798e9ea-15a0-4ef2-869b-63ce4dc95b78");
+        String sourceApplication = "com.egormoroz.schooly";
+
+        Intent intent = new Intent("com.instagram.share.ADD_TO_STORY");
+        intent.putExtra("source_application", sourceApplication);
+
+        intent.setType("image/зтп");
+        intent.putExtra("interactive_asset_uri", stickerAssetUri);
+        intent.putExtra("top_background_color", "#33FF33");
+        intent.putExtra("bottom_background_color", "#FF00FF");
+
+
+        Activity activity = getActivity();
+        activity.grantUriPermission(
+                "com.instagram.android", stickerAssetUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        if (activity.getPackageManager().resolveActivity(intent, 0) != null) {
+            activity.startActivityForResult(intent, 0);
+        }
+
     }
 
     void intentMessage(String msg) {

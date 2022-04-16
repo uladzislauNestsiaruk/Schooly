@@ -65,10 +65,8 @@ public class MainActivity extends AppCompatActivity {
         IsEntered();
         FirebaseUser mFirebaseUser = AuthenticationBase.getCurrentUser();
         if(mFirebaseUser != null) {
-            Log.d("AAA", "aaa");
             currentUserID = mFirebaseUser.getUid();
         }else{
-            Log.d("AAA", "aaabbb");
         }
         ///////////
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
@@ -160,7 +158,6 @@ public class MainActivity extends AppCompatActivity {
                                                     public void onComplete(@NonNull Task<Void> task) {
                                                         if(task.isSuccessful()){
                                                             WorkManager.getInstance(getApplicationContext()).cancelWorkById(miningWorkRequest.getId());
-                                                            Log.d("AAA", "ddl");
                                                         }
                                                     }
                                                 });

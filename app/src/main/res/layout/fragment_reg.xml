@@ -37,43 +37,43 @@
         android:layout_marginTop="22dp"
         android:layout_marginStart="56dp"/>
 
-    <TextView
-        android:id="@+id/longtextreg"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="9sp"
-        android:textColor="@color/app_grey"
-        android:fontFamily="@font/montserratblack"
-        android:layout_below="@+id/helloostev"
-        android:text="твой виртуальный помощник \nSchooly. Чтобы начать работу с\nприложением нужно пройти\nнесколько простых шагов.\nПриступим!"
-        android:layout_marginStart="56dp"/>
+        <TextView
+            android:id="@+id/longtextreg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/helloostev"
+            android:layout_marginStart="56dp"
+            android:fontFamily="@font/montserratblack"
+            android:text="@string/virtualSteve"
+            android:textColor="@color/app_grey"
+            android:textSize="9sp" />
 
 
-    <ImageView
-        android:id="@+id/steve"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/steve"
-        android:layout_toRightOf="@+id/longtextreg"
-        android:layout_marginStart="-80dp"
-        android:layout_marginTop="-40dp"/>
+        <ImageView
+            android:id="@+id/steve"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="-80dp"
+            android:layout_marginTop="-40dp"
+            android:layout_toRightOf="@+id/longtextreg"
+            android:src="@drawable/steve" />
 
-    <TextView
-     android:id="@+id/regtext"
-     android:layout_width="match_parent"
-     android:layout_height="wrap_content"
-     android:paddingStart="26dp"
-     android:paddingTop="21dp"
-     android:paddingBottom="22dp"
-     android:layout_marginTop="-108dp"
-     android:layout_marginStart="40dp"
-     android:layout_marginEnd="40dp"
-     android:background="@drawable/corners30dpwhite"
-     android:textColor="@color/app_grey"
-     android:text="Ты уже есть в Schooly? Если да, то войди \nв свой аккаунт, а если нет, то \nрегестрируйся!"
-     android:textSize="10dp"
-     android:layout_below="@id/steve"
-     android:fontFamily="@font/montserratblack"/>
+        <TextView
+            android:id="@+id/regtext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/steve"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="-108dp"
+            android:layout_marginEnd="40dp"
+            android:background="@drawable/corners30dpwhite"
+            android:fontFamily="@font/montserratblack"
+            android:paddingStart="26dp"
+            android:paddingTop="21dp"
+            android:paddingBottom="22dp"
+            android:text="@string/regOrEnter"
+            android:textColor="@color/app_grey"
+            android:textSize="10dp" />
 
 
         <Button
@@ -113,13 +113,13 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:text="@string/belarus"
-            android:fontFamily="@font/montserratblack"
-            android:textSize="12dp"
-            android:textColor="@color/app_grey"
             android:layout_alignParentBottom="true"
-            android:layout_marginBottom="24dp"/>
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="24dp"
+            android:fontFamily="@font/montserratblack"
+            android:text="@string/belarus"
+            android:textColor="@color/app_grey"
+            android:textSize="12dp" />
 
     </RelativeLayout>
 
