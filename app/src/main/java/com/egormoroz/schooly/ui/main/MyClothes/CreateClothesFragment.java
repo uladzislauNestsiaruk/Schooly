@@ -138,7 +138,7 @@ public class CreateClothesFragment extends Fragment {
         criteria.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(fragment, getActivity());
+                RecentMethods.setCurrentFragment(CriteriaFragment.newInstance(fragment), getActivity());
             }
         });
         publish=view.findViewById(R.id.publish);

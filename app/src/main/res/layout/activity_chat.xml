@@ -63,6 +63,7 @@
             android:fontFamily="@font/montserrat_bold"
             android:hint="Сообщение..."
             android:maxLines="5"
+            android:autoLink="all"
             android:padding="15dp"
             android:textColor="@color/white"
             android:textColorHint="@color/white"
