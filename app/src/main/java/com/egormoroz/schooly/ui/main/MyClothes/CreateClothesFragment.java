@@ -60,7 +60,7 @@ public class CreateClothesFragment extends Fragment {
     EditText editTextClothes,editClothesPrice,addDescriptionEdit;
     ImageView addModelFile,addModelImage,modelPhoto;
     TextView modelWay,before,criteria
-            ,noTitle,noModel,noPhoto,noSum;
+            ,noTitle,noModel,noPhoto,noSum,exclusivePremium;
     RelativeLayout publish;
     RadioGroup radioGroup,radioGroupCurrency,radioGroupExclusive;
     private String checker = "", myUrl = "";
@@ -127,6 +127,7 @@ public class CreateClothesFragment extends Fragment {
         noPhoto=view.findViewById(R.id.noPhoto);
         noModel=view.findViewById(R.id.noFile);
         noSum=view.findViewById(R.id.noSum);
+        exclusivePremium=view.findViewById(R.id.exclusivePremium);
         noTitle=view.findViewById(R.id.noEnterTitleText);
         before.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -219,6 +220,20 @@ public class CreateClothesFragment extends Fragment {
                 }
             }
         });
+        radioGroupExclusive.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                int idExclusive=radioGroupExclusive.getCheckedRadioButtonId();
+                switch(idExclusive){
+                    case R.id.radioButtonExclusiveYes:
+                        exclusivePremium.setVisibility(View.VISIBLE);
+                        break;
+                    case R.id.radioButtonExclusiveNo:
+                        exclusivePremium.setVisibility(View.GONE);
+                        break;
+                }
+            }
+        });
         publish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -241,95 +256,12 @@ public class CreateClothesFragment extends Fragment {
                     noModel.setVisibility(View.VISIBLE);
                 }else {
                     noModel.setVisibility(View.GONE);
-                }if(editTextClothes.getText().toString().length()>0 && editClothesPrice.getText().toString().length()>0 &&
+                }
+                if(editTextClothes.getText().toString().length()>0 && editClothesPrice.getText().toString().length()>0 &&
                         !editClothesPrice.getText().toString().equals("0")&& modelPhoto.getVisibility()==View.VISIBLE
                         && modelScene.getVisibility()==View.VISIBLE
                 ){
-                    RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-                        @Override
-                        public void PassUserNick(String nick) {
-                            Random random = new Random();
-                            int num =random.nextInt(1000000000);
-                            int radioButtonID = radioGroup.getCheckedRadioButtonId();
-                            switch(radioButtonID){
-                                case R.id.radio_button_1:
-                                    bodyType="foot";
-                                    type="shoes";
-                                    break;
-                                case R.id.radio_button_2:
-                                    bodyType="pants";
-                                    type="clothes";
-                                    break;
-                                case R.id.radio_button_3:
-                                    bodyType="shorts";
-                                    type="clothes";
-                                    break;
-                                case R.id.radio_button_4:
-                                    bodyType="belt";
-                                    type="clothes";
-                                    break;
-                                case R.id.radio_button_5:
-                                    bodyType="tshirt";
-                                    type="clothes";
-                                    break;
-                                case R.id.radio_button_6:
-                                    bodyType="shirt";
-                                    type="clothes";
-                                    break;
-                                case R.id.radio_button_7:
-                                    bodyType="longsleeve";
-                                    type="clothes";
-                                    break;
-                                case R.id.radio_button_8:
-                                    bodyType="glasses";
-                                    type="accessories";
-                                    break;
-                                case R.id.radio_button_9:
-                                    bodyType="cap";
-                                    type="hats";
-                                    break;
-                                case R.id.radio_button_10:
-                                    bodyType="panama";
-                                    type="hats";
-                                    break;
-                                case R.id.radio_button_11:
-                                    bodyType="skirt";
-                                    type="clothes";
-                                    break;
-                                case R.id.radio_button_12:
-                                    bodyType="top";
-                                    type="clothes";
-                                    break;
-                                case R.id.radio_button_13:
-                                    bodyType="bag";
-                                    type="accessories";
-                                    break;
-                            }
-                            int idCurrency=radioGroupCurrency.getCheckedRadioButtonId();
-                            switch(idCurrency){
-                                case R.id.schoolyCoinRadio:
-                                    currencyType="coin";
-                                    break;
-                                case R.id.dollarRadio:
-                                    currencyType="dollar";
-                                    break;
-                            }
-                            int idExclusive=radioGroupExclusive.getCheckedRadioButtonId();
-                            switch(idExclusive){
-                                case R.id.radioButtonExclusiveYes:
-                                    exclusiveType="exclusive";
-                                    break;
-                                case R.id.radioButtonExclusiveNo:
-                                    exclusiveType="no";
-                                    break;
-                            }
-                            String uid=firebaseModel.getReference().child("clothesReqests").push().getKey();
-                            firebaseModel.getReference().child("clothesReqests").child(uid)
-                                    .setValue(new ClothesRequest(type, imageApplication, Long.valueOf(editClothesPrice.getText().toString()), editTextClothes.getText().toString()
-                                            , 111, nick, currencyType,addDescriptionEdit.getText().toString() ,modelApplication , bodyType,uid,exclusiveType));
-                            Toast.makeText(getContext(), "Заявка отправлена", Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                    showDialogSendClothes();
                 }else {
                     showDialog();
                 }
@@ -495,6 +427,110 @@ public class CreateClothesFragment extends Fragment {
         } catch (CameraNotAvailableException e) {
             e.printStackTrace();
         }
+    }
+
+    public void showDialogSendClothes(){
+
+        final Dialog dialog = new Dialog(getContext());
+        dialog.setContentView(R.layout.dialog_send_clothes_application);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        RelativeLayout sendRelative=dialog.findViewById(R.id.sendRelative);
+
+
+        sendRelative.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+                    @Override
+                    public void PassUserNick(String nick) {
+                        Random random = new Random();
+                        int num =random.nextInt(1000000000);
+                        int radioButtonID = radioGroup.getCheckedRadioButtonId();
+                        switch(radioButtonID){
+                            case R.id.radio_button_1:
+                                bodyType="foot";
+                                type="shoes";
+                                break;
+                            case R.id.radio_button_2:
+                                bodyType="pants";
+                                type="clothes";
+                                break;
+                            case R.id.radio_button_3:
+                                bodyType="shorts";
+                                type="clothes";
+                                break;
+                            case R.id.radio_button_4:
+                                bodyType="belt";
+                                type="clothes";
+                                break;
+                            case R.id.radio_button_5:
+                                bodyType="tshirt";
+                                type="clothes";
+                                break;
+                            case R.id.radio_button_6:
+                                bodyType="shirt";
+                                type="clothes";
+                                break;
+                            case R.id.radio_button_7:
+                                bodyType="longsleeve";
+                                type="clothes";
+                                break;
+                            case R.id.radio_button_8:
+                                bodyType="glasses";
+                                type="accessories";
+                                break;
+                            case R.id.radio_button_9:
+                                bodyType="cap";
+                                type="hats";
+                                break;
+                            case R.id.radio_button_10:
+                                bodyType="panama";
+                                type="hats";
+                                break;
+                            case R.id.radio_button_11:
+                                bodyType="skirt";
+                                type="clothes";
+                                break;
+                            case R.id.radio_button_12:
+                                bodyType="top";
+                                type="clothes";
+                                break;
+                            case R.id.radio_button_13:
+                                bodyType="bag";
+                                type="accessories";
+                                break;
+                        }
+                        int idCurrency=radioGroupCurrency.getCheckedRadioButtonId();
+                        switch(idCurrency){
+                            case R.id.schoolyCoinRadio:
+                                currencyType="coin";
+                                break;
+                            case R.id.dollarRadio:
+                                currencyType="dollar";
+                                break;
+                        }
+                        int idExclusive=radioGroupExclusive.getCheckedRadioButtonId();
+                        switch(idExclusive){
+                            case R.id.radioButtonExclusiveYes:
+                                exclusiveType="exclusive";
+                                break;
+                            case R.id.radioButtonExclusiveNo:
+                                exclusiveType="no";
+                                break;
+                        }
+                        String uid=firebaseModel.getReference().child("clothesReqests").push().getKey();
+                        firebaseModel.getReference().child("clothesReqests").child(uid)
+                                .setValue(new ClothesRequest(type, imageApplication, Long.valueOf(editClothesPrice.getText().toString()), editTextClothes.getText().toString()
+                                        , 111, nick, currencyType,addDescriptionEdit.getText().toString() ,modelApplication , bodyType,uid,exclusiveType));
+                        Toast.makeText(getContext(), "Заявка отправлена", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
     }
 
 }

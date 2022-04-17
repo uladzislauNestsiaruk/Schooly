@@ -378,10 +378,24 @@
         </RadioGroup>
 
         <TextView
-            android:id="@+id/currencyType"
+            android:id="@+id/exclusivePremium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/radioGroupExclusive"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="24dp"
+            android:fontFamily="@font/montserrat_bold"
+            android:text="@string/exclusivePremium"
+            android:textColor="@color/app_grey"
+            android:textSize="12sp"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/currencyType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/exclusivePremium"
             android:layout_marginStart="24dp"
             android:layout_marginTop="24dp"
             android:fontFamily="@font/montserrat_bold"

@@ -421,6 +421,9 @@
     <string name="cantSellClothes">К сожалению, в данный момент эта функция недоступна. Она появится в следующих обновлениях:)</string>
     <string name="buyClothes">Купить предмет?</string>
     <string name="buyFirstMiner">Купи свой первый майнер!</string>
+    <string name="exclusivePremium">Только пользователи с подпиской Schooly Premium смогут купить эту одежду</string>
+    <string name="sendClothesApplication">Отправить заявку</string>
+    <string name="clothesApplication">Заявка на одежду может обрабатываться несколько дней. После обработки мы пришлем вам ответ.</string>
 
 
 
