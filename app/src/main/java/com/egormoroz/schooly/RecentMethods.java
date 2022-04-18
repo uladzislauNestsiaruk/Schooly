@@ -1181,7 +1181,7 @@ public class RecentMethods {
 
     public static void getNontificationsList(String nickName, FirebaseModel model, Callbacks.getNontificationsList callback){
         model.initAll();
-        Query query=model.getUsersReference().child(nickName).child("nontifications");
+        Query query=model.getUsersReference().child(nickName).child("nontifications").orderByKey();
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {

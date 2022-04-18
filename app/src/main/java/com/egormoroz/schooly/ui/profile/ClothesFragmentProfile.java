@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.egormoroz.schooly.Callbacks;
@@ -128,7 +129,11 @@ public class ClothesFragmentProfile extends Fragment {
                         }else {
                             looksRecycler.setVisibility(View.VISIBLE);
                             ClothesAdapter clothesAdapter=new ClothesAdapter(clothesFromBase,itemClickListener);
-                            looksRecycler.setLayoutManager(new GridLayoutManager(getContext(), 2));
+                            LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+                            layoutManager.setReverseLayout(true);
+                            layoutManager.setStackFromEnd(true);
+                            GridLayoutManager gridLayoutManager=new GridLayoutManager(getContext(), 2);
+                            looksRecycler.setLayoutManager(gridLayoutManager);
                             looksRecycler.setAdapter(clothesAdapter);
                         }
                     }

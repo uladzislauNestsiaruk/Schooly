@@ -12,6 +12,7 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.egormoroz.schooly.Callbacks;
@@ -76,6 +77,10 @@ public class NontificationFragment extends Fragment {
                             emptyNonts.setVisibility(View.GONE);
                         }
                         NontificationAdapter nontificationAdapter=new NontificationAdapter(nontifications);
+                        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+                        layoutManager.setReverseLayout(true);
+                        layoutManager.setStackFromEnd(true);
+                        nontsRecyclerView.setLayoutManager(layoutManager);
                         nontsRecyclerView.setAdapter(nontificationAdapter);
                         NontificationAdapter.ItemClickListener itemClickListener=new NontificationAdapter.ItemClickListener() {
                             @Override

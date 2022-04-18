@@ -19,6 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.egormoroz.schooly.Callbacks;
@@ -154,6 +155,10 @@ public class MyClothesFragment extends Fragment {
                                 @Override
                                 public void getClothes(ArrayList<Clothes> allClothes) {
                                     MyClothesAdapter myClothesAdapter=new MyClothesAdapter(allClothes,itemClickListener);
+                                    LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+                                    layoutManager.setReverseLayout(true);
+                                    layoutManager.setStackFromEnd(true);
+                                    recyclerMyClothes.setLayoutManager(layoutManager);
                                     recyclerMyClothes.setAdapter(myClothesAdapter);
                                 }
                             });

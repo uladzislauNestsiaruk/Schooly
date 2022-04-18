@@ -12,6 +12,7 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.egormoroz.schooly.Callbacks;
@@ -83,6 +84,10 @@ public class MyMinersFragment extends Fragment {
                                     buyMiner.setVisibility(View.GONE);
                                 }
                                 MyMinersAdapter myminersAdapter=new MyMinersAdapter(listAdapter);
+                                LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+                                layoutManager.setReverseLayout(true);
+                                layoutManager.setStackFromEnd(true);
+                                recyclerviewMining.setLayoutManager(layoutManager);
                                 recyclerviewMining.setAdapter(myminersAdapter);
                             }
                         });

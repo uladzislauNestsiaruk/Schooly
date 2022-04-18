@@ -83,7 +83,8 @@ public class LooksFragmentProfile extends Fragment {
                             });
                         }else {
                             LooksAdapter looksAdapter=new LooksAdapter(look,LooksFragmentProfile.newInstance(type,fragment));
-                            looksRecycler.setLayoutManager(new GridLayoutManager(getActivity(), 3));
+                            GridLayoutManager gridLayoutManager=new GridLayoutManager(getContext(), 3);
+                            looksRecycler.setLayoutManager(gridLayoutManager);
                             looksRecycler.setAdapter(looksAdapter);
                             LooksAdapter.ItemClickListener itemClickListener=new LooksAdapter.ItemClickListener() {
                                 @Override

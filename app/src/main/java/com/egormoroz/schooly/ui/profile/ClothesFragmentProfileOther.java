@@ -106,7 +106,8 @@ public class ClothesFragmentProfileOther extends Fragment {
                         }else {
                             recyclerOther.setVisibility(View.VISIBLE);
                             ClothesAdapterOther clothesAdapter=new ClothesAdapterOther(clothesFromBase,itemClickListener);
-                            recyclerOther.setLayoutManager(new GridLayoutManager(getContext(), 2));
+                            GridLayoutManager gridLayoutManager=new GridLayoutManager(getContext(), 2);
+                            recyclerOther.setLayoutManager(gridLayoutManager);
                             recyclerOther.setAdapter(clothesAdapter);
                         }
                     }

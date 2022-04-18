@@ -12,6 +12,7 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.egormoroz.schooly.Callbacks;
@@ -84,7 +85,7 @@ public class TransferHistoryFragment extends Fragment {
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @Override
             public void PassUserNick(String nick) {
-                Query query=firebaseModel.getUsersReference().child(nick).child("transferHistory");
+                Query query=firebaseModel.getUsersReference().child(nick).child("transferHistory").orderByKey();
                 query.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -100,6 +101,10 @@ public class TransferHistoryFragment extends Fragment {
                             noTransfer.setVisibility(View.VISIBLE);
                         }else {
                             TransferHistoryAdapter transferHistoryAdapter=new TransferHistoryAdapter(transferHistoryBase);
+                            LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+                            layoutManager.setReverseLayout(true);
+                            layoutManager.setStackFromEnd(true);
+                            historyRecyclerView.setLayoutManager(layoutManager);
                             historyRecyclerView.setAdapter(transferHistoryAdapter);
                             noTransfer.setVisibility(View.GONE);
                         }

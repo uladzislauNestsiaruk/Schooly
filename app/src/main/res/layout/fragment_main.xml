@@ -148,10 +148,10 @@
             android:layout_marginTop="16dp"
             android:clipToPadding="false"
             android:orientation="horizontal"
+            android:overScrollMode="never"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
             android:scrollbars="none"
-            android:overScrollMode="never"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
         <RelativeLayout
@@ -191,11 +191,11 @@
             android:layout_marginTop="10dp"
             android:clipToPadding="false"
             android:orientation="horizontal"
+            android:overScrollMode="never"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
             android:scrollbars="none"
-            android:overScrollMode="never"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 
 
         <RelativeLayout

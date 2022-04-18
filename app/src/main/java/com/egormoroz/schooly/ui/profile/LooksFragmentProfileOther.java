@@ -68,7 +68,9 @@ public class LooksFragmentProfileOther extends Fragment {
           looksRecyclerOther.setVisibility(View.GONE);
         }else{
           LooksAdapter looksAdapter=new LooksAdapter(look,LooksFragmentProfileOther.newInstance(otherUserNick));
-          looksRecyclerOther.setLayoutManager(new GridLayoutManager(getActivity(), 3));
+          GridLayoutManager gridLayoutManager=new GridLayoutManager(getContext(), 3);
+
+          looksRecyclerOther.setLayoutManager(gridLayoutManager);
           looksRecyclerOther.setAdapter(looksAdapter);
           LooksAdapter.ItemClickListener itemClickListener=new LooksAdapter.ItemClickListener() {
             @Override
