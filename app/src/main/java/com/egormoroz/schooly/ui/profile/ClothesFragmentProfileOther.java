@@ -26,6 +26,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class ClothesFragmentProfileOther extends Fragment {
 
@@ -105,6 +106,7 @@ public class ClothesFragmentProfileOther extends Fragment {
                             recyclerOther.setVisibility(View.GONE);
                         }else {
                             recyclerOther.setVisibility(View.VISIBLE);
+                            Collections.reverse(clothesFromBase);
                             ClothesAdapterOther clothesAdapter=new ClothesAdapterOther(clothesFromBase,itemClickListener);
                             GridLayoutManager gridLayoutManager=new GridLayoutManager(getContext(), 2);
                             recyclerOther.setLayoutManager(gridLayoutManager);

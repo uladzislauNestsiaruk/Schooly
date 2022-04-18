@@ -732,7 +732,7 @@ public class RecentMethods {
     public static void getClothesInWardrobe(String nick,FirebaseModel firebaseModel,Callbacks.GetClothes callback){
         firebaseModel.initAll();
         Query query=firebaseModel.getUsersReference().child(nick)
-                .child("clothes");
+                .child("clothes").orderByKey();
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -1087,7 +1087,7 @@ public class RecentMethods {
 
     public static void getSavedLooks(String nickName, FirebaseModel model, Callbacks.getSavedLook callback){
         model.initAll();
-        Query query=model.getUsersReference().child(nickName).child("saved");
+        Query query=model.getUsersReference().child(nickName).child("saved").orderByKey();
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -1108,7 +1108,7 @@ public class RecentMethods {
     }
     public static void getLooksList(String nickName, FirebaseModel model, Callbacks.getLooksList callback){
         model.initAll();
-        Query query=model.getUsersReference().child(nickName).child("looks");
+        Query query=model.getUsersReference().child(nickName).child("looks").orderByKey();
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -1308,7 +1308,7 @@ public class RecentMethods {
     public static void getMyClothes(String nick,FirebaseModel firebaseModel,Callbacks.GetClothes callback){
         firebaseModel.initAll();
         Query query=firebaseModel.getUsersReference().child(nick)
-                .child("myClothes");
+                .child("myClothes").orderByKey();
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {

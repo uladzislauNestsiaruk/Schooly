@@ -22,6 +22,7 @@ import com.egormoroz.schooly.ui.profile.Wardrobe.CreateLookFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class LooksFragmentProfile extends Fragment {
 
@@ -82,6 +83,7 @@ public class LooksFragmentProfile extends Fragment {
                                 }
                             });
                         }else {
+                            Collections.reverse(look);
                             LooksAdapter looksAdapter=new LooksAdapter(look,LooksFragmentProfile.newInstance(type,fragment));
                             GridLayoutManager gridLayoutManager=new GridLayoutManager(getContext(), 3);
                             looksRecycler.setLayoutManager(gridLayoutManager);

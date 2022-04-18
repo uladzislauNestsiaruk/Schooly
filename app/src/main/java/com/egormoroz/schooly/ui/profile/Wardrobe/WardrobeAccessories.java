@@ -22,6 +22,7 @@ import com.egormoroz.schooly.ui.main.Shop.ShopFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class WardrobeAccessories extends Fragment {
     String type;
@@ -97,6 +98,7 @@ public class WardrobeAccessories extends Fragment {
                                 }
                             });
                         }else {
+                            Collections.reverse(sortAccessoriesArrayListWardrobe);
                             WardrobeClothesAdapter newClothesAdapter = new WardrobeClothesAdapter(sortAccessoriesArrayListWardrobe, itemClickListener);
                             wardrobeRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
                             wardrobeRecyclerView.setAdapter(newClothesAdapter);

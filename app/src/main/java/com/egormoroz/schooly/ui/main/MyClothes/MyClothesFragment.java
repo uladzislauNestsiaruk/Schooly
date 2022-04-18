@@ -41,6 +41,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class MyClothesFragment extends Fragment {
 
@@ -154,11 +155,8 @@ public class MyClothesFragment extends Fragment {
                             RecentMethods.getMyClothes(nick, firebaseModel, new Callbacks.GetClothes() {
                                 @Override
                                 public void getClothes(ArrayList<Clothes> allClothes) {
+                                    Collections.reverse(allClothes);
                                     MyClothesAdapter myClothesAdapter=new MyClothesAdapter(allClothes,itemClickListener);
-                                    LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-                                    layoutManager.setReverseLayout(true);
-                                    layoutManager.setStackFromEnd(true);
-                                    recyclerMyClothes.setLayoutManager(layoutManager);
                                     recyclerMyClothes.setAdapter(myClothesAdapter);
                                 }
                             });
@@ -209,6 +207,7 @@ public class MyClothesFragment extends Fragment {
                     RecentMethods.getMyClothes(nick, firebaseModel, new Callbacks.GetClothes() {
                         @Override
                         public void getClothes(ArrayList<Clothes> allClothes) {
+                            Collections.reverse(allClothes);
                             MyClothesAdapter myClothesAdapter=new MyClothesAdapter(allClothes,itemClickListener);
                             recyclerMyClothes.setAdapter(myClothesAdapter);
                             Query query=firebaseModel.getUsersReference().child(nick)

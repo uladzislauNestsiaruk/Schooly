@@ -175,6 +175,7 @@ public class EnterFragment extends Fragment {
                             FirebaseUser user = AuthenticationBase.getCurrentUser();
                             RecentMethods.setCurrentFragment(MainFragment.newInstance(), getActivity());
                         } else {
+                            Log.d("AAAA", RecentMethods.makeEmail(phone)+"  "+password);
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
                         }

@@ -142,7 +142,7 @@ public class MainActivity extends AppCompatActivity {
                     public void hasGoogleUserCallback(boolean hasThisUser) {
                         if(hasThisUser) {
                             Log.d("AAA", "current user: " + user.getEmail());
-                            setCurrentFragment(MainFragment.newInstance());
+                            setCurrentFragment(RegisrtationstartFragment.newInstance());
                             RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
                                 @Override
                                 public void PassUserNick(String nick) {

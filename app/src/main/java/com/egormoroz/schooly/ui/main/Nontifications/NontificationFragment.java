@@ -26,6 +26,7 @@ import com.egormoroz.schooly.ui.main.MainFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class NontificationFragment extends Fragment {
     public static NontificationFragment newInstance() {
@@ -76,10 +77,9 @@ public class NontificationFragment extends Fragment {
                         }else {
                             emptyNonts.setVisibility(View.GONE);
                         }
+                        Collections.reverse(nontifications);
                         NontificationAdapter nontificationAdapter=new NontificationAdapter(nontifications);
                         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-                        layoutManager.setReverseLayout(true);
-                        layoutManager.setStackFromEnd(true);
                         nontsRecyclerView.setLayoutManager(layoutManager);
                         nontsRecyclerView.setAdapter(nontificationAdapter);
                         NontificationAdapter.ItemClickListener itemClickListener=new NontificationAdapter.ItemClickListener() {

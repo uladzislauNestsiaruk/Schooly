@@ -21,6 +21,7 @@ import com.egormoroz.schooly.ui.profile.Wardrobe.CreateLookFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class LooksFragmentProfileOther extends Fragment {
 
@@ -67,9 +68,9 @@ public class LooksFragmentProfileOther extends Fragment {
           noLooksOther.setText("У "+otherUserNick+" нет образов :(");
           looksRecyclerOther.setVisibility(View.GONE);
         }else{
+          Collections.reverse(look);
           LooksAdapter looksAdapter=new LooksAdapter(look,LooksFragmentProfileOther.newInstance(otherUserNick));
           GridLayoutManager gridLayoutManager=new GridLayoutManager(getContext(), 3);
-
           looksRecyclerOther.setLayoutManager(gridLayoutManager);
           looksRecyclerOther.setAdapter(looksAdapter);
           LooksAdapter.ItemClickListener itemClickListener=new LooksAdapter.ItemClickListener() {

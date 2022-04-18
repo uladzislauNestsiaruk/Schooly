@@ -34,6 +34,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class ClothesFragmentProfile extends Fragment {
 
@@ -128,6 +129,7 @@ public class ClothesFragmentProfile extends Fragment {
                             looksRecycler.setVisibility(View.GONE);
                         }else {
                             looksRecycler.setVisibility(View.VISIBLE);
+                            Collections.reverse(clothesFromBase);
                             ClothesAdapter clothesAdapter=new ClothesAdapter(clothesFromBase,itemClickListener);
                             LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
                             layoutManager.setReverseLayout(true);

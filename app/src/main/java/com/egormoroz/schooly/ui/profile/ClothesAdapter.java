@@ -110,6 +110,7 @@ public class ClothesAdapter extends RecyclerView.Adapter<ClothesAdapter.ViewHold
         return listAdapter.size();
     }
 
+
     public class ViewHolder extends RecyclerView.ViewHolder  {
         ImageView clothesImage,dollarImage,coinsImage;
         TextView clothesPrise,clothesTitle,purchaseNumber;

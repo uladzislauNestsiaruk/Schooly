@@ -1,6 +1,6 @@
 package com.egormoroz.schooly.ui.coins;
 
-public class Transfer {
+public class Transfer{
 
     private long sum;
     private String who;

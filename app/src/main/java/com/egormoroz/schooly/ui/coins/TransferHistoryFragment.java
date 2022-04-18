@@ -29,6 +29,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class TransferHistoryFragment extends Fragment {
 
@@ -100,10 +101,9 @@ public class TransferHistoryFragment extends Fragment {
                         if (transferHistoryBase.size()==0){
                             noTransfer.setVisibility(View.VISIBLE);
                         }else {
+                            Collections.reverse(transferHistoryBase);
                             TransferHistoryAdapter transferHistoryAdapter=new TransferHistoryAdapter(transferHistoryBase);
                             LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-                            layoutManager.setReverseLayout(true);
-                            layoutManager.setStackFromEnd(true);
                             historyRecyclerView.setLayoutManager(layoutManager);
                             historyRecyclerView.setAdapter(transferHistoryAdapter);
                             noTransfer.setVisibility(View.GONE);

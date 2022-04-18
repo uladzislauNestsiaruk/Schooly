@@ -25,6 +25,7 @@ import com.egormoroz.schooly.ui.profile.Wardrobe.CreateLookFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class SavedFragment extends Fragment {
 
@@ -88,6 +89,7 @@ public class SavedFragment extends Fragment {
                             emptyList.setVisibility(View.VISIBLE);
                             recyclerView.setVisibility(View.GONE);
                         }else {
+                            Collections.reverse(newsItems);
                             LooksAdapter looksAdapter=new LooksAdapter(newsItems, SavedFragment.newInstance(type,fragment));
                             recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
                             recyclerView.setAdapter(looksAdapter);
