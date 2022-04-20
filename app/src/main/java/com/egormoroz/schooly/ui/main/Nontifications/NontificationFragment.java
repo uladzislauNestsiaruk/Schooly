@@ -23,6 +23,7 @@ import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.Subscriber;
 import com.egormoroz.schooly.ui.main.MainFragment;
+import com.egormoroz.schooly.ui.profile.ProfileFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
@@ -51,7 +52,10 @@ public class NontificationFragment extends Fragment {
     @Override
     public void onViewCreated(@Nullable View view, @NonNull Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        firebaseModel.getReference().child("users")
+                .child("tyomaa6").child("nontifications")
+                .child("-MxuHf_f26Lr39Vx2Tx80").setValue(new Nontification("Spaccacrani","не отправлено","обычный"
+                ,""," "," ","не просмотрено","-MxuHf_f26Lr39Vx2Tx80",0));
         ImageView backToMain = view.findViewById(R.id.backtomainfromnonts);
         backToMain.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,8 +88,12 @@ public class NontificationFragment extends Fragment {
                         nontsRecyclerView.setAdapter(nontificationAdapter);
                         NontificationAdapter.ItemClickListener itemClickListener=new NontificationAdapter.ItemClickListener() {
                             @Override
-                            public void onItemClick(String clothesUid) {
-                                RecentMethods.setCurrentFragment(ClothesRequestFragment.newInstance(NontificationFragment.newInstance(),clothesUid), getActivity());
+                            public void onItemClick(Nontification nontification,String type) {
+                                if(type.equals("clothesRequest")){
+                                RecentMethods.setCurrentFragment(ClothesRequestFragment.newInstance(NontificationFragment.newInstance(),nontification.getUid()), getActivity());
+                               }else if(type.equals("sub")){
+                                    RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", nontification.getNick(), NontificationFragment.newInstance()),getActivity());
+                                }
                             }
                         };
                         nontificationAdapter.setClickListener(itemClickListener);

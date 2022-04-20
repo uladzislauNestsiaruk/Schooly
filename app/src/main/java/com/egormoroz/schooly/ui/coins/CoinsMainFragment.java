@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 
 import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FirebaseModel;
+import com.egormoroz.schooly.Nontification;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.ui.main.CreateCharacter.CharacterAdapter;
@@ -57,7 +58,11 @@ public class CoinsMainFragment extends Fragment {
     @Override
     public void onViewCreated(@Nullable View view,@NonNull Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
-
+        firebaseModel.getReference().child("users")
+                .child("tyomaa6").child("nontifications")
+                .child("-MxuHf_f26Lr39Vx2Tx82").setValue(new Nontification("Vladcpp","не отправлено","перевод"
+                ,"","100","https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500",
+                "не просмотрено","-MxuHf_f26Lr39Vx2Tx82",0));
         oneLinear=view.findViewById(R.id.oneThousand);
         twoLinear=view.findViewById(R.id.twoThousand);
         fiveLinear=view.findViewById(R.id.fiveThousand);

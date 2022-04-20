@@ -196,7 +196,6 @@ public class ClothesViewingProfile extends Fragment {
                     purchaseAll.setText(clothesPriceString.substring(0, 2)+"KK");
                 }
                 profitTodayString=String.valueOf(clothesViewing.getClothesPrice()*clothesViewing.getPurchaseToday());
-                Log.d("####", "ff "+profitTodayString);
                 profitAllString=String.valueOf(clothesViewing.getPurchaseNumber()*clothesViewing.getClothesPrice());
                 if (clothesViewing.getCurrencyType().equals("dollar")){
                     clothesPrice.setText("$"+String.valueOf(clothes.getClothesPrice()));

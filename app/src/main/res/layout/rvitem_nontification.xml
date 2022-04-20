@@ -6,8 +6,8 @@
 
     <ImageView
         android:id="@+id/userImage"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_marginStart="24dp"
         android:layout_marginTop="16dp"
         android:background="@drawable/corners14appcolor"
@@ -32,7 +32,7 @@
         android:layout_below="@+id/type"
         android:layout_marginStart="24dp"
         android:fontFamily="@font/montserrat_extrabold"
-        android:textSize="20sp"
+        android:textSize="17sp"
         android:visibility="gone"/>
 
     <ImageView
@@ -73,7 +73,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/app_grey"
-        android:textSize="18dp"
+        android:textSize="16dp"
         android:fontFamily="@font/montserrat_extrabold"
         android:layout_toRightOf="@+id/userImage"
         android:layout_marginStart="8dp"

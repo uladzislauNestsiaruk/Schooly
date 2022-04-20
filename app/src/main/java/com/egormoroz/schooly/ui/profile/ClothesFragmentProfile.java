@@ -78,7 +78,7 @@ public class ClothesFragmentProfile extends Fragment {
                 itemClickListener=new ClothesAdapter.ItemClickListener() {
                     @Override
                     public void onItemClick(Clothes clothes) {
-                        RecentMethods.setCurrentFragment(ClothesViewingProfile.newInstance(type,ProfileFragment.newInstance(type,nick,ClothesFragmentProfile.newInstance(type,fragment))), getActivity());
+                        RecentMethods.setCurrentFragment(ClothesViewingProfile.newInstance(type,ProfileFragment.newInstance(type,nick,fragment)), getActivity());
                     }
                 };
             }

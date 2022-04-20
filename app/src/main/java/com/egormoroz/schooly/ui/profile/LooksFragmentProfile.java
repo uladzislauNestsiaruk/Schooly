@@ -84,15 +84,18 @@ public class LooksFragmentProfile extends Fragment {
                             });
                         }else {
                             Collections.reverse(look);
-                            LooksAdapter looksAdapter=new LooksAdapter(look,LooksFragmentProfile.newInstance(type,fragment));
+                            LooksAdapter looksAdapter=new LooksAdapter(look,LooksFragmentProfile.newInstance(type,fragment),looksRecycler);
                             GridLayoutManager gridLayoutManager=new GridLayoutManager(getContext(), 3);
+                            looksAdapter.setHasStableIds(true);
+                            looksRecycler.setHasFixedSize(true);
+                            looksRecycler.setItemViewCacheSize(20);
                             looksRecycler.setLayoutManager(gridLayoutManager);
                             looksRecycler.setAdapter(looksAdapter);
                             LooksAdapter.ItemClickListener itemClickListener=new LooksAdapter.ItemClickListener() {
                                 @Override
                                 public void onItemClick(NewsItem newsItem) {
                                     RecentMethods.setCurrentFragment(ViewingLookFragment.newInstance(ProfileFragment.
-                                            newInstance(type, nick, LooksFragmentProfile.newInstance(type,fragment))), getActivity());
+                                            newInstance(type, nick, fragment)), getActivity());
                                 }
                             };
                             looksAdapter.setClickListener(itemClickListener);

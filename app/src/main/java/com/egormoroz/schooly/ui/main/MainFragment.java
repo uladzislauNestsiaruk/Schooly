@@ -26,6 +26,7 @@ import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.egormoroz.schooly.Callbacks;
@@ -69,6 +70,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Random;
 
 public class MainFragment extends Fragment{
@@ -151,7 +153,7 @@ public class MainFragment extends Fragment{
 //                firebaseModel.getReference().child("users")
 //                        .child(nick).child("nontifications")
 //                        .child("-MxuHf_f26Lr39Vx2Tx8").setValue(new Nontification(nick,"не отправлено","запросодежда"
-//                        ,""," "," ","не просмотрено","-MxuHf_f26Lr39Vx2Tx8"));
+//                        ,""," "," ","не просмотрено","-MxuHf_f26Lr39Vx2Tx8",0));
                 RecentMethods.getMyClothes(nick, firebaseModel, new Callbacks.GetClothes() {
                     @Override
                     public void getClothes(ArrayList<Clothes> allClothes) {
@@ -288,9 +290,9 @@ public class MainFragment extends Fragment{
             @Override
             public void PassUserNick(String nick) {
   //              firebaseModel.getReference().child("usersNicks").child("Spaccacrani").setValue(new UserPeopleAdapter("Spaccacrani", "5", "hello"));
-//                String uid=firebaseModel.getUsersReference().child("tyomaa6").child("myClothes").push().getKey();
- //               firebaseModel.getUsersReference().child("tyomaa6").child("myClothes").child(uid).setValue(new Clothes("shoes", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
-//                        ,220,"Blazer",344,123,"tyomaa6","coin"," ","",72,"foot",uid,"exclusive"));
+ //               String uid=firebaseModel.getUsersReference().child("tyomaa6").child("myClothes").push().getKey();
+//                firebaseModel.getUsersReference().child("tyomaa6").child("myClothes").child(uid).setValue(new Clothes("shoes", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
+ //                       ,220,"Prada",344,123,"tyomaa6","coin"," ","",72,"foot",uid,"exclusive"));
 //                firebaseModel.getUsersReference().child("Vladcpp").child("myClothes").child(uid).setValue(new Clothes("shoes", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
 //                        ,220,"Blazer",344,123,"Vladcpp","coin"," ","",72,"foot",uid,"exclusive"));
 //                String uid=firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").push().getKey();
@@ -411,7 +413,7 @@ public class MainFragment extends Fragment{
             @Override
             public void PassUserNick(String nick) {
                 Query query=firebaseModel.getUsersReference().child(nick)
-                        .child("myClothes");
+                        .child("myClothes").orderByKey();
                 query.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -457,6 +459,7 @@ public class MainFragment extends Fragment{
                             });
                         }else {
                             relativeFirstLayout.setVisibility(View.GONE);
+                            Collections.reverse(clothesFromBase);
                             MyClothesAdapterMain myClothesAdapterMain=new MyClothesAdapterMain(clothesFromBase,itemClickListenerMyClothes);
                             myClothesRecycler.setAdapter(myClothesAdapterMain);
                         }

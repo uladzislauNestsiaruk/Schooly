@@ -33,9 +33,10 @@ import java.util.concurrent.TimeUnit;
 public class NontificationManager extends Worker {
 
     FirebaseModel firebaseModel=new FirebaseModel();
-    private static final int NOTIFY_ID = 102;
+    int NOTIFY_ID;
     private static final String CHANNEL_ID = "channel";
-    Nontification otherUserNickNonts;
+    private static final String CHANNEL_ID1 = "channel1";
+    Nontification nonts;
     String nickOther;
 
     public NontificationManager(@NonNull Context context, @NonNull WorkerParameters workerParams) {
@@ -48,7 +49,6 @@ public class NontificationManager extends Worker {
     public Result doWork() {
         firebaseModel.initAll();
         getChangesInSubscribers();
-        createNotificationChannel();
         Log.d("######", "great");
         return Result.success();
     }
@@ -62,11 +62,12 @@ public class NontificationManager extends Worker {
             channel.setDescription(description);
             NotificationManager notificationManager = getApplicationContext().getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
-            Log.d("####", "dd  ");
+            Log.d("AAA", "dd  ");
         }
     }
 
     public void getChangesInSubscribers(){
+        Log.d("SSS", "shiiiiiiiitttttttttttt");
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @Override
             public void PassUserNick(String nick) {
@@ -74,24 +75,111 @@ public class NontificationManager extends Worker {
                 query.addChildEventListener(new ChildEventListener() {
                     @Override
                     public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                        RecentMethods.getNontificationsList(nick, firebaseModel, new Callbacks.getNontificationsList() {
-                            @Override
-                            public void getNontificationsList(ArrayList<Nontification> nontifications) {
-                                Log.d("#####", "f "+nontifications);
-                                if(nontifications.size()!=0) {
-                                    for(int i=0;i<nontifications.size();i++){
-                                        otherUserNickNonts = nontifications.get(i);
-                                        nickOther = otherUserNickNonts.getNick();
-                                        Log.d("####", "shiiiiiiiitttttttttttt");
-                                        if(otherUserNickNonts.getTypeDispatch().equals("не отправлено")) {
-                                            nontification(nickOther);
-                                            firebaseModel.getUsersReference().child(nick).child("nontifications").child(otherUserNickNonts.getUid())
-                                                    .child("typeDispatch").setValue("отправлено");
-                                        }
-                                    }
-                                }
+                        nonts=dataSnapshot.getValue(Nontification.class);
+                        Log.d("AAA", "shiiiiiiiitttttttttttt");
+                        if(nonts.getTypeDispatch().equals("не отправлено")) {
+                            nickOther = nonts.getNick();
+                            if(nonts.getTypeView().equals("обычный")) {
+                                nontification("Еще один!",nickOther+" подписался на тебя",NOTIFY_ID);
+                                firebaseModel.getUsersReference().child(nick).child("nontifications").child(nonts.getUid())
+                                        .child("typeDispatch").setValue("отправлено");
+                                createNotificationChannel();
+                            }else if(nonts.getTypeView().equals("запросодежда")){
+                                nontification("Пришел ответ на заявку","Рассмотрена заявка на добавление одежды"+nonts.getClothesName() ,NOTIFY_ID);
+                                firebaseModel.getUsersReference().child(nick).child("nontifications").child(nonts.getUid())
+                                        .child("typeDispatch").setValue("отправлено");
+                                createNotificationChannel();
+                            }else if(nonts.getTypeView().equals("запрос")){
+                                nontification("Запрос на подписку",nickOther+" хочет подписаться на тебя!",NOTIFY_ID);
+                                firebaseModel.getUsersReference().child(nick).child("nontifications").child(nonts.getUid())
+                                        .child("typeDispatch").setValue("отправлено");
+                                createNotificationChannel();
+                            }else if(nonts.getTypeView().equals("одежда")){
+                                nontification("Еще больше прибыли!",nickOther+" купил у тебя "+nonts.getClothesName()+"!",NOTIFY_ID);
+                                firebaseModel.getUsersReference().child(nick).child("nontifications").child(nonts.getUid())
+                                        .child("typeDispatch").setValue("отправлено");
+                                createNotificationChannel();
+                            }else if(nonts.getTypeView().equals("перевод")){
+                                nontification("Перевод коинов",nickOther+" перевел тебе коины!",NOTIFY_ID);
+                                firebaseModel.getUsersReference().child(nick).child("nontifications").child(nonts.getUid())
+                                        .child("typeDispatch").setValue("отправлено");
+                                createNotificationChannel();
+                            }else if(nonts.getTypeView().equals("подарок")){
+                                nontification("Ух ты! Новый подарок!",nickOther+" подарил тебе подарок",NOTIFY_ID);
+                                firebaseModel.getUsersReference().child(nick).child("nontifications").child(nonts.getUid())
+                                        .child("typeDispatch").setValue("отправлено");
+                                createNotificationChannel();
                             }
-                        });
+                            else if(nonts.getTypeView().equals("майнинг")){
+                                nontification("Майнинг","+"+nonts.getClothesProfit()+"S за день",NOTIFY_ID);
+                                firebaseModel.getUsersReference().child(nick).child("nontifications").child(nonts.getUid())
+                                        .child("typeDispatch").setValue("отправлено");
+                                createNotificationChannel();
+                            }
+                            else if(nonts.getTypeView().equals("одеждаприбыль")){
+                                nontification("Прибыль с продаж одежды","+"+nonts.getClothesProfit()+"S за день",NOTIFY_ID);
+                                firebaseModel.getUsersReference().child(nick).child("nontifications").child(nonts.getUid())
+                                        .child("typeDispatch").setValue("отправлено");
+                                createNotificationChannel();
+                            }
+                        }
+//                        RecentMethods.getNontificationsList(nick, firebaseModel, new Callbacks.getNontificationsList() {
+//                            @Override
+//                            public void getNontificationsList(ArrayList<Nontification> nontifications) {
+//                                if(nontifications.size()!=0) {
+//                                    for(int i=0;i<nontifications.size();i++){
+//                                        nonts = nontifications.get(i);
+//                                        Log.d("AAA", "shiiiiiiiitttttttttttt");
+//                                        if(nonts.getTypeDispatch().equals("не отправлено")) {
+//                                            nickOther = nonts.getNick();
+//                                            if(nonts.getTypeView().equals("обычный")) {
+//                                                nontification("Еще один!",nickOther+" подписался на тебя",NOTIFY_ID);
+//                                                firebaseModel.getUsersReference().child(nick).child("nontifications").child(nonts.getUid())
+//                                                        .child("typeDispatch").setValue("отправлено");
+//                                                createNotificationChannel();
+//                                            }else if(nonts.getTypeView().equals("запросодежда")){
+//                                                nontification("Пришел ответ на заявку","Рассмотрена заявка на добавление одежды"+nonts.getClothesName() ,NOTIFY_ID);
+//                                                firebaseModel.getUsersReference().child(nick).child("nontifications").child(nonts.getUid())
+//                                                        .child("typeDispatch").setValue("отправлено");
+//                                                createNotificationChannel();
+//                                            }else if(nonts.getTypeView().equals("запрос")){
+//                                                nontification("Запрос на подписку",nickOther+" хочет подписаться на тебя!",NOTIFY_ID);
+//                                                firebaseModel.getUsersReference().child(nick).child("nontifications").child(nonts.getUid())
+//                                                        .child("typeDispatch").setValue("отправлено");
+//                                                createNotificationChannel();
+//                                            }else if(nonts.getTypeView().equals("одежда")){
+//                                                nontification("Еще больше прибыли!",nickOther+" купил у тебя "+nonts.getClothesName()+"!",NOTIFY_ID);
+//                                                firebaseModel.getUsersReference().child(nick).child("nontifications").child(nonts.getUid())
+//                                                        .child("typeDispatch").setValue("отправлено");
+//                                                createNotificationChannel();
+//                                            }else if(nonts.getTypeView().equals("перевод")){
+//                                                nontification("Перевод коинов",nickOther+" перевел тебе коины!",NOTIFY_ID);
+//                                                firebaseModel.getUsersReference().child(nick).child("nontifications").child(nonts.getUid())
+//                                                        .child("typeDispatch").setValue("отправлено");
+//                                                createNotificationChannel();
+//                                            }else if(nonts.getTypeView().equals("подарок")){
+//                                                nontification("Ух ты! Новый подарок!",nickOther+" подарил тебе подарок",NOTIFY_ID);
+//                                                firebaseModel.getUsersReference().child(nick).child("nontifications").child(nonts.getUid())
+//                                                        .child("typeDispatch").setValue("отправлено");
+//                                                createNotificationChannel();
+//                                            }
+//                                            else if(nonts.getTypeView().equals("майнинг")){
+//                                                nontification("Майнинг","+"+nonts.getClothesProfit()+"S за день",NOTIFY_ID);
+//                                                firebaseModel.getUsersReference().child(nick).child("nontifications").child(nonts.getUid())
+//                                                        .child("typeDispatch").setValue("отправлено");
+//                                                createNotificationChannel();
+//                                            }
+//                                            else if(nonts.getTypeView().equals("одеждаприбыль")){
+//                                                nontification("Прибыль с продаж одежды","+"+nonts.getClothesProfit()+"S за день",NOTIFY_ID);
+//                                                firebaseModel.getUsersReference().child(nick).child("nontifications").child(nonts.getUid())
+//                                                        .child("typeDispatch").setValue("отправлено");
+//                                                createNotificationChannel();
+//                                            }
+//                                        }
+//                                    }
+//                                }
+//                            }
+//                        });
 
                     }
 
@@ -119,7 +207,7 @@ public class NontificationManager extends Worker {
         });
     }
 
-    public void nontification(String nickOther){
+    public void nontification(String nickOther,String text, int notificationId){
         Intent notificationIntent = new Intent(getApplicationContext(), MainActivity.class);
         PendingIntent contentIntent = PendingIntent.getActivity(getApplicationContext(),
                 0, notificationIntent,
@@ -128,16 +216,17 @@ public class NontificationManager extends Worker {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_nontification_image)
                 .setContentTitle(nickOther)
-                .setContentText("хочет добавить вас в друзья")
+                .setContentText(text)
                 .setContentIntent(contentIntent)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
         NotificationManagerCompat notificationManager =
                 NotificationManagerCompat.from(getApplicationContext());
-        notificationManager.notify(NOTIFY_ID, builder.build());
-        Log.d("######", "good");
+        notificationManager.notify(notificationId, builder.build());
+        NOTIFY_ID+=1;
+        Log.d("AAAA", "zz  "+NOTIFY_ID);
         Vibrator v = (Vibrator) getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
-        v.vibrate(400);
+        v.vibrate(100);
     }
 
 }

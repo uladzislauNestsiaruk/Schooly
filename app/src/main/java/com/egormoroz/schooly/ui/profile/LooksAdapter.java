@@ -16,6 +16,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.egormoroz.schooly.Callbacks;
@@ -50,9 +52,10 @@ public class LooksAdapter extends RecyclerView.Adapter<LooksAdapter.ViewHolder> 
     static  NewsItem newsItemToViewing;
     Fragment fragment;
     View view;
+    NewsItem  newsItem;
     String viewLookCount;
 
-    public LooksAdapter(ArrayList<NewsItem> listAdapter,Fragment fragment) {
+    public LooksAdapter(ArrayList<NewsItem> listAdapter,Fragment fragment,RecyclerView recyclerView) {
         this.listAdapter = listAdapter;
         this.fragment=fragment;
     }
@@ -70,7 +73,7 @@ public class LooksAdapter extends RecyclerView.Adapter<LooksAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull LooksAdapter.ViewHolder holder, int position) {
-        NewsItem  newsItem=listAdapter.get(position);
+        newsItem=listAdapter.get(position);
         newsItemToViewing=newsItem;
         holder.lookScene.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,9 +102,39 @@ public class LooksAdapter extends RecyclerView.Adapter<LooksAdapter.ViewHolder> 
         else if(newsItem.getViewCount()>10000000 && newsItem.getViewCount()<100000000){
             holder.viewPurchase.setText(viewLookCount.substring(0, 2)+"KK");
         }
+
         loadModels(Uri.parse(newsItem.getImageUrl()), holder.lookScene,holder.lookScene.getContext() , 0.25f);
 
     }
+
+//    @Override
+//    public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
+//        super.onAttachedToRecyclerView(recyclerView);
+//        RecyclerView.LayoutManager manager = recyclerView.getLayoutManager();
+//        if(manager instanceof GridLayoutManager && getItemCount() > 0) {
+//            GridLayoutManager llm = (GridLayoutManager) manager;
+//            recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+//                @Override
+//                public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+//                    super.onScrollStateChanged(recyclerView, newState);
+//                }
+//
+//                @Override
+//                public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+//                    super.onScrolled(recyclerView, dx, dy);
+//                    int visiblePosition = llm.findFirstCompletelyVisibleItemPosition();
+//                    if(visiblePosition > -1) {
+//                        View v = llm.findViewByPosition(visiblePosition);
+//                        //do something
+//                        TextView purchase=v.findViewById(R.id.viewPurchase);
+//                        SceneView lookScene=v.findViewById(R.id.lookScene);
+//                        loadModels(Uri.parse(newsItem.getImageUrl()), lookScene,lookScene.getContext() , 0.25f);
+//
+//                    }
+//                }
+//            });
+//        }
+//    }
 
     @Override
     public int getItemCount() {

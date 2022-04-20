@@ -90,7 +90,7 @@ public class SavedFragment extends Fragment {
                             recyclerView.setVisibility(View.GONE);
                         }else {
                             Collections.reverse(newsItems);
-                            LooksAdapter looksAdapter=new LooksAdapter(newsItems, SavedFragment.newInstance(type,fragment));
+                            LooksAdapter looksAdapter=new LooksAdapter(newsItems, SavedFragment.newInstance(type,fragment),recyclerView);
                             recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
                             recyclerView.setAdapter(looksAdapter);
                             LooksAdapter.ItemClickListener itemClickListener=new LooksAdapter.ItemClickListener() {

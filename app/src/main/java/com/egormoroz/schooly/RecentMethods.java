@@ -403,26 +403,25 @@ public class RecentMethods {
 
     public static void GetActiveMiner(String nick,FirebaseModel model, Callbacks.GetActiveMiners callback) {
         model.initAll();
-        Query query = model.getUsersReference().child(nick).child("activeMiners");
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                ArrayList<Miner> activeMinersFromBase=new ArrayList<>();
-                for (DataSnapshot snap : snapshot.getChildren()) {
-                    Miner miner = new Miner();
-                    miner.setInHour(snap.child("inHour").getValue(Long.class));
-                    miner.setMinerPrice(snap.child("minerPrice").getValue(Long.class));
-                    miner.setMinerImage(snap.child("minerImage").getValue(String.class));
-                    activeMinersFromBase.add(miner);
-                    long d=miner.getInHour();
-                }
-                callback.GetActiveMiners(activeMinersFromBase);
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
+         model.getUsersReference().child(nick).child("activeMiners")
+                .get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DataSnapshot> task) {
+                        if (task.isSuccessful()){
+                            DataSnapshot snapshot=task.getResult();
+                            ArrayList<Miner> activeMinersFromBase=new ArrayList<>();
+                            for (DataSnapshot snap : snapshot.getChildren()) {
+                                Miner miner = new Miner();
+                                miner.setInHour(snap.child("inHour").getValue(Long.class));
+                                miner.setMinerPrice(snap.child("minerPrice").getValue(Long.class));
+                                miner.setMinerImage(snap.child("minerImage").getValue(String.class));
+                                activeMinersFromBase.add(miner);
+                                long d=miner.getInHour();
+                            }
+                            callback.GetActiveMiners(activeMinersFromBase);
+                        }
+                    }
+                });
     }
 
     public static void GetMoneyFromBase(String nick,FirebaseModel firebaseModel,Callbacks.MoneyFromBase callback){
@@ -445,20 +444,17 @@ public class RecentMethods {
 
     public static void GetTodayMining(String nick,FirebaseModel model,Callbacks.GetTodayMining callback){
         model.initAll();
-        Query query=model.getUsersReference().child(nick)
-                .child("todayMining");
-        query.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.getValue(Double.class) != null)
-                    callback.GetTodayMining(dataSnapshot.getValue(Double.class));
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
+        model.getUsersReference().child(nick)
+                .child("todayMining").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DataSnapshot> task) {
+                        if(task.isSuccessful()){
+                            DataSnapshot snapshot=task.getResult();
+                            if (snapshot.getValue(Double.class) != null)
+                                callback.GetTodayMining(snapshot.getValue(Double.class));
+                        }
+                    }
+                });
     }
     public static void GetTimesTamp(String nick, FirebaseModel firebaseModel,Callbacks.GetTimesTamp callback){
         firebaseModel.initAll();
@@ -1108,33 +1104,30 @@ public class RecentMethods {
     }
     public static void getLooksList(String nickName, FirebaseModel model, Callbacks.getLooksList callback){
         model.initAll();
-        Query query=model.getUsersReference().child(nickName).child("looks").orderByKey();
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
+        model.getUsersReference().child(nickName).child("looks").orderByKey().get()
+                .addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                ArrayList<NewsItem> lookList = new ArrayList<>();
-                for (DataSnapshot snap:snapshot.getChildren()){
-                    NewsItem newsItem=new NewsItem();
-                    newsItem.setImageUrl(snap.child("imageUrl").getValue(String.class));
-                    newsItem.setLookPrice(snap.child("lookPrice").getValue(Long.class));
-                    newsItem.setItem_description(snap.child("item_description").getValue(String.class));
-                    newsItem.setNewsId(snap.child("newsId").getValue(String.class));
-                    newsItem.setLikesCount(snap.child("likes_count").getValue(String.class));
-                    newsItem.setViewCount(snap.child("viewCount").getValue(Long.class));
-                    newsItem.setPostTime(snap.child("postTime").getValue(String.class));
-                    newsItem.setNick(snap.child("nick").getValue(String.class));
-                    newsItem.setLookPriceDollar(snap.child("lookPriceDollar").getValue(Long.class));
-                    lookList.add(newsItem);
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if(task.isSuccessful()){
+                    DataSnapshot snapshot=task.getResult();
+                    ArrayList<NewsItem> lookList = new ArrayList<>();
+                    for (DataSnapshot snap:snapshot.getChildren()){
+                        NewsItem newsItem=new NewsItem();
+                        newsItem.setImageUrl(snap.child("imageUrl").getValue(String.class));
+                        newsItem.setLookPrice(snap.child("lookPrice").getValue(Long.class));
+                        newsItem.setItem_description(snap.child("item_description").getValue(String.class));
+                        newsItem.setNewsId(snap.child("newsId").getValue(String.class));
+                        newsItem.setLikesCount(snap.child("likes_count").getValue(String.class));
+                        newsItem.setViewCount(snap.child("viewCount").getValue(Long.class));
+                        newsItem.setPostTime(snap.child("postTime").getValue(String.class));
+                        newsItem.setNick(snap.child("nick").getValue(String.class));
+                        newsItem.setLookPriceDollar(snap.child("lookPriceDollar").getValue(Long.class));
+                        lookList.add(newsItem);
+                    }
+                    callback.getLooksList(lookList);
                 }
-                callback.getLooksList(lookList);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
             }
         });
-
 
     }
 
@@ -1181,30 +1174,28 @@ public class RecentMethods {
 
     public static void getNontificationsList(String nickName, FirebaseModel model, Callbacks.getNontificationsList callback){
         model.initAll();
-        Query query=model.getUsersReference().child(nickName).child("nontifications").orderByKey();
-        query.addValueEventListener(new ValueEventListener() {
+        model.getUsersReference().child(nickName).child("nontifications").orderByKey()
+        .get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                ArrayList<Nontification> nontificationArrayList = new ArrayList<>();
-                for (DataSnapshot snap:snapshot.getChildren()){
-                    Nontification nontification=new Nontification();
-                    nontification.setNick(snap.child("nick").getValue(String.class));
-                    nontification.setTypeDispatch(snap.child("typeDispatch").getValue(String.class));
-                    nontification.setTypeView(snap.child("typeView").getValue(String.class));
-                    nontification.setTimestamp(snap.child("timestamp").getValue(String.class));
-                    nontification.setClothesName(snap.child("clothesName").getValue(String.class));
-                    nontification.setClothesImage(snap.child("clothesImage").getValue(String.class));
-                    nontification.setType(snap.child("type").getValue(String.class));
-                    nontification.setUid(snap.child("uid").getValue(String.class));
-                    nontification.setClothesProfit(snap.child("clothesProfit").getValue(Long.class));
-                    nontificationArrayList.add(nontification);
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if(task.isSuccessful()){
+                    DataSnapshot snapshot=task.getResult();
+                    ArrayList<Nontification> nontificationArrayList = new ArrayList<>();
+                    for (DataSnapshot snap:snapshot.getChildren()){
+                        Nontification nontification=new Nontification();
+                        nontification.setNick(snap.child("nick").getValue(String.class));
+                        nontification.setTypeDispatch(snap.child("typeDispatch").getValue(String.class));
+                        nontification.setTypeView(snap.child("typeView").getValue(String.class));
+                        nontification.setTimestamp(snap.child("timestamp").getValue(String.class));
+                        nontification.setClothesName(snap.child("clothesName").getValue(String.class));
+                        nontification.setClothesImage(snap.child("clothesImage").getValue(String.class));
+                        nontification.setType(snap.child("type").getValue(String.class));
+                        nontification.setUid(snap.child("uid").getValue(String.class));
+                        nontification.setClothesProfit(snap.child("clothesProfit").getValue(Long.class));
+                        nontificationArrayList.add(nontification);
+                    }
+                    callback.getNontificationsList(nontificationArrayList);
                 }
-                callback.getNontificationsList(nontificationArrayList);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
             }
         });
     }

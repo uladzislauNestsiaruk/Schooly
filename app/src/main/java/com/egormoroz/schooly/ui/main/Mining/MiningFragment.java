@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.MiningManager;
+import com.egormoroz.schooly.Nontification;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.SchoolyService;
@@ -84,7 +85,6 @@ public class MiningFragment extends Fragment {
                 RecentMethods.setCurrentFragment(MainFragment.newInstance(), getActivity());
             }
         };
-
         requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(), callback);
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @Override

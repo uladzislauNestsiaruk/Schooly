@@ -30,13 +30,15 @@ public class LooksFragmentProfileOther extends Fragment {
   FirebaseModel firebaseModel=new FirebaseModel();
   int looksListSize;
   String otherUserNick;
+  Fragment fragment;
 
-  public LooksFragmentProfileOther(String otherUserNick) {
+  public LooksFragmentProfileOther(String otherUserNick,Fragment fragment) {
     this.otherUserNick = otherUserNick;
+    this.fragment=fragment;
   }
 
-  public static LooksFragmentProfileOther newInstance(String otherUserNick) {
-    return new LooksFragmentProfileOther(otherUserNick);
+  public static LooksFragmentProfileOther newInstance(String otherUserNick,Fragment fragment) {
+    return new LooksFragmentProfileOther(otherUserNick,fragment);
   }
 
   @Override
@@ -69,7 +71,7 @@ public class LooksFragmentProfileOther extends Fragment {
           looksRecyclerOther.setVisibility(View.GONE);
         }else{
           Collections.reverse(look);
-          LooksAdapter looksAdapter=new LooksAdapter(look,LooksFragmentProfileOther.newInstance(otherUserNick));
+          LooksAdapter looksAdapter=new LooksAdapter(look,LooksFragmentProfileOther.newInstance(otherUserNick,fragment),looksRecyclerOther);
           GridLayoutManager gridLayoutManager=new GridLayoutManager(getContext(), 3);
           looksRecyclerOther.setLayoutManager(gridLayoutManager);
           looksRecyclerOther.setAdapter(looksAdapter);
@@ -77,7 +79,7 @@ public class LooksFragmentProfileOther extends Fragment {
             @Override
             public void onItemClick(NewsItem newsItem) {
               RecentMethods.setCurrentFragment(ViewingLookFragment.newInstance(ProfileFragment.
-                      newInstance("other", otherUserNick, LooksFragmentProfileOther.newInstance(otherUserNick))), getActivity());
+                      newInstance("other", otherUserNick, fragment)), getActivity());
             }
           };
           looksAdapter.setClickListener(itemClickListener);

@@ -21,10 +21,12 @@ import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.Subscriber;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
 import com.egormoroz.schooly.ui.main.Shop.NewClothesAdapter;
+import com.egormoroz.schooly.ui.profile.ProfileFragment;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -37,7 +39,8 @@ public class NontificationAdapter extends RecyclerView.Adapter<NontificationAdap
     private NontificationAdapter.ItemClickListener clickListener;
     private FirebaseModel firebaseModel = new FirebaseModel();
     String accountType;
-    static String clothesUid;
+    static Nontification sendNont;
+    static String clothesUid,type;
 
     public  NontificationAdapter(ArrayList<Nontification> listAdapter) {
         this.listAdapter = listAdapter;
@@ -87,6 +90,13 @@ public class NontificationAdapter extends RecyclerView.Adapter<NontificationAdap
                     holder.otherUserNick.setText(nontification.getNick()+" хочет подписаться на тебя");
                     holder.addFriend.setVisibility(View.VISIBLE);
                     holder.addFriend.setText("Добавить");
+                    holder.otherUserNick.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            if (clickListener != null) clickListener.onItemClick(listAdapter.get(holder.getAdapterPosition()),"sub");
+                            sendNont=listAdapter.get(holder.getAdapterPosition());
+                        }
+                    });
                     holder.addFriend.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -137,32 +147,55 @@ public class NontificationAdapter extends RecyclerView.Adapter<NontificationAdap
                     holder.otherUserNick.setVisibility(View.VISIBLE);
                     holder.userImage.setVisibility(View.VISIBLE);
                     holder.otherUserNick.setText(nontification.getNick()+" подписался на тебя");
+                    holder.otherUserNick.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            if (clickListener != null) clickListener.onItemClick(listAdapter.get(holder.getAdapterPosition()),"sub");
+                            sendNont=listAdapter.get(holder.getAdapterPosition());
+                        }
+                    });
                 }else if(nontification.getTypeView().equals("одежда")) {
                     holder.otherUserNick.setVisibility(View.VISIBLE);
                     holder.userImage.setVisibility(View.VISIBLE);
                     holder.otherUserNick.setText(nontification.getNick()+" купил у тебя "+nontification.getClothesName());
+                    holder.otherUserNick.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            if (clickListener != null) clickListener.onItemClick(listAdapter.get(holder.getAdapterPosition()),"sub");
+                            sendNont=listAdapter.get(holder.getAdapterPosition());
+                        }
+                    });
                 }else if (nontification.getTypeView().equals("перевод")){
                     holder.otherUserNick.setVisibility(View.VISIBLE);
                     holder.userImage.setVisibility(View.VISIBLE);
-                    holder.otherUserNick.setText(nontification.getNick()+" перевел тебе "+nontification.getUid()+"коина");
+                    holder.otherUserNick.setText(nontification.getNick()+" перевел тебе "+nontification.getClothesName()+"S коинов");
+                    holder.otherUserNick.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            if (clickListener != null) clickListener.onItemClick(listAdapter.get(holder.getAdapterPosition()),"sub");
+                            sendNont=listAdapter.get(holder.getAdapterPosition());
+                        }
+                    });
                 }else if (nontification.getTypeView().equals("запросодежда")){
                     holder.otherUserNick.setVisibility(View.VISIBLE);
                     holder.userImage.setVisibility(View.VISIBLE);
-                    holder.otherUserNick.setText("Пришел ответ на публикацию "+nontification.getClothesName());
+                    Picasso.get().load(nontification.getClothesImage()).into(holder.userImage);
+                    holder.otherUserNick.setText("Пришел ответ на заявку "+nontification.getClothesName());
                     holder.addFriend.setVisibility(View.VISIBLE);
                     holder.addFriend.setText("Перейти");
-                    holder.addFriend.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            if (clickListener != null) clickListener.onItemClick(nontification.getUid());
-                        }
-                    });
                 }
                 else if (nontification.getTypeView().equals("подарок")){
                     holder.otherUserNick.setVisibility(View.VISIBLE);
                     holder.userImage.setVisibility(View.VISIBLE);
                     holder.otherUserNick.setText(nontification.getNick()+" подарил тебе "+nontification.getClothesName()+" !!!");
                     holder.addFriend.setVisibility(View.GONE);
+                    holder.otherUserNick.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            if (clickListener != null) clickListener.onItemClick(listAdapter.get(holder.getAdapterPosition()),"sub");
+                            sendNont=listAdapter.get(holder.getAdapterPosition());
+                        }
+                    });
                     holder.addFriend.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -223,7 +256,7 @@ public class NontificationAdapter extends RecyclerView.Adapter<NontificationAdap
 
         @Override
         public void onClick(View view) {
-            if (clickListener != null) clickListener.onItemClick("Jordan 1");
+            if (clickListener != null) clickListener.onItemClick(sendNont,"ok");
         }
     }
 
@@ -236,10 +269,10 @@ public class NontificationAdapter extends RecyclerView.Adapter<NontificationAdap
     }
 
     public static void singeClothesInfo(NontificationAdapter.ItemClickListener itemClickListener){
-        itemClickListener.onItemClick(clothesUid);
+        itemClickListener.onItemClick(sendNont,type);
     }
 
     public interface ItemClickListener {
-        void onItemClick( String clothesUid);
+        void onItemClick( Nontification nontification,String type);
     }
 }
