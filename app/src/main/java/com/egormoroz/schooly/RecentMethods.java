@@ -115,7 +115,7 @@ public class RecentMethods {
                 "6", "unknown", "Helicopter", 1000
                 , "Miner", 1,100,0, "", "",
                 "","","open","open","open",
-                "open","","regular", "");
+                "open","","regular", "",0);
         ref.child(nick).setValue(res);
         return nick.isEmpty();
     }
@@ -210,6 +210,22 @@ public class RecentMethods {
 
             }
         });
+    }
+    public static void UserNickByUid1(String uid, FirebaseModel model, Callbacks.GetUserNickByUid callback) {
+        model.initAll();
+        model.getUsersReference().orderByChild("uid").equalTo(uid).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if(task.isSuccessful()){
+                    DataSnapshot snapshot=task.getResult();
+                    for (DataSnapshot snap : snapshot.getChildren()) {
+                        Log.d("AAA", "uid  "+uid);
+                        callback.PassUserNick(snap.child("nick").getValue(String.class));
+                    }
+                }
+            }
+        });
+
     }
 
     public static void hasUid(String uid, FirebaseModel model, Callbacks.HasUid callback){

@@ -7,6 +7,7 @@ import android.util.Log;
 import androidx.work.Constraints;
 import androidx.work.ExistingWorkPolicy;
 import androidx.work.NetworkType;
+import androidx.work.OneTimeWorkRequest;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
@@ -24,8 +25,8 @@ public class SchoolyApplication extends Application {
                 .setRequiredNetworkType(NetworkType.CONNECTED)
                 .build();
 
-        PeriodicWorkRequest miningWorkRequest = new
-                PeriodicWorkRequest.Builder(MiningManager.class, 15, TimeUnit.MINUTES)
+        OneTimeWorkRequest miningWorkRequest = new
+                OneTimeWorkRequest.Builder(MiningManager.class)
                 .setConstraints(constraints)
                 .build();
 
@@ -37,7 +38,7 @@ public class SchoolyApplication extends Application {
 
         WorkManager.getInstance(getApplicationContext()).enqueue(notificationWorkRequest);
 
-        WorkManager.getInstance(getApplicationContext()).enqueue(miningWorkRequest);
+        WorkManager.getInstance(getApplicationContext()).enqueueUniqueWork("mining", ExistingWorkPolicy.KEEP,miningWorkRequest);
     }
 
 

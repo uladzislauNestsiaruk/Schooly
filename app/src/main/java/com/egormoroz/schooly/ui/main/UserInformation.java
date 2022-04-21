@@ -26,6 +26,7 @@ public class UserInformation {
     private String looks;
     private String accountType;
     private String version;
+    private long miningPremium;
     public UserInformation(){
     }
 
@@ -193,12 +194,20 @@ public class UserInformation {
         this.version = version;
     }
 
+    public long getMiningPremium() {
+        return miningPremium;
+    }
+
+    public void setMiningPremium(long miningPremium) {
+        this.miningPremium = miningPremium;
+    }
+
     public UserInformation(String nick, String phone, String uid, String Avatar, String password,
-                           String gender, long age,String miners,long level,long money,double todayMining,
-                           String subscription, String subscribers, String queue,String bio,
-                           String accountType,String chatsNontsType,
-                           String groupChatsNontsType,String profileNontsType,String myClothes,String version,
-                           String looks) {
+                           String gender, long age, String miners, long level, long money, double todayMining,
+                           String subscription, String subscribers, String queue, String bio,
+                           String accountType, String chatsNontsType,
+                           String groupChatsNontsType, String profileNontsType, String myClothes, String version,
+                           String looks,long miningPremium) {
         this.Nick = nick;
         this.uid = uid;
         this.phone = phone;
@@ -221,6 +230,7 @@ public class UserInformation {
         this.myClothes=myClothes;
         this.version=version;
         this.looks=looks;
+        this.miningPremium=miningPremium;
     }
 
 }
