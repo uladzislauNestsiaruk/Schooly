@@ -12,6 +12,7 @@
         android:layout_height="match_parent"
         android:gravity="center_vertical">
 
+
     <RelativeLayout
         android:id="@+id/rel"
         android:layout_width="match_parent"
@@ -40,6 +41,7 @@
 
     </RelativeLayout>
 
+
     <TextView
         android:id="@+id/emptyNonts"
         android:layout_width="wrap_content"
@@ -49,14 +51,19 @@
         android:textColor="@color/app_grey"
         android:textSize="18sp" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/nontificationsrecyclerview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/rel"
-        android:orientation="vertical"
-        android:overScrollMode="never"
-        android:paddingBottom="24dp"/>
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/rel"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/nontificationsrecyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:overScrollMode="never"
+            android:layout_below="@+id/rel"
+            android:paddingBottom="24dp" />
 
     </RelativeLayout>
 

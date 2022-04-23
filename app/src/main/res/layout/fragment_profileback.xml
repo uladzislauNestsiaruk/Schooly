@@ -250,6 +250,7 @@
             style="@style/AppTabLayoutProfile"
             android:layout_width="match_parent"
             android:layout_below="@+id/shielf"
+            app:tabRippleColor="@android:color/transparent"
             android:layout_height="52dp"
             android:layout_marginTop="260dp"
             app:tabTextAppearance="@style/AppTabTextAppearance"/>

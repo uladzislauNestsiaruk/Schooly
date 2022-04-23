@@ -139,7 +139,10 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/searchclothes"
                 android:layout_marginTop="8dp"
+                app:tabBackground="?attr/colorOnPrimary"
                 app:tabMode="scrollable"
+                app:tabRippleColor="@android:color/transparent"
+                android:background="?attr/colorOnPrimary"
                 app:tabTextAppearance="@style/AppTabTextAppearanceShop" />
 
 

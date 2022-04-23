@@ -37,13 +37,15 @@ public class ComplainFragment extends Fragment {
     String otherUserNick;
     TextView sendReasons;
     ComplainAdapter.ItemClickListener itemClickListener;
+    Fragment fragment;
 
-    public ComplainFragment(String otherUserNick) {
+    public ComplainFragment(String otherUserNick,Fragment fragment) {
         this.otherUserNick = otherUserNick;
+        this.fragment=fragment;
     }
 
-    public static ComplainFragment newInstance(String otherUserNick) {
-        return new ComplainFragment(otherUserNick);
+    public static ComplainFragment newInstance(String otherUserNick,Fragment fragment) {
+        return new ComplainFragment(otherUserNick,fragment);
     }
 
     FirebaseModel firebaseModel=new FirebaseModel();
@@ -72,7 +74,7 @@ public class ComplainFragment extends Fragment {
         itemClickListener=new ComplainAdapter.ItemClickListener() {
             @Override
             public void onItemClick(Reason reason) {
-                RecentMethods.setCurrentFragment(ComplainFragmentToBase.newInstance(otherUserNick), getActivity());
+                RecentMethods.setCurrentFragment(ComplainFragmentToBase.newInstance(otherUserNick,fragment), getActivity());
             }
         };
         RecentMethods.getComplainReasonList(firebaseModel, new Callbacks.getComplainReasonsList() {
@@ -86,7 +88,7 @@ public class ComplainFragment extends Fragment {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", otherUserNick, PeopleFragment.newInstance()),
+                RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", otherUserNick, fragment),
                         getActivity());
             }
         });

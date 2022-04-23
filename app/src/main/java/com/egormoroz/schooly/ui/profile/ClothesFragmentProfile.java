@@ -121,7 +121,7 @@ public class ClothesFragmentProfile extends Fragment {
                                     createNewLook.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
-                                            RecentMethods.setCurrentFragment(CreateClothesFragment.newInstance(ProfileFragment.newInstance("user", nick, ClothesFragmentProfile.newInstance(type,fragment))), getActivity());
+                                            RecentMethods.setCurrentFragment(CreateClothesFragment.newInstance(ProfileFragment.newInstance("user", nick, fragment)), getActivity());
                                         }
                                     });
                                 }

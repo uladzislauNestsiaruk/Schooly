@@ -47,9 +47,10 @@
                 style="@style/AppTabLayoutShop"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/linearsearch"
                 android:layout_marginTop="12dp"
                 app:tabMode="scrollable"
-                android:layout_below="@+id/linearsearch"
+                app:tabRippleColor="@android:color/transparent"
                 app:tabTextAppearance="@style/AppTabTextAppearanceShop" />
 
 
