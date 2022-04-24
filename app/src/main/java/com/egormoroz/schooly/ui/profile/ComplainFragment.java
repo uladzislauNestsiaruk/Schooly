@@ -97,7 +97,7 @@ public class ComplainFragment extends Fragment {
             @Override
             public void handleOnBackPressed() {
 
-                RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", otherUserNick, PeopleFragment.newInstance()), getActivity());
+                RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", otherUserNick, fragment), getActivity());
             }
         };
 

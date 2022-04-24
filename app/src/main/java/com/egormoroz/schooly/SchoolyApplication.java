@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.util.Log;
 
 import androidx.work.Constraints;
+import androidx.work.ExistingPeriodicWorkPolicy;
 import androidx.work.ExistingWorkPolicy;
 import androidx.work.NetworkType;
 import androidx.work.OneTimeWorkRequest;
@@ -29,16 +30,15 @@ public class SchoolyApplication extends Application {
                 PeriodicWorkRequest.Builder(MiningManager.class,15,TimeUnit.MINUTES)
                 .setConstraints(constraints)
                 .build();
-
-        PeriodicWorkRequest notificationWorkRequest = new
-                PeriodicWorkRequest.Builder(NontificationManager.class, 15, TimeUnit.MINUTES)
-                .setConstraints(constraints
-                )
-                .build();
-
-        WorkManager.getInstance(getApplicationContext()).enqueue(notificationWorkRequest);
-
-        WorkManager.getInstance(getApplicationContext()).enqueue(miningWorkRequest);
+//
+//        PeriodicWorkRequest notificationWorkRequest = new
+//                PeriodicWorkRequest.Builder(NontificationManager.class, 15, TimeUnit.MINUTES)
+//                .setConstraints(constraints
+//                )
+//                .build();
+//
+//        WorkManager.getInstance(getApplicationContext()).enqueue(notificationWorkRequest);
+//        WorkManager.getInstance(getApplicationContext()).enqueueUniquePeriodicWork("###", ExistingPeriodicWorkPolicy.KEEP,miningWorkRequest);
     }
 
 
