@@ -22,14 +22,14 @@ public class SchoolyApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-        Constraints constraints = new Constraints.Builder()
-                .setRequiredNetworkType(NetworkType.CONNECTED)
-                .build();
-
-        PeriodicWorkRequest miningWorkRequest = new
-                PeriodicWorkRequest.Builder(MiningManager.class,15,TimeUnit.MINUTES)
-                .setConstraints(constraints)
-                .build();
+//        Constraints constraints = new Constraints.Builder()
+//                .setRequiredNetworkType(NetworkType.CONNECTED)
+//                .build();
+//
+//        PeriodicWorkRequest miningWorkRequest = new
+//                PeriodicWorkRequest.Builder(MiningManager.class,15,TimeUnit.MINUTES)
+//                .setConstraints(constraints)
+//                .build();
 //
 //        PeriodicWorkRequest notificationWorkRequest = new
 //                PeriodicWorkRequest.Builder(NontificationManager.class, 15, TimeUnit.MINUTES)

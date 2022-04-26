@@ -88,45 +88,45 @@ public class MiningManager extends Worker {
 //            }
 //        });
         Log.d("AAA", "goofffffd"+ todayMining);
-        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-            @Override
-            public void PassUserNick(String nick) {
-                RecentMethods.GetActiveMiner(nick, firebaseModel, new Callbacks.GetActiveMiners() {
-                    @Override
-                    public void GetActiveMiners(ArrayList<Miner> activeMinersFromBase) {
-                        if(activeMinersFromBase.size()>0){
-                            Thread thread = new Thread()
-                            {
-                                @Override
-                                public void run() {
-                                    try {
-                                        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-                                            @Override
-                                            public void PassUserNick(String nick) {
-                                                RecentMethods.GetTodayMining(nick, firebaseModel, new Callbacks.GetTodayMining() {
-                                                    @Override
-                                                    public void GetTodayMining(double todayMiningFromBase) {
-                                                        todayMining=todayMiningFromBase;
-                                                    }
-                                                });
-                                            }
-                                        });
-                                        while(true) {
-                                            Thread.sleep(1000);
-                                            miningMoneyFun();
-                                            Log.d("#####", "goofffffd"+ todayMining);
-                                        }
-                                    } catch (InterruptedException e) {
-                                    }
-                                }
-                            };
-
-                            thread.start();
-                        }
-                    }
-                });
-            }
-        });
+//        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+//            @Override
+//            public void PassUserNick(String nick) {
+//                RecentMethods.GetActiveMiner(nick, firebaseModel, new Callbacks.GetActiveMiners() {
+//                    @Override
+//                    public void GetActiveMiners(ArrayList<Miner> activeMinersFromBase) {
+//                        if(activeMinersFromBase.size()>0){
+//                            Thread thread = new Thread()
+//                            {
+//                                @Override
+//                                public void run() {
+//                                    try {
+//                                        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+//                                            @Override
+//                                            public void PassUserNick(String nick) {
+//                                                RecentMethods.GetTodayMining(nick, firebaseModel, new Callbacks.GetTodayMining() {
+//                                                    @Override
+//                                                    public void GetTodayMining(double todayMiningFromBase) {
+//                                                        todayMining=todayMiningFromBase;
+//                                                    }
+//                                                });
+//                                            }
+//                                        });
+//                                        while(true) {
+//                                            Thread.sleep(1000);
+//                                            miningMoneyFun();
+//                                            Log.d("#####", "goofffffd"+ todayMining);
+//                                        }
+//                                    } catch (InterruptedException e) {
+//                                    }
+//                                }
+//                            };
+//
+//                            thread.start();
+//                        }
+//                    }
+//                });
+//            }
+//        });
         return Result.success();
     }
 

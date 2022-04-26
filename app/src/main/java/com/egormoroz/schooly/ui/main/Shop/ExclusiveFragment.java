@@ -53,13 +53,20 @@ public class ExclusiveFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.layoutviewpagershopexclusive, container, false);
+        View root = inflater.inflate(R.layout.layoutwiewpagershop, container, false);
         BottomNavigationView bnv = getActivity().findViewById(R.id.bottomNavigationView);
         bnv.setVisibility(bnv.GONE);
         firebaseModel.initAll();
         clothes=root.findViewById(R.id.newchlothesinshop);
         popularClothes=root.findViewById(R.id.popularchlothesinshop);
         return root;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getView().requestLayout();
+
     }
 
     @Override

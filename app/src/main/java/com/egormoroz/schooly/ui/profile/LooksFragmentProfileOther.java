@@ -54,6 +54,13 @@ public class LooksFragmentProfileOther extends Fragment {
   }
 
   @Override
+  public void onResume() {
+    super.onResume();
+    getView().requestLayout();
+
+  }
+
+  @Override
   public void onViewCreated(@Nullable View view,@NonNull Bundle savedInstanceState){
     super.onViewCreated(view, savedInstanceState);
     noLooksOther=view.findViewById(R.id.noLooks);

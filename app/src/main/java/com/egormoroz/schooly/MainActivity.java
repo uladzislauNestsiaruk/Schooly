@@ -157,26 +157,17 @@ public class MainActivity extends AppCompatActivity {
                                                     @Override
                                                     public void onComplete(@NonNull Task<Void> task) {
                                                         if(task.isSuccessful()){
-                                                            WorkManager.getInstance(getApplicationContext()).cancelWorkById(miningWorkRequest.getId());
+                                                            //WorkManager.getInstance(getApplicationContext()).cancelWorkById(miningWorkRequest.getId());
                                                         }
                                                     }
                                                 });
-                                                Constraints constraints = new Constraints.Builder()
-                                                        .setRequiredNetworkType(NetworkType.CONNECTED)
-                                                        .build();
-                                                miningWorkRequest = new
-                                                        OneTimeWorkRequest.Builder(MiningManager.class)
-                                                        .setConstraints(constraints)
-                                                        .build();
-
-                                                WorkManager.getInstance(getApplicationContext()).enqueue(miningWorkRequest);
 
                                                 DatabaseReference presenceRef = firebaseModel.getReference().child("users").child(nick).child("Status");
                                                 presenceRef.onDisconnect().setValue("Offline").addOnCompleteListener(new OnCompleteListener<Void>() {
                                                     @Override
                                                     public void onComplete(@NonNull Task<Void> task) {
                                                         if(task.isSuccessful()){
-                                                            WorkManager.getInstance(getApplicationContext()).cancelWorkById(miningWorkRequest.getId());
+                                                           // WorkManager.getInstance(getApplicationContext()).cancelWorkById(miningWorkRequest.getId());
                                                             Log.d("AAA", "ddll");
                                                         }
                                                     }

@@ -48,7 +48,7 @@ public class NontificationManager extends Worker {
     @Override
     public Result doWork() {
         firebaseModel.initAll();
-        getChangesInSubscribers();
+//        getChangesInSubscribers();
         Log.d("######", "great");
         return Result.success();
     }

@@ -128,14 +128,12 @@ public class PopularClothesAdapter extends RecyclerView.Adapter<PopularClothesAd
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @Override
             public void PassUserNick(String nick) {
-                Log.d("#####", "whats ");
                 Query query=firebaseModel.getUsersReference().child(nick).child("clothes")
                         .child(clothes.getUid());
                 query.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         if(snapshot.exists()){
-                            Log.d("#####", "whats what "+clothes.getUid());
                             holder.ifBuy.setVisibility(View.VISIBLE);
                         }
                     }
