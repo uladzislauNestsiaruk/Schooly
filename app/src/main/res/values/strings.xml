@@ -424,6 +424,8 @@
     <string name="exclusivePremium">Только пользователи с подпиской Schooly Premium смогут купить эту одежду</string>
     <string name="sendClothesApplication">Отправить заявку</string>
     <string name="clothesApplication">Заявка на одежду может обрабатываться несколько дней. После обработки мы пришлем вам ответ.</string>
+    <string name="loading">Загрузка...</string>
+
 
 
 

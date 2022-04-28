@@ -6,6 +6,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -51,9 +53,8 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth AuthenticationBase;
     public static String currentUserID;
     UserInformation userInformation;
-    String time,timeNow;
-    long a,d,min;
-    double minInGap;
+    RelativeLayout relativeLayout;
+    TextView s,loading;
     CoordinatorLayout fragmentContainer;
     OneTimeWorkRequest miningWorkRequest;
     FirebaseModel firebaseModel=new FirebaseModel();
@@ -62,6 +63,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         fragmentContainer = findViewById(R.id.fragment_container);
+        relativeLayout=findViewById(R.id.rel);
+        s=findViewById(R.id.s);
+        loading=findViewById(R.id.load);
         initFirebase();
         firebaseModel.initAll();
         ///////////Authorization block
@@ -121,8 +125,10 @@ public class MainActivity extends AppCompatActivity {
                                                         //userInformation.setSubscription(snapshot.child("subscription").getValue(String.class));
                                                         userInformation.setmoney(snapshot.child("money").getValue(Long.class));
                                                         userInformation.setTodayMining(snapshot.child("todayMining").getValue(Double.class));
-                                                        setCurrentFragment(MainFragment.newInstance(userInformation));
                                                         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
+                                                        s.setVisibility(View.GONE);
+                                                        loading.setVisibility(View.GONE);
+                                                        relativeLayout.setVisibility(View.GONE);
                                                         bottomNavigationView.setVisibility(View.VISIBLE);
                                                         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
                                                             @SuppressLint("NonConstantResourceId")
@@ -168,6 +174,7 @@ public class MainActivity extends AppCompatActivity {
                                                                 return false;
                                                             }
                                                         });
+                                                        setCurrentFragment(MainFragment.newInstance(userInformation));
                                                         final DatabaseReference connectedRef = database.getReference(".info/connected");
                                                         connectedRef.addValueEventListener(new ValueEventListener() {
                                                             @Override

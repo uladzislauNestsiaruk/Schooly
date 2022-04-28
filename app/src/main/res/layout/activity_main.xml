@@ -7,9 +7,38 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-
-
     <include layout="@layout/content_main" />
+
+    <RelativeLayout
+        android:id="@+id/rel"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+
+    <TextView
+        android:id="@+id/s"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:fontFamily="@font/montserratblack"
+        android:layout_marginTop="180dp"
+        android:text="S"
+        android:layout_centerHorizontal="true"
+        android:textColor="@color/app_color"
+        android:textSize="100sp" />
+
+        <TextView
+            android:id="@+id/load"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="120dp"
+            android:fontFamily="@font/montserrat_bold"
+            android:text="@string/loading"
+            android:textColor="@color/app_grey"
+            android:textSize="18sp" />
+    </RelativeLayout>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigationView"
@@ -21,6 +50,7 @@
         android:layout_marginBottom="32dp"
         android:background="@drawable/cornerstoolbar"
         app:labelVisibilityMode="unlabeled"
-        app:menu="@menu/bottom_navigation" />
+        app:menu="@menu/bottom_navigation"
+        android:visibility="gone"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
