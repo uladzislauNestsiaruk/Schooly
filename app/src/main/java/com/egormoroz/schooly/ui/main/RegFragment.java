@@ -232,10 +232,11 @@ public class RegFragment extends Fragment {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
                             String nick = String.valueOf(nickNameEditText.getText()).trim();
-                            if(nick.isEmpty())
-                                RecentMethods.setCurrentFragment(NicknameFragment.newInstance(), getActivity());
-                            else
-                                RecentMethods.setCurrentFragment(MainFragment.newInstance(), getActivity());
+                            UserInformation userInformation=new UserInformation();
+                            //if(nick.isEmpty())
+                                RecentMethods.setCurrentFragment(NicknameFragment.newInstance(userInformation), getActivity());
+                            //else
+                               // RecentMethods.setCurrentFragment(MainFragment.newInstance(), getActivity());
                         } else {
                             GoogleEnter.setEnabled(true);
                             // If sign in fails, display a message to the user.
@@ -257,8 +258,10 @@ public class RegFragment extends Fragment {
                         new Callbacks.hasGoogleUser() {
                             @Override
                             public void hasGoogleUserCallback(boolean hasThisUser) {
-                                if(hasThisUser)
-                                    RecentMethods.setCurrentFragment(new EnterFragment(), getActivity());
+                                if(hasThisUser) {
+                                    UserInformation userInformation = new UserInformation();
+                                    RecentMethods.setCurrentFragment(new EnterFragment(userInformation), getActivity());
+                                }
                                 else
                                     AuthorizationThrowGoogle();
                             }
@@ -307,7 +310,7 @@ public class RegFragment extends Fragment {
                             reference.child(nick).setValue(res);
                             database.getReference("usersNicks")
                                     .child(nick).setValue(new UserPeopleAdapter(nick,"6"," "));
-                            RecentMethods.setCurrentFragment(MainFragment.newInstance(), getActivity());
+                            RecentMethods.setCurrentFragment(MainFragment.newInstance(res), getActivity());
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());

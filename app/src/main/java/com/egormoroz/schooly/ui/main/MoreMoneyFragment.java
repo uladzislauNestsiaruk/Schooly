@@ -18,6 +18,7 @@ import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
+import com.egormoroz.schooly.ui.chat.User;
 import com.egormoroz.schooly.ui.coins.CoinsFragmentSecond;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
 import com.egormoroz.schooly.ui.main.Shop.FittingFragment;
@@ -30,13 +31,15 @@ import com.squareup.picasso.Picasso;
 public class MoreMoneyFragment extends Fragment {
 
     Fragment fragment;
+    UserInformation userInformation;
 
-    public MoreMoneyFragment(Fragment fragment) {
+    public MoreMoneyFragment(Fragment fragment,UserInformation userInformation) {
         this.fragment = fragment;
+        this.userInformation=userInformation;
     }
 
-    public static MoreMoneyFragment newInstance(Fragment fragment) {
-        return new MoreMoneyFragment(fragment);
+    public static MoreMoneyFragment newInstance(Fragment fragment, UserInformation userInformation) {
+        return new MoreMoneyFragment(fragment,userInformation);
 
     }
 

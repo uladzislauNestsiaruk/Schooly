@@ -33,6 +33,7 @@ import com.egormoroz.schooly.Subscriber;
 import com.egormoroz.schooly.ui.main.MyClothes.CreateClothesFragment;
 import com.egormoroz.schooly.ui.main.MyClothes.CriteriaFragment;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
+import com.egormoroz.schooly.ui.main.UserInformation;
 import com.egormoroz.schooly.ui.news.Comment;
 import com.egormoroz.schooly.ui.news.CommentAdapter;
 import com.egormoroz.schooly.ui.news.NewsItem;
@@ -83,16 +84,16 @@ public class ViewingLookFragment extends Fragment {
     ConstituentsAdapter.ItemClickListener itemClickListenerClothes;
     ComplainAdapter.ItemClickListener itemClickListenerComplain;
     RelativeLayout sendReason;
-
-
+    UserInformation userInformation;
     Fragment fragment;
 
-    public ViewingLookFragment(Fragment fragment) {
+    public ViewingLookFragment(Fragment fragment,UserInformation userInformation) {
         this.fragment = fragment;
+        this.userInformation=userInformation;
     }
 
-    public static ViewingLookFragment newInstance(Fragment fragment) {
-        return new ViewingLookFragment(fragment);
+    public static ViewingLookFragment newInstance(Fragment fragment,UserInformation userInformation) {
+        return new ViewingLookFragment(fragment,userInformation);
 
     }
 
@@ -415,7 +416,7 @@ public class ViewingLookFragment extends Fragment {
             @Override
             public void onItemClick(Clothes clothes) {
                 bottomSheetDialog.dismiss();
-                RecentMethods.setCurrentFragment(ViewingClothesNews.newInstance(ViewingLookFragment.newInstance(fragment)), getActivity());
+                RecentMethods.setCurrentFragment(ViewingClothesNews.newInstance(ViewingLookFragment.newInstance(fragment, userInformation),userInformation), getActivity());
             }
         };
         clothesCreatorsRecycler=bottomSheetDialog.findViewById(R.id.recyclerView);

@@ -60,6 +60,7 @@ import com.egormoroz.schooly.ui.main.Shop.ViewingClothes;
 import com.egormoroz.schooly.ui.people.UserPeopleAdapter;
 import com.egormoroz.schooly.ui.profile.ComplainFragment;
 import com.egormoroz.schooly.ui.profile.Reason;
+import com.egormoroz.schooly.ui.profile.SubscriberFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.progressindicator.CircularProgressIndicator;
 import com.google.firebase.database.DataSnapshot;
@@ -96,8 +97,15 @@ public class MainFragment extends Fragment{
     private static final String CHANNEL_ID = "Tyomaa channel";
 
 
-    public static MainFragment newInstance() {
-        return new MainFragment();
+    UserInformation userInformation;
+
+    public MainFragment(UserInformation userInformation) {
+        this.userInformation=userInformation;
+    }
+
+    public static MainFragment newInstance(UserInformation userInformation) {
+        return new MainFragment(userInformation);
+
     }
 
     @Override
@@ -128,13 +136,13 @@ public class MainFragment extends Fragment{
         getMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(MoreMoneyFragment.newInstance(MainFragment.newInstance()), getActivity());
+                RecentMethods.setCurrentFragment(MoreMoneyFragment.newInstance(MainFragment.newInstance(userInformation),userInformation), getActivity());
             }
         });
         coinsLinear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(CoinsFragmentSecond.newInstance(MainFragment.newInstance()), getActivity());
+                RecentMethods.setCurrentFragment(CoinsFragmentSecond.newInstance(MainFragment.newInstance(userInformation)), getActivity());
             }
         });
         getMyClothes();
@@ -168,7 +176,7 @@ public class MainFragment extends Fragment{
         itemClickListenerMyClothes=new MyClothesAdapterMain.ItemClickListener() {
             @Override
             public void onItemClick(Clothes clothes) {
-                RecentMethods.setCurrentFragment(ViewingMyClothesMain.newInstance(MainFragment.newInstance()), getActivity());
+                RecentMethods.setCurrentFragment(ViewingMyClothesMain.newInstance(MainFragment.newInstance(userInformation),userInformation), getActivity());
             }
         };
         ImageView chat=view.findViewById(R.id.chat);
@@ -279,7 +287,7 @@ public class MainFragment extends Fragment{
         nontifications.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((MainActivity)getActivity()).setCurrentFragment(NontificationFragment.newInstance());
+                ((MainActivity)getActivity()).setCurrentFragment(NontificationFragment.newInstance(userInformation));
 //
             }
         });
@@ -332,35 +340,36 @@ public class MainFragment extends Fragment{
         relativeShop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((MainActivity)getActivity()).setCurrentFragment((ShopFragment.newInstance()));
+                ((MainActivity)getActivity()).setCurrentFragment((ShopFragment.newInstance(userInformation)));
             }
         });
 
         relativeMining.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(MiningFragment.newInstanse(), getActivity());
+                RecentMethods.setCurrentFragment(MiningFragment.newInstance(userInformation), getActivity());
 
             }
         });
 
         TextView schoolycoins=view.findViewById(R.id.schoolycoins);
-        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-            @Override
-            public void PassUserNick(String nick) {
-                RecentMethods.GetMoneyFromBase(nick, firebaseModel, new Callbacks.MoneyFromBase() {
-                    @Override
-                    public void GetMoneyFromBase(long money) {
-                        schoolycoins.setText(String.valueOf(money));
-                    }
-                });
-            }
-        });
+        schoolycoins.setText(String.valueOf(userInformation.getmoney()));
+//        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+//            @Override
+//            public void PassUserNick(String nick) {
+//                RecentMethods.GetMoneyFromBase(nick, firebaseModel, new Callbacks.MoneyFromBase() {
+//                    @Override
+//                    public void GetMoneyFromBase(long money) {
+//                        schoolycoins.setText(String.valueOf(money));
+//                    }
+//                });
+//            }
+//        });
         clothesRecyclerMain=view.findViewById(R.id.newchlothesinshop);
         itemClickListener=new NewClothesAdapter.ItemClickListener() {
             @Override
             public void onItemClick(Clothes clothes) {
-                ((MainActivity)getActivity()).setCurrentFragment(ViewingClothes.newInstance(MainFragment.newInstance()));
+                ((MainActivity)getActivity()).setCurrentFragment(ViewingClothes.newInstance(MainFragment.newInstance(userInformation),userInformation));
             }
         };
         TextView appName=view.findViewById(R.id.appname);
@@ -368,7 +377,7 @@ public class MainFragment extends Fragment{
         appName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(CreateCharacterFragment.newInstance(), getActivity());
+                RecentMethods.setCurrentFragment(CreateCharacterFragment.newInstance(userInformation), getActivity());
             }
         });
         todayMiningMain=view.findViewById(R.id.todayminingmain);
@@ -447,7 +456,7 @@ public class MainFragment extends Fragment{
                             public void onClick(View v) {
                                 if(myClothesListSize>-1) {
                                     RecentMethods.setCurrentFragment(MyClothesFragment.newInstance(myClothesListSize
-                                            ,totalProfitLong,totalPurchaseLong,totalProfitDollarLong), getActivity());
+                                            ,totalProfitLong,totalPurchaseLong,totalProfitDollarLong,userInformation), getActivity());
                                 }
                             }
                         });
@@ -457,7 +466,7 @@ public class MainFragment extends Fragment{
                             createClothes.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    RecentMethods.setCurrentFragment(CreateClothesFragment.newInstance(MainFragment.newInstance()), getActivity());
+                                    RecentMethods.setCurrentFragment(CreateClothesFragment.newInstance(MainFragment.newInstance(userInformation),userInformation), getActivity());
                                 }
                             });
                         }else {

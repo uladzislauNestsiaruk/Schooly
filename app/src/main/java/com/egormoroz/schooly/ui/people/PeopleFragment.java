@@ -20,6 +20,7 @@ import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.Subscriber;
 import com.egormoroz.schooly.ui.main.UserInformation;
+import com.egormoroz.schooly.ui.news.ViewingClothesNews;
 import com.egormoroz.schooly.ui.profile.ProfileFragment;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -35,8 +36,15 @@ public class PeopleFragment extends Fragment {
     String userName,userNameToProfile,avatar,bio;
 
 
-    public static PeopleFragment newInstance() {
-        return new PeopleFragment();
+    UserInformation userInformation;
+
+    public PeopleFragment(UserInformation userInformation) {
+        this.userInformation=userInformation;
+    }
+
+    public static PeopleFragment newInstance( UserInformation userInformation) {
+        return new PeopleFragment(userInformation);
+
     }
     FirebaseModel firebaseModel=new FirebaseModel();
 
@@ -78,9 +86,9 @@ public class PeopleFragment extends Fragment {
                                     @Override
                                     public void PassUserNick(String nick) {
                                         if (userNameToProfile.equals(nick)) {
-                                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback", nick, PeopleFragment.newInstance()), getActivity());
+                                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback", nick, PeopleFragment.newInstance(userInformation),userInformation), getActivity());
                                         } else {
-                                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile, PeopleFragment.newInstance()),
+                                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile, PeopleFragment.newInstance(userInformation),userInformation),
                                                     getActivity());
                                         }
                                     }
@@ -141,9 +149,9 @@ public class PeopleFragment extends Fragment {
                                                 @Override
                                                 public void PassUserNick(String nick) {
                                                     if (userNameToProfile.equals(nick)) {
-                                                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback", nick, PeopleFragment.newInstance()), getActivity());
+                                                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback", nick, PeopleFragment.newInstance(userInformation),userInformation), getActivity());
                                                     } else {
-                                                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile, PeopleFragment.newInstance()),
+                                                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile, PeopleFragment.newInstance(userInformation),userInformation),
                                                                 getActivity());
                                                     }
                                                 }
@@ -199,7 +207,7 @@ public class PeopleFragment extends Fragment {
                                                 @Override
                                                 public void PassUserNick(String nick) {
                                                     if (userNameToProfile.equals(nick)) {
-                                                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback", nick, PeopleFragment.newInstance()), getActivity());
+                                                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback", nick, PeopleFragment.newInstance(userInformation),userInformation), getActivity());
                                                     } else {
                                                         Query querySearchedAvatar = firebaseModel.getUsersReference().child(userNameToProfile).child("avatar");
                                                         querySearchedAvatar.addValueEventListener(new ValueEventListener() {
@@ -213,7 +221,7 @@ public class PeopleFragment extends Fragment {
                                                                         bio = snapshot.getValue(String.class);
                                                                         firebaseModel.getUsersReference().child(nick).child("alreadySearched").child(userNameToProfile)
                                                                                 .setValue(new UserPeopleAdapter(userNameToProfile, avatar, bio));
-                                                                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile, PeopleFragment.newInstance()),
+                                                                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile, PeopleFragment.newInstance(userInformation),userInformation),
                                                                                 getActivity());
                                                                     }
 

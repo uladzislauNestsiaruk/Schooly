@@ -31,14 +31,16 @@ public class PasswordFragment extends Fragment {
 
     String type;
     Fragment fragment;
+    UserInformation userInformation;
 
-    public PasswordFragment(String type,Fragment fragment) {
+    public PasswordFragment(String type,Fragment fragment,UserInformation userInformation) {
         this.type = type;
         this.fragment=fragment;
+        this.userInformation=userInformation;
     }
 
-    public static PasswordFragment newInstance(String type, Fragment fragment) {
-        return new PasswordFragment(type,fragment);
+    public static PasswordFragment newInstance(String type, Fragment fragment,UserInformation userInformation) {
+        return new PasswordFragment(type,fragment,userInformation);
 
     }
 
@@ -85,14 +87,14 @@ public class PasswordFragment extends Fragment {
         backToSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(SettingsFragment.newInstance(type,fragment), getActivity());
+                RecentMethods.setCurrentFragment(SettingsFragment.newInstance(type,fragment,userInformation), getActivity());
             }
         });
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
 
-                RecentMethods.setCurrentFragment(SettingsFragment.newInstance(type, fragment), getActivity());
+                RecentMethods.setCurrentFragment(SettingsFragment.newInstance(type, fragment,userInformation), getActivity());
             }
         };
 

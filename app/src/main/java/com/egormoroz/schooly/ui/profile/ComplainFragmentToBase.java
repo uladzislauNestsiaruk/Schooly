@@ -34,16 +34,18 @@ import java.util.Random;
 
 public class ComplainFragmentToBase extends Fragment {
 
-    public ComplainFragmentToBase(String otherUserNick,Fragment fragment) {
+    public ComplainFragmentToBase(String otherUserNick,Fragment fragment,UserInformation userInformation) {
         this.otherUserNick = otherUserNick;
         this.fragment=fragment;
+        this.userInformation=userInformation;
     }
 
-    public static ComplainFragmentToBase newInstance(String otherUserNick,Fragment fragment) {
-        return new ComplainFragmentToBase(otherUserNick,fragment
+    public static ComplainFragmentToBase newInstance(String otherUserNick,Fragment fragment,UserInformation userInformation) {
+        return new ComplainFragmentToBase(otherUserNick,fragment,userInformation
         );
     }
 
+    UserInformation userInformation;
     Fragment fragment;
     FirebaseModel firebaseModel=new FirebaseModel();
     RecyclerView recyclerView;
@@ -92,7 +94,7 @@ public class ComplainFragmentToBase extends Fragment {
                         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
                             @Override
                             public void PassUserNick(String nick) {
-                                RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", otherUserNick, fragment), getActivity());
+                                RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", otherUserNick, fragment,userInformation), getActivity());
                             }
                         });
                     }
@@ -102,14 +104,14 @@ public class ComplainFragmentToBase extends Fragment {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(ComplainFragment.newInstance(otherUserNick,fragment), getActivity());
+                RecentMethods.setCurrentFragment(ComplainFragment.newInstance(otherUserNick,fragment,userInformation), getActivity());
             }
         });
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
 
-                RecentMethods.setCurrentFragment(ComplainFragment.newInstance(otherUserNick,fragment), getActivity());
+                RecentMethods.setCurrentFragment(ComplainFragment.newInstance(otherUserNick,fragment,userInformation), getActivity());
             }
         };
 

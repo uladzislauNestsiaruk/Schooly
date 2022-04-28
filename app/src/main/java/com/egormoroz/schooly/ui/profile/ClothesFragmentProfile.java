@@ -27,6 +27,7 @@ import com.egormoroz.schooly.ui.main.MyClothes.MyClothesAdapter;
 import com.egormoroz.schooly.ui.main.MyClothes.MyClothesFragment;
 import com.egormoroz.schooly.ui.main.MyClothes.ViewingMyClothes;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
+import com.egormoroz.schooly.ui.main.UserInformation;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -45,15 +46,17 @@ public class ClothesFragmentProfile extends Fragment {
 
     Fragment fragment;
     String type;
+    UserInformation userInformation;
 
 
-    public ClothesFragmentProfile(String type,Fragment fragment) {
+    public ClothesFragmentProfile(String type,Fragment fragment,UserInformation userInformation) {
         this.fragment = fragment;
         this.type = type;
+        this.userInformation=userInformation;
     }
 
-    public static ClothesFragmentProfile newInstance(String type,Fragment fragment) {
-        return new ClothesFragmentProfile(type,fragment);
+    public static ClothesFragmentProfile newInstance(String type,Fragment fragment,UserInformation userInformation) {
+        return new ClothesFragmentProfile(type,fragment,userInformation);
 
     }
 
@@ -85,7 +88,7 @@ public class ClothesFragmentProfile extends Fragment {
                 itemClickListener=new ClothesAdapter.ItemClickListener() {
                     @Override
                     public void onItemClick(Clothes clothes) {
-                        RecentMethods.setCurrentFragment(ClothesViewingProfile.newInstance(type,ProfileFragment.newInstance(type,nick,fragment)), getActivity());
+                        RecentMethods.setCurrentFragment(ClothesViewingProfile.newInstance(type,ProfileFragment.newInstance(type,nick,fragment,userInformation),userInformation), getActivity());
                     }
                 };
             }
@@ -128,7 +131,7 @@ public class ClothesFragmentProfile extends Fragment {
                                     createNewLook.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
-                                            RecentMethods.setCurrentFragment(CreateClothesFragment.newInstance(ProfileFragment.newInstance("user", nick, fragment)), getActivity());
+                                            RecentMethods.setCurrentFragment(CreateClothesFragment.newInstance(ProfileFragment.newInstance("user", nick, fragment,userInformation),userInformation), getActivity());
                                         }
                                     });
                                 }

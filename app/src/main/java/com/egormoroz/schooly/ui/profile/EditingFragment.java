@@ -22,6 +22,7 @@ import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.MainActivity;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
+import com.egormoroz.schooly.ui.chat.User;
 import com.egormoroz.schooly.ui.main.UserInformation;
 import com.egormoroz.schooly.ui.profile.Wardrobe.CreateLookFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -37,14 +38,16 @@ public class EditingFragment extends Fragment {
     RelativeLayout agree;
     String type;
     Fragment fragment;
+    UserInformation userInformation;
 
-    public EditingFragment(String type,Fragment fragment) {
+    public EditingFragment(String type,Fragment fragment,UserInformation userInformation) {
         this.type = type;
         this.fragment=fragment;
+        this.userInformation=userInformation;
     }
 
-    public static EditingFragment newInstance(String type, Fragment fragment) {
-        return new EditingFragment(type,fragment);
+    public static EditingFragment newInstance(String type, Fragment fragment, UserInformation userInformation) {
+        return new EditingFragment(type,fragment,userInformation);
 
     }
 
@@ -70,7 +73,7 @@ public class EditingFragment extends Fragment {
                 RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
                     @Override
                     public void PassUserNick(String nick) {
-                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance(type, nick,fragment), getActivity());
+                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance(type, nick,fragment,userInformation), getActivity());
                     }
                 });
             }
@@ -83,7 +86,7 @@ public class EditingFragment extends Fragment {
                     @Override
                     public void handleOnBackPressed() {
 
-                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance(type, nick,fragment), getActivity());
+                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance(type, nick,fragment,userInformation), getActivity());
                     }
                 };
 

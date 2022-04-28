@@ -23,6 +23,8 @@ import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.Subscriber;
 import com.egormoroz.schooly.ui.main.MainFragment;
+import com.egormoroz.schooly.ui.main.Mining.MiningFragment;
+import com.egormoroz.schooly.ui.main.UserInformation;
 import com.egormoroz.schooly.ui.profile.ProfileFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -30,8 +32,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class NontificationFragment extends Fragment {
-    public static NontificationFragment newInstance() {
-        return new NontificationFragment();
+    UserInformation userInformation;
+
+    public NontificationFragment(UserInformation userInformation) {
+        this.userInformation=userInformation;
+    }
+
+    public static NontificationFragment newInstance(UserInformation userInformation) {
+        return new NontificationFragment(userInformation);
     }
 
     FirebaseModel firebaseModel=new FirebaseModel();
@@ -60,7 +68,7 @@ public class NontificationFragment extends Fragment {
         backToMain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((MainActivity) getActivity()).setCurrentFragment(MainFragment.newInstance());
+                ((MainActivity) getActivity()).setCurrentFragment(MainFragment.newInstance(userInformation));
             }
         });
         nontsRecyclerView=view.findViewById(R.id.nontificationsrecyclerview);
@@ -90,9 +98,9 @@ public class NontificationFragment extends Fragment {
                             @Override
                             public void onItemClick(Nontification nontification,String type) {
                                 if(type.equals("clothesRequest")){
-                                RecentMethods.setCurrentFragment(ClothesRequestFragment.newInstance(NontificationFragment.newInstance(),nontification.getUid()), getActivity());
+                                RecentMethods.setCurrentFragment(ClothesRequestFragment.newInstance(NontificationFragment.newInstance(userInformation),nontification.getUid()), getActivity());
                                }else if(type.equals("sub")){
-                                    RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", nontification.getNick(), NontificationFragment.newInstance()),getActivity());
+                                    RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", nontification.getNick(), NontificationFragment.newInstance(userInformation),userInformation),getActivity());
                                 }
                             }
                         };
@@ -106,7 +114,7 @@ public class NontificationFragment extends Fragment {
             @Override
             public void handleOnBackPressed() {
 
-                RecentMethods.setCurrentFragment(MainFragment.newInstance(), getActivity());
+                RecentMethods.setCurrentFragment(MainFragment.newInstance(userInformation), getActivity());
             }
         };
 

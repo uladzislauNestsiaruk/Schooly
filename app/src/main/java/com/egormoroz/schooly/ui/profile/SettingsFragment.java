@@ -40,14 +40,16 @@ public class SettingsFragment extends Fragment {
 
     String type;
     Fragment fragment;
+    UserInformation userInformation;
 
-    public SettingsFragment(String type,Fragment fragment) {
+    public SettingsFragment(String type,Fragment fragment,UserInformation userInformation) {
         this.type = type;
         this.fragment=fragment;
+        this.userInformation=userInformation;
     }
 
-    public static SettingsFragment newInstance(String type, Fragment fragment) {
-        return new SettingsFragment(type,fragment);
+    public static SettingsFragment newInstance(String type, Fragment fragment,UserInformation userInformation) {
+        return new SettingsFragment(type,fragment,userInformation);
 
     }
 
@@ -61,11 +63,11 @@ public class SettingsFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState){
-         View root =inflater.inflate(R.layout.fragment_settings,container,false);
-         BottomNavigationView bnv = getActivity().findViewById(R.id.bottomNavigationView);
-         bnv.setVisibility(bnv.GONE);
-         firebaseModel.initAll();
-         return root;
+        View root =inflater.inflate(R.layout.fragment_settings,container,false);
+        BottomNavigationView bnv = getActivity().findViewById(R.id.bottomNavigationView);
+        bnv.setVisibility(bnv.GONE);
+        firebaseModel.initAll();
+        return root;
     }
 
     @Override
@@ -81,7 +83,7 @@ public class SettingsFragment extends Fragment {
         saved.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(SavedFragment.newInstance(type,fragment), getActivity());
+                RecentMethods.setCurrentFragment(SavedFragment.newInstance(type,fragment,userInformation), getActivity());
             }
         });
         support=view.findViewById(R.id.support);
@@ -283,12 +285,12 @@ public class SettingsFragment extends Fragment {
                 query.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                       String accountType = snapshot.getValue(String.class);
-                       if(accountType.equals("open")){
-                           privateAccountSwitch.setChecked(false);
-                       }else {
-                           privateAccountSwitch.setChecked(true);
-                       }
+                        String accountType = snapshot.getValue(String.class);
+                        if(accountType.equals("open")){
+                            privateAccountSwitch.setChecked(false);
+                        }else {
+                            privateAccountSwitch.setChecked(true);
+                        }
                     }
 
                     @Override
@@ -319,7 +321,7 @@ public class SettingsFragment extends Fragment {
                 });
             }
         });
-        
+
 
 
 
@@ -330,7 +332,7 @@ public class SettingsFragment extends Fragment {
                 RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
                     @Override
                     public void PassUserNick(String nick) {
-                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance(type, nick,fragment), getActivity());
+                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance(type, nick,fragment,userInformation), getActivity());
                     }
                 });
             }
@@ -342,7 +344,7 @@ public class SettingsFragment extends Fragment {
                     @Override
                     public void handleOnBackPressed() {
 
-                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance(type, nick, fragment), getActivity());
+                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance(type, nick, fragment,userInformation), getActivity());
                     }
                 };
 
@@ -354,7 +356,7 @@ public class SettingsFragment extends Fragment {
         blackList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(BlackListFragment.newInstance(type,fragment), getActivity());
+                RecentMethods.setCurrentFragment(BlackListFragment.newInstance(type,fragment,userInformation), getActivity());
             }
         });
         userNick=view.findViewById(R.id.userNick);
@@ -400,7 +402,7 @@ public class SettingsFragment extends Fragment {
                             changePassword.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    RecentMethods.setCurrentFragment(PasswordFragment.newInstance(type,fragment), getActivity());
+                                    RecentMethods.setCurrentFragment(PasswordFragment.newInstance(type,fragment,userInformation), getActivity());
                                 }
                             });
                         }

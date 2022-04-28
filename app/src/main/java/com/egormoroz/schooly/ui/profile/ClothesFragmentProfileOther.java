@@ -19,6 +19,7 @@ import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
 import com.egormoroz.schooly.ui.main.Shop.ShopFragment;
 import com.egormoroz.schooly.ui.main.Shop.ViewingClothes;
+import com.egormoroz.schooly.ui.main.UserInformation;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -36,14 +37,16 @@ public class ClothesFragmentProfileOther extends Fragment {
     String otherUserNick;
     ClothesAdapterOther.ItemClickListener itemClickListener;
     Fragment fragment;
+    UserInformation userInformation;
 
-    public ClothesFragmentProfileOther(String otherUserNick,Fragment fragment) {
+    public ClothesFragmentProfileOther(String otherUserNick,Fragment fragment,UserInformation userInformation) {
         this.otherUserNick = otherUserNick;
         this.fragment=fragment;
+        this.userInformation=userInformation;
     }
 
-    public static ClothesFragmentProfileOther newInstance(String otherUserNick,Fragment fragment) {
-        return new ClothesFragmentProfileOther(otherUserNick,fragment);
+    public static ClothesFragmentProfileOther newInstance(String otherUserNick,Fragment fragment,UserInformation userInformation) {
+        return new ClothesFragmentProfileOther(otherUserNick,fragment,userInformation);
     }
 
     @Override
@@ -77,7 +80,7 @@ public class ClothesFragmentProfileOther extends Fragment {
                 itemClickListener=new ClothesAdapterOther.ItemClickListener() {
                     @Override
                     public void onItemClick(Clothes clothes) {
-                        RecentMethods.setCurrentFragment(ClothesViewingProfileOther.newInstance(ProfileFragment.newInstance("other", otherUserNick, fragment)), getActivity());
+                        RecentMethods.setCurrentFragment(ClothesViewingProfileOther.newInstance(ProfileFragment.newInstance("other", otherUserNick, fragment,userInformation),userInformation), getActivity());
                     }
                 };
             }

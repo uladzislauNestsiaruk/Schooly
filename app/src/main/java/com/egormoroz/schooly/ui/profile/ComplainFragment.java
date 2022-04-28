@@ -21,6 +21,7 @@ import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
+import com.egormoroz.schooly.ui.chat.User;
 import com.egormoroz.schooly.ui.main.Shop.NewClothesAdapter;
 import com.egormoroz.schooly.ui.main.UserInformation;
 import com.egormoroz.schooly.ui.people.PeopleFragment;
@@ -38,14 +39,16 @@ public class ComplainFragment extends Fragment {
     TextView sendReasons;
     ComplainAdapter.ItemClickListener itemClickListener;
     Fragment fragment;
+    UserInformation userInformation;
 
-    public ComplainFragment(String otherUserNick,Fragment fragment) {
+    public ComplainFragment(String otherUserNick,Fragment fragment,UserInformation userInformation) {
         this.otherUserNick = otherUserNick;
         this.fragment=fragment;
+        this.userInformation=userInformation;
     }
 
-    public static ComplainFragment newInstance(String otherUserNick,Fragment fragment) {
-        return new ComplainFragment(otherUserNick,fragment);
+    public static ComplainFragment newInstance(String otherUserNick,Fragment fragment,UserInformation userInformation) {
+        return new ComplainFragment(otherUserNick,fragment,userInformation);
     }
 
     FirebaseModel firebaseModel=new FirebaseModel();
@@ -74,7 +77,7 @@ public class ComplainFragment extends Fragment {
         itemClickListener=new ComplainAdapter.ItemClickListener() {
             @Override
             public void onItemClick(Reason reason) {
-                RecentMethods.setCurrentFragment(ComplainFragmentToBase.newInstance(otherUserNick,fragment), getActivity());
+                RecentMethods.setCurrentFragment(ComplainFragmentToBase.newInstance(otherUserNick,fragment,userInformation), getActivity());
             }
         };
         RecentMethods.getComplainReasonList(firebaseModel, new Callbacks.getComplainReasonsList() {
@@ -88,7 +91,7 @@ public class ComplainFragment extends Fragment {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", otherUserNick, fragment),
+                RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", otherUserNick, fragment,userInformation),
                         getActivity());
             }
         });
@@ -97,7 +100,7 @@ public class ComplainFragment extends Fragment {
             @Override
             public void handleOnBackPressed() {
 
-                RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", otherUserNick, fragment), getActivity());
+                RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", otherUserNick, fragment,userInformation), getActivity());
             }
         };
 

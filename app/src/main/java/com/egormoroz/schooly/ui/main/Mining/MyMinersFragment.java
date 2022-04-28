@@ -20,6 +20,7 @@ import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.MainActivity;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
+import com.egormoroz.schooly.ui.main.UserInformation;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
@@ -27,7 +28,15 @@ import java.util.ArrayList;
 public class MyMinersFragment extends Fragment {
 
     ArrayList<Miner> listAdapter=new ArrayList<Miner>();
-    public static MyMinersFragment newInstanse(){return new MyMinersFragment();}
+    UserInformation userInformation;
+
+    public MyMinersFragment(UserInformation userInformation) {
+        this.userInformation=userInformation;
+    }
+
+    public static MyMinersFragment newInstance(UserInformation userInformation) {
+        return new MyMinersFragment(userInformation);
+    }
     private FirebaseModel firebaseModel = new FirebaseModel();
     RecyclerView recyclerviewMining;
     TextView useMiner,emptyMyMiners,buyMiner;
@@ -50,7 +59,7 @@ public class MyMinersFragment extends Fragment {
             @Override
             public void handleOnBackPressed() {
 
-                RecentMethods.setCurrentFragment(MiningFragment.newInstanse(), getActivity());
+                RecentMethods.setCurrentFragment(MiningFragment.newInstance(userInformation), getActivity());
             }
         };
 
@@ -59,7 +68,7 @@ public class MyMinersFragment extends Fragment {
         backtomoning.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((MainActivity)getActivity()).setCurrentFragment(MiningFragment.newInstanse());
+                ((MainActivity)getActivity()).setCurrentFragment(MiningFragment.newInstance(userInformation));
             }
         });
         GetMyMinersFromBase();

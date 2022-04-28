@@ -17,13 +17,21 @@ import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.MainActivity;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
+import com.egormoroz.schooly.ui.main.Mining.MiningFragment;
+import com.egormoroz.schooly.ui.main.UserInformation;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
 
 public class ClothesFragment extends Fragment {
-    public static ClothesFragment newInstance() {
-        return new ClothesFragment();
+    UserInformation userInformation;
+
+    public ClothesFragment(UserInformation userInformation) {
+        this.userInformation=userInformation;
+    }
+
+    public static ClothesFragment newInstance(UserInformation userInformation) {
+        return new ClothesFragment(userInformation);
     }
     FirebaseModel firebaseModel=new FirebaseModel();
     ArrayList<Clothes> clothesArrayList=new ArrayList<Clothes>();
@@ -62,13 +70,13 @@ public class ClothesFragment extends Fragment {
         itemClickListener=new NewClothesAdapter.ItemClickListener() {
             @Override
             public void onItemClick(Clothes clothes) {
-                ((MainActivity)getActivity()).setCurrentFragment(ViewingClothes.newInstance(ShopFragment.newInstance()));
+                ((MainActivity)getActivity()).setCurrentFragment(ViewingClothes.newInstance(ShopFragment.newInstance(userInformation),userInformation));
             }
         };
         itemClickListenerPopular=new PopularClothesAdapter.ItemClickListener() {
             @Override
             public void onItemClick(Clothes clothes) {
-                ((MainActivity)getActivity()).setCurrentFragment(ViewingClothesPopular.newInstance());
+                ((MainActivity)getActivity()).setCurrentFragment(ViewingClothesPopular.newInstance(userInformation));
             }
         };
     }

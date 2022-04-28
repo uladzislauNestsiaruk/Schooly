@@ -25,11 +25,13 @@ import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.ui.main.MainFragment;
 import com.egormoroz.schooly.ui.main.Mining.Miner;
+import com.egormoroz.schooly.ui.main.Mining.MiningFragment;
 import com.egormoroz.schooly.ui.main.Shop.AccessoriesFragment;
 import com.egormoroz.schooly.ui.main.Shop.ClothesFragment;
 import com.egormoroz.schooly.ui.main.Shop.HatsFragment;
 import com.egormoroz.schooly.ui.main.Shop.PopularFragment;
 import com.egormoroz.schooly.ui.main.Shop.ShoesFargment;
+import com.egormoroz.schooly.ui.main.UserInformation;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.tabs.TabLayout;
 
@@ -42,8 +44,14 @@ public class CreateCharacterFragment extends Fragment {
     private FirebaseModel firebaseModel = new FirebaseModel();
 
 
-    public static CreateCharacterFragment newInstance() {
-        return new CreateCharacterFragment();
+    UserInformation userInformation;
+
+    public CreateCharacterFragment(UserInformation userInformation) {
+        this.userInformation=userInformation;
+    }
+
+    public static CreateCharacterFragment newInstance(UserInformation userInformation) {
+        return new CreateCharacterFragment(userInformation);
     }
 
     @Override
@@ -77,7 +85,7 @@ public class CreateCharacterFragment extends Fragment {
         leftarrowtoreg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((MainActivity)getActivity()).setCurrentFragment(MainFragment.newInstance());
+                ((MainActivity)getActivity()).setCurrentFragment(MainFragment.newInstance(userInformation));
             }
         });
 

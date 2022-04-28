@@ -25,6 +25,7 @@ import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
 import com.egormoroz.schooly.ui.main.Shop.ViewingClothes;
+import com.egormoroz.schooly.ui.main.UserInformation;
 import com.egormoroz.schooly.ui.news.NewsItem;
 import com.egormoroz.schooly.ui.news.ViewingClothesNews;
 import com.egormoroz.schooly.ui.profile.Look;
@@ -54,15 +55,17 @@ public class AcceptNewLook extends Fragment {
     ConstituentsAdapter.ItemClickListener itemClickListener;
     String type;
     Fragment fragment;
+    UserInformation userInformation;
 
-    public AcceptNewLook(String model,String type,Fragment fragment) {
+    public AcceptNewLook(String model,String type,Fragment fragment,UserInformation userInformation) {
         this.model = model;
         this.type = type;
         this.fragment=fragment;
+        this.userInformation=userInformation;
     }
 
-    public static AcceptNewLook newInstance(String model,String type,Fragment fragment) {
-        return new AcceptNewLook(model,type,fragment);
+    public static AcceptNewLook newInstance(String model,String type,Fragment fragment,UserInformation userInformation) {
+        return new AcceptNewLook(model,type,fragment,userInformation);
 
     }
 
@@ -92,7 +95,7 @@ public class AcceptNewLook extends Fragment {
         itemClickListener=new ConstituentsAdapter.ItemClickListener() {
             @Override
             public void onItemClick(Clothes clothes) {
-                RecentMethods.setCurrentFragment(ViewingClothesNews.newInstance(AcceptNewLook.newInstance(model,type,fragment)), getActivity());
+                RecentMethods.setCurrentFragment(ViewingClothesNews.newInstance(AcceptNewLook.newInstance(model,type,fragment, userInformation),userInformation), getActivity());
             }
         };
 
@@ -103,7 +106,7 @@ public class AcceptNewLook extends Fragment {
                 RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
                     @Override
                     public void PassUserNick(String nick) {
-                        RecentMethods.setCurrentFragment(CreateLookFragment.newInstance(type,fragment), getActivity());
+                        RecentMethods.setCurrentFragment(CreateLookFragment.newInstance(type,fragment,userInformation), getActivity());
                     }
                 });
             }
@@ -115,7 +118,7 @@ public class AcceptNewLook extends Fragment {
                     @Override
                     public void handleOnBackPressed() {
 
-                        RecentMethods.setCurrentFragment(CreateLookFragment.newInstance(type,fragment), getActivity());
+                        RecentMethods.setCurrentFragment(CreateLookFragment.newInstance(type,fragment,userInformation), getActivity());
                     }
                 };
 
@@ -171,7 +174,7 @@ public class AcceptNewLook extends Fragment {
                                         firebaseModel.getUsersReference().child(nick).child("looks").child(lookId)
                                                 .setValue(new NewsItem(model, descriptionLook.getText().toString(), "0", lookId,
                                                         "", lookClothesFromBase, 1200, 0,"",nick,0));
-                                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance(type, nick, fragment), getActivity());
+                                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance(type, nick, fragment,userInformation), getActivity());
                                     }
                                 });
                             }

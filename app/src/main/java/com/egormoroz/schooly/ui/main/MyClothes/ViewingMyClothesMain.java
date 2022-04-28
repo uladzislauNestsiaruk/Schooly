@@ -37,9 +37,11 @@ import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.Subscriber;
+import com.egormoroz.schooly.ui.chat.User;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
 import com.egormoroz.schooly.ui.main.Shop.NewClothesAdapter;
 import com.egormoroz.schooly.ui.main.Shop.ViewingClothes;
+import com.egormoroz.schooly.ui.main.UserInformation;
 import com.egormoroz.schooly.ui.profile.ProfileFragment;
 import com.egormoroz.schooly.ui.profile.SendLookAdapter;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -59,13 +61,15 @@ import java.util.Map;
 
 public class ViewingMyClothesMain extends Fragment {
     Fragment fragment;
+    UserInformation userInformation;
 
-    public ViewingMyClothesMain(Fragment fragment) {
+    public ViewingMyClothesMain(Fragment fragment, UserInformation userInformation) {
         this.fragment = fragment;
+        this.userInformation=userInformation;
     }
 
-    public static ViewingMyClothesMain newInstance(Fragment fragment) {
-        return new ViewingMyClothesMain(fragment);
+    public static ViewingMyClothesMain newInstance(Fragment fragment,UserInformation userInformation) {
+        return new ViewingMyClothesMain(fragment,userInformation);
 
     }
 
@@ -150,7 +154,7 @@ public class ViewingMyClothesMain extends Fragment {
                 presentClothes.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        RecentMethods.setCurrentFragment(PresentClothesFragment.newInstance(clothesViewing,ViewingMyClothesMain.newInstance(fragment)), getActivity());
+                        RecentMethods.setCurrentFragment(PresentClothesFragment.newInstance(clothesViewing,ViewingMyClothesMain.newInstance(fragment,userInformation)), getActivity());
                     }
                 });
                 send.setOnClickListener(new View.OnClickListener() {

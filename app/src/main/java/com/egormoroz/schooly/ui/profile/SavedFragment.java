@@ -20,6 +20,7 @@ import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.Subscriber;
+import com.egormoroz.schooly.ui.main.UserInformation;
 import com.egormoroz.schooly.ui.news.NewsItem;
 import com.egormoroz.schooly.ui.profile.Wardrobe.CreateLookFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -33,17 +34,18 @@ public class SavedFragment extends Fragment {
     RecyclerView recyclerView;
     ImageView back;
     TextView emptyList;
-
+    UserInformation userInformation;
     String type;
     Fragment fragment;
 
-    public SavedFragment(String type,Fragment fragment) {
+    public SavedFragment(String type,Fragment fragment,UserInformation userInformation) {
         this.type = type;
         this.fragment=fragment;
+        this.userInformation=userInformation;
     }
 
-    public static SavedFragment newInstance(String type, Fragment fragment) {
-        return new SavedFragment(type,fragment);
+    public static SavedFragment newInstance(String type, Fragment fragment,UserInformation userInformation) {
+        return new SavedFragment(type,fragment,userInformation);
 
     }
 
@@ -66,14 +68,14 @@ public class SavedFragment extends Fragment {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(SettingsFragment.newInstance(type,fragment),getActivity());
+                RecentMethods.setCurrentFragment(SettingsFragment.newInstance(type,fragment,userInformation),getActivity());
             }
         });
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
 
-                RecentMethods.setCurrentFragment(SettingsFragment.newInstance(type, fragment), getActivity());
+                RecentMethods.setCurrentFragment(SettingsFragment.newInstance(type, fragment,userInformation), getActivity());
             }
         };
 
@@ -90,13 +92,13 @@ public class SavedFragment extends Fragment {
                             recyclerView.setVisibility(View.GONE);
                         }else {
                             Collections.reverse(newsItems);
-                            LooksAdapter looksAdapter=new LooksAdapter(newsItems, SavedFragment.newInstance(type,fragment),recyclerView);
+                            LooksAdapter looksAdapter=new LooksAdapter(newsItems, SavedFragment.newInstance(type,fragment,userInformation),recyclerView);
                             recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
                             recyclerView.setAdapter(looksAdapter);
                             LooksAdapter.ItemClickListener itemClickListener=new LooksAdapter.ItemClickListener() {
                                 @Override
                                 public void onItemClick(NewsItem newsItem) {
-                                    RecentMethods.setCurrentFragment(ViewingLookFragment.newInstance(SavedFragment.newInstance(type,fragment)), getActivity());
+                                    RecentMethods.setCurrentFragment(ViewingLookFragment.newInstance(SavedFragment.newInstance(type,fragment,userInformation),userInformation), getActivity());
                                 }
                             };
                             looksAdapter.setClickListener(itemClickListener);

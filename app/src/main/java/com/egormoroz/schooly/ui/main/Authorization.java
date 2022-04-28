@@ -47,7 +47,7 @@ public interface Authorization {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d("#####", "signInWithCredential:success");
                             FirebaseUser user = AuthBase.getCurrentUser();
-                            setCurrentFragment(MainFragment.newInstance(), fm);
+                            //setCurrentFragment(MainFragment.newInstance(), fm);
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w("####", "signInWithCredential:failure", task.getException());

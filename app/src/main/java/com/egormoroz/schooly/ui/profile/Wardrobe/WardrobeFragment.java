@@ -54,14 +54,16 @@ import java.util.function.Consumer;
 public class WardrobeFragment extends Fragment {
     String type;
     Fragment fragment;
+    UserInformation userInformation;
 
-    public WardrobeFragment(String type,Fragment fragment) {
+    public WardrobeFragment(String type,Fragment fragment,UserInformation userInformation) {
         this.type = type;
         this.fragment=fragment;
+        this.userInformation=userInformation;
     }
 
-    public static WardrobeFragment newInstance(String type,Fragment fragment) {
-        return new WardrobeFragment(type,fragment);
+    public static WardrobeFragment newInstance(String type,Fragment fragment,UserInformation userInformation) {
+        return new WardrobeFragment(type,fragment,userInformation);
 
     }
     ArrayList<Clothes> clothesArrayListWardrobe=new ArrayList<Clothes>();
@@ -163,7 +165,7 @@ public class WardrobeFragment extends Fragment {
                 RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
                     @Override
                     public void PassUserNick(String nick) {
-                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance(type, nick,fragment), getActivity());
+                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance(type, nick,fragment,userInformation), getActivity());
                     }
                 });
             }
@@ -175,7 +177,7 @@ public class WardrobeFragment extends Fragment {
                     @Override
                     public void handleOnBackPressed() {
 
-                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance(type,nick,fragment), getActivity());
+                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance(type,nick,fragment,userInformation), getActivity());
                     }
                 };
 
@@ -290,14 +292,14 @@ public class WardrobeFragment extends Fragment {
             switch (position)
             {
                 case 1 :
-                    return new WardrobeClothes(type,fragment);
+                    return new WardrobeClothes(type,fragment,userInformation);
                 case 2 :
-                    return new WardrobeHats(type,fragment);
+                    return new WardrobeHats(type,fragment,userInformation);
                 case 3 :
-                    return new WardrobeAccessories(type,fragment);
+                    return new WardrobeAccessories(type,fragment,userInformation);
             }
 
-            return new WardrobeShoes(type,fragment);
+            return new WardrobeShoes(type,fragment,userInformation);
         }
 
         @Override
@@ -344,10 +346,10 @@ public class WardrobeFragment extends Fragment {
         }
     }
 
-        @Override
+    @Override
     public void onPause() {
         super.onPause();
-      sceneView.pause();
+        sceneView.pause();
 
     }
     @Override

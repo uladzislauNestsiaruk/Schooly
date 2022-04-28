@@ -42,7 +42,7 @@ public class GenderFragment extends Fragment {
         leftarrowtoreg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((MainActivity)getActivity()).setCurrentFragment(MainFragment.newInstance());
+                //((MainActivity)getActivity()).setCurrentFragment(MainFragment.newInstance());
             }
         });
 

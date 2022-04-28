@@ -20,6 +20,7 @@ import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
+import com.egormoroz.schooly.ui.main.Mining.MiningFragment;
 import com.google.android.filament.Camera;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -38,7 +39,15 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class EnterFragment extends Fragment {
-    public static EnterFragment newInstance(){return new EnterFragment();}
+    UserInformation userInformation;
+
+    public EnterFragment(UserInformation userInformation) {
+        this.userInformation=userInformation;
+    }
+
+    public static EnterFragment newInstance(UserInformation userInformation) {
+        return new EnterFragment(userInformation);
+    }
     EditText phoneEditText;
     EditText passwordEditText;
     GoogleSignInOptions gso;
@@ -173,7 +182,7 @@ public class EnterFragment extends Fragment {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithEmail:success");
                             FirebaseUser user = AuthenticationBase.getCurrentUser();
-                            RecentMethods.setCurrentFragment(MainFragment.newInstance(), getActivity());
+                            RecentMethods.setCurrentFragment(MainFragment.newInstance(userInformation), getActivity());
                         } else {
                             Log.d("AAAA", RecentMethods.makeEmail(phone)+"  "+password);
                             // If sign in fails, display a message to the user.

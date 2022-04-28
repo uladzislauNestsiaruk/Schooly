@@ -31,6 +31,8 @@ import com.egormoroz.schooly.ui.coins.CoinsMainFragment;
 import com.egormoroz.schooly.ui.main.MainFragment;
 import com.egormoroz.schooly.ui.main.MoreMoneyFragment;
 import com.egormoroz.schooly.ui.main.Shop.NewClothesAdapter;
+import com.egormoroz.schooly.ui.main.UserInformation;
+import com.egormoroz.schooly.ui.profile.SubscriptionsFragmentOther;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.text.DecimalFormat;
@@ -40,8 +42,14 @@ import java.util.Map;
 
 public class MiningFragment extends Fragment {
 
-    public static MiningFragment newInstanse() {
-        return new MiningFragment();
+    UserInformation userInformation;
+
+    public MiningFragment(UserInformation userInformation) {
+        this.userInformation=userInformation;
+    }
+
+    public static MiningFragment newInstance(UserInformation userInformation) {
+        return new MiningFragment(userInformation);
     }
 
     ArrayList<Miner> listAdapterMiner = new ArrayList<Miner>();
@@ -82,7 +90,7 @@ public class MiningFragment extends Fragment {
             @Override
             public void handleOnBackPressed() {
 
-                RecentMethods.setCurrentFragment(MainFragment.newInstance(), getActivity());
+                RecentMethods.setCurrentFragment(MainFragment.newInstance(userInformation), getActivity());
             }
         };
         requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(), callback);
@@ -102,28 +110,28 @@ public class MiningFragment extends Fragment {
         coinsLinear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(CoinsFragmentSecond.newInstance(MiningFragment.newInstanse()), getActivity());
+                RecentMethods.setCurrentFragment(CoinsFragmentSecond.newInstance(MiningFragment.newInstance(userInformation)), getActivity());
             }
         });
         myminers = view.findViewById(R.id.myminers);
         myminers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(MyMinersFragment.newInstanse(), getActivity());
+                RecentMethods.setCurrentFragment(MyMinersFragment.newInstance(userInformation), getActivity());
             }
         });
         ImageView backtomainfrommining = view.findViewById(R.id.backtomainfrommining);
         backtomainfrommining.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(MainFragment.newInstance(), getActivity());
+                RecentMethods.setCurrentFragment(MainFragment.newInstance(userInformation), getActivity());
             }
         });
         getMore=view.findViewById(R.id.getMore);
         getMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(MoreMoneyFragment.newInstance(MiningFragment.newInstanse()), getActivity());
+                RecentMethods.setCurrentFragment(MoreMoneyFragment.newInstance(MiningFragment.newInstance(userInformation),userInformation), getActivity());
             }
         });
         activeminersrecyclerview = view.findViewById(R.id.activeminersrecyclerview);
@@ -228,7 +236,7 @@ public class MiningFragment extends Fragment {
                                     addActiveMiners.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
-                                            RecentMethods.setCurrentFragment(MyMinersFragment.newInstanse(), getActivity());
+                                            RecentMethods.setCurrentFragment(MyMinersFragment.newInstance(userInformation), getActivity());
                                         }
                                     });
                                     emptyActiveMiners.setText("Добавь активные майнеры!");

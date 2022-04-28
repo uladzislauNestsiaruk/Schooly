@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -49,16 +50,18 @@ public class MainActivity extends AppCompatActivity {
     private DatabaseReference reference;
     private FirebaseAuth AuthenticationBase;
     public static String currentUserID;
+    UserInformation userInformation;
     String time,timeNow;
     long a,d,min;
     double minInGap;
+    CoordinatorLayout fragmentContainer;
     OneTimeWorkRequest miningWorkRequest;
     FirebaseModel firebaseModel=new FirebaseModel();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        CoordinatorLayout fragmentContainer = findViewById(R.id.fragment_container);
+        fragmentContainer = findViewById(R.id.fragment_container);
         initFirebase();
         firebaseModel.initAll();
         ///////////Authorization block
@@ -69,51 +72,6 @@ public class MainActivity extends AppCompatActivity {
         }else{
         }
         ///////////
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
-        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @SuppressLint("NonConstantResourceId")
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.bottom_nav_home:
-                        setCurrentFragment(MainFragment.newInstance());
-//                        toolbarTitle.setText(getString(R.string.app_name));
-//                        toolbarTitle.setTextColor(getColor(R.color.app_color));
-//                        appBarLayout.setVisibility(View.VISIBLE);
-                        return true;
-                    case R.id.bottom_nav_news:
-                        setCurrentFragment(NewsFragment.newInstance());
-//                        toolbarTitle.setText(getString(R.string.toolbar_news));
-//                        toolbarTitle.setTextColor(getColor(R.color.black));
-//                        appBarLayout.setVisibility(View.VISIBLE);
-                        return true;
-                    case R.id.bottom_nav_coins:
-                        setCurrentFragment(CoinsMainFragment.newInstance());
-//                        toolbarTitle.setText(getString(R.string.toolbar_people));
-//                        toolbarTitle.setTextColor(getColor(R.color.black));
-//                        appBarLayout.setVisibility(View.VISIBLE);
-                        return true;
-                    case R.id.bottom_nav_people:
-                        setCurrentFragment(PeopleFragment.newInstance());
-//                        toolbarTitle.setText(getString(R.string.toolbar_people));
-//                        toolbarTitle.setTextColor(getColor(R.color.black));
-//                        appBarLayout.setVisibility(View.VISIBLE);
-                        return true;
-                    case R.id.bottom_nav_profile:
-                        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-                            @Override
-                            public void PassUserNick(String nick) {
-                                setCurrentFragment(ProfileFragment.newInstance("user", nick,MainFragment.newInstance()));
-                            }
-                        });
-//                        appBarLayout.setVisibility(View.GONE);
-                        CoordinatorLayout.LayoutParams coordinatorLayoutParams = (CoordinatorLayout.LayoutParams) fragmentContainer.getLayoutParams();
-                        coordinatorLayoutParams.setBehavior(null);
-                        return true;
-                }
-                return false;
-            }
-        });
 
 
 
@@ -142,44 +100,111 @@ public class MainActivity extends AppCompatActivity {
                     public void hasGoogleUserCallback(boolean hasThisUser) {
                         if(hasThisUser) {
                             Log.d("AAA", "current user: " + user.getEmail());
-                            setCurrentFragment(MainFragment.newInstance());
                             RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
                                 @Override
                                 public void PassUserNick(String nick) {
-                                    final DatabaseReference connectedRef = database.getReference(".info/connected");
-                                    connectedRef.addValueEventListener(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(DataSnapshot snapshot) {
-                                            boolean connected = snapshot.getValue(Boolean.class);
-                                            if (connected) {
-                                                firebaseModel.getUsersReference().child(nick).child("Status")
-                                                        .setValue("Online").addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                    @Override
-                                                    public void onComplete(@NonNull Task<Void> task) {
-                                                        if(task.isSuccessful()){
-                                                            //WorkManager.getInstance(getApplicationContext()).cancelWorkById(miningWorkRequest.getId());
-                                                        }
-                                                    }
-                                                });
+                                    firebaseModel.getUsersReference().child(nick).get()
+                                            .addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<DataSnapshot> task) {
+                                                    if (task.isSuccessful()){
+                                                        DataSnapshot snapshot=task.getResult();
+                                                        userInformation=new UserInformation();
+                                                        userInformation.setAge(snapshot.child("age").getValue(Long.class));
+                                                        userInformation.setAvatar(snapshot.child("avatar").getValue(String.class));
+                                                        userInformation.setGender(snapshot.child("gender").getValue(String.class));
+                                                        userInformation.setNick(snapshot.child("nick").getValue(String.class));
+                                                        userInformation.setPassword(snapshot.child("password").getValue(String.class));
+                                                        userInformation.setPhone(snapshot.child("phone").getValue(String.class));
+                                                        userInformation.setUid(snapshot.child("uid").getValue(String.class));
+                                                        userInformation.setQueue(snapshot.child("queue").getValue(String.class));
+                                                        //userInformation.setSubscription(snapshot.child("subscription").getValue(String.class));
+                                                        userInformation.setmoney(snapshot.child("money").getValue(Long.class));
+                                                        userInformation.setTodayMining(snapshot.child("todayMining").getValue(Double.class));
+                                                        setCurrentFragment(MainFragment.newInstance(userInformation));
+                                                        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
+                                                        bottomNavigationView.setVisibility(View.VISIBLE);
+                                                        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+                                                            @SuppressLint("NonConstantResourceId")
+                                                            @Override
+                                                            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                                                                switch (item.getItemId()) {
+                                                                    case R.id.bottom_nav_home:
+                                                                        setCurrentFragment(MainFragment.newInstance(userInformation));
+//                        toolbarTitle.setText(getString(R.string.app_name));
+//                        toolbarTitle.setTextColor(getColor(R.color.app_color));
+//                        appBarLayout.setVisibility(View.VISIBLE);
+                                                                        return true;
+                                                                    case R.id.bottom_nav_news:
+                                                                        setCurrentFragment(NewsFragment.newInstance());
+//                        toolbarTitle.setText(getString(R.string.toolbar_news));
+//                        toolbarTitle.setTextColor(getColor(R.color.black));
+//                        appBarLayout.setVisibility(View.VISIBLE);
+                                                                        return true;
+                                                                    case R.id.bottom_nav_coins:
+                                                                        setCurrentFragment(CoinsMainFragment.newInstance());
+//                        toolbarTitle.setText(getString(R.string.toolbar_people));
+//                        toolbarTitle.setTextColor(getColor(R.color.black));
+//                        appBarLayout.setVisibility(View.VISIBLE);
+                                                                        return true;
+                                                                    case R.id.bottom_nav_people:
+                                                                        setCurrentFragment(PeopleFragment.newInstance(userInformation));
+//                        toolbarTitle.setText(getString(R.string.toolbar_people));
+//                        toolbarTitle.setTextColor(getColor(R.color.black));
+//                        appBarLayout.setVisibility(View.VISIBLE);
+                                                                        return true;
+                                                                    case R.id.bottom_nav_profile:
+                                                                        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+                                                                            @Override
+                                                                            public void PassUserNick(String nick) {
+                                                                                setCurrentFragment(ProfileFragment.newInstance("user", nick,MainFragment.newInstance(userInformation),userInformation));
+                                                                            }
+                                                                        });
+//                        appBarLayout.setVisibility(View.GONE);
+                                                                        CoordinatorLayout.LayoutParams coordinatorLayoutParams = (CoordinatorLayout.LayoutParams) fragmentContainer.getLayoutParams();
+                                                                        coordinatorLayoutParams.setBehavior(null);
+                                                                        return true;
+                                                                }
+                                                                return false;
+                                                            }
+                                                        });
+                                                        final DatabaseReference connectedRef = database.getReference(".info/connected");
+                                                        connectedRef.addValueEventListener(new ValueEventListener() {
+                                                            @Override
+                                                            public void onDataChange(DataSnapshot snapshot) {
+                                                                boolean connected = snapshot.getValue(Boolean.class);
+                                                                if (connected) {
+                                                                    firebaseModel.getUsersReference().child(nick).child("Status")
+                                                                            .setValue("Online").addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                        @Override
+                                                                        public void onComplete(@NonNull Task<Void> task) {
+                                                                            if(task.isSuccessful()){
+                                                                                //WorkManager.getInstance(getApplicationContext()).cancelWorkById(miningWorkRequest.getId());
+                                                                            }
+                                                                        }
+                                                                    });
 
-                                                DatabaseReference presenceRef = firebaseModel.getReference().child("users").child(nick).child("Status");
-                                                presenceRef.onDisconnect().setValue("Offline").addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                    @Override
-                                                    public void onComplete(@NonNull Task<Void> task) {
-                                                        if(task.isSuccessful()){
-                                                           // WorkManager.getInstance(getApplicationContext()).cancelWorkById(miningWorkRequest.getId());
-                                                            Log.d("AAA", "ddll");
-                                                        }
-                                                    }
-                                                });
-                                            }else{
-                                            }
-                                        }
+                                                                    DatabaseReference presenceRef = firebaseModel.getReference().child("users").child(nick).child("Status");
+                                                                    presenceRef.onDisconnect().setValue("Offline").addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                        @Override
+                                                                        public void onComplete(@NonNull Task<Void> task) {
+                                                                            if(task.isSuccessful()){
+                                                                                // WorkManager.getInstance(getApplicationContext()).cancelWorkById(miningWorkRequest.getId());
+                                                                                Log.d("AAA", "ddll");
+                                                                            }
+                                                                        }
+                                                                    });
+                                                                }else{
+                                                                }
+                                                            }
 
-                                        @Override
-                                        public void onCancelled(DatabaseError error) {
-                                        }
-                                    });
+                                                            @Override
+                                                            public void onCancelled(DatabaseError error) {
+                                                            }
+                                                        });
+                                                    }
+                                                }
+                                            });
                                 }
                             });
                         }

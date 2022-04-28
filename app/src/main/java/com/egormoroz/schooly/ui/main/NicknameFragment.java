@@ -18,14 +18,21 @@ import androidx.fragment.app.Fragment;
 import com.egormoroz.schooly.CONST;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
+import com.egormoroz.schooly.ui.main.Mining.MiningFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class NicknameFragment extends Fragment {
-    public static NicknameFragment newInstance() {
-        return new NicknameFragment();
+    UserInformation userInformation;
+
+    public NicknameFragment(UserInformation userInformation) {
+        this.userInformation=userInformation;
+    }
+
+    public static NicknameFragment newInstance(UserInformation userInformation) {
+        return new NicknameFragment(userInformation);
     }
     FirebaseAuth authenticationDatabase;
     FirebaseDatabase database;
@@ -86,7 +93,7 @@ public class NicknameFragment extends Fragment {
                 String error = String.valueOf(nicknameTextView.getText()).trim();
                 if(error.isEmpty()) {
                     RecentMethods.saveData(ref, authenticationDatabase.getCurrentUser(), nickname);
-                    RecentMethods.setCurrentFragment(MainFragment.newInstance(), getActivity());
+                    RecentMethods.setCurrentFragment(MainFragment.newInstance(userInformation), getActivity());
                 }
             }
         });

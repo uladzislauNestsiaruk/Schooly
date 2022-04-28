@@ -29,12 +29,14 @@ import com.egormoroz.schooly.Nontification;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.Subscriber;
+import com.egormoroz.schooly.ui.chat.User;
 import com.egormoroz.schooly.ui.coins.CoinsFragmentSecond;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
 import com.egormoroz.schooly.ui.main.Shop.FittingFragment;
 import com.egormoroz.schooly.ui.main.Shop.NewClothesAdapter;
 import com.egormoroz.schooly.ui.main.Shop.ViewingClothes;
 import com.egormoroz.schooly.ui.main.Shop.ViewingClothesPopular;
+import com.egormoroz.schooly.ui.main.UserInformation;
 import com.egormoroz.schooly.ui.profile.ProfileFragment;
 import com.egormoroz.schooly.ui.profile.SendLookAdapter;
 import com.egormoroz.schooly.ui.profile.Wardrobe.ConstituentsAdapter;
@@ -58,13 +60,15 @@ import java.util.Random;
 public class ViewingClothesNews extends Fragment {
 
     Fragment fragment;
+    UserInformation userInformation;
 
-    public ViewingClothesNews(Fragment fragment) {
+    public ViewingClothesNews(Fragment fragment,UserInformation userInformation) {
         this.fragment = fragment;
+        this.userInformation=userInformation;
     }
 
-    public static ViewingClothesNews newInstance(Fragment fragment) {
-        return new ViewingClothesNews(fragment);
+    public static ViewingClothesNews newInstance(Fragment fragment, UserInformation userInformation) {
+        return new ViewingClothesNews(fragment,userInformation);
 
     }
 
@@ -123,13 +127,13 @@ public class ViewingClothesNews extends Fragment {
         fittingClothes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(FittingFragment.newInstance(ViewingClothes.newInstance(fragment)), getActivity());
+                RecentMethods.setCurrentFragment(FittingFragment.newInstance(ViewingClothes.newInstance(fragment,userInformation)), getActivity());
             }
         });
         coinsLinear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(CoinsFragmentSecond.newInstance(ViewingClothes.newInstance(fragment)), getActivity());
+                RecentMethods.setCurrentFragment(CoinsFragmentSecond.newInstance(ViewingClothes.newInstance(fragment,userInformation)), getActivity());
             }
         });
         back.setOnClickListener(new View.OnClickListener() {
@@ -163,9 +167,9 @@ public class ViewingClothesNews extends Fragment {
                             @Override
                             public void PassUserNick(String nick) {
                                 if (clothesViewing.getCreator().equals(nick)) {
-                                    RecentMethods.setCurrentFragment(ProfileFragment.newInstance("user", nick, ViewingClothes.newInstance(fragment)), getActivity());
+                                    RecentMethods.setCurrentFragment(ProfileFragment.newInstance("user", nick, ViewingClothes.newInstance(fragment,userInformation),userInformation), getActivity());
                                 }else {
-                                    RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", clothesViewing.getCreator(), ViewingClothes.newInstance(fragment)), getActivity());
+                                    RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", clothesViewing.getCreator(), ViewingClothes.newInstance(fragment,userInformation),userInformation), getActivity());
                                 }
                             }
                         });
@@ -668,7 +672,7 @@ public class ViewingClothesNews extends Fragment {
                         });
                     }else{
                         Toast.makeText(getContext(), "Не хватает коинов", Toast.LENGTH_SHORT).show();
-                        RecentMethods.setCurrentFragment(CoinsFragmentSecond.newInstance(ViewingClothesPopular.newInstance()), getActivity());
+                        RecentMethods.setCurrentFragment(CoinsFragmentSecond.newInstance(ViewingClothesPopular.newInstance(userInformation)), getActivity());
                     }
                 }
                 dialog.dismiss();

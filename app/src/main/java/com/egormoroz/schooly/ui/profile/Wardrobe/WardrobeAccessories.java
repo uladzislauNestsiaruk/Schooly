@@ -19,6 +19,7 @@ import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
 import com.egormoroz.schooly.ui.main.Shop.ShopFragment;
+import com.egormoroz.schooly.ui.main.UserInformation;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
@@ -27,14 +28,16 @@ import java.util.Collections;
 public class WardrobeAccessories extends Fragment {
     String type;
     Fragment fragment;
+    UserInformation userInformation;
 
-    public WardrobeAccessories(String type,Fragment fragment) {
+    public WardrobeAccessories(String type,Fragment fragment,UserInformation userInformation) {
         this.type = type;
         this.fragment=fragment;
+        this.userInformation=userInformation;
     }
 
-    public static WardrobeAccessories newInstance(String type,Fragment fragment) {
-        return new WardrobeAccessories(type,fragment);
+    public static WardrobeAccessories newInstance(String type,Fragment fragment,UserInformation userInformation) {
+        return new WardrobeAccessories(type,fragment,userInformation);
 
     }
     FirebaseModel firebaseModel=new FirebaseModel();
@@ -71,7 +74,7 @@ public class WardrobeAccessories extends Fragment {
         itemClickListener=new WardrobeClothesAdapter.ItemClickListener() {
             @Override
             public void onItemClick(Clothes clothes) {
-                RecentMethods.setCurrentFragment(ViewingClothesWardrobe.newInstance(type,fragment), getActivity());
+                RecentMethods.setCurrentFragment(ViewingClothesWardrobe.newInstance(type,fragment,userInformation), getActivity());
             }
         };
         buyToShop=view.findViewById(R.id.buyToShop);
@@ -101,7 +104,7 @@ public class WardrobeAccessories extends Fragment {
                             buyToShop.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    RecentMethods.setCurrentFragment(ShopFragment.newInstance(), getActivity());
+                                    RecentMethods.setCurrentFragment(ShopFragment.newInstance(userInformation), getActivity());
                                 }
                             });
                         }else {

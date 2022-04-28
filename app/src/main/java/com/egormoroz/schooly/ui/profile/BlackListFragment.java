@@ -33,14 +33,16 @@ public  class BlackListFragment extends Fragment {
 
     String type;
     Fragment fragment;
+    UserInformation userInformation;
 
-    public BlackListFragment(String type,Fragment fragment) {
+    public BlackListFragment(String type,Fragment fragment,UserInformation userInformation) {
         this.type = type;
         this.fragment=fragment;
+        this.userInformation=userInformation;
     }
 
-    public static BlackListFragment newInstance(String type, Fragment fragment) {
-        return new BlackListFragment(type,fragment);
+    public static BlackListFragment newInstance(String type, Fragment fragment,UserInformation userInformation) {
+        return new BlackListFragment(type,fragment,userInformation);
 
     }
 
@@ -64,7 +66,7 @@ public  class BlackListFragment extends Fragment {
             @Override
             public void handleOnBackPressed() {
 
-                RecentMethods.setCurrentFragment(SettingsFragment.newInstance(type,fragment), getActivity());
+                RecentMethods.setCurrentFragment(SettingsFragment.newInstance(type,fragment,userInformation), getActivity());
             }
         };
 
@@ -72,7 +74,7 @@ public  class BlackListFragment extends Fragment {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(SettingsFragment.newInstance(type,fragment),getActivity());
+                RecentMethods.setCurrentFragment(SettingsFragment.newInstance(type,fragment,userInformation),getActivity());
             }
         });
 

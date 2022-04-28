@@ -17,6 +17,7 @@ import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
+import com.egormoroz.schooly.ui.main.UserInformation;
 import com.egormoroz.schooly.ui.profile.ProfileFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.database.DataSnapshot;
@@ -25,14 +26,16 @@ import com.squareup.picasso.Picasso;
 public class ViewingClothesWardrobe extends Fragment {
   String type;
   Fragment fragment;
+  UserInformation userInformation;
 
-  public ViewingClothesWardrobe(String type,Fragment fragment) {
+  public ViewingClothesWardrobe(String type,Fragment fragment,UserInformation userInformation) {
     this.type = type;
     this.fragment=fragment;
+    this.userInformation=userInformation;
   }
 
-  public static ViewingClothesWardrobe newInstance(String type,Fragment fragment) {
-    return new ViewingClothesWardrobe(type,fragment);
+  public static ViewingClothesWardrobe newInstance(String type,Fragment fragment,UserInformation userInformation) {
+    return new ViewingClothesWardrobe(type,fragment,userInformation);
 
   }
 
@@ -64,7 +67,7 @@ public class ViewingClothesWardrobe extends Fragment {
     backToShop.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        RecentMethods.setCurrentFragment(WardrobeFragment.newInstance(type,fragment), getActivity());
+        RecentMethods.setCurrentFragment(WardrobeFragment.newInstance(type,fragment,userInformation), getActivity());
       }
     });
 
@@ -75,7 +78,7 @@ public class ViewingClothesWardrobe extends Fragment {
           @Override
           public void handleOnBackPressed() {
 
-            RecentMethods.setCurrentFragment(WardrobeFragment.newInstance(type, fragment), getActivity());
+            RecentMethods.setCurrentFragment(WardrobeFragment.newInstance(type, fragment,userInformation), getActivity());
           }
         };
 

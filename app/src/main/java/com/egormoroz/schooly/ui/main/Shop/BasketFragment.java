@@ -27,6 +27,7 @@ import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.ui.coins.CoinsFragmentSecond;
 import com.egormoroz.schooly.ui.coins.CoinsMainFragment;
 import com.egormoroz.schooly.ui.main.Mining.MiningFragment;
+import com.egormoroz.schooly.ui.main.UserInformation;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -36,8 +37,14 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 public class BasketFragment extends Fragment {
-  public static BasketFragment newInstance() {
-    return new BasketFragment();
+  UserInformation userInformation;
+
+  public BasketFragment(UserInformation userInformation) {
+    this.userInformation=userInformation;
+  }
+
+  public static BasketFragment newInstance(UserInformation userInformation) {
+    return new BasketFragment(userInformation);
   }
 
   FirebaseModel firebaseModel=new FirebaseModel();
@@ -70,7 +77,7 @@ public class BasketFragment extends Fragment {
       @Override
       public void handleOnBackPressed() {
 
-        RecentMethods.setCurrentFragment(ShopFragment.newInstance(), getActivity());
+        RecentMethods.setCurrentFragment(ShopFragment.newInstance(userInformation), getActivity());
       }
     };
 
@@ -78,7 +85,7 @@ public class BasketFragment extends Fragment {
     backtoshop.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        RecentMethods.setCurrentFragment(ShopFragment.newInstance(), getActivity());
+        RecentMethods.setCurrentFragment(ShopFragment.newInstance(userInformation), getActivity());
       }
     });
     schoolyCoin=view.findViewById(R.id.schoolycoinbasketfrag);
@@ -97,7 +104,7 @@ public class BasketFragment extends Fragment {
     coinsLinear.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        RecentMethods.setCurrentFragment(CoinsFragmentSecond.newInstance(BasketFragment.newInstance()), getActivity());
+        RecentMethods.setCurrentFragment(CoinsFragmentSecond.newInstance(BasketFragment.newInstance(userInformation)), getActivity());
       }
     });
     numberOfClothes=view.findViewById(R.id.numberofclothes);
@@ -106,13 +113,13 @@ public class BasketFragment extends Fragment {
     onItemClick=new BasketAdapter.ItemClickListener() {
       @Override
       public void onItemClick(Clothes clothes) {
-        ((MainActivity)getActivity()).setCurrentFragment(ViewingClothesBasket.newInstance());
+        ((MainActivity)getActivity()).setCurrentFragment(ViewingClothesBasket.newInstance(userInformation));
       }
     };
     onItemClick=new BasketAdapter.ItemClickListener() {
       @Override
       public void onItemClick(Clothes clothes) {
-        ((MainActivity)getActivity()).setCurrentFragment(ViewingClothesBasket.newInstance());
+        ((MainActivity)getActivity()).setCurrentFragment(ViewingClothesBasket.newInstance(userInformation));
       }
     };
     editText.addTextChangedListener(new TextWatcher() {

@@ -42,6 +42,7 @@ import com.egormoroz.schooly.ui.main.DialogsActivity;
 import com.egormoroz.schooly.ui.main.GroupsFragment;
 import com.egormoroz.schooly.ui.main.MainFragment;
 import com.egormoroz.schooly.ui.main.Mining.MiningFragment;
+import com.egormoroz.schooly.ui.main.UserInformation;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.database.DataSnapshot;
@@ -54,8 +55,14 @@ import java.util.List;
 import java.util.Locale;
 
 public class ShopFragment extends Fragment {
-    public static ShopFragment newInstance() {
-        return new ShopFragment();
+    UserInformation userInformation;
+
+    public ShopFragment(UserInformation userInformation) {
+        this.userInformation=userInformation;
+    }
+
+    public static ShopFragment newInstance(UserInformation userInformation) {
+        return new ShopFragment(userInformation);
     }
 
     FirebaseModel firebaseModel=new FirebaseModel();
@@ -93,7 +100,7 @@ public class ShopFragment extends Fragment {
             @Override
             public void handleOnBackPressed() {
 
-                RecentMethods.setCurrentFragment(MainFragment.newInstance(), getActivity());
+                RecentMethods.setCurrentFragment(MainFragment.newInstance(userInformation), getActivity());
             }
         };
 
@@ -103,14 +110,14 @@ public class ShopFragment extends Fragment {
         backtoprofileshop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((MainActivity)getActivity()).setCurrentFragment(MainFragment.newInstance());
+                ((MainActivity)getActivity()).setCurrentFragment(MainFragment.newInstance(userInformation));
             }
         });
         coinsLinear=view.findViewById(R.id.linearCoins);
         coinsLinear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(CoinsFragmentSecond.newInstance(ShopFragment.newInstance()), getActivity());
+                RecentMethods.setCurrentFragment(CoinsFragmentSecond.newInstance(ShopFragment.newInstance(userInformation)), getActivity());
             }
         });
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
@@ -151,7 +158,7 @@ public class ShopFragment extends Fragment {
                     itemClickListenerPopular=new PopularClothesAdapter.ItemClickListener() {
                         @Override
                         public void onItemClick(Clothes clothes) {
-                            ((MainActivity)getActivity()).setCurrentFragment(ViewingClothesPopular.newInstance());
+                            ((MainActivity)getActivity()).setCurrentFragment(ViewingClothesPopular.newInstance(userInformation));
                         }
                     };
                 }else if(editGetText.length()==0){
@@ -258,7 +265,7 @@ public class ShopFragment extends Fragment {
         basket.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(BasketFragment.newInstance(), getActivity());
+                RecentMethods.setCurrentFragment(BasketFragment.newInstance(userInformation), getActivity());
                 SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
                 SharedPreferences.Editor editor = preferences.edit();
                 editor.putInt("Name",tabLayout.getSelectedTabPosition());
@@ -362,17 +369,17 @@ public class ShopFragment extends Fragment {
 
             switch (position) {
                 case 1:
-                    return new ExclusiveFragment(version);
+                    return new ExclusiveFragment(version,userInformation);
                 case 2:
-                    return new ShoesFargment();
+                    return new ShoesFargment(userInformation);
                 case 3:
-                    return new ClothesFragment();
+                    return new ClothesFragment(userInformation);
                 case 4:
-                    return new HatsFragment();
+                    return new HatsFragment(userInformation);
                 case 5:
-                    return new AccessoriesFragment();
+                    return new AccessoriesFragment(userInformation);
             }
-            return new PopularFragment();
+            return new PopularFragment(userInformation);
         }
 
 

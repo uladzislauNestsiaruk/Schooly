@@ -16,6 +16,8 @@ import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
+import com.egormoroz.schooly.ui.chat.User;
+import com.egormoroz.schooly.ui.main.UserInformation;
 import com.egormoroz.schooly.ui.news.NewsItem;
 import com.egormoroz.schooly.ui.profile.Wardrobe.CreateLookFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -31,14 +33,16 @@ public class LooksFragmentProfileOther extends Fragment {
   int looksListSize;
   String otherUserNick;
   Fragment fragment;
+  UserInformation userInformation;
 
-  public LooksFragmentProfileOther(String otherUserNick,Fragment fragment) {
+  public LooksFragmentProfileOther(String otherUserNick, Fragment fragment, UserInformation userInformation) {
     this.otherUserNick = otherUserNick;
     this.fragment=fragment;
+    this.userInformation=userInformation;
   }
 
-  public static LooksFragmentProfileOther newInstance(String otherUserNick,Fragment fragment) {
-    return new LooksFragmentProfileOther(otherUserNick,fragment);
+  public static LooksFragmentProfileOther newInstance(String otherUserNick,Fragment fragment,UserInformation userInformation) {
+    return new LooksFragmentProfileOther(otherUserNick,fragment,userInformation);
   }
 
   @Override
@@ -78,7 +82,7 @@ public class LooksFragmentProfileOther extends Fragment {
           looksRecyclerOther.setVisibility(View.GONE);
         }else{
           Collections.reverse(look);
-          LooksAdapter looksAdapter=new LooksAdapter(look,LooksFragmentProfileOther.newInstance(otherUserNick,fragment),looksRecyclerOther);
+          LooksAdapter looksAdapter=new LooksAdapter(look,LooksFragmentProfileOther.newInstance(otherUserNick,fragment,userInformation),looksRecyclerOther);
           GridLayoutManager gridLayoutManager=new GridLayoutManager(getContext(), 3);
           looksRecyclerOther.setLayoutManager(gridLayoutManager);
           looksRecyclerOther.setAdapter(looksAdapter);
@@ -86,7 +90,7 @@ public class LooksFragmentProfileOther extends Fragment {
             @Override
             public void onItemClick(NewsItem newsItem) {
               RecentMethods.setCurrentFragment(ViewingLookFragment.newInstance(ProfileFragment.
-                      newInstance("other", otherUserNick, fragment)), getActivity());
+                      newInstance("other", otherUserNick, fragment,userInformation),userInformation), getActivity());
             }
           };
           looksAdapter.setClickListener(itemClickListener);

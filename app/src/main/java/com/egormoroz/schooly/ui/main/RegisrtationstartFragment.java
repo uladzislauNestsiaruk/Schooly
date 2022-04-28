@@ -38,13 +38,14 @@ public class RegisrtationstartFragment extends Fragment {
         EnterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                RecentMethods.setCurrentFragment(EnterFragment.newInstance(), getActivity());
+                UserInformation userInformation=new UserInformation();
+                RecentMethods.setCurrentFragment(EnterFragment.newInstance(userInformation), getActivity());
             }
         });
         return root;
     }
     void isUserLoggedIn(){
-        if(AuthBase.getCurrentUser() != null)
-            RecentMethods.setCurrentFragment(MainFragment.newInstance(), getActivity());
+       // if(AuthBase.getCurrentUser() != null)
+            //RecentMethods.setCurrentFragment(MainFragment.newInstance(), getActivity());
     }
 }

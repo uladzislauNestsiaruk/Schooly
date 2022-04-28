@@ -39,17 +39,18 @@ public class SubscriptionsFragment extends Fragment {
     TextView emptyList;
     String userNameToProfile,userName;
     EditText searchUser;
-
+    UserInformation userInformation;
     String type;
     Fragment fragment;
 
-    public SubscriptionsFragment(String type,Fragment fragment) {
+    public SubscriptionsFragment(String type,Fragment fragment,UserInformation userInformation) {
         this.type = type;
         this.fragment=fragment;
+        this.userInformation=userInformation;
     }
 
-    public static SubscriptionsFragment newInstance(String type, Fragment fragment) {
-        return new SubscriptionsFragment(type,fragment);
+    public static SubscriptionsFragment newInstance(String type, Fragment fragment,UserInformation userInformation) {
+        return new SubscriptionsFragment(type,fragment,userInformation);
 
     }
 
@@ -75,7 +76,7 @@ public class SubscriptionsFragment extends Fragment {
                 RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
                     @Override
                     public void PassUserNick(String nick) {
-                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance(type,nick,fragment),getActivity());
+                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance(type,nick,fragment,userInformation),getActivity());
                     }
                 });
             }
@@ -87,7 +88,7 @@ public class SubscriptionsFragment extends Fragment {
                     @Override
                     public void handleOnBackPressed() {
 
-                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance(type,nick,fragment), getActivity());
+                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance(type,nick,fragment,userInformation), getActivity());
                     }
                 };
 
@@ -118,9 +119,9 @@ public class SubscriptionsFragment extends Fragment {
                                                     Subscriber user = subscriptionsAdapter.getItem(position);
                                                     userNameToProfile=user.getSub();
                                                     if(userNameToProfile.equals(nick)){
-                                                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback",nick,fragment),getActivity());
+                                                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback",nick,fragment,userInformation),getActivity());
                                                     }else {
-                                                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile,SubscriptionsFragment.newInstance(type,fragment)),
+                                                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile,SubscriptionsFragment.newInstance(type,fragment,userInformation),userInformation),
                                                                 getActivity());
                                                     }
                                                 }
@@ -185,9 +186,9 @@ public class SubscriptionsFragment extends Fragment {
                                                     Subscriber user = subscriptionsAdapter.getItem(position);
                                                     userNameToProfile=user.getSub();
                                                     if(userNameToProfile.equals(nick)){
-                                                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback",nick,fragment),getActivity());
+                                                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback",nick,fragment,userInformation),getActivity());
                                                     }else {
-                                                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile,SubscriptionsFragment.newInstance(type,fragment)),
+                                                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile,SubscriptionsFragment.newInstance(type,fragment,userInformation),userInformation),
                                                                 getActivity());
                                                     }
                                                 }

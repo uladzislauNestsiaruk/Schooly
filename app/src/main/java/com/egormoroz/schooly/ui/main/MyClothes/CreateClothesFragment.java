@@ -31,6 +31,7 @@ import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
+import com.egormoroz.schooly.ui.main.UserInformation;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -74,14 +75,16 @@ public class CreateClothesFragment extends Fragment {
             ,radioButtonExclusiveYes,radioButtonExclusiveNo;
 
     Fragment fragment;
+    UserInformation userInformation;
     String premiumType,modelApplication,imageApplication,currencyType,bodyType,type,exclusiveType;
 
-    public CreateClothesFragment(Fragment fragment) {
+    public CreateClothesFragment(Fragment fragment,UserInformation userInformation) {
         this.fragment = fragment;
+        this.userInformation=userInformation;
     }
 
-    public static CreateClothesFragment newInstance(Fragment fragment) {
-        return new CreateClothesFragment(fragment);
+    public static CreateClothesFragment newInstance(Fragment fragment,UserInformation userInformation) {
+        return new CreateClothesFragment(fragment,userInformation);
 
     }
 
@@ -132,13 +135,13 @@ public class CreateClothesFragment extends Fragment {
         before.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(CriteriaFragment.newInstance(fragment), getActivity());
+                RecentMethods.setCurrentFragment(CriteriaFragment.newInstance(fragment,userInformation), getActivity());
             }
         });
         criteria.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(CriteriaFragment.newInstance(fragment), getActivity());
+                RecentMethods.setCurrentFragment(CriteriaFragment.newInstance(fragment,userInformation), getActivity());
             }
         });
         publish=view.findViewById(R.id.publish);
