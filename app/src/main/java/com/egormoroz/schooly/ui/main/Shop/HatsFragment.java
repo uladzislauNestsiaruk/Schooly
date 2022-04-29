@@ -83,27 +83,22 @@ public class HatsFragment extends Fragment {
 
 
     public void loadClothesFromBase(){
-        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+        RecentMethods.getClothes(firebaseModel, new Callbacks.GetClothes() {
             @Override
-            public void PassUserNick(String nick) {
-                RecentMethods.getClothes(firebaseModel, new Callbacks.GetClothes() {
-                    @Override
-                    public void getClothes(ArrayList<Clothes> allClothes) {
-                        clothesArrayList.addAll(allClothes);
-                        for(int i=0;i<clothesArrayList.size();i++){
-                            Clothes cl=clothesArrayList.get(i);
-                            if (cl.getClothesType().equals("hats")){
-                                hatsArrayList.add(cl);
-                            }
+            public void getClothes(ArrayList<Clothes> allClothes) {
+                clothesArrayList.addAll(allClothes);
+                for(int i=0;i<clothesArrayList.size();i++){
+                    Clothes cl=clothesArrayList.get(i);
+                    if (cl.getClothesType().equals("hats")){
+                        hatsArrayList.add(cl);
+                    }
 //                           if (cl.getPurchaseNumber()==1){
 //                               firebaseModel.getReference("AppData/Clothes/Popular").setValue()
 //                            }
-                        }
-                        Log.d("#####", "size  "+clothesArrayList);
-                        NewClothesAdapter newClothesAdapter=new NewClothesAdapter(hatsArrayList,itemClickListener);
-                        clothes.setAdapter(newClothesAdapter);
-                    }
-                });
+                }
+                Log.d("#####", "size  "+clothesArrayList);
+                NewClothesAdapter newClothesAdapter=new NewClothesAdapter(hatsArrayList,itemClickListener);
+                clothes.setAdapter(newClothesAdapter);
             }
         });
 
