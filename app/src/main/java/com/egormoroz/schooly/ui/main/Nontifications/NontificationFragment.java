@@ -77,36 +77,31 @@ public class NontificationFragment extends Fragment {
     }
 
     public  void  getNontificationList(){
-        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+        RecentMethods.getNontificationsList(userInformation.getNick(), firebaseModel, new Callbacks.getNontificationsList() {
             @Override
-            public void PassUserNick(String nick) {
-                RecentMethods.getNontificationsList(nick, firebaseModel, new Callbacks.getNontificationsList() {
+            public void getNontificationsList(ArrayList<Nontification> nontifications) {
+                if (nontifications.size()==0){
+                    emptyNonts.setVisibility(View.VISIBLE);
+                    emptyNonts.setText("Пока нет уведомлений :)");
+                }else {
+                    emptyNonts.setVisibility(View.GONE);
+                }
+                Collections.reverse(nontifications);
+                NontificationAdapter nontificationAdapter=new NontificationAdapter(nontifications);
+                LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+                nontsRecyclerView.setLayoutManager(layoutManager);
+                nontsRecyclerView.setAdapter(nontificationAdapter);
+                NontificationAdapter.ItemClickListener itemClickListener=new NontificationAdapter.ItemClickListener() {
                     @Override
-                    public void getNontificationsList(ArrayList<Nontification> nontifications) {
-                        if (nontifications.size()==0){
-                            emptyNonts.setVisibility(View.VISIBLE);
-                            emptyNonts.setText("Пока нет уведомлений :)");
-                        }else {
-                            emptyNonts.setVisibility(View.GONE);
+                    public void onItemClick(Nontification nontification,String type) {
+                        if(type.equals("clothesRequest")){
+                            RecentMethods.setCurrentFragment(ClothesRequestFragment.newInstance(NontificationFragment.newInstance(userInformation),nontification.getUid(),userInformation), getActivity());
+                        }else if(type.equals("sub")){
+                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", nontification.getNick(), NontificationFragment.newInstance(userInformation),userInformation),getActivity());
                         }
-                        Collections.reverse(nontifications);
-                        NontificationAdapter nontificationAdapter=new NontificationAdapter(nontifications);
-                        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-                        nontsRecyclerView.setLayoutManager(layoutManager);
-                        nontsRecyclerView.setAdapter(nontificationAdapter);
-                        NontificationAdapter.ItemClickListener itemClickListener=new NontificationAdapter.ItemClickListener() {
-                            @Override
-                            public void onItemClick(Nontification nontification,String type) {
-                                if(type.equals("clothesRequest")){
-                                RecentMethods.setCurrentFragment(ClothesRequestFragment.newInstance(NontificationFragment.newInstance(userInformation),nontification.getUid()), getActivity());
-                               }else if(type.equals("sub")){
-                                    RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", nontification.getNick(), NontificationFragment.newInstance(userInformation),userInformation),getActivity());
-                                }
-                            }
-                        };
-                        nontificationAdapter.setClickListener(itemClickListener);
                     }
-                });
+                };
+                nontificationAdapter.setClickListener(itemClickListener);
             }
         });
 

@@ -23,11 +23,15 @@ import com.egormoroz.schooly.ClothesRequest;
 import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
+import com.egormoroz.schooly.ui.chat.User;
 import com.egormoroz.schooly.ui.main.MainFragment;
 import com.egormoroz.schooly.ui.main.MyClothes.CreateClothesFragment;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
 import com.egormoroz.schooly.ui.main.Shop.FittingFragment;
 import com.egormoroz.schooly.ui.main.Shop.NewClothesAdapter;
+import com.egormoroz.schooly.ui.main.UserInformation;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.ar.core.exceptions.CameraNotAvailableException;
 import com.google.ar.sceneform.Node;
@@ -50,17 +54,18 @@ public class ClothesRequestFragment extends Fragment {
     TextView clothesTitleCV,clothesPrice,clothesType,result,reason,addReason,reasonText,addReasonText;
     SceneView sceneView;
     ImageView clothesImageCV, coinsImage;
-
+    UserInformation userInformation;
     Fragment fragment;
     String clothesUid;
 
-    public ClothesRequestFragment(Fragment fragment,String clothesUid) {
+    public ClothesRequestFragment(Fragment fragment,String clothesUid,UserInformation userInformation) {
         this.fragment = fragment;
         this.clothesUid=clothesUid;
+        this.userInformation=userInformation;
     }
 
-    public static ClothesRequestFragment newInstance(Fragment fragment,String clothesUid) {
-        return new ClothesRequestFragment(fragment,clothesUid);
+    public static ClothesRequestFragment newInstance(Fragment fragment, String clothesUid, UserInformation userInformation) {
+        return new ClothesRequestFragment(fragment,clothesUid,userInformation);
 
     }
 
@@ -98,54 +103,45 @@ public class ClothesRequestFragment extends Fragment {
                 RecentMethods.setCurrentFragment(fragment, getActivity());
             }
         });
-        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+        firebaseModel.getUsersReference().child(userInformation.getNick())
+                .child("clothesRequest").child(clothesUid).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
-            public void PassUserNick(String nick) {
-                Query query=firebaseModel.getUsersReference().child(nick)
-                        .child("clothesRequest").child(clothesUid);
-                query.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        ClothesRequest clothesRequest=new ClothesRequest();
-                        clothesRequest.setClothesImage(snapshot.child("clothesImage").getValue(String.class));
-                        clothesRequest.setClothesPrice(snapshot.child("clothesPrice").getValue(Long.class));
-                        clothesRequest.setClothesType(snapshot.child("clothesType").getValue(String.class));
-                        clothesRequest.setClothesTitle(snapshot.child("clothesTitle").getValue(String.class));
-                        clothesRequest.setCreator(snapshot.child("creator").getValue(String.class));
-                        clothesRequest.setCurrencyType(snapshot.child("currencyType").getValue(String.class));
-                        clothesRequest.setDescription(snapshot.child("description").getValue(String.class));
-                        clothesRequest.setModel(snapshot.child("model").getValue(String.class));
-                        clothesRequest.setBodyType(snapshot.child("bodyType").getValue(String.class));
-                        clothesRequest.setReason(snapshot.child("reason").getValue(String.class));
-                        clothesRequest.setResult(snapshot.child("result").getValue(String.class));
-                        clothesRequest.setReasonDescription(snapshot.child("reasonDescription").getValue(String.class));
-                        clothesRequest.setUid(snapshot.child("uid").getValue(String.class));
-                        clothesTitleCV.setText(clothesRequest.getClothesTitle());
-                        Picasso.get().load(clothesRequest.getClothesImage()).into(clothesImageCV);
-                        clothesPrice.setText(String.valueOf(clothesRequest.getClothesPrice()));
-                        clothesType.setText(clothesRequest.getClothesType());
-                        loadModels(Uri.parse(clothesRequest.getModel()), sceneView, ClothesRequestFragment.this, 0.25f);
-                        if(clothesRequest.getResult().equals("okey")){
-                            result.setTextColor(Color.parseColor("#53B35C"));
-                            result.setText("Модель добавлена в магазин одежды Schooly");
-                        }else {
-                            result.setTextColor(Color.parseColor("#EA4646"));
-                            result.setText("Запрос на добавление отказан");
-                            reason.setVisibility(View.VISIBLE);
-                            reasonText.setVisibility(View.VISIBLE);
-                            addReason.setVisibility(View.VISIBLE);
-                            addReasonText.setVisibility(View.VISIBLE);
-                            reason.setText(clothesRequest.getReason());
-                            addReason.setText(clothesRequest.getReasonDescription());
-                        }
-
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (task.isSuccessful()){
+                    DataSnapshot snapshot=task.getResult();
+                    ClothesRequest clothesRequest=new ClothesRequest();
+                    clothesRequest.setClothesImage(snapshot.child("clothesImage").getValue(String.class));
+                    clothesRequest.setClothesPrice(snapshot.child("clothesPrice").getValue(Long.class));
+                    clothesRequest.setClothesType(snapshot.child("clothesType").getValue(String.class));
+                    clothesRequest.setClothesTitle(snapshot.child("clothesTitle").getValue(String.class));
+                    clothesRequest.setCreator(snapshot.child("creator").getValue(String.class));
+                    clothesRequest.setCurrencyType(snapshot.child("currencyType").getValue(String.class));
+                    clothesRequest.setDescription(snapshot.child("description").getValue(String.class));
+                    clothesRequest.setModel(snapshot.child("model").getValue(String.class));
+                    clothesRequest.setBodyType(snapshot.child("bodyType").getValue(String.class));
+                    clothesRequest.setReason(snapshot.child("reason").getValue(String.class));
+                    clothesRequest.setResult(snapshot.child("result").getValue(String.class));
+                    clothesRequest.setReasonDescription(snapshot.child("reasonDescription").getValue(String.class));
+                    clothesRequest.setUid(snapshot.child("uid").getValue(String.class));
+                    clothesTitleCV.setText(clothesRequest.getClothesTitle());
+                    Picasso.get().load(clothesRequest.getClothesImage()).into(clothesImageCV);
+                    clothesPrice.setText(String.valueOf(clothesRequest.getClothesPrice()));
+                    clothesType.setText(clothesRequest.getClothesType());
+                    loadModels(Uri.parse(clothesRequest.getModel()), sceneView, ClothesRequestFragment.this, 0.25f);
+                    if(clothesRequest.getResult().equals("okey")){
+                        result.setTextColor(Color.parseColor("#53B35C"));
+                        result.setText("Модель добавлена в магазин одежды Schooly");
+                    }else {
+                        result.setTextColor(Color.parseColor("#EA4646"));
+                        result.setText("Запрос на добавление отказан");
+                        reason.setVisibility(View.VISIBLE);
+                        reasonText.setVisibility(View.VISIBLE);
+                        addReason.setVisibility(View.VISIBLE);
+                        addReasonText.setVisibility(View.VISIBLE);
+                        reason.setText(clothesRequest.getReason());
+                        addReason.setText(clothesRequest.getReasonDescription());
                     }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
+                }
             }
         });
 
@@ -186,9 +182,6 @@ public class ClothesRequestFragment extends Fragment {
         Node modelNode1 = new Node();
         modelNode1.setRenderable(modelRenderable);
         modelNode1.setLocalScale(new Vector3(0.3f, 0.3f, 0.3f));
-//        modelNode1.setLocalRotation(Quaternion.multiply(
-//                Quaternion.axisAngle(new Vector3(1f, 0f, 0f), 45),
-//                Quaternion.axisAngle(new Vector3(0f, 1f, 0f), 75)));
         modelNode1.setLocalPosition(new Vector3(0f, 0f, -0.9f));
         sceneView.getScene().addChild(modelNode1);
         try {

@@ -121,6 +121,7 @@ public class MainActivity extends AppCompatActivity {
                                                         userInformation.setPassword(snapshot.child("password").getValue(String.class));
                                                         userInformation.setPhone(snapshot.child("phone").getValue(String.class));
                                                         userInformation.setUid(snapshot.child("uid").getValue(String.class));
+                                                        userInformation.setBio(snapshot.child("bio").getValue(String.class));
                                                         userInformation.setQueue(snapshot.child("queue").getValue(String.class));
                                                         //userInformation.setSubscription(snapshot.child("subscription").getValue(String.class));
                                                         userInformation.setmoney(snapshot.child("money").getValue(Long.class));

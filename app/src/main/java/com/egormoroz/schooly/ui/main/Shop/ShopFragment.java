@@ -43,6 +43,8 @@ import com.egormoroz.schooly.ui.main.GroupsFragment;
 import com.egormoroz.schooly.ui.main.MainFragment;
 import com.egormoroz.schooly.ui.main.Mining.MiningFragment;
 import com.egormoroz.schooly.ui.main.UserInformation;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.database.DataSnapshot;
@@ -120,23 +122,17 @@ public class ShopFragment extends Fragment {
                 RecentMethods.setCurrentFragment(CoinsFragmentSecond.newInstance(ShopFragment.newInstance(userInformation)), getActivity());
             }
         });
-        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-            @Override
-            public void PassUserNick(String nick) {
-                Query query=firebaseModel.getUsersReference().child(nick).child("version");
-                query.addValueEventListener(new ValueEventListener() {
+        firebaseModel.getUsersReference().child(userInformation.getNick()).child("version").get()
+                .addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                     @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        version=snapshot.getValue(String.class);
-                    }
+                    public void onComplete(@NonNull Task<DataSnapshot> task) {
+                        if(task.isSuccessful()){
+                            DataSnapshot snapshot= task.getResult();
+                            version=snapshot.getValue(String.class);
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
+                        }
                     }
                 });
-            }
-        });
         searchRecycler=view.findViewById(R.id.searchRecycler);
         notFound=view.findViewById(R.id.notFound);
         searchClothes=view.findViewById(R.id.searchClothes);
@@ -211,15 +207,10 @@ public class ShopFragment extends Fragment {
 
             }
         });
-        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+        RecentMethods.GetMoneyFromBase(userInformation.getNick(), firebaseModel, new Callbacks.MoneyFromBase() {
             @Override
-            public void PassUserNick(String nick) {
-                RecentMethods.GetMoneyFromBase(nick, firebaseModel, new Callbacks.MoneyFromBase() {
-                    @Override
-                    public void GetMoneyFromBase(long money) {
-                        coinsshop.setText(String.valueOf(money));
-                    }
-                });
+            public void GetMoneyFromBase(long money) {
+                coinsshop.setText(String.valueOf(money));
             }
         });
         tabLayout = view.findViewById(R.id.tabLayoutShop);
