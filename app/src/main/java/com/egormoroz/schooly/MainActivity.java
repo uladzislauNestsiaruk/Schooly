@@ -1,7 +1,15 @@
 package com.egormoroz.schooly;
 
 import android.annotation.SuppressLint;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,6 +21,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.work.Constraints;
@@ -25,6 +35,7 @@ import androidx.work.WorkManager;
 import com.egormoroz.schooly.ui.coins.CoinsMainFragment;
 import com.egormoroz.schooly.ui.main.MainFragment;
 import com.egormoroz.schooly.ui.main.RegisrtationstartFragment;
+import com.egormoroz.schooly.ui.main.Shop.Clothes;
 import com.egormoroz.schooly.ui.main.UserInformation;
 import com.egormoroz.schooly.ui.news.NewsFragment;
 import com.egormoroz.schooly.ui.people.PeopleFragment;
@@ -39,6 +50,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
@@ -55,7 +67,9 @@ public class MainActivity extends AppCompatActivity {
     UserInformation userInformation;
     RelativeLayout relativeLayout;
     TextView s,loading;
+    int NOTIFY_ID;
     CoordinatorLayout fragmentContainer;
+    private static final String CHANNEL_ID = "channel";
     OneTimeWorkRequest miningWorkRequest;
     FirebaseModel firebaseModel=new FirebaseModel();
     @Override
@@ -81,6 +95,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

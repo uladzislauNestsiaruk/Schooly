@@ -38,6 +38,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -306,7 +308,8 @@ public class RegFragment extends Fragment {
                             FirebaseUser user = AuthenticationBase.getCurrentUser();
                             UserInformation res = new UserInformation(nick, RecentMethods.getPhone(email), user.getUid(),
                                     "6", password, "Helicopter", 1000, "Miners",1,100,0
-                                    , "", "", ""," ","open","open","open","open","","regular", "",0);
+                                    , "", "", ""," ","open","open","open","open"
+                                    ,new ArrayList<>(),"regular", "",0);
                             reference.child(nick).setValue(res);
                             database.getReference("usersNicks")
                                     .child(nick).setValue(new UserPeopleAdapter(nick,"6"," "));

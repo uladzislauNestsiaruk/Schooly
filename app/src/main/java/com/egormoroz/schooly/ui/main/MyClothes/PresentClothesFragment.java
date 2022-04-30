@@ -36,6 +36,8 @@ import com.egormoroz.schooly.ui.coins.TransferMoneyFragment;
 import com.egormoroz.schooly.ui.main.Mining.Miner;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
 import com.egormoroz.schooly.ui.main.UserInformation;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -52,20 +54,22 @@ public class PresentClothesFragment extends Fragment {
     RecyclerView peopleRecyclerView;
     EditText searchUser;
     FirebaseModel firebaseModel=new FirebaseModel();
-    String userNameToProfile,userName;;
+    String userNameToProfile,userName,nick;
     ImageView back,transferHistory;
     TextView emptySubscriptionList;
 
     Clothes clothes;
     Fragment fragment;
+    UserInformation userInformation;
 
-    public PresentClothesFragment(Clothes clothes,Fragment fragment) {
+    public PresentClothesFragment(Clothes clothes,Fragment fragment,UserInformation userInformation) {
         this.clothes = clothes;
         this.fragment=fragment;
+        this.userInformation=userInformation;
     }
 
-    public static PresentClothesFragment newInstance(Clothes clothes,Fragment fragment) {
-        return new PresentClothesFragment(clothes,fragment);
+    public static PresentClothesFragment newInstance(Clothes clothes,Fragment fragment,UserInformation userInformation) {
+        return new PresentClothesFragment(clothes,fragment,userInformation);
 
     }
 
@@ -83,7 +87,7 @@ public class PresentClothesFragment extends Fragment {
     @Override
     public void onViewCreated(@Nullable View view,@NonNull Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
-
+        nick=userInformation.getNick();
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
@@ -105,23 +109,69 @@ public class PresentClothesFragment extends Fragment {
             }
         });
         firebaseModel.initAll();
-        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+        RecentMethods.getSubscriptionList(nick, firebaseModel, new Callbacks.getFriendsList() {
             @Override
-            public void PassUserNick(String nick) {
-                RecentMethods.getSubscriptionList(nick, firebaseModel, new Callbacks.getFriendsList() {
+            public void getFriendsList(ArrayList<Subscriber> friends) {
+                if (friends.size()==0){
+                    emptySubscriptionList.setVisibility(View.VISIBLE);
+                }else {
+                    emptySubscriptionList.setVisibility(View.GONE);
+                    PresentClothesAdapter presentClothesAdapter = new PresentClothesAdapter(friends,clothes);
+                    peopleRecyclerView.setAdapter(presentClothesAdapter);
+                    PresentClothesAdapter.ItemClickListener itemClickListener = new PresentClothesAdapter.ItemClickListener() {
+                        @Override
+                        public void onItemClick(int alreadyHave, int position) {
+                            Subscriber user = presentClothesAdapter.getItem(position);
+                            userNameToProfile = user.getSub();
+                            showDialog(alreadyHave);
+                        }
+                    };
+                    presentClothesAdapter.setClickListener(itemClickListener);
+                }
+            }
+        });
+        initUserEnter();
+    }
+
+    public void initUserEnter() {
+        searchUser.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                userName = String.valueOf(searchUser.getText()).trim();
+                userName = userName.toLowerCase();
+                firebaseModel.getUsersReference().child(nick).child("subscription").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                     @Override
-                    public void getFriendsList(ArrayList<Subscriber> friends) {
-                        if (friends.size()==0){
-                            emptySubscriptionList.setVisibility(View.VISIBLE);
-                        }else {
-                            emptySubscriptionList.setVisibility(View.GONE);
-                            PresentClothesAdapter presentClothesAdapter = new PresentClothesAdapter(friends,clothes);
+                    public void onComplete(@NonNull Task<DataSnapshot> task) {
+                        if(task.isSuccessful()){
+                            DataSnapshot snapshot= task.getResult();
+                            ArrayList<Subscriber> userFromBase = new ArrayList<>();
+                            for (DataSnapshot snap : snapshot.getChildren()) {
+                                Subscriber subscriber = new Subscriber();
+                                subscriber.setSub(snap.getValue(String.class));
+                                String nick = subscriber.getSub();
+                                int valueLetters = userName.length();
+                                nick = nick.toLowerCase();
+                                if (nick.length() < valueLetters) {
+                                    if (nick.equals(userName))
+                                        userFromBase.add(subscriber);
+                                } else {
+                                    nick = nick.substring(0, valueLetters);
+                                    if (nick.equals(userName))
+                                        userFromBase.add(subscriber);
+                                }
+
+                            }
+                            PresentClothesAdapter presentClothesAdapter=new PresentClothesAdapter(userFromBase,clothes);
                             peopleRecyclerView.setAdapter(presentClothesAdapter);
-                            PresentClothesAdapter.ItemClickListener itemClickListener = new PresentClothesAdapter.ItemClickListener() {
+                            PresentClothesAdapter.ItemClickListener itemClickListener=new PresentClothesAdapter.ItemClickListener() {
                                 @Override
-                                public void onItemClick(int alreadyHave, int position) {
+                                public void onItemClick(int alreadyHave,int position) {
                                     Subscriber user = presentClothesAdapter.getItem(position);
-                                    userNameToProfile = user.getSub();
+                                    userNameToProfile=user.getSub();
                                     showDialog(alreadyHave);
                                 }
                             };
@@ -130,68 +180,9 @@ public class PresentClothesFragment extends Fragment {
                     }
                 });
             }
-        });
-        initUserEnter();
-    }
 
-    public void initUserEnter() {
-        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @Override
-            public void PassUserNick(String nick) {
-                searchUser.addTextChangedListener(new TextWatcher() {
-                    @Override
-                    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                    }
-
-                    @Override
-                    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                        userName = String.valueOf(searchUser.getText()).trim();
-                        userName = userName.toLowerCase();
-                        Query query = firebaseModel.getUsersReference().child(nick).child("subscription");
-                        query.addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                ArrayList<Subscriber> userFromBase = new ArrayList<>();
-                                for (DataSnapshot snap : snapshot.getChildren()) {
-                                    Subscriber subscriber = new Subscriber();
-                                    subscriber.setSub(snap.getValue(String.class));
-                                    String nick = subscriber.getSub();
-                                    int valueLetters = userName.length();
-                                    nick = nick.toLowerCase();
-                                    if (nick.length() < valueLetters) {
-                                        if (nick.equals(userName))
-                                            userFromBase.add(subscriber);
-                                    } else {
-                                        nick = nick.substring(0, valueLetters);
-                                        if (nick.equals(userName))
-                                            userFromBase.add(subscriber);
-                                    }
-
-                                }
-                                PresentClothesAdapter presentClothesAdapter=new PresentClothesAdapter(userFromBase,clothes);
-                                peopleRecyclerView.setAdapter(presentClothesAdapter);
-                                PresentClothesAdapter.ItemClickListener itemClickListener=new PresentClothesAdapter.ItemClickListener() {
-                                    @Override
-                                    public void onItemClick(int alreadyHave,int position) {
-                                        Subscriber user = presentClothesAdapter.getItem(position);
-                                        userNameToProfile=user.getSub();
-                                        showDialog(alreadyHave);
-                                    }
-                                };
-                                presentClothesAdapter.setClickListener(itemClickListener);
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
-
-                            }
-                        });
-                    }
-
-                    @Override
-                    public void afterTextChanged(Editable editable) {
-                    }
-                });
+            public void afterTextChanged(Editable editable) {
             }
         });
     }
@@ -219,24 +210,19 @@ public class PresentClothesFragment extends Fragment {
         yes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-                    @Override
-                    public void PassUserNick(String nick) {
-                        if (alreadyHave==1) {
-                            Toast.makeText(getContext(), "У " + userNameToProfile + " уже есть этот предмет одежды", Toast.LENGTH_SHORT).show();
-                        } else {
-                            firebaseModel.getUsersReference().child(userNameToProfile).child("clothes")
-                                    .child(clothes.getUid()).setValue(clothes);
-                            String numToBase = firebaseModel.getReference().child("users")
-                                    .child(userNameToProfile).child("nontifications").push().getKey();
-                            firebaseModel.getReference().child("users")
-                                    .child(userNameToProfile).child("nontifications")
-                                    .child(numToBase).setValue(new Nontification(nick, "не отправлено", "подарок"
-                                    , "", clothes.getClothesTitle(), clothes.getClothesImage(), "не просмотрено", numToBase,0));
-                            Toast.makeText(getContext(), "Подарок отправлен", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
+                if (alreadyHave==1) {
+                    Toast.makeText(getContext(), "У " + userNameToProfile + " уже есть этот предмет одежды", Toast.LENGTH_SHORT).show();
+                } else {
+                    firebaseModel.getUsersReference().child(userNameToProfile).child("clothes")
+                            .child(clothes.getUid()).setValue(clothes);
+                    String numToBase = firebaseModel.getReference().child("users")
+                            .child(userNameToProfile).child("nontifications").push().getKey();
+                    firebaseModel.getReference().child("users")
+                            .child(userNameToProfile).child("nontifications")
+                            .child(numToBase).setValue(new Nontification(nick, "не отправлено", "подарок"
+                            , "", clothes.getClothesTitle(), clothes.getClothesImage(), "не просмотрено", numToBase,0));
+                    Toast.makeText(getContext(), "Подарок отправлен", Toast.LENGTH_SHORT).show();
+                }
                 dialog.dismiss();
             }
         });

@@ -115,7 +115,7 @@ public class RecentMethods {
                 "6", "unknown", "Helicopter", 1000
                 , "Miner", 1,100,0, "", "",
                 "","","open","open","open",
-                "open","","regular", "",0);
+                "open",new ArrayList<>(),"regular", "",0);
         ref.child(nick).setValue(res);
         return nick.isEmpty();
     }

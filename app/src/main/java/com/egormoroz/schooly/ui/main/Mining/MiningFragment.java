@@ -61,7 +61,7 @@ public class MiningFragment extends Fragment {
     ImageView viewminer;
     double todayMining;
     Map<String,String> timeStamp;
-    String todayMiningFormatted;
+    String todayMiningFormatted,nick;
     LinearLayout coinsLinear;
     TextView minerprice, schoolycoinminer, myminers, upgrade, todayminingText
             , getMore,buy,numderOfActiveMiners,emptyActiveMiners,addActiveMiners;
@@ -70,7 +70,6 @@ public class MiningFragment extends Fragment {
     WeakMinersAdapter.ItemClickListener itemClickListener;
     StrongMinersAdapter.ItemClickListener itemClickListenerStrong;
     AverageMinersAdapter.ItemClickListener itemClickListenerAverage;
-    long moneyAfterBuy,moneyOriginal;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -85,7 +84,7 @@ public class MiningFragment extends Fragment {
     @Override
     public void onViewCreated(@Nullable View view, @NonNull Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        nick=userInformation.getNick();
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
@@ -94,18 +93,7 @@ public class MiningFragment extends Fragment {
             }
         };
         requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(), callback);
-        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-            @Override
-            public void PassUserNick(String nick) {
-                RecentMethods.GetMoneyFromBase(nick, firebaseModel, new Callbacks.MoneyFromBase() {
-                    @Override
-                    public void GetMoneyFromBase(long money) {
-                        moneyOriginal=money;
-                        Log.d("######", "suck "+moneyOriginal);
-                    }
-                });
-            }
-        });
+
         coinsLinear=view.findViewById(R.id.linearCoins);
         coinsLinear.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -141,11 +129,11 @@ public class MiningFragment extends Fragment {
         buy=view.findViewById(R.id.buy);
         addActiveMiners=view.findViewById(R.id.addActiveMiner);
         emptyActiveMiners=view.findViewById(R.id.emptyMiners);
+        schoolycoinminer.setText(String.valueOf(userInformation.getmoney()));
 
 
         GetDataFromBase();
         getActiveMinersFromBase();
-        SetSchoolyCoin();
 
 
         todayminingText.setText(String.valueOf(0));
@@ -220,52 +208,34 @@ public class MiningFragment extends Fragment {
 
 
     public void getActiveMinersFromBase(){
-        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-            @Override
-            public void PassUserNick(String nick) {
-                RecentMethods.GetActiveMiner(nick, firebaseModel,
-                        new Callbacks.GetActiveMiners() {
-                            @Override
-                            public void GetActiveMiners(ArrayList<Miner> activeMinersFromBase) {
-                                numderOfActiveMiners.setText(String.valueOf(activeMinersFromBase.size())+"/5");
-                                if(activeMinersFromBase.size()==0) {
-                                    emptyActiveMiners.setVisibility(View.VISIBLE);
-                                    addActiveMiners.setVisibility(View.VISIBLE);
-                                    addActiveMiners.setOutlineAmbientShadowColor(Color.parseColor("#F3A2E5"));
-                                    addActiveMiners.setOutlineAmbientShadowColor(Color.parseColor("#F3A2E5"));
-                                    addActiveMiners.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            RecentMethods.setCurrentFragment(MyMinersFragment.newInstance(userInformation), getActivity());
-                                        }
-                                    });
-                                    emptyActiveMiners.setText("Добавь активные майнеры!");
-                                }else {
-                                    emptyActiveMiners.setVisibility(View.GONE);
-                                    addActiveMiners.setVisibility(View.GONE);
-                                }
-                                listAdapterActiveMiner.addAll(activeMinersFromBase);
-                                ActiveMinersAdapter activeMinersAdapter=new ActiveMinersAdapter(listAdapterActiveMiner);
-                                activeminersrecyclerview.setAdapter(activeMinersAdapter);
-                            }
-                        });
-            }
-        });
-    }
-
-    public void SetSchoolyCoin(){
-        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-            @Override
-            public void PassUserNick(String nick) {
-                RecentMethods.GetMoneyFromBase(nick, firebaseModel, new Callbacks.MoneyFromBase() {
+        RecentMethods.GetActiveMiner(nick, firebaseModel,
+                new Callbacks.GetActiveMiners() {
                     @Override
-                    public void GetMoneyFromBase(long money) {
-                        schoolycoinminer.setText(String.valueOf(money));
+                    public void GetActiveMiners(ArrayList<Miner> activeMinersFromBase) {
+                        numderOfActiveMiners.setText(String.valueOf(activeMinersFromBase.size())+"/5");
+                        if(activeMinersFromBase.size()==0) {
+                            emptyActiveMiners.setVisibility(View.VISIBLE);
+                            addActiveMiners.setVisibility(View.VISIBLE);
+                            addActiveMiners.setOutlineAmbientShadowColor(Color.parseColor("#F3A2E5"));
+                            addActiveMiners.setOutlineAmbientShadowColor(Color.parseColor("#F3A2E5"));
+                            addActiveMiners.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    RecentMethods.setCurrentFragment(MyMinersFragment.newInstance(userInformation), getActivity());
+                                }
+                            });
+                            emptyActiveMiners.setText("Добавь активные майнеры!");
+                        }else {
+                            emptyActiveMiners.setVisibility(View.GONE);
+                            addActiveMiners.setVisibility(View.GONE);
+                        }
+                        listAdapterActiveMiner.addAll(activeMinersFromBase);
+                        ActiveMinersAdapter activeMinersAdapter=new ActiveMinersAdapter(listAdapterActiveMiner);
+                        activeminersrecyclerview.setAdapter(activeMinersAdapter);
                     }
                 });
-            }
-        });
     }
+
 
     public void showDialog(int pos,Miner miner,String type,long money){
 
@@ -290,65 +260,52 @@ public class MiningFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (type.equals("weak")){
-                    RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+                    RecentMethods.GetMoneyFromBase(nick, firebaseModel, new Callbacks.MoneyFromBase() {
                         @Override
-                        public void PassUserNick(String nick) {
-                            RecentMethods.GetMoneyFromBase(nick, firebaseModel, new Callbacks.MoneyFromBase() {
+                        public void GetMoneyFromBase(long money) {
+                            RecentMethods.buyWeakMiner(String.valueOf(pos), firebaseModel, new Callbacks.buyMiner() {
                                 @Override
-                                public void GetMoneyFromBase(long money) {
-                                    RecentMethods.buyWeakMiner(String.valueOf(pos), firebaseModel, new Callbacks.buyMiner() {
-                                        @Override
-                                        public void buyMiner(Miner miner) {
-                                            firebaseModel.getReference("users").child(nick)
-                                                    .child("miners").child(String.valueOf(pos)+type).setValue(miner);
-                                        }
-                                    });
+                                public void buyMiner(Miner miner) {
+                                    firebaseModel.getReference("users").child(nick)
+                                            .child("miners").child(String.valueOf(pos)+type).setValue(miner);
                                 }
                             });
                         }
                     });
                 }else if(type.equals("medium")){
-                    RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+                    RecentMethods.GetMoneyFromBase(nick, firebaseModel, new Callbacks.MoneyFromBase() {
                         @Override
-                        public void PassUserNick(String nick) {
-                            RecentMethods.GetMoneyFromBase(nick, firebaseModel, new Callbacks.MoneyFromBase() {
+                        public void GetMoneyFromBase(long money) {
+                            RecentMethods.buyAverageMiner(String.valueOf(pos), firebaseModel, new Callbacks.buyMiner() {
                                 @Override
-                                public void GetMoneyFromBase(long money) {
-                                    RecentMethods.buyAverageMiner(String.valueOf(pos), firebaseModel, new Callbacks.buyMiner() {
-                                        @Override
-                                        public void buyMiner(Miner miner) {
-                                            firebaseModel.getReference("users").child(nick)
-                                                    .child("miners").child(String.valueOf(pos)+type).setValue(miner);
-                                        }
-                                    });
+                                public void buyMiner(Miner miner) {
+                                    firebaseModel.getReference("users").child(nick)
+                                            .child("miners").child(String.valueOf(pos)+type).setValue(miner);
                                 }
                             });
                         }
                     });
                 }
                 else if(type.equals("strong")){
-                    RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+                    RecentMethods.GetMoneyFromBase(nick, firebaseModel, new Callbacks.MoneyFromBase() {
                         @Override
-                        public void PassUserNick(String nick) {
-                            RecentMethods.GetMoneyFromBase(nick, firebaseModel, new Callbacks.MoneyFromBase() {
+                        public void GetMoneyFromBase(long money) {
+                            RecentMethods.buyStrongMiner(String.valueOf(pos), firebaseModel, new Callbacks.buyMiner() {
                                 @Override
-                                public void GetMoneyFromBase(long money) {
-                                    RecentMethods.buyStrongMiner(String.valueOf(pos), firebaseModel, new Callbacks.buyMiner() {
-                                        @Override
-                                        public void buyMiner(Miner miner) {
-                                            firebaseModel.getReference("users").child(nick)
-                                                    .child("miners").child(String.valueOf(pos)+type).setValue(miner);
-                                        }
-                                    });
+                                public void buyMiner(Miner miner) {
+                                    firebaseModel.getReference("users").child(nick)
+                                            .child("miners").child(String.valueOf(pos)+type).setValue(miner);
                                 }
                             });
                         }
                     });
                 }
-                RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+                firebaseModel.getUsersReference().child(nick).child("money").setValue(money-miner.getMinerPrice());
+                RecentMethods.GetMoneyFromBase(nick, firebaseModel, new Callbacks.MoneyFromBase() {
                     @Override
-                    public void PassUserNick(String nick) {
-                        firebaseModel.getUsersReference().child(nick).child("money").setValue(money-miner.getMinerPrice());
+                    public void GetMoneyFromBase(long money) {
+                        schoolycoinminer.setText(String.valueOf(money));
+                        userInformation.setmoney(money);
                     }
                 });
                 dialog.dismiss();
@@ -395,16 +352,11 @@ public class MiningFragment extends Fragment {
 //    }
 
     public void setMiningMoney(){
-        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+        RecentMethods.GetTodayMining(nick, firebaseModel, new Callbacks.GetTodayMining() {
             @Override
-            public void PassUserNick(String nick) {
-                RecentMethods.GetTodayMining(nick, firebaseModel, new Callbacks.GetTodayMining() {
-                    @Override
-                    public void GetTodayMining(double todayMiningFromBase) {
-                        todayMiningFormatted = new DecimalFormat("#0.00").format(todayMiningFromBase);
-                        todayminingText.setText("+"+todayMiningFormatted);
-                    }
-                });
+            public void GetTodayMining(double todayMiningFromBase) {
+                todayMiningFormatted = new DecimalFormat("#0.00").format(todayMiningFromBase);
+                todayminingText.setText("+"+todayMiningFormatted);
             }
         });
     }

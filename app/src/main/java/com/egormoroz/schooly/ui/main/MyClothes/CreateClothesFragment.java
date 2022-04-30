@@ -76,7 +76,8 @@ public class CreateClothesFragment extends Fragment {
 
     Fragment fragment;
     UserInformation userInformation;
-    String premiumType,modelApplication,imageApplication,currencyType,bodyType,type,exclusiveType;
+    String premiumType,modelApplication,imageApplication,currencyType,bodyType,type,exclusiveType
+            ,nick;
 
     public CreateClothesFragment(Fragment fragment,UserInformation userInformation) {
         this.fragment = fragment;
@@ -103,7 +104,7 @@ public class CreateClothesFragment extends Fragment {
     @Override
     public void onViewCreated(@Nullable View view,@NonNull Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
-
+        nick=userInformation.getNick();
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
@@ -193,24 +194,17 @@ public class CreateClothesFragment extends Fragment {
                 });
             }
         });
-        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+        firebaseModel.getUsersReference().child(nick)
+                .child("version").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
-            public void PassUserNick(String nick) {
-                Query query=firebaseModel.getUsersReference().child(nick)
-                        .child("version");
-                query.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        premiumType=snapshot.getValue(String.class);
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if(task.isSuccessful()){
+                    DataSnapshot snapshot= task.getResult();
+                    premiumType=snapshot.getValue(String.class);
+                }
             }
         });
+
         radioButtonDollar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -280,45 +274,37 @@ public class CreateClothesFragment extends Fragment {
             if (checker.equals("image")) {
                 StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("Images");
 
-                RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+                DatabaseReference userMessageKeyRef = firebaseModel.getUsersReference().child(nick).child("imageApplication").push();
+                final String messagePushID = userMessageKeyRef.getKey();
+
+                final StorageReference filePath = storageReference.child(messagePushID + "." + "jpg");
+                uploadTask = filePath.putFile(fileUri);
+                uploadTask.continueWithTask(new Continuation() {
                     @Override
-                    public void PassUserNick(String nick) {
-                        DatabaseReference userMessageKeyRef = firebaseModel.getUsersReference().child(nick).child("imageApplication").push();
-                        final String messagePushID = userMessageKeyRef.getKey();
+                    public Object then(@NonNull Task task) throws Exception {
+                        if (!task.isSuccessful()) {
+                            throw task.getException();
+                        }
+                        return filePath.getDownloadUrl();
+                    }
+                }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Uri> task) {
+                        Uri downloadUrl = task.getResult();
+                        myUrl = downloadUrl.toString();
 
-                        final StorageReference filePath = storageReference.child(messagePushID + "." + "jpg");
-                        uploadTask = filePath.putFile(fileUri);
-                        uploadTask.continueWithTask(new Continuation() {
+                        firebaseModel.getUsersReference().child(nick).child("imageApplication").setValue(myUrl);
+
+                        firebaseModel.getUsersReference().child(nick).child("imageApplication").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                             @Override
-                            public Object then(@NonNull Task task) throws Exception {
-                                if (!task.isSuccessful()) {
-                                    throw task.getException();
+                            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                                if(task.isSuccessful()){
+                                    DataSnapshot snapshot= task.getResult();
+                                    modelPhoto.setVisibility(View.VISIBLE);
+                                    imageApplication=snapshot.getValue(String.class);
+                                    Picasso.get().load(snapshot.getValue(String.class)).into(modelPhoto);
+                                    noPhoto.setVisibility(View.GONE);
                                 }
-                                return filePath.getDownloadUrl();
-                            }
-                        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Uri> task) {
-                                Uri downloadUrl = task.getResult();
-                                myUrl = downloadUrl.toString();
-
-                                firebaseModel.getUsersReference().child(nick).child("imageApplication").setValue(myUrl);
-
-                                Query query=firebaseModel.getUsersReference().child(nick).child("imageApplication");
-                                query.addListenerForSingleValueEvent(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                        modelPhoto.setVisibility(View.VISIBLE);
-                                        imageApplication=snapshot.getValue(String.class);
-                                        Picasso.get().load(snapshot.getValue(String.class)).into(modelPhoto);
-                                        noPhoto.setVisibility(View.GONE);
-                                    }
-
-                                    @Override
-                                    public void onCancelled(@NonNull DatabaseError error) {
-
-                                    }
-                                });
                             }
                         });
                     }
@@ -328,47 +314,40 @@ public class CreateClothesFragment extends Fragment {
             else if (checker.equals("model")){
                 StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("model");
 
-                RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+                DatabaseReference userMessageKeyRef = firebaseModel.getUsersReference().child(nick).child("modelApplication").push();
+                final String messagePushID = userMessageKeyRef.getKey();
+
+                final StorageReference filePath = storageReference.child(messagePushID + "." + "glb");
+                uploadTask = filePath.putFile(fileUri);
+                uploadTask.continueWithTask(new Continuation() {
                     @Override
-                    public void PassUserNick(String nick) {
-                        DatabaseReference userMessageKeyRef = firebaseModel.getUsersReference().child(nick).child("modelApplication").push();
-                        final String messagePushID = userMessageKeyRef.getKey();
+                    public Object then(@NonNull Task task) throws Exception {
+                        if (!task.isSuccessful()) {
+                            throw task.getException();
+                        }
+                        return filePath.getDownloadUrl();
+                    }
+                }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Uri> task) {
+                        Uri downloadUrl = task.getResult();
+                        myUrl = downloadUrl.toString();
 
-                        final StorageReference filePath = storageReference.child(messagePushID + "." + "glb");
-                        uploadTask = filePath.putFile(fileUri);
-                        uploadTask.continueWithTask(new Continuation() {
+                        firebaseModel.getUsersReference().child(nick).child("modelApplication").setValue(myUrl);
+
+                        firebaseModel.getUsersReference().child(nick).child("modelApplication").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                             @Override
-                            public Object then(@NonNull Task task) throws Exception {
-                                if (!task.isSuccessful()) {
-                                    throw task.getException();
+                            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                                if(task.isSuccessful()){
+                                    DataSnapshot snapshot= task.getResult();
+                                    modelScene.setVisibility(View.VISIBLE);
+                                    modelApplication=snapshot.getValue(String.class);
+                                    loadModels(Uri.parse(modelApplication), modelScene, CreateClothesFragment.this, 0.25f);
+                                    noModel.setVisibility(View.GONE);
                                 }
-                                return filePath.getDownloadUrl();
-                            }
-                        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Uri> task) {
-                                Uri downloadUrl = task.getResult();
-                                myUrl = downloadUrl.toString();
-
-                                firebaseModel.getUsersReference().child(nick).child("modelApplication").setValue(myUrl);
-
-                                Query query=firebaseModel.getUsersReference().child(nick).child("modelApplication");
-                                query.addListenerForSingleValueEvent(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                        modelScene.setVisibility(View.VISIBLE);
-                                        modelApplication=snapshot.getValue(String.class);
-                                        loadModels(Uri.parse(modelApplication), modelScene, CreateClothesFragment.this, 0.25f);
-                                        noModel.setVisibility(View.GONE);
-                                    }
-
-                                    @Override
-                                    public void onCancelled(@NonNull DatabaseError error) {
-
-                                    }
-                                });
                             }
                         });
+
                     }
                 });
             }
@@ -444,91 +423,86 @@ public class CreateClothesFragment extends Fragment {
         sendRelative.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-                    @Override
-                    public void PassUserNick(String nick) {
-                        Random random = new Random();
-                        int num =random.nextInt(1000000000);
-                        int radioButtonID = radioGroup.getCheckedRadioButtonId();
-                        switch(radioButtonID){
-                            case R.id.radio_button_1:
-                                bodyType="foot";
-                                type="shoes";
-                                break;
-                            case R.id.radio_button_2:
-                                bodyType="pants";
-                                type="clothes";
-                                break;
-                            case R.id.radio_button_3:
-                                bodyType="shorts";
-                                type="clothes";
-                                break;
-                            case R.id.radio_button_4:
-                                bodyType="belt";
-                                type="clothes";
-                                break;
-                            case R.id.radio_button_5:
-                                bodyType="tshirt";
-                                type="clothes";
-                                break;
-                            case R.id.radio_button_6:
-                                bodyType="shirt";
-                                type="clothes";
-                                break;
-                            case R.id.radio_button_7:
-                                bodyType="longsleeve";
-                                type="clothes";
-                                break;
-                            case R.id.radio_button_8:
-                                bodyType="glasses";
-                                type="accessories";
-                                break;
-                            case R.id.radio_button_9:
-                                bodyType="cap";
-                                type="hats";
-                                break;
-                            case R.id.radio_button_10:
-                                bodyType="panama";
-                                type="hats";
-                                break;
-                            case R.id.radio_button_11:
-                                bodyType="skirt";
-                                type="clothes";
-                                break;
-                            case R.id.radio_button_12:
-                                bodyType="top";
-                                type="clothes";
-                                break;
-                            case R.id.radio_button_13:
-                                bodyType="bag";
-                                type="accessories";
-                                break;
-                        }
-                        int idCurrency=radioGroupCurrency.getCheckedRadioButtonId();
-                        switch(idCurrency){
-                            case R.id.schoolyCoinRadio:
-                                currencyType="coin";
-                                break;
-                            case R.id.dollarRadio:
-                                currencyType="dollar";
-                                break;
-                        }
-                        int idExclusive=radioGroupExclusive.getCheckedRadioButtonId();
-                        switch(idExclusive){
-                            case R.id.radioButtonExclusiveYes:
-                                exclusiveType="exclusive";
-                                break;
-                            case R.id.radioButtonExclusiveNo:
-                                exclusiveType="no";
-                                break;
-                        }
-                        String uid=firebaseModel.getReference().child("clothesReqests").push().getKey();
-                        firebaseModel.getReference().child("clothesReqests").child(uid)
-                                .setValue(new ClothesRequest(type, imageApplication, Long.valueOf(editClothesPrice.getText().toString()), editTextClothes.getText().toString()
-                                        , 111, nick, currencyType,addDescriptionEdit.getText().toString() ,modelApplication , bodyType,uid,exclusiveType));
-                        Toast.makeText(getContext(), "Заявка отправлена", Toast.LENGTH_SHORT).show();
-                    }
-                });
+                Random random = new Random();
+                int num =random.nextInt(1000000000);
+                int radioButtonID = radioGroup.getCheckedRadioButtonId();
+                switch(radioButtonID){
+                    case R.id.radio_button_1:
+                        bodyType="foot";
+                        type="shoes";
+                        break;
+                    case R.id.radio_button_2:
+                        bodyType="pants";
+                        type="clothes";
+                        break;
+                    case R.id.radio_button_3:
+                        bodyType="shorts";
+                        type="clothes";
+                        break;
+                    case R.id.radio_button_4:
+                        bodyType="belt";
+                        type="clothes";
+                        break;
+                    case R.id.radio_button_5:
+                        bodyType="tshirt";
+                        type="clothes";
+                        break;
+                    case R.id.radio_button_6:
+                        bodyType="shirt";
+                        type="clothes";
+                        break;
+                    case R.id.radio_button_7:
+                        bodyType="longsleeve";
+                        type="clothes";
+                        break;
+                    case R.id.radio_button_8:
+                        bodyType="glasses";
+                        type="accessories";
+                        break;
+                    case R.id.radio_button_9:
+                        bodyType="cap";
+                        type="hats";
+                        break;
+                    case R.id.radio_button_10:
+                        bodyType="panama";
+                        type="hats";
+                        break;
+                    case R.id.radio_button_11:
+                        bodyType="skirt";
+                        type="clothes";
+                        break;
+                    case R.id.radio_button_12:
+                        bodyType="top";
+                        type="clothes";
+                        break;
+                    case R.id.radio_button_13:
+                        bodyType="bag";
+                        type="accessories";
+                        break;
+                }
+                int idCurrency=radioGroupCurrency.getCheckedRadioButtonId();
+                switch(idCurrency){
+                    case R.id.schoolyCoinRadio:
+                        currencyType="coin";
+                        break;
+                    case R.id.dollarRadio:
+                        currencyType="dollar";
+                        break;
+                }
+                int idExclusive=radioGroupExclusive.getCheckedRadioButtonId();
+                switch(idExclusive){
+                    case R.id.radioButtonExclusiveYes:
+                        exclusiveType="exclusive";
+                        break;
+                    case R.id.radioButtonExclusiveNo:
+                        exclusiveType="no";
+                        break;
+                }
+                String uid=firebaseModel.getReference().child("clothesReqests").push().getKey();
+                firebaseModel.getReference().child("clothesReqests").child(uid)
+                        .setValue(new ClothesRequest(type, imageApplication, Long.valueOf(editClothesPrice.getText().toString()), editTextClothes.getText().toString()
+                                , 111, nick, currencyType,addDescriptionEdit.getText().toString() ,modelApplication , bodyType,uid,exclusiveType));
+                Toast.makeText(getContext(), "Заявка отправлена", Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
             }
         });

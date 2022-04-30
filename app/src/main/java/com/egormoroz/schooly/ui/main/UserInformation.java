@@ -1,6 +1,9 @@
 package com.egormoroz.schooly.ui.main;
 
+import com.egormoroz.schooly.ui.main.Shop.Clothes;
 import com.google.firebase.database.IgnoreExtraProperties;
+
+import java.util.ArrayList;
 
 @IgnoreExtraProperties
 public class UserInformation {
@@ -20,7 +23,7 @@ public class UserInformation {
     private double todayMining=0;
     private String subscription;
     private String subscribers;
-    private String myClothes;
+    private ArrayList<Clothes> myClothes;
     private String queue;
     private String bio;
     private String looks;
@@ -162,10 +165,10 @@ public class UserInformation {
         this.queue = queue;
     }
 
-    public String getMyClothes(){
+    public ArrayList<Clothes> getMyClothes(){
         return this.myClothes;
     }
-    public void setMyClothes(String myClothes){
+    public void setMyClothes(ArrayList<Clothes> myClothes){
         this.myClothes = myClothes;
     }
 
@@ -206,7 +209,7 @@ public class UserInformation {
                            String gender, long age, String miners, long level, long money, double todayMining,
                            String subscription, String subscribers, String queue, String bio,
                            String accountType, String chatsNontsType,
-                           String groupChatsNontsType, String profileNontsType, String myClothes, String version,
+                           String groupChatsNontsType, String profileNontsType, ArrayList<Clothes> myClothes, String version,
                            String looks,long miningPremium) {
         this.Nick = nick;
         this.uid = uid;

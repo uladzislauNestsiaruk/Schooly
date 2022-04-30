@@ -33,8 +33,11 @@ import com.egormoroz.schooly.ui.main.Mining.Miner;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
 import com.egormoroz.schooly.ui.main.Shop.NewClothesAdapter;
 import com.egormoroz.schooly.ui.main.Shop.ViewingClothes;
+import com.egormoroz.schooly.ui.main.UserInformation;
 import com.egormoroz.schooly.ui.profile.ProfileFragment;
 import com.egormoroz.schooly.ui.profile.SendLookAdapter;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.firebase.database.DataSnapshot;
@@ -52,13 +55,15 @@ import java.util.Map;
 public class ViewingMyClothes extends Fragment {
 
     Fragment fragment;
+    UserInformation userInformation;
 
-    public ViewingMyClothes(Fragment fragment) {
+    public ViewingMyClothes(Fragment fragment,UserInformation userInformation) {
         this.fragment = fragment;
+        this.userInformation=userInformation;
     }
 
-    public static ViewingMyClothes newInstance(Fragment fragment) {
-        return new ViewingMyClothes(fragment);
+    public static ViewingMyClothes newInstance(Fragment fragment,UserInformation userInformation) {
+        return new ViewingMyClothes(fragment,userInformation);
 
     }
 
@@ -66,16 +71,14 @@ public class ViewingMyClothes extends Fragment {
     TextView  clothesTitleCV, description, noDescription,purchaseToday,purchaseAll,profitToday,profitAll
             ,perSentToday,perSentAll,clothesPrice;
     ImageView clothesImageCV, backToShop, coinsImage,coinsImageAll,coinsImagePurple,send;
-    long schoolyCoins, clothesPrise;
-    RelativeLayout checkBasket,presentClothes,resaleClothes;
-    int a = 0;
+    RelativeLayout presentClothes,resaleClothes;
     RecyclerView recyclerView;
     SendLookAdapter.ItemClickListener itemClickListener;
     TextView emptyList;
     LinearLayout linearElse,linearTelegram,linearInstagram;
     EditText editText,messageEdit;
-    String userName,otherUserNickString;
-    String clothesPriceString,purchaseTodayString,profitTodayString,profitAllString;
+    String clothesPriceString,purchaseTodayString,profitTodayString,profitAllString
+            ,userName,otherUserNickString,nick;
     Clothes clothesViewing;
     private FirebaseModel firebaseModel = new FirebaseModel();
     NewClothesAdapter.ViewHolder viewHolder;
@@ -95,6 +98,7 @@ public class ViewingMyClothes extends Fragment {
     @Override
     public void onViewCreated(@Nullable View view, @NonNull Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        nick=userInformation.getNick();
         clothesImageCV = view.findViewById(R.id.clothesImagecv);
         coinsImage = view.findViewById(R.id.coinsImage);
         coinsImageAll = view.findViewById(R.id.coinsImageAll);
@@ -148,7 +152,7 @@ public class ViewingMyClothes extends Fragment {
                 presentClothes.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        RecentMethods.setCurrentFragment(PresentClothesFragment.newInstance(clothesViewing,ViewingMyClothes.newInstance(fragment)), getActivity());
+                        RecentMethods.setCurrentFragment(PresentClothesFragment.newInstance(clothesViewing,ViewingMyClothes.newInstance(fragment,userInformation),userInformation), getActivity());
                     }
                 });
                 clothesTitleCV.setText(clothes.getClothesTitle());
@@ -194,7 +198,6 @@ public class ViewingMyClothes extends Fragment {
                     purchaseAll.setText(clothesPriceString.substring(0, 2)+"KK");
                 }
                 profitTodayString=String.valueOf(clothesViewing.getClothesPrice()*clothesViewing.getPurchaseToday());
-                Log.d("####", "ff "+profitTodayString);
                 profitAllString=String.valueOf(clothesViewing.getPurchaseNumber()*clothesViewing.getClothesPrice());
                 if (clothesViewing.getCurrencyType().equals("dollar")){
                     clothesPrice.setText("$"+String.valueOf(clothes.getClothesPrice()));
@@ -357,41 +360,36 @@ public class ViewingMyClothes extends Fragment {
 
             }
         });
-        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+        itemClickListener=new SendLookAdapter.ItemClickListener() {
             @Override
-            public void PassUserNick(String nick) {
-                itemClickListener=new SendLookAdapter.ItemClickListener() {
-                    @Override
-                    public void onItemClick(String otherUserNick, String type) {
-                        if(type.equals("send")){
-                            String messageText = messageEdit.getText().toString();
+            public void onItemClick(String otherUserNick, String type) {
+                if(type.equals("send")){
+                    String messageText = messageEdit.getText().toString();
 
-                            String messageSenderRef = otherUserNick + "/Chats/" + nick + "/Messages";
-                            String messageReceiverRef = nick + "/Chats/" + otherUserNick+ "/Messages";
-                            otherUserNickString=otherUserNick;
+                    String messageSenderRef = otherUserNick + "/Chats/" + nick + "/Messages";
+                    String messageReceiverRef = nick + "/Chats/" + otherUserNick+ "/Messages";
+                    otherUserNickString=otherUserNick;
 
-                            DatabaseReference userMessageKeyRef = firebaseModel.getUsersReference().child(nick).child("Chats").child(otherUserNick).child("Messages").push();
-                            String messagePushID = userMessageKeyRef.getKey();
+                    DatabaseReference userMessageKeyRef = firebaseModel.getUsersReference().child(nick).child("Chats").child(otherUserNick).child("Messages").push();
+                    String messagePushID = userMessageKeyRef.getKey();
 
-                            Map<String, String> messageTextBody = new HashMap<>();
-                            messageTextBody.put("message", messageText);
-                            messageTextBody.put("type", "text");
-                            messageTextBody.put("from", nick);
-                            messageTextBody.put("to", otherUserNick);
-                            messageTextBody.put("time", RecentMethods.getCurrentTime());
-                            messageTextBody.put("messageID", messagePushID);
-                            addLastMessage("text", messageText);
+                    Map<String, String> messageTextBody = new HashMap<>();
+                    messageTextBody.put("message", messageText);
+                    messageTextBody.put("type", "text");
+                    messageTextBody.put("from", nick);
+                    messageTextBody.put("to", otherUserNick);
+                    messageTextBody.put("time", RecentMethods.getCurrentTime());
+                    messageTextBody.put("messageID", messagePushID);
+                    addLastMessage("text", messageText);
 
-                            Map<String, Object> messageBodyDetails = new HashMap<String, Object>();
-                            messageBodyDetails.put(messageSenderRef + "/" + messagePushID, messageTextBody);
-                            messageBodyDetails.put(messageReceiverRef + "/" + messagePushID, messageTextBody);
-                        }else {
-                            Log.d("####", type);
-                        }
-                    }
-                };
+                    Map<String, Object> messageBodyDetails = new HashMap<String, Object>();
+                    messageBodyDetails.put(messageSenderRef + "/" + messagePushID, messageTextBody);
+                    messageBodyDetails.put(messageReceiverRef + "/" + messagePushID, messageTextBody);
+                }else {
+                    Log.d("####", type);
+                }
             }
-        });
+        };
 
         itemClickListener=new SendLookAdapter.ItemClickListener() {
             @Override
@@ -404,21 +402,16 @@ public class ViewingMyClothes extends Fragment {
             }
         };
 
-        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+        RecentMethods.getSubscriptionList(nick, firebaseModel, new Callbacks.getFriendsList() {
             @Override
-            public void PassUserNick(String nick) {
-                RecentMethods.getSubscriptionList(nick, firebaseModel, new Callbacks.getFriendsList() {
-                    @Override
-                    public void getFriendsList(ArrayList<Subscriber> friends) {
-                        if (friends.size()==0){
-                            emptyList.setVisibility(View.VISIBLE);
-                            recyclerView.setVisibility(View.GONE);
-                        }else {
-                            SendLookAdapter sendLookAdapter = new SendLookAdapter(friends,itemClickListener);
-                            recyclerView.setAdapter(sendLookAdapter);
-                        }
-                    }
-                });
+            public void getFriendsList(ArrayList<Subscriber> friends) {
+                if (friends.size()==0){
+                    emptyList.setVisibility(View.VISIBLE);
+                    recyclerView.setVisibility(View.GONE);
+                }else {
+                    SendLookAdapter sendLookAdapter = new SendLookAdapter(friends,itemClickListener);
+                    recyclerView.setAdapter(sendLookAdapter);
+                }
             }
         });
 
@@ -428,117 +421,94 @@ public class ViewingMyClothes extends Fragment {
     }
 
     public void initUserEnter() {
-        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+        editText.addTextChangedListener(new TextWatcher() {
             @Override
-            public void PassUserNick(String nick) {
-                editText.addTextChangedListener(new TextWatcher() {
-                    @Override
-                    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                    }
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
 
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                userName = String.valueOf(editText.getText()).trim();
+                userName = userName.toLowerCase();
+                firebaseModel.getUsersReference().child(nick).child("subscription").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                     @Override
-                    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                        userName = String.valueOf(editText.getText()).trim();
-                        userName = userName.toLowerCase();
-                        Query query = firebaseModel.getUsersReference().child(nick).child("subscription");
-                        query.addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                ArrayList<Subscriber> userFromBase = new ArrayList<>();
-                                for (DataSnapshot snap : snapshot.getChildren()) {
-                                    Subscriber subscriber = new Subscriber();
-                                    subscriber.setSub(snap.getValue(String.class));
-                                    String nick = subscriber.getSub();
-                                    int valueLetters = userName.length();
-                                    nick = nick.toLowerCase();
-                                    if (nick.length() < valueLetters) {
-                                        if (nick.equals(userName))
-                                            userFromBase.add(subscriber);
-                                    } else {
-                                        nick = nick.substring(0, valueLetters);
-                                        if (nick.equals(userName))
-                                            userFromBase.add(subscriber);
-                                    }
-
+                    public void onComplete(@NonNull Task<DataSnapshot> task) {
+                        if(task.isSuccessful()){
+                            DataSnapshot snapshot= task.getResult();
+                            ArrayList<Subscriber> userFromBase = new ArrayList<>();
+                            for (DataSnapshot snap : snapshot.getChildren()) {
+                                Subscriber subscriber = new Subscriber();
+                                subscriber.setSub(snap.getValue(String.class));
+                                String nick = subscriber.getSub();
+                                int valueLetters = userName.length();
+                                nick = nick.toLowerCase();
+                                if (nick.length() < valueLetters) {
+                                    if (nick.equals(userName))
+                                        userFromBase.add(subscriber);
+                                } else {
+                                    nick = nick.substring(0, valueLetters);
+                                    if (nick.equals(userName))
+                                        userFromBase.add(subscriber);
                                 }
-                                SendLookAdapter sendLookAdapter = new SendLookAdapter(userFromBase,itemClickListener);
-                                recyclerView.setAdapter(sendLookAdapter);
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
 
                             }
-                        });
-                    }
-
-                    @Override
-                    public void afterTextChanged(Editable editable) {
-                        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-                            @Override
-                            public void PassUserNick(String nick) {
-                            }
-                        });
+                            SendLookAdapter sendLookAdapter = new SendLookAdapter(userFromBase,itemClickListener);
+                            recyclerView.setAdapter(sendLookAdapter);
+                        }
                     }
                 });
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
             }
         });
     }
 
     private void addLastMessage(String type, String Message){
-        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-            @Override
-            public void PassUserNick(String nick) {
-                switch (type) {
-                    case "text":
-                        addType("text");
-                        firebaseModel.getUsersReference().child(nick).child("Chats").child(otherUserNickString).child("LastMessage").setValue(Message);
-                        firebaseModel.getUsersReference().child(otherUserNickString).child("Chats").child(nick).child("LastMessage").setValue(Message);
-                        break;
-                    case "voice":
-                        addType("voice");
-                        firebaseModel.getUsersReference().child(nick).child("Chats").child(otherUserNickString).child("LastMessage").setValue("Голосовое сообщение");
-                        firebaseModel.getUsersReference().child(otherUserNickString).child("Chats").child(nick).child("LastMessage").setValue("Голосовое сообщение");
-                        break;
-                    case "image":
-                        firebaseModel.getUsersReference().child(nick).child("Chats").child(otherUserNickString).child("LastMessage").setValue("Фотография");
-                        firebaseModel.getUsersReference().child(otherUserNickString).child("Chats").child(nick).child("LastMessage").setValue("Фотография");
-                        addType("image");
-                        break;
-                }
-                Calendar calendar = Calendar.getInstance();
-                firebaseModel.getUsersReference().child(nick).child("Chats").child(otherUserNickString).child("LastTime").setValue(RecentMethods.getCurrentTime());
-                firebaseModel.getUsersReference().child(otherUserNickString).child("Chats").child(nick).child("LastTime").setValue(RecentMethods.getCurrentTime());
-                firebaseModel.getUsersReference().child(nick).child("Chats").child(otherUserNickString).child("TimeMill").setValue(calendar.getTimeInMillis() * -1);
-                firebaseModel.getUsersReference().child(otherUserNickString).child("Chats").child(nick).child("TimeMill").setValue(calendar.getTimeInMillis() * -1);
-            }
-        });
+        switch (type) {
+            case "text":
+                addType("text");
+                firebaseModel.getUsersReference().child(nick).child("Chats").child(otherUserNickString).child("LastMessage").setValue(Message);
+                firebaseModel.getUsersReference().child(otherUserNickString).child("Chats").child(nick).child("LastMessage").setValue(Message);
+                break;
+            case "voice":
+                addType("voice");
+                firebaseModel.getUsersReference().child(nick).child("Chats").child(otherUserNickString).child("LastMessage").setValue("Голосовое сообщение");
+                firebaseModel.getUsersReference().child(otherUserNickString).child("Chats").child(nick).child("LastMessage").setValue("Голосовое сообщение");
+                break;
+            case "image":
+                firebaseModel.getUsersReference().child(nick).child("Chats").child(otherUserNickString).child("LastMessage").setValue("Фотография");
+                firebaseModel.getUsersReference().child(otherUserNickString).child("Chats").child(nick).child("LastMessage").setValue("Фотография");
+                addType("image");
+                break;
+        }
+        Calendar calendar = Calendar.getInstance();
+        firebaseModel.getUsersReference().child(nick).child("Chats").child(otherUserNickString).child("LastTime").setValue(RecentMethods.getCurrentTime());
+        firebaseModel.getUsersReference().child(otherUserNickString).child("Chats").child(nick).child("LastTime").setValue(RecentMethods.getCurrentTime());
+        firebaseModel.getUsersReference().child(nick).child("Chats").child(otherUserNickString).child("TimeMill").setValue(calendar.getTimeInMillis() * -1);
+        firebaseModel.getUsersReference().child(otherUserNickString).child("Chats").child(nick).child("TimeMill").setValue(calendar.getTimeInMillis() * -1);
     }
 
     public void addType(String type) {
-        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+        final long[] value = new long[1];
+        DatabaseReference ref = firebaseModel.getUsersReference().child(otherUserNickString).child("Chats").child(nick).child(type);
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void PassUserNick(String nick) {
-                final long[] value = new long[1];
-                DatabaseReference ref = firebaseModel.getUsersReference().child(otherUserNickString).child("Chats").child(nick).child(type);
-                ref.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        if (dataSnapshot.exists()){
-                            value[0] = (long) dataSnapshot.getValue();
-                            value[0] = value[0] + 1;
-                            dataSnapshot.getRef().setValue(value[0]);}
-                        else dataSnapshot.getRef().setValue(1);
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-
-
-                });
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()){
+                    value[0] = (long) dataSnapshot.getValue();
+                    value[0] = value[0] + 1;
+                    dataSnapshot.getRef().setValue(value[0]);}
+                else dataSnapshot.getRef().setValue(1);
             }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+
+
         });
     }
 

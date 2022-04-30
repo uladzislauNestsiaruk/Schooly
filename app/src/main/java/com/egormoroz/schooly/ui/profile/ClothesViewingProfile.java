@@ -154,7 +154,7 @@ public class ClothesViewingProfile extends Fragment {
                 presentClothes.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        RecentMethods.setCurrentFragment(PresentClothesFragment.newInstance(clothesViewing,ClothesViewingProfile.newInstance(type,fragment,userInformation)), getActivity());
+                        RecentMethods.setCurrentFragment(PresentClothesFragment.newInstance(clothesViewing,ClothesViewingProfile.newInstance(type,fragment,userInformation),userInformation), getActivity());
                     }
                 });
                 clothesTitleCV.setText(clothes.getClothesTitle());

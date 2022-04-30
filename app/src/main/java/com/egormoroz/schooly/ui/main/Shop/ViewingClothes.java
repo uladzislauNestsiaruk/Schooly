@@ -173,6 +173,7 @@ public class ViewingClothes extends Fragment {
                 clothesTitleCV.setText(clothes.getClothesTitle());
                 clothesPrise=clothes.getClothesPrice();
                 creator.setText(clothesViewing.getCreator());
+                schoolyCoins=userInformation.getmoney();
                 creator.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

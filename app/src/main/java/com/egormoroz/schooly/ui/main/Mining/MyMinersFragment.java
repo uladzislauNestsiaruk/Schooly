@@ -40,6 +40,7 @@ public class MyMinersFragment extends Fragment {
     private FirebaseModel firebaseModel = new FirebaseModel();
     RecyclerView recyclerviewMining;
     TextView useMiner,emptyMyMiners,buyMiner;
+    String nick;
 
 
     @Override
@@ -55,6 +56,7 @@ public class MyMinersFragment extends Fragment {
     @Override
     public void onViewCreated(@Nullable View view,@NonNull Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        nick=userInformation.getNick();
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
@@ -62,8 +64,8 @@ public class MyMinersFragment extends Fragment {
                 RecentMethods.setCurrentFragment(MiningFragment.newInstance(userInformation), getActivity());
             }
         };
-
         requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(), callback);
+
         ImageView backtomoning=view.findViewById(R.id.back_tomining);
         backtomoning.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,27 +81,21 @@ public class MyMinersFragment extends Fragment {
     }
 
     public void GetMyMinersFromBase(){
-        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+        RecentMethods.MyMinersFromBase(nick,firebaseModel, new Callbacks.GetMyMinerFromBase(){
             @Override
-            public void PassUserNick(String nick) {
-                RecentMethods.MyMinersFromBase(nick,firebaseModel, new Callbacks.GetMyMinerFromBase(){
-                            @Override
-                            public void GetMyMinerFromBase(ArrayList<Miner> myMinersFromBase) {
-                                listAdapter.addAll(myMinersFromBase);
-                                if (myMinersFromBase.size()==0){
-                                    emptyMyMiners.setVisibility(View.VISIBLE);
-                                }else {
-                                    emptyMyMiners.setVisibility(View.GONE);
-                                    buyMiner.setVisibility(View.GONE);
-                                }
-                                MyMinersAdapter myminersAdapter=new MyMinersAdapter(listAdapter);
-                                LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-                                layoutManager.setReverseLayout(true);
-                                layoutManager.setStackFromEnd(true);
-                                recyclerviewMining.setLayoutManager(layoutManager);
-                                recyclerviewMining.setAdapter(myminersAdapter);
-                            }
-                        });
+            public void GetMyMinerFromBase(ArrayList<Miner> myMinersFromBase) {
+                listAdapter.addAll(myMinersFromBase);
+                if (myMinersFromBase.size()==0){
+                    emptyMyMiners.setVisibility(View.VISIBLE);
+                }else {
+                    emptyMyMiners.setVisibility(View.GONE);
+                    buyMiner.setVisibility(View.GONE);
+                }
+                MyMinersAdapter myminersAdapter=new MyMinersAdapter(listAdapter);
+                LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+                layoutManager.setReverseLayout(true);layoutManager.setStackFromEnd(true);
+                recyclerviewMining.setLayoutManager(layoutManager);
+                recyclerviewMining.setAdapter(myminersAdapter);
             }
         });
     }

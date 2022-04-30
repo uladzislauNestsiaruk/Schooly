@@ -208,16 +208,19 @@ public class NontificationManager extends Worker {
     }
 
     public void nontification(String nickOther,String text, int notificationId){
-        Intent notificationIntent = new Intent(getApplicationContext(), MainActivity.class);
-        PendingIntent contentIntent = PendingIntent.getActivity(getApplicationContext(),
-                0, notificationIntent,
-                PendingIntent.FLAG_CANCEL_CURRENT);
+        Intent notifyIntent = new Intent(getApplicationContext(), MainActivity.class);
+        notifyIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        PendingIntent notifyPendingIntent = PendingIntent.getActivity(
+                getApplicationContext(), 0, notifyIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+        );
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_nontification_image)
                 .setContentTitle(nickOther)
                 .setContentText(text)
-                .setContentIntent(contentIntent)
+                .setContentIntent(notifyPendingIntent)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
         NotificationManagerCompat notificationManager =
