@@ -1,5 +1,6 @@
 package com.egormoroz.schooly.ui.main;
 
+import com.egormoroz.schooly.ui.main.Mining.Miner;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
 import com.google.firebase.database.IgnoreExtraProperties;
 
@@ -17,7 +18,8 @@ public class UserInformation {
     private String password;
     private String gender = "Helicopter";
     private long age = 404;
-    private String miners="Start mining stupid dog!";
+    private ArrayList<Miner> activeMinerArrayList;
+    private ArrayList<Miner> minerArrayList;
     private long level=1;
     private long money=100;
     private double todayMining=0;
@@ -83,12 +85,20 @@ public class UserInformation {
         this.age = age;
     }
 
-    public String getMiners(){
-        return miners;
+    public ArrayList<Miner> getMiners(){
+        return activeMinerArrayList;
     }
 
-    public void setMiners(String miners){
-        this.miners=miners;
+    public void setMiners(ArrayList<Miner> activeMinerArrayList){
+        this.activeMinerArrayList=activeMinerArrayList;
+    }
+
+    public ArrayList<Miner> getMyMiners(){
+        return minerArrayList;
+    }
+
+    public void setMyMiners(ArrayList<Miner> minerArrayList){
+        this.minerArrayList=minerArrayList;
     }
 
     public String getLooks(){
@@ -206,7 +216,7 @@ public class UserInformation {
     }
 
     public UserInformation(String nick, String phone, String uid, String Avatar, String password,
-                           String gender, long age, String miners, long level, long money, double todayMining,
+                           String gender, long age, ArrayList<Miner> activeMinerArrayList,ArrayList<Miner> minerArrayList, long level, long money, double todayMining,
                            String subscription, String subscribers, String queue, String bio,
                            String accountType, String chatsNontsType,
                            String groupChatsNontsType, String profileNontsType, ArrayList<Clothes> myClothes, String version,
@@ -218,7 +228,8 @@ public class UserInformation {
         this.gender = gender;
         this.age = age;
         this.Avatar = Avatar;
-        this.miners=miners;
+        this.activeMinerArrayList=activeMinerArrayList;
+        this.minerArrayList=minerArrayList;
         this.level=level;
         this.money=money;
         this.todayMining=todayMining;

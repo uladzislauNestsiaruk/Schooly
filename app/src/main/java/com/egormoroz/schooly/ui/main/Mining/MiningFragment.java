@@ -21,7 +21,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FirebaseModel;
-import com.egormoroz.schooly.MiningManager;
 import com.egormoroz.schooly.Nontification;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
@@ -33,7 +32,10 @@ import com.egormoroz.schooly.ui.main.MoreMoneyFragment;
 import com.egormoroz.schooly.ui.main.Shop.NewClothesAdapter;
 import com.egormoroz.schooly.ui.main.UserInformation;
 import com.egormoroz.schooly.ui.profile.SubscriptionsFragmentOther;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.database.DataSnapshot;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -56,17 +58,12 @@ public class MiningFragment extends Fragment {
     ArrayList<Miner> listAdapterAverageMiner = new ArrayList<Miner>();
     ArrayList<Miner> listAdapterStrongMiner = new ArrayList<Miner>();
     ArrayList<Miner> listAdapterActiveMiner = new ArrayList<Miner>();
-    ArrayList<Miner> allminersarraylist = new ArrayList<Miner>();
     private FirebaseModel firebaseModel = new FirebaseModel();
-    ImageView viewminer;
-    double todayMining;
-    Map<String,String> timeStamp;
     String todayMiningFormatted,nick;
     LinearLayout coinsLinear;
-    TextView minerprice, schoolycoinminer, myminers, upgrade, todayminingText
+    TextView  schoolycoinminer, myminers, todayminingText
             , getMore,buy,numderOfActiveMiners,emptyActiveMiners,addActiveMiners;
     RecyclerView activeminersrecyclerview,weakminersrecyclerview,averageminersrecyclerview,strongminersrecyclerview;
-    private static final String TAG = "###########";
     WeakMinersAdapter.ItemClickListener itemClickListener;
     StrongMinersAdapter.ItemClickListener itemClickListenerStrong;
     AverageMinersAdapter.ItemClickListener itemClickListenerAverage;
@@ -102,12 +99,39 @@ public class MiningFragment extends Fragment {
             }
         });
         myminers = view.findViewById(R.id.myminers);
-        myminers.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                RecentMethods.setCurrentFragment(MyMinersFragment.newInstance(userInformation), getActivity());
-            }
-        });
+        if(userInformation.getMyMiners()==null){
+            firebaseModel.getUsersReference().child(nick).child("miners")
+                    .get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DataSnapshot> task) {
+                    if(task.isSuccessful()){
+                        DataSnapshot snapshot= task.getResult();
+                        ArrayList<Miner> myMinersFromBase=new ArrayList<>();
+                        for (DataSnapshot snap : snapshot.getChildren()) {
+                            Miner miner = new Miner();
+                            miner.setInHour(snap.child("inHour").getValue(Long.class));
+                            miner.setMinerPrice(snap.child("minerPrice").getValue(Long.class));
+                            miner.setMinerImage(snap.child("minerImage").getValue(String.class));
+                            myMinersFromBase.add(miner);
+                        }
+                        userInformation.setMyMiners(myMinersFromBase);
+                        myminers.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                RecentMethods.setCurrentFragment(MyMinersFragment.newInstance(userInformation), getActivity());
+                            }
+                        });
+                    }
+                }
+            });
+        }else{
+            myminers.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    RecentMethods.setCurrentFragment(MyMinersFragment.newInstance(userInformation), getActivity());
+                }
+            });
+        }
         ImageView backtomainfrommining = view.findViewById(R.id.backtomainfrommining);
         backtomainfrommining.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -208,32 +232,55 @@ public class MiningFragment extends Fragment {
 
 
     public void getActiveMinersFromBase(){
-        RecentMethods.GetActiveMiner(nick, firebaseModel,
-                new Callbacks.GetActiveMiners() {
-                    @Override
-                    public void GetActiveMiners(ArrayList<Miner> activeMinersFromBase) {
-                        numderOfActiveMiners.setText(String.valueOf(activeMinersFromBase.size())+"/5");
-                        if(activeMinersFromBase.size()==0) {
-                            emptyActiveMiners.setVisibility(View.VISIBLE);
-                            addActiveMiners.setVisibility(View.VISIBLE);
-                            addActiveMiners.setOutlineAmbientShadowColor(Color.parseColor("#F3A2E5"));
-                            addActiveMiners.setOutlineAmbientShadowColor(Color.parseColor("#F3A2E5"));
-                            addActiveMiners.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    RecentMethods.setCurrentFragment(MyMinersFragment.newInstance(userInformation), getActivity());
-                                }
-                            });
-                            emptyActiveMiners.setText("Добавь активные майнеры!");
-                        }else {
-                            emptyActiveMiners.setVisibility(View.GONE);
-                            addActiveMiners.setVisibility(View.GONE);
+        if(userInformation.getMiners()==null){
+            RecentMethods.GetActiveMiner(nick, firebaseModel,
+                    new Callbacks.GetActiveMiners() {
+                        @Override
+                        public void GetActiveMiners(ArrayList<Miner> activeMinersFromBase) {
+                            numderOfActiveMiners.setText(String.valueOf(activeMinersFromBase.size())+"/5");
+                            userInformation.setMiners(activeMinersFromBase);
+                            if(activeMinersFromBase.size()==0) {
+                                emptyActiveMiners.setVisibility(View.VISIBLE);
+                                addActiveMiners.setVisibility(View.VISIBLE);
+                                addActiveMiners.setOutlineAmbientShadowColor(Color.parseColor("#F3A2E5"));
+                                addActiveMiners.setOutlineAmbientShadowColor(Color.parseColor("#F3A2E5"));
+                                addActiveMiners.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        RecentMethods.setCurrentFragment(MyMinersFragment.newInstance(userInformation), getActivity());
+                                    }
+                                });
+                                emptyActiveMiners.setText("Добавь активные майнеры!");
+                            }else {
+                                emptyActiveMiners.setVisibility(View.GONE);
+                                addActiveMiners.setVisibility(View.GONE);
+                            }
+                            listAdapterActiveMiner.addAll(activeMinersFromBase);
+                            ActiveMinersAdapter activeMinersAdapter=new ActiveMinersAdapter(listAdapterActiveMiner);
+                            activeminersrecyclerview.setAdapter(activeMinersAdapter);
                         }
-                        listAdapterActiveMiner.addAll(activeMinersFromBase);
-                        ActiveMinersAdapter activeMinersAdapter=new ActiveMinersAdapter(listAdapterActiveMiner);
-                        activeminersrecyclerview.setAdapter(activeMinersAdapter);
+                    });
+        }else {
+            if(userInformation.getMiners().size()==0) {
+                emptyActiveMiners.setVisibility(View.VISIBLE);
+                addActiveMiners.setVisibility(View.VISIBLE);
+                addActiveMiners.setOutlineAmbientShadowColor(Color.parseColor("#F3A2E5"));
+                addActiveMiners.setOutlineAmbientShadowColor(Color.parseColor("#F3A2E5"));
+                addActiveMiners.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        RecentMethods.setCurrentFragment(MyMinersFragment.newInstance(userInformation), getActivity());
                     }
                 });
+                emptyActiveMiners.setText("Добавь активные майнеры!");
+            }else {
+                emptyActiveMiners.setVisibility(View.GONE);
+                addActiveMiners.setVisibility(View.GONE);
+            }
+            listAdapterActiveMiner.addAll(userInformation.getMiners());
+            ActiveMinersAdapter activeMinersAdapter=new ActiveMinersAdapter(listAdapterActiveMiner);
+            activeminersrecyclerview.setAdapter(activeMinersAdapter);
+        }
     }
 
 

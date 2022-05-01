@@ -73,30 +73,46 @@ public class MyMinersFragment extends Fragment {
                 ((MainActivity)getActivity()).setCurrentFragment(MiningFragment.newInstance(userInformation));
             }
         });
-        GetMyMinersFromBase();
         recyclerviewMining=view.findViewById(R.id.recyclerviewmyminers);
         useMiner=view.findViewById(R.id.use);
         emptyMyMiners=view.findViewById(R.id.emptyMyMiners);
         buyMiner=view.findViewById(R.id.buyMiner);
+        GetMyMinersFromBase();
     }
 
     public void GetMyMinersFromBase(){
-        RecentMethods.MyMinersFromBase(nick,firebaseModel, new Callbacks.GetMyMinerFromBase(){
-            @Override
-            public void GetMyMinerFromBase(ArrayList<Miner> myMinersFromBase) {
-                listAdapter.addAll(myMinersFromBase);
-                if (myMinersFromBase.size()==0){
-                    emptyMyMiners.setVisibility(View.VISIBLE);
-                }else {
-                    emptyMyMiners.setVisibility(View.GONE);
-                    buyMiner.setVisibility(View.GONE);
+        if(userInformation.getMyMiners()==null){
+            RecentMethods.MyMinersFromBase(nick,firebaseModel, new Callbacks.GetMyMinerFromBase(){
+                @Override
+                public void GetMyMinerFromBase(ArrayList<Miner> myMinersFromBase) {
+                    listAdapter.addAll(myMinersFromBase);
+                    userInformation.setMyMiners(myMinersFromBase);
+                    if (myMinersFromBase.size()==0){
+                        emptyMyMiners.setVisibility(View.VISIBLE);
+                    }else {
+                        emptyMyMiners.setVisibility(View.GONE);
+                        buyMiner.setVisibility(View.GONE);
+                    }
+                    MyMinersAdapter myminersAdapter=new MyMinersAdapter(listAdapter);
+                    LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+                    layoutManager.setReverseLayout(true);layoutManager.setStackFromEnd(true);
+                    recyclerviewMining.setLayoutManager(layoutManager);
+                    recyclerviewMining.setAdapter(myminersAdapter);
                 }
-                MyMinersAdapter myminersAdapter=new MyMinersAdapter(listAdapter);
-                LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-                layoutManager.setReverseLayout(true);layoutManager.setStackFromEnd(true);
-                recyclerviewMining.setLayoutManager(layoutManager);
-                recyclerviewMining.setAdapter(myminersAdapter);
+            });
+        } else {
+            if (userInformation.getMyMiners().size()==0){
+                emptyMyMiners.setVisibility(View.VISIBLE);
+            }else {
+                emptyMyMiners.setVisibility(View.GONE);
+                buyMiner.setVisibility(View.GONE);
             }
-        });
+            MyMinersAdapter myminersAdapter=new MyMinersAdapter(userInformation.getMyMiners());
+            LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+            layoutManager.setReverseLayout(true);
+            layoutManager.setStackFromEnd(true);
+            recyclerviewMining.setLayoutManager(layoutManager);
+            recyclerviewMining.setAdapter(myminersAdapter);
+        }
     }
 }

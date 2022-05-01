@@ -60,22 +60,23 @@ public class MyClothesFragment extends Fragment {
     EditText searchMyClothes;
     LinearLayout linearSearch;
     UserInformation userInformation;
+    ArrayList<Clothes> clothesArrayList;
 
 
     int clothesListSize;
 
-    public MyClothesFragment(int clothesListSize,long totalProfitLong,long totalPurchaseLong,
+    public MyClothesFragment(ArrayList<Clothes> clothesArrayList,long totalProfitLong,long totalPurchaseLong,
                              long totalProfitDollarLong,UserInformation userInformation) {
-        this.clothesListSize = clothesListSize;
+        this.clothesArrayList = clothesArrayList;
         this.totalProfitLong=totalProfitLong;
         this.totalPurchaseLong=totalPurchaseLong;
         this.totalProfitDollarLong=totalProfitDollarLong;
         this.userInformation=userInformation;
     }
 
-    public static MyClothesFragment newInstance(int clothesListSize,long totalProfitLong,long totalPurchaseLong,
+    public static MyClothesFragment newInstance(ArrayList<Clothes> clothesArrayList,long totalProfitLong,long totalPurchaseLong,
                                                 long totalProfitDollarLong,UserInformation userInformation) {
-        return new MyClothesFragment(clothesListSize,totalProfitLong,totalPurchaseLong,totalProfitDollarLong
+        return new MyClothesFragment(clothesArrayList,totalProfitLong,totalPurchaseLong,totalProfitDollarLong
         ,userInformation);
 
     }
@@ -123,7 +124,7 @@ public class MyClothesFragment extends Fragment {
         itemClickListener=new MyClothesAdapter.ItemClickListener() {
             @Override
             public void onItemClick(Clothes clothes) {
-                RecentMethods.setCurrentFragment(ViewingMyClothes.newInstance(MyClothesFragment.newInstance(clothesListSize
+                RecentMethods.setCurrentFragment(ViewingMyClothes.newInstance(MyClothesFragment.newInstance(clothesArrayList
                         ,totalProfitLong,totalPurchaseLong,totalProfitDollarLong,userInformation),userInformation), getActivity());
             }
         };
@@ -176,7 +177,7 @@ public class MyClothesFragment extends Fragment {
     }
 
     public void getMyClothes(){
-        if(clothesListSize==0){
+        if(clothesArrayList.size()==0){
             recyclerMyClothes.setVisibility(View.GONE);
             totalProfitText.setVisibility(View.GONE);
             totalProfit.setVisibility(View.GONE);
@@ -192,7 +193,7 @@ public class MyClothesFragment extends Fragment {
             createClothesBig.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    RecentMethods.setCurrentFragment(CreateClothesFragment.newInstance(MyClothesFragment.newInstance(clothesListSize
+                    RecentMethods.setCurrentFragment(CreateClothesFragment.newInstance(MyClothesFragment.newInstance(clothesArrayList
                             ,totalProfitLong,totalPurchaseLong,totalProfitDollarLong,userInformation),userInformation), getActivity());
                 }
             });
@@ -202,37 +203,12 @@ public class MyClothesFragment extends Fragment {
             relativeFirstClothes.setVisibility(View.GONE);
             createClothes.setVisibility(View.VISIBLE);
             clothes.setText("Одежда "+String.valueOf(clothesListSize)+":");
-            RecentMethods.getMyClothes(nick, firebaseModel, new Callbacks.GetClothes() {
-                @Override
-                public void getClothes(ArrayList<Clothes> allClothes) {
-                    Collections.reverse(allClothes);
-                    MyClothesAdapter myClothesAdapter=new MyClothesAdapter(allClothes,itemClickListener);
-                    recyclerMyClothes.setAdapter(myClothesAdapter);
-                    Query query=firebaseModel.getUsersReference().child(nick)
-                            .child("myClothes");
-                    query.addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            ArrayList<Clothes> clothesFromBase=new ArrayList<>();
-                            for (DataSnapshot snap : snapshot.getChildren()) {
-                                Clothes clothes = new Clothes();
-                                clothes.setPurchaseToday(snap.child("purchaseToday").getValue(Long.class));
-                                clothes.setClothesPrice(snap.child("clothesPrice").getValue(Long.class));
-                                clothes.setCurrencyType(snap.child("currencyType").getValue(String.class));
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-
-                        }
-                    });
-                }
-            });
+            MyClothesAdapter myClothesAdapter=new MyClothesAdapter(clothesArrayList,itemClickListener);
+            recyclerMyClothes.setAdapter(myClothesAdapter);
             createClothes.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    RecentMethods.setCurrentFragment(CreateClothesFragment.newInstance(MyClothesFragment.newInstance(clothesListSize
+                    RecentMethods.setCurrentFragment(CreateClothesFragment.newInstance(MyClothesFragment.newInstance(clothesArrayList
                             ,totalProfitLong,totalPurchaseLong,totalProfitDollarLong,userInformation),userInformation), getActivity());
                 }
             });
@@ -240,53 +216,32 @@ public class MyClothesFragment extends Fragment {
     }
 
     public void searchMyClothes(String editTextText){
-        firebaseModel.getUsersReference().child(nick)
-                .child("myClothes").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if(task.isSuccessful()){
-                    DataSnapshot snapshot= task.getResult();
-                    ArrayList<Clothes> clothesFromBase = new ArrayList<>();
-                    for (DataSnapshot snap : snapshot.getChildren()) {
-                        Clothes clothes = new Clothes();
-                        clothes.setClothesImage(snap.child("clothesImage").getValue(String.class));
-                        clothes.setClothesPrice(snap.child("clothesPrice").getValue(Long.class));
-                        clothes.setPurchaseNumber(snap.child("purchaseNumber").getValue(Long.class));
-                        clothes.setClothesType(snap.child("clothesType").getValue(String.class));
-                        clothes.setClothesTitle(snap.child("clothesTitle").getValue(String.class));
-                        clothes.setCreator(snap.child("creator").getValue(String.class));
-                        clothes.setCurrencyType(snap.child("currencyType").getValue(String.class));
-                        clothes.setDescription(snap.child("description").getValue(String.class));
-                        clothes.setPurchaseToday(snap.child("purchaseToday").getValue(Long.class));
-                        clothes.setModel(snap.child("model").getValue(String.class));
-                        clothes.setBodyType(snap.child("bodyType").getValue(String.class));
-                        clothes.setUid(snap.child("uid").getValue(String.class));
-                        clothes.setExclusive(snap.child("exclusive").getValue(String.class));
-                        String clothesTitle = clothes.getClothesTitle();
-                        String title = clothesTitle;
-                        int valueLetters = editTextText.length();
-                        title = title.toLowerCase();
-                        if (title.length() < valueLetters) {
-                            if (title.equals(editTextText))
-                                clothesFromBase.add(clothes);
-                        } else {
-                            title = title.substring(0, valueLetters);
-                            if (title.equals(editTextText))
-                                clothesFromBase.add(clothes);
-                        }
-                    }
-                    if (clothesFromBase.size() == 0) {
-                        recyclerMyClothes.setVisibility(View.GONE);
-                        notFound.setVisibility(View.VISIBLE);
-                    } else {
-                        recyclerMyClothes.setVisibility(View.VISIBLE);
-                        MyClothesAdapter myClothesAdapter=new MyClothesAdapter(clothesFromBase,itemClickListener);
-                        recyclerMyClothes.setAdapter(myClothesAdapter);
-                        notFound.setVisibility(View.GONE);
-                    }
-                }
+        ArrayList<Clothes> clothesFromBase = new ArrayList<>();
+        for(int i=0;i<userInformation.getMyClothes().size();i++){
+            Clothes clothes=userInformation.getMyClothes().get(i);
+            String clothesTitle = clothes.getClothesTitle();
+            String title = clothesTitle;
+            int valueLetters = editTextText.length();
+            title = title.toLowerCase();
+            if (title.length() < valueLetters) {
+                if (title.equals(editTextText))
+                    clothesFromBase.add(clothes);
+            } else {
+                title = title.substring(0, valueLetters);
+                if (title.equals(editTextText))
+                    clothesFromBase.add(clothes);
             }
-        });
+
+        }
+        if (clothesFromBase.size() == 0) {
+            recyclerMyClothes.setVisibility(View.GONE);
+            notFound.setVisibility(View.VISIBLE);
+        } else {
+            recyclerMyClothes.setVisibility(View.VISIBLE);
+            MyClothesAdapter myClothesAdapter=new MyClothesAdapter(clothesFromBase,itemClickListener);
+            recyclerMyClothes.setAdapter(myClothesAdapter);
+            notFound.setVisibility(View.GONE);
+        }
     }
 
     public  void setCounts(){

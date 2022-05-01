@@ -54,8 +54,8 @@ public class NontificationService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         firebaseModel.initAll();
-        getChangesInSubscribers();
-        createNotificationChannel();
+//        getChangesInSubscribers();
+//        createNotificationChannel();
         return Service.START_STICKY;
     }
 
