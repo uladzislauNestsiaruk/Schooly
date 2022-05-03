@@ -109,7 +109,7 @@ public class PeopleFragment extends Fragment {
         listAdapterPeople.add(new UserInformation("nick", "fidjfif", "gk",
                 "6", "password", "Helicopter", 1000, new ArrayList<>(),new ArrayList<>(),1,100,0, ""
                 , "", ""," ","open","open","open","open",
-                new ArrayList<>(),"regular", "",0));
+                new ArrayList<>(),"regular", "",0,new ArrayList<>(),new ArrayList<>()));
     }
     public void initUserEnter(){
         searchUser.addTextChangedListener(new TextWatcher() {

@@ -35,7 +35,9 @@ import com.egormoroz.schooly.ui.profile.SubscriptionsFragmentOther;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -114,6 +116,7 @@ public class MiningFragment extends Fragment {
                             miner.setMinerImage(snap.child("minerImage").getValue(String.class));
                             myMinersFromBase.add(miner);
                         }
+                        Log.d("####", "a "+myMinersFromBase);
                         userInformation.setMyMiners(myMinersFromBase);
                         myminers.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -154,18 +157,10 @@ public class MiningFragment extends Fragment {
         addActiveMiners=view.findViewById(R.id.addActiveMiner);
         emptyActiveMiners=view.findViewById(R.id.emptyMiners);
         schoolycoinminer.setText(String.valueOf(userInformation.getmoney()));
-
-
-        GetDataFromBase();
-        getActiveMinersFromBase();
-
-
         todayminingText.setText(String.valueOf(0));
         weakminersrecyclerview=view.findViewById(R.id.allminersrecyclerview);
         averageminersrecyclerview=view.findViewById(R.id.averageminersrecyclerview);
         strongminersrecyclerview=view.findViewById(R.id.strongminersrecyclerview);
-
-        setMiningMoney();
 
         itemClickListener=new WeakMinersAdapter.ItemClickListener() {
             @Override
@@ -197,6 +192,9 @@ public class MiningFragment extends Fragment {
                 }
             }
         };
+        setMiningMoney();
+        GetDataFromBase();
+        getActiveMinersFromBase();
     }
 
 
@@ -256,11 +254,12 @@ public class MiningFragment extends Fragment {
                                 addActiveMiners.setVisibility(View.GONE);
                             }
                             listAdapterActiveMiner.addAll(activeMinersFromBase);
-                            ActiveMinersAdapter activeMinersAdapter=new ActiveMinersAdapter(listAdapterActiveMiner);
+                            ActiveMinersAdapter activeMinersAdapter=new ActiveMinersAdapter(listAdapterActiveMiner,userInformation);
                             activeminersrecyclerview.setAdapter(activeMinersAdapter);
                         }
                     });
         }else {
+            numderOfActiveMiners.setText(String.valueOf(userInformation.getMiners().size())+"/5");
             if(userInformation.getMiners().size()==0) {
                 emptyActiveMiners.setVisibility(View.VISIBLE);
                 addActiveMiners.setVisibility(View.VISIBLE);
@@ -278,7 +277,7 @@ public class MiningFragment extends Fragment {
                 addActiveMiners.setVisibility(View.GONE);
             }
             listAdapterActiveMiner.addAll(userInformation.getMiners());
-            ActiveMinersAdapter activeMinersAdapter=new ActiveMinersAdapter(listAdapterActiveMiner);
+            ActiveMinersAdapter activeMinersAdapter=new ActiveMinersAdapter(listAdapterActiveMiner,userInformation);
             activeminersrecyclerview.setAdapter(activeMinersAdapter);
         }
     }
@@ -315,6 +314,7 @@ public class MiningFragment extends Fragment {
                                 public void buyMiner(Miner miner) {
                                     firebaseModel.getReference("users").child(nick)
                                             .child("miners").child(String.valueOf(pos)+type).setValue(miner);
+                                    updateMiners();
                                 }
                             });
                         }
@@ -328,6 +328,7 @@ public class MiningFragment extends Fragment {
                                 public void buyMiner(Miner miner) {
                                     firebaseModel.getReference("users").child(nick)
                                             .child("miners").child(String.valueOf(pos)+type).setValue(miner);
+                                    updateMiners();
                                 }
                             });
                         }
@@ -342,6 +343,7 @@ public class MiningFragment extends Fragment {
                                 public void buyMiner(Miner miner) {
                                     firebaseModel.getReference("users").child(nick)
                                             .child("miners").child(String.valueOf(pos)+type).setValue(miner);
+                                    updateMiners();
                                 }
                             });
                         }
@@ -381,6 +383,15 @@ public class MiningFragment extends Fragment {
         });
 
         dialog.show();
+    }
+
+    public void updateMiners(){
+        RecentMethods.MyMinersFromBase(nick, firebaseModel, new Callbacks.GetMyMinerFromBase() {
+            @Override
+            public void GetMyMinerFromBase(ArrayList<Miner> myMinersFromBase) {
+                userInformation.setMyMiners(myMinersFromBase);
+            }
+        });
     }
 
 //    public void getSchoolyCoin(){

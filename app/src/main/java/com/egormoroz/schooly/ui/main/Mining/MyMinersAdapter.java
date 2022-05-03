@@ -1,6 +1,7 @@
 package com.egormoroz.schooly.ui.main.Mining;
 
 import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,9 @@ import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
+import com.egormoroz.schooly.ui.main.UserInformation;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.Query;
@@ -32,9 +36,12 @@ public class MyMinersAdapter extends RecyclerView.Adapter<MyMinersAdapter.ViewHo
     List<Miner> listAdapter;
     private ItemClickListener clickListener;
     private FirebaseModel firebaseModel = new FirebaseModel();
+    UserInformation userInformation;
+    String nick;
 
-    public  MyMinersAdapter(ArrayList<Miner> listAdapter) {
+    public  MyMinersAdapter(ArrayList<Miner> listAdapter,UserInformation userInformation) {
         this.listAdapter = listAdapter;
+        this.userInformation=userInformation;
     }
 
 
@@ -45,6 +52,7 @@ public class MyMinersAdapter extends RecyclerView.Adapter<MyMinersAdapter.ViewHo
                 inflate(R.layout.myminers_item, viewGroup, false);
         ViewHolder viewHolder=new ViewHolder(v);
         firebaseModel.initAll();
+        nick=userInformation.getNick();
         return viewHolder;
     }
 
@@ -54,62 +62,57 @@ public class MyMinersAdapter extends RecyclerView.Adapter<MyMinersAdapter.ViewHo
         holder.inHour.setText("+"+String.valueOf(miner.getInHour())+"S");
         holder.minerImage.setVisibility(View.VISIBLE);
         Picasso.get().load(miner.getMinerImage()).into(holder.minerImage);
-        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+        RecentMethods.GetActiveMiner(nick, firebaseModel, new Callbacks.GetActiveMiners() {
             @Override
-            public void PassUserNick(String nick) {
-                RecentMethods.GetActiveMiner(nick, firebaseModel, new Callbacks.GetActiveMiners() {
+            public void GetActiveMiners(ArrayList<Miner> activeMinersFromBase) {
+                firebaseModel.getUsersReference().child(nick)
+                        .child("activeMiners").child(String.valueOf(miner.getMinerPrice()))
+                .get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                     @Override
-                    public void GetActiveMiners(ArrayList<Miner> activeMinersFromBase) {
-                        Query query=firebaseModel.getUsersReference().child(nick)
-                                .child("activeMiners").child(String.valueOf(miner.getMinerPrice()));
-                        query.addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                if(snapshot.exists()){
-                                    holder.use.setText("Используется");
-                                    holder.use.setBackgroundResource(R.drawable.corners14dpappcolor2dpstroke);
-                                    holder.use.setTextColor(Color.parseColor("#F3A2E5"));
-                                }
+                    public void onComplete(@NonNull Task<DataSnapshot> task) {
+                        if (task.isSuccessful()){
+                            DataSnapshot snapshot= task.getResult();
+                            if(snapshot.exists()){
+                                holder.use.setText("Используется");
+                                holder.use.setBackgroundResource(R.drawable.corners14dpappcolor2dpstroke);
+                                holder.use.setTextColor(Color.parseColor("#F3A2E5"));
                             }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
-
-                            }
-                        });
-                        if(activeMinersFromBase.size()==5){
-                            holder.use.setBackgroundResource(R.drawable.corners14grey);
                         }
                     }
                 });
+                if(activeMinersFromBase.size()==5){
+                    holder.use.setBackgroundResource(R.drawable.corners14grey);
+                }
             }
         });
         holder.use.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+                RecentMethods.GetActiveMiner(nick, firebaseModel, new Callbacks.GetActiveMiners() {
                     @Override
-                    public void PassUserNick(String nick) {
-                        RecentMethods.GetActiveMiner(nick, firebaseModel, new Callbacks.GetActiveMiners() {
-                            @Override
-                            public void GetActiveMiners(ArrayList<Miner> activeMinersFromBase) {
-                                if(activeMinersFromBase.size()==5){
-                                    holder.use.setBackgroundResource(R.drawable.corners14grey);
-                                    Toast.makeText(v.getContext(), "Пять майнеров уже активны",Toast.LENGTH_SHORT).show();
-                                }else {int pos=holder.getAdapterPosition();
-                                    RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel
-                                            , new Callbacks.GetUserNickByUid() {
-                                                @Override
-                                                public void PassUserNick(String nick) {
-                                                    firebaseModel.getUsersReference().child(nick)
-                                                            .child("activeMiners")
-                                                            .child(String.valueOf(miner.getMinerPrice())).setValue(listAdapter.get(pos));
-                                                }
-                                            });
+                    public void GetActiveMiners(ArrayList<Miner> activeMinersFromBase) {
+                        if(holder.use.getText().toString().equals("Используется")){
 
-                                }
+                        }else{
+                            if(activeMinersFromBase.size()==5){
+                                holder.use.setBackgroundResource(R.drawable.corners14grey);
+                                Toast.makeText(v.getContext(), "Пять майнеров уже активны",Toast.LENGTH_SHORT).show();
+                            }else {int pos=holder.getAdapterPosition();
+                                holder.use.setText("Используется");
+                                holder.use.setBackgroundResource(R.drawable.corners14dpappcolor2dpstroke);
+                                holder.use.setTextColor(Color.parseColor("#F3A2E5"));
+                                firebaseModel.getUsersReference().child(nick)
+                                        .child("activeMiners")
+                                        .child(String.valueOf(miner.getMinerPrice())).setValue(listAdapter.get(pos));
+                                RecentMethods.GetActiveMiner(nick, firebaseModel, new Callbacks.GetActiveMiners() {
+                                    @Override
+                                    public void GetActiveMiners(ArrayList<Miner> activeMinersFromBase) {
+                                        userInformation.setMiners(activeMinersFromBase);
+                                    }
+                                });
+
                             }
-                        });
+                        }
                     }
                 });
             }

@@ -93,7 +93,7 @@ public class MyMinersFragment extends Fragment {
                         emptyMyMiners.setVisibility(View.GONE);
                         buyMiner.setVisibility(View.GONE);
                     }
-                    MyMinersAdapter myminersAdapter=new MyMinersAdapter(listAdapter);
+                    MyMinersAdapter myminersAdapter=new MyMinersAdapter(listAdapter,userInformation);
                     LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
                     layoutManager.setReverseLayout(true);layoutManager.setStackFromEnd(true);
                     recyclerviewMining.setLayoutManager(layoutManager);
@@ -107,7 +107,7 @@ public class MyMinersFragment extends Fragment {
                 emptyMyMiners.setVisibility(View.GONE);
                 buyMiner.setVisibility(View.GONE);
             }
-            MyMinersAdapter myminersAdapter=new MyMinersAdapter(userInformation.getMyMiners());
+            MyMinersAdapter myminersAdapter=new MyMinersAdapter(userInformation.getMyMiners(),userInformation);
             LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
             layoutManager.setReverseLayout(true);
             layoutManager.setStackFromEnd(true);

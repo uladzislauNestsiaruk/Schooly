@@ -34,6 +34,10 @@ import androidx.work.WorkManager;
 
 import com.egormoroz.schooly.ui.coins.CoinsMainFragment;
 import com.egormoroz.schooly.ui.main.MainFragment;
+import com.egormoroz.schooly.ui.main.MyClothes.CreateClothesFragment;
+import com.egormoroz.schooly.ui.main.MyClothes.MyClothesAdapterMain;
+import com.egormoroz.schooly.ui.main.MyClothes.MyClothesFragment;
+import com.egormoroz.schooly.ui.main.MyClothes.ViewingMyClothesMain;
 import com.egormoroz.schooly.ui.main.RegisrtationstartFragment;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
 import com.egormoroz.schooly.ui.main.UserInformation;
@@ -56,6 +60,7 @@ import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
@@ -67,7 +72,6 @@ public class MainActivity extends AppCompatActivity {
     UserInformation userInformation;
     RelativeLayout relativeLayout;
     TextView s,loading;
-    int NOTIFY_ID;
     CoordinatorLayout fragmentContainer;
     private static final String CHANNEL_ID = "channel";
     OneTimeWorkRequest miningWorkRequest;
@@ -141,56 +145,35 @@ public class MainActivity extends AppCompatActivity {
                                                         //userInformation.setSubscription(snapshot.child("subscription").getValue(String.class));
                                                         userInformation.setmoney(snapshot.child("money").getValue(Long.class));
                                                         userInformation.setTodayMining(snapshot.child("todayMining").getValue(Double.class));
-                                                        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
-                                                        s.setVisibility(View.GONE);
-                                                        loading.setVisibility(View.GONE);
-                                                        relativeLayout.setVisibility(View.GONE);
-                                                        bottomNavigationView.setVisibility(View.VISIBLE);
-                                                        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-                                                            @SuppressLint("NonConstantResourceId")
+                                                        firebaseModel.getUsersReference().child(nick).child("clothes")
+                                                                .get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                                                             @Override
-                                                            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                                                                switch (item.getItemId()) {
-                                                                    case R.id.bottom_nav_home:
-                                                                        setCurrentFragment(MainFragment.newInstance(userInformation));
-//                        toolbarTitle.setText(getString(R.string.app_name));
-//                        toolbarTitle.setTextColor(getColor(R.color.app_color));
-//                        appBarLayout.setVisibility(View.VISIBLE);
-                                                                        return true;
-                                                                    case R.id.bottom_nav_news:
-                                                                        setCurrentFragment(NewsFragment.newInstance());
-//                        toolbarTitle.setText(getString(R.string.toolbar_news));
-//                        toolbarTitle.setTextColor(getColor(R.color.black));
-//                        appBarLayout.setVisibility(View.VISIBLE);
-                                                                        return true;
-                                                                    case R.id.bottom_nav_coins:
-                                                                        setCurrentFragment(CoinsMainFragment.newInstance());
-//                        toolbarTitle.setText(getString(R.string.toolbar_people));
-//                        toolbarTitle.setTextColor(getColor(R.color.black));
-//                        appBarLayout.setVisibility(View.VISIBLE);
-                                                                        return true;
-                                                                    case R.id.bottom_nav_people:
-                                                                        setCurrentFragment(PeopleFragment.newInstance(userInformation));
-//                        toolbarTitle.setText(getString(R.string.toolbar_people));
-//                        toolbarTitle.setTextColor(getColor(R.color.black));
-//                        appBarLayout.setVisibility(View.VISIBLE);
-                                                                        return true;
-                                                                    case R.id.bottom_nav_profile:
-                                                                        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-                                                                            @Override
-                                                                            public void PassUserNick(String nick) {
-                                                                                setCurrentFragment(ProfileFragment.newInstance("user", nick,MainFragment.newInstance(userInformation),userInformation));
-                                                                            }
-                                                                        });
-//                        appBarLayout.setVisibility(View.GONE);
-                                                                        CoordinatorLayout.LayoutParams coordinatorLayoutParams = (CoordinatorLayout.LayoutParams) fragmentContainer.getLayoutParams();
-                                                                        coordinatorLayoutParams.setBehavior(null);
-                                                                        return true;
+                                                            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                                                                if(task.isSuccessful()){
+                                                                    DataSnapshot snapshot=task.getResult();
+                                                                    ArrayList<Clothes> clothesFromBase=new ArrayList<>();
+                                                                    for (DataSnapshot snap : snapshot.getChildren()) {
+                                                                        Clothes clothes = new Clothes();
+                                                                        clothes.setClothesImage(snap.child("clothesImage").getValue(String.class));
+                                                                        clothes.setClothesPrice(snap.child("clothesPrice").getValue(Long.class));
+                                                                        clothes.setPurchaseNumber(snap.child("purchaseNumber").getValue(Long.class));
+                                                                        clothes.setClothesType(snap.child("clothesType").getValue(String.class));
+                                                                        clothes.setClothesTitle(snap.child("clothesTitle").getValue(String.class));
+                                                                        clothes.setCurrencyType(snap.child("currencyType").getValue(String.class));
+                                                                        clothes.setCreator(snap.child("creator").getValue(String.class));
+                                                                        clothes.setDescription(snap.child("description").getValue(String.class));
+                                                                        clothes.setPurchaseToday(snap.child("purchaseToday").getValue(Long.class));
+                                                                        clothes.setModel(snap.child("model").getValue(String.class));
+                                                                        clothes.setBodyType(snap.child("bodyType").getValue(String.class));
+                                                                        clothes.setUid(snap.child("uid").getValue(String.class));
+                                                                        clothes.setExclusive(snap.child("exclusive").getValue(String.class));
+                                                                        clothesFromBase.add(clothes);
+                                                                    }
+                                                                    userInformation.setClothes(clothesFromBase);
                                                                 }
-                                                                return false;
                                                             }
                                                         });
-                                                        setCurrentFragment(MainFragment.newInstance(userInformation));
+                                                        getMyClothes(nick);
                                                         final DatabaseReference connectedRef = database.getReference(".info/connected");
                                                         connectedRef.addValueEventListener(new ValueEventListener() {
                                                             @Override
@@ -259,6 +242,76 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void PassUserNick(String nick) {
                 firebaseModel.getUsersReference().child(nick).child("timesTamp").setValue(ServerValue.TIMESTAMP);
+            }
+        });
+    }
+
+    public void getMyClothes(String nick){
+        Query query=firebaseModel.getUsersReference().child(nick)
+                .child("myClothes").orderByKey();
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                ArrayList<Clothes> clothesFromBase=new ArrayList<>();
+                Log.d("###", "sss");
+                for (DataSnapshot snap : snapshot.getChildren()) {
+                    Clothes clothes = new Clothes();
+                    clothes.setClothesImage(snap.child("clothesImage").getValue(String.class));
+                    clothes.setClothesPrice(snap.child("clothesPrice").getValue(Long.class));
+                    clothes.setPurchaseNumber(snap.child("purchaseNumber").getValue(Long.class));
+                    clothes.setClothesType(snap.child("clothesType").getValue(String.class));
+                    clothes.setClothesTitle(snap.child("clothesTitle").getValue(String.class));
+                    clothes.setCreator(snap.child("creator").getValue(String.class));
+                    clothes.setCurrencyType(snap.child("currencyType").getValue(String.class));
+                    clothes.setDescription(snap.child("description").getValue(String.class));
+                    clothes.setPurchaseToday(snap.child("purchaseToday").getValue(Long.class));
+                    clothes.setModel(snap.child("model").getValue(String.class));
+                    clothes.setUid(snap.child("uid").getValue(String.class));
+                    clothesFromBase.add(clothes);
+                }
+                userInformation.setMyClothes(clothesFromBase);
+                BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
+                s.setVisibility(View.GONE);
+                loading.setVisibility(View.GONE);
+                relativeLayout.setVisibility(View.GONE);
+                bottomNavigationView.setVisibility(View.VISIBLE);
+                bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+                    @SuppressLint("NonConstantResourceId")
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.bottom_nav_home:
+                                setCurrentFragment(MainFragment.newInstance(userInformation));
+                                return true;
+                            case R.id.bottom_nav_news:
+                                setCurrentFragment(NewsFragment.newInstance());
+                                return true;
+                            case R.id.bottom_nav_coins:
+                                setCurrentFragment(CoinsMainFragment.newInstance());
+                                return true;
+                            case R.id.bottom_nav_people:
+                                setCurrentFragment(PeopleFragment.newInstance(userInformation));
+                                return true;
+                            case R.id.bottom_nav_profile:
+                                RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+                                    @Override
+                                    public void PassUserNick(String nick) {
+                                        setCurrentFragment(ProfileFragment.newInstance("user", nick,MainFragment.newInstance(userInformation),userInformation));
+                                    }
+                                });
+                                CoordinatorLayout.LayoutParams coordinatorLayoutParams = (CoordinatorLayout.LayoutParams) fragmentContainer.getLayoutParams();
+                                coordinatorLayoutParams.setBehavior(null);
+                                return true;
+                        }
+                        return false;
+                    }
+                });
+                setCurrentFragment(MainFragment.newInstance(userInformation));
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
             }
         });
     }

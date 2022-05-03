@@ -26,6 +26,8 @@ public class UserInformation {
     private String subscription;
     private String subscribers;
     private ArrayList<Clothes> myClothes;
+    private ArrayList<Clothes> lookClothes;
+    private ArrayList<Clothes> clothes;
     private String queue;
     private String bio;
     private String looks;
@@ -182,6 +184,20 @@ public class UserInformation {
         this.myClothes = myClothes;
     }
 
+    public ArrayList<Clothes> getLookClothes(){
+        return this.lookClothes;
+    }
+    public void setLookClothes(ArrayList<Clothes> lookClothes){
+        this.lookClothes = lookClothes;
+    }
+
+    public ArrayList<Clothes> getClothes(){
+        return this.clothes;
+    }
+    public void setClothes(ArrayList<Clothes> clothes){
+        this.clothes = clothes;
+    }
+
     public String getBio(){
         return this.bio;
     }
@@ -220,7 +236,7 @@ public class UserInformation {
                            String subscription, String subscribers, String queue, String bio,
                            String accountType, String chatsNontsType,
                            String groupChatsNontsType, String profileNontsType, ArrayList<Clothes> myClothes, String version,
-                           String looks,long miningPremium) {
+                           String looks,long miningPremium,ArrayList<Clothes> lookClothes,ArrayList<Clothes> clothes) {
         this.Nick = nick;
         this.uid = uid;
         this.phone = phone;
@@ -245,6 +261,8 @@ public class UserInformation {
         this.version=version;
         this.looks=looks;
         this.miningPremium=miningPremium;
+        this.lookClothes=lookClothes;
+        this.clothes=clothes;
     }
 
 }

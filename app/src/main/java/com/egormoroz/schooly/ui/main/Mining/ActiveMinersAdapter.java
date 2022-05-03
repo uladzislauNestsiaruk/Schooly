@@ -16,6 +16,7 @@ import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
+import com.egormoroz.schooly.ui.main.UserInformation;
 import com.squareup.picasso.Picasso;
 
 import org.jetbrains.annotations.NotNull;
@@ -27,9 +28,12 @@ public class ActiveMinersAdapter extends RecyclerView.Adapter<ActiveMinersAdapte
     ArrayList<Miner> listAdapterActivaMiner;
     private ItemClickListener clickListener;
     private FirebaseModel firebaseModel = new FirebaseModel();
+    UserInformation userInformation;
+    String nick;
 
-    public ActiveMinersAdapter(ArrayList<Miner> listAdapter) {
+    public ActiveMinersAdapter(ArrayList<Miner> listAdapter,UserInformation userInformation) {
         this.listAdapterActivaMiner = listAdapter;
+        this.userInformation=userInformation;
     }
 
 
@@ -39,6 +43,7 @@ public class ActiveMinersAdapter extends RecyclerView.Adapter<ActiveMinersAdapte
         RelativeLayout v = (RelativeLayout) LayoutInflater.from(viewGroup.getContext()).
                 inflate(R.layout.horizontalrecyclerview_item, viewGroup, false);
         ViewHolder viewHolder=new ViewHolder(v);
+        nick=userInformation.getNick();
         return viewHolder;
     }
 
@@ -52,12 +57,13 @@ public class ActiveMinersAdapter extends RecyclerView.Adapter<ActiveMinersAdapte
         holder.putAway.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+                firebaseModel.getUsersReference().child(nick)
+                        .child("activeMiners").child(String.valueOf(miner.getMinerPrice())).removeValue();
+                holder.putAway.setText("Не активен");
+                RecentMethods.GetActiveMiner(nick, firebaseModel, new Callbacks.GetActiveMiners() {
                     @Override
-                    public void PassUserNick(String nick) {
-                        firebaseModel.getUsersReference().child(nick)
-                                .child("activeMiners").child(String.valueOf(miner.getMinerPrice())).removeValue();
-                        holder.putAway.setText("Не активен");
+                    public void GetActiveMiners(ArrayList<Miner> activeMinersFromBase) {
+                        userInformation.setMiners(activeMinersFromBase);
                     }
                 });
             }

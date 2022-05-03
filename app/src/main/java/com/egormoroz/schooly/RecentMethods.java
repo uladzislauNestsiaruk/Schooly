@@ -115,7 +115,7 @@ public class RecentMethods {
                 "6", "unknown", "Helicopter", 1000
                 , new ArrayList<>(),new ArrayList<>(), 1,100,0, "", "",
                 "","","open","open","open",
-                "open",new ArrayList<>(),"regular", "",0);
+                "open",new ArrayList<>(),"regular", "",0,new ArrayList<>(),new ArrayList<>());
         ref.child(nick).setValue(res);
         return nick.isEmpty();
     }
@@ -340,9 +340,7 @@ public class RecentMethods {
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Log.d("#########", "minerrr  "+currentMiner);
                 Miner miner=snapshot.child(currentMiner).getValue(Miner.class);
-                Log.d("#########", "minerrr  "+miner);
                 callback.buyMiner(miner);
             }
 
@@ -360,9 +358,7 @@ public class RecentMethods {
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Log.d("#########", "minerrr  "+currentMiner);
                 Miner miner=snapshot.child(currentMiner).getValue(Miner.class);
-                Log.d("#########", "minerrr  "+miner);
                 callback.buyMiner(miner);
             }
 
@@ -380,9 +376,7 @@ public class RecentMethods {
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Log.d("#########", "minerrr  "+currentMiner);
                 Miner miner=snapshot.child(currentMiner).getValue(Miner.class);
-                Log.d("#########", "minerrr  "+miner);
                 callback.buyMiner(miner);
             }
 

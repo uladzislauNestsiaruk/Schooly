@@ -144,7 +144,6 @@ public class MainFragment extends Fragment{
             }
         });
         relativeMyClothes=view.findViewById(R.id.relativeClothes);
-        getMyClothes();
         relativeMining=view.findViewById(R.id.relativeMining);
         relativeShop=view.findViewById(R.id.relativeshop);
         //                firebaseModel.getUsersReference().child(nick).child("clothesRequest")
@@ -375,6 +374,7 @@ public class MainFragment extends Fragment{
             }
         });
         loadClothesFromBase();
+        getMyClothes();
     }
 
     public void loadClothesFromBase(){

@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class WardrobeAccessories extends Fragment {
-    String type;
+    String type,nick;
     Fragment fragment;
     UserInformation userInformation;
 
@@ -55,9 +55,6 @@ public class WardrobeAccessories extends Fragment {
         BottomNavigationView bnv = getActivity().findViewById(R.id.bottomNavigationView);
         bnv.setVisibility(bnv.GONE);
         firebaseModel.initAll();
-        wardrobeRecyclerView=root.findViewById(R.id.recyclerwardrobe);
-        loadClothesInWardrobe();
-        Log.d("######", "dd");
         return root;
     }
 
@@ -71,6 +68,8 @@ public class WardrobeAccessories extends Fragment {
     @Override
     public void onViewCreated(@Nullable View view,@NonNull Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
+        nick=userInformation.getNick();
+        wardrobeRecyclerView=view.findViewById(R.id.recyclerwardrobe);
         itemClickListener=new WardrobeClothesAdapter.ItemClickListener() {
             @Override
             public void onItemClick(Clothes clothes) {
@@ -79,43 +78,65 @@ public class WardrobeAccessories extends Fragment {
         };
         buyToShop=view.findViewById(R.id.buyToShop);
         noClothesText=view.findViewById(R.id.noClothesText);
+        loadClothesInWardrobe();
     }
 
 
     public void loadClothesInWardrobe(){
-        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-            @Override
-            public void PassUserNick(String nick) {
-                RecentMethods.getClothesInWardrobe(nick, firebaseModel, new Callbacks.GetClothes() {
-                    @Override
-                    public void getClothes(ArrayList<Clothes> allClothes) {
-                        clothesArrayListWardrobe.addAll(allClothes);
-                        for(int i=0;i<clothesArrayListWardrobe.size();i++){
-                            Clothes cl=clothesArrayListWardrobe.get(i);
-                            String clType=cl.getClothesType();
-                            if (clType.equals("accessories")){
-                                sortAccessoriesArrayListWardrobe.add(cl);
-                            }
-                        }
-                        if (sortAccessoriesArrayListWardrobe.size()==0){
-                            buyToShop.setVisibility(View.VISIBLE);
-                            noClothesText.setVisibility(View.VISIBLE);
-                            wardrobeRecyclerView.setVisibility(View.GONE);
-                            buyToShop.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    RecentMethods.setCurrentFragment(ShopFragment.newInstance(userInformation), getActivity());
-                                }
-                            });
-                        }else {
-                            Collections.reverse(sortAccessoriesArrayListWardrobe);
-                            WardrobeClothesAdapter newClothesAdapter = new WardrobeClothesAdapter(sortAccessoriesArrayListWardrobe, itemClickListener);
-                            wardrobeRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
-                            wardrobeRecyclerView.setAdapter(newClothesAdapter);
+        if(userInformation.getClothes()==null){
+            RecentMethods.getClothesInWardrobe(nick, firebaseModel, new Callbacks.GetClothes() {
+                @Override
+                public void getClothes(ArrayList<Clothes> allClothes) {
+                    clothesArrayListWardrobe.addAll(allClothes);
+                    for(int i=0;i<clothesArrayListWardrobe.size();i++){
+                        Clothes cl=clothesArrayListWardrobe.get(i);
+                        String clType=cl.getClothesType();
+                        if (clType.equals("accessories")){
+                            sortAccessoriesArrayListWardrobe.add(cl);
                         }
                     }
-                });
+                    if (sortAccessoriesArrayListWardrobe.size()==0){
+                        buyToShop.setVisibility(View.VISIBLE);
+                        noClothesText.setVisibility(View.VISIBLE);
+                        wardrobeRecyclerView.setVisibility(View.GONE);
+                        buyToShop.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                RecentMethods.setCurrentFragment(ShopFragment.newInstance(userInformation), getActivity());
+                            }
+                        });
+                    }else {
+                        Collections.reverse(sortAccessoriesArrayListWardrobe);
+                        WardrobeClothesAdapter newClothesAdapter = new WardrobeClothesAdapter(sortAccessoriesArrayListWardrobe, itemClickListener);
+                        wardrobeRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+                        wardrobeRecyclerView.setAdapter(newClothesAdapter);
+                    }
+                }
+            });
+        }else {
+            for(int i=0;i<userInformation.getClothes().size();i++){
+                Clothes cl=userInformation.getClothes().get(i);
+                String clType=cl.getClothesType();
+                if (clType.equals("accessories")){
+                    sortAccessoriesArrayListWardrobe.add(cl);
+                }
             }
-        });
+            if (sortAccessoriesArrayListWardrobe.size()==0){
+                buyToShop.setVisibility(View.VISIBLE);
+                noClothesText.setVisibility(View.VISIBLE);
+                wardrobeRecyclerView.setVisibility(View.GONE);
+                buyToShop.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        RecentMethods.setCurrentFragment(ShopFragment.newInstance(userInformation), getActivity());
+                    }
+                });
+            }else {
+                Collections.reverse(sortAccessoriesArrayListWardrobe);
+                WardrobeClothesAdapter newClothesAdapter = new WardrobeClothesAdapter(sortAccessoriesArrayListWardrobe, itemClickListener);
+                wardrobeRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+                wardrobeRecyclerView.setAdapter(newClothesAdapter);
+            }
+        }
     }
 }

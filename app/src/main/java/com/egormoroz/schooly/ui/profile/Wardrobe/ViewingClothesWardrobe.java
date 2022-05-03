@@ -24,7 +24,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.squareup.picasso.Picasso;
 
 public class ViewingClothesWardrobe extends Fragment {
-  String type;
+  String type,nick;
   Fragment fragment;
   UserInformation userInformation;
 
@@ -61,6 +61,7 @@ public class ViewingClothesWardrobe extends Fragment {
   @Override
   public void onViewCreated(@Nullable View view,@NonNull Bundle savedInstanceState){
     super.onViewCreated(view, savedInstanceState);
+    nick=userInformation.getNick();
     clothesImageCV=view.findViewById(R.id.clothesImagecv);
     clothesTitleCV=view.findViewById(R.id.clothesTitlecv);
     backToShop=view.findViewById(R.id.back_toshop);
@@ -71,20 +72,15 @@ public class ViewingClothesWardrobe extends Fragment {
       }
     });
 
-    RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+    OnBackPressedCallback callback = new OnBackPressedCallback(true) {
       @Override
-      public void PassUserNick(String nick) {
-        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
-          @Override
-          public void handleOnBackPressed() {
+      public void handleOnBackPressed() {
 
-            RecentMethods.setCurrentFragment(WardrobeFragment.newInstance(type, fragment,userInformation), getActivity());
-          }
-        };
-
-        requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(), callback);
+        RecentMethods.setCurrentFragment(WardrobeFragment.newInstance(type, fragment,userInformation), getActivity());
       }
-    });
+    };
+
+    requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(), callback);
 
     WardrobeClothesAdapter.singeClothesInfo(new WardrobeClothesAdapter.ItemClickListener() {
       @Override

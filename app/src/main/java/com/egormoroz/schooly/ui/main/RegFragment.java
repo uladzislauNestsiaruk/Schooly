@@ -309,7 +309,7 @@ public class RegFragment extends Fragment {
                             UserInformation res = new UserInformation(nick, RecentMethods.getPhone(email), user.getUid(),
                                     "6", password, "Helicopter", 1000, new ArrayList<>(),new ArrayList<>(),1,100,0
                                     , "", "", ""," ","open","open","open","open"
-                                    ,new ArrayList<>(),"regular", "",0);
+                                    ,new ArrayList<>(),"regular", "",0,new ArrayList<>(),new ArrayList<>());
                             reference.child(nick).setValue(res);
                             database.getReference("usersNicks")
                                     .child(nick).setValue(new UserPeopleAdapter(nick,"6"," "));

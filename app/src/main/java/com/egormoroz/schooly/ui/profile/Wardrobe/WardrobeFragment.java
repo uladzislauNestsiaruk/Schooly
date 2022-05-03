@@ -34,6 +34,8 @@ import com.egormoroz.schooly.ui.main.Shop.PopularClothesAdapter;
 import com.egormoroz.schooly.ui.main.Shop.ShopFragment;
 import com.egormoroz.schooly.ui.main.UserInformation;
 import com.egormoroz.schooly.ui.profile.ProfileFragment;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.tabs.TabLayout;
 import com.google.ar.core.exceptions.CameraNotAvailableException;
@@ -52,7 +54,7 @@ import java.util.ArrayList;
 import java.util.function.Consumer;
 
 public class WardrobeFragment extends Fragment {
-    String type;
+    String type,nick;
     Fragment fragment;
     UserInformation userInformation;
 
@@ -91,6 +93,7 @@ public class WardrobeFragment extends Fragment {
     @Override
     public void onViewCreated(@Nullable View view, @NonNull Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
+        nick= userInformation.getNick();
         sceneView = view.findViewById(R.id.sceneViewWardrobe);
         searchText=view.findViewById(R.id.searchClothesWardrobe);
         searchRecycler=view.findViewById(R.id.searchRecycler);
@@ -162,28 +165,19 @@ public class WardrobeFragment extends Fragment {
         backfromwardrobe.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-                    @Override
-                    public void PassUserNick(String nick) {
-                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance(type, nick,fragment,userInformation), getActivity());
-                    }
-                });
+                RecentMethods.setCurrentFragment(ProfileFragment.newInstance(type, nick,fragment,userInformation), getActivity());
             }
         });
-        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
-            public void PassUserNick(String nick) {
-                OnBackPressedCallback callback = new OnBackPressedCallback(true) {
-                    @Override
-                    public void handleOnBackPressed() {
+            public void handleOnBackPressed() {
 
-                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance(type,nick,fragment,userInformation), getActivity());
-                    }
-                };
-
-                requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(), callback);
+                RecentMethods.setCurrentFragment(ProfileFragment.newInstance(type,nick,fragment,userInformation), getActivity());
             }
-        });
+        };
+
+        requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(), callback);
 
         tabLayout = view.findViewById(R.id.tabLayoutWardrobe);
         viewPager=view.findViewById(R.id.frcontwardrobe);
@@ -225,56 +219,49 @@ public class WardrobeFragment extends Fragment {
     }
 
     public void loadSearchClothes(String editTextText){
-        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+        firebaseModel.getUsersReference().child(nick).child("clothes")
+        .get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
-            public void PassUserNick(String nick) {
-                Query query=firebaseModel.getUsersReference().child(nick).child("clothes");
-                query.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        ArrayList<Clothes> clothesFromBase=new ArrayList<>();
-                        for (DataSnapshot snap : snapshot.getChildren()) {
-                            Clothes clothes = new Clothes();
-                            clothes.setClothesImage(snap.child("clothesImage").getValue(String.class));
-                            clothes.setClothesPrice(snap.child("clothesPrice").getValue(Long.class));
-                            clothes.setPurchaseNumber(snap.child("purchaseNumber").getValue(Long.class));
-                            clothes.setClothesType(snap.child("clothesType").getValue(String.class));
-                            clothes.setClothesTitle(snap.child("clothesTitle").getValue(String.class));
-                            clothes.setCreator(snap.child("creator").getValue(String.class));
-                            clothes.setCurrencyType(snap.child("currencyType").getValue(String.class));
-                            clothes.setDescription(snap.child("description").getValue(String.class));
-                            clothes.setPurchaseToday(snap.child("purchaseToday").getValue(Long.class));
-                            clothes.setModel(snap.child("model").getValue(String.class));
-                            clothes.setBodyType(snap.child("bodyType").getValue(String.class));
-                            clothes.setUid(snap.child("uid").getValue(String.class));
-                            String clothesTitle=clothes.getClothesTitle();
-                            String title=clothesTitle;
-                            int valueLetters=editTextText.length();
-                            title=title.toLowerCase();
-                            if(title.length()<valueLetters){
-                                if(title.equals(editTextText))
-                                    clothesFromBase.add(clothes);
-                            }else{
-                                title=title.substring(0, valueLetters);
-                                if(title.equals(editTextText))
-                                    clothesFromBase.add(clothes);
-                            }
-                        }
-                        if(clothesFromBase.size()==0){
-                            searchRecycler.setVisibility(View.GONE);
-                            notFound.setVisibility(View.VISIBLE);
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if(task.isSuccessful()){
+                    DataSnapshot snapshot= task.getResult();
+                    ArrayList<Clothes> clothesFromBase=new ArrayList<>();
+                    for (DataSnapshot snap : snapshot.getChildren()) {
+                        Clothes clothes = new Clothes();
+                        clothes.setClothesImage(snap.child("clothesImage").getValue(String.class));
+                        clothes.setClothesPrice(snap.child("clothesPrice").getValue(Long.class));
+                        clothes.setPurchaseNumber(snap.child("purchaseNumber").getValue(Long.class));
+                        clothes.setClothesType(snap.child("clothesType").getValue(String.class));
+                        clothes.setClothesTitle(snap.child("clothesTitle").getValue(String.class));
+                        clothes.setCreator(snap.child("creator").getValue(String.class));
+                        clothes.setCurrencyType(snap.child("currencyType").getValue(String.class));
+                        clothes.setDescription(snap.child("description").getValue(String.class));
+                        clothes.setPurchaseToday(snap.child("purchaseToday").getValue(Long.class));
+                        clothes.setModel(snap.child("model").getValue(String.class));
+                        clothes.setBodyType(snap.child("bodyType").getValue(String.class));
+                        clothes.setUid(snap.child("uid").getValue(String.class));
+                        String clothesTitle=clothes.getClothesTitle();
+                        String title=clothesTitle;
+                        int valueLetters=editTextText.length();
+                        title=title.toLowerCase();
+                        if(title.length()<valueLetters){
+                            if(title.equals(editTextText))
+                                clothesFromBase.add(clothes);
                         }else{
-                            WardrobeClothesAdapter wardrobeClothesAdapter=new WardrobeClothesAdapter(clothesFromBase,itemClickListener);
-                            searchRecycler.setLayoutManager(new GridLayoutManager(getActivity(), 2));
-                            searchRecycler.setAdapter(wardrobeClothesAdapter);
+                            title=title.substring(0, valueLetters);
+                            if(title.equals(editTextText))
+                                clothesFromBase.add(clothes);
                         }
                     }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
+                    if(clothesFromBase.size()==0){
+                        searchRecycler.setVisibility(View.GONE);
+                        notFound.setVisibility(View.VISIBLE);
+                    }else{
+                        WardrobeClothesAdapter wardrobeClothesAdapter=new WardrobeClothesAdapter(clothesFromBase,itemClickListener);
+                        searchRecycler.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+                        searchRecycler.setAdapter(wardrobeClothesAdapter);
                     }
-                });
+                }
             }
         });
     }

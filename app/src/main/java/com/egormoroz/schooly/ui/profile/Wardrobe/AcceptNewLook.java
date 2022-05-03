@@ -50,8 +50,7 @@ public class AcceptNewLook extends Fragment {
     ImageView schoolyCoin;
     RecyclerView recyclerView;
     long lookPriceLong,lookPriceDollarLong;
-    String lookPriceString,lookPriceDollarString;
-    String model;
+    String lookPriceString,lookPriceDollarString,nick,model;
     ConstituentsAdapter.ItemClickListener itemClickListener;
     String type;
     Fragment fragment;
@@ -84,7 +83,7 @@ public class AcceptNewLook extends Fragment {
     @Override
     public void onViewCreated(@Nullable View view,@NonNull Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
-
+        nick=userInformation.getNick();
         publish=view.findViewById(R.id.publish);
         lookPrice=view.findViewById(R.id.lookPrice);
         lookPriceDollar=view.findViewById(R.id.lookPriceDollar);
@@ -103,89 +102,44 @@ public class AcceptNewLook extends Fragment {
         backfromwardrobe.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-                    @Override
-                    public void PassUserNick(String nick) {
-                        RecentMethods.setCurrentFragment(CreateLookFragment.newInstance(type,fragment,userInformation), getActivity());
-                    }
-                });
+                RecentMethods.setCurrentFragment(CreateLookFragment.newInstance(type,fragment,userInformation), getActivity());
             }
         });
-        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
-            public void PassUserNick(String nick) {
-                OnBackPressedCallback callback = new OnBackPressedCallback(true) {
-                    @Override
-                    public void handleOnBackPressed() {
-
-                        RecentMethods.setCurrentFragment(CreateLookFragment.newInstance(type,fragment,userInformation), getActivity());
-                    }
-                };
-
-                requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(), callback);
+            public void handleOnBackPressed() {
+                RecentMethods.setCurrentFragment(CreateLookFragment.newInstance(type,fragment,userInformation), getActivity());
             }
-        });
+        };
+
+        requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(), callback);
         getLookClothes();
     }
 
     public void getLookClothes(){
-        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+        for (int i=0;i<userInformation.getLookClothes().size();i++){
+            Clothes clothes=userInformation.getLookClothes().get(i);
+            if(clothes.getCurrencyType().equals("dollar")){
+                lookPriceDollarLong+=clothes.getClothesPrice();
+            }else {
+                lookPriceLong+=clothes.getClothesPrice();
+            }
+        }
+        if(lookPriceDollarLong>0 || lookPriceLong>0){
+            setTextInLookPrice();
+        }
+        ConstituentsAdapter constituentsAdapter=new ConstituentsAdapter(userInformation.getLookClothes(), itemClickListener);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setAdapter(constituentsAdapter);
+        publish.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void PassUserNick(String nick) {
-                Query query=firebaseModel.getUsersReference().child(nick).child("lookClothes");
-                query.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        ArrayList<Clothes> lookClothesFromBase=new ArrayList<>();
-                        for (DataSnapshot snap : snapshot.getChildren()) {
-                            Clothes clothes = new Clothes();
-                            clothes.setClothesImage(snap.child("clothesImage").getValue(String.class));
-                            clothes.setClothesPrice(snap.child("clothesPrice").getValue(Long.class));
-                            clothes.setPurchaseNumber(snap.child("purchaseNumber").getValue(Long.class));
-                            clothes.setClothesType(snap.child("clothesType").getValue(String.class));
-                            clothes.setClothesTitle(snap.child("clothesTitle").getValue(String.class));
-                            clothes.setCreator(snap.child("creator").getValue(String.class));
-                            clothes.setCurrencyType(snap.child("currencyType").getValue(String.class));
-                            clothes.setDescription(snap.child("description").getValue(String.class));
-                            clothes.setPurchaseToday(snap.child("purchaseToday").getValue(Long.class));
-                            clothes.setModel(snap.child("model").getValue(String.class));
-                            clothes.setBodyType(snap.child("bodyType").getValue(String.class));
-                            clothes.setUid(snap.child("uid").getValue(String.class));
-                            lookClothesFromBase.add(clothes);
-                            if(clothes.getCurrencyType().equals("dollar")){
-                                lookPriceDollarLong+=clothes.getClothesPrice();
-                            }else {
-                                lookPriceLong+=clothes.getClothesPrice();
-                            }
-                        }
-                        if(lookPriceDollarLong>0 || lookPriceLong>0){
-                            setTextInLookPrice();
-                        }
-                        ConstituentsAdapter constituentsAdapter=new ConstituentsAdapter(lookClothesFromBase,itemClickListener);
-                        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-                        recyclerView.setAdapter(constituentsAdapter);
-                        publish.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-                                    @Override
-                                    public void PassUserNick(String nick) {
-                                        String lookId=firebaseModel.getUsersReference().child(nick).child("looks").push().getKey();
-                                        firebaseModel.getUsersReference().child(nick).child("looks").child(lookId)
-                                                .setValue(new NewsItem(model, descriptionLook.getText().toString(), "0", lookId,
-                                                        "", lookClothesFromBase, 1200, 0,"",nick,0));
-                                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance(type, nick, fragment,userInformation), getActivity());
-                                    }
-                                });
-                            }
-                        });
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
+            public void onClick(View v) {
+                String lookId=firebaseModel.getUsersReference().child(nick).child("looks").push().getKey();
+                firebaseModel.getUsersReference().child(nick).child("looks").child(lookId)
+                        .setValue(new NewsItem(model, descriptionLook.getText().toString(), "0", lookId,
+                                "", userInformation.getLookClothes(), 1200, 0,"",nick,0));
+                firebaseModel.getUsersReference().child(nick).child("lookClothes").removeValue();
+                RecentMethods.setCurrentFragment(ProfileFragment.newInstance(type, nick, fragment,userInformation), getActivity());
             }
         });
     }
