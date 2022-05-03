@@ -67,7 +67,7 @@
             android:fontFamily="@font/montserrat_extrabold"
             android:text="@string/account"
             android:textColor="@color/app_grey"
-            android:textSize="18sp" />
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/numder"
@@ -185,7 +185,7 @@
             android:fontFamily="@font/montserrat_extrabold"
             android:text="@string/nontsBig"
             android:textColor="@color/app_grey"
-            android:textSize="18sp" />
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/singleChat"
@@ -197,7 +197,7 @@
             android:fontFamily="@font/montserrat_bold"
             android:text="@string/lichnyechats"
             android:textColor="@color/app_grey"
-            android:textSize="14sp" />
+            android:textSize="16sp" />
 
         <com.google.android.material.switchmaterial.SwitchMaterial
             android:id="@+id/chatsSwitch"
@@ -218,7 +218,7 @@
             android:fontFamily="@font/montserrat_bold"
             android:text="@string/group"
             android:textColor="@color/app_grey"
-            android:textSize="14sp" />
+            android:textSize="16sp" />
 
         <com.google.android.material.switchmaterial.SwitchMaterial
             android:id="@+id/groupChatsSwitch"
@@ -239,7 +239,7 @@
             android:fontFamily="@font/montserrat_bold"
             android:text="@string/profilereact"
             android:textColor="@color/app_grey"
-            android:textSize="14sp" />
+            android:textSize="16sp" />
 
         <com.google.android.material.switchmaterial.SwitchMaterial
             android:id="@+id/profileSwitch"
@@ -260,7 +260,7 @@
             android:fontFamily="@font/montserrat_extrabold"
             android:text="@string/help"
             android:textColor="@color/app_grey"
-            android:textSize="18sp" />
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/dataProtect"
@@ -272,7 +272,7 @@
             android:fontFamily="@font/montserrat_bold"
             android:text="@string/dataProtect"
             android:textColor="@color/app_grey"
-            android:textSize="14sp" />
+            android:textSize="16sp" />
 
 
         <TextView
@@ -285,7 +285,7 @@
             android:fontFamily="@font/montserrat_bold"
             android:text="@string/rules"
             android:textColor="@color/app_grey"
-            android:textSize="14sp" />
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/support"
@@ -297,7 +297,7 @@
             android:fontFamily="@font/montserrat_bold"
             android:text="@string/support"
             android:textColor="@color/app_grey"
-            android:textSize="14sp" />
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/exitAccount"
