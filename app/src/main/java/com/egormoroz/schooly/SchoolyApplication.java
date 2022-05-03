@@ -12,7 +12,6 @@ import androidx.work.OneTimeWorkRequest;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
-import com.egormoroz.schooly.ui.main.NontificationService;
 
 import java.util.concurrent.TimeUnit;
 

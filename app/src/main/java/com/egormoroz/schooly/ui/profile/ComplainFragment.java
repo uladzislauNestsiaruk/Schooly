@@ -35,7 +35,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class ComplainFragment extends Fragment {
-    String otherUserNick;
+    String otherUserNick,nick;
     TextView sendReasons;
     ComplainAdapter.ItemClickListener itemClickListener;
     Fragment fragment;
@@ -70,6 +70,7 @@ public class ComplainFragment extends Fragment {
     @Override
     public void onViewCreated(@Nullable View view, @NonNull Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
+        nick=userInformation.getNick();
         otherUserNickText=view.findViewById(R.id.complainOtherUserText);
         otherUserNickText.setText(otherUserNick);
         recyclerView=view.findViewById(R.id.reasonsRecycler);

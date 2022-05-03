@@ -31,7 +31,7 @@ public  class BlackListFragment extends Fragment {
     ImageView back;
     TextView emptyList;
 
-    String type;
+    String type,nick;
     Fragment fragment;
     UserInformation userInformation;
 
@@ -59,6 +59,7 @@ public  class BlackListFragment extends Fragment {
     @Override
     public void onViewCreated(@Nullable View view, @NonNull Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        nick=userInformation.getNick();
         recyclerView=view.findViewById(R.id.blackListRecycler);
         back=view.findViewById(R.id.back_tosettings);
         emptyList=view.findViewById(R.id.emptyBlackList);
@@ -78,22 +79,17 @@ public  class BlackListFragment extends Fragment {
             }
         });
 
-        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+        RecentMethods.getBlackList(nick, firebaseModel, new Callbacks.getSubscribersList() {
             @Override
-            public void PassUserNick(String nick) {
-                RecentMethods.getBlackList(nick, firebaseModel, new Callbacks.getSubscribersList() {
-                    @Override
-                    public void getSubscribersList(ArrayList<Subscriber> subscribers) {
-                        if(subscribers.size()==0){
-                            emptyList.setVisibility(View.VISIBLE);
-                            recyclerView.setVisibility(View.GONE);
-                        }else {
-                            BlackListAdapter blackListAdapter=new BlackListAdapter(subscribers);
-                            recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-                            recyclerView.setAdapter(blackListAdapter);
-                        }
-                    }
-                });
+            public void getSubscribersList(ArrayList<Subscriber> subscribers) {
+                if(subscribers.size()==0){
+                    emptyList.setVisibility(View.VISIBLE);
+                    recyclerView.setVisibility(View.GONE);
+                }else {
+                    BlackListAdapter blackListAdapter=new BlackListAdapter(subscribers);
+                    recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+                    recyclerView.setAdapter(blackListAdapter);
+                }
             }
         });
     }

@@ -3,6 +3,7 @@ package com.egormoroz.schooly.ui.profile;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,8 @@ import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.ui.chat.User;
 import com.egormoroz.schooly.ui.main.UserInformation;
 import com.egormoroz.schooly.ui.profile.Wardrobe.CreateLookFragment;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -34,7 +37,7 @@ import com.google.firebase.database.ValueEventListener;
 public class EditingFragment extends Fragment {
     FirebaseModel firebaseModel=new FirebaseModel();
     EditText nickEdit,bioEdit;
-    String nickname;
+    String nickname,nick;
     RelativeLayout agree;
     String type;
     Fragment fragment;
@@ -64,59 +67,33 @@ public class EditingFragment extends Fragment {
     @Override
     public void onViewCreated(@Nullable View view, @NonNull Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        nick=userInformation.getNick();
         ImageView arrowtoprofileediting = view.findViewById(R.id.back_toprofile);
         arrowtoprofileediting.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-                    @Override
-                    public void PassUserNick(String nick) {
-                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance(type, nick,fragment,userInformation), getActivity());
-                    }
-                });
+                RecentMethods.setCurrentFragment(ProfileFragment.newInstance(type, nick,fragment,userInformation), getActivity());
             }
         });
 
-        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
-            public void PassUserNick(String nick) {
-                OnBackPressedCallback callback = new OnBackPressedCallback(true) {
-                    @Override
-                    public void handleOnBackPressed() {
+            public void handleOnBackPressed() {
 
-                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance(type, nick,fragment,userInformation), getActivity());
-                    }
-                };
-
-                requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(), callback);
+                RecentMethods.setCurrentFragment(ProfileFragment.newInstance(type, nick,fragment,userInformation), getActivity());
             }
-        });
+        };
+
+        requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(), callback);
 
         nickEdit=view.findViewById(R.id.edittextnickname);
         bioEdit=view.findViewById(R.id.edittextbio);
         agree=view.findViewById(R.id.agree);
 
-        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-            @Override
-            public void PassUserNick(String nick) {
-                nickEdit.setText(nick);
-                nickname=nick;
-                Query query=firebaseModel.getUsersReference().child(nickname).child("bio");
-                query.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        bioEdit.setText(snapshot.getValue(String.class));
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-            }
-        });
+        nickEdit.setText(nick);
+        nickname=nick;
+        bioEdit.setText(userInformation.getBio());
         changeNick();
         changeBio();
     }
@@ -153,6 +130,17 @@ public class EditingFragment extends Fragment {
                     public void onClick(View v) {
                         firebaseModel.getUsersReference().child(nickname).child("bio").setValue(bioText);
                         Toast.makeText(getContext(), "Изменения сохранены", Toast.LENGTH_SHORT).show();
+                        firebaseModel.getUsersReference().child(nick).child("bio")
+                                .get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                                if(task.isSuccessful()){
+                                    DataSnapshot snapshot=task.getResult();
+                                    userInformation.setBio(snapshot.getValue(String.class));
+                                    Log.d("####", userInformation.getBio());
+                                }
+                            }
+                        });
                     }
                 });
             }

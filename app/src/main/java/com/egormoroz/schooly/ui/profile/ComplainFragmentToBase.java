@@ -52,7 +52,7 @@ public class ComplainFragmentToBase extends Fragment {
     TextView reasonText;
     RelativeLayout sendReason;
     ImageView back;
-    String reasonTextString,otherUserNick,descriptionText;
+    String reasonTextString,otherUserNick,descriptionText,nick;
     EditText addDescriptionEdit;
 
     @Override
@@ -69,6 +69,7 @@ public class ComplainFragmentToBase extends Fragment {
     @Override
     public void onViewCreated(@Nullable View view, @NonNull Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
+        nick=userInformation.getNick();
         reasonText=view.findViewById(R.id.reasonText);
         sendReason=view.findViewById(R.id.sendReasons);
         addDescriptionEdit=view.findViewById(R.id.addDescriptionEdit);
@@ -83,22 +84,12 @@ public class ComplainFragmentToBase extends Fragment {
         sendReason.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-                    @Override
-                    public void PassUserNick(String nick) {
-                        descriptionText=addDescriptionEdit.getText().toString();
-                        String uid=firebaseModel.getReference().child("complains").push().getKey();
-                        firebaseModel.getReference().child("complains").child(uid)
-                                .setValue(new Complain(nick,otherUserNick, reasonTextString,descriptionText));
-                        Toast.makeText(getContext(), "Жалоба отправлена", Toast.LENGTH_SHORT).show();
-                        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-                            @Override
-                            public void PassUserNick(String nick) {
-                                RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", otherUserNick, fragment,userInformation), getActivity());
-                            }
-                        });
-                    }
-                });
+                descriptionText=addDescriptionEdit.getText().toString();
+                String uid=firebaseModel.getReference().child("complains").push().getKey();
+                firebaseModel.getReference().child("complains").child(uid)
+                        .setValue(new Complain(nick,otherUserNick, reasonTextString,descriptionText));
+                Toast.makeText(getContext(), "Жалоба отправлена", Toast.LENGTH_SHORT).show();
+                RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", otherUserNick, fragment,userInformation), getActivity());
             }
         });
         back.setOnClickListener(new View.OnClickListener() {
