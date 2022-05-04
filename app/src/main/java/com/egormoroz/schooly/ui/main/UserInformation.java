@@ -28,6 +28,7 @@ public class UserInformation {
     private ArrayList<Clothes> myClothes;
     private ArrayList<Clothes> lookClothes;
     private ArrayList<Clothes> clothes;
+    private ArrayList<Clothes> clothesBasket;
     private String queue;
     private String bio;
     private String looks;
@@ -196,6 +197,13 @@ public class UserInformation {
     }
     public void setClothes(ArrayList<Clothes> clothes){
         this.clothes = clothes;
+    }
+
+    public ArrayList<Clothes> getClothesBasket(){
+        return this.clothesBasket;
+    }
+    public void setClothesBasket(ArrayList<Clothes> clothesBasket){
+        this.clothesBasket = clothesBasket;
     }
 
     public String getBio(){

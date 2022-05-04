@@ -35,7 +35,7 @@ public class SavedFragment extends Fragment {
     ImageView back;
     TextView emptyList;
     UserInformation userInformation;
-    String type;
+    String type,nick;
     Fragment fragment;
 
     public SavedFragment(String type,Fragment fragment,UserInformation userInformation) {
@@ -62,6 +62,7 @@ public class SavedFragment extends Fragment {
     @Override
     public void onViewCreated(@Nullable View view, @NonNull Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        nick=userInformation.getNick();
         recyclerView=view.findViewById(R.id.blackListRecycler);
         back=view.findViewById(R.id.back_tosettings);
         emptyList=view.findViewById(R.id.emptyBlackList);
@@ -81,30 +82,25 @@ public class SavedFragment extends Fragment {
 
         requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(), callback);
 
-        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+        RecentMethods.getSavedLooks(nick, firebaseModel, new Callbacks.getSavedLook() {
             @Override
-            public void PassUserNick(String nick) {
-                RecentMethods.getSavedLooks(nick, firebaseModel, new Callbacks.getSavedLook() {
-                    @Override
-                    public void getSavedLook(ArrayList<NewsItem> newsItems) {
-                        if(newsItems.size()==0){
-                            emptyList.setVisibility(View.VISIBLE);
-                            recyclerView.setVisibility(View.GONE);
-                        }else {
-                            Collections.reverse(newsItems);
-                            LooksAdapter looksAdapter=new LooksAdapter(newsItems, SavedFragment.newInstance(type,fragment,userInformation),recyclerView);
-                            recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
-                            recyclerView.setAdapter(looksAdapter);
-                            LooksAdapter.ItemClickListener itemClickListener=new LooksAdapter.ItemClickListener() {
-                                @Override
-                                public void onItemClick(NewsItem newsItem) {
-                                    RecentMethods.setCurrentFragment(ViewingLookFragment.newInstance(SavedFragment.newInstance(type,fragment,userInformation),userInformation), getActivity());
-                                }
-                            };
-                            looksAdapter.setClickListener(itemClickListener);
+            public void getSavedLook(ArrayList<NewsItem> newsItems) {
+                if(newsItems.size()==0){
+                    emptyList.setVisibility(View.VISIBLE);
+                    recyclerView.setVisibility(View.GONE);
+                }else {
+                    Collections.reverse(newsItems);
+                    LooksAdapter looksAdapter=new LooksAdapter(newsItems, SavedFragment.newInstance(type,fragment,userInformation),recyclerView);
+                    recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
+                    recyclerView.setAdapter(looksAdapter);
+                    LooksAdapter.ItemClickListener itemClickListener=new LooksAdapter.ItemClickListener() {
+                        @Override
+                        public void onItemClick(NewsItem newsItem) {
+                            RecentMethods.setCurrentFragment(ViewingLookFragment.newInstance(SavedFragment.newInstance(type,fragment,userInformation),userInformation), getActivity());
                         }
-                    }
-                });
+                    };
+                    looksAdapter.setClickListener(itemClickListener);
+                }
             }
         });
     }

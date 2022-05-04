@@ -1,15 +1,7 @@
 package com.egormoroz.schooly;
 
 import android.annotation.SuppressLint;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.app.TaskStackBuilder;
-import android.content.Context;
-import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Vibrator;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,23 +13,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.work.Constraints;
-import androidx.work.ExistingPeriodicWorkPolicy;
-import androidx.work.NetworkType;
-import androidx.work.OneTimeWorkRequest;
-import androidx.work.PeriodicWorkRequest;
-import androidx.work.WorkManager;
 
 import com.egormoroz.schooly.ui.coins.CoinsMainFragment;
 import com.egormoroz.schooly.ui.main.MainFragment;
-import com.egormoroz.schooly.ui.main.MyClothes.CreateClothesFragment;
-import com.egormoroz.schooly.ui.main.MyClothes.MyClothesAdapterMain;
-import com.egormoroz.schooly.ui.main.MyClothes.MyClothesFragment;
-import com.egormoroz.schooly.ui.main.MyClothes.ViewingMyClothesMain;
 import com.egormoroz.schooly.ui.main.RegisrtationstartFragment;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
 import com.egormoroz.schooly.ui.main.UserInformation;
@@ -54,7 +34,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
@@ -66,7 +45,6 @@ import java.util.concurrent.TimeUnit;
 public class MainActivity extends AppCompatActivity {
 
     private FirebaseDatabase database;
-    private DatabaseReference reference;
     private FirebaseAuth AuthenticationBase;
     public static String currentUserID;
     UserInformation userInformation;
@@ -74,7 +52,6 @@ public class MainActivity extends AppCompatActivity {
     TextView s,loading;
     CoordinatorLayout fragmentContainer;
     private static final String CHANNEL_ID = "channel";
-    OneTimeWorkRequest miningWorkRequest;
     FirebaseModel firebaseModel=new FirebaseModel();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,10 +71,6 @@ public class MainActivity extends AppCompatActivity {
         }else{
         }
         ///////////
-
-
-
-
     }
 
 
@@ -142,7 +115,10 @@ public class MainActivity extends AppCompatActivity {
                                                         userInformation.setUid(snapshot.child("uid").getValue(String.class));
                                                         userInformation.setBio(snapshot.child("bio").getValue(String.class));
                                                         userInformation.setQueue(snapshot.child("queue").getValue(String.class));
-                                                        //userInformation.setSubscription(snapshot.child("subscription").getValue(String.class));
+                                                        userInformation.setChatsNontsType(snapshot.child("chatsNontsType").getValue(String.class));
+                                                        userInformation.setGroupChatsNontsType(snapshot.child("groupChatsNontsType").getValue(String.class));
+                                                        userInformation.setProfileNontsType(snapshot.child("profileNontsType").getValue(String.class));
+                                                        userInformation.setAccountType(snapshot.child("accountType").getValue(String.class));
                                                         userInformation.setmoney(snapshot.child("money").getValue(Long.class));
                                                         userInformation.setTodayMining(snapshot.child("todayMining").getValue(Double.class));
                                                         firebaseModel.getUsersReference().child(nick).child("clothes")
@@ -174,6 +150,7 @@ public class MainActivity extends AppCompatActivity {
                                                             }
                                                         });
                                                         getMyClothes(nick);
+                                                        h();
                                                         final DatabaseReference connectedRef = database.getReference(".info/connected");
                                                         connectedRef.addValueEventListener(new ValueEventListener() {
                                                             @Override
@@ -287,7 +264,7 @@ public class MainActivity extends AppCompatActivity {
                                 setCurrentFragment(NewsFragment.newInstance());
                                 return true;
                             case R.id.bottom_nav_coins:
-                                setCurrentFragment(CoinsMainFragment.newInstance());
+                                setCurrentFragment(CoinsMainFragment.newInstance(userInformation));
                                 return true;
                             case R.id.bottom_nav_people:
                                 setCurrentFragment(PeopleFragment.newInstance(userInformation));
@@ -312,6 +289,20 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
+            }
+        });
+    }
+
+    public void h(){
+        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+            @Override
+            public void PassUserNick(String nick) {
+                RecentMethods.getClothesInBasket(nick, firebaseModel, new Callbacks.GetClothes() {
+                    @Override
+                    public void getClothes(ArrayList<Clothes> allClothes) {
+                        userInformation.setClothesBasket(allClothes);
+                    }
+                });
             }
         });
     }

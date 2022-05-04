@@ -26,6 +26,8 @@ import com.egormoroz.schooly.Subscriber;
 import com.egormoroz.schooly.ui.main.RegisrtationstartFragment;
 import com.egormoroz.schooly.ui.main.UserInformation;
 import com.egormoroz.schooly.ui.profile.Wardrobe.CreateLookFragment;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.firebase.database.DataSnapshot;
@@ -38,7 +40,7 @@ import java.util.ArrayList;
 public class SettingsFragment extends Fragment {
 
 
-    String type;
+    String type,nick;
     Fragment fragment;
     UserInformation userInformation;
 
@@ -73,20 +75,45 @@ public class SettingsFragment extends Fragment {
     @Override
     public void onViewCreated(@Nullable View view, @NonNull Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
-
+        nick=userInformation.getNick();
         chatsSwitch=view.findViewById(R.id.chatsSwitch);
         groupChatsSwitch=view.findViewById(R.id.groupChatsSwitch);
         profileSwitch=view.findViewById(R.id.profileSwitch);
         dataProtect=view.findViewById(R.id.dataProtect);
         rules=view.findViewById(R.id.rules);
         saved=view.findViewById(R.id.saved);
+        userNick=view.findViewById(R.id.userNick);
+        support=view.findViewById(R.id.support);
+        exitAccout=view.findViewById(R.id.exitAccount);
+        changePassword=view.findViewById(R.id.changePassword);
+        privateAccountSwitch=view.findViewById(R.id.privateAccountSwitch);
+        blackList=view.findViewById(R.id.blackList);
+        userPassword=view.findViewById(R.id.userPassword);
+        userNumber=view.findViewById(R.id.userNumber);
+        userNick.setText(nick);
+
+        ImageView imageViewBack = view.findViewById(R.id.backtomainfromsettings);
+        imageViewBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RecentMethods.setCurrentFragment(ProfileFragment.newInstance(type, nick,fragment,userInformation), getActivity());
+            }
+        });
+
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                RecentMethods.setCurrentFragment(ProfileFragment.newInstance(type, nick, fragment,userInformation), getActivity());
+            }
+        };
+        requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(), callback);
+
         saved.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 RecentMethods.setCurrentFragment(SavedFragment.newInstance(type,fragment,userInformation), getActivity());
             }
         });
-        support=view.findViewById(R.id.support);
 
         dataProtect.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -108,30 +135,7 @@ public class SettingsFragment extends Fragment {
 
             }
         });
-        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-            @Override
-            public void PassUserNick(String nick) {
-                Query query=firebaseModel.getUsersReference().child(nick).child("chatsNontsType");
-                query.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        String accountType = snapshot.getValue(String.class);
-                        if(accountType.equals("close")){
-                            chatsSwitch.setChecked(true);
-                        }else {
-                            chatsSwitch.setChecked(false);
-                        }
-                    }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-            }
-        });
-
-        exitAccout=view.findViewById(R.id.exitAccount);
         exitAccout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -139,352 +143,201 @@ public class SettingsFragment extends Fragment {
             }
         });
 
-        chatsSwitch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                checkType=true;
-                RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-                    @Override
-                    public void PassUserNick(String nick) {
-                        Query query=firebaseModel.getUsersReference().child(nick).child("chatsNontsType");
-                        query.addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                if (checkType=chatsSwitch.isChecked()){
-                                    firebaseModel.getUsersReference().child(nick)
-                                            .child("chatsNontsType").setValue("close");
-                                }else {
-                                    firebaseModel.getUsersReference().child(nick)
-                                            .child("chatsNontsType").setValue("open");
-                                }
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
-
-                            }
-                        });
-                    }
-                });
-            }
-        });
-        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-            @Override
-            public void PassUserNick(String nick) {
-                Query query=firebaseModel.getUsersReference().child(nick).child("groupChatsNontsType");
-                query.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        String accountType = snapshot.getValue(String.class);
-                        if(accountType.equals("close")){
-                            groupChatsSwitch.setChecked(true);
-                        }else {
-                            groupChatsSwitch.setChecked(false);
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-            }
-        });
-
-        groupChatsSwitch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                checkType=true;
-                RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-                    @Override
-                    public void PassUserNick(String nick) {
-                        Query query=firebaseModel.getUsersReference().child(nick).child("groupChatsNontsType");
-                        query.addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                if (checkType=groupChatsSwitch.isChecked()){
-                                    firebaseModel.getUsersReference().child(nick)
-                                            .child("groupChatsNontsType").setValue("close");
-                                }else {
-                                    firebaseModel.getUsersReference().child(nick)
-                                            .child("groupChatsNontsType").setValue("open");
-                                }
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
-
-                            }
-                        });
-                    }
-                });
-            }
-        });
-
-        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-            @Override
-            public void PassUserNick(String nick) {
-                Query query=firebaseModel.getUsersReference().child(nick).child("profileNontsType");
-                query.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        String accountType = snapshot.getValue(String.class);
-                        if(accountType.equals("close")){
-                            profileSwitch.setChecked(true);
-                        }else {
-                            profileSwitch.setChecked(false);
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-            }
-        });
-
-        profileSwitch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                checkType=true;
-                RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-                    @Override
-                    public void PassUserNick(String nick) {
-                        Query query=firebaseModel.getUsersReference().child(nick).child("profileNontsType");
-                        query.addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                if (checkType=profileSwitch.isChecked()){
-                                    firebaseModel.getUsersReference().child(nick)
-                                            .child("profileNontsType").setValue("close");
-                                }else {
-                                    firebaseModel.getUsersReference().child(nick)
-                                            .child("profileNontsType").setValue("open");
-                                }
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
-
-                            }
-                        });
-                    }
-                });
-            }
-        });
-
-
-
-
-        privateAccountSwitch=view.findViewById(R.id.privateAccountSwitch);
-        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-            @Override
-            public void PassUserNick(String nick) {
-                Query query=firebaseModel.getUsersReference().child(nick).child("accountType");
-                query.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        String accountType = snapshot.getValue(String.class);
-                        if(accountType.equals("open")){
-                            privateAccountSwitch.setChecked(false);
-                        }else {
-                            privateAccountSwitch.setChecked(true);
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-            }
-        });
-
-        privateAccountSwitch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                checkType=true;
-                RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-                    @Override
-                    public void PassUserNick(String nick) {
-                        if (checkType=privateAccountSwitch.isChecked()){
-                            firebaseModel.getUsersReference().child(nick)
-                                    .child("accountType").setValue("close");
-                        }else {
-                            firebaseModel.getUsersReference().child(nick)
-                                    .child("accountType").setValue("open");
-                            clearRequests();
-                            clearRequestsNonts();
-                        }
-                    }
-                });
-            }
-        });
-
-
-
-
-        ImageView imageViewBack = view.findViewById(R.id.backtomainfromsettings);
-        imageViewBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-                    @Override
-                    public void PassUserNick(String nick) {
-                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance(type, nick,fragment,userInformation), getActivity());
-                    }
-                });
-            }
-        });
-        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-            @Override
-            public void PassUserNick(String nick) {
-                OnBackPressedCallback callback = new OnBackPressedCallback(true) {
-                    @Override
-                    public void handleOnBackPressed() {
-
-                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance(type, nick, fragment,userInformation), getActivity());
-                    }
-                };
-
-                requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(), callback);
-            }
-        });
-
-        blackList=view.findViewById(R.id.blackList);
         blackList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 RecentMethods.setCurrentFragment(BlackListFragment.newInstance(type,fragment,userInformation), getActivity());
             }
         });
-        userNick=view.findViewById(R.id.userNick);
-        userNumber=view.findViewById(R.id.userNumber);
 
 
-        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-            @Override
-            public void PassUserNick(String nick) {
-                Query query1=firebaseModel.getUsersReference().child(nick)
-                        .child("phone");
-                query1.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if(snapshot.getValue(String.class).equals("unknown")) {
-                            userNumber.setText("Вход через Google Play");
-                        }else {
-                            userNumber.setText(snapshot.getValue(String.class));
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-            }
-        });
-        userPassword=view.findViewById(R.id.userPassword);
-        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-            @Override
-            public void PassUserNick(String nick) {
-                Query query=firebaseModel.getUsersReference().child(nick)
-                        .child("password");
-                query.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if(snapshot.getValue(String.class).equals("unknown")) {
-                            userPassword.setText("Вход через Google Play");
-                            changePassword.setVisibility(View.GONE);
-                        }else {
-                            userPassword.setText(snapshot.getValue(String.class));
-                            changePassword.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    RecentMethods.setCurrentFragment(PasswordFragment.newInstance(type,fragment,userInformation), getActivity());
-                                }
-                            });
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-            }
-        });
-        changePassword=view.findViewById(R.id.changePassword);
-        viewNick();
-
-    }
-
-    public void viewNick(){
-        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-            @Override
-            public void PassUserNick(String nick) {
-                userNick.setText(nick);
-            }
-        });
+        checkRegistrationType();
+        checkSwitches();
     }
 
     public void clearRequests(){
-        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+        firebaseModel.getUsersReference().child(nick).child("requests")
+        .get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
-            public void PassUserNick(String nick) {
-                Query query=firebaseModel.getUsersReference().child(nick).child("requests");
-                query.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        ArrayList<Subscriber> subscribersList = new ArrayList<>();
-                        for (DataSnapshot snap:snapshot.getChildren()){
-                            Subscriber subscriber=new Subscriber();
-                            subscriber.setSub(snap.getValue(String.class));
-                            subscribersList.add(subscriber);
-                        }
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if(task.isSuccessful()){
+                    DataSnapshot snapshot= task.getResult();
+                    ArrayList<Subscriber> subscribersList = new ArrayList<>();
+                    for (DataSnapshot snap:snapshot.getChildren()){
+                        Subscriber subscriber=new Subscriber();
+                        subscriber.setSub(snap.getValue(String.class));
+                        subscribersList.add(subscriber);
+                    }
+                    if(subscribersList.size()>0){
                         for (int i=0;i<subscribersList.size();i++){
                             Subscriber requestSub=subscribersList.get(i);
                             firebaseModel.getUsersReference().child(nick).child("requests")
                                     .child(requestSub.getSub()).removeValue();
-                            Log.d("######", requestSub.getSub());
                             firebaseModel.getReference().child("users").child(nick).child("subscribers")
                                     .child(requestSub.getSub()).setValue(requestSub.getSub());
                             firebaseModel.getReference().child("users").child(requestSub.getSub()).child("subscription")
                                     .child(nick).setValue(nick);
                         }
                     }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
+                }
             }
         });
     }
 
     public void clearRequestsNonts(){
-        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+        RecentMethods.getNontificationsList(nick, firebaseModel, new Callbacks.getNontificationsList() {
             @Override
-            public void PassUserNick(String nick) {
-                RecentMethods.getNontificationsList(nick, firebaseModel, new Callbacks.getNontificationsList() {
-                    @Override
-                    public void getNontificationsList(ArrayList<Nontification> nontifications) {
-                        for (int i=0;i<nontifications.size();i++){
-                            Nontification nontification=nontifications.get(i);
-                            if(nontification.getTypeView().equals("запрос")){
-                                firebaseModel.getUsersReference().child(nick).child("nontifications")
-                                        .child(nontification.getUid()).child("typeView")
-                                        .setValue("обычный");
-                            }
-                        }
+            public void getNontificationsList(ArrayList<Nontification> nontifications) {
+                for (int i=0;i<nontifications.size();i++){
+                    Nontification nontification=nontifications.get(i);
+                    if(nontification.getTypeView().equals("запрос")){
+                        firebaseModel.getUsersReference().child(nick).child("nontifications")
+                                .child(nontification.getUid()).child("typeView")
+                                .setValue("обычный");
                     }
-                });
+                }
             }
         });
     }
 
+    public void checkRegistrationType(){
+        if(userInformation.getPhone().equals("unknown")) {
+            userNumber.setText("Вход через Google Play");
+        }else {
+            userNumber.setText(userInformation.getPassword());
+        }
+        if(userInformation.getPassword().equals("unknown")) {
+            userPassword.setText("Вход через Google Play");
+            changePassword.setVisibility(View.GONE);
+        }else {
+            userPassword.setText(userInformation.getPassword());
+            changePassword.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    RecentMethods.setCurrentFragment(PasswordFragment.newInstance(type,fragment,userInformation), getActivity());
+                }
+            });
+        }
+    }
+
+    public  void checkSwitches(){
+        if(userInformation.getChatsNontsType().equals("open")){
+            chatsSwitch.setChecked(true);
+        }else {
+            chatsSwitch.setChecked(false);
+        }
+
+        chatsSwitch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                checkType=true;
+                if (checkType=chatsSwitch.isChecked()){
+                    firebaseModel.getUsersReference().child(nick)
+                            .child("chatsNontsType").setValue("open");
+                }else {
+                    firebaseModel.getUsersReference().child(nick)
+                            .child("chatsNontsType").setValue("close");
+                }
+                firebaseModel.getUsersReference().child(nick)
+                        .child("chatsNontsType").get()
+                        .addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                                DataSnapshot snapshot= task.getResult();
+                                userInformation.setChatsNontsType(snapshot.getValue(String.class));
+                            }
+                        });
+            }
+        });
+
+        if(userInformation.getGroupChatsNontsType().equals("open")){
+            groupChatsSwitch.setChecked(true);
+        }else {
+            groupChatsSwitch.setChecked(false);
+        }
+
+        groupChatsSwitch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                checkType=true;
+                if (checkType=groupChatsSwitch.isChecked()){
+                    firebaseModel.getUsersReference().child(nick)
+                            .child("groupChatsNontsType").setValue("open");
+                }else {
+                    firebaseModel.getUsersReference().child(nick)
+                            .child("groupChatsNontsType").setValue("close");
+                }
+                firebaseModel.getUsersReference().child(nick)
+                        .child("groupChatsNontsType").get()
+                        .addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                                DataSnapshot snapshot= task.getResult();
+                                userInformation.setGroupChatsNontsType(snapshot.getValue(String.class));
+                            }
+                        });
+            }
+        });
+
+        if(userInformation.getProfileNontsType().equals("open")){
+            profileSwitch.setChecked(true);
+        }else {
+            profileSwitch.setChecked(false);
+        }
+
+        profileSwitch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                checkType=true;
+                if (checkType=profileSwitch.isChecked()){
+                    firebaseModel.getUsersReference().child(nick)
+                            .child("profileNontsType").setValue("open");
+                }else {
+                    firebaseModel.getUsersReference().child(nick)
+                            .child("profileNontsType").setValue("close");
+                }
+                firebaseModel.getUsersReference().child(nick)
+                        .child("profileNontsType").get()
+                        .addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                                DataSnapshot snapshot= task.getResult();
+                                userInformation.setProfileNontsType(snapshot.getValue(String.class));
+                            }
+                        });
+            }
+        });
 
 
+        if(userInformation.getAccountType().equals("open")){
+            privateAccountSwitch.setChecked(false);
+        }else {
+            privateAccountSwitch.setChecked(true);
+        }
+
+        privateAccountSwitch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                checkType=true;
+                if (checkType=privateAccountSwitch.isChecked()){
+                    firebaseModel.getUsersReference().child(nick)
+                            .child("accountType").setValue("close");
+                }else {
+                    firebaseModel.getUsersReference().child(nick)
+                            .child("accountType").setValue("open");
+                    clearRequests();
+                    clearRequestsNonts();
+                }
+                firebaseModel.getUsersReference().child(nick)
+                        .child("accountType").get()
+                        .addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                                DataSnapshot snapshot= task.getResult();
+                                userInformation.setAccountType(snapshot.getValue(String.class));
+                            }
+                        });
+            }
+        });
+    }
 }

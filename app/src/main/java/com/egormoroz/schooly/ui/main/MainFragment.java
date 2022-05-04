@@ -140,7 +140,7 @@ public class MainFragment extends Fragment{
         coinsLinear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(CoinsFragmentSecond.newInstance(MainFragment.newInstance(userInformation)), getActivity());
+                RecentMethods.setCurrentFragment(CoinsFragmentSecond.newInstance(MainFragment.newInstance(userInformation),userInformation), getActivity());
             }
         });
         relativeMyClothes=view.findViewById(R.id.relativeClothes);

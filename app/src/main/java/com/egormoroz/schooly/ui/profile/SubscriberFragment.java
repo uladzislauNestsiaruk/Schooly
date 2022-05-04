@@ -28,6 +28,8 @@ import com.egormoroz.schooly.ui.main.UserInformation;
 import com.egormoroz.schooly.ui.people.PeopleAdapter;
 import com.egormoroz.schooly.ui.people.UserPeopleAdapter;
 import com.egormoroz.schooly.ui.profile.Wardrobe.CreateLookFragment;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -44,7 +46,7 @@ public class SubscriberFragment extends Fragment {
     String userNameToProfile,userName;
     EditText searchUser;
 
-    String type;
+    String type,nick;
     Fragment fragment;
     UserInformation userInformation;
 
@@ -72,72 +74,53 @@ public class SubscriberFragment extends Fragment {
     @Override
     public void onViewCreated(@Nullable View view, @NonNull Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        nick=userInformation.getNick();
         recyclerView=view.findViewById(R.id.subscribersRecycler);
         back=view.findViewById(R.id.back_toprofile);
         emptyList=view.findViewById(R.id.emptySubscribersList);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-                    @Override
-                    public void PassUserNick(String nick) {
-                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance(type,nick,fragment,userInformation),getActivity());
-                    }
-                });
+                RecentMethods.setCurrentFragment(ProfileFragment.newInstance(type,nick,fragment,userInformation),getActivity());
             }
         });
-        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
-            public void PassUserNick(String nick) {
-                OnBackPressedCallback callback = new OnBackPressedCallback(true) {
-                    @Override
-                    public void handleOnBackPressed() {
+            public void handleOnBackPressed() {
 
-                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance(type,nick,fragment,userInformation), getActivity());
-                    }
-                };
-
-                requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(), callback);
+                RecentMethods.setCurrentFragment(ProfileFragment.newInstance(type,nick,fragment,userInformation), getActivity());
             }
-        });
+        };
 
-        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+        requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(), callback);
+
+        RecentMethods.getSubscribersList(nick, firebaseModel, new Callbacks.getSubscribersList() {
             @Override
-            public void PassUserNick(String nick) {
-                RecentMethods.getSubscribersList(nick, firebaseModel, new Callbacks.getSubscribersList() {
-                    @Override
-                    public void getSubscribersList(ArrayList<Subscriber> subscribers) {
-                        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-                            @Override
-                            public void PassUserNick(String nick) {
-                                if (subscribers.size()==0){
-                                    emptyList.setVisibility(View.VISIBLE);
-                                    recyclerView.setVisibility(View.GONE);
-                                }else {
-                                    emptyList.setVisibility(View.GONE);
-                                    recyclerView.setVisibility(View.VISIBLE);
-                                    SubscribersAdapter subscribersAdapter = new SubscribersAdapter(subscribers);
-                                    recyclerView.setAdapter(subscribersAdapter);
-                                    SubscribersAdapter.ItemClickListener clickListener =
-                                            new SubscribersAdapter.ItemClickListener() {
-                                                @Override
-                                                public void onItemClick(View view, int position) {
-                                                    Subscriber user = subscribersAdapter.getItem(position);
-                                                    userNameToProfile=user.getSub();
-                                                    if(userNameToProfile.equals(nick)){
-                                                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback",nick,fragment,userInformation),getActivity());
-                                                    }else {
-                                                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile,SubscriberFragment.newInstance(type,fragment,userInformation),userInformation),
-                                                                getActivity());
-                                                    }
-                                                }
-                                            };
-                                    subscribersAdapter.setClickListener(clickListener);
+            public void getSubscribersList(ArrayList<Subscriber> subscribers) {
+                if (subscribers.size()==0){
+                    emptyList.setVisibility(View.VISIBLE);
+                    recyclerView.setVisibility(View.GONE);
+                }else {
+                    emptyList.setVisibility(View.GONE);
+                    recyclerView.setVisibility(View.VISIBLE);
+                    SubscribersAdapter subscribersAdapter = new SubscribersAdapter(subscribers);
+                    recyclerView.setAdapter(subscribersAdapter);
+                    SubscribersAdapter.ItemClickListener clickListener =
+                            new SubscribersAdapter.ItemClickListener() {
+                                @Override
+                                public void onItemClick(View view, int position) {
+                                    Subscriber user = subscribersAdapter.getItem(position);
+                                    userNameToProfile=user.getSub();
+                                    if(userNameToProfile.equals(nick)){
+                                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback",nick,fragment,userInformation),getActivity());
+                                    }else {
+                                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile,SubscriberFragment.newInstance(type,fragment,userInformation),userInformation),
+                                                getActivity());
+                                    }
                                 }
-                            }
-                        });
-                    }
-                });
+                            };
+                    subscribersAdapter.setClickListener(clickListener);
+                }
             }
         });
         searchUser=view.findViewById(R.id.searchuser);
@@ -145,81 +128,69 @@ public class SubscriberFragment extends Fragment {
     }
 
     public void initUserEnter() {
-        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+        searchUser.addTextChangedListener(new TextWatcher() {
             @Override
-            public void PassUserNick(String nick) {
-                searchUser.addTextChangedListener(new TextWatcher() {
-                    @Override
-                    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                    }
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
 
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                userName = String.valueOf(searchUser.getText()).trim();
+                userName = userName.toLowerCase();
+                firebaseModel.getUsersReference().child(nick).child("subscribers")
+                .get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                     @Override
-                    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                        userName = String.valueOf(searchUser.getText()).trim();
-                        userName = userName.toLowerCase();
-                        Query query = firebaseModel.getUsersReference().child(nick).child("subscribers");
-                        query.addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                ArrayList<Subscriber> userFromBase = new ArrayList<>();
-                                for (DataSnapshot snap : snapshot.getChildren()) {
-                                    Subscriber subscriber = new Subscriber();
-                                    subscriber.setSub(snap.getValue(String.class));
-                                    String nick = subscriber.getSub();
-                                    int valueLetters = userName.length();
-                                    nick = nick.toLowerCase();
-                                    if (nick.length() < valueLetters) {
-                                        if (nick.equals(userName))
-                                            userFromBase.add(subscriber);
-                                    } else {
-                                        nick = nick.substring(0, valueLetters);
-                                        if (nick.equals(userName))
-                                            userFromBase.add(subscriber);
-                                    }
-
+                    public void onComplete(@NonNull Task<DataSnapshot> task) {
+                        if(task.isSuccessful()){
+                            DataSnapshot snapshot= task.getResult();
+                            ArrayList<Subscriber> userFromBase = new ArrayList<>();
+                            for (DataSnapshot snap : snapshot.getChildren()) {
+                                Subscriber subscriber = new Subscriber();
+                                subscriber.setSub(snap.getValue(String.class));
+                                String nick = subscriber.getSub();
+                                int valueLetters = userName.length();
+                                nick = nick.toLowerCase();
+                                if (nick.length() < valueLetters) {
+                                    if (nick.equals(userName))
+                                        userFromBase.add(subscriber);
+                                } else {
+                                    nick = nick.substring(0, valueLetters);
+                                    if (nick.equals(userName))
+                                        userFromBase.add(subscriber);
                                 }
-                                if (userFromBase.size()==0){
-                                    emptyList.setVisibility(View.VISIBLE);
-                                    recyclerView.setVisibility(View.GONE);
-                                }else {
-                                    emptyList.setVisibility(View.GONE);
-                                    recyclerView.setVisibility(View.VISIBLE);
-                                    SubscribersAdapter subscribersAdapter = new SubscribersAdapter(userFromBase);
-                                    recyclerView.setAdapter(subscribersAdapter);
-                                    SubscribersAdapter.ItemClickListener clickListener =
-                                            new SubscribersAdapter.ItemClickListener() {
-                                                @Override
-                                                public void onItemClick(View view, int position) {
-                                                    Subscriber user = subscribersAdapter.getItem(position);
-                                                    userNameToProfile=user.getSub();
-                                                    if(userNameToProfile.equals(nick)){
-                                                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback",nick,fragment,userInformation),getActivity());
-                                                    }else {
-                                                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile,SubscriberFragment.newInstance(type,fragment,userInformation),userInformation),
-                                                                getActivity());
-                                                    }
+
+                            }
+                            if (userFromBase.size()==0){
+                                emptyList.setVisibility(View.VISIBLE);
+                                recyclerView.setVisibility(View.GONE);
+                            }else {
+                                emptyList.setVisibility(View.GONE);
+                                recyclerView.setVisibility(View.VISIBLE);
+                                SubscribersAdapter subscribersAdapter = new SubscribersAdapter(userFromBase);
+                                recyclerView.setAdapter(subscribersAdapter);
+                                SubscribersAdapter.ItemClickListener clickListener =
+                                        new SubscribersAdapter.ItemClickListener() {
+                                            @Override
+                                            public void onItemClick(View view, int position) {
+                                                Subscriber user = subscribersAdapter.getItem(position);
+                                                userNameToProfile=user.getSub();
+                                                if(userNameToProfile.equals(nick)){
+                                                    RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback",nick,fragment,userInformation),getActivity());
+                                                }else {
+                                                    RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile,SubscriberFragment.newInstance(type,fragment,userInformation),userInformation),
+                                                            getActivity());
                                                 }
-                                            };
-                                    subscribersAdapter.setClickListener(clickListener);
-                                }
+                                            }
+                                        };
+                                subscribersAdapter.setClickListener(clickListener);
                             }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
-
-                            }
-                        });
-                    }
-
-                    @Override
-                    public void afterTextChanged(Editable editable) {
-                        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-                            @Override
-                            public void PassUserNick(String nick) {
-                            }
-                        });
+                        }
                     }
                 });
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
             }
         });
     }

@@ -119,7 +119,7 @@ public class ShopFragment extends Fragment {
         coinsLinear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(CoinsFragmentSecond.newInstance(ShopFragment.newInstance(userInformation)), getActivity());
+                RecentMethods.setCurrentFragment(CoinsFragmentSecond.newInstance(ShopFragment.newInstance(userInformation),userInformation), getActivity());
             }
         });
         firebaseModel.getUsersReference().child(userInformation.getNick()).child("version").get()

@@ -64,11 +64,6 @@ public class BuyCoinsFragment extends Fragment {
         textAcceptPayment=view.findViewById(R.id.textAcceptPayment);
         textAcceptPayment.setText("Оплатить "+dollar);
         backImage=view.findViewById(R.id.back_coins);
-        backImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                RecentMethods.setCurrentFragment(CoinsMainFragment.newInstance(), getActivity());
-            }
-        });
+
     }
 }

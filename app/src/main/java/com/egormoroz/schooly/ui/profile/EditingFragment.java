@@ -137,7 +137,6 @@ public class EditingFragment extends Fragment {
                                 if(task.isSuccessful()){
                                     DataSnapshot snapshot=task.getResult();
                                     userInformation.setBio(snapshot.getValue(String.class));
-                                    Log.d("####", userInformation.getBio());
                                 }
                             }
                         });

@@ -97,7 +97,7 @@ public class MiningFragment extends Fragment {
         coinsLinear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(CoinsFragmentSecond.newInstance(MiningFragment.newInstance(userInformation)), getActivity());
+                RecentMethods.setCurrentFragment(CoinsFragmentSecond.newInstance(MiningFragment.newInstance(userInformation),userInformation), getActivity());
             }
         });
         myminers = view.findViewById(R.id.myminers);

@@ -98,7 +98,7 @@ public class BasketFragment extends Fragment {
     coinsLinear.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        RecentMethods.setCurrentFragment(CoinsFragmentSecond.newInstance(BasketFragment.newInstance(userInformation)), getActivity());
+        RecentMethods.setCurrentFragment(CoinsFragmentSecond.newInstance(BasketFragment.newInstance(userInformation),userInformation), getActivity());
       }
     });
     numberOfClothes=view.findViewById(R.id.numberofclothes);
@@ -146,23 +146,39 @@ public class BasketFragment extends Fragment {
   }
 
   public void loadClothesFromBasket(){
-    RecentMethods.getClothesInBasket(userInformation.getNick(), firebaseModel, new Callbacks.GetClothes() {
-      @Override
-      public void getClothes(ArrayList<Clothes> allClothes) {
-        clothesArrayList.addAll(allClothes);
-        numberOfClothes.setText("Элементов в корзине:"+String.valueOf(clothesArrayList.size()));
-        if(clothesArrayList.size()==0){
-          notFound.setVisibility(View.VISIBLE);
-          basketRecycler.setVisibility(View.GONE);
-        }else {
-          notFound.setVisibility(View.GONE);
-          basketRecycler.setVisibility(View.VISIBLE);
-          BasketAdapter basketAdapter=new BasketAdapter(clothesArrayList,onItemClick);
-          basketRecycler.setLayoutManager(new GridLayoutManager(getActivity(), 2));
-          basketRecycler.setAdapter(basketAdapter);
+    if(userInformation.getClothesBasket()==null){
+      RecentMethods.getClothesInBasket(userInformation.getNick(), firebaseModel, new Callbacks.GetClothes() {
+        @Override
+        public void getClothes(ArrayList<Clothes> allClothes) {
+          clothesArrayList.addAll(allClothes);
+          numberOfClothes.setText("Элементов в корзине:"+String.valueOf(clothesArrayList.size()));
+          userInformation.setClothesBasket(allClothes);
+          if(clothesArrayList.size()==0){
+            notFound.setVisibility(View.VISIBLE);
+            basketRecycler.setVisibility(View.GONE);
+          }else {
+            notFound.setVisibility(View.GONE);
+            basketRecycler.setVisibility(View.VISIBLE);
+            BasketAdapter basketAdapter=new BasketAdapter(clothesArrayList,onItemClick);
+            basketRecycler.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+            basketRecycler.setAdapter(basketAdapter);
+          }
         }
+      });
+    }else {
+      numberOfClothes.setText("Элементов в корзине:"+String.valueOf(userInformation.getClothesBasket().size()));
+      userInformation.setClothesBasket(userInformation.getClothesBasket());
+      if(userInformation.getClothesBasket().size()==0){
+        notFound.setVisibility(View.VISIBLE);
+        basketRecycler.setVisibility(View.GONE);
+      }else {
+        notFound.setVisibility(View.GONE);
+        basketRecycler.setVisibility(View.VISIBLE);
+        BasketAdapter basketAdapter=new BasketAdapter(userInformation.getClothesBasket(),onItemClick);
+        basketRecycler.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+        basketRecycler.setAdapter(basketAdapter);
       }
-    });
+    }
   }
 
   public void loadSearchClothes(String editTextText){

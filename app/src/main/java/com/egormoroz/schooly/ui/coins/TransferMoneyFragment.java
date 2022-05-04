@@ -50,13 +50,15 @@ public class TransferMoneyFragment extends Fragment {
     TextView emptySubscriptionList,emptySearchSubscriptionList;
 
     Fragment fragment;
+    UserInformation userInformation;
 
-    public TransferMoneyFragment(Fragment fragment) {
+    public TransferMoneyFragment(Fragment fragment,UserInformation userInformation) {
         this.fragment = fragment;
+        this.userInformation=userInformation;
     }
 
-    public static TransferMoneyFragment newInstance(Fragment fragment) {
-        return new TransferMoneyFragment(fragment);
+    public static TransferMoneyFragment newInstance(Fragment fragment,UserInformation userInformation) {
+        return new TransferMoneyFragment(fragment,userInformation);
 
     }
 
@@ -84,7 +86,7 @@ public class TransferMoneyFragment extends Fragment {
         transferHistory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(TransferHistoryFragment.newInstance(fragment), getActivity());
+                RecentMethods.setCurrentFragment(TransferHistoryFragment.newInstance(fragment,userInformation), getActivity());
             }
         });
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
@@ -122,7 +124,7 @@ public class TransferMoneyFragment extends Fragment {
                                 public void onItemClick(View view, int position) {
                                     Subscriber user = transferMoneyAdapter.getItem(position);
                                     userNameToProfile = user.getSub();
-                                    RecentMethods.setCurrentFragment(SendMoneyFragment.newInstance(userNameToProfile,fragment), getActivity());
+                                    RecentMethods.setCurrentFragment(SendMoneyFragment.newInstance(userNameToProfile,fragment,userInformation), getActivity());
                                 }
                             };
                             transferMoneyAdapter.setClickListener(itemClickListener);
@@ -181,7 +183,7 @@ public class TransferMoneyFragment extends Fragment {
                                         public void onItemClick(View view, int position) {
                                             Subscriber user = transferMoneyAdapter.getItem(position);
                                             userNameToProfile=user.getSub();
-                                            RecentMethods.setCurrentFragment(SendMoneyFragment.newInstance(userNameToProfile,fragment), getActivity());
+                                            RecentMethods.setCurrentFragment(SendMoneyFragment.newInstance(userNameToProfile,fragment,userInformation), getActivity());
                                         }
                                     };
                                     transferMoneyAdapter.setClickListener(itemClickListener);

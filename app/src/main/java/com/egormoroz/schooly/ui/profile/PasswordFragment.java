@@ -21,6 +21,8 @@ import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.ui.main.UserInformation;
 import com.egormoroz.schooly.ui.profile.Wardrobe.CreateLookFragment;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -29,7 +31,7 @@ import com.google.firebase.database.ValueEventListener;
 
 public class PasswordFragment extends Fragment {
 
-    String type;
+    String type,nick;
     Fragment fragment;
     UserInformation userInformation;
 
@@ -59,30 +61,13 @@ public class PasswordFragment extends Fragment {
         BottomNavigationView bnv = getActivity().findViewById(R.id.bottomNavigationView);
         bnv.setVisibility(bnv.GONE);
         firebaseModel.initAll();
-        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-            @Override
-            public void PassUserNick(String nick) {
-                Query query=firebaseModel.getUsersReference().child(nick)
-                        .child("password");
-                query.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        passwordFromBase=snapshot.getValue(String.class);
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-            }
-        });
         return root;
     }
 
     @Override
     public void onViewCreated(@Nullable View view, @NonNull Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
+        nick=userInformation.getNick();
         backToSettings=view.findViewById(R.id.back_tosettings);
         backToSettings.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -113,7 +98,7 @@ public class PasswordFragment extends Fragment {
             public void onClick(View v) {
                 if(a==0) {
                     String passwordEditText = editUsePassword.getText().toString();
-                    if (passwordEditText.equals(passwordFromBase)) {
+                    if (passwordEditText.equals(userInformation.getPassword())) {
                         editTextCreateNewPassword.setVisibility(View.VISIBLE);
                         editTextRepeatNewPassword.setVisibility(View.VISIBLE);
                         errorTextNewPassword.setVisibility(View.VISIBLE);
@@ -132,13 +117,16 @@ public class PasswordFragment extends Fragment {
                     String getNewPasswordOne=editTextCreateNewPassword.getText().toString();
                     String getNewPasswordTwo=editTextRepeatNewPassword.getText().toString();
                     if(getNewPasswordOne.equals(getNewPasswordTwo)){
-                        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+                        firebaseModel.getUsersReference().child(nick).child("password")
+                                .setValue(getNewPasswordOne);
+                        firebaseModel.getUsersReference().child(nick).child("password")
+                                .get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                             @Override
-                            public void PassUserNick(String nick) {
-                                firebaseModel.getUsersReference().child(nick).child("password")
-                                        .removeValue();
-                                firebaseModel.getUsersReference().child(nick).child("password")
-                                        .setValue(getNewPasswordOne);
+                            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                                if(task.isSuccessful()){
+                                    DataSnapshot snapshot= task.getResult();
+                                    userInformation.setPassword(snapshot.getValue(String.class));
+                                }
                             }
                         });
                     }else {

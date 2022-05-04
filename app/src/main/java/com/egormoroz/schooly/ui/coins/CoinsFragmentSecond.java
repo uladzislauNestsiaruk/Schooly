@@ -18,6 +18,7 @@ import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.ui.main.Shop.ViewingClothes;
+import com.egormoroz.schooly.ui.main.UserInformation;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class CoinsFragmentSecond extends Fragment {
@@ -34,13 +35,15 @@ public class CoinsFragmentSecond extends Fragment {
             ,sevenImage,tenImage,twentyImage,back;
 
     Fragment fragment;
+    UserInformation userInformation;
 
-    public CoinsFragmentSecond(Fragment fragment) {
+    public CoinsFragmentSecond(Fragment fragment,UserInformation userInformation) {
         this.fragment = fragment;
+        this.userInformation=userInformation;
     }
 
-    public static CoinsFragmentSecond newInstance(Fragment fragment) {
-        return new CoinsFragmentSecond(fragment);
+    public static CoinsFragmentSecond newInstance(Fragment fragment,UserInformation userInformation) {
+        return new CoinsFragmentSecond(fragment,userInformation);
 
     }
 
@@ -103,51 +106,51 @@ public class CoinsFragmentSecond extends Fragment {
         transferMoney.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(TransferMoneyFragment.newInstance(CoinsFragmentSecond.newInstance(fragment)), getActivity());
+                RecentMethods.setCurrentFragment(TransferMoneyFragment.newInstance(CoinsFragmentSecond.newInstance(fragment,userInformation),userInformation), getActivity());
             }
         });
-        oneLinear.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                RecentMethods.setCurrentFragment(BuyCoinsFragment
-                        .newInstance(oneS.getText().toString(),oneD.getText().toString() ), getActivity());
-            }
-        });
-        twoLinear.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                RecentMethods.setCurrentFragment(BuyCoinsFragment
-                        .newInstance(twoS.getText().toString(),twoD.getText().toString() ), getActivity());
-            }
-        });
-        fiveLinear.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                RecentMethods.setCurrentFragment(BuyCoinsFragment
-                        .newInstance(fiveS.getText().toString(),fiveD.getText().toString() ), getActivity());
-            }
-        });
-        sevenLinear.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                RecentMethods.setCurrentFragment(BuyCoinsFragment
-                        .newInstance(sevenS.getText().toString(),sevenD.getText().toString() ), getActivity());
-            }
-        });
-        tenLinear.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                RecentMethods.setCurrentFragment(BuyCoinsFragment
-                        .newInstance(tenS.getText().toString(),tenD.getText().toString() ), getActivity());
-            }
-        });
-        twentyLinear.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                RecentMethods.setCurrentFragment(BuyCoinsFragment
-                        .newInstance(twentyS.getText().toString(),twentyD.getText().toString() ), getActivity());
-            }
-        });
+//        oneLinear.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                RecentMethods.setCurrentFragment(BuyCoinsFragment
+//                        .newInstance(oneS.getText().toString(),oneD.getText().toString() ), getActivity());
+//            }
+//        });
+//        twoLinear.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                RecentMethods.setCurrentFragment(BuyCoinsFragment
+//                        .newInstance(twoS.getText().toString(),twoD.getText().toString() ), getActivity());
+//            }
+//        });
+//        fiveLinear.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                RecentMethods.setCurrentFragment(BuyCoinsFragment
+//                        .newInstance(fiveS.getText().toString(),fiveD.getText().toString() ), getActivity());
+//            }
+//        });
+//        sevenLinear.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                RecentMethods.setCurrentFragment(BuyCoinsFragment
+//                        .newInstance(sevenS.getText().toString(),sevenD.getText().toString() ), getActivity());
+//            }
+//        });
+//        tenLinear.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                RecentMethods.setCurrentFragment(BuyCoinsFragment
+//                        .newInstance(tenS.getText().toString(),tenD.getText().toString() ), getActivity());
+//            }
+//        });
+//        twentyLinear.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                RecentMethods.setCurrentFragment(BuyCoinsFragment
+//                        .newInstance(twentyS.getText().toString(),twentyD.getText().toString() ), getActivity());
+//            }
+//        });
     }
 
 }

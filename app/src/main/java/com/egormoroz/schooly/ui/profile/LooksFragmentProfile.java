@@ -32,7 +32,7 @@ public class LooksFragmentProfile extends Fragment {
     FirebaseModel firebaseModel=new FirebaseModel();
     int looksListSize;
 
-    String type;
+    String type,nick;
     Fragment fragment;
     UserInformation userInformation;
 
@@ -69,49 +69,43 @@ public class LooksFragmentProfile extends Fragment {
     @Override
     public void onViewCreated(@Nullable View view,@NonNull Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
-
-
+        nick=userInformation.getNick();
         createNewLook=view.findViewById(R.id.CreateYourLook);
         createNewLookText=view.findViewById(R.id.textCreateYourLook);
         looksRecycler=view.findViewById(R.id.Recycler);
-        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+        RecentMethods.getLooksList(nick, firebaseModel, new Callbacks.getLooksList() {
             @Override
-            public void PassUserNick(String nick) {
-                RecentMethods.getLooksList(nick, firebaseModel, new Callbacks.getLooksList() {
-                    @Override
-                    public void getLooksList(ArrayList<NewsItem> look) {
-                        looksListSize=look.size();
-                        if (looksListSize==0){
-                            createNewLookText.setVisibility(View.VISIBLE);
-                            createNewLookText.setText("Создай свой первый образ!");
-                            createNewLook.setVisibility(View.VISIBLE);
-                            looksRecycler.setVisibility(View.GONE);
-                            createNewLook.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    RecentMethods.setCurrentFragment(CreateLookFragment.newInstance(type,fragment,userInformation), getActivity());
-                                }
-                            });
-                        }else {
-                            Collections.reverse(look);
-                            LooksAdapter looksAdapter=new LooksAdapter(look,LooksFragmentProfile.newInstance(type,fragment,userInformation),looksRecycler);
-                            GridLayoutManager gridLayoutManager=new GridLayoutManager(getContext(), 3);
-                            looksAdapter.setHasStableIds(true);
-                            looksRecycler.setHasFixedSize(true);
-                            looksRecycler.setItemViewCacheSize(20);
-                            looksRecycler.setLayoutManager(gridLayoutManager);
-                            looksRecycler.setAdapter(looksAdapter);
-                            LooksAdapter.ItemClickListener itemClickListener=new LooksAdapter.ItemClickListener() {
-                                @Override
-                                public void onItemClick(NewsItem newsItem) {
-                                    RecentMethods.setCurrentFragment(ViewingLookFragment.newInstance(ProfileFragment.
-                                            newInstance(type, nick, fragment,userInformation),userInformation), getActivity());
-                                }
-                            };
-                            looksAdapter.setClickListener(itemClickListener);
+            public void getLooksList(ArrayList<NewsItem> look) {
+                looksListSize=look.size();
+                if (looksListSize==0){
+                    createNewLookText.setVisibility(View.VISIBLE);
+                    createNewLookText.setText("Создай свой первый образ!");
+                    createNewLook.setVisibility(View.VISIBLE);
+                    looksRecycler.setVisibility(View.GONE);
+                    createNewLook.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            RecentMethods.setCurrentFragment(CreateLookFragment.newInstance(type,fragment,userInformation), getActivity());
                         }
-                    }
-                });
+                    });
+                }else {
+                    Collections.reverse(look);
+                    LooksAdapter looksAdapter=new LooksAdapter(look,LooksFragmentProfile.newInstance(type,fragment,userInformation),looksRecycler);
+                    GridLayoutManager gridLayoutManager=new GridLayoutManager(getContext(), 3);
+                    looksAdapter.setHasStableIds(true);
+                    looksRecycler.setHasFixedSize(true);
+                    looksRecycler.setItemViewCacheSize(20);
+                    looksRecycler.setLayoutManager(gridLayoutManager);
+                    looksRecycler.setAdapter(looksAdapter);
+                    LooksAdapter.ItemClickListener itemClickListener=new LooksAdapter.ItemClickListener() {
+                        @Override
+                        public void onItemClick(NewsItem newsItem) {
+                            RecentMethods.setCurrentFragment(ViewingLookFragment.newInstance(ProfileFragment.
+                                    newInstance(type, nick, fragment,userInformation),userInformation), getActivity());
+                        }
+                    };
+                    looksAdapter.setClickListener(itemClickListener);
+                }
             }
         });
 
