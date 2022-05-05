@@ -73,41 +73,75 @@ public class LooksFragmentProfile extends Fragment {
         createNewLook=view.findViewById(R.id.CreateYourLook);
         createNewLookText=view.findViewById(R.id.textCreateYourLook);
         looksRecycler=view.findViewById(R.id.Recycler);
-        RecentMethods.getLooksList(nick, firebaseModel, new Callbacks.getLooksList() {
-            @Override
-            public void getLooksList(ArrayList<NewsItem> look) {
-                looksListSize=look.size();
-                if (looksListSize==0){
-                    createNewLookText.setVisibility(View.VISIBLE);
-                    createNewLookText.setText("Создай свой первый образ!");
-                    createNewLook.setVisibility(View.VISIBLE);
-                    looksRecycler.setVisibility(View.GONE);
-                    createNewLook.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            RecentMethods.setCurrentFragment(CreateLookFragment.newInstance(type,fragment,userInformation), getActivity());
-                        }
-                    });
-                }else {
-                    Collections.reverse(look);
-                    LooksAdapter looksAdapter=new LooksAdapter(look,LooksFragmentProfile.newInstance(type,fragment,userInformation),looksRecycler);
-                    GridLayoutManager gridLayoutManager=new GridLayoutManager(getContext(), 3);
-                    looksAdapter.setHasStableIds(true);
-                    looksRecycler.setHasFixedSize(true);
-                    looksRecycler.setItemViewCacheSize(20);
-                    looksRecycler.setLayoutManager(gridLayoutManager);
-                    looksRecycler.setAdapter(looksAdapter);
-                    LooksAdapter.ItemClickListener itemClickListener=new LooksAdapter.ItemClickListener() {
-                        @Override
-                        public void onItemClick(NewsItem newsItem) {
-                            RecentMethods.setCurrentFragment(ViewingLookFragment.newInstance(ProfileFragment.
-                                    newInstance(type, nick, fragment,userInformation),userInformation), getActivity());
-                        }
-                    };
-                    looksAdapter.setClickListener(itemClickListener);
-                }
-            }
-        });
+        putLooks();
+    }
 
+    public void putLooks(){
+        if(userInformation.getLooks()==null){
+            RecentMethods.getLooksList(nick, firebaseModel, new Callbacks.getLooksList() {
+                @Override
+                public void getLooksList(ArrayList<NewsItem> look) {
+                    looksListSize=look.size();
+                    if (looksListSize==0){
+                        createNewLookText.setVisibility(View.VISIBLE);
+                        createNewLookText.setText("Создай свой первый образ!");
+                        createNewLook.setVisibility(View.VISIBLE);
+                        looksRecycler.setVisibility(View.GONE);
+                        createNewLook.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                RecentMethods.setCurrentFragment(CreateLookFragment.newInstance(type,fragment,userInformation), getActivity());
+                            }
+                        });
+                    }else {
+                        Collections.reverse(look);
+                        LooksAdapter looksAdapter=new LooksAdapter(look,LooksFragmentProfile.newInstance(type,fragment,userInformation),looksRecycler);
+                        GridLayoutManager gridLayoutManager=new GridLayoutManager(getContext(), 3);
+                        looksAdapter.setHasStableIds(true);
+                        looksRecycler.setHasFixedSize(true);
+                        looksRecycler.setItemViewCacheSize(20);
+                        looksRecycler.setLayoutManager(gridLayoutManager);
+                        looksRecycler.setAdapter(looksAdapter);
+                        LooksAdapter.ItemClickListener itemClickListener=new LooksAdapter.ItemClickListener() {
+                            @Override
+                            public void onItemClick(NewsItem newsItem) {
+                                RecentMethods.setCurrentFragment(ViewingLookFragment.newInstance(ProfileFragment.
+                                        newInstance(type, nick, fragment,userInformation),userInformation), getActivity());
+                            }
+                        };
+                        looksAdapter.setClickListener(itemClickListener);
+                    }
+                }
+            });
+        }else {
+            if (userInformation.getLooks().size()==0){
+                createNewLookText.setVisibility(View.VISIBLE);
+                createNewLookText.setText("Создай свой первый образ!");
+                createNewLook.setVisibility(View.VISIBLE);
+                looksRecycler.setVisibility(View.GONE);
+                createNewLook.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        RecentMethods.setCurrentFragment(CreateLookFragment.newInstance(type,fragment,userInformation), getActivity());
+                    }
+                });
+            }else {
+                LooksAdapter looksAdapter = new LooksAdapter(userInformation.getLooks(), LooksFragmentProfile.newInstance(type, fragment, userInformation), looksRecycler);
+                GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 3);
+                looksAdapter.setHasStableIds(true);
+                looksRecycler.setHasFixedSize(true);
+                looksRecycler.setItemViewCacheSize(20);
+                looksRecycler.setLayoutManager(gridLayoutManager);
+                looksRecycler.setAdapter(looksAdapter);
+                LooksAdapter.ItemClickListener itemClickListener = new LooksAdapter.ItemClickListener() {
+                    @Override
+                    public void onItemClick(NewsItem newsItem) {
+                        RecentMethods.setCurrentFragment(ViewingLookFragment.newInstance(ProfileFragment.
+                                newInstance(type, nick, fragment, userInformation), userInformation), getActivity());
+                    }
+                };
+                looksAdapter.setClickListener(itemClickListener);
+            }
+        }
     }
 }

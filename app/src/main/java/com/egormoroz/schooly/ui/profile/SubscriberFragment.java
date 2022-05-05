@@ -78,6 +78,7 @@ public class SubscriberFragment extends Fragment {
         recyclerView=view.findViewById(R.id.subscribersRecycler);
         back=view.findViewById(R.id.back_toprofile);
         emptyList=view.findViewById(R.id.emptySubscribersList);
+        searchUser=view.findViewById(R.id.searchuser);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -93,38 +94,67 @@ public class SubscriberFragment extends Fragment {
         };
 
         requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(), callback);
-
-        RecentMethods.getSubscribersList(nick, firebaseModel, new Callbacks.getSubscribersList() {
-            @Override
-            public void getSubscribersList(ArrayList<Subscriber> subscribers) {
-                if (subscribers.size()==0){
-                    emptyList.setVisibility(View.VISIBLE);
-                    recyclerView.setVisibility(View.GONE);
-                }else {
-                    emptyList.setVisibility(View.GONE);
-                    recyclerView.setVisibility(View.VISIBLE);
-                    SubscribersAdapter subscribersAdapter = new SubscribersAdapter(subscribers);
-                    recyclerView.setAdapter(subscribersAdapter);
-                    SubscribersAdapter.ItemClickListener clickListener =
-                            new SubscribersAdapter.ItemClickListener() {
-                                @Override
-                                public void onItemClick(View view, int position) {
-                                    Subscriber user = subscribersAdapter.getItem(position);
-                                    userNameToProfile=user.getSub();
-                                    if(userNameToProfile.equals(nick)){
-                                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback",nick,fragment,userInformation),getActivity());
-                                    }else {
-                                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile,SubscriberFragment.newInstance(type,fragment,userInformation),userInformation),
-                                                getActivity());
-                                    }
-                                }
-                            };
-                    subscribersAdapter.setClickListener(clickListener);
-                }
-            }
-        });
-        searchUser=view.findViewById(R.id.searchuser);
+        putSubscribersListInAdapter();
         initUserEnter();
+    }
+
+    public void putSubscribersListInAdapter() {
+        if (userInformation.getSubscribers() == null) {
+            RecentMethods.getSubscribersList(nick, firebaseModel, new Callbacks.getSubscribersList() {
+                @Override
+                public void getSubscribersList(ArrayList<Subscriber> subscribers) {
+                    if (subscribers.size() == 0) {
+                        emptyList.setVisibility(View.VISIBLE);
+                        recyclerView.setVisibility(View.GONE);
+                    } else {
+                        emptyList.setVisibility(View.GONE);
+                        recyclerView.setVisibility(View.VISIBLE);
+                        SubscribersAdapter subscribersAdapter = new SubscribersAdapter(subscribers);
+                        recyclerView.setAdapter(subscribersAdapter);
+                        SubscribersAdapter.ItemClickListener clickListener =
+                                new SubscribersAdapter.ItemClickListener() {
+                                    @Override
+                                    public void onItemClick(View view, int position) {
+                                        Subscriber user = subscribersAdapter.getItem(position);
+                                        userNameToProfile = user.getSub();
+                                        if (userNameToProfile.equals(nick)) {
+                                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback", nick, fragment, userInformation), getActivity());
+                                        } else {
+                                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile, SubscriberFragment.newInstance(type, fragment, userInformation), userInformation),
+                                                    getActivity());
+                                        }
+                                    }
+                                };
+                        subscribersAdapter.setClickListener(clickListener);
+                    }
+                }
+            });
+        } else {
+            if (userInformation.getSubscribers().size() == 0) {
+                emptyList.setVisibility(View.VISIBLE);
+                recyclerView.setVisibility(View.GONE);
+            } else {
+                emptyList.setVisibility(View.GONE);
+                recyclerView.setVisibility(View.VISIBLE);
+                SubscribersAdapter subscribersAdapter = new SubscribersAdapter(userInformation.getSubscribers());
+                recyclerView.setAdapter(subscribersAdapter);
+                SubscribersAdapter.ItemClickListener clickListener =
+                        new SubscribersAdapter.ItemClickListener() {
+                            @Override
+                            public void onItemClick(View view, int position) {
+                                Subscriber user = subscribersAdapter.getItem(position);
+                                userNameToProfile = user.getSub();
+                                if (userNameToProfile.equals(nick)) {
+                                    RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback", nick, fragment, userInformation), getActivity());
+                                } else {
+                                    RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile, SubscriberFragment.newInstance(type, fragment, userInformation), userInformation),
+                                            getActivity());
+                                }
+                            }
+                        };
+                subscribersAdapter.setClickListener(clickListener);
+            }
+        }
     }
 
     public void initUserEnter() {

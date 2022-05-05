@@ -87,38 +87,67 @@ public class SubscriptionsFragment extends Fragment {
                 RecentMethods.setCurrentFragment(ProfileFragment.newInstance(type,nick,fragment,userInformation), getActivity());
             }
         };
-
         requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(), callback);
-        RecentMethods.getSubscriptionList(nick, firebaseModel, new Callbacks.getFriendsList() {
-            @Override
-            public void getFriendsList(ArrayList<Subscriber> friends) {
-                if (friends.size()==0){
-                    emptyList.setVisibility(View.VISIBLE);
-                    recyclerView.setVisibility(View.GONE);
-                }else {
-                    emptyList.setVisibility(View.GONE);
-                    recyclerView.setVisibility(View.VISIBLE);
-                    SubscriptionsAdapter subscriptionsAdapter = new SubscriptionsAdapter(friends);
-                    recyclerView.setAdapter(subscriptionsAdapter);
-                    SubscriptionsAdapter.ItemClickListener clickListener =
-                            new SubscriptionsAdapter.ItemClickListener() {
-                                @Override
-                                public void onItemClick(View view, int position) {
-                                    Subscriber user = subscriptionsAdapter.getItem(position);
-                                    userNameToProfile=user.getSub();
-                                    if(userNameToProfile.equals(nick)){
-                                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback",nick,fragment,userInformation),getActivity());
-                                    }else {
-                                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile,SubscriptionsFragment.newInstance(type,fragment,userInformation),userInformation),
-                                                getActivity());
-                                    }
-                                }
-                            };
-                    subscriptionsAdapter.setClickListener(clickListener);
-                }
-            }
-        });
+        putSubscriptionListInAdapter();
         initUserEnter();
+    }
+    public void putSubscriptionListInAdapter(){
+        if(userInformation.getSubscription()==null){
+            RecentMethods.getSubscriptionList(nick, firebaseModel, new Callbacks.getFriendsList() {
+                @Override
+                public void getFriendsList(ArrayList<Subscriber> friends) {
+                    if (friends.size()==0){
+                        emptyList.setVisibility(View.VISIBLE);
+                        recyclerView.setVisibility(View.GONE);
+                    }else {
+                        emptyList.setVisibility(View.GONE);
+                        recyclerView.setVisibility(View.VISIBLE);
+                        SubscriptionsAdapter subscriptionsAdapter = new SubscriptionsAdapter(friends);
+                        recyclerView.setAdapter(subscriptionsAdapter);
+                        SubscriptionsAdapter.ItemClickListener clickListener =
+                                new SubscriptionsAdapter.ItemClickListener() {
+                                    @Override
+                                    public void onItemClick(View view, int position) {
+                                        Subscriber user = subscriptionsAdapter.getItem(position);
+                                        userNameToProfile=user.getSub();
+                                        if(userNameToProfile.equals(nick)){
+                                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback",nick,fragment,userInformation),getActivity());
+                                        }else {
+                                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile,SubscriptionsFragment.newInstance(type,fragment,userInformation),userInformation),
+                                                    getActivity());
+                                        }
+                                    }
+                                };
+                        subscriptionsAdapter.setClickListener(clickListener);
+                    }
+                }
+            });
+        }else {
+            if (userInformation.getSubscription().size()==0){
+                emptyList.setVisibility(View.VISIBLE);
+                recyclerView.setVisibility(View.GONE);
+            }else {
+                emptyList.setVisibility(View.GONE);
+                recyclerView.setVisibility(View.VISIBLE);
+                SubscriptionsAdapter subscriptionsAdapter = new SubscriptionsAdapter(userInformation.getSubscription());
+                recyclerView.setAdapter(subscriptionsAdapter);
+                SubscriptionsAdapter.ItemClickListener clickListener =
+                        new SubscriptionsAdapter.ItemClickListener() {
+                            @Override
+                            public void onItemClick(View view, int position) {
+                                Subscriber user = subscriptionsAdapter.getItem(position);
+                                userNameToProfile=user.getSub();
+                                if(userNameToProfile.equals(nick)){
+                                    RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback",nick,fragment,userInformation),getActivity());
+                                }else {
+                                    RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile,SubscriptionsFragment.newInstance(type,fragment,userInformation),userInformation),
+                                            getActivity());
+                                }
+                            }
+                        };
+                subscriptionsAdapter.setClickListener(clickListener);
+            }
+        }
     }
     public void initUserEnter() {
         searchUser.addTextChangedListener(new TextWatcher() {

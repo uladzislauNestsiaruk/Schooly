@@ -92,30 +92,15 @@ public class ClothesFragmentProfile extends Fragment {
         createNewLook=view.findViewById(R.id.CreateYourLook);
         createNewLookText=view.findViewById(R.id.textCreateYourLook);
         looksRecycler=view.findViewById(R.id.Recycler);
-        firebaseModel.getUsersReference().child(nick)
-                .child("myClothes").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if(task.isSuccessful()){
-                    DataSnapshot snapshot= task.getResult();
-                    ArrayList<Clothes> clothesFromBase=new ArrayList<>();
-                    for (DataSnapshot snap : snapshot.getChildren()) {
-                        Clothes clothes = new Clothes();
-                        clothes.setClothesImage(snap.child("clothesImage").getValue(String.class));
-                        clothes.setClothesPrice(snap.child("clothesPrice").getValue(Long.class));
-                        clothes.setPurchaseNumber(snap.child("purchaseNumber").getValue(Long.class));
-                        clothes.setClothesType(snap.child("clothesType").getValue(String.class));
-                        clothes.setClothesTitle(snap.child("clothesTitle").getValue(String.class));
-                        clothes.setCreator(snap.child("creator").getValue(String.class));
-                        clothes.setCurrencyType(snap.child("currencyType").getValue(String.class));
-                        clothes.setDescription(snap.child("description").getValue(String.class));
-                        clothes.setPurchaseToday(snap.child("purchaseToday").getValue(Long.class));
-                        clothes.setBodyType(snap.child("bodyType").getValue(String.class));
-                        clothes.setModel(snap.child("model").getValue(String.class));
-                        clothes.setUid(snap.child("uid").getValue(String.class));
-                        clothesFromBase.add(clothes);
-                    }
-                    if (clothesFromBase.size()==0){
+        putClothesInAdapter();
+
+    }
+    public void putClothesInAdapter(){
+        if(userInformation.getMyClothes()==null){
+            RecentMethods.getMyClothes(nick, firebaseModel, new Callbacks.GetClothes() {
+                @Override
+                public void getClothes(ArrayList<Clothes> allClothes) {
+                    if (allClothes.size()==0){
                         createNewLookText.setVisibility(View.VISIBLE);
                         createNewLookText.setText("Создай свою одежду!");
                         createNewLook.setVisibility(View.VISIBLE);
@@ -123,8 +108,8 @@ public class ClothesFragmentProfile extends Fragment {
                         looksRecycler.setVisibility(View.GONE);
                     }else {
                         looksRecycler.setVisibility(View.VISIBLE);
-                        Collections.reverse(clothesFromBase);
-                        ClothesAdapter clothesAdapter=new ClothesAdapter(clothesFromBase,itemClickListener);
+                        Collections.reverse(allClothes);
+                        ClothesAdapter clothesAdapter=new ClothesAdapter(allClothes,itemClickListener);
                         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
                         layoutManager.setReverseLayout(true);
                         layoutManager.setStackFromEnd(true);
@@ -133,8 +118,25 @@ public class ClothesFragmentProfile extends Fragment {
                         looksRecycler.setAdapter(clothesAdapter);
                     }
                 }
+            });
+        }else {
+            if (userInformation.getMyClothes().size()==0){
+                createNewLookText.setVisibility(View.VISIBLE);
+                createNewLookText.setText("Создай свою одежду!");
+                createNewLook.setVisibility(View.VISIBLE);
+                RecentMethods.setCurrentFragment(CreateClothesFragment.newInstance(ProfileFragment.newInstance("user", nick, fragment,userInformation),userInformation), getActivity());
+                looksRecycler.setVisibility(View.GONE);
+            }else {
+                looksRecycler.setVisibility(View.VISIBLE);
+                Collections.reverse(userInformation.getMyClothes());
+                ClothesAdapter clothesAdapter=new ClothesAdapter(userInformation.getMyClothes(),itemClickListener);
+                LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+                layoutManager.setReverseLayout(true);
+                layoutManager.setStackFromEnd(true);
+                GridLayoutManager gridLayoutManager=new GridLayoutManager(getContext(), 2);
+                looksRecycler.setLayoutManager(gridLayoutManager);
+                looksRecycler.setAdapter(clothesAdapter);
             }
-        });
-
+        }
     }
 }

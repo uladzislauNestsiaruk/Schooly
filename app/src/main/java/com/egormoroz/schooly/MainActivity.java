@@ -22,6 +22,7 @@ import com.egormoroz.schooly.ui.main.RegisrtationstartFragment;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
 import com.egormoroz.schooly.ui.main.UserInformation;
 import com.egormoroz.schooly.ui.news.NewsFragment;
+import com.egormoroz.schooly.ui.news.NewsItem;
 import com.egormoroz.schooly.ui.people.PeopleFragment;
 import com.egormoroz.schooly.ui.profile.ProfileFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -121,36 +122,8 @@ public class MainActivity extends AppCompatActivity {
                                                         userInformation.setAccountType(snapshot.child("accountType").getValue(String.class));
                                                         userInformation.setmoney(snapshot.child("money").getValue(Long.class));
                                                         userInformation.setTodayMining(snapshot.child("todayMining").getValue(Double.class));
-                                                        firebaseModel.getUsersReference().child(nick).child("clothes")
-                                                                .get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                                                            @Override
-                                                            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                                                                if(task.isSuccessful()){
-                                                                    DataSnapshot snapshot=task.getResult();
-                                                                    ArrayList<Clothes> clothesFromBase=new ArrayList<>();
-                                                                    for (DataSnapshot snap : snapshot.getChildren()) {
-                                                                        Clothes clothes = new Clothes();
-                                                                        clothes.setClothesImage(snap.child("clothesImage").getValue(String.class));
-                                                                        clothes.setClothesPrice(snap.child("clothesPrice").getValue(Long.class));
-                                                                        clothes.setPurchaseNumber(snap.child("purchaseNumber").getValue(Long.class));
-                                                                        clothes.setClothesType(snap.child("clothesType").getValue(String.class));
-                                                                        clothes.setClothesTitle(snap.child("clothesTitle").getValue(String.class));
-                                                                        clothes.setCurrencyType(snap.child("currencyType").getValue(String.class));
-                                                                        clothes.setCreator(snap.child("creator").getValue(String.class));
-                                                                        clothes.setDescription(snap.child("description").getValue(String.class));
-                                                                        clothes.setPurchaseToday(snap.child("purchaseToday").getValue(Long.class));
-                                                                        clothes.setModel(snap.child("model").getValue(String.class));
-                                                                        clothes.setBodyType(snap.child("bodyType").getValue(String.class));
-                                                                        clothes.setUid(snap.child("uid").getValue(String.class));
-                                                                        clothes.setExclusive(snap.child("exclusive").getValue(String.class));
-                                                                        clothesFromBase.add(clothes);
-                                                                    }
-                                                                    userInformation.setClothes(clothesFromBase);
-                                                                }
-                                                            }
-                                                        });
                                                         getMyClothes(nick);
-                                                        h();
+                                                        getLists();
                                                         final DatabaseReference connectedRef = database.getReference(".info/connected");
                                                         connectedRef.addValueEventListener(new ValueEventListener() {
                                                             @Override
@@ -224,29 +197,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void getMyClothes(String nick){
-        Query query=firebaseModel.getUsersReference().child(nick)
-                .child("myClothes").orderByKey();
-        query.addValueEventListener(new ValueEventListener() {
+        RecentMethods.getMyClothes(nick, firebaseModel, new Callbacks.GetClothes() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                ArrayList<Clothes> clothesFromBase=new ArrayList<>();
-                Log.d("###", "sss");
-                for (DataSnapshot snap : snapshot.getChildren()) {
-                    Clothes clothes = new Clothes();
-                    clothes.setClothesImage(snap.child("clothesImage").getValue(String.class));
-                    clothes.setClothesPrice(snap.child("clothesPrice").getValue(Long.class));
-                    clothes.setPurchaseNumber(snap.child("purchaseNumber").getValue(Long.class));
-                    clothes.setClothesType(snap.child("clothesType").getValue(String.class));
-                    clothes.setClothesTitle(snap.child("clothesTitle").getValue(String.class));
-                    clothes.setCreator(snap.child("creator").getValue(String.class));
-                    clothes.setCurrencyType(snap.child("currencyType").getValue(String.class));
-                    clothes.setDescription(snap.child("description").getValue(String.class));
-                    clothes.setPurchaseToday(snap.child("purchaseToday").getValue(Long.class));
-                    clothes.setModel(snap.child("model").getValue(String.class));
-                    clothes.setUid(snap.child("uid").getValue(String.class));
-                    clothesFromBase.add(clothes);
-                }
-                userInformation.setMyClothes(clothesFromBase);
+            public void getClothes(ArrayList<Clothes> allClothes) {
+                Collections.reverse(allClothes);
+                userInformation.setMyClothes(allClothes);
                 BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
                 s.setVisibility(View.GONE);
                 loading.setVisibility(View.GONE);
@@ -285,15 +240,10 @@ public class MainActivity extends AppCompatActivity {
                 });
                 setCurrentFragment(MainFragment.newInstance(userInformation));
             }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
         });
     }
 
-    public void h(){
+    public void getLists(){
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @Override
             public void PassUserNick(String nick) {
@@ -301,6 +251,38 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void getClothes(ArrayList<Clothes> allClothes) {
                         userInformation.setClothesBasket(allClothes);
+                    }
+                });
+                RecentMethods.getClothesInWardrobe(nick, firebaseModel, new Callbacks.GetClothes() {
+                    @Override
+                    public void getClothes(ArrayList<Clothes> allClothes) {
+                        userInformation.setClothes(allClothes);
+                    }
+                });
+                RecentMethods.getSubscribersList(nick, firebaseModel, new Callbacks.getSubscribersList() {
+                    @Override
+                    public void getSubscribersList(ArrayList<Subscriber> subscribers) {
+                        userInformation.setSubscribers(subscribers);
+                    }
+                });
+                RecentMethods.getSubscriptionList(nick, firebaseModel, new Callbacks.getFriendsList() {
+                    @Override
+                    public void getFriendsList(ArrayList<Subscriber> friends) {
+                        userInformation.setSubscription(friends);
+                    }
+                });
+                RecentMethods.getNontificationsList(nick, firebaseModel, new Callbacks.getNontificationsList() {
+                    @Override
+                    public void getNontificationsList(ArrayList<Nontification> nontifications) {
+                        Collections.reverse(nontifications);
+                        userInformation.setNotifications(nontifications);
+                    }
+                });
+                RecentMethods.getLooksList(nick, firebaseModel, new Callbacks.getLooksList() {
+                    @Override
+                    public void getLooksList(ArrayList<NewsItem> look) {
+                        Collections.reverse(look);
+                        userInformation.setLooks(look);
                     }
                 });
             }

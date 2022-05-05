@@ -1,7 +1,10 @@
 package com.egormoroz.schooly.ui.main;
 
+import com.egormoroz.schooly.Nontification;
+import com.egormoroz.schooly.Subscriber;
 import com.egormoroz.schooly.ui.main.Mining.Miner;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
+import com.egormoroz.schooly.ui.news.NewsItem;
 import com.google.firebase.database.IgnoreExtraProperties;
 
 import java.util.ArrayList;
@@ -23,15 +26,16 @@ public class UserInformation {
     private long level=1;
     private long money=100;
     private double todayMining=0;
-    private String subscription;
-    private String subscribers;
+    private ArrayList<Subscriber> subscription;
+    private ArrayList<Subscriber> subscribers;
     private ArrayList<Clothes> myClothes;
     private ArrayList<Clothes> lookClothes;
     private ArrayList<Clothes> clothes;
     private ArrayList<Clothes> clothesBasket;
+    private ArrayList<Nontification> notifications;
     private String queue;
     private String bio;
-    private String looks;
+    private ArrayList<NewsItem> looks;
     private String accountType;
     private String version;
     private long miningPremium;
@@ -104,11 +108,11 @@ public class UserInformation {
         this.minerArrayList=minerArrayList;
     }
 
-    public String getLooks(){
+    public ArrayList<NewsItem> getLooks(){
         return looks;
     }
 
-    public void setLooks(String looks){
+    public void setLooks(ArrayList<NewsItem> looks){
         this.looks=looks;
     }
 
@@ -132,11 +136,11 @@ public class UserInformation {
         this.todayMining = todayMining;
     }
 
-    public String getSubscription(){
+    public ArrayList<Subscriber> getSubscription(){
         return subscription;
     }
 
-    public void setSubscription(String subscription){
+    public void setSubscription(ArrayList subscription){
         this.subscription = subscription;
     }
 
@@ -164,11 +168,11 @@ public class UserInformation {
         this.groupChatsNontsType = groupChatsNontsType;
     }
 
-    public String getSubscribers(){
+    public ArrayList<Subscriber> getSubscribers(){
         return subscribers;
     }
 
-    public void setSubscribers(String subscribers){
+    public void setSubscribers(ArrayList<Subscriber> subscribers){
         this.subscribers = subscribers;
     }
     public String getQueue(){
@@ -239,12 +243,20 @@ public class UserInformation {
         this.miningPremium = miningPremium;
     }
 
+    public ArrayList<Nontification> getNontifications(){
+        return notifications;
+    }
+
+    public void setNotifications(ArrayList<Nontification> notifications) {
+        this.notifications = notifications;
+    }
+
     public UserInformation(String nick, String phone, String uid, String Avatar, String password,
                            String gender, long age, ArrayList<Miner> activeMinerArrayList,ArrayList<Miner> minerArrayList, long level, long money, double todayMining,
-                           String subscription, String subscribers, String queue, String bio,
+                           ArrayList<Subscriber> subscription, ArrayList<Subscriber> subscribers, String queue, String bio,
                            String accountType, String chatsNontsType,
                            String groupChatsNontsType, String profileNontsType, ArrayList<Clothes> myClothes, String version,
-                           String looks,long miningPremium,ArrayList<Clothes> lookClothes,ArrayList<Clothes> clothes) {
+                           ArrayList<NewsItem> looks,long miningPremium,ArrayList<Clothes> lookClothes,ArrayList<Clothes> clothes,ArrayList<Nontification> notifications) {
         this.Nick = nick;
         this.uid = uid;
         this.phone = phone;
@@ -271,6 +283,7 @@ public class UserInformation {
         this.miningPremium=miningPremium;
         this.lookClothes=lookClothes;
         this.clothes=clothes;
+        this.notifications=notifications;
     }
 
 }

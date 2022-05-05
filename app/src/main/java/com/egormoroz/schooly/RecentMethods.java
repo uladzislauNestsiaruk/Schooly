@@ -113,9 +113,9 @@ public class RecentMethods {
 
         UserInformation res = new UserInformation(nick, "unknown", user.getUid(),
                 "6", "unknown", "Helicopter", 1000
-                , new ArrayList<>(),new ArrayList<>(), 1,100,0, "", "",
+                , new ArrayList<>(),new ArrayList<>(), 1,100,0, new ArrayList<>(),new ArrayList<>(),
                 "","","open","open","open",
-                "open",new ArrayList<>(),"regular", "",0,new ArrayList<>(),new ArrayList<>());
+                "open",new ArrayList<>(),"regular", new ArrayList<>(),0,new ArrayList<>(),new ArrayList<>(),new ArrayList<>());
         ref.child(nick).setValue(res);
         return nick.isEmpty();
     }
@@ -164,14 +164,11 @@ public class RecentMethods {
                     userData.setAge(snapshot.child("age").getValue(Long.class));
                     userData.setAvatar(snapshot.child("avatar").getValue(String.class));
                     userData.setGender(snapshot.child("gender").getValue(String.class));
-                    //////////////////userData.setMiners();
                     userData.setNick(snapshot.child("nick").getValue(String.class));
                     userData.setPassword(snapshot.child("password").getValue(String.class));
                     userData.setPhone(snapshot.child("phone").getValue(String.class));
                     userData.setUid(snapshot.child("uid").getValue(String.class));
                     userData.setQueue(snapshot.child("queue").getValue(String.class));
-//                    userData.setSubscribers(snapshot.child("subscribers").getValue(String.class));
-                    userData.setSubscription(snapshot.child("subscription").getValue(String.class));
                     userData.setmoney(snapshot.child("money").getValue(Long.class));
                     userData.setTodayMining(snapshot.child("todayMining").getValue(Double.class));
                     data.add(userData);
@@ -1141,47 +1138,6 @@ public class RecentMethods {
 
     }
 
-    public static void getNontificationsListAdded(String nickName, FirebaseModel model, Callbacks.getNontificationsList callback){
-        model.initAll();
-        Query query=model.getUsersReference().child(nickName).child("nontifications");
-        query.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                ArrayList<Nontification> nontificationArrayList = new ArrayList<>();
-                for (DataSnapshot snap:dataSnapshot.getChildren()){
-                    Nontification nontification=new Nontification();
-                    nontification.setNick(snap.child("nick").getValue(String.class));
-                    nontification.setTypeDispatch(snap.child("typeDispatch").getValue(String.class));
-                    nontification.setTypeView(snap.child("typeView").getValue(String.class));
-                    nontification.setTimestamp(snap.child("timestamp").getValue(String.class));
-                }
-                callback.getNontificationsList(nontificationArrayList);
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-
-    }
-
     public static void getNontificationsList(String nickName, FirebaseModel model, Callbacks.getNontificationsList callback){
         model.initAll();
         model.getUsersReference().child(nickName).child("nontifications").orderByKey()
@@ -1325,6 +1281,7 @@ public class RecentMethods {
                     clothes.setCurrencyType(snap.child("currencyType").getValue(String.class));
                     clothes.setDescription(snap.child("description").getValue(String.class));
                     clothes.setPurchaseToday(snap.child("purchaseToday").getValue(Long.class));
+                    clothes.setBodyType(snap.child("bodyType").getValue(String.class));
                     clothes.setModel(snap.child("model").getValue(String.class));
                     clothes.setUid(snap.child("uid").getValue(String.class));
                     clothesFromBase.add(clothes);
