@@ -40,6 +40,7 @@ public class TransferHistoryFragment extends Fragment {
     TextView noTransfer;
     Fragment fragment;
     UserInformation userInformation;
+    String nick;
 
     public TransferHistoryFragment(Fragment fragment,UserInformation userInformation) {
         this.fragment = fragment;
@@ -65,7 +66,7 @@ public class TransferHistoryFragment extends Fragment {
     @Override
     public void onViewCreated(@Nullable View view,@NonNull Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
-
+        nick=userInformation.getNick();
         backToCoins=view.findViewById(R.id.backtocoins);
         historyRecyclerView=view.findViewById(R.id.hisroryRecycler);
         noTransfer=view.findViewById(R.id.noTransfer);
@@ -85,39 +86,37 @@ public class TransferHistoryFragment extends Fragment {
             }
         });
         firebaseModel.initAll();
-        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-            @Override
-            public void PassUserNick(String nick) {
-                Query query=firebaseModel.getUsersReference().child(nick).child("transferHistory").orderByKey();
-                query.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        ArrayList<Transfer> transferHistoryBase=new ArrayList<>();
-                        for (DataSnapshot snap : dataSnapshot.getChildren()) {
-                            Transfer transfer=new Transfer();
-                            transfer.setSum(snap.child("sum").getValue(Long.class));
-                            transfer.setType(snap.child("type").getValue(String.class));
-                            transfer.setWho(snap.child("who").getValue(String.class));
-                            transferHistoryBase.add(transfer);
-                        }
-                        if (transferHistoryBase.size()==0){
-                            noTransfer.setVisibility(View.VISIBLE);
-                        }else {
-                            Collections.reverse(transferHistoryBase);
-                            TransferHistoryAdapter transferHistoryAdapter=new TransferHistoryAdapter(transferHistoryBase);
-                            LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-                            historyRecyclerView.setLayoutManager(layoutManager);
-                            historyRecyclerView.setAdapter(transferHistoryAdapter);
-                            noTransfer.setVisibility(View.GONE);
-                        }
-                    }
+        setHistoryInAdapter();
+    }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
+    public void setHistoryInAdapter(){
+        if(userInformation.getTransfers()==null){
+            RecentMethods.getTransferHistory(nick, firebaseModel, new Callbacks.getTransferHistory() {
+                @Override
+                public void getTransferHistory(ArrayList<Transfer> transfers) {
+                    userInformation.setTransfers(transfers);
+                    if (transfers.size()==0){
+                        noTransfer.setVisibility(View.VISIBLE);
+                    }else {
+                        Collections.reverse(transfers);
+                        TransferHistoryAdapter transferHistoryAdapter=new TransferHistoryAdapter(transfers);
+                        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+                        historyRecyclerView.setLayoutManager(layoutManager);
+                        historyRecyclerView.setAdapter(transferHistoryAdapter);
+                        noTransfer.setVisibility(View.GONE);
                     }
-                });
+                }
+            });
+        }else{
+            if (userInformation.getTransfers().size()==0){
+                noTransfer.setVisibility(View.VISIBLE);
+            }else {
+                TransferHistoryAdapter transferHistoryAdapter=new TransferHistoryAdapter(userInformation.getTransfers());
+                LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+                historyRecyclerView.setLayoutManager(layoutManager);
+                historyRecyclerView.setAdapter(transferHistoryAdapter);
+                noTransfer.setVisibility(View.GONE);
             }
-        });
+        }
     }
 }

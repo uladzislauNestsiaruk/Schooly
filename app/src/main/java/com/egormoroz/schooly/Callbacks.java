@@ -1,5 +1,6 @@
 package com.egormoroz.schooly;
 
+import com.egormoroz.schooly.ui.coins.Transfer;
 import com.egormoroz.schooly.ui.main.Mining.Miner;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
 import com.egormoroz.schooly.ui.main.UserInformation;
@@ -54,9 +55,6 @@ public class Callbacks {
     public interface GetTimesTamp{
         void GetTimesTamp(long timesTamp);
     }
-    public interface GetUserNicks{
-        void GetUsersNicks(ArrayList<String> userNicks);
-    }
 
     public interface GetBio{
         void GetBiography(String bio);
@@ -92,11 +90,11 @@ public class Callbacks {
     public interface getLooksList{
         default void getLooksList(ArrayList<NewsItem> look){}
     }
+    public interface getTransferHistory{
+        default void getTransferHistory(ArrayList<Transfer> transfers){}
+    }
     public interface getAmountOfSubscribers{
         default void getAmountOfSubscribers(int amount){}
-    }
-    public interface friendQuery{
-        default void friendQuery(){}
     }
     public interface getSubsCount{
         void getCount(Long subsCount);

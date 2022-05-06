@@ -96,6 +96,7 @@ public class SubscriptionsFragment extends Fragment {
             RecentMethods.getSubscriptionList(nick, firebaseModel, new Callbacks.getFriendsList() {
                 @Override
                 public void getFriendsList(ArrayList<Subscriber> friends) {
+                    userInformation.setSubscription(friends);
                     if (friends.size()==0){
                         emptyList.setVisibility(View.VISIBLE);
                         recyclerView.setVisibility(View.GONE);

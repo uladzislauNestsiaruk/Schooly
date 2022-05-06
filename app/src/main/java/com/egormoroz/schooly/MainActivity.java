@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.egormoroz.schooly.ui.coins.CoinsMainFragment;
+import com.egormoroz.schooly.ui.coins.Transfer;
 import com.egormoroz.schooly.ui.main.MainFragment;
 import com.egormoroz.schooly.ui.main.RegisrtationstartFragment;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
@@ -283,6 +284,26 @@ public class MainActivity extends AppCompatActivity {
                     public void getLooksList(ArrayList<NewsItem> look) {
                         Collections.reverse(look);
                         userInformation.setLooks(look);
+                    }
+                });
+                RecentMethods.getTransferHistory(nick, firebaseModel, new Callbacks.getTransferHistory() {
+                    @Override
+                    public void getTransferHistory(ArrayList<Transfer> transfers) {
+                        Collections.reverse(transfers);
+                        userInformation.setTransfers(transfers);
+                    }
+                });
+                RecentMethods.getSavedLooks(nick, firebaseModel, new Callbacks.getSavedLook() {
+                    @Override
+                    public void getSavedLook(ArrayList<NewsItem> newsItems) {
+                        Collections.reverse(newsItems);
+                        userInformation.setSavedLooks(newsItems);
+                    }
+                });
+                RecentMethods.getBlackList(nick, firebaseModel, new Callbacks.getSubscribersList() {
+                    @Override
+                    public void getSubscribersList(ArrayList<Subscriber> subscribers) {
+                        userInformation.setBlackList(subscribers);
                     }
                 });
             }

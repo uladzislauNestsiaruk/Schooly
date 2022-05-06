@@ -78,19 +78,34 @@ public  class BlackListFragment extends Fragment {
                 RecentMethods.setCurrentFragment(SettingsFragment.newInstance(type,fragment,userInformation),getActivity());
             }
         });
+        setBlackListInAdapter();
+    }
 
-        RecentMethods.getBlackList(nick, firebaseModel, new Callbacks.getSubscribersList() {
-            @Override
-            public void getSubscribersList(ArrayList<Subscriber> subscribers) {
-                if(subscribers.size()==0){
-                    emptyList.setVisibility(View.VISIBLE);
-                    recyclerView.setVisibility(View.GONE);
-                }else {
-                    BlackListAdapter blackListAdapter=new BlackListAdapter(subscribers);
-                    recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-                    recyclerView.setAdapter(blackListAdapter);
+    public void setBlackListInAdapter(){
+        if(userInformation.getBlackList()==null){
+            RecentMethods.getBlackList(nick, firebaseModel, new Callbacks.getSubscribersList() {
+                @Override
+                public void getSubscribersList(ArrayList<Subscriber> subscribers) {
+                    userInformation.setBlackList(subscribers);
+                    if(subscribers.size()==0){
+                        emptyList.setVisibility(View.VISIBLE);
+                        recyclerView.setVisibility(View.GONE);
+                    }else {
+                        BlackListAdapter blackListAdapter=new BlackListAdapter(subscribers);
+                        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+                        recyclerView.setAdapter(blackListAdapter);
+                    }
                 }
+            });
+        }else {
+            if(userInformation.getBlackList().size()==0){
+                emptyList.setVisibility(View.VISIBLE);
+                recyclerView.setVisibility(View.GONE);
+            }else {
+                BlackListAdapter blackListAdapter=new BlackListAdapter(userInformation.getBlackList());
+                recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+                recyclerView.setAdapter(blackListAdapter);
             }
-        });
+        }
     }
 }

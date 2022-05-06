@@ -103,6 +103,7 @@ public class SubscriberFragment extends Fragment {
             RecentMethods.getSubscribersList(nick, firebaseModel, new Callbacks.getSubscribersList() {
                 @Override
                 public void getSubscribersList(ArrayList<Subscriber> subscribers) {
+                    userInformation.setSubscribers(subscribers);
                     if (subscribers.size() == 0) {
                         emptyList.setVisibility(View.VISIBLE);
                         recyclerView.setVisibility(View.GONE);

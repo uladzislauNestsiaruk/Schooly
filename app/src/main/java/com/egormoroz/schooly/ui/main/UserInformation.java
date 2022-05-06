@@ -2,6 +2,7 @@ package com.egormoroz.schooly.ui.main;
 
 import com.egormoroz.schooly.Nontification;
 import com.egormoroz.schooly.Subscriber;
+import com.egormoroz.schooly.ui.coins.Transfer;
 import com.egormoroz.schooly.ui.main.Mining.Miner;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
 import com.egormoroz.schooly.ui.news.NewsItem;
@@ -26,13 +27,16 @@ public class UserInformation {
     private long level=1;
     private long money=100;
     private double todayMining=0;
+    private ArrayList<Transfer> transfers;
     private ArrayList<Subscriber> subscription;
     private ArrayList<Subscriber> subscribers;
+    private ArrayList<Subscriber> blackList;
     private ArrayList<Clothes> myClothes;
     private ArrayList<Clothes> lookClothes;
     private ArrayList<Clothes> clothes;
     private ArrayList<Clothes> clothesBasket;
     private ArrayList<Nontification> notifications;
+    private ArrayList<NewsItem> savedLooks;
     private String queue;
     private String bio;
     private ArrayList<NewsItem> looks;
@@ -116,6 +120,14 @@ public class UserInformation {
         this.looks=looks;
     }
 
+    public ArrayList<NewsItem> getSavedLooks(){
+        return savedLooks;
+    }
+
+    public void setSavedLooks(ArrayList<NewsItem> savedLooks){
+        this.savedLooks=savedLooks;
+    }
+
     public long getLevel() {
         return level;
     }
@@ -142,6 +154,22 @@ public class UserInformation {
 
     public void setSubscription(ArrayList subscription){
         this.subscription = subscription;
+    }
+
+    public ArrayList<Subscriber> getBlackList(){
+        return blackList;
+    }
+
+    public void setBlackList(ArrayList blackList){
+        this.blackList = blackList;
+    }
+
+    public ArrayList<Transfer> getTransfers(){
+        return transfers;
+    }
+
+    public void setTransfers(ArrayList transfers){
+        this.transfers = transfers;
     }
 
     public String getChatsNontsType(){
@@ -256,7 +284,8 @@ public class UserInformation {
                            ArrayList<Subscriber> subscription, ArrayList<Subscriber> subscribers, String queue, String bio,
                            String accountType, String chatsNontsType,
                            String groupChatsNontsType, String profileNontsType, ArrayList<Clothes> myClothes, String version,
-                           ArrayList<NewsItem> looks,long miningPremium,ArrayList<Clothes> lookClothes,ArrayList<Clothes> clothes,ArrayList<Nontification> notifications) {
+                           ArrayList<NewsItem> looks,long miningPremium,ArrayList<Clothes> lookClothes,ArrayList<Clothes> clothes,ArrayList<Nontification> notifications
+    ,ArrayList<Transfer> transfers, ArrayList<NewsItem> savedLooks,ArrayList<Subscriber> blackList) {
         this.Nick = nick;
         this.uid = uid;
         this.phone = phone;
@@ -284,6 +313,9 @@ public class UserInformation {
         this.lookClothes=lookClothes;
         this.clothes=clothes;
         this.notifications=notifications;
+        this.transfers=transfers;
+        this.savedLooks=savedLooks;
+        this.blackList=blackList;
     }
 
 }

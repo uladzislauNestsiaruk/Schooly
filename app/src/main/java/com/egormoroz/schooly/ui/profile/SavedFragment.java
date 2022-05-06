@@ -82,26 +82,51 @@ public class SavedFragment extends Fragment {
 
         requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(), callback);
 
-        RecentMethods.getSavedLooks(nick, firebaseModel, new Callbacks.getSavedLook() {
-            @Override
-            public void getSavedLook(ArrayList<NewsItem> newsItems) {
-                if(newsItems.size()==0){
-                    emptyList.setVisibility(View.VISIBLE);
-                    recyclerView.setVisibility(View.GONE);
-                }else {
-                    Collections.reverse(newsItems);
-                    LooksAdapter looksAdapter=new LooksAdapter(newsItems, SavedFragment.newInstance(type,fragment,userInformation),recyclerView);
-                    recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
-                    recyclerView.setAdapter(looksAdapter);
-                    LooksAdapter.ItemClickListener itemClickListener=new LooksAdapter.ItemClickListener() {
-                        @Override
-                        public void onItemClick(NewsItem newsItem) {
-                            RecentMethods.setCurrentFragment(ViewingLookFragment.newInstance(SavedFragment.newInstance(type,fragment,userInformation),userInformation), getActivity());
-                        }
-                    };
-                    looksAdapter.setClickListener(itemClickListener);
+        setSavedLooksInAdapter();
+
+    }
+
+    public void setSavedLooksInAdapter(){
+        if(userInformation.getSavedLooks()==null){
+            RecentMethods.getSavedLooks(nick, firebaseModel, new Callbacks.getSavedLook() {
+                @Override
+                public void getSavedLook(ArrayList<NewsItem> newsItems) {
+                    userInformation.setSavedLooks(newsItems);
+                    if(newsItems.size()==0){
+                        emptyList.setVisibility(View.VISIBLE);
+                        recyclerView.setVisibility(View.GONE);
+                    }else {
+                        Collections.reverse(newsItems);
+                        LooksAdapter looksAdapter=new LooksAdapter(newsItems, SavedFragment.newInstance(type,fragment,userInformation),recyclerView);
+                        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
+                        recyclerView.setAdapter(looksAdapter);
+                        LooksAdapter.ItemClickListener itemClickListener=new LooksAdapter.ItemClickListener() {
+                            @Override
+                            public void onItemClick(NewsItem newsItem) {
+                                RecentMethods.setCurrentFragment(ViewingLookFragment.newInstance(SavedFragment.newInstance(type,fragment,userInformation),userInformation), getActivity());
+                            }
+                        };
+                        looksAdapter.setClickListener(itemClickListener);
+                    }
                 }
+            });
+        }else {
+            if(userInformation.getSavedLooks().size()==0){
+                emptyList.setVisibility(View.VISIBLE);
+                recyclerView.setVisibility(View.GONE);
+            }else {
+                Collections.reverse(userInformation.getSavedLooks());
+                LooksAdapter looksAdapter=new LooksAdapter(userInformation.getSavedLooks(), SavedFragment.newInstance(type,fragment,userInformation),recyclerView);
+                recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
+                recyclerView.setAdapter(looksAdapter);
+                LooksAdapter.ItemClickListener itemClickListener=new LooksAdapter.ItemClickListener() {
+                    @Override
+                    public void onItemClick(NewsItem newsItem) {
+                        RecentMethods.setCurrentFragment(ViewingLookFragment.newInstance(SavedFragment.newInstance(type,fragment,userInformation),userInformation), getActivity());
+                    }
+                };
+                looksAdapter.setClickListener(itemClickListener);
             }
-        });
+        }
     }
 }

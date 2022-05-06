@@ -1,6 +1,7 @@
 package com.egormoroz.schooly;
 import android.app.Activity;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -8,7 +9,10 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.egormoroz.schooly.ui.coins.Transfer;
+import com.egormoroz.schooly.ui.coins.TransferHistoryAdapter;
 import com.egormoroz.schooly.ui.main.Mining.Miner;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
 import com.egormoroz.schooly.ui.main.UserInformation;
@@ -25,6 +29,7 @@ import com.google.firebase.database.*;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Queue;
 
@@ -115,7 +120,8 @@ public class RecentMethods {
                 "6", "unknown", "Helicopter", 1000
                 , new ArrayList<>(),new ArrayList<>(), 1,100,0, new ArrayList<>(),new ArrayList<>(),
                 "","","open","open","open",
-                "open",new ArrayList<>(),"regular", new ArrayList<>(),0,new ArrayList<>(),new ArrayList<>(),new ArrayList<>());
+                "open",new ArrayList<>(),"regular", new ArrayList<>(),0,new ArrayList<>(),new ArrayList<>(),new ArrayList<>()
+        ,new ArrayList<>(),new ArrayList<>(),new ArrayList<>());
         ref.child(nick).setValue(res);
         return nick.isEmpty();
     }
@@ -253,6 +259,30 @@ public class RecentMethods {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    public static void getTransferHistory(String nick,FirebaseModel firebaseModel,Callbacks.getTransferHistory callback){
+        firebaseModel.initAll();
+        Query query=firebaseModel.getUsersReference().child(nick).child("transferHistory").orderByKey();
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                ArrayList<Transfer> transferHistoryBase=new ArrayList<>();
+                for (DataSnapshot snap : dataSnapshot.getChildren()) {
+                    Transfer transfer=new Transfer();
+                    transfer.setSum(snap.child("sum").getValue(Long.class));
+                    transfer.setType(snap.child("type").getValue(String.class));
+                    transfer.setWho(snap.child("who").getValue(String.class));
+                    transferHistoryBase.add(transfer);
+                }
+                callback.getTransferHistory(transferHistoryBase);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
         });

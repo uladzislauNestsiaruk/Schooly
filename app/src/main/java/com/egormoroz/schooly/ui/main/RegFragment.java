@@ -310,7 +310,7 @@ public class RegFragment extends Fragment {
                                     "6", password, "Helicopter", 1000, new ArrayList<>(),new ArrayList<>(),1,100,0
                                     , new ArrayList<>(), new ArrayList<>(), ""," ","open","open","open","open"
                                     ,new ArrayList<>(),"regular", new ArrayList<>(),0,new ArrayList<>(),new ArrayList<>()
-                            ,new ArrayList<>());
+                            ,new ArrayList<>(),new ArrayList<>(),new ArrayList<>(),new ArrayList<>());
                             reference.child(nick).setValue(res);
                             database.getReference("usersNicks")
                                     .child(nick).setValue(new UserPeopleAdapter(nick,"6"," "));
