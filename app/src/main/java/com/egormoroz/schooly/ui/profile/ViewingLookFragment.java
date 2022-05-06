@@ -145,6 +145,18 @@ public class ViewingLookFragment extends Fragment {
             public void onItemClick(NewsItem newsItem) {
                 loadModels(Uri.parse(newsItem.getImageUrl()), sceneView, ViewingLookFragment.this, 0.25f);
                 nickView.setText(newsItem.getNick());
+                nickView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String userNameToProfile=nickView.getText().toString();
+                        if(userNameToProfile.equals(nick)){
+                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback",nick,ViewingLookFragment.newInstance(fragment, userInformation),userInformation),getActivity());
+                        }else {
+                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile,fragment,userInformation
+                            ), getActivity());
+                        }
+                    }
+                });
                 likesCountString=String.valueOf(newsItem.getLikes_count());
                 comment.setOnClickListener(new View.OnClickListener() {
                     @Override
