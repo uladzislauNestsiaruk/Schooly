@@ -115,7 +115,6 @@ public class SavedFragment extends Fragment {
                 emptyList.setVisibility(View.VISIBLE);
                 recyclerView.setVisibility(View.GONE);
             }else {
-                Collections.reverse(userInformation.getSavedLooks());
                 LooksAdapter looksAdapter=new LooksAdapter(userInformation.getSavedLooks(), SavedFragment.newInstance(type,fragment,userInformation),recyclerView);
                 recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
                 recyclerView.setAdapter(looksAdapter);

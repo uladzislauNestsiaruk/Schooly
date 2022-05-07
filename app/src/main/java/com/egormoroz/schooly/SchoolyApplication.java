@@ -1,9 +1,13 @@
 package com.egormoroz.schooly;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ProcessLifecycleOwner;
 import androidx.work.Constraints;
@@ -20,7 +24,7 @@ import com.egormoroz.schooly.ui.main.Mining.Miner;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
-public class SchoolyApplication extends Application {
+public class SchoolyApplication extends Application implements Application.ActivityLifecycleCallbacks {
 
     FirebaseModel firebaseModel=new FirebaseModel();
         Miner firstMiner,secondMiner,thirdMiner,fourthMiner,fifthMiner;
@@ -28,24 +32,17 @@ public class SchoolyApplication extends Application {
     double firstMinerInHour,secondMinerInHour,thirdMinerInHour,fourthMinerInHour,fifthMinerInHour;
     static double todayMining;
     Thread thread;
-    int a;
+    private int activityReferences = 0;
+    private boolean isActivityChangingConfigurations = false;
     @Override
     public void onCreate() {
         super.onCreate();
         firebaseModel.initAll();
-//        Log.d("####", "v "+ProcessLifecycleOwner.get().getLifecycle().getCurrentState());
-//        if(ProcessLifecycleOwner.get().getLifecycle().getCurrentState() == Lifecycle.State.CREATED){
-//            a=1;
-//            startMining();
-//            Log.d("####", "fuck "+a);
-//        }else if(ProcessLifecycleOwner.get().getLifecycle().getCurrentState() == Lifecycle.State.DESTROYED){
-//           a=2;
-//            Log.d("####", "wtf "+ProcessLifecycleOwner.get().getLifecycle().getCurrentState());
-//        }
+        registerActivityLifecycleCallbacks(this);
     }
 
     public void startMining(){
-        if(a==1){
+        if(activityReferences==1){
             RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
                 @Override
                 public void PassUserNick(String nick) {
@@ -137,6 +134,46 @@ public class SchoolyApplication extends Application {
             }
         });
     }
+
+    @Override
+    public void onActivityCreated(@NonNull Activity activity, @Nullable Bundle savedInstanceState) {
+
+    }
+
+    @Override
+    public void onActivityStarted(@NonNull Activity activity) {
+        if (++activityReferences == 1 && !isActivityChangingConfigurations) {
+            //startMining();
+        }
+    }
+
+    @Override
+    public void onActivityResumed(@NonNull Activity activity) {
+
+    }
+
+    @Override
+    public void onActivityPaused(@NonNull Activity activity) {
+
+    }
+
+    @Override
+    public void onActivityStopped(@NonNull Activity activity) {
+        isActivityChangingConfigurations = activity.isChangingConfigurations();
+        if (--activityReferences == 0 && !isActivityChangingConfigurations) {
+            thread.stop();
+        }
+    }
+
+    @Override
+    public void onActivitySaveInstanceState(@NonNull Activity activity, @NonNull Bundle outState) {
+
+    }
+
+    @Override
+    public void onActivityDestroyed(@NonNull Activity activity) {
+
+    }
 //        Constraints constraints = new Constraints.Builder()
 //                .setRequiredNetworkType(NetworkType.CONNECTED)
 //                .build();
@@ -154,6 +191,5 @@ public class SchoolyApplication extends Application {
 //
 //        WorkManager.getInstance(getApplicationContext()).enqueue(notificationWorkRequest);
 //        WorkManager.getInstance(getApplicationContext()).enqueueUniquePeriodicWork("###", ExistingPeriodicWorkPolicy.KEEP,miningWorkRequest);
-
 }
 

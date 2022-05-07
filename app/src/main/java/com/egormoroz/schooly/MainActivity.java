@@ -54,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
     RelativeLayout relativeLayout;
     TextView s,loading;
     CoordinatorLayout fragmentContainer;
+    String TAG="###";
     private static final String CHANNEL_ID = "channel";
     FirebaseModel firebaseModel=new FirebaseModel();
     @Override
@@ -178,24 +179,8 @@ public class MainActivity extends AppCompatActivity {
         AuthenticationBase = FirebaseAuth.getInstance();
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-    }
-
     public interface GetTimeStamp{
         public void GetTimeStamp(long timestamp);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-            @Override
-            public void PassUserNick(String nick) {
-                firebaseModel.getUsersReference().child(nick).child("timesTamp").setValue(ServerValue.TIMESTAMP);
-            }
-        });
     }
 
     public void getMyClothes(String nick){
@@ -299,6 +284,7 @@ public class MainActivity extends AppCompatActivity {
                     public void getSavedLook(ArrayList<NewsItem> newsItems) {
                         Collections.reverse(newsItems);
                         userInformation.setSavedLooks(newsItems);
+                        Log.d("###", "ok  "+newsItems);
                     }
                 });
                 RecentMethods.getBlackList(nick, firebaseModel, new Callbacks.getSubscribersList() {
@@ -313,6 +299,17 @@ public class MainActivity extends AppCompatActivity {
                         userInformation.setAlreadySearched(searchedUserFromBase);
                     }
                 });
+            }
+        });
+    }
+    @Override
+    protected void onStop(){
+        super.onStop();
+        Log.d(TAG, "onStop");
+        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+            @Override
+            public void PassUserNick(String nick) {
+                firebaseModel.getUsersReference().child(nick).child("timesTamp").setValue(ServerValue.TIMESTAMP);
             }
         });
     }

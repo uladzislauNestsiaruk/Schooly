@@ -482,7 +482,6 @@ public class MainFragment extends Fragment{
                     }
                 };
                 relativeFirstLayout.setVisibility(View.GONE);
-                Collections.reverse(userInformation.getMyClothes());
                 MyClothesAdapterMain myClothesAdapterMain=new MyClothesAdapterMain(userInformation.getMyClothes(), itemClickListenerMyClothes);
                 myClothesRecycler.setAdapter(myClothesAdapterMain);
                 for( int i=0;i<userInformation.getMyClothes().size();i++){

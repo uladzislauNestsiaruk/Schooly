@@ -79,17 +79,12 @@ public class PeopleFragment extends Fragment {
                         public void onItemClick(View view, int position) {
                             UserPeopleAdapter user = alreadySearchAdapter.getItem(position);
                             userNameToProfile = user.getNick();
-                            RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-                                @Override
-                                public void PassUserNick(String nick) {
-                                    if (userNameToProfile.equals(nick)) {
-                                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback", nick, PeopleFragment.newInstance(userInformation),userInformation), getActivity());
-                                    } else {
-                                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile, PeopleFragment.newInstance(userInformation),userInformation),
-                                                getActivity());
-                                    }
-                                }
-                            });
+                            if (userNameToProfile.equals(nick)) {
+                                RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback", nick, PeopleFragment.newInstance(userInformation),userInformation), getActivity());
+                            } else {
+                                RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile, PeopleFragment.newInstance(userInformation),userInformation),
+                                        getActivity());
+                            }
                         }
                     };
                     alreadySearchAdapter.setClickListener(itemClickListener);
@@ -184,15 +179,15 @@ public class PeopleFragment extends Fragment {
                                 upa.setBio(snap.child("bio").getValue(String.class));
                                 upa.setAvatar(snap.child("avatar").getValue(String.class));
                                 String nickName = upa.getNick();
-                                String nick = nickName;
+                                String nick1 = nickName;
                                 int valueLetters = userName.length();
-                                nick = nick.toLowerCase();
-                                if (nick.length() < valueLetters) {
-                                    if (nick.equals(userName))
+                                nick1 = nick1.toLowerCase();
+                                if (nick1.length() < valueLetters) {
+                                    if (nick1.equals(userName))
                                         userFromBase.add(upa);
                                 } else {
-                                    nick = nick.substring(0, valueLetters);
-                                    if (nick.equals(userName))
+                                    nick1 = nick1.substring(0, valueLetters);
+                                    if (nick1.equals(userName))
                                         userFromBase.add(upa);
                                 }
 
