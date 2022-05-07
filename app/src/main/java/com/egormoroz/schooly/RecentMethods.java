@@ -1099,7 +1099,7 @@ public class RecentMethods {
     public static void getSubscribersList(String nickName, FirebaseModel model, Callbacks.getSubscribersList callback){
         model.initAll();
         Query query=model.getUsersReference().child(nickName).child("subscribers");
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
+        query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 ArrayList<Subscriber> subscribersList = new ArrayList<>();
@@ -1123,7 +1123,7 @@ public class RecentMethods {
     public static void getBlackList(String nickName, FirebaseModel model, Callbacks.getSubscribersList callback){
         model.initAll();
         Query query=model.getUsersReference().child(nickName).child("blackList");
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
+        query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 ArrayList<Subscriber> subscribersList = new ArrayList<>();
@@ -1145,7 +1145,7 @@ public class RecentMethods {
     public static void getSavedLooks(String nickName, FirebaseModel model, Callbacks.getSavedLook callback){
         model.initAll();
         Query query=model.getUsersReference().child(nickName).child("saved").orderByKey();
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
+        query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 ArrayList<NewsItem> savedArrayList = new ArrayList<>();
@@ -1245,7 +1245,7 @@ public class RecentMethods {
     public static void getSubscriptionList(String nickName, FirebaseModel model, Callbacks.getFriendsList callback){
         model.initAll();
         Query query=model.getUsersReference().child(nickName).child("subscription");
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
+        query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 ArrayList<Subscriber> subscribersList = new ArrayList<>();

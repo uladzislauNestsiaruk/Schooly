@@ -284,7 +284,6 @@ public class MainActivity extends AppCompatActivity {
                     public void getSavedLook(ArrayList<NewsItem> newsItems) {
                         Collections.reverse(newsItems);
                         userInformation.setSavedLooks(newsItems);
-                        Log.d("###", "ok  "+newsItems);
                     }
                 });
                 RecentMethods.getBlackList(nick, firebaseModel, new Callbacks.getSubscribersList() {

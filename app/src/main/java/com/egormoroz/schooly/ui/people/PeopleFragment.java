@@ -98,17 +98,12 @@ public class PeopleFragment extends Fragment {
                 public void onItemClick(View view, int position) {
                     UserPeopleAdapter user = alreadySearchAdapter.getItem(position);
                     userNameToProfile = user.getNick();
-                    RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-                        @Override
-                        public void PassUserNick(String nick) {
-                            if (userNameToProfile.equals(nick)) {
-                                RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback", nick, PeopleFragment.newInstance(userInformation),userInformation), getActivity());
-                            } else {
-                                RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile, PeopleFragment.newInstance(userInformation),userInformation),
-                                        getActivity());
-                            }
-                        }
-                    });
+                    if (userNameToProfile.equals(nick)) {
+                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback", nick, PeopleFragment.newInstance(userInformation),userInformation), getActivity());
+                    } else {
+                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile, PeopleFragment.newInstance(userInformation),userInformation),
+                                getActivity());
+                    }
                 }
             };
             alreadySearchAdapter.setClickListener(itemClickListener);
