@@ -408,13 +408,6 @@ public class ViewingLookFragment extends Fragment {
 
         final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(getContext());
         bottomSheetDialog.setContentView(R.layout.bottom_sheet_dialog_clothescreators);
-        itemClickListenerClothes=new ConstituentsAdapter.ItemClickListener() {
-            @Override
-            public void onItemClick(Clothes clothes) {
-                bottomSheetDialog.dismiss();
-                RecentMethods.setCurrentFragment(ViewingClothesNews.newInstance(ViewingLookFragment.newInstance(fragment, userInformation),userInformation), getActivity());
-            }
-        };
         clothesCreatorsRecycler=bottomSheetDialog.findViewById(R.id.recyclerView);
         RecentMethods.getLookClothes(newsItem.getNick(), newsItem.getNewsId(), firebaseModel, new Callbacks.getLookClothes() {
             @Override
@@ -424,6 +417,13 @@ public class ViewingLookFragment extends Fragment {
                 clothesCreatorsRecycler.setAdapter(constituentsAdapter);
             }
         });
+        itemClickListenerClothes=new ConstituentsAdapter.ItemClickListener() {
+            @Override
+            public void onItemClick(Clothes clothes) {
+                bottomSheetDialog.dismiss();
+                RecentMethods.setCurrentFragment(ViewingClothesNews.newInstance(ViewingLookFragment.newInstance(fragment, userInformation),userInformation), getActivity());
+            }
+        };
 
         bottomSheetDialog.show();
     }

@@ -6,6 +6,7 @@ import com.egormoroz.schooly.ui.main.Shop.Clothes;
 import com.egormoroz.schooly.ui.main.UserInformation;
 import com.egormoroz.schooly.ui.news.Comment;
 import com.egormoroz.schooly.ui.news.NewsItem;
+import com.egormoroz.schooly.ui.people.UserPeopleAdapter;
 import com.egormoroz.schooly.ui.profile.Look;
 import com.egormoroz.schooly.ui.profile.Reason;
 
@@ -61,6 +62,10 @@ public class Callbacks {
     }
     public interface GetClothes{
         default void getClothes(ArrayList<Clothes> allClothes) {
+        }
+    }
+    public interface GetAlreadySearched{
+        default void getAlreadySearched(ArrayList<UserPeopleAdapter> searchedUserFromBase) {
         }
     }
     public interface getFriendsList{

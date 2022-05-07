@@ -219,15 +219,17 @@ public class ViewingClothesBasket extends Fragment {
 
     public void checkIfBuy(){
         firebaseModel.getUsersReference().child(userInformation.getNick()).child("clothes")
-                .child(clothesViewing.getUid()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                .child(clothesViewing.getUid()).addValueEventListener(new ValueEventListener() {
             @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if(task.isSuccessful()){
-                    DataSnapshot snapshot=task.getResult();
-                    if(snapshot.exists()){
-                        a=3;
-                    }else {}
-                }
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists()){
+                    a=3;
+                }else {}
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
             }
         });
     }
@@ -258,58 +260,62 @@ public class ViewingClothesBasket extends Fragment {
                             DataSnapshot snapshot= task.getResult();
                             if(snapshot.exists()){
                                 a=3;
-                                Toast.makeText(getContext(), "Предмет уже куплен", Toast.LENGTH_SHORT).show();
+                                showDialogBasket("Предмет уже куплен");
                             }else {}
+                            if(a!=0 && a!=3){
+                                if(a==1){
+                                    firebaseModel.getUsersReference().child(userInformation.getNick()).child("basket")
+                                            .child(clothesViewing.getUid()).removeValue();
+                                }else if (a==2){
+                                    firebaseModel.getUsersReference().child(userInformation.getNick()).child("basket")
+                                            .child(clothesViewing.getUid()).setValue(clothesViewing);
+                                }
+                            }
                         }
                     }
                 });
-                if(a!=0 && a!=3){
-                    if(a==1){
-                        firebaseModel.getUsersReference().child(userInformation.getNick()).child("basket")
-                                .child(clothesViewing.getUid()).removeValue();
-                    }else if (a==2){
-                        firebaseModel.getUsersReference().child(userInformation.getNick()).child("basket")
-                                .child(clothesViewing.getUid()).setValue(clothesViewing);
-                    }
-                }
             }
         });
     }
 
     public void checkClothes(){
         firebaseModel.getUsersReference().child(userInformation.getNick()).child("basket").
-                child(String.valueOf(clothesViewing.getUid())).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                child(String.valueOf(clothesViewing.getUid())).addValueEventListener(new ValueEventListener() {
             @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if(task.isSuccessful()){
-                    DataSnapshot snapshot= task.getResult();
-                    if(snapshot.exists()){
-                        a=1;
-                        inBasket.setVisibility(View.VISIBLE);
-                        notInBasket.setVisibility(View.GONE);
-                    }else {
-                        a=2;
-                        inBasket.setVisibility(View.GONE);
-                        notInBasket.setVisibility(View.VISIBLE);
-                    }
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists()){
+                    a=1;
+                    inBasket.setVisibility(View.VISIBLE);
+                    notInBasket.setVisibility(View.GONE);
+                }else {
+                    a=2;
+                    inBasket.setVisibility(View.GONE);
+                    notInBasket.setVisibility(View.VISIBLE);
                 }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
             }
         });
     }
 
     public void checkClothesOnBuy(){
-        firebaseModel.getUsersReference().child(userInformation.getNick()).child("clothes").
-                child(String.valueOf(clothesViewing.getUid())).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+        firebaseModel.getUsersReference().child(userInformation.getNick()).child("clothes")
+                .child(String.valueOf(clothesViewing.getUid())).addValueEventListener(new ValueEventListener() {
             @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if(task.isSuccessful()){
-                    DataSnapshot snapshot= task.getResult();
-                    if(snapshot.exists()){
-                        buyClothesBottom.setText("Куплено");
-                    }else {
-                        buyClothesBottom.setText("Купить");
-                    }
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists()){
+                    buyClothesBottom.setText("Куплено");
+                }else {
+                    buyClothesBottom.setText("Купить");
                 }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
             }
         });
     }
@@ -487,6 +493,27 @@ public class ViewingClothesBasket extends Fragment {
 
 
         });
+    }
+
+    public void showDialogBasket(String textInDialog){
+
+        final Dialog dialog = new Dialog(getActivity());
+        dialog.setContentView(R.layout.dialog_layout);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        TextView text=dialog.findViewById(R.id.Text);
+        text.setText(textInDialog);
+        RelativeLayout relative=dialog.findViewById(R.id.Relative);
+
+
+        relative.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
     }
 
     public void showDialog(){

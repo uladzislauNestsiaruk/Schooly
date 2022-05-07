@@ -61,50 +61,64 @@ public class PeopleFragment extends Fragment {
         peopleRecyclerView=view.findViewById(R.id.peoplerecycler);
         searchUser=view.findViewById(R.id.searchuser);
         firebaseModel.initAll();
-        Query query3=firebaseModel.getUsersReference().child(nick).child("alreadySearched");
-        query3.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                ArrayList<UserPeopleAdapter> searchedUserFromBase=new ArrayList<>();
-                for (DataSnapshot snap : snapshot.getChildren()) {
-                    UserPeopleAdapter upaSearch=new UserPeopleAdapter();
-                    upaSearch.setNick(snap.child("nick").getValue(String.class));
-                    upaSearch.setBio(snap.child("bio").getValue(String.class));
-                    upaSearch.setAvatar(snap.child("avatar").getValue(String.class));
-                    searchedUserFromBase.add(upaSearch);
-                }
-                AlreadySearchAdapter alreadySearchAdapter=new AlreadySearchAdapter(searchedUserFromBase);
-                peopleRecyclerView.setAdapter(alreadySearchAdapter);
-                AlreadySearchAdapter.ItemClickListener itemClickListener=new AlreadySearchAdapter.ItemClickListener() {
-                    @Override
-                    public void onItemClick(View view, int position) {
-                        UserPeopleAdapter user = alreadySearchAdapter.getItem(position);
-                        userNameToProfile = user.getNick();
-                        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-                            @Override
-                            public void PassUserNick(String nick) {
-                                if (userNameToProfile.equals(nick)) {
-                                    RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback", nick, PeopleFragment.newInstance(userInformation),userInformation), getActivity());
-                                } else {
-                                    RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile, PeopleFragment.newInstance(userInformation),userInformation),
-                                            getActivity());
-                                }
-                            }
-                        });
-                    }
-                };
-                alreadySearchAdapter.setClickListener(itemClickListener);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
+        setAlreadySearchedInAdapter();
         initUserEnter();
         setPeopleData();
     }
 
+    public void setAlreadySearchedInAdapter(){
+        if(userInformation.getAlreadySearched()==null){
+            RecentMethods.getAlreadySearched(nick, firebaseModel, new Callbacks.GetAlreadySearched() {
+                @Override
+                public void getAlreadySearched(ArrayList<UserPeopleAdapter> searchedUserFromBase) {
+                    userInformation.setAlreadySearched(searchedUserFromBase);
+                    AlreadySearchAdapter alreadySearchAdapter=new AlreadySearchAdapter(searchedUserFromBase);
+                    peopleRecyclerView.setAdapter(alreadySearchAdapter);
+                    AlreadySearchAdapter.ItemClickListener itemClickListener=new AlreadySearchAdapter.ItemClickListener() {
+                        @Override
+                        public void onItemClick(View view, int position) {
+                            UserPeopleAdapter user = alreadySearchAdapter.getItem(position);
+                            userNameToProfile = user.getNick();
+                            RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+                                @Override
+                                public void PassUserNick(String nick) {
+                                    if (userNameToProfile.equals(nick)) {
+                                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback", nick, PeopleFragment.newInstance(userInformation),userInformation), getActivity());
+                                    } else {
+                                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile, PeopleFragment.newInstance(userInformation),userInformation),
+                                                getActivity());
+                                    }
+                                }
+                            });
+                        }
+                    };
+                    alreadySearchAdapter.setClickListener(itemClickListener);
+                }
+            });
+        }else {
+            AlreadySearchAdapter alreadySearchAdapter=new AlreadySearchAdapter(userInformation.getAlreadySearched());
+            peopleRecyclerView.setAdapter(alreadySearchAdapter);
+            AlreadySearchAdapter.ItemClickListener itemClickListener=new AlreadySearchAdapter.ItemClickListener() {
+                @Override
+                public void onItemClick(View view, int position) {
+                    UserPeopleAdapter user = alreadySearchAdapter.getItem(position);
+                    userNameToProfile = user.getNick();
+                    RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+                        @Override
+                        public void PassUserNick(String nick) {
+                            if (userNameToProfile.equals(nick)) {
+                                RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback", nick, PeopleFragment.newInstance(userInformation),userInformation), getActivity());
+                            } else {
+                                RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile, PeopleFragment.newInstance(userInformation),userInformation),
+                                        getActivity());
+                            }
+                        }
+                    });
+                }
+            };
+            alreadySearchAdapter.setClickListener(itemClickListener);
+        }
+    }
     public void setPeopleData(){
         listAdapterPeople.add(new UserInformation("nick", "fidjfif", "gk",
                 "6", "password", "Helicopter", 1000, new ArrayList<>(),new ArrayList<>(),1,100,0, new ArrayList<>()

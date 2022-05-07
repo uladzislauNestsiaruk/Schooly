@@ -18,6 +18,7 @@ import com.egormoroz.schooly.ui.main.Shop.Clothes;
 import com.egormoroz.schooly.ui.main.UserInformation;
 import com.egormoroz.schooly.ui.news.Comment;
 import com.egormoroz.schooly.ui.news.NewsItem;
+import com.egormoroz.schooly.ui.people.UserPeopleAdapter;
 import com.egormoroz.schooly.ui.profile.Look;
 import com.egormoroz.schooly.ui.profile.Reason;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -283,6 +284,29 @@ public class RecentMethods {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public static void getAlreadySearched(String nick,FirebaseModel firebaseModel,Callbacks.GetAlreadySearched callback){
+        firebaseModel.initAll();
+        firebaseModel.getUsersReference().child(nick).child("alreadySearched").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                ArrayList<UserPeopleAdapter> searchedUserFromBase=new ArrayList<>();
+                for (DataSnapshot snap : snapshot.getChildren()) {
+                    UserPeopleAdapter upaSearch=new UserPeopleAdapter();
+                    upaSearch.setNick(snap.child("nick").getValue(String.class));
+                    upaSearch.setBio(snap.child("bio").getValue(String.class));
+                    upaSearch.setAvatar(snap.child("avatar").getValue(String.class));
+                    searchedUserFromBase.add(upaSearch);
+                }
+                callback.getAlreadySearched(searchedUserFromBase);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
 
             }
         });

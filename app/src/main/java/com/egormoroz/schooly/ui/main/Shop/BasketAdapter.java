@@ -73,13 +73,7 @@ public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.ViewHolder
     query.addValueEventListener(new ValueEventListener() {
       @Override
       public void onDataChange(@NonNull DataSnapshot snapshot) {
-        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-          @Override
-          public void PassUserNick(String nick) {
-              holder.purchaseNumber.setText(String.valueOf(snapshot.getValue(Long.class)));
-
-          }
-        });
+        holder.purchaseNumber.setText(String.valueOf(snapshot.getValue(Long.class)));
       }
 
       @Override

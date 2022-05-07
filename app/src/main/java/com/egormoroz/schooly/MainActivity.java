@@ -25,6 +25,7 @@ import com.egormoroz.schooly.ui.main.UserInformation;
 import com.egormoroz.schooly.ui.news.NewsFragment;
 import com.egormoroz.schooly.ui.news.NewsItem;
 import com.egormoroz.schooly.ui.people.PeopleFragment;
+import com.egormoroz.schooly.ui.people.UserPeopleAdapter;
 import com.egormoroz.schooly.ui.profile.ProfileFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -304,6 +305,12 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void getSubscribersList(ArrayList<Subscriber> subscribers) {
                         userInformation.setBlackList(subscribers);
+                    }
+                });
+                RecentMethods.getAlreadySearched(nick, firebaseModel, new Callbacks.GetAlreadySearched() {
+                    @Override
+                    public void getAlreadySearched(ArrayList<UserPeopleAdapter> searchedUserFromBase) {
+                        userInformation.setAlreadySearched(searchedUserFromBase);
                     }
                 });
             }

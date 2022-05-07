@@ -6,6 +6,7 @@ import com.egormoroz.schooly.ui.coins.Transfer;
 import com.egormoroz.schooly.ui.main.Mining.Miner;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
 import com.egormoroz.schooly.ui.news.NewsItem;
+import com.egormoroz.schooly.ui.people.UserPeopleAdapter;
 import com.google.firebase.database.IgnoreExtraProperties;
 
 import java.util.ArrayList;
@@ -28,6 +29,7 @@ public class UserInformation {
     private long money=100;
     private double todayMining=0;
     private ArrayList<Transfer> transfers;
+    private ArrayList<UserPeopleAdapter> alreadySearched;
     private ArrayList<Subscriber> subscription;
     private ArrayList<Subscriber> subscribers;
     private ArrayList<Subscriber> blackList;
@@ -102,6 +104,14 @@ public class UserInformation {
 
     public void setMiners(ArrayList<Miner> activeMinerArrayList){
         this.activeMinerArrayList=activeMinerArrayList;
+    }
+
+    public ArrayList<UserPeopleAdapter> getAlreadySearched(){
+        return alreadySearched;
+    }
+
+    public void setAlreadySearched(ArrayList<UserPeopleAdapter> alreadySearched){
+        this.alreadySearched=alreadySearched;
     }
 
     public ArrayList<Miner> getMyMiners(){
