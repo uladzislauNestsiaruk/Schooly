@@ -298,6 +298,12 @@ public class MainActivity extends AppCompatActivity {
                         userInformation.setAlreadySearched(searchedUserFromBase);
                     }
                 });
+                RecentMethods.GetMoneyFromBase(nick, firebaseModel, new Callbacks.MoneyFromBase() {
+                    @Override
+                    public void GetMoneyFromBase(long money) {
+                        userInformation.setmoney(money);
+                    }
+                });
             }
         });
     }

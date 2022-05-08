@@ -80,6 +80,13 @@ class WardrobeClothesAdapter extends RecyclerView.Adapter<WardrobeClothesAdapter
                 });
             }
         });
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onClothesClick.onItemClick(clothesArrayListWardrobe.get(holder.getAdapterPosition()));
+                trueClothes=clothesArrayListWardrobe.get(holder.getAdapterPosition());
+            }
+        });
     }
 
 

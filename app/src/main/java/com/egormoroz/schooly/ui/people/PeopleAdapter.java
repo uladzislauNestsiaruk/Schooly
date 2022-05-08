@@ -46,7 +46,8 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.ViewHolder
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (clickListener != null) clickListener.onItemClick(v, position);
+                if (clickListener != null) clickListener.onItemClick(v, position, userInformation.getAvatar()
+                , userInformation.getBio());
             }
         });
     }
@@ -75,6 +76,6 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.ViewHolder
     }
 
     public interface ItemClickListener {
-        void onItemClick(View view, int position);
+        void onItemClick(View view, int position,String avatar,String bio);
     }
 }

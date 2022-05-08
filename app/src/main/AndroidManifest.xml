@@ -28,16 +28,6 @@
         <activity android:name=".ui.main.GroupChatActivity" />
         <activity android:name=".ui.Model.SceneViewModelActivity"/>
         <!--        <activity android:name=".ModelActivity" />-->
-        <service            android:name=".SchoolyService"
-            android:enabled="true"
-            android:exported="true" >
-        </service>
-        <service
-            android:name=".ui.main.NontificationService"
-            android:enabled="true"
-            android:exported="true"
-            android:stopWithTask="false">
-        </service>
         <activity
             android:name=".MainActivity"
             android:screenOrientation="portrait"

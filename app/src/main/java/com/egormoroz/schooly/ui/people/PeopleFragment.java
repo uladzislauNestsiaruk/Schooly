@@ -125,41 +125,7 @@ public class PeopleFragment extends Fragment {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 if (String.valueOf(searchUser.getText()).trim().length()==0){
-                    Query query3=firebaseModel.getUsersReference().child(nick).child("alreadySearched");
-                    query3.addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            ArrayList<UserPeopleAdapter> searchedUserFromBase=new ArrayList<>();
-                            for (DataSnapshot snap : snapshot.getChildren()) {
-                                UserPeopleAdapter upa=new UserPeopleAdapter();
-                                upa.setNick(snap.child("nick").getValue(String.class));
-                                upa.setBio(snap.child("bio").getValue(String.class));
-                                upa.setAvatar(snap.child("avatar").getValue(String.class));
-                                searchedUserFromBase.add(upa);
-                            }
-                            AlreadySearchAdapter alreadySearchAdapter=new AlreadySearchAdapter(searchedUserFromBase);
-                            peopleRecyclerView.setAdapter(alreadySearchAdapter);
-                            AlreadySearchAdapter.ItemClickListener itemClickListener=new AlreadySearchAdapter.ItemClickListener() {
-                                @Override
-                                public void onItemClick(View view, int position) {
-                                    UserPeopleAdapter user = alreadySearchAdapter.getItem(position);
-                                    userNameToProfile = user.getNick();
-                                    if (userNameToProfile.equals(nick)) {
-                                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback", nick, PeopleFragment.newInstance(userInformation),userInformation), getActivity());
-                                    } else {
-                                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile, PeopleFragment.newInstance(userInformation),userInformation),
-                                                getActivity());
-                                    }
-                                }
-                            };
-                            alreadySearchAdapter.setClickListener(itemClickListener);
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-
-                        }
-                    });
+                    setAlreadySearchedInAdapter();
                 }else {
                     userName = String.valueOf(searchUser.getText()).trim();
                     userName = userName.toLowerCase();
@@ -173,6 +139,7 @@ public class PeopleFragment extends Fragment {
                                 upa.setNick(snap.child("nick").getValue(String.class));
                                 upa.setBio(snap.child("bio").getValue(String.class));
                                 upa.setAvatar(snap.child("avatar").getValue(String.class));
+                                Log.d("#####", "nickNAme "+upa.getNick());
                                 String nickName = upa.getNick();
                                 String nick1 = nickName;
                                 int valueLetters = userName.length();
@@ -192,40 +159,16 @@ public class PeopleFragment extends Fragment {
                             PeopleAdapter.ItemClickListener clickListener =
                                     new PeopleAdapter.ItemClickListener() {
                                         @Override
-                                        public void onItemClick(View view, int position) {
+                                        public void onItemClick(View view, int position,String avatar,String bio) {
                                             UserPeopleAdapter user = peopleAdapter.getItem(position);
                                             userNameToProfile = user.getNick();
                                             if (userNameToProfile.equals(nick)) {
                                                 RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback", nick, PeopleFragment.newInstance(userInformation),userInformation), getActivity());
                                             } else {
-                                                Query querySearchedAvatar = firebaseModel.getUsersReference().child(userNameToProfile).child("avatar");
-                                                querySearchedAvatar.addValueEventListener(new ValueEventListener() {
-                                                    @Override
-                                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                        avatar = snapshot.getValue(String.class);
-                                                        Query querySearchedBio = firebaseModel.getUsersReference().child(userNameToProfile).child("bio");
-                                                        querySearchedBio.addValueEventListener(new ValueEventListener() {
-                                                            @Override
-                                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                                bio = snapshot.getValue(String.class);
-                                                                firebaseModel.getUsersReference().child(nick).child("alreadySearched").child(userNameToProfile)
-                                                                        .setValue(new UserPeopleAdapter(userNameToProfile, avatar, bio));
-                                                                RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile, PeopleFragment.newInstance(userInformation),userInformation),
-                                                                        getActivity());
-                                                            }
-
-                                                            @Override
-                                                            public void onCancelled(@NonNull DatabaseError error) {
-
-                                                            }
-                                                        });
-                                                    }
-
-                                                    @Override
-                                                    public void onCancelled(@NonNull DatabaseError error) {
-
-                                                    }
-                                                });
+                                                firebaseModel.getUsersReference().child(nick).child("alreadySearched").child(userNameToProfile)
+                                                        .setValue(new UserPeopleAdapter(userNameToProfile, avatar, bio));
+                                                RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile, PeopleFragment.newInstance(userInformation),userInformation),
+                                                        getActivity());
                                             }
                                         }
                                     };
