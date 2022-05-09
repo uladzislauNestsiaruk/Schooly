@@ -475,7 +475,6 @@ public class RecentMethods {
                              miner.setMinerPrice(snap.child("minerPrice").getValue(Long.class));
                              miner.setMinerImage(snap.child("minerImage").getValue(String.class));
                              activeMinersFromBase.add(miner);
-                             long d=miner.getInHour();
                          }
                          callback.GetActiveMiners(activeMinersFromBase);
                      }
