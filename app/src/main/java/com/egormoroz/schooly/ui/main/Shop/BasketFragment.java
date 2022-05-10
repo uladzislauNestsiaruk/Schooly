@@ -124,9 +124,7 @@ public class BasketFragment extends Fragment {
         }else {
           notFound.setVisibility(View.GONE);
           basketRecycler.setVisibility(View.VISIBLE);
-          BasketAdapter basketAdapter=new BasketAdapter(clothesArrayList,onItemClick);
-          basketRecycler.setLayoutManager(new GridLayoutManager(getActivity(), 2));
-          basketRecycler.setAdapter(basketAdapter);
+          loadClothesFromBasket();
         }
       }
 

@@ -15,20 +15,20 @@
             android:id="@+id/back_tomyclothes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_marginStart="26dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginStart="24dp"
             android:src="@drawable/left_arrow"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="14dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="6dp"
             android:layout_toRightOf="@+id/back_tomyclothes"
             android:fontFamily="@font/montserrat_bold"
             android:text="@string/creatingClothes"
             android:textColor="@color/app_color"
-            android:textSize="23sp" />
+            android:textSize="22sp" />
 
         <RelativeLayout
             android:id="@+id/beforeShareRelative"

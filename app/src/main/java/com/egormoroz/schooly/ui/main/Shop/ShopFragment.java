@@ -148,7 +148,6 @@ public class ShopFragment extends Fragment {
                 editGetText=editGetText.toLowerCase();
                 if (editGetText.length()>0) {
                     viewPager.setVisibility(View.GONE);
-                    searchRecycler.setVisibility(View.VISIBLE);
                     tabLayout.setVisibility(View.GONE);
                     loadSearchClothes(editGetText);
                     itemClickListenerPopular=new PopularClothesAdapter.ItemClickListener() {
@@ -301,9 +300,12 @@ public class ShopFragment extends Fragment {
                         }
                     }
                     if (clothesFromBase.size()==0){
+                        Log.d("###","cl  ");
                         searchRecycler.setVisibility(View.GONE);
                         notFound.setVisibility(View.VISIBLE);
                     }else {
+                        Log.d("###","cll  ");
+                        searchRecycler.setVisibility(View.VISIBLE);
                         PopularClothesAdapter popularClothesAdapter=new PopularClothesAdapter(clothesFromBase,itemClickListenerPopular);
                         searchRecycler.setLayoutManager(new GridLayoutManager(getActivity(), 2));
                         searchRecycler.setAdapter(popularClothesAdapter);

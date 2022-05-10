@@ -366,7 +366,9 @@ public class MainFragment extends Fragment{
             }
         });
         todayMiningMain=view.findViewById(R.id.todayminingmain);
-        RecentMethods.GetTodayMining(nick, firebaseModel, new Callbacks.GetTodayMining() {
+        todayMiningFormatted = new DecimalFormat("#0.00").format(userInformation.getTodayMining());
+        todayMiningMain.setText("+"+todayMiningFormatted);
+        RecentMethods.GetTodayMiningValue(nick, firebaseModel, new Callbacks.GetTodayMining() {
             @Override
             public void GetTodayMining(double todayMiningFromBase) {
                 todayMiningFormatted = new DecimalFormat("#0.00").format(todayMiningFromBase);

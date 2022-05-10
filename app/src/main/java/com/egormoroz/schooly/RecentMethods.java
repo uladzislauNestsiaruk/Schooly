@@ -518,6 +518,22 @@ public class RecentMethods {
                     }
                 });
     }
+    public static void GetTodayMiningValue(String nick,FirebaseModel model,Callbacks.GetTodayMining callback){
+        model.initAll();
+        model.getUsersReference().child(nick)
+                .child("todayMining").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.getValue(Double.class) != null)
+                    callback.GetTodayMining(snapshot.getValue(Double.class));
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
     public static void GetTimesTamp(String nick, FirebaseModel firebaseModel,Callbacks.GetTimesTamp callback){
         firebaseModel.initAll();
         Query query =firebaseModel.getUsersReference().child(nick).child("timesTamp");

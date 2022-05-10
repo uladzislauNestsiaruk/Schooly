@@ -304,6 +304,7 @@ public class MainActivity extends AppCompatActivity {
                         userInformation.setmoney(money);
                     }
                 });
+
             }
         });
     }

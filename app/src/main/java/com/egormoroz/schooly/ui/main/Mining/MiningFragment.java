@@ -157,7 +157,6 @@ public class MiningFragment extends Fragment {
         addActiveMiners=view.findViewById(R.id.addActiveMiner);
         emptyActiveMiners=view.findViewById(R.id.emptyMiners);
         schoolycoinminer.setText(String.valueOf(userInformation.getmoney()));
-        todayminingText.setText(String.valueOf(0));
         weakminersrecyclerview=view.findViewById(R.id.allminersrecyclerview);
         averageminersrecyclerview=view.findViewById(R.id.averageminersrecyclerview);
         strongminersrecyclerview=view.findViewById(R.id.strongminersrecyclerview);
@@ -192,6 +191,8 @@ public class MiningFragment extends Fragment {
                 }
             }
         };
+        todayMiningFormatted = new DecimalFormat("#0.00").format(userInformation.getTodayMining());
+        todayminingText.setText("+"+todayMiningFormatted);
         setMiningMoney();
         GetDataFromBase();
         getActiveMinersFromBase();
@@ -410,7 +411,7 @@ public class MiningFragment extends Fragment {
 //    }
 
     public void setMiningMoney(){
-        RecentMethods.GetTodayMining(nick, firebaseModel, new Callbacks.GetTodayMining() {
+        RecentMethods.GetTodayMiningValue(nick, firebaseModel, new Callbacks.GetTodayMining() {
             @Override
             public void GetTodayMining(double todayMiningFromBase) {
                 todayMiningFormatted = new DecimalFormat("#0.00").format(todayMiningFromBase);

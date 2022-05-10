@@ -50,7 +50,7 @@ public class MyClothesFragment extends Fragment {
 
     FirebaseModel firebaseModel=new FirebaseModel();
     RecyclerView recyclerMyClothes;
-    RelativeLayout createAndGet,getMoney,createClothesBig,relativeFirstClothes,createClothes;
+    RelativeLayout createClothesBig,relativeFirstClothes,createClothes;
     TextView totalProfitText,totalProfit,totalProfitDollar,clothes,totalPurchaseText
             ,totalPurchase,notFound;
     MyClothesAdapter.ItemClickListener itemClickListener;
@@ -61,9 +61,6 @@ public class MyClothesFragment extends Fragment {
     LinearLayout linearSearch;
     UserInformation userInformation;
     ArrayList<Clothes> clothesArrayList;
-
-
-    int clothesListSize;
 
     public MyClothesFragment(ArrayList<Clothes> clothesArrayList,long totalProfitLong,long totalPurchaseLong,
                              long totalProfitDollarLong,UserInformation userInformation) {
@@ -202,7 +199,7 @@ public class MyClothesFragment extends Fragment {
             createClothesBig.setVisibility(View.GONE);
             relativeFirstClothes.setVisibility(View.GONE);
             createClothes.setVisibility(View.VISIBLE);
-            clothes.setText("Одежда "+String.valueOf(clothesListSize)+":");
+            clothes.setText("Одежда "+String.valueOf(userInformation.getMyClothes().size())+":");
             MyClothesAdapter myClothesAdapter=new MyClothesAdapter(clothesArrayList,itemClickListener);
             recyclerMyClothes.setAdapter(myClothesAdapter);
             createClothes.setOnClickListener(new View.OnClickListener() {
