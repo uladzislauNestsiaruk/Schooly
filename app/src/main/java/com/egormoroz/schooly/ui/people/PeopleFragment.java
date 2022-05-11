@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -35,6 +36,7 @@ public class PeopleFragment extends Fragment {
     EditText searchUser;
     String userName,userNameToProfile,nick;
     ArrayList<UserPeopleAdapter> userFromBase,searchUserFromBase;
+    TextView userNotSearch;
 
 
     UserInformation userInformation;
@@ -61,6 +63,7 @@ public class PeopleFragment extends Fragment {
         nick=userInformation.getNick();
         peopleRecyclerView=view.findViewById(R.id.peoplerecycler);
         searchUser=view.findViewById(R.id.searchuser);
+        userNotSearch=view.findViewById(R.id.notSearch);
         firebaseModel.initAll();
         setPeopleData();
         getUsersNicks();
@@ -90,6 +93,8 @@ public class PeopleFragment extends Fragment {
     }
 
     public void setAlreadySearchedInAdapter(){
+        peopleRecyclerView.setVisibility(View.VISIBLE);
+        userNotSearch.setVisibility(View.GONE);
         if(userInformation.getAlreadySearched()==null){
             RecentMethods.getAlreadySearched(nick, firebaseModel, new Callbacks.GetAlreadySearched() {
                 @Override
@@ -169,25 +174,32 @@ public class PeopleFragment extends Fragment {
                         }
 
                     }
-                    PeopleAdapter peopleAdapter = new PeopleAdapter(searchUserFromBase);
-                    peopleRecyclerView.setAdapter(peopleAdapter);
-                    PeopleAdapter.ItemClickListener clickListener =
-                            new PeopleAdapter.ItemClickListener() {
-                                @Override
-                                public void onItemClick(View view, int position,String avatar,String bio) {
-                                    UserPeopleAdapter user = peopleAdapter.getItem(position);
-                                    userNameToProfile = user.getNick();
-                                    if (userNameToProfile.equals(nick)) {
-                                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback", nick, PeopleFragment.newInstance(userInformation),userInformation), getActivity());
-                                    } else {
+                    if(searchUserFromBase.size()==0){
+                        userNotSearch.setVisibility(View.VISIBLE);
+                        peopleRecyclerView.setVisibility(View.GONE);
+                    }else{
+                        peopleRecyclerView.setVisibility(View.VISIBLE);
+                        userNotSearch.setVisibility(View.GONE);
+                        PeopleAdapter peopleAdapter = new PeopleAdapter(searchUserFromBase);
+                        peopleRecyclerView.setAdapter(peopleAdapter);
+                        PeopleAdapter.ItemClickListener clickListener =
+                                new PeopleAdapter.ItemClickListener() {
+                                    @Override
+                                    public void onItemClick(View view, int position,String avatar,String bio) {
+                                        UserPeopleAdapter user = peopleAdapter.getItem(position);
+                                        userNameToProfile = user.getNick();
+                                        if (userNameToProfile.equals(nick)) {
+                                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback", nick, PeopleFragment.newInstance(userInformation),userInformation), getActivity());
+                                        } else {
 //                                        firebaseModel.getReference().child("users").child(nick).child("alreadySearched").child(userNameToProfile)
 //                                                .setValue(new UserPeopleAdapter(userNameToProfile, avatar, bio));
-                                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile, PeopleFragment.newInstance(userInformation),userInformation),
-                                                getActivity());
+                                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile, PeopleFragment.newInstance(userInformation),userInformation),
+                                                    getActivity());
+                                        }
                                     }
-                                }
-                            };
-                    peopleAdapter.setClickListener(clickListener);
+                                };
+                        peopleAdapter.setClickListener(clickListener);
+                    }
                 }
             }
 

@@ -425,6 +425,7 @@
     <string name="sendClothesApplication">Отправить заявку</string>
     <string name="clothesApplication">Заявка на одежду может обрабатываться несколько дней. После обработки мы пришлем вам ответ.</string>
     <string name="loading">Загрузка...</string>
+    <string name="userNotsearch">Пользователь не найден:(</string>
 
 
 

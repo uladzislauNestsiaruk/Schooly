@@ -36,6 +36,7 @@ import com.egormoroz.schooly.MainActivity;
 import com.egormoroz.schooly.Nontification;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
+import com.egormoroz.schooly.SchoolyApplication;
 import com.egormoroz.schooly.SchoolyService;
 
 import com.egormoroz.schooly.Subscriber;
@@ -507,7 +508,6 @@ public class MainFragment extends Fragment{
             }
         }
     }
-
     private void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CharSequence name = getString(R.string.chanel_name);
@@ -550,5 +550,4 @@ public class MainFragment extends Fragment{
             startActivity(intent);
         }
     }
-
 }

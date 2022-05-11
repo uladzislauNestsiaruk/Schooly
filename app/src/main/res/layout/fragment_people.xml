@@ -26,6 +26,17 @@
       android:textColorHint="@color/greysearch"
       android:textSize="15sp" />
 
+  <TextView
+      android:id="@+id/notSearch"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:textColor="@color/app_grey"
+      android:textSize="18sp"
+      android:fontFamily="@font/montserrat_bold"
+      android:layout_centerInParent="true"
+      android:visibility="gone"
+      android:text="@string/userNotsearch"/>
+
   <androidx.recyclerview.widget.RecyclerView
       android:id="@+id/peoplerecycler"
       android:layout_width="match_parent"
