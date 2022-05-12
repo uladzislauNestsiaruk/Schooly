@@ -30,8 +30,8 @@ public  class BlackListFragment extends Fragment {
     RecyclerView recyclerView;
     ImageView back;
     TextView emptyList;
-
-    String type,nick;
+    BlackListAdapter.ItemClickListener clickListener;
+    String type,nick,userNameToProfile;
     Fragment fragment;
     UserInformation userInformation;
 
@@ -94,6 +94,20 @@ public  class BlackListFragment extends Fragment {
                         BlackListAdapter blackListAdapter=new BlackListAdapter(subscribers);
                         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
                         recyclerView.setAdapter(blackListAdapter);
+                        clickListener=new BlackListAdapter.ItemClickListener() {
+                            @Override
+                            public void onItemClick(View view, int position) {
+                                Subscriber user = blackListAdapter.getItem(position);
+                                userNameToProfile=user.getSub();
+                                if(userNameToProfile.equals(nick)){
+                                    RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback",nick,fragment,userInformation),getActivity());
+                                }else {
+                                    RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile,BlackListFragment.newInstance(type,fragment,userInformation),userInformation),
+                                            getActivity());
+                                }
+                            }
+                        };
+                        blackListAdapter.setClickListener(clickListener);
                     }
                 }
             });
@@ -105,6 +119,20 @@ public  class BlackListFragment extends Fragment {
                 BlackListAdapter blackListAdapter=new BlackListAdapter(userInformation.getBlackList());
                 recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
                 recyclerView.setAdapter(blackListAdapter);
+                clickListener=new BlackListAdapter.ItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        Subscriber user = blackListAdapter.getItem(position);
+                        userNameToProfile=user.getSub();
+                        if(userNameToProfile.equals(nick)){
+                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback",nick,fragment,userInformation),getActivity());
+                        }else {
+                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile,BlackListFragment.newInstance(type,fragment,userInformation),userInformation),
+                                    getActivity());
+                        }
+                    }
+                };
+                blackListAdapter.setClickListener(clickListener);
             }
         }
     }

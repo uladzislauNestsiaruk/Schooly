@@ -28,11 +28,8 @@ import java.util.ArrayList;
 public class BlackListAdapter extends RecyclerView.Adapter<BlackListAdapter.ViewHolder>  {
 
     ArrayList<Subscriber> listAdapter;
-    private SubscribersAdapter.ItemClickListener clickListener;
+    private BlackListAdapter.ItemClickListener clickListener;
     private FirebaseModel firebaseModel = new FirebaseModel();
-    long subscriptionsCount,subscribersCount;
-    boolean check=false;
-    int a=0;
 
     public  BlackListAdapter(ArrayList<Subscriber> listAdapter) {
         this.listAdapter = listAdapter;
@@ -53,6 +50,12 @@ public class BlackListAdapter extends RecyclerView.Adapter<BlackListAdapter.View
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Subscriber subscriber=listAdapter.get(position);
         holder.otherUserNick.setText(subscriber.getSub());
+        holder.otherUserNick.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (clickListener != null) clickListener.onItemClick(v, position);
+            }
+        });
         holder.putAwayText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -94,12 +97,13 @@ public class BlackListAdapter extends RecyclerView.Adapter<BlackListAdapter.View
         return listAdapter.get(id);
     }
 
-    void setClickListener(SubscribersAdapter.ItemClickListener itemClickListener) {
+    void setClickListener(BlackListAdapter.ItemClickListener itemClickListener) {
         this.clickListener = itemClickListener;
     }
 
     public interface ItemClickListener {
         void onItemClick(View view, int position);
     }
+
 
 }

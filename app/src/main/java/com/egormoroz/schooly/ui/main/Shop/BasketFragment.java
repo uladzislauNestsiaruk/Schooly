@@ -74,7 +74,6 @@ public class BasketFragment extends Fragment {
     super.onViewCreated(view, savedInstanceState);
     backtoshop=view.findViewById(R.id.back_toshopfrombasket);
     editText=view.findViewById(R.id.searchClothes);
-    notFound=view.findViewById(R.id.notFound);
     OnBackPressedCallback callback = new OnBackPressedCallback(true) {
       @Override
       public void handleOnBackPressed() {
@@ -96,10 +95,10 @@ public class BasketFragment extends Fragment {
         RecentMethods.setCurrentFragment(ViewingClothesBasket.newInstance(userInformation),getActivity());
       }
     };
+    coinsLinear=view.findViewById(R.id.linearCoinsBasket);
     schoolyCoin=view.findViewById(R.id.schoolycoinbasketfrag);
     schoolyCoin.setText(String.valueOf(userInformation.getmoney()));
-
-    coinsLinear=view.findViewById(R.id.linearCoins);
+    notFound=view.findViewById(R.id.notFound);
     coinsLinear.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {

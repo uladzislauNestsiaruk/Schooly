@@ -101,6 +101,7 @@
                 android:textSize="14sp"
                 android:fontFamily="@font/montserrat_extrabold"
                 android:background="@drawable/corners10dpappcolor"
+                android:visibility="gone"
                 android:text="@string/mes"/>
 
             <TextView
