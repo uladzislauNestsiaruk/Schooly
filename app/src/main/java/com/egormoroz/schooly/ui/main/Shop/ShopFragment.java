@@ -77,7 +77,6 @@ public class ShopFragment extends Fragment {
     static String editGetText;
     RecyclerView searchRecycler;
     TabLayout tabLayout;
-    ArrayList<Clothes> searchClothesArrayList=new ArrayList<Clothes>();
     PopularClothesAdapter.ItemClickListener itemClickListenerPopular;
     LinearLayout coinsLinear;
 
@@ -89,9 +88,13 @@ public class ShopFragment extends Fragment {
         bnv.setVisibility(bnv.GONE);
         firebaseModel.initAll();
         coinsshop=root.findViewById(R.id.schoolycoinshopfrag);
-//        AppBarLayout abl = getActivity().findViewById(R.id.AppBarLayout);
-//        abl.setVisibility(abl.GONE);
         return root;
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("TAB_POS", tabLayout.getSelectedTabPosition());
     }
 
     @Override

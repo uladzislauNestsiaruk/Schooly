@@ -152,7 +152,7 @@ public class ViewingLookFragment extends Fragment {
                         if(userNameToProfile.equals(nick)){
                             RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback",nick,ViewingLookFragment.newInstance(fragment, userInformation),userInformation),getActivity());
                         }else {
-                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile,fragment,userInformation
+                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile,ViewingLookFragment.newInstance(fragment, userInformation),userInformation
                             ), getActivity());
                         }
                     }

@@ -139,7 +139,7 @@ public class ViewingClothesNews extends Fragment {
         coinsLinear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(CoinsFragmentSecond.newInstance(ViewingClothes.newInstance(fragment,userInformation),userInformation), getActivity());
+                RecentMethods.setCurrentFragment(CoinsFragmentSecond.newInstance(ViewingClothesNews.newInstance(fragment,userInformation),userInformation), getActivity());
             }
         });
         back.setOnClickListener(new View.OnClickListener() {

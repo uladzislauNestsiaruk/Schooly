@@ -29,9 +29,23 @@ public class MyMinersFragment extends Fragment {
 
     ArrayList<Miner> listAdapter=new ArrayList<Miner>();
     UserInformation userInformation;
+    Bundle bundle;
 
     public MyMinersFragment(UserInformation userInformation) {
         this.userInformation=userInformation;
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Log.d("####", "yeah()");
+        outState.putSerializable("MY_MINERS", listAdapter);
+    }
+
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        Log.d("####", "yeah()ss");
     }
 
     public static MyMinersFragment newInstance(UserInformation userInformation) {
@@ -57,6 +71,14 @@ public class MyMinersFragment extends Fragment {
     public void onViewCreated(@Nullable View view,@NonNull Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         nick=userInformation.getNick();
+        if (savedInstanceState != null) {
+            //probably orientation change
+            Log.d("####", "yeah");
+            listAdapter=(ArrayList<Miner>)savedInstanceState.getSerializable("MY_MINERS");
+        } else {
+            Log.d("####", "yeah(");
+            listAdapter=userInformation.getMyMiners();
+        }
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
