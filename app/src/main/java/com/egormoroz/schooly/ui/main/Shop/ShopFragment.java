@@ -92,12 +92,6 @@ public class ShopFragment extends Fragment {
     }
 
     @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putInt("TAB_POS", tabLayout.getSelectedTabPosition());
-    }
-
-    @Override
     public void onViewCreated(@Nullable View view,@NonNull Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
 
@@ -253,19 +247,27 @@ public class ShopFragment extends Fragment {
         basket.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(BasketFragment.newInstance(userInformation), getActivity());
-                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-                SharedPreferences.Editor editor = preferences.edit();
-                editor.putInt("Name",tabLayout.getSelectedTabPosition());
-                editor.apply();
+               getAndSave(BasketFragment.newInstance(userInformation));
             }
         });
-        SharedPreferences preferences1 = PreferenceManager.getDefaultSharedPreferences(getContext());
-        int name = preferences1.getInt("Name", 0);
-        Log.d("ooo", "f "+name);
+
+        Bundle getSaveState=getArguments();
+        if (getSaveState!=null){
+            loadSearchClothes(getSaveState.getString("EDIT_TAG"));
+        }
 
     }
 
+    public void getAndSave(Fragment fragment){
+        Bundle saveState=new Bundle();
+        if(searchClothes.getText().length()!=0){
+            saveState.putString("EDIT_TAG",searchClothes.getText().toString());
+        }
+        fragment.setArguments(saveState);
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.frame, fragment).commit();
+    }
 
     public void loadSearchClothes(String editTextText){
         firebaseModel.getReference("AppData/Clothes/AllClothes").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {

@@ -16,6 +16,7 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -58,6 +59,7 @@ public class BasketFragment extends Fragment {
   static String editGetText;
   LinearLayout coinsLinear;
   EditText editText;
+  Bundle getSaveBundle;
 
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -78,15 +80,16 @@ public class BasketFragment extends Fragment {
       @Override
       public void handleOnBackPressed() {
 
-        RecentMethods.setCurrentFragment(ShopFragment.newInstance(userInformation), getActivity());
+        getAndSave(ShopFragment.newInstance(userInformation));
       }
     };
 
     requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(), callback);
+
     backtoshop.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        RecentMethods.setCurrentFragment(ShopFragment.newInstance(userInformation), getActivity());
+        getAndSave(ShopFragment.newInstance(userInformation));
       }
     });
     onItemClick=new BasketAdapter.ItemClickListener() {
@@ -133,6 +136,16 @@ public class BasketFragment extends Fragment {
       }
     });
 
+  }
+
+  public void getAndSave(Fragment fragment){
+    getSaveBundle=getArguments();
+    if(getSaveBundle!=null){
+    }
+    fragment.setArguments(getSaveBundle);
+    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+    fragmentManager.beginTransaction()
+            .replace(R.id.frame, fragment).commit();
   }
 
   public void loadClothesFromBasket(){
