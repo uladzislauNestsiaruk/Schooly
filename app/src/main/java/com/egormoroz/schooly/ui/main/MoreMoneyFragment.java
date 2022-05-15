@@ -32,14 +32,16 @@ public class MoreMoneyFragment extends Fragment {
 
     Fragment fragment;
     UserInformation userInformation;
+    Bundle bundle;
 
-    public MoreMoneyFragment(Fragment fragment,UserInformation userInformation) {
+    public MoreMoneyFragment(Fragment fragment,UserInformation userInformation,Bundle bundle) {
         this.fragment = fragment;
         this.userInformation=userInformation;
+        this.bundle=bundle;
     }
 
-    public static MoreMoneyFragment newInstance(Fragment fragment, UserInformation userInformation) {
-        return new MoreMoneyFragment(fragment,userInformation);
+    public static MoreMoneyFragment newInstance(Fragment fragment, UserInformation userInformation,Bundle bundle) {
+        return new MoreMoneyFragment(fragment,userInformation,bundle);
 
     }
 
@@ -82,6 +84,6 @@ public class MoreMoneyFragment extends Fragment {
             }
         };
 
-        requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(), callback);
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
     }
 }

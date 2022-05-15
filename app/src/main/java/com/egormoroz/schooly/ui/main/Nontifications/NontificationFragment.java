@@ -33,13 +33,15 @@ import java.util.Collections;
 
 public class NontificationFragment extends Fragment {
     UserInformation userInformation;
+    Bundle bundle;
 
-    public NontificationFragment(UserInformation userInformation) {
+    public NontificationFragment(UserInformation userInformation,Bundle bundle) {
         this.userInformation=userInformation;
+        this.bundle=bundle;
     }
 
-    public static NontificationFragment newInstance(UserInformation userInformation) {
-        return new NontificationFragment(userInformation);
+    public static NontificationFragment newInstance(UserInformation userInformation,Bundle bundle) {
+        return new NontificationFragment(userInformation,bundle);
     }
 
     FirebaseModel firebaseModel=new FirebaseModel();
@@ -64,7 +66,7 @@ public class NontificationFragment extends Fragment {
         backToMain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((MainActivity) getActivity()).setCurrentFragment(MainFragment.newInstance(userInformation));
+                ((MainActivity) getActivity()).setCurrentFragment(MainFragment.newInstance(userInformation,bundle));
             }
         });
         nontsRecyclerView=view.findViewById(R.id.nontificationsrecyclerview);
@@ -74,11 +76,11 @@ public class NontificationFragment extends Fragment {
             @Override
             public void handleOnBackPressed() {
 
-                RecentMethods.setCurrentFragment(MainFragment.newInstance(userInformation), getActivity());
+                RecentMethods.setCurrentFragment(MainFragment.newInstance(userInformation,bundle), getActivity());
             }
         };
 
-        requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(), callback);
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
     }
 
     public  void  getNontificationList(){
@@ -101,9 +103,9 @@ public class NontificationFragment extends Fragment {
                         @Override
                         public void onItemClick(Nontification nontification,String type) {
                             if(type.equals("clothesRequest")){
-                                RecentMethods.setCurrentFragment(ClothesRequestFragment.newInstance(NontificationFragment.newInstance(userInformation),nontification.getUid(),userInformation), getActivity());
+                                RecentMethods.setCurrentFragment(ClothesRequestFragment.newInstance(NontificationFragment.newInstance(userInformation,bundle),nontification.getUid(),userInformation,bundle), getActivity());
                             }else if(type.equals("sub")){
-                                RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", nontification.getNick(), NontificationFragment.newInstance(userInformation),userInformation),getActivity());
+                                RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", nontification.getNick(), NontificationFragment.newInstance(userInformation,bundle),userInformation,bundle),getActivity());
                             }
                         }
                     };
@@ -125,9 +127,9 @@ public class NontificationFragment extends Fragment {
                 @Override
                 public void onItemClick(Nontification nontification,String type) {
                     if(type.equals("clothesRequest")){
-                        RecentMethods.setCurrentFragment(ClothesRequestFragment.newInstance(NontificationFragment.newInstance(userInformation),nontification.getUid(),userInformation), getActivity());
+                        RecentMethods.setCurrentFragment(ClothesRequestFragment.newInstance(NontificationFragment.newInstance(userInformation,bundle),nontification.getUid(),userInformation,bundle), getActivity());
                     }else if(type.equals("sub")){
-                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", nontification.getNick(), NontificationFragment.newInstance(userInformation),userInformation),getActivity());
+                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", nontification.getNick(), NontificationFragment.newInstance(userInformation,bundle),userInformation,bundle),getActivity());
                     }
                 }
             };

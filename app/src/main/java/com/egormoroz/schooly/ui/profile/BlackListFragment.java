@@ -34,15 +34,17 @@ public  class BlackListFragment extends Fragment {
     String type,nick,userNameToProfile;
     Fragment fragment;
     UserInformation userInformation;
+    Bundle bundle;
 
-    public BlackListFragment(String type,Fragment fragment,UserInformation userInformation) {
+    public BlackListFragment(String type,Fragment fragment,UserInformation userInformation,Bundle bundle) {
         this.type = type;
         this.fragment=fragment;
         this.userInformation=userInformation;
+        this.bundle=bundle;
     }
 
-    public static BlackListFragment newInstance(String type, Fragment fragment,UserInformation userInformation) {
-        return new BlackListFragment(type,fragment,userInformation);
+    public static BlackListFragment newInstance(String type, Fragment fragment,UserInformation userInformation,Bundle bundle) {
+        return new BlackListFragment(type,fragment,userInformation,bundle);
 
     }
 
@@ -67,15 +69,15 @@ public  class BlackListFragment extends Fragment {
             @Override
             public void handleOnBackPressed() {
 
-                RecentMethods.setCurrentFragment(SettingsFragment.newInstance(type,fragment,userInformation), getActivity());
+                RecentMethods.setCurrentFragment(SettingsFragment.newInstance(type,fragment,userInformation,bundle), getActivity());
             }
         };
 
-        requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(), callback);
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(SettingsFragment.newInstance(type,fragment,userInformation),getActivity());
+                RecentMethods.setCurrentFragment(SettingsFragment.newInstance(type,fragment,userInformation,bundle),getActivity());
             }
         });
         setBlackListInAdapter();
@@ -100,9 +102,9 @@ public  class BlackListFragment extends Fragment {
                                 Subscriber user = blackListAdapter.getItem(position);
                                 userNameToProfile=user.getSub();
                                 if(userNameToProfile.equals(nick)){
-                                    RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback",nick,fragment,userInformation),getActivity());
+                                    RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback",nick,fragment,userInformation,bundle),getActivity());
                                 }else {
-                                    RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile,BlackListFragment.newInstance(type,fragment,userInformation),userInformation),
+                                    RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile,BlackListFragment.newInstance(type,fragment,userInformation,bundle),userInformation,bundle),
                                             getActivity());
                                 }
                             }
@@ -125,9 +127,9 @@ public  class BlackListFragment extends Fragment {
                         Subscriber user = blackListAdapter.getItem(position);
                         userNameToProfile=user.getSub();
                         if(userNameToProfile.equals(nick)){
-                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback",nick,fragment,userInformation),getActivity());
+                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback",nick,fragment,userInformation,bundle),getActivity());
                         }else {
-                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile,BlackListFragment.newInstance(type,fragment,userInformation),userInformation),
+                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile,BlackListFragment.newInstance(type,fragment,userInformation,bundle),userInformation,bundle),
                                     getActivity());
                         }
                     }

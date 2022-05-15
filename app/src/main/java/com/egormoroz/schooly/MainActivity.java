@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
     TextView s,loading;
     CoordinatorLayout fragmentContainer;
     String TAG="###";
+    Bundle bundle;
     private static final String CHANNEL_ID = "channel";
     FirebaseModel firebaseModel=new FirebaseModel();
     @Override
@@ -201,22 +202,22 @@ public class MainActivity extends AppCompatActivity {
                     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.bottom_nav_home:
-                                setCurrentFragment(MainFragment.newInstance(userInformation));
+                                setCurrentFragment(MainFragment.newInstance(userInformation,bundle));
                                 return true;
                             case R.id.bottom_nav_news:
                                 setCurrentFragment(NewsFragment.newInstance());
                                 return true;
                             case R.id.bottom_nav_coins:
-                                setCurrentFragment(CoinsMainFragment.newInstance(userInformation));
+                                setCurrentFragment(CoinsMainFragment.newInstance(userInformation,bundle));
                                 return true;
                             case R.id.bottom_nav_people:
-                                setCurrentFragment(PeopleFragment.newInstance(userInformation));
+                                setCurrentFragment(PeopleFragment.newInstance(userInformation,bundle));
                                 return true;
                             case R.id.bottom_nav_profile:
                                 RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
                                     @Override
                                     public void PassUserNick(String nick) {
-                                        setCurrentFragment(ProfileFragment.newInstance("user", nick,MainFragment.newInstance(userInformation),userInformation));
+                                        setCurrentFragment(ProfileFragment.newInstance("user", nick,MainFragment.newInstance(userInformation,bundle),userInformation,bundle));
                                     }
                                 });
                                 CoordinatorLayout.LayoutParams coordinatorLayoutParams = (CoordinatorLayout.LayoutParams) fragmentContainer.getLayoutParams();
@@ -226,7 +227,7 @@ public class MainActivity extends AppCompatActivity {
                         return false;
                     }
                 });
-                setCurrentFragment(MainFragment.newInstance(userInformation));
+                setCurrentFragment(MainFragment.newInstance(userInformation,bundle));
             }
         });
     }

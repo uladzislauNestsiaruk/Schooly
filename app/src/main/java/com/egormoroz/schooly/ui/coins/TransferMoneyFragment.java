@@ -48,17 +48,18 @@ public class TransferMoneyFragment extends Fragment {
     String userNameToProfile,userName,nick;
     ImageView backToCoins,transferHistory;
     TextView emptySubscriptionList,emptySearchSubscriptionList;
-
+    Bundle bundle;
     Fragment fragment;
     UserInformation userInformation;
 
-    public TransferMoneyFragment(Fragment fragment,UserInformation userInformation) {
+    public TransferMoneyFragment(Fragment fragment,UserInformation userInformation,Bundle bundle) {
         this.fragment = fragment;
         this.userInformation=userInformation;
+        this.bundle=bundle;
     }
 
-    public static TransferMoneyFragment newInstance(Fragment fragment,UserInformation userInformation) {
-        return new TransferMoneyFragment(fragment,userInformation);
+    public static TransferMoneyFragment newInstance(Fragment fragment,UserInformation userInformation,Bundle bundle) {
+        return new TransferMoneyFragment(fragment,userInformation,bundle);
 
     }
 
@@ -86,7 +87,7 @@ public class TransferMoneyFragment extends Fragment {
         transferHistory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(TransferHistoryFragment.newInstance(fragment,userInformation), getActivity());
+                RecentMethods.setCurrentFragment(TransferHistoryFragment.newInstance(fragment,userInformation,bundle), getActivity());
             }
         });
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
@@ -97,7 +98,7 @@ public class TransferMoneyFragment extends Fragment {
             }
         };
 
-        requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(), callback);
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
         backToCoins.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -128,7 +129,7 @@ public class TransferMoneyFragment extends Fragment {
                             public void onItemClick(View view, int position) {
                                 Subscriber user = transferMoneyAdapter.getItem(position);
                                 userNameToProfile = user.getSub();
-                                RecentMethods.setCurrentFragment(SendMoneyFragment.newInstance(userNameToProfile, fragment, userInformation), getActivity());
+                                RecentMethods.setCurrentFragment(SendMoneyFragment.newInstance(userNameToProfile, fragment, userInformation,bundle), getActivity());
                             }
                         };
                         transferMoneyAdapter.setClickListener(itemClickListener);
@@ -149,7 +150,7 @@ public class TransferMoneyFragment extends Fragment {
                     public void onItemClick(View view, int position) {
                         Subscriber user = transferMoneyAdapter.getItem(position);
                         userNameToProfile = user.getSub();
-                        RecentMethods.setCurrentFragment(SendMoneyFragment.newInstance(userNameToProfile, fragment, userInformation), getActivity());
+                        RecentMethods.setCurrentFragment(SendMoneyFragment.newInstance(userNameToProfile, fragment, userInformation,bundle), getActivity());
                     }
                 };
                 transferMoneyAdapter.setClickListener(itemClickListener);
@@ -204,7 +205,7 @@ public class TransferMoneyFragment extends Fragment {
                                         public void onItemClick(View view, int position) {
                                             Subscriber user = transferMoneyAdapter.getItem(position);
                                             userNameToProfile=user.getSub();
-                                            RecentMethods.setCurrentFragment(SendMoneyFragment.newInstance(userNameToProfile,fragment,userInformation), getActivity());
+                                            RecentMethods.setCurrentFragment(SendMoneyFragment.newInstance(userNameToProfile,fragment,userInformation,bundle), getActivity());
                                         }
                                     };
                                     transferMoneyAdapter.setClickListener(itemClickListener);

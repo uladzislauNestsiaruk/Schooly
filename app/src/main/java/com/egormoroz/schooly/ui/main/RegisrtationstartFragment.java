@@ -17,6 +17,7 @@ public class RegisrtationstartFragment extends Fragment {
     public static RegisrtationstartFragment newInstance(){return new RegisrtationstartFragment();}
     Button RegistrationButton;
     Button EnterButton;
+    Bundle bundle;
     FirebaseAuth AuthBase;
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -39,7 +40,7 @@ public class RegisrtationstartFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 UserInformation userInformation=new UserInformation();
-                RecentMethods.setCurrentFragment(EnterFragment.newInstance(userInformation), getActivity());
+                RecentMethods.setCurrentFragment(EnterFragment.newInstance(userInformation,bundle), getActivity());
             }
         });
         return root;

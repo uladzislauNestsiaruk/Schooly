@@ -97,13 +97,15 @@ public class MainFragment extends Fragment{
 
 
     UserInformation userInformation;
+    Bundle bundle;
 
-    public MainFragment(UserInformation userInformation) {
+    public MainFragment(UserInformation userInformation,Bundle bundle) {
         this.userInformation=userInformation;
+        this.bundle=bundle;
     }
 
-    public static MainFragment newInstance(UserInformation userInformation) {
-        return new MainFragment(userInformation);
+    public static MainFragment newInstance(UserInformation userInformation,Bundle bundle) {
+        return new MainFragment(userInformation,bundle);
 
     }
 
@@ -135,13 +137,13 @@ public class MainFragment extends Fragment{
         getMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(MoreMoneyFragment.newInstance(MainFragment.newInstance(userInformation),userInformation), getActivity());
+                RecentMethods.setCurrentFragment(MoreMoneyFragment.newInstance(MainFragment.newInstance(userInformation,bundle),userInformation,bundle), getActivity());
             }
         });
         coinsLinear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(CoinsFragmentSecond.newInstance(MainFragment.newInstance(userInformation),userInformation), getActivity());
+                RecentMethods.setCurrentFragment(CoinsFragmentSecond.newInstance(MainFragment.newInstance(userInformation,bundle),userInformation,bundle), getActivity());
             }
         });
         relativeMyClothes=view.findViewById(R.id.relativeClothes);
@@ -264,7 +266,7 @@ public class MainFragment extends Fragment{
         nontifications.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((MainActivity)getActivity()).setCurrentFragment(NontificationFragment.newInstance(userInformation));
+                ((MainActivity)getActivity()).setCurrentFragment(NontificationFragment.newInstance(userInformation,bundle));
 //
             }
         });
@@ -311,7 +313,7 @@ public class MainFragment extends Fragment{
         relativeShop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((MainActivity)getActivity()).setCurrentFragment((ShopFragment.newInstance(userInformation)));
+                ((MainActivity)getActivity()).setCurrentFragment((ShopFragment.newInstance(userInformation,bundle)));
             }
         });
         if (userInformation.getMiners()==null){
@@ -322,7 +324,7 @@ public class MainFragment extends Fragment{
                     relativeMining.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            RecentMethods.setCurrentFragment(MiningFragment.newInstance(userInformation), getActivity());
+                            RecentMethods.setCurrentFragment(MiningFragment.newInstance(userInformation,bundle), getActivity());
 
                         }
                     });
@@ -332,7 +334,7 @@ public class MainFragment extends Fragment{
             relativeMining.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    RecentMethods.setCurrentFragment(MiningFragment.newInstance(userInformation), getActivity());
+                    RecentMethods.setCurrentFragment(MiningFragment.newInstance(userInformation,bundle), getActivity());
 
                 }
             });
@@ -355,7 +357,7 @@ public class MainFragment extends Fragment{
         itemClickListener=new NewClothesAdapter.ItemClickListener() {
             @Override
             public void onItemClick(Clothes clothes) {
-                ((MainActivity)getActivity()).setCurrentFragment(ViewingClothes.newInstance(MainFragment.newInstance(userInformation),userInformation));
+                ((MainActivity)getActivity()).setCurrentFragment(ViewingClothes.newInstance(MainFragment.newInstance(userInformation,bundle),userInformation,bundle));
             }
         };
         TextView appName=view.findViewById(R.id.appname);
@@ -363,7 +365,7 @@ public class MainFragment extends Fragment{
         appName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(CreateCharacterFragment.newInstance(userInformation), getActivity());
+                RecentMethods.setCurrentFragment(CreateCharacterFragment.newInstance(userInformation,bundle), getActivity());
             }
         });
         todayMiningMain=view.findViewById(R.id.todayminingmain);
@@ -434,7 +436,7 @@ public class MainFragment extends Fragment{
                         public void onClick(View v) {
                             if(myClothesListSize>-1) {
                                 RecentMethods.setCurrentFragment(MyClothesFragment.newInstance(clothesFromBase
-                                        ,totalProfitLong,totalPurchaseLong,totalProfitDollarLong,userInformation), getActivity());
+                                        ,totalProfitLong,totalPurchaseLong,totalProfitDollarLong,userInformation,bundle), getActivity());
                             }
                         }
                     });
@@ -444,14 +446,14 @@ public class MainFragment extends Fragment{
                         createClothes.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                RecentMethods.setCurrentFragment(CreateClothesFragment.newInstance(MainFragment.newInstance(userInformation),userInformation), getActivity());
+                                RecentMethods.setCurrentFragment(CreateClothesFragment.newInstance(MainFragment.newInstance(userInformation,bundle),userInformation,bundle), getActivity());
                             }
                         });
                     }else {
                         itemClickListenerMyClothes=new MyClothesAdapterMain.ItemClickListener() {
                             @Override
                             public void onItemClick(Clothes clothes) {
-                                RecentMethods.setCurrentFragment(ViewingMyClothesMain.newInstance(MainFragment.newInstance(userInformation),userInformation), getActivity());
+                                RecentMethods.setCurrentFragment(ViewingMyClothesMain.newInstance(MainFragment.newInstance(userInformation,bundle),userInformation,bundle), getActivity());
                             }
                         };
                         relativeFirstLayout.setVisibility(View.GONE);
@@ -474,14 +476,14 @@ public class MainFragment extends Fragment{
                 createClothes.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        RecentMethods.setCurrentFragment(CreateClothesFragment.newInstance(MainFragment.newInstance(userInformation),userInformation), getActivity());
+                        RecentMethods.setCurrentFragment(CreateClothesFragment.newInstance(MainFragment.newInstance(userInformation,bundle),userInformation,bundle), getActivity());
                     }
                 });
             }else {
                 itemClickListenerMyClothes=new MyClothesAdapterMain.ItemClickListener() {
                     @Override
                     public void onItemClick(Clothes clothes) {
-                        RecentMethods.setCurrentFragment(ViewingMyClothesMain.newInstance(MainFragment.newInstance(userInformation),userInformation), getActivity());
+                        RecentMethods.setCurrentFragment(ViewingMyClothesMain.newInstance(MainFragment.newInstance(userInformation,bundle),userInformation,bundle), getActivity());
                     }
                 };
                 relativeFirstLayout.setVisibility(View.GONE);
@@ -501,7 +503,7 @@ public class MainFragment extends Fragment{
                     public void onClick(View v) {
                         if(myClothesListSize>-1) {
                             RecentMethods.setCurrentFragment(MyClothesFragment.newInstance(userInformation.getMyClothes()
-                                    ,totalProfitLong,totalPurchaseLong,totalProfitDollarLong,userInformation), getActivity());
+                                    ,totalProfitLong,totalPurchaseLong,totalProfitDollarLong,userInformation,bundle), getActivity());
                         }
                     }
                 });

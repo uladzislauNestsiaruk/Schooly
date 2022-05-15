@@ -55,16 +55,18 @@ public class AcceptNewLook extends Fragment {
     String type;
     Fragment fragment;
     UserInformation userInformation;
+    Bundle bundle;
 
-    public AcceptNewLook(String model,String type,Fragment fragment,UserInformation userInformation) {
+    public AcceptNewLook(String model,String type,Fragment fragment,UserInformation userInformation,Bundle bundle) {
         this.model = model;
         this.type = type;
         this.fragment=fragment;
         this.userInformation=userInformation;
+        this.bundle=bundle;
     }
 
-    public static AcceptNewLook newInstance(String model,String type,Fragment fragment,UserInformation userInformation) {
-        return new AcceptNewLook(model,type,fragment,userInformation);
+    public static AcceptNewLook newInstance(String model,String type,Fragment fragment,UserInformation userInformation,Bundle bundle) {
+        return new AcceptNewLook(model,type,fragment,userInformation,bundle);
 
     }
 
@@ -94,7 +96,7 @@ public class AcceptNewLook extends Fragment {
         itemClickListener=new ConstituentsAdapter.ItemClickListener() {
             @Override
             public void onItemClick(Clothes clothes) {
-                RecentMethods.setCurrentFragment(ViewingClothesNews.newInstance(AcceptNewLook.newInstance(model,type,fragment, userInformation),userInformation), getActivity());
+                RecentMethods.setCurrentFragment(ViewingClothesNews.newInstance(AcceptNewLook.newInstance(model,type,fragment, userInformation,bundle),userInformation,bundle), getActivity());
             }
         };
 
@@ -102,17 +104,17 @@ public class AcceptNewLook extends Fragment {
         backfromwardrobe.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(CreateLookFragment.newInstance(type,fragment,userInformation), getActivity());
+                RecentMethods.setCurrentFragment(CreateLookFragment.newInstance(type,fragment,userInformation,bundle), getActivity());
             }
         });
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                RecentMethods.setCurrentFragment(CreateLookFragment.newInstance(type,fragment,userInformation), getActivity());
+                RecentMethods.setCurrentFragment(CreateLookFragment.newInstance(type,fragment,userInformation,bundle), getActivity());
             }
         };
 
-        requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(), callback);
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
         getLookClothes();
     }
 
@@ -139,7 +141,7 @@ public class AcceptNewLook extends Fragment {
                         .setValue(new NewsItem(model, descriptionLook.getText().toString(), "0", lookId,
                                 "", userInformation.getLookClothes(), 1200, 0,"",nick,0));
                 firebaseModel.getUsersReference().child(nick).child("lookClothes").removeValue();
-                RecentMethods.setCurrentFragment(ProfileFragment.newInstance(type, nick, fragment,userInformation), getActivity());
+                RecentMethods.setCurrentFragment(ProfileFragment.newInstance(type, nick, fragment,userInformation,bundle), getActivity());
             }
         });
     }

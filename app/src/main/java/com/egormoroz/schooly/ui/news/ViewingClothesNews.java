@@ -65,14 +65,16 @@ public class ViewingClothesNews extends Fragment {
     Fragment fragment;
     UserInformation userInformation;
     String nick;
+    Bundle bundle;
 
-    public ViewingClothesNews(Fragment fragment,UserInformation userInformation) {
+    public ViewingClothesNews(Fragment fragment,UserInformation userInformation,Bundle bundle) {
         this.fragment = fragment;
         this.userInformation=userInformation;
+        this.bundle=bundle;
     }
 
-    public static ViewingClothesNews newInstance(Fragment fragment, UserInformation userInformation) {
-        return new ViewingClothesNews(fragment,userInformation);
+    public static ViewingClothesNews newInstance(Fragment fragment, UserInformation userInformation,Bundle bundle) {
+        return new ViewingClothesNews(fragment,userInformation,bundle);
 
     }
 
@@ -133,13 +135,13 @@ public class ViewingClothesNews extends Fragment {
         fittingClothes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(FittingFragment.newInstance(ViewingClothes.newInstance(fragment,userInformation)), getActivity());
+                RecentMethods.setCurrentFragment(FittingFragment.newInstance(ViewingClothes.newInstance(fragment,userInformation,bundle),userInformation,bundle), getActivity());
             }
         });
         coinsLinear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(CoinsFragmentSecond.newInstance(ViewingClothesNews.newInstance(fragment,userInformation),userInformation), getActivity());
+                RecentMethods.setCurrentFragment(CoinsFragmentSecond.newInstance(ViewingClothesNews.newInstance(fragment,userInformation,bundle),userInformation,bundle), getActivity());
             }
         });
         back.setOnClickListener(new View.OnClickListener() {
@@ -157,7 +159,7 @@ public class ViewingClothesNews extends Fragment {
             }
         };
 
-        requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(), callback);
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
 
         send.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -180,9 +182,9 @@ public class ViewingClothesNews extends Fragment {
                     @Override
                     public void onClick(View v) {
                         if (clothesViewing.getCreator().equals(nick)) {
-                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("user", nick, ViewingClothes.newInstance(fragment,userInformation),userInformation), getActivity());
+                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("user", nick, ViewingClothes.newInstance(fragment,userInformation,bundle),userInformation,bundle), getActivity());
                         }else {
-                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", clothesViewing.getCreator(), ViewingClothes.newInstance(fragment,userInformation),userInformation), getActivity());
+                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", clothesViewing.getCreator(), ViewingClothes.newInstance(fragment,userInformation,bundle),userInformation,bundle), getActivity());
                         }
                     }
                 });
@@ -640,7 +642,7 @@ public class ViewingClothesNews extends Fragment {
                         });
                     }else{
                         Toast.makeText(getContext(), "Не хватает коинов", Toast.LENGTH_SHORT).show();
-                        RecentMethods.setCurrentFragment(CoinsFragmentSecond.newInstance(ViewingClothesNews.newInstance(fragment,userInformation),userInformation), getActivity());
+                        RecentMethods.setCurrentFragment(CoinsFragmentSecond.newInstance(ViewingClothesNews.newInstance(fragment,userInformation,bundle),userInformation,bundle), getActivity());
                     }
                 }
                 dialog.dismiss();

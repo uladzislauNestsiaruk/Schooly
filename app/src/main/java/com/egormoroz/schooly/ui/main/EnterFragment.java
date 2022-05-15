@@ -40,13 +40,15 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class EnterFragment extends Fragment {
     UserInformation userInformation;
+    Bundle bundle;
 
-    public EnterFragment(UserInformation userInformation) {
+    public EnterFragment(UserInformation userInformation,Bundle bundle) {
         this.userInformation=userInformation;
+        this.bundle=bundle;
     }
 
-    public static EnterFragment newInstance(UserInformation userInformation) {
-        return new EnterFragment(userInformation);
+    public static EnterFragment newInstance(UserInformation userInformation,Bundle bundle) {
+        return new EnterFragment(userInformation,bundle);
     }
     EditText phoneEditText;
     EditText passwordEditText;
@@ -182,7 +184,7 @@ public class EnterFragment extends Fragment {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithEmail:success");
                             FirebaseUser user = AuthenticationBase.getCurrentUser();
-                            RecentMethods.setCurrentFragment(MainFragment.newInstance(userInformation), getActivity());
+                            RecentMethods.setCurrentFragment(MainFragment.newInstance(userInformation,bundle), getActivity());
                         } else {
                             Log.d("AAAA", RecentMethods.makeEmail(phone)+"  "+password);
                             // If sign in fails, display a message to the user.

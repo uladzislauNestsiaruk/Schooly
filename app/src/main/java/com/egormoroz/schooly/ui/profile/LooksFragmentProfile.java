@@ -31,19 +31,20 @@ public class LooksFragmentProfile extends Fragment {
     TextView createNewLookText,createNewLook;
     FirebaseModel firebaseModel=new FirebaseModel();
     int looksListSize;
-
     String type,nick;
     Fragment fragment;
     UserInformation userInformation;
+    Bundle bundle;
 
-    public LooksFragmentProfile(String type,Fragment fragment,UserInformation userInformation) {
+    public LooksFragmentProfile(String type,Fragment fragment,UserInformation userInformation,Bundle bundle) {
         this.type = type;
         this.fragment=fragment;
         this.userInformation=userInformation;
+        this.bundle=bundle;
     }
 
-    public static LooksFragmentProfile newInstance(String type,Fragment fragment,UserInformation userInformation) {
-        return new LooksFragmentProfile(type,fragment,userInformation);
+    public static LooksFragmentProfile newInstance(String type,Fragment fragment,UserInformation userInformation,Bundle bundle) {
+        return new LooksFragmentProfile(type,fragment,userInformation,bundle);
 
     }
 
@@ -90,12 +91,12 @@ public class LooksFragmentProfile extends Fragment {
                         createNewLook.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                RecentMethods.setCurrentFragment(CreateLookFragment.newInstance(type,fragment,userInformation), getActivity());
+                                RecentMethods.setCurrentFragment(CreateLookFragment.newInstance(type,fragment,userInformation,bundle), getActivity());
                             }
                         });
                     }else {
                         Collections.reverse(look);
-                        LooksAdapter looksAdapter=new LooksAdapter(look,LooksFragmentProfile.newInstance(type,fragment,userInformation),looksRecycler);
+                        LooksAdapter looksAdapter=new LooksAdapter(look,LooksFragmentProfile.newInstance(type,fragment,userInformation,bundle),looksRecycler);
                         GridLayoutManager gridLayoutManager=new GridLayoutManager(getContext(), 3);
                         looksAdapter.setHasStableIds(true);
                         looksRecycler.setHasFixedSize(true);
@@ -106,7 +107,7 @@ public class LooksFragmentProfile extends Fragment {
                             @Override
                             public void onItemClick(NewsItem newsItem) {
                                 RecentMethods.setCurrentFragment(ViewingLookFragment.newInstance(ProfileFragment.
-                                        newInstance(type, nick, fragment,userInformation),userInformation), getActivity());
+                                        newInstance(type, nick, fragment,userInformation,bundle),userInformation,bundle), getActivity());
                             }
                         };
                         looksAdapter.setClickListener(itemClickListener);
@@ -122,11 +123,11 @@ public class LooksFragmentProfile extends Fragment {
                 createNewLook.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        RecentMethods.setCurrentFragment(CreateLookFragment.newInstance(type,fragment,userInformation), getActivity());
+                        RecentMethods.setCurrentFragment(CreateLookFragment.newInstance(type,fragment,userInformation,bundle), getActivity());
                     }
                 });
             }else {
-                LooksAdapter looksAdapter = new LooksAdapter(userInformation.getLooks(), LooksFragmentProfile.newInstance(type, fragment, userInformation), looksRecycler);
+                LooksAdapter looksAdapter = new LooksAdapter(userInformation.getLooks(), LooksFragmentProfile.newInstance(type, fragment, userInformation,bundle), looksRecycler);
                 GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 3);
                 looksAdapter.setHasStableIds(true);
                 looksRecycler.setHasFixedSize(true);
@@ -137,7 +138,7 @@ public class LooksFragmentProfile extends Fragment {
                     @Override
                     public void onItemClick(NewsItem newsItem) {
                         RecentMethods.setCurrentFragment(ViewingLookFragment.newInstance(ProfileFragment.
-                                newInstance(type, nick, fragment, userInformation), userInformation), getActivity());
+                                newInstance(type, nick, fragment, userInformation,bundle), userInformation,bundle), getActivity());
                     }
                 };
                 looksAdapter.setClickListener(itemClickListener);

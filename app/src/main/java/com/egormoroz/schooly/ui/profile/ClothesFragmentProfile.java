@@ -45,20 +45,21 @@ public class ClothesFragmentProfile extends Fragment {
     TextView createNewLookText,createNewLook;
     ClothesAdapter.ItemClickListener itemClickListener;
     FirebaseModel firebaseModel=new FirebaseModel();
-
     Fragment fragment;
     String type,nick;
     UserInformation userInformation;
+    Bundle bundle;
 
 
-    public ClothesFragmentProfile(String type,Fragment fragment,UserInformation userInformation) {
+    public ClothesFragmentProfile(String type,Fragment fragment,UserInformation userInformation,Bundle bundle) {
         this.fragment = fragment;
         this.type = type;
         this.userInformation=userInformation;
+        this.bundle=bundle;
     }
 
-    public static ClothesFragmentProfile newInstance(String type,Fragment fragment,UserInformation userInformation) {
-        return new ClothesFragmentProfile(type,fragment,userInformation);
+    public static ClothesFragmentProfile newInstance(String type,Fragment fragment,UserInformation userInformation,Bundle bundle) {
+        return new ClothesFragmentProfile(type,fragment,userInformation,bundle);
 
     }
 
@@ -86,7 +87,7 @@ public class ClothesFragmentProfile extends Fragment {
         itemClickListener=new ClothesAdapter.ItemClickListener() {
             @Override
             public void onItemClick(Clothes clothes) {
-                RecentMethods.setCurrentFragment(ClothesViewingProfile.newInstance(type,ProfileFragment.newInstance(type,nick,fragment,userInformation),userInformation), getActivity());
+                RecentMethods.setCurrentFragment(ClothesViewingProfile.newInstance(type,ProfileFragment.newInstance(type,nick,fragment,userInformation,bundle),userInformation,bundle), getActivity());
             }
         };
         createNewLook=view.findViewById(R.id.CreateYourLook);
@@ -104,7 +105,7 @@ public class ClothesFragmentProfile extends Fragment {
                         createNewLookText.setVisibility(View.VISIBLE);
                         createNewLookText.setText("Создай свою одежду!");
                         createNewLook.setVisibility(View.VISIBLE);
-                        RecentMethods.setCurrentFragment(CreateClothesFragment.newInstance(ProfileFragment.newInstance("user", nick, fragment,userInformation),userInformation), getActivity());
+                        RecentMethods.setCurrentFragment(CreateClothesFragment.newInstance(ProfileFragment.newInstance("user", nick, fragment,userInformation,bundle),userInformation,bundle), getActivity());
                         looksRecycler.setVisibility(View.GONE);
                     }else {
                         looksRecycler.setVisibility(View.VISIBLE);
@@ -124,7 +125,7 @@ public class ClothesFragmentProfile extends Fragment {
                 createNewLookText.setVisibility(View.VISIBLE);
                 createNewLookText.setText("Создай свою одежду!");
                 createNewLook.setVisibility(View.VISIBLE);
-                RecentMethods.setCurrentFragment(CreateClothesFragment.newInstance(ProfileFragment.newInstance("user", nick, fragment,userInformation),userInformation), getActivity());
+                RecentMethods.setCurrentFragment(CreateClothesFragment.newInstance(ProfileFragment.newInstance("user", nick, fragment,userInformation,bundle),userInformation,bundle), getActivity());
                 looksRecycler.setVisibility(View.GONE);
             }else {
                 looksRecycler.setVisibility(View.VISIBLE);

@@ -61,20 +61,22 @@ public class MyClothesFragment extends Fragment {
     LinearLayout linearSearch;
     UserInformation userInformation;
     ArrayList<Clothes> clothesArrayList;
+    Bundle bundle;
 
     public MyClothesFragment(ArrayList<Clothes> clothesArrayList,long totalProfitLong,long totalPurchaseLong,
-                             long totalProfitDollarLong,UserInformation userInformation) {
+                             long totalProfitDollarLong,UserInformation userInformation,Bundle bundle) {
         this.clothesArrayList = clothesArrayList;
         this.totalProfitLong=totalProfitLong;
         this.totalPurchaseLong=totalPurchaseLong;
         this.totalProfitDollarLong=totalProfitDollarLong;
         this.userInformation=userInformation;
+        this.bundle=bundle;
     }
 
     public static MyClothesFragment newInstance(ArrayList<Clothes> clothesArrayList,long totalProfitLong,long totalPurchaseLong,
-                                                long totalProfitDollarLong,UserInformation userInformation) {
+                                                long totalProfitDollarLong,UserInformation userInformation,Bundle bundle) {
         return new MyClothesFragment(clothesArrayList,totalProfitLong,totalPurchaseLong,totalProfitDollarLong
-        ,userInformation);
+        ,userInformation,bundle);
 
     }
 
@@ -98,11 +100,11 @@ public class MyClothesFragment extends Fragment {
             @Override
             public void handleOnBackPressed() {
 
-                RecentMethods.setCurrentFragment(MainFragment.newInstance(userInformation), getActivity());
+                RecentMethods.setCurrentFragment(MainFragment.newInstance(userInformation,bundle), getActivity());
             }
         };
 
-        requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(), callback);
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
 
         recyclerMyClothes=view.findViewById(R.id.recyclerMyClothes);
         createClothesBig=view.findViewById(R.id.createBigButtonRecycler);
@@ -122,7 +124,7 @@ public class MyClothesFragment extends Fragment {
             @Override
             public void onItemClick(Clothes clothes) {
                 RecentMethods.setCurrentFragment(ViewingMyClothes.newInstance(MyClothesFragment.newInstance(clothesArrayList
-                        ,totalProfitLong,totalPurchaseLong,totalProfitDollarLong,userInformation),userInformation), getActivity());
+                        ,totalProfitLong,totalPurchaseLong,totalProfitDollarLong,userInformation,bundle),userInformation,bundle), getActivity());
             }
         };
         ImageView backtomain=view.findViewById(R.id.back_tomain);
@@ -132,7 +134,7 @@ public class MyClothesFragment extends Fragment {
                 RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
                     @Override
                     public void PassUserNick(String nick) {
-                        RecentMethods.setCurrentFragment(MainFragment.newInstance(userInformation), getActivity());
+                        RecentMethods.setCurrentFragment(MainFragment.newInstance(userInformation,bundle), getActivity());
                     }
                 });
             }
@@ -191,7 +193,7 @@ public class MyClothesFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     RecentMethods.setCurrentFragment(CreateClothesFragment.newInstance(MyClothesFragment.newInstance(clothesArrayList
-                            ,totalProfitLong,totalPurchaseLong,totalProfitDollarLong,userInformation),userInformation), getActivity());
+                            ,totalProfitLong,totalPurchaseLong,totalProfitDollarLong,userInformation,bundle),userInformation,bundle), getActivity());
                 }
             });
         }else {
@@ -206,7 +208,7 @@ public class MyClothesFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     RecentMethods.setCurrentFragment(CreateClothesFragment.newInstance(MyClothesFragment.newInstance(clothesArrayList
-                            ,totalProfitLong,totalPurchaseLong,totalProfitDollarLong,userInformation),userInformation), getActivity());
+                            ,totalProfitLong,totalPurchaseLong,totalProfitDollarLong,userInformation,bundle),userInformation,bundle), getActivity());
                 }
             });
         }

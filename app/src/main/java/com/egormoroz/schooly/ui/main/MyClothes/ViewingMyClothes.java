@@ -56,14 +56,16 @@ public class ViewingMyClothes extends Fragment {
 
     Fragment fragment;
     UserInformation userInformation;
+    Bundle bundle;
 
-    public ViewingMyClothes(Fragment fragment,UserInformation userInformation) {
+    public ViewingMyClothes(Fragment fragment,UserInformation userInformation,Bundle bundle) {
         this.fragment = fragment;
         this.userInformation=userInformation;
+        this.bundle=bundle;
     }
 
-    public static ViewingMyClothes newInstance(Fragment fragment,UserInformation userInformation) {
-        return new ViewingMyClothes(fragment,userInformation);
+    public static ViewingMyClothes newInstance(Fragment fragment,UserInformation userInformation,Bundle bundle) {
+        return new ViewingMyClothes(fragment,userInformation,bundle);
 
     }
 
@@ -136,7 +138,7 @@ public class ViewingMyClothes extends Fragment {
                 RecentMethods.setCurrentFragment(fragment, getActivity());
             }
         };
-        requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(), callback);
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
 
         backToShop.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -152,7 +154,8 @@ public class ViewingMyClothes extends Fragment {
                 presentClothes.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        RecentMethods.setCurrentFragment(PresentClothesFragment.newInstance(clothesViewing,ViewingMyClothes.newInstance(fragment,userInformation),userInformation), getActivity());
+                        RecentMethods.setCurrentFragment(PresentClothesFragment.newInstance(clothesViewing,
+                                ViewingMyClothes.newInstance(fragment,userInformation,bundle),userInformation,bundle), getActivity());
                     }
                 });
                 clothesTitleCV.setText(clothes.getClothesTitle());

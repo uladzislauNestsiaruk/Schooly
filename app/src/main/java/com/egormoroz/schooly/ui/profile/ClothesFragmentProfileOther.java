@@ -41,15 +41,17 @@ public class ClothesFragmentProfileOther extends Fragment {
     ClothesAdapterOther.ItemClickListener itemClickListener;
     Fragment fragment;
     UserInformation userInformation;
+    Bundle bundle;
 
-    public ClothesFragmentProfileOther(String otherUserNick,Fragment fragment,UserInformation userInformation) {
+    public ClothesFragmentProfileOther(String otherUserNick,Fragment fragment,UserInformation userInformation,Bundle bundle) {
         this.otherUserNick = otherUserNick;
         this.fragment=fragment;
         this.userInformation=userInformation;
+        this.bundle=bundle;
     }
 
-    public static ClothesFragmentProfileOther newInstance(String otherUserNick,Fragment fragment,UserInformation userInformation) {
-        return new ClothesFragmentProfileOther(otherUserNick,fragment,userInformation);
+    public static ClothesFragmentProfileOther newInstance(String otherUserNick,Fragment fragment,UserInformation userInformation,Bundle bundle) {
+        return new ClothesFragmentProfileOther(otherUserNick,fragment,userInformation,bundle);
     }
 
     @Override
@@ -80,7 +82,7 @@ public class ClothesFragmentProfileOther extends Fragment {
         itemClickListener=new ClothesAdapterOther.ItemClickListener() {
             @Override
             public void onItemClick(Clothes clothes) {
-                RecentMethods.setCurrentFragment(ClothesViewingProfileOther.newInstance(ProfileFragment.newInstance("other", otherUserNick, fragment,userInformation),userInformation), getActivity());
+                RecentMethods.setCurrentFragment(ClothesViewingProfileOther.newInstance(ProfileFragment.newInstance("other", otherUserNick, fragment,userInformation,bundle),userInformation,bundle), getActivity());
             }
         };
         firebaseModel.getUsersReference().child(otherUserNick)

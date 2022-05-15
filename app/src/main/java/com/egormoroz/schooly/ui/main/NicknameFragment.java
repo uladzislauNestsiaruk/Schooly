@@ -26,13 +26,15 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class NicknameFragment extends Fragment {
     UserInformation userInformation;
+    Bundle bundle;
 
-    public NicknameFragment(UserInformation userInformation) {
+    public NicknameFragment(UserInformation userInformation,Bundle bundle) {
         this.userInformation=userInformation;
+        this.bundle=bundle;
     }
 
-    public static NicknameFragment newInstance(UserInformation userInformation) {
-        return new NicknameFragment(userInformation);
+    public static NicknameFragment newInstance(UserInformation userInformation,Bundle bundle) {
+        return new NicknameFragment(userInformation,bundle);
     }
     FirebaseAuth authenticationDatabase;
     FirebaseDatabase database;
@@ -93,7 +95,7 @@ public class NicknameFragment extends Fragment {
                 String error = String.valueOf(nicknameTextView.getText()).trim();
                 if(error.isEmpty()) {
                     RecentMethods.saveData(ref, authenticationDatabase.getCurrentUser(), nickname);
-                    RecentMethods.setCurrentFragment(MainFragment.newInstance(userInformation), getActivity());
+                    RecentMethods.setCurrentFragment(MainFragment.newInstance(userInformation,bundle), getActivity());
                 }
             }
         });

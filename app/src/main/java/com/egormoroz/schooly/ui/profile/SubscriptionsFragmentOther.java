@@ -42,15 +42,18 @@ public class SubscriptionsFragmentOther extends Fragment {
     EditText searchUser;
     UserInformation userInformation;
     Fragment fragment;
+    Bundle bundle;
 
-    public SubscriptionsFragmentOther(Fragment fragment,String otherUserNick,UserInformation userInformation) {
+    public SubscriptionsFragmentOther(Fragment fragment,String otherUserNick,UserInformation userInformation,Bundle bundle) {
         this.fragment=fragment;
         this.otherUserNick=otherUserNick;
         this.userInformation=userInformation;
+        this.bundle=bundle;
     }
 
-    public static SubscriptionsFragmentOther newInstance( Fragment fragment,String otherUserNick,UserInformation userInformation) {
-        return new SubscriptionsFragmentOther(fragment,otherUserNick,userInformation);
+    public static SubscriptionsFragmentOther newInstance( Fragment fragment,String otherUserNick
+            ,UserInformation userInformation,Bundle bundle) {
+        return new SubscriptionsFragmentOther(fragment,otherUserNick,userInformation,bundle);
     }
 
     @Override
@@ -74,7 +77,7 @@ public class SubscriptionsFragmentOther extends Fragment {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", otherUserNick,fragment,userInformation),
+                RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", otherUserNick,fragment,userInformation,bundle),
                         getActivity());
             }
         });
@@ -82,11 +85,11 @@ public class SubscriptionsFragmentOther extends Fragment {
             @Override
             public void handleOnBackPressed() {
 
-                RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other",otherUserNick,fragment,userInformation), getActivity());
+                RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other",otherUserNick,fragment,userInformation,bundle), getActivity());
             }
         };
 
-        requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(), callback);
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
         RecentMethods.getSubscriptionList(otherUserNick, firebaseModel, new Callbacks.getFriendsList() {
             @Override
             public void getFriendsList(ArrayList<Subscriber> friends) {
@@ -105,9 +108,9 @@ public class SubscriptionsFragmentOther extends Fragment {
                                     Subscriber user = subscriptionsAdapterOther.getItem(position);
                                     userNameToProfile=user.getSub();
                                     if(userNameToProfile.equals(nick)){
-                                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback",nick,SubscriptionsFragmentOther.newInstance(fragment,otherUserNick,userInformation),userInformation),getActivity());
+                                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback",nick,SubscriptionsFragmentOther.newInstance(fragment,otherUserNick,userInformation,bundle),userInformation,bundle),getActivity());
                                     }else {
-                                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile,SubscriptionsFragmentOther.newInstance(fragment,otherUserNick,userInformation),userInformation
+                                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile,SubscriptionsFragmentOther.newInstance(fragment,otherUserNick,userInformation,bundle),userInformation,bundle
                                         ), getActivity());
                                     }
                                 }
@@ -166,9 +169,9 @@ public class SubscriptionsFragmentOther extends Fragment {
                                                 Subscriber subscriber = subscriptionsAdapterOther.getItem(position);
                                                 userNameToProfile = subscriber.getSub();
                                                 if(userNameToProfile.equals(nick)){
-                                                    RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback",nick,SubscriptionsFragmentOther.newInstance(fragment,otherUserNick,userInformation),userInformation),getActivity());
+                                                    RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback",nick,SubscriptionsFragmentOther.newInstance(fragment,otherUserNick,userInformation,bundle),userInformation,bundle),getActivity());
                                                 }else {
-                                                    RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile,SubscriptionsFragmentOther.newInstance(fragment,otherUserNick,userInformation),userInformation),
+                                                    RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile,SubscriptionsFragmentOther.newInstance(fragment,otherUserNick,userInformation,bundle),userInformation,bundle),
                                                             getActivity());
                                                 }
                                             }

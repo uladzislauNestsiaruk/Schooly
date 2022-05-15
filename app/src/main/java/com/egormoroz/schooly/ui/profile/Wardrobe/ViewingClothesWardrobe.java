@@ -60,15 +60,17 @@ public class ViewingClothesWardrobe extends Fragment {
   String type,nick;
   Fragment fragment;
   UserInformation userInformation;
+  Bundle bundle;
 
-  public ViewingClothesWardrobe(String type,Fragment fragment,UserInformation userInformation) {
+  public ViewingClothesWardrobe(String type,Fragment fragment,UserInformation userInformation,Bundle bundle) {
     this.type = type;
     this.fragment=fragment;
     this.userInformation=userInformation;
+    this.bundle=bundle;
   }
 
-  public static ViewingClothesWardrobe newInstance(String type,Fragment fragment,UserInformation userInformation) {
-    return new ViewingClothesWardrobe(type,fragment,userInformation);
+  public static ViewingClothesWardrobe newInstance(String type,Fragment fragment,UserInformation userInformation,Bundle bundle) {
+    return new ViewingClothesWardrobe(type,fragment,userInformation,bundle);
 
   }
 
@@ -127,13 +129,13 @@ public class ViewingClothesWardrobe extends Fragment {
     fittingClothes.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        RecentMethods.setCurrentFragment(FittingFragment.newInstance(ViewingClothesWardrobe.newInstance(type,fragment,userInformation)), getActivity());
+        RecentMethods.setCurrentFragment(FittingFragment.newInstance(ViewingClothesWardrobe.newInstance(type,fragment,userInformation,bundle),userInformation,bundle), getActivity());
       }
     });
     coinsLinear.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        RecentMethods.setCurrentFragment(CoinsFragmentSecond.newInstance(ViewingClothesWardrobe.newInstance(type,fragment,userInformation),userInformation), getActivity());
+        RecentMethods.setCurrentFragment(CoinsFragmentSecond.newInstance(ViewingClothesWardrobe.newInstance(type,fragment,userInformation,bundle),userInformation,bundle), getActivity());
       }
     });
     OnBackPressedCallback callback = new OnBackPressedCallback(true) {
@@ -144,7 +146,7 @@ public class ViewingClothesWardrobe extends Fragment {
       }
     };
 
-    requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(), callback);
+    requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
     backToShop.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
@@ -172,9 +174,9 @@ public class ViewingClothesWardrobe extends Fragment {
           @Override
           public void onClick(View v) {
             if (clothesViewing.getCreator().equals(userInformation.getNick())) {
-              RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback", userInformation.getNick(), ViewingClothesWardrobe.newInstance(type,fragment,userInformation),userInformation), getActivity());
+              RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback", userInformation.getNick(), ViewingClothesWardrobe.newInstance(type,fragment,userInformation,bundle),userInformation,bundle), getActivity());
             }else {
-              RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", clothesViewing.getCreator(), ViewingClothesWardrobe.newInstance(type,fragment,userInformation),userInformation), getActivity());
+              RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", clothesViewing.getCreator(), ViewingClothesWardrobe.newInstance(type,fragment,userInformation,bundle),userInformation,bundle), getActivity());
             }
           }
         });

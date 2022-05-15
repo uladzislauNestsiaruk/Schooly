@@ -59,6 +59,7 @@ public class RegFragment extends Fragment {
     FirebaseDatabase database;
     DatabaseReference reference;
     RelativeLayout GoogleEnter;
+    Bundle bundle;
     EditText passwordEditText, nickNameEditText, phoneEditText;
     TextView continueRegistrationButton, errorTextnickname, errorTextphone, errorTextPassword;
     @Override
@@ -236,7 +237,7 @@ public class RegFragment extends Fragment {
                             String nick = String.valueOf(nickNameEditText.getText()).trim();
                             UserInformation userInformation=new UserInformation();
                             //if(nick.isEmpty())
-                                RecentMethods.setCurrentFragment(NicknameFragment.newInstance(userInformation), getActivity());
+                                RecentMethods.setCurrentFragment(NicknameFragment.newInstance(userInformation,bundle), getActivity());
                             //else
                                // RecentMethods.setCurrentFragment(MainFragment.newInstance(), getActivity());
                         } else {
@@ -262,7 +263,7 @@ public class RegFragment extends Fragment {
                             public void hasGoogleUserCallback(boolean hasThisUser) {
                                 if(hasThisUser) {
                                     UserInformation userInformation = new UserInformation();
-                                    RecentMethods.setCurrentFragment(new EnterFragment(userInformation), getActivity());
+                                    RecentMethods.setCurrentFragment(new EnterFragment(userInformation,bundle), getActivity());
                                 }
                                 else
                                     AuthorizationThrowGoogle();
@@ -314,7 +315,7 @@ public class RegFragment extends Fragment {
                             reference.child(nick).setValue(res);
                             database.getReference("usersNicks")
                                     .child(nick).setValue(new UserPeopleAdapter(nick,"6"," "));
-                            RecentMethods.setCurrentFragment(MainFragment.newInstance(res), getActivity());
+                            RecentMethods.setCurrentFragment(MainFragment.newInstance(res,bundle), getActivity());
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());

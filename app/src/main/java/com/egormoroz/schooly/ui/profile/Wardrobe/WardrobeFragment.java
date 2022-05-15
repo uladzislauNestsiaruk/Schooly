@@ -57,15 +57,17 @@ public class WardrobeFragment extends Fragment {
     String type,nick;
     Fragment fragment;
     UserInformation userInformation;
+    Bundle bundle;
 
-    public WardrobeFragment(String type,Fragment fragment,UserInformation userInformation) {
+    public WardrobeFragment(String type,Fragment fragment,UserInformation userInformation,Bundle bundle) {
         this.type = type;
         this.fragment=fragment;
         this.userInformation=userInformation;
+        this.bundle=bundle;
     }
 
-    public static WardrobeFragment newInstance(String type,Fragment fragment,UserInformation userInformation) {
-        return new WardrobeFragment(type,fragment,userInformation);
+    public static WardrobeFragment newInstance(String type,Fragment fragment,UserInformation userInformation,Bundle bundle) {
+        return new WardrobeFragment(type,fragment,userInformation,bundle);
 
     }
     ArrayList<Clothes> clothesArrayListWardrobe=new ArrayList<Clothes>();
@@ -165,7 +167,7 @@ public class WardrobeFragment extends Fragment {
         backfromwardrobe.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(ProfileFragment.newInstance(type, nick,fragment,userInformation), getActivity());
+                RecentMethods.setCurrentFragment(ProfileFragment.newInstance(type, nick,fragment,userInformation,bundle), getActivity());
             }
         });
 
@@ -173,11 +175,11 @@ public class WardrobeFragment extends Fragment {
             @Override
             public void handleOnBackPressed() {
 
-                RecentMethods.setCurrentFragment(ProfileFragment.newInstance(type,nick,fragment,userInformation), getActivity());
+                RecentMethods.setCurrentFragment(ProfileFragment.newInstance(type,nick,fragment,userInformation,bundle), getActivity());
             }
         };
 
-        requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(), callback);
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
 
         tabLayout = view.findViewById(R.id.tabLayoutWardrobe);
         viewPager=view.findViewById(R.id.frcontwardrobe);
@@ -279,14 +281,14 @@ public class WardrobeFragment extends Fragment {
             switch (position)
             {
                 case 1 :
-                    return new WardrobeClothes(type,fragment,userInformation);
+                    return new WardrobeClothes(type,fragment,userInformation,bundle);
                 case 2 :
-                    return new WardrobeHats(type,fragment,userInformation);
+                    return new WardrobeHats(type,fragment,userInformation,bundle);
                 case 3 :
-                    return new WardrobeAccessories(type,fragment,userInformation);
+                    return new WardrobeAccessories(type,fragment,userInformation,bundle);
             }
 
-            return new WardrobeShoes(type,fragment,userInformation);
+            return new WardrobeShoes(type,fragment,userInformation,bundle);
         }
 
         @Override

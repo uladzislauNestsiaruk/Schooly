@@ -76,16 +76,18 @@ public class CreateClothesFragment extends Fragment {
 
     Fragment fragment;
     UserInformation userInformation;
+    Bundle bundle;
     String premiumType,modelApplication,imageApplication,currencyType,bodyType,type,exclusiveType
             ,nick;
 
-    public CreateClothesFragment(Fragment fragment,UserInformation userInformation) {
+    public CreateClothesFragment(Fragment fragment,UserInformation userInformation,Bundle bundle) {
         this.fragment = fragment;
         this.userInformation=userInformation;
+        this.bundle=bundle;
     }
 
-    public static CreateClothesFragment newInstance(Fragment fragment,UserInformation userInformation) {
-        return new CreateClothesFragment(fragment,userInformation);
+    public static CreateClothesFragment newInstance(Fragment fragment,UserInformation userInformation,Bundle bundle) {
+        return new CreateClothesFragment(fragment,userInformation,bundle);
 
     }
 
@@ -113,7 +115,7 @@ public class CreateClothesFragment extends Fragment {
             }
         };
 
-        requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(), callback);
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
 
         editClothesPrice=view.findViewById(R.id.editClothesPrice);
         editTextClothes=view.findViewById(R.id.editTextClothes);
@@ -136,13 +138,13 @@ public class CreateClothesFragment extends Fragment {
         before.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(CriteriaFragment.newInstance(fragment,userInformation), getActivity());
+                RecentMethods.setCurrentFragment(CriteriaFragment.newInstance(fragment,userInformation,bundle), getActivity());
             }
         });
         criteria.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(CriteriaFragment.newInstance(fragment,userInformation), getActivity());
+                RecentMethods.setCurrentFragment(CriteriaFragment.newInstance(fragment,userInformation,bundle), getActivity());
             }
         });
         publish=view.findViewById(R.id.publish);

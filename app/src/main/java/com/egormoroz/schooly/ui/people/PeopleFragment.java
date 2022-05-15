@@ -37,16 +37,16 @@ public class PeopleFragment extends Fragment {
     String userName,userNameToProfile,nick;
     ArrayList<UserPeopleAdapter> userFromBase,searchUserFromBase;
     TextView userNotSearch;
-
-
     UserInformation userInformation;
+    Bundle bundle;
 
-    public PeopleFragment(UserInformation userInformation) {
+    public PeopleFragment(UserInformation userInformation,Bundle bundle) {
         this.userInformation=userInformation;
+        this.bundle=bundle;
     }
 
-    public static PeopleFragment newInstance( UserInformation userInformation) {
-        return new PeopleFragment(userInformation);
+    public static PeopleFragment newInstance( UserInformation userInformation,Bundle bundle) {
+        return new PeopleFragment(userInformation,bundle);
 
     }
     FirebaseModel firebaseModel=new FirebaseModel();
@@ -108,9 +108,9 @@ public class PeopleFragment extends Fragment {
                             UserPeopleAdapter user = alreadySearchAdapter.getItem(position);
                             userNameToProfile = user.getNick();
                             if (userNameToProfile.equals(nick)) {
-                                RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback", nick, PeopleFragment.newInstance(userInformation),userInformation), getActivity());
+                                RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback", nick, PeopleFragment.newInstance(userInformation,bundle),userInformation,bundle), getActivity());
                             } else {
-                                RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile, PeopleFragment.newInstance(userInformation),userInformation),
+                                RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile, PeopleFragment.newInstance(userInformation,bundle),userInformation,bundle),
                                         getActivity());
                             }
                         }
@@ -127,9 +127,9 @@ public class PeopleFragment extends Fragment {
                     UserPeopleAdapter user = alreadySearchAdapter.getItem(position);
                     userNameToProfile = user.getNick();
                     if (userNameToProfile.equals(nick)) {
-                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback", nick, PeopleFragment.newInstance(userInformation),userInformation), getActivity());
+                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback", nick, PeopleFragment.newInstance(userInformation,bundle),userInformation,bundle), getActivity());
                     } else {
-                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile, PeopleFragment.newInstance(userInformation),userInformation),
+                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile, PeopleFragment.newInstance(userInformation,bundle),userInformation,bundle),
                                 getActivity());
                     }
                 }
@@ -189,11 +189,11 @@ public class PeopleFragment extends Fragment {
                                         UserPeopleAdapter user = peopleAdapter.getItem(position);
                                         userNameToProfile = user.getNick();
                                         if (userNameToProfile.equals(nick)) {
-                                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback", nick, PeopleFragment.newInstance(userInformation),userInformation), getActivity());
+                                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback", nick, PeopleFragment.newInstance(userInformation,bundle),userInformation,bundle), getActivity());
                                         } else {
 //                                        firebaseModel.getReference().child("users").child(nick).child("alreadySearched").child(userNameToProfile)
 //                                                .setValue(new UserPeopleAdapter(userNameToProfile, avatar, bio));
-                                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile, PeopleFragment.newInstance(userInformation),userInformation),
+                                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile, PeopleFragment.newInstance(userInformation,bundle),userInformation,bundle),
                                                     getActivity());
                                         }
                                     }

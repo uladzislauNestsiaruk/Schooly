@@ -29,15 +29,17 @@ public class WardrobeAccessories extends Fragment {
     String type,nick;
     Fragment fragment;
     UserInformation userInformation;
+    Bundle bundle;
 
-    public WardrobeAccessories(String type,Fragment fragment,UserInformation userInformation) {
+    public WardrobeAccessories(String type,Fragment fragment,UserInformation userInformation,Bundle bundle) {
         this.type = type;
         this.fragment=fragment;
         this.userInformation=userInformation;
+        this.bundle=bundle;
     }
 
-    public static WardrobeAccessories newInstance(String type,Fragment fragment,UserInformation userInformation) {
-        return new WardrobeAccessories(type,fragment,userInformation);
+    public static WardrobeAccessories newInstance(String type,Fragment fragment,UserInformation userInformation,Bundle bundle) {
+        return new WardrobeAccessories(type,fragment,userInformation,bundle);
 
     }
     FirebaseModel firebaseModel=new FirebaseModel();
@@ -73,8 +75,8 @@ public class WardrobeAccessories extends Fragment {
         itemClickListener=new WardrobeClothesAdapter.ItemClickListener() {
             @Override
             public void onItemClick(Clothes clothes) {
-                RecentMethods.setCurrentFragment(ViewingClothesWardrobe.newInstance(type,WardrobeFragment.newInstance(type, fragment, userInformation)
-                        ,userInformation), getActivity());
+                RecentMethods.setCurrentFragment(ViewingClothesWardrobe.newInstance(type,WardrobeFragment.newInstance(type, fragment, userInformation,bundle)
+                        ,userInformation,bundle), getActivity());
             }
         };
         buyToShop=view.findViewById(R.id.buyToShop);
@@ -103,7 +105,7 @@ public class WardrobeAccessories extends Fragment {
                         buyToShop.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                RecentMethods.setCurrentFragment(ShopFragment.newInstance(userInformation), getActivity());
+                                RecentMethods.setCurrentFragment(ShopFragment.newInstance(userInformation,bundle), getActivity());
                             }
                         });
                     }else {
@@ -129,7 +131,7 @@ public class WardrobeAccessories extends Fragment {
                 buyToShop.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        RecentMethods.setCurrentFragment(ShopFragment.newInstance(userInformation), getActivity());
+                        RecentMethods.setCurrentFragment(ShopFragment.newInstance(userInformation,bundle), getActivity());
                     }
                 });
             }else {

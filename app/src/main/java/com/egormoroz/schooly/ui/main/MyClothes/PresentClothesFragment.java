@@ -61,15 +61,17 @@ public class PresentClothesFragment extends Fragment {
     Clothes clothes;
     Fragment fragment;
     UserInformation userInformation;
+    Bundle bundle;
 
-    public PresentClothesFragment(Clothes clothes,Fragment fragment,UserInformation userInformation) {
+    public PresentClothesFragment(Clothes clothes,Fragment fragment,UserInformation userInformation,Bundle bundle) {
         this.clothes = clothes;
         this.fragment=fragment;
         this.userInformation=userInformation;
+        this.bundle=bundle;
     }
 
-    public static PresentClothesFragment newInstance(Clothes clothes,Fragment fragment,UserInformation userInformation) {
-        return new PresentClothesFragment(clothes,fragment,userInformation);
+    public static PresentClothesFragment newInstance(Clothes clothes,Fragment fragment,UserInformation userInformation,Bundle bundle) {
+        return new PresentClothesFragment(clothes,fragment,userInformation,bundle);
 
     }
 
@@ -96,7 +98,7 @@ public class PresentClothesFragment extends Fragment {
             }
         };
 
-        requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(), callback);
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
 
         peopleRecyclerView=view.findViewById(R.id.peoplerecycler);
         searchUser=view.findViewById(R.id.searchuser);

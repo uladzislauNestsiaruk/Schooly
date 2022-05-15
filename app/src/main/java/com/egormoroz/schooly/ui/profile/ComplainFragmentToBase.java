@@ -34,17 +34,19 @@ import java.util.Random;
 
 public class ComplainFragmentToBase extends Fragment {
 
-    public ComplainFragmentToBase(String otherUserNick,Fragment fragment,UserInformation userInformation) {
+    public ComplainFragmentToBase(String otherUserNick,Fragment fragment,UserInformation userInformation,Bundle bundle) {
         this.otherUserNick = otherUserNick;
         this.fragment=fragment;
         this.userInformation=userInformation;
+        this.bundle=bundle;
     }
 
-    public static ComplainFragmentToBase newInstance(String otherUserNick,Fragment fragment,UserInformation userInformation) {
-        return new ComplainFragmentToBase(otherUserNick,fragment,userInformation
-        );
+    public static ComplainFragmentToBase newInstance(String otherUserNick,Fragment fragment
+            ,UserInformation userInformation,Bundle bundle) {
+        return new ComplainFragmentToBase(otherUserNick,fragment,userInformation,bundle);
     }
 
+    Bundle bundle;
     UserInformation userInformation;
     Fragment fragment;
     FirebaseModel firebaseModel=new FirebaseModel();
@@ -89,23 +91,23 @@ public class ComplainFragmentToBase extends Fragment {
                 firebaseModel.getReference().child("complains").child(uid)
                         .setValue(new Complain(nick,otherUserNick, reasonTextString,descriptionText));
                 Toast.makeText(getContext(), "Жалоба отправлена", Toast.LENGTH_SHORT).show();
-                RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", otherUserNick, fragment,userInformation), getActivity());
+                RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", otherUserNick, fragment,userInformation,bundle), getActivity());
             }
         });
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(ComplainFragment.newInstance(otherUserNick,fragment,userInformation), getActivity());
+                RecentMethods.setCurrentFragment(ComplainFragment.newInstance(otherUserNick,fragment,userInformation,bundle), getActivity());
             }
         });
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
 
-                RecentMethods.setCurrentFragment(ComplainFragment.newInstance(otherUserNick,fragment,userInformation), getActivity());
+                RecentMethods.setCurrentFragment(ComplainFragment.newInstance(otherUserNick,fragment,userInformation,bundle), getActivity());
             }
         };
 
-        requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(), callback);
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
     }
 }

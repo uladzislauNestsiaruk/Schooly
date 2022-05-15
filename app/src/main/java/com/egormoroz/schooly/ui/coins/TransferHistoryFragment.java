@@ -41,14 +41,16 @@ public class TransferHistoryFragment extends Fragment {
     Fragment fragment;
     UserInformation userInformation;
     String nick;
+    Bundle bundle;
 
-    public TransferHistoryFragment(Fragment fragment,UserInformation userInformation) {
+    public TransferHistoryFragment(Fragment fragment,UserInformation userInformation,Bundle bundle) {
         this.fragment = fragment;
         this.userInformation=userInformation;
+        this.bundle=bundle;
     }
 
-    public static TransferHistoryFragment newInstance(Fragment fragment,UserInformation userInformation) {
-        return new TransferHistoryFragment(fragment,userInformation);
+    public static TransferHistoryFragment newInstance(Fragment fragment,UserInformation userInformation,Bundle bundle) {
+        return new TransferHistoryFragment(fragment,userInformation,bundle);
 
     }
 
@@ -74,15 +76,15 @@ public class TransferHistoryFragment extends Fragment {
             @Override
             public void handleOnBackPressed() {
 
-                RecentMethods.setCurrentFragment(TransferMoneyFragment.newInstance(fragment,userInformation), getActivity());
+                RecentMethods.setCurrentFragment(TransferMoneyFragment.newInstance(fragment,userInformation,bundle), getActivity());
             }
         };
 
-        requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(), callback);
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
         backToCoins.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(TransferMoneyFragment.newInstance(fragment,userInformation), getActivity());
+                RecentMethods.setCurrentFragment(TransferMoneyFragment.newInstance(fragment,userInformation,bundle), getActivity());
             }
         });
         firebaseModel.initAll();

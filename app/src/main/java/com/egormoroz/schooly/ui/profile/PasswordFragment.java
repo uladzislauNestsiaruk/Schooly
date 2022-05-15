@@ -34,15 +34,17 @@ public class PasswordFragment extends Fragment {
     String type,nick;
     Fragment fragment;
     UserInformation userInformation;
+    Bundle bundle;
 
-    public PasswordFragment(String type,Fragment fragment,UserInformation userInformation) {
+    public PasswordFragment(String type,Fragment fragment,UserInformation userInformation,Bundle bundle) {
         this.type = type;
         this.fragment=fragment;
         this.userInformation=userInformation;
+        this.bundle=bundle;
     }
 
-    public static PasswordFragment newInstance(String type, Fragment fragment,UserInformation userInformation) {
-        return new PasswordFragment(type,fragment,userInformation);
+    public static PasswordFragment newInstance(String type, Fragment fragment,UserInformation userInformation,Bundle bundle) {
+        return new PasswordFragment(type,fragment,userInformation,bundle);
 
     }
 
@@ -72,18 +74,18 @@ public class PasswordFragment extends Fragment {
         backToSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(SettingsFragment.newInstance(type,fragment,userInformation), getActivity());
+                RecentMethods.setCurrentFragment(SettingsFragment.newInstance(type,fragment,userInformation,bundle), getActivity());
             }
         });
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
 
-                RecentMethods.setCurrentFragment(SettingsFragment.newInstance(type, fragment,userInformation), getActivity());
+                RecentMethods.setCurrentFragment(SettingsFragment.newInstance(type, fragment,userInformation,bundle), getActivity());
             }
         };
 
-        requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(), callback);
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
         next=view.findViewById(R.id.next);
         errorText=view.findViewById(R.id.errorText);
         enterUsePassword=view.findViewById(R.id.textenterpassword);

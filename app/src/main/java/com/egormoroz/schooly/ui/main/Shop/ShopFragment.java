@@ -96,12 +96,17 @@ public class ShopFragment extends Fragment {
     @Override
     public void onViewCreated(@Nullable View view,@NonNull Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
+        version= userInformation.getVersion();
+        searchRecycler=view.findViewById(R.id.searchRecycler);
+        notFound=view.findViewById(R.id.notFound);
+        searchClothes=view.findViewById(R.id.searchClothes);
+        tabLayout = view.findViewById(R.id.tabLayoutShop);
+        viewPager=view.findViewById(R.id.frcontshop);
 
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-
-                RecentMethods.setCurrentFragment(MainFragment.newInstance(userInformation), getActivity());
+                getAndSave(MainFragment.newInstance(userInformation,bundle));
             }
         };
 
@@ -111,31 +116,25 @@ public class ShopFragment extends Fragment {
         backtoprofileshop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((MainActivity)getActivity()).setCurrentFragment(MainFragment.newInstance(userInformation));
+                getAndSave(MainFragment.newInstance(userInformation,bundle));
             }
         });
         coinsLinear=view.findViewById(R.id.linearCoins);
         coinsLinear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(CoinsFragmentSecond.newInstance(ShopFragment.newInstance(userInformation,bundle),userInformation), getActivity());
+                getAndSave(CoinsFragmentSecond.newInstance(ShopFragment.newInstance(userInformation,bundle),userInformation,bundle));
             }
         });
-        version= userInformation.getVersion();
-        searchRecycler=view.findViewById(R.id.searchRecycler);
-        notFound=view.findViewById(R.id.notFound);
-        searchClothes=view.findViewById(R.id.searchClothes);
-        tabLayout = view.findViewById(R.id.tabLayoutShop);
-        viewPager=view.findViewById(R.id.frcontshop);
 
-        Bundle getSaveState=getArguments();
-        if (getSaveState!=null){
-            String bundleEditText=getSaveState.getString("EDIT_TAG");
+        bundle=getArguments();
+        if (bundle!=null){
+            String bundleEditText=bundle.getString("EDIT_TAG");
             if(bundleEditText.length()!=0){
                 searchClothes.setText(bundleEditText);
                 viewPager.setVisibility(View.GONE);
                 tabLayout.setVisibility(View.GONE);
-                loadSearchClothes(getSaveState.getString("EDIT_TAG"));
+                loadSearchClothes(bundleEditText);
             }
         }
         searchClothes.addTextChangedListener(new TextWatcher() {
@@ -248,7 +247,7 @@ public class ShopFragment extends Fragment {
         basket.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               getAndSave(BasketFragment.newInstance(userInformation,bundle));
+                getAndSave(BasketFragment.newInstance(userInformation, bundle));
             }
         });
 
@@ -260,9 +259,7 @@ public class ShopFragment extends Fragment {
             saveState.putString("EDIT_TAG",searchClothes.getText().toString());
             fragment.setArguments(saveState);
         }
-        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-        fragmentManager.beginTransaction()
-                .replace(R.id.frame, fragment).commit();
+        RecentMethods.setCurrentFragment(fragment,getActivity());
     }
 
     public void loadSearchClothes(String editTextText){

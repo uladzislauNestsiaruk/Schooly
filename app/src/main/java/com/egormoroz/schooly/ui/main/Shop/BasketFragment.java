@@ -76,6 +76,10 @@ public class BasketFragment extends Fragment {
   @Override
   public void onViewCreated(@Nullable View view,@NonNull Bundle savedInstanceState){
     super.onViewCreated(view, savedInstanceState);
+    bundle=getArguments();
+    if(bundle!=null){
+      Log.d("####", bundle.getString("EDIT_TAG"));
+    }
     backtoshop=view.findViewById(R.id.back_toshopfrombasket);
     editText=view.findViewById(R.id.searchClothes);
     OnBackPressedCallback callback = new OnBackPressedCallback(true) {
@@ -107,7 +111,7 @@ public class BasketFragment extends Fragment {
     coinsLinear.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        RecentMethods.setCurrentFragment(CoinsFragmentSecond.newInstance(BasketFragment.newInstance(userInformation,bundle),userInformation), getActivity());
+        RecentMethods.setCurrentFragment(CoinsFragmentSecond.newInstance(BasketFragment.newInstance(userInformation,bundle),userInformation,bundle), getActivity());
       }
     });
     numberOfClothes=view.findViewById(R.id.numberofclothes);
@@ -142,8 +146,8 @@ public class BasketFragment extends Fragment {
 
   public void getAndSave(Fragment fragment){
     getSaveBundle=getArguments();
-    if(getSaveBundle!=null){
-      fragment.setArguments(getSaveBundle);
+    if(bundle!=null){
+      fragment.setArguments(bundle);
     }
     FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
     fragmentManager.beginTransaction()

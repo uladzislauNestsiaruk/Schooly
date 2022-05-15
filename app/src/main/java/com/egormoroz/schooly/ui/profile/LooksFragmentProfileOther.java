@@ -30,19 +30,20 @@ public class LooksFragmentProfileOther extends Fragment {
   RecyclerView looksRecyclerOther;
   TextView noLooksOther;
   FirebaseModel firebaseModel=new FirebaseModel();
-  int looksListSize;
   String otherUserNick;
   Fragment fragment;
   UserInformation userInformation;
+  Bundle bundle;
 
-  public LooksFragmentProfileOther(String otherUserNick, Fragment fragment, UserInformation userInformation) {
+  public LooksFragmentProfileOther(String otherUserNick, Fragment fragment, UserInformation userInformation,Bundle bundle) {
     this.otherUserNick = otherUserNick;
     this.fragment=fragment;
     this.userInformation=userInformation;
+    this.bundle=bundle;
   }
 
-  public static LooksFragmentProfileOther newInstance(String otherUserNick,Fragment fragment,UserInformation userInformation) {
-    return new LooksFragmentProfileOther(otherUserNick,fragment,userInformation);
+  public static LooksFragmentProfileOther newInstance(String otherUserNick,Fragment fragment,UserInformation userInformation,Bundle bundle) {
+    return new LooksFragmentProfileOther(otherUserNick,fragment,userInformation,bundle);
   }
 
   @Override
@@ -82,7 +83,7 @@ public class LooksFragmentProfileOther extends Fragment {
           looksRecyclerOther.setVisibility(View.GONE);
         }else{
           Collections.reverse(look);
-          LooksAdapter looksAdapter=new LooksAdapter(look,LooksFragmentProfileOther.newInstance(otherUserNick,fragment,userInformation),looksRecyclerOther);
+          LooksAdapter looksAdapter=new LooksAdapter(look,LooksFragmentProfileOther.newInstance(otherUserNick,fragment,userInformation,bundle),looksRecyclerOther);
           GridLayoutManager gridLayoutManager=new GridLayoutManager(getContext(), 3);
           looksRecyclerOther.setLayoutManager(gridLayoutManager);
           looksRecyclerOther.setAdapter(looksAdapter);
@@ -90,7 +91,7 @@ public class LooksFragmentProfileOther extends Fragment {
             @Override
             public void onItemClick(NewsItem newsItem) {
               RecentMethods.setCurrentFragment(ViewingLookFragment.newInstance(ProfileFragment.
-                      newInstance("other", otherUserNick, fragment,userInformation),userInformation), getActivity());
+                      newInstance("other", otherUserNick, fragment,userInformation,bundle),userInformation,bundle), getActivity());
             }
           };
           looksAdapter.setClickListener(itemClickListener);

@@ -27,14 +27,16 @@ public class CriteriaFragment extends Fragment {
 
     Fragment fragment;
     UserInformation userInformation;
+    Bundle bundle;
 
-    public CriteriaFragment(Fragment fragment,UserInformation userInformation) {
+    public CriteriaFragment(Fragment fragment,UserInformation userInformation,Bundle bundle) {
         this.fragment = fragment;
         this.userInformation=userInformation;
+        this.bundle=bundle;
     }
 
-    public static CriteriaFragment newInstance(Fragment fragment, UserInformation userInformation) {
-        return new CriteriaFragment(fragment,userInformation);
+    public static CriteriaFragment newInstance(Fragment fragment, UserInformation userInformation,Bundle bundle) {
+        return new CriteriaFragment(fragment,userInformation,bundle);
 
     }
 
@@ -58,17 +60,17 @@ public class CriteriaFragment extends Fragment {
             @Override
             public void handleOnBackPressed() {
 
-                RecentMethods.setCurrentFragment(CreateClothesFragment.newInstance(fragment,userInformation), getActivity());
+                RecentMethods.setCurrentFragment(CreateClothesFragment.newInstance(fragment,userInformation,bundle), getActivity());
             }
         };
 
-        requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(), callback);
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
 
         back=view.findViewById(R.id.back);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(CreateClothesFragment.newInstance(fragment,userInformation),getActivity());
+                RecentMethods.setCurrentFragment(CreateClothesFragment.newInstance(fragment,userInformation,bundle),getActivity());
             }
         });
     }

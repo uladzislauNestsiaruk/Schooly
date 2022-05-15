@@ -37,15 +37,17 @@ public class SavedFragment extends Fragment {
     UserInformation userInformation;
     String type,nick;
     Fragment fragment;
+    Bundle bundle;
 
-    public SavedFragment(String type,Fragment fragment,UserInformation userInformation) {
+    public SavedFragment(String type,Fragment fragment,UserInformation userInformation,Bundle bundle) {
         this.type = type;
         this.fragment=fragment;
         this.userInformation=userInformation;
+        this.bundle=bundle;
     }
 
-    public static SavedFragment newInstance(String type, Fragment fragment,UserInformation userInformation) {
-        return new SavedFragment(type,fragment,userInformation);
+    public static SavedFragment newInstance(String type, Fragment fragment,UserInformation userInformation,Bundle bundle) {
+        return new SavedFragment(type,fragment,userInformation,bundle);
 
     }
 
@@ -69,18 +71,18 @@ public class SavedFragment extends Fragment {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(SettingsFragment.newInstance(type,fragment,userInformation),getActivity());
+                RecentMethods.setCurrentFragment(SettingsFragment.newInstance(type,fragment,userInformation,bundle),getActivity());
             }
         });
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
 
-                RecentMethods.setCurrentFragment(SettingsFragment.newInstance(type, fragment,userInformation), getActivity());
+                RecentMethods.setCurrentFragment(SettingsFragment.newInstance(type, fragment,userInformation,bundle), getActivity());
             }
         };
 
-        requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(), callback);
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
 
         setSavedLooksInAdapter();
 
@@ -97,13 +99,13 @@ public class SavedFragment extends Fragment {
                         recyclerView.setVisibility(View.GONE);
                     }else {
                         Collections.reverse(newsItems);
-                        LooksAdapter looksAdapter=new LooksAdapter(newsItems, SavedFragment.newInstance(type,fragment,userInformation),recyclerView);
+                        LooksAdapter looksAdapter=new LooksAdapter(newsItems, SavedFragment.newInstance(type,fragment,userInformation,bundle),recyclerView);
                         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
                         recyclerView.setAdapter(looksAdapter);
                         LooksAdapter.ItemClickListener itemClickListener=new LooksAdapter.ItemClickListener() {
                             @Override
                             public void onItemClick(NewsItem newsItem) {
-                                RecentMethods.setCurrentFragment(ViewingLookFragment.newInstance(SavedFragment.newInstance(type,fragment,userInformation),userInformation), getActivity());
+                                RecentMethods.setCurrentFragment(ViewingLookFragment.newInstance(SavedFragment.newInstance(type,fragment,userInformation,bundle),userInformation,bundle), getActivity());
                             }
                         };
                         looksAdapter.setClickListener(itemClickListener);
@@ -115,13 +117,13 @@ public class SavedFragment extends Fragment {
                 emptyList.setVisibility(View.VISIBLE);
                 recyclerView.setVisibility(View.GONE);
             }else {
-                LooksAdapter looksAdapter=new LooksAdapter(userInformation.getSavedLooks(), SavedFragment.newInstance(type,fragment,userInformation),recyclerView);
+                LooksAdapter looksAdapter=new LooksAdapter(userInformation.getSavedLooks(), SavedFragment.newInstance(type,fragment,userInformation,bundle),recyclerView);
                 recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
                 recyclerView.setAdapter(looksAdapter);
                 LooksAdapter.ItemClickListener itemClickListener=new LooksAdapter.ItemClickListener() {
                     @Override
                     public void onItemClick(NewsItem newsItem) {
-                        RecentMethods.setCurrentFragment(ViewingLookFragment.newInstance(SavedFragment.newInstance(type,fragment,userInformation),userInformation), getActivity());
+                        RecentMethods.setCurrentFragment(ViewingLookFragment.newInstance(SavedFragment.newInstance(type,fragment,userInformation,bundle),userInformation,bundle), getActivity());
                     }
                 };
                 looksAdapter.setClickListener(itemClickListener);

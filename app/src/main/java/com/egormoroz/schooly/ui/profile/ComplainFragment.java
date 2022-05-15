@@ -36,19 +36,20 @@ import java.util.Random;
 
 public class ComplainFragment extends Fragment {
     String otherUserNick,nick;
-    TextView sendReasons;
     ComplainAdapter.ItemClickListener itemClickListener;
     Fragment fragment;
     UserInformation userInformation;
+    Bundle bundle;
 
-    public ComplainFragment(String otherUserNick,Fragment fragment,UserInformation userInformation) {
+    public ComplainFragment(String otherUserNick,Fragment fragment,UserInformation userInformation,Bundle bundle) {
         this.otherUserNick = otherUserNick;
         this.fragment=fragment;
         this.userInformation=userInformation;
+        this.bundle=bundle;
     }
 
-    public static ComplainFragment newInstance(String otherUserNick,Fragment fragment,UserInformation userInformation) {
-        return new ComplainFragment(otherUserNick,fragment,userInformation);
+    public static ComplainFragment newInstance(String otherUserNick,Fragment fragment,UserInformation userInformation,Bundle bundle) {
+        return new ComplainFragment(otherUserNick,fragment,userInformation,bundle);
     }
 
     FirebaseModel firebaseModel=new FirebaseModel();
@@ -78,7 +79,7 @@ public class ComplainFragment extends Fragment {
         itemClickListener=new ComplainAdapter.ItemClickListener() {
             @Override
             public void onItemClick(Reason reason) {
-                RecentMethods.setCurrentFragment(ComplainFragmentToBase.newInstance(otherUserNick,fragment,userInformation), getActivity());
+                RecentMethods.setCurrentFragment(ComplainFragmentToBase.newInstance(otherUserNick,fragment,userInformation,bundle), getActivity());
             }
         };
         RecentMethods.getComplainReasonList(firebaseModel, new Callbacks.getComplainReasonsList() {
@@ -92,7 +93,7 @@ public class ComplainFragment extends Fragment {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", otherUserNick, fragment,userInformation),
+                RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", otherUserNick, fragment,userInformation,bundle),
                         getActivity());
             }
         });
@@ -101,10 +102,10 @@ public class ComplainFragment extends Fragment {
             @Override
             public void handleOnBackPressed() {
 
-                RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", otherUserNick, fragment,userInformation), getActivity());
+                RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", otherUserNick, fragment,userInformation,bundle), getActivity());
             }
         };
 
-        requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(), callback);
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
     }
 }

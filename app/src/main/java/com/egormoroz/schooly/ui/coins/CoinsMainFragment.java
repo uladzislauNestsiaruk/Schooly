@@ -42,13 +42,15 @@ public class CoinsMainFragment extends Fragment {
             ,sevenImage,tenImage,twentyImage;
     String nick;
     UserInformation userInformation;
+    Bundle bundle;
 
-    public CoinsMainFragment(UserInformation userInformation) {
+    public CoinsMainFragment(UserInformation userInformation,Bundle bundle) {
         this.userInformation=userInformation;
+        this.bundle=bundle;
     }
 
-    public static CoinsMainFragment newInstance(UserInformation userInformation) {
-        return new CoinsMainFragment(userInformation);
+    public static CoinsMainFragment newInstance(UserInformation userInformation,Bundle bundle) {
+        return new CoinsMainFragment(userInformation,bundle);
     }
 
     @Override
@@ -93,7 +95,7 @@ public class CoinsMainFragment extends Fragment {
         transferMoney.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(TransferMoneyFragment.newInstance(CoinsMainFragment.newInstance(userInformation),userInformation), getActivity());
+                RecentMethods.setCurrentFragment(TransferMoneyFragment.newInstance(CoinsMainFragment.newInstance(userInformation,bundle),userInformation,bundle), getActivity());
             }
         });
 //        oneLinear.setOnClickListener(new View.OnClickListener() {

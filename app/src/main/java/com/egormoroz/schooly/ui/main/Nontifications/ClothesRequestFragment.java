@@ -57,15 +57,18 @@ public class ClothesRequestFragment extends Fragment {
     UserInformation userInformation;
     Fragment fragment;
     String clothesUid;
+    Bundle bundle;
 
-    public ClothesRequestFragment(Fragment fragment,String clothesUid,UserInformation userInformation) {
+    public ClothesRequestFragment(Fragment fragment,String clothesUid,UserInformation userInformation,Bundle bundle) {
         this.fragment = fragment;
         this.clothesUid=clothesUid;
         this.userInformation=userInformation;
+        this.bundle=bundle;
     }
 
-    public static ClothesRequestFragment newInstance(Fragment fragment, String clothesUid, UserInformation userInformation) {
-        return new ClothesRequestFragment(fragment,clothesUid,userInformation);
+    public static ClothesRequestFragment newInstance(Fragment fragment, String clothesUid
+            , UserInformation userInformation,Bundle bundle) {
+        return new ClothesRequestFragment(fragment,clothesUid,userInformation,bundle);
 
     }
 
@@ -153,7 +156,7 @@ public class ClothesRequestFragment extends Fragment {
             }
         };
 
-        requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(), callback);
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)

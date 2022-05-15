@@ -42,15 +42,17 @@ public class EditingFragment extends Fragment {
     String type;
     Fragment fragment;
     UserInformation userInformation;
+    Bundle bundle;
 
-    public EditingFragment(String type,Fragment fragment,UserInformation userInformation) {
+    public EditingFragment(String type,Fragment fragment,UserInformation userInformation,Bundle bundle) {
         this.type = type;
         this.fragment=fragment;
         this.userInformation=userInformation;
+        this.bundle=bundle;
     }
 
-    public static EditingFragment newInstance(String type, Fragment fragment, UserInformation userInformation) {
-        return new EditingFragment(type,fragment,userInformation);
+    public static EditingFragment newInstance(String type, Fragment fragment, UserInformation userInformation,Bundle bundle) {
+        return new EditingFragment(type,fragment,userInformation,bundle);
 
     }
 
@@ -73,7 +75,7 @@ public class EditingFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(ProfileFragment.newInstance(type, nick,fragment,userInformation), getActivity());
+                RecentMethods.setCurrentFragment(ProfileFragment.newInstance(type, nick,fragment,userInformation,bundle), getActivity());
             }
         });
 
@@ -81,11 +83,11 @@ public class EditingFragment extends Fragment {
             @Override
             public void handleOnBackPressed() {
 
-                RecentMethods.setCurrentFragment(ProfileFragment.newInstance(type, nick,fragment,userInformation), getActivity());
+                RecentMethods.setCurrentFragment(ProfileFragment.newInstance(type, nick,fragment,userInformation,bundle), getActivity());
             }
         };
 
-        requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(), callback);
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
 
         nickEdit=view.findViewById(R.id.edittextnickname);
         bioEdit=view.findViewById(R.id.edittextbio);

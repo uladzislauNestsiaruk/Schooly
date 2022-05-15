@@ -64,14 +64,16 @@ import java.util.Map;
 public class ViewingMyClothesMain extends Fragment {
     Fragment fragment;
     UserInformation userInformation;
+    Bundle bundle;
 
-    public ViewingMyClothesMain(Fragment fragment, UserInformation userInformation) {
+    public ViewingMyClothesMain(Fragment fragment, UserInformation userInformation,Bundle bundle) {
         this.fragment = fragment;
         this.userInformation=userInformation;
+        this.bundle=bundle;
     }
 
-    public static ViewingMyClothesMain newInstance(Fragment fragment,UserInformation userInformation) {
-        return new ViewingMyClothesMain(fragment,userInformation);
+    public static ViewingMyClothesMain newInstance(Fragment fragment,UserInformation userInformation,Bundle bundle) {
+        return new ViewingMyClothesMain(fragment,userInformation,bundle);
 
     }
 
@@ -131,7 +133,7 @@ public class ViewingMyClothesMain extends Fragment {
             }
         };
 
-        requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(), callback);
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
         backToShop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -152,7 +154,8 @@ public class ViewingMyClothesMain extends Fragment {
                 presentClothes.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        RecentMethods.setCurrentFragment(PresentClothesFragment.newInstance(clothesViewing,ViewingMyClothesMain.newInstance(fragment,userInformation),userInformation), getActivity());
+                        RecentMethods.setCurrentFragment(PresentClothesFragment.newInstance(clothesViewing,
+                                ViewingMyClothesMain.newInstance(fragment,userInformation,bundle),userInformation,bundle), getActivity());
                     }
                 });
                 send.setOnClickListener(new View.OnClickListener() {

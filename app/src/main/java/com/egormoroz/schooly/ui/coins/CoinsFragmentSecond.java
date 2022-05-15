@@ -1,6 +1,7 @@
 package com.egormoroz.schooly.ui.coins;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,14 +37,16 @@ public class CoinsFragmentSecond extends Fragment {
 
     Fragment fragment;
     UserInformation userInformation;
+    Bundle bundle;
 
-    public CoinsFragmentSecond(Fragment fragment,UserInformation userInformation) {
+    public CoinsFragmentSecond(Fragment fragment,UserInformation userInformation,Bundle bundle) {
         this.fragment = fragment;
         this.userInformation=userInformation;
+        this.bundle=bundle;
     }
 
-    public static CoinsFragmentSecond newInstance(Fragment fragment,UserInformation userInformation) {
-        return new CoinsFragmentSecond(fragment,userInformation);
+    public static CoinsFragmentSecond newInstance(Fragment fragment,UserInformation userInformation,Bundle bundle) {
+        return new CoinsFragmentSecond(fragment,userInformation,bundle);
 
     }
 
@@ -78,6 +81,7 @@ public class CoinsFragmentSecond extends Fragment {
                 RecentMethods.setCurrentFragment(fragment, getActivity());
             }
         });
+        Log.d("#####", bundle.getString("EDIT_TAG"));
         oneLinear=view.findViewById(R.id.oneThousand);
         twoLinear=view.findViewById(R.id.twoThousand);
         fiveLinear=view.findViewById(R.id.fiveThousand);
@@ -106,7 +110,7 @@ public class CoinsFragmentSecond extends Fragment {
         transferMoney.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(TransferMoneyFragment.newInstance(CoinsFragmentSecond.newInstance(fragment,userInformation),userInformation), getActivity());
+                RecentMethods.setCurrentFragment(TransferMoneyFragment.newInstance(CoinsFragmentSecond.newInstance(fragment,userInformation,bundle),userInformation,bundle), getActivity());
             }
         });
 //        oneLinear.setOnClickListener(new View.OnClickListener() {

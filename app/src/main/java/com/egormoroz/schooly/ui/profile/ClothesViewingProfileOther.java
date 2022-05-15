@@ -62,14 +62,16 @@ public class ClothesViewingProfileOther extends Fragment {
 
     Fragment fragment;
     UserInformation userInformation;
+    Bundle bundle;
 
-    public ClothesViewingProfileOther(Fragment fragment,UserInformation userInformation) {
+    public ClothesViewingProfileOther(Fragment fragment,UserInformation userInformation,Bundle bundle) {
         this.fragment = fragment;
         this.userInformation=userInformation;
+        this.bundle=bundle;
     }
 
-    public static ClothesViewingProfileOther newInstance(Fragment fragment, UserInformation userInformation) {
-        return new ClothesViewingProfileOther(fragment,userInformation);
+    public static ClothesViewingProfileOther newInstance(Fragment fragment, UserInformation userInformation,Bundle bundle) {
+        return new ClothesViewingProfileOther(fragment,userInformation,bundle);
 
     }
 
@@ -135,13 +137,13 @@ public class ClothesViewingProfileOther extends Fragment {
         fittingClothes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(FittingFragment.newInstance(ClothesViewingProfileOther.newInstance(fragment,userInformation)), getActivity());
+                RecentMethods.setCurrentFragment(FittingFragment.newInstance(ClothesViewingProfileOther.newInstance(fragment,userInformation,bundle),userInformation,bundle), getActivity());
             }
         });
         coinsLinear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(CoinsFragmentSecond.newInstance(ClothesViewingProfileOther.newInstance(fragment,userInformation),userInformation), getActivity());
+                RecentMethods.setCurrentFragment(CoinsFragmentSecond.newInstance(ClothesViewingProfileOther.newInstance(fragment,userInformation,bundle),userInformation,bundle), getActivity());
             }
         });
         backToShop.setOnClickListener(new View.OnClickListener() {
@@ -159,7 +161,7 @@ public class ClothesViewingProfileOther extends Fragment {
             }
         };
 
-        requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(), callback);
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
 
         ClothesAdapterOther.singeClothesInfo(new ClothesAdapterOther.ItemClickListener() {
             @Override
@@ -173,9 +175,9 @@ public class ClothesViewingProfileOther extends Fragment {
                     @Override
                     public void onClick(View v) {
                         if (clothesViewing.getCreator().equals(nick)) {
-                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("user", nick, ViewingClothes.newInstance(fragment,userInformation),userInformation), getActivity());
+                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("user", nick, ViewingClothes.newInstance(fragment,userInformation,bundle),userInformation,bundle), getActivity());
                         }else {
-                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", clothesViewing.getCreator(), ClothesViewingProfileOther.newInstance(fragment,userInformation),userInformation), getActivity());
+                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", clothesViewing.getCreator(), ClothesViewingProfileOther.newInstance(fragment,userInformation,bundle),userInformation,bundle), getActivity());
                         }
                     }
                 });
@@ -625,7 +627,8 @@ public class ClothesViewingProfileOther extends Fragment {
                         });
                     }else{
                         Toast.makeText(getContext(), "Не хватает коинов", Toast.LENGTH_SHORT).show();
-                        RecentMethods.setCurrentFragment(CoinsFragmentSecond.newInstance(ViewingClothesPopular.newInstance(userInformation),userInformation), getActivity());
+                        RecentMethods.setCurrentFragment(CoinsFragmentSecond.newInstance(ViewingClothesPopular.newInstance(userInformation,bundle),userInformation,bundle
+                        ), getActivity());
                     }
                 }
                 dialog.dismiss();

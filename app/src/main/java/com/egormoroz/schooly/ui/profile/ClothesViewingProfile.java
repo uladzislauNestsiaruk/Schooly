@@ -56,16 +56,18 @@ public class ClothesViewingProfile extends Fragment {
     Fragment fragment;
     String type,nick;
     UserInformation userInformation;
+    Bundle bundle;
 
 
-    public ClothesViewingProfile(String type,Fragment fragment,UserInformation userInformation) {
+    public ClothesViewingProfile(String type,Fragment fragment,UserInformation userInformation,Bundle bundle) {
         this.fragment = fragment;
         this.type = type;
         this.userInformation=userInformation;
+        this.bundle=bundle;
     }
 
-    public static ClothesViewingProfile newInstance(String type,Fragment fragment,UserInformation userInformation) {
-        return new ClothesViewingProfile(type,fragment,userInformation);
+    public static ClothesViewingProfile newInstance(String type,Fragment fragment,UserInformation userInformation,Bundle bundle) {
+        return new ClothesViewingProfile(type,fragment,userInformation,bundle);
 
     }
 
@@ -148,7 +150,7 @@ public class ClothesViewingProfile extends Fragment {
             }
         };
 
-        requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(), callback);
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
 
         ClothesAdapter.singeClothesInfo(new ClothesAdapter.ItemClickListener() {
             @Override
@@ -157,7 +159,7 @@ public class ClothesViewingProfile extends Fragment {
                 presentClothes.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        RecentMethods.setCurrentFragment(PresentClothesFragment.newInstance(clothesViewing,ClothesViewingProfile.newInstance(type,fragment,userInformation),userInformation), getActivity());
+                        RecentMethods.setCurrentFragment(PresentClothesFragment.newInstance(clothesViewing,ClothesViewingProfile.newInstance(type,fragment,userInformation,bundle),userInformation,bundle), getActivity());
                     }
                 });
                 clothesTitleCV.setText(clothes.getClothesTitle());

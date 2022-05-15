@@ -31,25 +31,13 @@ public class MyMinersFragment extends Fragment {
     UserInformation userInformation;
     Bundle bundle;
 
-    public MyMinersFragment(UserInformation userInformation) {
+    public MyMinersFragment(UserInformation userInformation,Bundle bundle) {
         this.userInformation=userInformation;
+        this.bundle=bundle;
     }
 
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        Log.d("####", "yeah()");
-        outState.putSerializable("MY_MINERS", listAdapter);
-    }
-
-    @Override
-    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
-        super.onViewStateRestored(savedInstanceState);
-        Log.d("####", "yeah()ss");
-    }
-
-    public static MyMinersFragment newInstance(UserInformation userInformation) {
-        return new MyMinersFragment(userInformation);
+    public static MyMinersFragment newInstance(UserInformation userInformation,Bundle bundle) {
+        return new MyMinersFragment(userInformation,bundle);
     }
     private FirebaseModel firebaseModel = new FirebaseModel();
     RecyclerView recyclerviewMining;
@@ -83,16 +71,16 @@ public class MyMinersFragment extends Fragment {
             @Override
             public void handleOnBackPressed() {
 
-                RecentMethods.setCurrentFragment(MiningFragment.newInstance(userInformation), getActivity());
+                RecentMethods.setCurrentFragment(MiningFragment.newInstance(userInformation,bundle), getActivity());
             }
         };
-        requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(), callback);
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
 
         ImageView backtomoning=view.findViewById(R.id.back_tomining);
         backtomoning.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((MainActivity)getActivity()).setCurrentFragment(MiningFragment.newInstance(userInformation));
+                ((MainActivity)getActivity()).setCurrentFragment(MiningFragment.newInstance(userInformation,bundle));
             }
         });
         recyclerviewMining=view.findViewById(R.id.recyclerviewmyminers);

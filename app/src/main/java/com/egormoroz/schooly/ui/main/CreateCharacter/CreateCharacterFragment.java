@@ -42,16 +42,18 @@ public class CreateCharacterFragment extends Fragment {
     ViewPager2 viewPager;
     FragmentAdapter fragmentAdapter;
     private FirebaseModel firebaseModel = new FirebaseModel();
+    Bundle bundle;
 
 
     UserInformation userInformation;
 
-    public CreateCharacterFragment(UserInformation userInformation) {
+    public CreateCharacterFragment(UserInformation userInformation,Bundle bundle) {
         this.userInformation=userInformation;
+        this.bundle=bundle;
     }
 
-    public static CreateCharacterFragment newInstance(UserInformation userInformation) {
-        return new CreateCharacterFragment(userInformation);
+    public static CreateCharacterFragment newInstance(UserInformation userInformation,Bundle bundle) {
+        return new CreateCharacterFragment(userInformation,bundle);
     }
 
     @Override
@@ -85,7 +87,7 @@ public class CreateCharacterFragment extends Fragment {
         leftarrowtoreg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((MainActivity)getActivity()).setCurrentFragment(MainFragment.newInstance(userInformation));
+                ((MainActivity)getActivity()).setCurrentFragment(MainFragment.newInstance(userInformation,bundle));
             }
         });
 

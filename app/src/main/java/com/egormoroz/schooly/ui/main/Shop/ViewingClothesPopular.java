@@ -139,7 +139,7 @@ public class ViewingClothesPopular extends Fragment {
         coinsLinear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(CoinsFragmentSecond.newInstance(ViewingClothesPopular.newInstance(userInformation,bundle),userInformation), getActivity());
+                RecentMethods.setCurrentFragment(CoinsFragmentSecond.newInstance(ViewingClothesPopular.newInstance(userInformation,bundle),userInformation,bundle), getActivity());
             }
         });
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
@@ -169,9 +169,9 @@ public class ViewingClothesPopular extends Fragment {
                     @Override
                     public void onClick(View v) {
                         if (clothesViewing.getCreator().equals(nick)) {
-                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback", nick, ViewingClothesPopular.newInstance(userInformation,bundle),userInformation), getActivity());
+                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback", nick, ViewingClothesPopular.newInstance(userInformation,bundle),userInformation,bundle), getActivity());
                         }else {
-                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", clothesViewing.getCreator(), ViewingClothesPopular.newInstance(userInformation,bundle),userInformation), getActivity());
+                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", clothesViewing.getCreator(), ViewingClothesPopular.newInstance(userInformation,bundle),userInformation,bundle), getActivity());
                         }
                     }
                 });
@@ -598,7 +598,7 @@ public class ViewingClothesPopular extends Fragment {
                         });
                     }else{
                         Toast.makeText(getContext(), "Не хватает коинов", Toast.LENGTH_SHORT).show();
-                        RecentMethods.setCurrentFragment(CoinsFragmentSecond.newInstance(ViewingClothesPopular.newInstance(userInformation,bundle),userInformation), getActivity());
+                        RecentMethods.setCurrentFragment(CoinsFragmentSecond.newInstance(ViewingClothesPopular.newInstance(userInformation,bundle),userInformation,bundle), getActivity());
                     }
                 }
                 dialog.dismiss();

@@ -45,15 +45,17 @@ public class SendMoneyFragment extends Fragment {
     FirebaseModel firebaseModel=new FirebaseModel();
     Fragment fragment;
     UserInformation userInformation;
+    Bundle bundle;
 
-    public SendMoneyFragment(String otherUserNick,Fragment fragment,UserInformation userInformation) {
+    public SendMoneyFragment(String otherUserNick,Fragment fragment,UserInformation userInformation,Bundle bundle) {
         this.otherUserNick = otherUserNick;
         this.fragment=fragment;
         this.userInformation=userInformation;
+        this.bundle=bundle;
     }
 
-    public static SendMoneyFragment newInstance(String otherUserNick,Fragment fragment,UserInformation userInformation) {
-        return new SendMoneyFragment(otherUserNick,fragment,userInformation);
+    public static SendMoneyFragment newInstance(String otherUserNick,Fragment fragment,UserInformation userInformation,Bundle bundle) {
+        return new SendMoneyFragment(otherUserNick,fragment,userInformation,bundle);
     }
 
     @Override
@@ -86,7 +88,7 @@ public class SendMoneyFragment extends Fragment {
         backToCoins.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(TransferMoneyFragment.newInstance(fragment,userInformation), getActivity());
+                RecentMethods.setCurrentFragment(TransferMoneyFragment.newInstance(fragment,userInformation,bundle), getActivity());
             }
         });
 
@@ -94,11 +96,11 @@ public class SendMoneyFragment extends Fragment {
             @Override
             public void handleOnBackPressed() {
 
-                RecentMethods.setCurrentFragment(TransferMoneyFragment.newInstance(fragment,userInformation), getActivity());
+                RecentMethods.setCurrentFragment(TransferMoneyFragment.newInstance(fragment,userInformation,bundle), getActivity());
             }
         };
 
-        requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(), callback);
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
 
     }
 
@@ -137,7 +139,7 @@ public class SendMoneyFragment extends Fragment {
                         if(task.isSuccessful()){}
                         DataSnapshot snapshot= task.getResult();
                         userInformation.setmoney(snapshot.getValue(Long.class));
-                        RecentMethods.setCurrentFragment(TransferMoneyFragment.newInstance(fragment,userInformation), getActivity());
+                        RecentMethods.setCurrentFragment(TransferMoneyFragment.newInstance(fragment,userInformation,bundle), getActivity());
                     }
                 });
             }

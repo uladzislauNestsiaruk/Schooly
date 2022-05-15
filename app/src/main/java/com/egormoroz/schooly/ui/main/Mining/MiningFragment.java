@@ -47,13 +47,15 @@ import java.util.Map;
 public class MiningFragment extends Fragment {
 
     UserInformation userInformation;
+    Bundle bundle;
 
-    public MiningFragment(UserInformation userInformation) {
+    public MiningFragment(UserInformation userInformation,Bundle bundle) {
         this.userInformation=userInformation;
+        this.bundle=bundle;
     }
 
-    public static MiningFragment newInstance(UserInformation userInformation) {
-        return new MiningFragment(userInformation);
+    public static MiningFragment newInstance(UserInformation userInformation,Bundle bundle) {
+        return new MiningFragment(userInformation,bundle);
     }
 
     ArrayList<Miner> listAdapterMiner = new ArrayList<Miner>();
@@ -88,16 +90,16 @@ public class MiningFragment extends Fragment {
             @Override
             public void handleOnBackPressed() {
 
-                RecentMethods.setCurrentFragment(MainFragment.newInstance(userInformation), getActivity());
+                RecentMethods.setCurrentFragment(MainFragment.newInstance(userInformation,bundle), getActivity());
             }
         };
-        requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(), callback);
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
 
         coinsLinear=view.findViewById(R.id.linearCoins);
         coinsLinear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(CoinsFragmentSecond.newInstance(MiningFragment.newInstance(userInformation),userInformation), getActivity());
+                RecentMethods.setCurrentFragment(CoinsFragmentSecond.newInstance(MiningFragment.newInstance(userInformation,bundle),userInformation,bundle), getActivity());
             }
         });
         myminers = view.findViewById(R.id.myminers);
@@ -121,7 +123,7 @@ public class MiningFragment extends Fragment {
                         myminers.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                RecentMethods.setCurrentFragment(MyMinersFragment.newInstance(userInformation), getActivity());
+                                RecentMethods.setCurrentFragment(MyMinersFragment.newInstance(userInformation,bundle), getActivity());
                             }
                         });
                     }
@@ -131,7 +133,7 @@ public class MiningFragment extends Fragment {
             myminers.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    RecentMethods.setCurrentFragment(MyMinersFragment.newInstance(userInformation), getActivity());
+                    RecentMethods.setCurrentFragment(MyMinersFragment.newInstance(userInformation,bundle), getActivity());
                 }
             });
         }
@@ -139,14 +141,14 @@ public class MiningFragment extends Fragment {
         backtomainfrommining.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(MainFragment.newInstance(userInformation), getActivity());
+                RecentMethods.setCurrentFragment(MainFragment.newInstance(userInformation,bundle), getActivity());
             }
         });
         getMore=view.findViewById(R.id.getMore);
         getMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(MoreMoneyFragment.newInstance(MiningFragment.newInstance(userInformation),userInformation), getActivity());
+                RecentMethods.setCurrentFragment(MoreMoneyFragment.newInstance(MiningFragment.newInstance(userInformation,bundle),userInformation,bundle), getActivity());
             }
         });
         activeminersrecyclerview = view.findViewById(R.id.activeminersrecyclerview);
@@ -246,7 +248,7 @@ public class MiningFragment extends Fragment {
                                 addActiveMiners.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        RecentMethods.setCurrentFragment(MyMinersFragment.newInstance(userInformation), getActivity());
+                                        RecentMethods.setCurrentFragment(MyMinersFragment.newInstance(userInformation,bundle), getActivity());
                                     }
                                 });
                                 emptyActiveMiners.setText("Добавь активные майнеры!");
@@ -269,7 +271,7 @@ public class MiningFragment extends Fragment {
                 addActiveMiners.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        RecentMethods.setCurrentFragment(MyMinersFragment.newInstance(userInformation), getActivity());
+                        RecentMethods.setCurrentFragment(MyMinersFragment.newInstance(userInformation,bundle), getActivity());
                     }
                 });
                 emptyActiveMiners.setText("Добавь активные майнеры!");

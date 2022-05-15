@@ -53,15 +53,17 @@ public class CreateLookFragment extends Fragment {
     String type,nick;
     Fragment fragment;
     UserInformation userInformation;
+    Bundle bundle;
 
-    public CreateLookFragment(String type,Fragment fragment,UserInformation userInformation) {
+    public CreateLookFragment(String type,Fragment fragment,UserInformation userInformation,Bundle bundle) {
         this.type = type;
         this.fragment=fragment;
         this.userInformation=userInformation;
+        this.bundle=bundle;
     }
 
-    public static CreateLookFragment newInstance(String type,Fragment fragment,UserInformation userInformation) {
-        return new CreateLookFragment(type,fragment,userInformation);
+    public static CreateLookFragment newInstance(String type,Fragment fragment,UserInformation userInformation,Bundle bundle) {
+        return new CreateLookFragment(type,fragment,userInformation,bundle);
 
     }
 
@@ -172,7 +174,7 @@ public class CreateLookFragment extends Fragment {
                             }
                             userInformation.setLookClothes(lookClothesFromBase);
                             RecentMethods.setCurrentFragment(AcceptNewLook.newInstance("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Funtitled.glb?alt=media&token=657b45d7-a84b-4f2a-89f4-a699029401f7"
-                                    ,type,fragment,userInformation)
+                                    ,type,fragment,userInformation,bundle)
                                     , getActivity());
                         }
                     }
@@ -183,7 +185,7 @@ public class CreateLookFragment extends Fragment {
         backfromwardrobe.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(ProfileFragment.newInstance(type, nick,fragment,userInformation)
+                RecentMethods.setCurrentFragment(ProfileFragment.newInstance(type, nick,fragment,userInformation,bundle)
                         , getActivity());
             }
         });
@@ -191,11 +193,11 @@ public class CreateLookFragment extends Fragment {
             @Override
             public void handleOnBackPressed() {
 
-                RecentMethods.setCurrentFragment(ProfileFragment.newInstance(type,nick,fragment,userInformation), getActivity());
+                RecentMethods.setCurrentFragment(ProfileFragment.newInstance(type,nick,fragment,userInformation,bundle), getActivity());
             }
         };
 
-        requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(), callback);
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
 
         tabLayout = view.findViewById(R.id.tabLayoutWardrobe);
         viewPager=view.findViewById(R.id.frcontwardrobe);
@@ -291,14 +293,14 @@ public class CreateLookFragment extends Fragment {
             switch (position)
             {
                 case 1 :
-                    return new WardrobeClothes(type,fragment,userInformation);
+                    return new WardrobeClothes(type,fragment,userInformation,bundle);
                 case 2 :
-                    return new WardrobeHats(type,fragment,userInformation);
+                    return new WardrobeHats(type,fragment,userInformation,bundle);
                 case 3 :
-                    return new WardrobeAccessories(type,fragment,userInformation);
+                    return new WardrobeAccessories(type,fragment,userInformation,bundle);
             }
 
-            return new WardrobeShoes(type,fragment,userInformation);
+            return new WardrobeShoes(type,fragment,userInformation,bundle);
         }
 
         @Override

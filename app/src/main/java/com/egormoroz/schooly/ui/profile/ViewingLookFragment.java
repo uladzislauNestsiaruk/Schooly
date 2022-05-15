@@ -85,14 +85,16 @@ public class ViewingLookFragment extends Fragment {
     RelativeLayout sendReason;
     UserInformation userInformation;
     Fragment fragment;
+    Bundle bundle;
 
-    public ViewingLookFragment(Fragment fragment,UserInformation userInformation) {
+    public ViewingLookFragment(Fragment fragment,UserInformation userInformation,Bundle bundle) {
         this.fragment = fragment;
         this.userInformation=userInformation;
+        this.bundle=bundle;
     }
 
-    public static ViewingLookFragment newInstance(Fragment fragment,UserInformation userInformation) {
-        return new ViewingLookFragment(fragment,userInformation);
+    public static ViewingLookFragment newInstance(Fragment fragment,UserInformation userInformation,Bundle bundle) {
+        return new ViewingLookFragment(fragment,userInformation,bundle);
 
     }
 
@@ -139,7 +141,7 @@ public class ViewingLookFragment extends Fragment {
             }
         };
 
-        requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(), callback);
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
         LooksAdapter.lookInfo(new LooksAdapter.ItemClickListener() {
             @Override
             public void onItemClick(NewsItem newsItem) {
@@ -150,9 +152,9 @@ public class ViewingLookFragment extends Fragment {
                     public void onClick(View v) {
                         String userNameToProfile=nickView.getText().toString();
                         if(userNameToProfile.equals(nick)){
-                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback",nick,ViewingLookFragment.newInstance(fragment, userInformation),userInformation),getActivity());
+                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback",nick,ViewingLookFragment.newInstance(fragment, userInformation,bundle),userInformation,bundle),getActivity());
                         }else {
-                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile,ViewingLookFragment.newInstance(fragment, userInformation),userInformation
+                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile,ViewingLookFragment.newInstance(fragment, userInformation,bundle),userInformation,bundle
                             ), getActivity());
                         }
                     }
@@ -421,7 +423,7 @@ public class ViewingLookFragment extends Fragment {
             @Override
             public void onItemClick(Clothes clothes) {
                 bottomSheetDialog.dismiss();
-                RecentMethods.setCurrentFragment(ViewingClothesNews.newInstance(ViewingLookFragment.newInstance(fragment, userInformation),userInformation), getActivity());
+                RecentMethods.setCurrentFragment(ViewingClothesNews.newInstance(ViewingLookFragment.newInstance(fragment, userInformation,bundle),userInformation,bundle), getActivity());
             }
         };
 

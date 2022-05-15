@@ -43,15 +43,18 @@ public class SettingsFragment extends Fragment {
     String type,nick;
     Fragment fragment;
     UserInformation userInformation;
+    Bundle bundle;
 
-    public SettingsFragment(String type,Fragment fragment,UserInformation userInformation) {
+    public SettingsFragment(String type,Fragment fragment,UserInformation userInformation,Bundle bundle) {
         this.type = type;
         this.fragment=fragment;
         this.userInformation=userInformation;
+        this.bundle=bundle;
     }
 
-    public static SettingsFragment newInstance(String type, Fragment fragment,UserInformation userInformation) {
-        return new SettingsFragment(type,fragment,userInformation);
+    public static SettingsFragment newInstance(String type, Fragment fragment
+            ,UserInformation userInformation,Bundle bundle) {
+        return new SettingsFragment(type,fragment,userInformation,bundle);
 
     }
 
@@ -96,22 +99,22 @@ public class SettingsFragment extends Fragment {
         imageViewBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(ProfileFragment.newInstance(type, nick,fragment,userInformation), getActivity());
+                RecentMethods.setCurrentFragment(ProfileFragment.newInstance(type, nick,fragment,userInformation,bundle), getActivity());
             }
         });
 
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                RecentMethods.setCurrentFragment(ProfileFragment.newInstance(type, nick, fragment,userInformation), getActivity());
+                RecentMethods.setCurrentFragment(ProfileFragment.newInstance(type, nick, fragment,userInformation,bundle), getActivity());
             }
         };
-        requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(), callback);
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
 
         saved.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(SavedFragment.newInstance(type,fragment,userInformation), getActivity());
+                RecentMethods.setCurrentFragment(SavedFragment.newInstance(type,fragment,userInformation,bundle), getActivity());
             }
         });
 
@@ -146,7 +149,7 @@ public class SettingsFragment extends Fragment {
         blackList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(BlackListFragment.newInstance(type,fragment,userInformation), getActivity());
+                RecentMethods.setCurrentFragment(BlackListFragment.newInstance(type,fragment,userInformation,bundle), getActivity());
             }
         });
 
@@ -214,7 +217,7 @@ public class SettingsFragment extends Fragment {
             changePassword.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    RecentMethods.setCurrentFragment(PasswordFragment.newInstance(type,fragment,userInformation), getActivity());
+                    RecentMethods.setCurrentFragment(PasswordFragment.newInstance(type,fragment,userInformation,bundle), getActivity());
                 }
             });
         }

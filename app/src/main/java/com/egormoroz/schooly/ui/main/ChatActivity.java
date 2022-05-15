@@ -95,6 +95,7 @@ public final class ChatActivity extends Activity {
     private Uri fileUri;
     private StorageTask uploadTask;
     int chatCheckValue;
+    Bundle bundle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -242,7 +243,7 @@ public final class ChatActivity extends Activity {
             @Override
             public void onClick(View v) {
                 finish();
-                RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", messageReceiverName, PeopleFragment.newInstance(userInformation),userInformation),
+                RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", messageReceiverName, PeopleFragment.newInstance(userInformation,bundle),userInformation,bundle),
                         getParent());
             }
         });

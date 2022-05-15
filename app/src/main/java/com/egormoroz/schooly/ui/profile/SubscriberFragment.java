@@ -45,19 +45,20 @@ public class SubscriberFragment extends Fragment {
     TextView emptyList;
     String userNameToProfile,userName;
     EditText searchUser;
-
     String type,nick;
     Fragment fragment;
     UserInformation userInformation;
+    Bundle bundle;
 
-    public SubscriberFragment(String type,Fragment fragment,UserInformation userInformation) {
+    public SubscriberFragment(String type,Fragment fragment,UserInformation userInformation,Bundle bundle) {
         this.type = type;
         this.fragment=fragment;
         this.userInformation=userInformation;
+        this.bundle=bundle;
     }
 
-    public static SubscriberFragment newInstance(String type, Fragment fragment,UserInformation userInformation) {
-        return new SubscriberFragment(type,fragment,userInformation);
+    public static SubscriberFragment newInstance(String type, Fragment fragment,UserInformation userInformation,Bundle bundle) {
+        return new SubscriberFragment(type,fragment,userInformation,bundle);
 
     }
 
@@ -82,18 +83,18 @@ public class SubscriberFragment extends Fragment {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(ProfileFragment.newInstance(type,nick,fragment,userInformation),getActivity());
+                RecentMethods.setCurrentFragment(ProfileFragment.newInstance(type,nick,fragment,userInformation,bundle),getActivity());
             }
         });
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
 
-                RecentMethods.setCurrentFragment(ProfileFragment.newInstance(type,nick,fragment,userInformation), getActivity());
+                RecentMethods.setCurrentFragment(ProfileFragment.newInstance(type,nick,fragment,userInformation,bundle), getActivity());
             }
         };
 
-        requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(), callback);
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
         putSubscribersListInAdapter();
         initUserEnter();
     }
@@ -119,9 +120,9 @@ public class SubscriberFragment extends Fragment {
                                         Subscriber user = subscribersAdapter.getItem(position);
                                         userNameToProfile = user.getSub();
                                         if (userNameToProfile.equals(nick)) {
-                                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback", nick, fragment, userInformation), getActivity());
+                                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback", nick, fragment, userInformation,bundle), getActivity());
                                         } else {
-                                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile, SubscriberFragment.newInstance(type, fragment, userInformation), userInformation),
+                                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile, SubscriberFragment.newInstance(type, fragment, userInformation,bundle), userInformation,bundle),
                                                     getActivity());
                                         }
                                     }
@@ -146,9 +147,9 @@ public class SubscriberFragment extends Fragment {
                                 Subscriber user = subscribersAdapter.getItem(position);
                                 userNameToProfile = user.getSub();
                                 if (userNameToProfile.equals(nick)) {
-                                    RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback", nick, fragment, userInformation), getActivity());
+                                    RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback", nick, fragment, userInformation,bundle), getActivity());
                                 } else {
-                                    RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile, SubscriberFragment.newInstance(type, fragment, userInformation), userInformation),
+                                    RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile, SubscriberFragment.newInstance(type, fragment, userInformation,bundle), userInformation,bundle),
                                             getActivity());
                                 }
                             }
@@ -206,9 +207,9 @@ public class SubscriberFragment extends Fragment {
                                                 Subscriber user = subscribersAdapter.getItem(position);
                                                 userNameToProfile=user.getSub();
                                                 if(userNameToProfile.equals(nick)){
-                                                    RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback",nick,fragment,userInformation),getActivity());
+                                                    RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback",nick,fragment,userInformation,bundle),getActivity());
                                                 }else {
-                                                    RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile,SubscriberFragment.newInstance(type,fragment,userInformation),userInformation),
+                                                    RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile,SubscriberFragment.newInstance(type,fragment,userInformation,bundle),userInformation,bundle),
                                                             getActivity());
                                                 }
                                             }

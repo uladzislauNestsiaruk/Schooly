@@ -137,7 +137,7 @@ public class ViewingClothesBasket extends Fragment {
         coinsLinear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(CoinsFragmentSecond.newInstance(ViewingClothesBasket.newInstance(userInformation,bundle),userInformation), getActivity());
+                RecentMethods.setCurrentFragment(CoinsFragmentSecond.newInstance(ViewingClothesBasket.newInstance(userInformation,bundle),userInformation,bundle), getActivity());
             }
         });
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
@@ -167,9 +167,9 @@ public class ViewingClothesBasket extends Fragment {
                     @Override
                     public void onClick(View v) {
                         if (clothesViewing.getCreator().equals(userInformation.getNick())) {
-                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback", userInformation.getNick(), ViewingClothesBasket.newInstance(userInformation,bundle),userInformation), getActivity());
+                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback", userInformation.getNick(), ViewingClothesBasket.newInstance(userInformation,bundle),userInformation,bundle), getActivity());
                         }else {
-                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", clothesViewing.getCreator(), ViewingClothesBasket.newInstance(userInformation,bundle),userInformation), getActivity());
+                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", clothesViewing.getCreator(), ViewingClothesBasket.newInstance(userInformation,bundle),userInformation,bundle), getActivity());
                         }
                     }
                 });
@@ -614,7 +614,7 @@ public class ViewingClothesBasket extends Fragment {
                         a=3;
                     }else{
                         Toast.makeText(getContext(), "Не хватает коинов", Toast.LENGTH_SHORT).show();
-                        RecentMethods.setCurrentFragment(CoinsFragmentSecond.newInstance(ViewingClothesBasket.newInstance(userInformation,bundle),userInformation),getActivity());
+                        RecentMethods.setCurrentFragment(CoinsFragmentSecond.newInstance(ViewingClothesBasket.newInstance(userInformation,bundle),userInformation,bundle),getActivity());
                     }
                 }
                 dialog.dismiss();
