@@ -29,13 +29,15 @@ import java.util.Collections;
 
 public class ShoesFargment extends Fragment {
     UserInformation userInformation;
+    Bundle bundle;
 
-    public ShoesFargment(UserInformation userInformation) {
+    public ShoesFargment(UserInformation userInformation,Bundle bundle) {
         this.userInformation=userInformation;
+        this.bundle=bundle;
     }
 
-    public static ShoesFargment newInstance(UserInformation userInformation) {
-        return new ShoesFargment(userInformation);
+    public static ShoesFargment newInstance(UserInformation userInformation,Bundle bundle) {
+        return new ShoesFargment(userInformation,bundle);
     }
     FirebaseModel firebaseModel=new FirebaseModel();
     ArrayList<Clothes> clothesArrayList=new ArrayList<Clothes>();
@@ -76,14 +78,14 @@ public class ShoesFargment extends Fragment {
         itemClickListener=new NewClothesAdapter.ItemClickListener() {
             @Override
             public void onItemClick(Clothes clothes) {
-                ((MainActivity)getActivity()).setCurrentFragment(ViewingClothes.newInstance(ShopFragment.newInstance(userInformation),userInformation));
+                ((MainActivity)getActivity()).setCurrentFragment(ViewingClothes.newInstance(ShopFragment.newInstance(userInformation,bundle),userInformation,bundle));
             }
         };
 
         itemClickListenerPopular=new PopularClothesAdapter.ItemClickListener() {
             @Override
             public void onItemClick(Clothes clothes) {
-                ((MainActivity)getActivity()).setCurrentFragment(ViewingClothesPopular.newInstance(userInformation));
+                ((MainActivity)getActivity()).setCurrentFragment(ViewingClothesPopular.newInstance(userInformation,bundle));
             }
         };
     }

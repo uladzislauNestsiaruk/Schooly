@@ -73,6 +73,7 @@ public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.ViewHolder
     query.addValueEventListener(new ValueEventListener() {
       @Override
       public void onDataChange(@NonNull DataSnapshot snapshot) {
+        Log.d("###","u"+snapshot.getValue(Long.class));
         holder.purchaseNumber.setText(String.valueOf(snapshot.getValue(Long.class)));
       }
 

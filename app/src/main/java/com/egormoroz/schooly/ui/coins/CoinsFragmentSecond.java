@@ -70,7 +70,7 @@ public class CoinsFragmentSecond extends Fragment {
             }
         };
 
-        requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(), callback);
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
         back=view.findViewById(R.id.back);
         back.setOnClickListener(new View.OnClickListener() {
             @Override

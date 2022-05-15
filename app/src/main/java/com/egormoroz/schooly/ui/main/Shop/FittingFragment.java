@@ -14,11 +14,13 @@ import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
+import com.egormoroz.schooly.ui.chat.User;
 import com.egormoroz.schooly.ui.main.MainFragment;
 import com.egormoroz.schooly.ui.main.MyClothes.CreateClothesFragment;
 import com.egormoroz.schooly.ui.main.MyClothes.MyClothesAdapter;
 import com.egormoroz.schooly.ui.main.MyClothes.MyClothesFragment;
 import com.egormoroz.schooly.ui.main.MyClothes.ViewingMyClothes;
+import com.egormoroz.schooly.ui.main.UserInformation;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
@@ -27,15 +29,18 @@ public class FittingFragment extends Fragment {
 
     FirebaseModel firebaseModel=new FirebaseModel();
     ImageView back;
-
+    UserInformation userInformation;
+    Bundle bundle;
     Fragment fragment;
 
-    public FittingFragment(Fragment fragment) {
+    public FittingFragment(Fragment fragment,UserInformation userInformation,Bundle bundle) {
         this.fragment = fragment;
+        this.userInformation=userInformation;
+        this.bundle=bundle;
     }
 
-    public static FittingFragment newInstance(Fragment fragment) {
-        return new FittingFragment(fragment);
+    public static FittingFragment newInstance(Fragment fragment, UserInformation userInformation,Bundle bundle) {
+        return new FittingFragment(fragment,userInformation,bundle);
 
     }
 

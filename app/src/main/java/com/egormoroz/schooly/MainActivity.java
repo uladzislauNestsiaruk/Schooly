@@ -118,6 +118,7 @@ public class MainActivity extends AppCompatActivity {
                                                         userInformation.setPhone(snapshot.child("phone").getValue(String.class));
                                                         userInformation.setUid(snapshot.child("uid").getValue(String.class));
                                                         userInformation.setBio(snapshot.child("bio").getValue(String.class));
+                                                        userInformation.setVersion(snapshot.child("version").getValue(String.class));
                                                         userInformation.setQueue(snapshot.child("queue").getValue(String.class));
                                                         userInformation.setChatsNontsType(snapshot.child("chatsNontsType").getValue(String.class));
                                                         userInformation.setGroupChatsNontsType(snapshot.child("groupChatsNontsType").getValue(String.class));

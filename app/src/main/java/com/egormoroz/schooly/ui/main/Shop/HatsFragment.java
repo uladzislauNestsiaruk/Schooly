@@ -25,13 +25,15 @@ import java.util.ArrayList;
 
 public class HatsFragment extends Fragment {
     UserInformation userInformation;
+    Bundle bundle;
 
-    public HatsFragment(UserInformation userInformation) {
+    public HatsFragment(UserInformation userInformation,Bundle bundle) {
         this.userInformation=userInformation;
+        this.bundle=bundle;
     }
 
-    public static HatsFragment newInstance(UserInformation userInformation) {
-        return new HatsFragment(userInformation);
+    public static HatsFragment newInstance(UserInformation userInformation,Bundle bundle) {
+        return new HatsFragment(userInformation,bundle);
     }
     FirebaseModel firebaseModel=new FirebaseModel();
     ArrayList<Clothes> clothesArrayList=new ArrayList<Clothes>();
@@ -70,13 +72,13 @@ public class HatsFragment extends Fragment {
         itemClickListener=new NewClothesAdapter.ItemClickListener() {
             @Override
             public void onItemClick(Clothes clothes) {
-                ((MainActivity)getActivity()).setCurrentFragment(ViewingClothes.newInstance(ShopFragment.newInstance(userInformation),userInformation));
+                ((MainActivity)getActivity()).setCurrentFragment(ViewingClothes.newInstance(ShopFragment.newInstance(userInformation,bundle),userInformation,bundle));
             }
         };
         itemClickListenerPopular=new PopularClothesAdapter.ItemClickListener() {
             @Override
             public void onItemClick(Clothes clothes) {
-                ((MainActivity)getActivity()).setCurrentFragment(ViewingClothesPopular.newInstance(userInformation));
+                ((MainActivity)getActivity()).setCurrentFragment(ViewingClothesPopular.newInstance(userInformation,bundle));
             }
         };
     }

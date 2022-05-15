@@ -29,14 +29,16 @@ public class ExclusiveFragment extends Fragment {
 
     String version;
     UserInformation userInformation;
+    Bundle bundle;
 
-    public ExclusiveFragment(String version,UserInformation userInformation) {
+    public ExclusiveFragment(String version,UserInformation userInformation,Bundle bundle) {
         this.version = version;
         this.userInformation=userInformation;
+        this.bundle=bundle;
     }
 
-    public static ExclusiveFragment newInstance(String version,UserInformation userInformation) {
-        return new ExclusiveFragment(version,userInformation);
+    public static ExclusiveFragment newInstance(String version,UserInformation userInformation,Bundle bundle) {
+        return new ExclusiveFragment(version,userInformation,bundle);
 
     }
 
@@ -88,13 +90,13 @@ public class ExclusiveFragment extends Fragment {
             itemClickListener=new NewClothesAdapter.ItemClickListener() {
                 @Override
                 public void onItemClick(Clothes clothes) {
-                    ((MainActivity)getActivity()).setCurrentFragment(ViewingClothes.newInstance(ShopFragment.newInstance(userInformation),userInformation));
+                    ((MainActivity)getActivity()).setCurrentFragment(ViewingClothes.newInstance(ShopFragment.newInstance(userInformation,bundle),userInformation,bundle));
                 }
             };
             itemClickListenerPopular=new PopularClothesAdapter.ItemClickListener() {
                 @Override
                 public void onItemClick(Clothes clothes) {
-                    ((MainActivity)getActivity()).setCurrentFragment(ViewingClothesPopular.newInstance(userInformation));
+                    ((MainActivity)getActivity()).setCurrentFragment(ViewingClothesPopular.newInstance(userInformation,bundle));
                 }
             };
         }else {

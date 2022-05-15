@@ -58,13 +58,15 @@ import java.util.Locale;
 
 public class ShopFragment extends Fragment {
     UserInformation userInformation;
+    Bundle bundle;
 
-    public ShopFragment(UserInformation userInformation) {
+    public ShopFragment(UserInformation userInformation,Bundle bundle) {
         this.userInformation=userInformation;
+        this.bundle=bundle;
     }
 
-    public static ShopFragment newInstance(UserInformation userInformation) {
-        return new ShopFragment(userInformation);
+    public static ShopFragment newInstance(UserInformation userInformation,Bundle bundle) {
+        return new ShopFragment(userInformation,bundle);
     }
 
     FirebaseModel firebaseModel=new FirebaseModel();
@@ -103,7 +105,7 @@ public class ShopFragment extends Fragment {
             }
         };
 
-        requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(), callback);
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
 
         ImageView backtoprofileshop=view.findViewById(R.id.back_toprofile);
         backtoprofileshop.setOnClickListener(new View.OnClickListener() {
@@ -116,23 +118,26 @@ public class ShopFragment extends Fragment {
         coinsLinear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(CoinsFragmentSecond.newInstance(ShopFragment.newInstance(userInformation),userInformation), getActivity());
+                RecentMethods.setCurrentFragment(CoinsFragmentSecond.newInstance(ShopFragment.newInstance(userInformation,bundle),userInformation), getActivity());
             }
         });
-        firebaseModel.getUsersReference().child(userInformation.getNick()).child("version").get()
-                .addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DataSnapshot> task) {
-                        if(task.isSuccessful()){
-                            DataSnapshot snapshot= task.getResult();
-                            version=snapshot.getValue(String.class);
-
-                        }
-                    }
-                });
+        version= userInformation.getVersion();
         searchRecycler=view.findViewById(R.id.searchRecycler);
         notFound=view.findViewById(R.id.notFound);
         searchClothes=view.findViewById(R.id.searchClothes);
+        tabLayout = view.findViewById(R.id.tabLayoutShop);
+        viewPager=view.findViewById(R.id.frcontshop);
+
+        Bundle getSaveState=getArguments();
+        if (getSaveState!=null){
+            String bundleEditText=getSaveState.getString("EDIT_TAG");
+            if(bundleEditText.length()!=0){
+                searchClothes.setText(bundleEditText);
+                viewPager.setVisibility(View.GONE);
+                tabLayout.setVisibility(View.GONE);
+                loadSearchClothes(getSaveState.getString("EDIT_TAG"));
+            }
+        }
         searchClothes.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -150,15 +155,13 @@ public class ShopFragment extends Fragment {
                     itemClickListenerPopular=new PopularClothesAdapter.ItemClickListener() {
                         @Override
                         public void onItemClick(Clothes clothes) {
-                            ((MainActivity)getActivity()).setCurrentFragment(ViewingClothesPopular.newInstance(userInformation));
+                            ((MainActivity)getActivity()).setCurrentFragment(ViewingClothesPopular.newInstance(userInformation,bundle));
                         }
                     };
                 }else if(editGetText.length()==0){
                     viewPager.setVisibility(View.VISIBLE);
                     searchRecycler.setVisibility(View.GONE);
                     tabLayout.setVisibility(View.VISIBLE);
-                    tabLayout = view.findViewById(R.id.tabLayoutShop);
-                    viewPager=view.findViewById(R.id.frcontshop);
                     notFound.setVisibility(View.GONE);
                     FragmentManager fm = getChildFragmentManager();
                     fragmentAdapter = new FragmentAdapter(fm, getLifecycle());
@@ -204,8 +207,6 @@ public class ShopFragment extends Fragment {
             }
         });
         coinsshop.setText(String.valueOf(userInformation.getmoney()));
-        tabLayout = view.findViewById(R.id.tabLayoutShop);
-        viewPager=view.findViewById(R.id.frcontshop);
         FragmentManager fm = getChildFragmentManager();
         fragmentAdapter = new FragmentAdapter(fm, getLifecycle());
         viewPager.setAdapter(fragmentAdapter);
@@ -247,14 +248,9 @@ public class ShopFragment extends Fragment {
         basket.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               getAndSave(BasketFragment.newInstance(userInformation));
+               getAndSave(BasketFragment.newInstance(userInformation,bundle));
             }
         });
-
-        Bundle getSaveState=getArguments();
-        if (getSaveState!=null){
-            loadSearchClothes(getSaveState.getString("EDIT_TAG"));
-        }
 
     }
 
@@ -262,8 +258,8 @@ public class ShopFragment extends Fragment {
         Bundle saveState=new Bundle();
         if(searchClothes.getText().length()!=0){
             saveState.putString("EDIT_TAG",searchClothes.getText().toString());
+            fragment.setArguments(saveState);
         }
-        fragment.setArguments(saveState);
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         fragmentManager.beginTransaction()
                 .replace(R.id.frame, fragment).commit();
@@ -357,17 +353,17 @@ public class ShopFragment extends Fragment {
 
             switch (position) {
                 case 1:
-                    return new ExclusiveFragment(version,userInformation);
+                    return new ExclusiveFragment(version,userInformation,bundle);
                 case 2:
-                    return new ShoesFargment(userInformation);
+                    return new ShoesFargment(userInformation,bundle);
                 case 3:
-                    return new ClothesFragment(userInformation);
+                    return new ClothesFragment(userInformation,bundle);
                 case 4:
-                    return new HatsFragment(userInformation);
+                    return new HatsFragment(userInformation,bundle);
                 case 5:
-                    return new AccessoriesFragment(userInformation);
+                    return new AccessoriesFragment(userInformation,bundle);
             }
-            return new PopularFragment(userInformation);
+            return new PopularFragment(userInformation,bundle);
         }
 
 
