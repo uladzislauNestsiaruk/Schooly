@@ -95,7 +95,7 @@
             android:maxLines="1"
             android:background="@null"
             android:fontFamily="@font/montserrat_bold"
-            android:hint="@string/searchitem"
+            android:hint="@string/searchiteminbasket"
             android:textColor="@color/greysearch"
             android:textColorHint="@color/greysearch"
             android:textSize="13sp" />

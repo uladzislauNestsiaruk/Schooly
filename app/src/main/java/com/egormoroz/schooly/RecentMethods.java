@@ -571,34 +571,31 @@ public class RecentMethods {
 
     public static void getClothes(FirebaseModel firebaseModel,Callbacks.GetClothes callback){
         firebaseModel.initAll();
-        Query query=firebaseModel.getReference("AppData/Clothes/AllClothes");
-        query.addValueEventListener(new ValueEventListener() {
+        firebaseModel.getReference("AppData/Clothes/AllClothes").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                ArrayList<Clothes> clothesFromBase=new ArrayList<>();
-                for (DataSnapshot snap : snapshot.getChildren()) {
-                    Clothes clothes = new Clothes();
-                    clothes.setClothesImage(snap.child("clothesImage").getValue(String.class));
-                    clothes.setClothesPrice(snap.child("clothesPrice").getValue(Long.class));
-                    clothes.setPurchaseNumber(snap.child("purchaseNumber").getValue(Long.class));
-                    clothes.setClothesType(snap.child("clothesType").getValue(String.class));
-                    clothes.setClothesTitle(snap.child("clothesTitle").getValue(String.class));
-                    clothes.setCreator(snap.child("creator").getValue(String.class));
-                    clothes.setCurrencyType(snap.child("currencyType").getValue(String.class));
-                    clothes.setDescription(snap.child("description").getValue(String.class));
-                    clothes.setPurchaseToday(snap.child("purchaseToday").getValue(Long.class));
-                    clothes.setModel(snap.child("model").getValue(String.class));
-                    clothes.setBodyType(snap.child("bodyType").getValue(String.class));
-                    clothes.setUid(snap.child("uid").getValue(String.class));
-                    clothes.setExclusive(snap.child("exclusive").getValue(String.class));
-                    clothesFromBase.add(clothes);
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if(task.isSuccessful()){
+                    DataSnapshot snapshot=task.getResult();
+                    ArrayList<Clothes> clothesFromBase=new ArrayList<>();
+                    for (DataSnapshot snap : snapshot.getChildren()) {
+                        Clothes clothes = new Clothes();
+                        clothes.setClothesImage(snap.child("clothesImage").getValue(String.class));
+                        clothes.setClothesPrice(snap.child("clothesPrice").getValue(Long.class));
+                        clothes.setPurchaseNumber(snap.child("purchaseNumber").getValue(Long.class));
+                        clothes.setClothesType(snap.child("clothesType").getValue(String.class));
+                        clothes.setClothesTitle(snap.child("clothesTitle").getValue(String.class));
+                        clothes.setCreator(snap.child("creator").getValue(String.class));
+                        clothes.setCurrencyType(snap.child("currencyType").getValue(String.class));
+                        clothes.setDescription(snap.child("description").getValue(String.class));
+                        clothes.setPurchaseToday(snap.child("purchaseToday").getValue(Long.class));
+                        clothes.setModel(snap.child("model").getValue(String.class));
+                        clothes.setBodyType(snap.child("bodyType").getValue(String.class));
+                        clothes.setUid(snap.child("uid").getValue(String.class));
+                        clothes.setExclusive(snap.child("exclusive").getValue(String.class));
+                        clothesFromBase.add(clothes);
+                    }
+                    callback.getClothes(clothesFromBase);
                 }
-                callback.getClothes(clothesFromBase);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
             }
         });
     }

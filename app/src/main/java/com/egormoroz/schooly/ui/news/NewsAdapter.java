@@ -1,6 +1,7 @@
 package com.egormoroz.schooly.ui.news;
 
 import android.app.Activity;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
+import com.egormoroz.schooly.ui.main.UserInformation;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -30,10 +32,14 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
     FirebaseModel firebaseModel = new FirebaseModel();
     long value;
     Activity activity;
+    UserInformation userInformation;
+    Bundle bundle;
 
 
-    public NewsAdapter(List<NewsItem> newsList) {
+    public NewsAdapter(List<NewsItem> newsList,UserInformation userInformation,Bundle bundle) {
         this.newsList = newsList;
+        this.userInformation=userInformation;
+        this.bundle=bundle;
     }
 
     @NonNull
@@ -106,7 +112,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
                 holder.comment.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        RecentMethods.setCurrentFragment(NewsFragment.newInstance(), NewsFragment.newInstance().getActivity());
+                        RecentMethods.setCurrentFragment(NewsFragment.newInstance(userInformation,bundle), NewsFragment.newInstance(userInformation,bundle).getActivity());
                     }
                 });
 

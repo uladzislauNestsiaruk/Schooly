@@ -61,7 +61,6 @@ public class BasketFragment extends Fragment {
   static String editGetText;
   LinearLayout coinsLinear;
   EditText editText;
-  Bundle getSaveBundle;
 
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -74,19 +73,21 @@ public class BasketFragment extends Fragment {
   }
 
   @Override
+  public void onDestroyView() {
+    super.onDestroyView();
+    bundle.putString("EDIT_BASKET_TAG",editText.getText().toString());
+  }
+
+
+  @Override
   public void onViewCreated(@Nullable View view,@NonNull Bundle savedInstanceState){
     super.onViewCreated(view, savedInstanceState);
-    bundle=getArguments();
-    if(bundle!=null){
-      Log.d("####", bundle.getString("EDIT_TAG"));
-    }
     backtoshop=view.findViewById(R.id.back_toshopfrombasket);
     editText=view.findViewById(R.id.searchClothes);
     OnBackPressedCallback callback = new OnBackPressedCallback(true) {
       @Override
       public void handleOnBackPressed() {
-
-        getAndSave(ShopFragment.newInstance(userInformation,bundle));
+        RecentMethods.setCurrentFragment(ShopFragment.newInstance(userInformation,bundle), getActivity());
       }
     };
 
@@ -95,7 +96,7 @@ public class BasketFragment extends Fragment {
     backtoshop.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        getAndSave(ShopFragment.newInstance(userInformation,bundle));
+        RecentMethods.setCurrentFragment(ShopFragment.newInstance(userInformation,bundle), getActivity());
       }
     });
     onItemClick=new BasketAdapter.ItemClickListener() {
@@ -115,8 +116,22 @@ public class BasketFragment extends Fragment {
       }
     });
     numberOfClothes=view.findViewById(R.id.numberofclothes);
+    numberOfClothes.setText("Элементов в корзине:"+String.valueOf(userInformation.getClothesBasket().size()));
     basketRecycler=view.findViewById(R.id.basketrecycler);
-    loadClothesFromBasket();
+    if (bundle!=null){
+      if(bundle.getString("EDIT_BASKET_TAG")!=null) {
+        String bundleEditText = bundle.getString("EDIT_BASKET_TAG");
+        if (bundleEditText.length() != 0) {
+          editText.setText(bundleEditText);
+          basketRecycler.setVisibility(View.GONE);
+          loadSearchClothes(bundleEditText);
+        }else {
+          loadClothesFromBasket();
+        }
+      }else {
+        loadClothesFromBasket();
+      }
+    }
     editText.addTextChangedListener(new TextWatcher() {
       @Override
       public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -142,16 +157,6 @@ public class BasketFragment extends Fragment {
       }
     });
 
-  }
-
-  public void getAndSave(Fragment fragment){
-    getSaveBundle=getArguments();
-    if(bundle!=null){
-      fragment.setArguments(bundle);
-    }
-    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-    fragmentManager.beginTransaction()
-            .replace(R.id.frame, fragment).commit();
   }
 
   public void loadClothesFromBasket(){

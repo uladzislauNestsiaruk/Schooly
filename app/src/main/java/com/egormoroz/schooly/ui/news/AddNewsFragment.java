@@ -23,6 +23,7 @@ import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
+import com.egormoroz.schooly.ui.main.UserInformation;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -51,8 +52,17 @@ public class AddNewsFragment extends Fragment {
     private StorageTask uploadTask;
     private EditText text;
 
-    public static AddNewsFragment newInstance() {
-        return new AddNewsFragment();
+    UserInformation userInformation;
+    Bundle bundle;
+
+    public AddNewsFragment(UserInformation userInformation,Bundle bundle) {
+        this.userInformation=userInformation;
+        this.bundle=bundle;
+    }
+
+    public static AddNewsFragment newInstance(UserInformation userInformation, Bundle bundle) {
+        return new AddNewsFragment(userInformation,bundle);
+
     }
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -143,7 +153,7 @@ public class AddNewsFragment extends Fragment {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                RecentMethods.setCurrentFragment(NewsFragment.newInstance(), getActivity());
+                RecentMethods.setCurrentFragment(NewsFragment.newInstance(userInformation,bundle), getActivity());
             }
         });
     }

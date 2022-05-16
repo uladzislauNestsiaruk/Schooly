@@ -81,7 +81,6 @@ public class CoinsFragmentSecond extends Fragment {
                 RecentMethods.setCurrentFragment(fragment, getActivity());
             }
         });
-        Log.d("#####", bundle.getString("EDIT_TAG"));
         oneLinear=view.findViewById(R.id.oneThousand);
         twoLinear=view.findViewById(R.id.twoThousand);
         fiveLinear=view.findViewById(R.id.fiveThousand);

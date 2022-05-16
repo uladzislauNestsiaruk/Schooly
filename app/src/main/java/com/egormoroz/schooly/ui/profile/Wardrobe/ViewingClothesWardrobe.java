@@ -174,9 +174,9 @@ public class ViewingClothesWardrobe extends Fragment {
           @Override
           public void onClick(View v) {
             if (clothesViewing.getCreator().equals(userInformation.getNick())) {
-              RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback", userInformation.getNick(), ViewingClothesWardrobe.newInstance(type,fragment,userInformation,bundle),userInformation,bundle), getActivity());
+              RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback", userInformation.getNick(), ViewingClothes.newInstance(fragment,userInformation,bundle),userInformation,bundle), getActivity());
             }else {
-              RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", clothesViewing.getCreator(), ViewingClothesWardrobe.newInstance(type,fragment,userInformation,bundle),userInformation,bundle), getActivity());
+              RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", clothesViewing.getCreator(), ViewingClothes.newInstance(fragment,userInformation,bundle),userInformation,bundle), getActivity());
             }
           }
         });
@@ -218,6 +218,7 @@ public class ViewingClothesWardrobe extends Fragment {
       checkIfBuy();
     }
     buyClothes();
+    putInBasket();
     if (a!=3 && a!=0){
       checkClothes();
     }
@@ -248,7 +249,38 @@ public class ViewingClothesWardrobe extends Fragment {
         if (a==3){
           showDialogAlreadyBuy("Предмет куплен");
         }else {
+          showDialog();
         }
+      }
+    });
+  }
+
+  public void putInBasket(){
+    checkBasket.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        firebaseModel.getUsersReference().child(userInformation.getNick()).child("clothes")
+                .child(clothesViewing.getUid()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+          @Override
+          public void onComplete(@NonNull Task<DataSnapshot> task) {
+            if(task.isSuccessful()){
+              DataSnapshot snapshot= task.getResult();
+              if(snapshot.exists()){
+                a=3;
+                showDialogBasket("Предмет уже куплен");
+              }else {}
+              if(a!=0 && a!=3){
+                if(a==1){
+                  firebaseModel.getUsersReference().child(userInformation.getNick()).child("basket")
+                          .child(clothesViewing.getUid()).removeValue();
+                }else if (a==2){
+                  firebaseModel.getUsersReference().child(userInformation.getNick()).child("basket")
+                          .child(clothesViewing.getUid()).setValue(clothesViewing);
+                }
+              }
+            }
+          }
+        });
       }
     });
   }
@@ -498,6 +530,108 @@ public class ViewingClothesWardrobe extends Fragment {
     });
   }
 
+  public void showDialog(){
+
+    final Dialog dialog = new Dialog(getContext());
+    dialog.setContentView(R.layout.dialog_buying);
+    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+    TextView text=dialog.findViewById(R.id.acceptText);
+
+    RelativeLayout no=dialog.findViewById(R.id.no);
+    RelativeLayout yes=dialog.findViewById(R.id.yes);
+
+
+    no.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        dialog.dismiss();
+      }
+    });
+
+    yes.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        if (clothesViewing.getCurrencyType().equals("dollar")){
+
+        }else {
+          if(schoolyCoins>=clothesPrise){
+            firebaseModel.getUsersReference().child(userInformation.getNick()).child("clothes")
+                    .child(String.valueOf(clothesViewing.getUid())).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+              @Override
+              public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (task.isSuccessful()) {
+                  DataSnapshot snapshot = task.getResult();
+                  if (snapshot.exists()) {
+                    Toast.makeText(getContext(), "Предмет куплен", Toast.LENGTH_SHORT).show();
+                  } else {
+                    firebaseModel.getUsersReference().child(userInformation.getNick()).child("clothes")
+                            .child(clothesViewing.getUid()).setValue(clothesViewing);
+                    firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes")
+                            .child(clothesViewing.getUid()).child("purchaseNumber")
+                            .setValue(clothesViewing.getPurchaseNumber() + 1);
+                    firebaseModel.getReference().child(clothesViewing.getCreator()).child("myClothes").
+                            child(clothesViewing.getUid()).child("purchaseNumber")
+                            .setValue(clothesViewing.getPurchaseNumber() + 1);
+                    firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes")
+                            .child(clothesViewing.getUid()).child("purchaseToday")
+                            .setValue(clothesViewing.getPurchaseToday() + 1);
+                    firebaseModel.getReference().child(clothesViewing.getCreator()).child("myClothes").
+                            child(clothesViewing.getUid()).child("purchaseToday")
+                            .setValue(clothesViewing.getPurchaseToday() + 1);
+                    if (clothesViewing.getCreator().equals("Schooly")) {
+
+                    } else {
+                      String numToBase = firebaseModel.getReference().child("users")
+                              .child(clothesViewing.getCreator()).child("nontifications").push().getKey();
+                      Date date = new Date();
+                      SimpleDateFormat formatter = new SimpleDateFormat("EEE, MMM dd hh:mm a");
+                      String dateAndTime = formatter.format(date);
+                      firebaseModel.getReference().child("users")
+                              .child(clothesViewing.getCreator()).child("nontifications")
+                              .child(numToBase).setValue(new Nontification(userInformation.getNick(), "не отправлено", "одежда"
+                              , "", clothesViewing.getClothesTitle(), clothesViewing.getClothesImage(), "не просмотрено", numToBase, 0));
+                    }
+                    firebaseModel.getUsersReference().child(userInformation.getNick()).child("basket").
+                            child(clothesViewing.getUid()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                      @Override
+                      public void onComplete(@NonNull Task<DataSnapshot> task) {
+                        if (task.isSuccessful()) {
+                          DataSnapshot snapshot = task.getResult();
+                          if (snapshot.exists()) {
+                            firebaseModel.getUsersReference().child(userInformation.getNick()).child("basket")
+                                    .child(clothesViewing.getUid()).removeValue();
+                          } else {
+                          }
+                        }
+                      }
+                    });
+                    schoolyCoins = schoolyCoins - clothesPrise;
+                    firebaseModel.getUsersReference().child(userInformation.getNick()).child("money").setValue(schoolyCoins);
+                    RecentMethods.GetMoneyFromBase(userInformation.getNick(), firebaseModel, new Callbacks.MoneyFromBase() {
+                      @Override
+                      public void GetMoneyFromBase(long money) {
+                        schoolyCoins = money;
+                        schoolyCoinCV.setText(String.valueOf(money));
+                        userInformation.setmoney(money);
+                      }
+                    });
+                  }
+                }
+              }
+            });
+          }else{
+            Toast.makeText(getContext(), "Не хватает коинов", Toast.LENGTH_SHORT).show();
+            RecentMethods.setCurrentFragment(CoinsFragmentSecond.newInstance(ViewingClothes.newInstance(fragment,userInformation,bundle),userInformation,bundle), getActivity());
+          }
+        }
+        dialog.dismiss();
+      }
+    });
+
+    dialog.show();
+  }
+
   public void showDialogAlreadyBuy(String textInDialog){
 
     final Dialog dialog = new Dialog(getContext());
@@ -518,6 +652,5 @@ public class ViewingClothesWardrobe extends Fragment {
 
     dialog.show();
   }
-
 
 }

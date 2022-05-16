@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
     TextView s,loading;
     CoordinatorLayout fragmentContainer;
     String TAG="###";
-    Bundle bundle;
+    Bundle bundle=new Bundle();
     private static final String CHANNEL_ID = "channel";
     FirebaseModel firebaseModel=new FirebaseModel();
     @Override
@@ -66,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
         relativeLayout=findViewById(R.id.rel);
         s=findViewById(R.id.s);
         loading=findViewById(R.id.load);
+        bundle.putString("START_BUNDLE", "Schooly");
         initFirebase();
         firebaseModel.initAll();
         ///////////Authorization block
@@ -128,7 +129,6 @@ public class MainActivity extends AppCompatActivity {
                                                         userInformation.setmoney(snapshot.child("money").getValue(Long.class));
                                                         userInformation.setTodayMining(snapshot.child("todayMining").getValue(Double.class));
                                                         getMyClothes(nick);
-                                                        getLists();
                                                         final DatabaseReference connectedRef = database.getReference(".info/connected");
                                                         connectedRef.addValueEventListener(new ValueEventListener() {
                                                             @Override
@@ -151,7 +151,6 @@ public class MainActivity extends AppCompatActivity {
                                                                         public void onComplete(@NonNull Task<Void> task) {
                                                                             if(task.isSuccessful()){
                                                                                 // WorkManager.getInstance(getApplicationContext()).cancelWorkById(miningWorkRequest.getId());
-                                                                                Log.d("AAA", "ddll");
                                                                             }
                                                                         }
                                                                     });
@@ -163,6 +162,7 @@ public class MainActivity extends AppCompatActivity {
                                                             public void onCancelled(DatabaseError error) {
                                                             }
                                                         });
+                                                        getLists();
                                                     }
                                                 }
                                             });
@@ -205,7 +205,7 @@ public class MainActivity extends AppCompatActivity {
                                 setCurrentFragment(MainFragment.newInstance(userInformation,bundle));
                                 return true;
                             case R.id.bottom_nav_news:
-                                setCurrentFragment(NewsFragment.newInstance());
+                                setCurrentFragment(NewsFragment.newInstance(userInformation,bundle));
                                 return true;
                             case R.id.bottom_nav_coins:
                                 setCurrentFragment(CoinsMainFragment.newInstance(userInformation,bundle));
@@ -306,6 +306,12 @@ public class MainActivity extends AppCompatActivity {
                         userInformation.setmoney(money);
                     }
                 });
+                RecentMethods.getClothes(firebaseModel, new Callbacks.GetClothes() {
+                    @Override
+                    public void getClothes(ArrayList<Clothes> allClothes) {
+                        bundle.putSerializable("ALL_CLOTHES", allClothes);
+                    }
+                });
 
             }
         });
@@ -314,11 +320,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onStop(){
         super.onStop();
         Log.d(TAG, "onStop");
-        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-            @Override
-            public void PassUserNick(String nick) {
-                firebaseModel.getUsersReference().child(nick).child("timesTamp").setValue(ServerValue.TIMESTAMP);
-            }
-        });
+//        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+//            @Override
+//            public void PassUserNick(String nick) {
+//                firebaseModel.getUsersReference().child(nick).child("timesTamp").setValue(ServerValue.TIMESTAMP);
+//            }
+//        });
     }
 }

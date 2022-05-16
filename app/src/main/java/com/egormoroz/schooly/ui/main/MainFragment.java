@@ -206,25 +206,6 @@ public class MainFragment extends Fragment{
 //        firebaseModel.getReference().child("AppData").child("complains").setValue(reasonsArrayList);
         circleChat=view.findViewById(R.id.circleChat);
         circleNontifications=view.findViewById(R.id.circleNontifications);
-        RecentMethods.getNontificationsList(nick, firebaseModel, new Callbacks.getNontificationsList() {
-            @Override
-            public void getNontificationsList(ArrayList<Nontification> nontifications) {
-                for (int i=0;i<nontifications.size();i++){
-                    Nontification nontification=nontifications.get(i);
-                    if(nontification.getType().equals("не просмотрено")){
-                        noViewedNonts.add(nontification);
-                    }
-                }
-                if(noViewedNonts.size()>0){
-                    circleNontifications.setVisibility(View.VISIBLE);
-                    if(noViewedNonts.size()>9){
-                        circleNontifications.setText("9+");
-                    }else {
-                        circleNontifications.setText(String.valueOf(noViewedNonts.size()));
-                    }
-                }
-            }
-        });
         circularProgressIndicator=view.findViewById(R.id.miningIndicator);
 
 //        TextView getMore=view.findViewById(R.id.getMore);
@@ -379,25 +360,70 @@ public class MainFragment extends Fragment{
             }
         });
         loadClothesFromBase();
+        checkNots();
         getMyClothes();
     }
 
-    public void loadClothesFromBase(){
-        RecentMethods.getClothes(firebaseModel, new Callbacks.GetClothes() {
-            @Override
-            public void getClothes(ArrayList<Clothes> allClothes) {
-                clothesArrayList.addAll(allClothes);
-                for(int i=0;i<clothesArrayList.size();i++){
-                    Clothes cl=clothesArrayList.get(i);
-                    popularClothesArrayList.add(cl);
-//                            if (cl.getPurchaseNumber()==1){
-//                                firebaseModel.getReference("AppData/Clothes/Popular").setValue()
-//                            }
+    public void checkNots(){
+        if(userInformation.getNontifications()!=null){
+            for (int i=0;i<userInformation.getNontifications().size();i++){
+                Nontification nontification=userInformation.getNontifications().get(i);
+                if(nontification.getType().equals("не просмотрено")){
+                    noViewedNonts.add(nontification);
                 }
-                NewClothesAdapter newClothesAdapter=new NewClothesAdapter(popularClothesArrayList,itemClickListener);
-                clothesRecyclerMain.setAdapter(newClothesAdapter);
             }
-        });
+            if(noViewedNonts.size()>0){
+                circleNontifications.setVisibility(View.VISIBLE);
+                if(noViewedNonts.size()>9){
+                    circleNontifications.setText("9+");
+                }else {
+                    circleNontifications.setText(String.valueOf(noViewedNonts.size()));
+                }
+            }
+        }else {
+            RecentMethods.getNontificationsList(nick, firebaseModel, new Callbacks.getNontificationsList() {
+                @Override
+                public void getNontificationsList(ArrayList<Nontification> nontifications) {
+                    userInformation.setNotifications(nontifications);
+                    for (int i=0;i<nontifications.size();i++){
+                        Nontification nontification=nontifications.get(i);
+                        if(nontification.getType().equals("не просмотрено")){
+                            noViewedNonts.add(nontification);
+                        }
+                    }
+                    if(noViewedNonts.size()>0){
+                        circleNontifications.setVisibility(View.VISIBLE);
+                        if(noViewedNonts.size()>9){
+                            circleNontifications.setText("9+");
+                        }else {
+                            circleNontifications.setText(String.valueOf(noViewedNonts.size()));
+                        }
+                    }
+                }
+            });
+        }
+    }
+
+    public void loadClothesFromBase(){
+        if(bundle.getSerializable("MAIN_REC_CLOTHES")!=null){
+            popularClothesArrayList = (ArrayList<Clothes>) bundle.getSerializable("MAIN_REC_CLOTHES");
+            NewClothesAdapter newClothesAdapter=new NewClothesAdapter(popularClothesArrayList,itemClickListener);
+            clothesRecyclerMain.setAdapter(newClothesAdapter);
+        }else {
+            RecentMethods.getClothes(firebaseModel, new Callbacks.GetClothes() {
+                @Override
+                public void getClothes(ArrayList<Clothes> allClothes) {
+                    clothesArrayList.addAll(allClothes);
+                    for(int i=0;i<clothesArrayList.size();i++){
+                        Clothes cl=clothesArrayList.get(i);
+                        popularClothesArrayList.add(cl);
+                    }
+                    bundle.putSerializable("MAIN_REC_CLOTHES",popularClothesArrayList);
+                    NewClothesAdapter newClothesAdapter=new NewClothesAdapter(popularClothesArrayList,itemClickListener);
+                    clothesRecyclerMain.setAdapter(newClothesAdapter);
+                }
+            });
+        }
 
     }
 

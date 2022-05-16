@@ -94,6 +94,12 @@ public class ShopFragment extends Fragment {
     }
 
     @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        bundle.putString("EDIT_SHOP_TAG",searchClothes.getText().toString());
+    }
+
+    @Override
     public void onViewCreated(@Nullable View view,@NonNull Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
         version= userInformation.getVersion();
@@ -106,7 +112,7 @@ public class ShopFragment extends Fragment {
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                getAndSave(MainFragment.newInstance(userInformation,bundle));
+                RecentMethods.setCurrentFragment(MainFragment.newInstance(userInformation,bundle),getActivity());
             }
         };
 
@@ -116,25 +122,26 @@ public class ShopFragment extends Fragment {
         backtoprofileshop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getAndSave(MainFragment.newInstance(userInformation,bundle));
+                RecentMethods.setCurrentFragment(MainFragment.newInstance(userInformation,bundle),getActivity());
             }
         });
         coinsLinear=view.findViewById(R.id.linearCoins);
         coinsLinear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getAndSave(CoinsFragmentSecond.newInstance(ShopFragment.newInstance(userInformation,bundle),userInformation,bundle));
+                RecentMethods.setCurrentFragment(CoinsFragmentSecond.newInstance(ShopFragment.newInstance(userInformation,bundle),userInformation,bundle),getActivity());
             }
         });
 
-        bundle=getArguments();
         if (bundle!=null){
-            String bundleEditText=bundle.getString("EDIT_TAG");
-            if(bundleEditText.length()!=0){
-                searchClothes.setText(bundleEditText);
-                viewPager.setVisibility(View.GONE);
-                tabLayout.setVisibility(View.GONE);
-                loadSearchClothes(bundleEditText);
+            if(bundle.getString("EDIT_SHOP_TAG")!=null){
+                String bundleEditText=bundle.getString("EDIT_SHOP_TAG");
+                if(bundleEditText.length()!=0){
+                    searchClothes.setText(bundleEditText);
+                    viewPager.setVisibility(View.GONE);
+                    tabLayout.setVisibility(View.GONE);
+                    loadSearchClothes(bundleEditText);
+                }
             }
         }
         searchClothes.addTextChangedListener(new TextWatcher() {
@@ -247,19 +254,10 @@ public class ShopFragment extends Fragment {
         basket.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getAndSave(BasketFragment.newInstance(userInformation, bundle));
+                RecentMethods.setCurrentFragment(BasketFragment.newInstance(userInformation, bundle),getActivity());
             }
         });
 
-    }
-
-    public void getAndSave(Fragment fragment){
-        Bundle saveState=new Bundle();
-        if(searchClothes.getText().length()!=0){
-            saveState.putString("EDIT_TAG",searchClothes.getText().toString());
-            fragment.setArguments(saveState);
-        }
-        RecentMethods.setCurrentFragment(fragment,getActivity());
     }
 
     public void loadSearchClothes(String editTextText){

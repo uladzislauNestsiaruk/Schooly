@@ -24,6 +24,8 @@ import com.egormoroz.schooly.ui.chat.Chat;
 import com.egormoroz.schooly.ui.chat.holders.ImageViewerActivity;
 import com.egormoroz.schooly.ui.main.ChatActivity;
 import com.egormoroz.schooly.ui.main.ChatsFragment;
+import com.egormoroz.schooly.ui.main.MainFragment;
+import com.egormoroz.schooly.ui.main.UserInformation;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DataSnapshot;
@@ -47,11 +49,18 @@ public class NewsFragment extends Fragment {
     TextView newsText;
     ImageView addNews;
     DatabaseReference ref;
+    UserInformation userInformation;
+    Bundle bundle;
 
-    public static NewsFragment newInstance() {
-        return new NewsFragment();
+    public NewsFragment(UserInformation userInformation,Bundle bundle) {
+        this.userInformation=userInformation;
+        this.bundle=bundle;
     }
 
+    public static NewsFragment newInstance(UserInformation userInformation, Bundle bundle) {
+        return new NewsFragment(userInformation,bundle);
+
+    }
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
@@ -64,7 +73,7 @@ public class NewsFragment extends Fragment {
         addNews.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                RecentMethods.setCurrentFragment(AddNewsFragment.newInstance(), getActivity());
+                RecentMethods.setCurrentFragment(AddNewsFragment.newInstance(userInformation,bundle), getActivity());
             }
         });
 

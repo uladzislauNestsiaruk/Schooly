@@ -94,7 +94,6 @@ public class CreateLookFragment extends Fragment {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if(searchText.getText().toString().length()>0){
                     viewPager.setVisibility(View.GONE);
-                    searchRecycler.setVisibility(View.VISIBLE);
                     tabLayout.setVisibility(View.GONE);
                     loadSearchClothes(searchText.getText().toString());
                 }else{
@@ -271,6 +270,8 @@ public class CreateLookFragment extends Fragment {
                        searchRecycler.setVisibility(View.GONE);
                        notFound.setVisibility(View.VISIBLE);
                    }else{
+                       notFound.setVisibility(View.GONE);
+                       searchRecycler.setVisibility(View.VISIBLE);
                        WardrobeClothesAdapter wardrobeClothesAdapter=new WardrobeClothesAdapter(clothesFromBase,itemClickListener);
                        searchRecycler.setLayoutManager(new GridLayoutManager(getActivity(), 2));
                        searchRecycler.setAdapter(wardrobeClothesAdapter);

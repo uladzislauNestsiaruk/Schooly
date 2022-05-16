@@ -282,7 +282,7 @@ public class UserInformation {
     }
 
     public ArrayList<Nontification> getNontifications(){
-        return notifications;
+        return this.notifications;
     }
 
     public void setNotifications(ArrayList<Nontification> notifications) {

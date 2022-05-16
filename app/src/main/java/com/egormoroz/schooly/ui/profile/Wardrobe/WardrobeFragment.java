@@ -100,6 +100,7 @@ public class WardrobeFragment extends Fragment {
         searchText=view.findViewById(R.id.searchClothesWardrobe);
         searchRecycler=view.findViewById(R.id.searchRecycler);
         notFound=view.findViewById(R.id.notFound);
+        loadModels(Uri.parse("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Funtitled.glb?alt=media&token=657b45d7-a84b-4f2a-89f4-a699029401f7"), sceneView, WardrobeFragment.this);
         searchText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -110,10 +111,8 @@ public class WardrobeFragment extends Fragment {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if(searchText.getText().toString().length()>0){
                     viewPager.setVisibility(View.GONE);
-                    searchRecycler.setVisibility(View.VISIBLE);
                     tabLayout.setVisibility(View.GONE);
                     loadSearchClothes(searchText.getText().toString());
-                    loadModels(Uri.parse("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Funtitled.glb?alt=media&token=657b45d7-a84b-4f2a-89f4-a699029401f7"), sceneView, WardrobeFragment.this);
                 }else{
                     viewPager.setVisibility(View.VISIBLE);
                     searchRecycler.setVisibility(View.GONE);
@@ -259,6 +258,8 @@ public class WardrobeFragment extends Fragment {
                         searchRecycler.setVisibility(View.GONE);
                         notFound.setVisibility(View.VISIBLE);
                     }else{
+                        notFound.setVisibility(View.GONE);
+                        searchRecycler.setVisibility(View.VISIBLE);
                         WardrobeClothesAdapter wardrobeClothesAdapter=new WardrobeClothesAdapter(clothesFromBase,itemClickListener);
                         searchRecycler.setLayoutManager(new GridLayoutManager(getActivity(), 2));
                         searchRecycler.setAdapter(wardrobeClothesAdapter);
