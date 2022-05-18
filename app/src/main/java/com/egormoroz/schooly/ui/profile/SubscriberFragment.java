@@ -49,6 +49,7 @@ public class SubscriberFragment extends Fragment {
     Fragment fragment;
     UserInformation userInformation;
     Bundle bundle;
+    ArrayList<Subscriber> userFromBase;
 
     public SubscriberFragment(String type,Fragment fragment,UserInformation userInformation,Bundle bundle) {
         this.type = type;
@@ -60,6 +61,13 @@ public class SubscriberFragment extends Fragment {
     public static SubscriberFragment newInstance(String type, Fragment fragment,UserInformation userInformation,Bundle bundle) {
         return new SubscriberFragment(type,fragment,userInformation,bundle);
 
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        bundle.putString("EDIT_SUBSCRIBERS_TAG",searchUser.getText().toString().trim());
+        bundle.putSerializable("SEARCH_SUBSCRIBERS_LIST", userFromBase);
     }
 
     @Override
@@ -95,7 +103,43 @@ public class SubscriberFragment extends Fragment {
         };
 
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
-        putSubscribersListInAdapter();
+        if(bundle!=null){
+            if(bundle.getString("EDIT_SUBSCRIBERS_TAG")!=null){
+                String textEdit=bundle.getString("EDIT_SUBSCRIBERS_TAG");
+                if(textEdit.length()>0){
+                    searchUser.setText(textEdit);
+                    userFromBase= (ArrayList<Subscriber>) bundle.getSerializable("SEARCH_SUBSCRIBERS_LIST");
+                    if (userFromBase.size()==0){
+                        emptyList.setVisibility(View.VISIBLE);
+                        recyclerView.setVisibility(View.GONE);
+                    }else {
+                        emptyList.setVisibility(View.GONE);
+                        recyclerView.setVisibility(View.VISIBLE);
+                        SubscribersAdapter subscribersAdapter = new SubscribersAdapter(userFromBase);
+                        recyclerView.setAdapter(subscribersAdapter);
+                        SubscribersAdapter.ItemClickListener clickListener =
+                                new SubscribersAdapter.ItemClickListener() {
+                                    @Override
+                                    public void onItemClick(View view, int position) {
+                                        Subscriber user = subscribersAdapter.getItem(position);
+                                        userNameToProfile=user.getSub();
+                                        if(userNameToProfile.equals(nick)){
+                                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback",nick,fragment,userInformation,bundle),getActivity());
+                                        }else {
+                                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile,SubscriberFragment.newInstance(type,fragment,userInformation,bundle),userInformation,bundle),
+                                                    getActivity());
+                                        }
+                                    }
+                                };
+                        subscribersAdapter.setClickListener(clickListener);
+                    }
+                }else {
+                    putSubscribersListInAdapter();
+                }
+            }else {
+                putSubscribersListInAdapter();
+            }
+        }
         initUserEnter();
     }
 
@@ -175,7 +219,7 @@ public class SubscriberFragment extends Fragment {
                     public void onComplete(@NonNull Task<DataSnapshot> task) {
                         if(task.isSuccessful()){
                             DataSnapshot snapshot= task.getResult();
-                            ArrayList<Subscriber> userFromBase = new ArrayList<>();
+                            userFromBase = new ArrayList<>();
                             for (DataSnapshot snap : snapshot.getChildren()) {
                                 Subscriber subscriber = new Subscriber();
                                 subscriber.setSub(snap.getValue(String.class));

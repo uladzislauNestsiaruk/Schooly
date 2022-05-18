@@ -151,7 +151,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_below="@+id/tabLayoutShop"
-                android:layout_marginTop="8dp" />
+                android:layout_marginTop="8dp"
+                android:saveEnabled="true"/>
         </RelativeLayout>
 </androidx.core.widget.NestedScrollView>
 

@@ -202,24 +202,57 @@ public class MiningFragment extends Fragment {
 
 
     public void GetDataFromBase(){
-        RecentMethods.AllminersFromBase(firebaseModel, new Callbacks.GetMinerFromBase() {
-            @Override
-            public void GetMinerFromBase(ArrayList<Miner> minersFromBase) {
-                listAdapterMiner.addAll(minersFromBase);
-                WeakMinersAdapter allMinersAdapter=new WeakMinersAdapter(listAdapterMiner,itemClickListener);
-                weakminersrecyclerview.setAdapter(allMinersAdapter);
-                weakminersrecyclerview.addItemDecoration(new WeakMinersAdapter.SpaceItemDecoration());
-            }
-        });
-        RecentMethods.AverageMinersFromBase(firebaseModel, new Callbacks.GetMinerFromBase() {
-            @Override
-            public void GetMinerFromBase(ArrayList<Miner> minersFromBase) {
-                listAdapterAverageMiner.addAll(minersFromBase);
-                AverageMinersAdapter avarageMinersAdapter=new AverageMinersAdapter(listAdapterAverageMiner,itemClickListenerAverage);
-                averageminersrecyclerview.setAdapter(avarageMinersAdapter);
-                averageminersrecyclerview.addItemDecoration(new AverageMinersAdapter.SpaceItemDecoration());
-            }
-        });
+        if(bundle.getSerializable("WEAK_MINERS")==null){
+            RecentMethods.AllminersFromBase(firebaseModel, new Callbacks.GetMinerFromBase() {
+                @Override
+                public void GetMinerFromBase(ArrayList<Miner> minersFromBase) {
+                    bundle.putSerializable("WEAK_MINERS", minersFromBase);
+                    listAdapterMiner.addAll(minersFromBase);
+                    WeakMinersAdapter allMinersAdapter=new WeakMinersAdapter(listAdapterMiner,itemClickListener);
+                    weakminersrecyclerview.setAdapter(allMinersAdapter);
+                    weakminersrecyclerview.addItemDecoration(new WeakMinersAdapter.SpaceItemDecoration());
+                }
+            });
+        }else{
+            listAdapterMiner= (ArrayList<Miner>) bundle.getSerializable("WEAK_MINERS");
+            WeakMinersAdapter allMinersAdapter=new WeakMinersAdapter(listAdapterMiner,itemClickListener);
+            weakminersrecyclerview.setAdapter(allMinersAdapter);
+            weakminersrecyclerview.addItemDecoration(new WeakMinersAdapter.SpaceItemDecoration());
+        }
+        if(bundle.getSerializable("AVERAGE_MINERS")==null){
+            RecentMethods.AverageMinersFromBase(firebaseModel, new Callbacks.GetMinerFromBase() {
+                @Override
+                public void GetMinerFromBase(ArrayList<Miner> minersFromBase) {
+                    bundle.putSerializable("AVERAGE_MINERS", minersFromBase);
+                    listAdapterAverageMiner.addAll(minersFromBase);
+                    AverageMinersAdapter avarageMinersAdapter=new AverageMinersAdapter(listAdapterAverageMiner,itemClickListenerAverage);
+                    averageminersrecyclerview.setAdapter(avarageMinersAdapter);
+                    averageminersrecyclerview.addItemDecoration(new AverageMinersAdapter.SpaceItemDecoration());
+                }
+            });
+        }else{
+            listAdapterAverageMiner= (ArrayList<Miner>) bundle.getSerializable("AVERAGE_MINERS");
+            AverageMinersAdapter avarageMinersAdapter=new AverageMinersAdapter(listAdapterAverageMiner,itemClickListenerAverage);
+            averageminersrecyclerview.setAdapter(avarageMinersAdapter);
+            averageminersrecyclerview.addItemDecoration(new AverageMinersAdapter.SpaceItemDecoration());
+        }
+        if(bundle.getSerializable("STRONG_MINERS")==null){
+            RecentMethods.StrongMinersFromBase(firebaseModel, new Callbacks.GetMinerFromBase() {
+                @Override
+                public void GetMinerFromBase(ArrayList<Miner> minersFromBase) {
+                    bundle.putSerializable("STRONG_MINERS", minersFromBase);
+                    listAdapterStrongMiner.addAll(minersFromBase);
+                    StrongMinersAdapter strongMinersAdapter=new StrongMinersAdapter(listAdapterStrongMiner,itemClickListenerStrong);
+                    strongminersrecyclerview.setAdapter(strongMinersAdapter);
+                    strongminersrecyclerview.addItemDecoration(new StrongMinersAdapter.SpaceItemDecoration());
+                }
+            });
+        }else{
+            listAdapterStrongMiner= (ArrayList<Miner>) bundle.getSerializable("STRONG_MINERS");
+            StrongMinersAdapter strongMinersAdapter=new StrongMinersAdapter(listAdapterStrongMiner,itemClickListenerStrong);
+            strongminersrecyclerview.setAdapter(strongMinersAdapter);
+            strongminersrecyclerview.addItemDecoration(new StrongMinersAdapter.SpaceItemDecoration());
+        }
         RecentMethods.StrongMinersFromBase(firebaseModel, new Callbacks.GetMinerFromBase() {
             @Override
             public void GetMinerFromBase(ArrayList<Miner> minersFromBase) {

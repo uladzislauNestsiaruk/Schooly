@@ -60,7 +60,6 @@ public class PopularFragment extends Fragment {
         firebaseModel.initAll();
         clothes=root.findViewById(R.id.newchlothesinshop);
         popularClothes=root.findViewById(R.id.popularchlothesinshop);
-        loadClothesFromBase();
         return root;
     }
 
@@ -89,6 +88,7 @@ public class PopularFragment extends Fragment {
                 ((MainActivity)getActivity()).setCurrentFragment(ViewingClothesPopular.newInstance(userInformation,bundle));
             }
         };
+        loadClothesFromBase();
     }
 
 

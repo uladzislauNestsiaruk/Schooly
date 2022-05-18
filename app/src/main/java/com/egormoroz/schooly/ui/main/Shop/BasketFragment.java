@@ -75,7 +75,7 @@ public class BasketFragment extends Fragment {
   @Override
   public void onDestroyView() {
     super.onDestroyView();
-    bundle.putString("EDIT_BASKET_TAG",editText.getText().toString());
+    bundle.putString("EDIT_BASKET_TAG",editText.getText().toString().trim());
   }
 
 

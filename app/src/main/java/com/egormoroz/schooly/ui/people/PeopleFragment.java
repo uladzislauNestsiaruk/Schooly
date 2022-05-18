@@ -58,6 +58,13 @@ public class PeopleFragment extends Fragment {
     }
 
     @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        bundle.putString("EDIT_SEARCH_PEOPLE_TAG",searchUser.getText().toString().trim());
+        bundle.putSerializable("SEARCH_PEOPLE_LIST", searchUserFromBase);
+    }
+
+    @Override
     public void onViewCreated(@Nullable View view,@NonNull Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         nick=userInformation.getNick();
@@ -66,8 +73,47 @@ public class PeopleFragment extends Fragment {
         userNotSearch=view.findViewById(R.id.notSearch);
         firebaseModel.initAll();
         setPeopleData();
+        if(bundle!=null){
+            if(bundle.getString("EDIT_SEARCH_PEOPLE_TAG")!=null){
+                String searchText=bundle.getString("EDIT_SEARCH_PEOPLE_TAG").trim();
+                if(searchText.length()>0){
+                    searchUser.setText(searchText);
+                    searchUserFromBase= (ArrayList<UserPeopleAdapter>) bundle.getSerializable("SEARCH_PEOPLE_LIST");
+                    if(searchUserFromBase.size()==0){
+                        userNotSearch.setVisibility(View.VISIBLE);
+                        peopleRecyclerView.setVisibility(View.GONE);
+                    }else{
+                        peopleRecyclerView.setVisibility(View.VISIBLE);
+                        userNotSearch.setVisibility(View.GONE);
+                        PeopleAdapter peopleAdapter = new PeopleAdapter(searchUserFromBase);
+                        peopleRecyclerView.setAdapter(peopleAdapter);
+                        PeopleAdapter.ItemClickListener clickListener =
+                                new PeopleAdapter.ItemClickListener() {
+                                    @Override
+                                    public void onItemClick(View view, int position,String avatar,String bio) {
+                                        UserPeopleAdapter user = peopleAdapter.getItem(position);
+                                        userNameToProfile = user.getNick();
+                                        if (userNameToProfile.equals(nick)) {
+                                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback", nick, PeopleFragment.newInstance(userInformation,bundle),userInformation,bundle), getActivity());
+                                        } else {
+//                                        firebaseModel.getReference().child("users").child(nick).child("alreadySearched").child(userNameToProfile)
+//                                                .setValue(new UserPeopleAdapter(userNameToProfile, avatar, bio));
+                                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile, PeopleFragment.newInstance(userInformation,bundle),userInformation,bundle),
+                                                    getActivity());
+                                        }
+                                    }
+                                };
+                        peopleAdapter.setClickListener(clickListener);
+                    }
+                }
+                else {
+                    setAlreadySearchedInAdapter();
+                }
+            }else {
+                setAlreadySearchedInAdapter();
+            }
+        }
         getUsersNicks();
-        setAlreadySearchedInAdapter();
         initUserEnter();
     }
 

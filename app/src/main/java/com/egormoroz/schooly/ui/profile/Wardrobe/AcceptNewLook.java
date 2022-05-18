@@ -83,6 +83,16 @@ public class AcceptNewLook extends Fragment {
     }
 
     @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if(descriptionLook.getText().toString().length()>0){
+            bundle.putString("EDIT_DESCRIPTION_LOOK",descriptionLook.getText().toString().trim());
+            Log.d("####", descriptionLook.getText().toString());
+        }
+    }
+
+
+    @Override
     public void onViewCreated(@Nullable View view,@NonNull Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
         nick=userInformation.getNick();
@@ -113,8 +123,14 @@ public class AcceptNewLook extends Fragment {
                 RecentMethods.setCurrentFragment(CreateLookFragment.newInstance(type,fragment,userInformation,bundle), getActivity());
             }
         };
-
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
+
+        if(bundle!=null){
+            if(bundle.getString("EDIT_DESCRIPTION_LOOK")!=null){
+                String editDescriptionText=bundle.getString("EDIT_DESCRIPTION_LOOK");
+                descriptionLook.setText(editDescriptionText);
+            }
+        }
         getLookClothes();
     }
 
@@ -140,7 +156,7 @@ public class AcceptNewLook extends Fragment {
                 firebaseModel.getUsersReference().child(nick).child("looks").child(lookId)
                         .setValue(new NewsItem(model, descriptionLook.getText().toString(), "0", lookId,
                                 "", userInformation.getLookClothes(), 1200, 0,"",nick,0));
-                firebaseModel.getUsersReference().child(nick).child("lookClothes").removeValue();
+                descriptionLook.getText().clear();
                 RecentMethods.setCurrentFragment(ProfileFragment.newInstance(type, nick, fragment,userInformation,bundle), getActivity());
             }
         });

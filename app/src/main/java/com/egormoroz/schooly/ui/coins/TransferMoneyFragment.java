@@ -69,9 +69,13 @@ public class TransferMoneyFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_transfermoney, container, false);
         BottomNavigationView bnv = getActivity().findViewById(R.id.bottomNavigationView);
         bnv.setVisibility(bnv.GONE);
-//        AppBarLayout abl = getActivity().findViewById(R.id.AppBarLayout);
-//        abl.setVisibility(abl.GONE);
         return root;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        bundle.putString("EDIT_TRANSFER_MONEY_TAG",searchUser.getText().toString().trim());
     }
 
     @Override
@@ -106,8 +110,44 @@ public class TransferMoneyFragment extends Fragment {
             }
         });
         firebaseModel.initAll();
-        setSubsInAdapter();
-        initUserEnter();
+        if(bundle!=null){
+            if(bundle.getString("EDIT_TRANSFER_MONEY_TAG")!=null){
+                String textEdit=bundle.getString("EDIT_TRANSFER_MONEY_TAG");
+                if(textEdit.length()>0){
+                    searchUser.setText(textEdit);
+                    initUserEnter(textEdit);
+                }else {
+                    setSubsInAdapter();
+                }
+            }else{
+                setSubsInAdapter();
+            }
+        }
+        searchUser.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                userName = String.valueOf(searchUser.getText()).trim();
+                userName = userName.toLowerCase();
+                if(userName.length()>0){
+                    initUserEnter(userName);
+                }else{
+                    emptySearchSubscriptionList.setVisibility(View.GONE);
+                    peopleRecyclerView.setVisibility(View.VISIBLE);
+                    TransferMoneyAdapter transferMoneyAdapter = new TransferMoneyAdapter(userInformation.getSubscription());
+                    peopleRecyclerView.setAdapter(transferMoneyAdapter);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
     }
 
     public void setSubsInAdapter() {
@@ -158,76 +198,51 @@ public class TransferMoneyFragment extends Fragment {
         }
     }
 
-    public void initUserEnter() {
-        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+    public void initUserEnter(String textEdit) {
+        Query query = firebaseModel.getUsersReference().child(nick).child("subscription");
+        query.addValueEventListener(new ValueEventListener() {
             @Override
-            public void PassUserNick(String nick) {
-                searchUser.addTextChangedListener(new TextWatcher() {
-                    @Override
-                    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                ArrayList<Subscriber> userFromBase = new ArrayList<>();
+                for (DataSnapshot snap : snapshot.getChildren()) {
+                    Subscriber subscriber = new Subscriber();
+                    subscriber.setSub(snap.getValue(String.class));
+                    String nick = subscriber.getSub();
+                    int valueLetters = textEdit.length();
+                    nick = nick.toLowerCase();
+                    if (nick.length() < valueLetters) {
+                        if (nick.equals(textEdit))
+                            userFromBase.add(subscriber);
+                    } else {
+                        nick = nick.substring(0, valueLetters);
+                        if (nick.equals(textEdit))
+                            userFromBase.add(subscriber);
                     }
 
-                    @Override
-                    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                        userName = String.valueOf(searchUser.getText()).trim();
-                        userName = userName.toLowerCase();
-                        Query query = firebaseModel.getUsersReference().child(nick).child("subscription");
-                        query.addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                ArrayList<Subscriber> userFromBase = new ArrayList<>();
-                                for (DataSnapshot snap : snapshot.getChildren()) {
-                                    Subscriber subscriber = new Subscriber();
-                                    subscriber.setSub(snap.getValue(String.class));
-                                    String nick = subscriber.getSub();
-                                    int valueLetters = userName.length();
-                                    nick = nick.toLowerCase();
-                                    if (nick.length() < valueLetters) {
-                                        if (nick.equals(userName))
-                                            userFromBase.add(subscriber);
-                                    } else {
-                                        nick = nick.substring(0, valueLetters);
-                                        if (nick.equals(userName))
-                                            userFromBase.add(subscriber);
-                                    }
+                }
+                if (userFromBase.size() == 0) {
+                    emptySearchSubscriptionList.setVisibility(View.VISIBLE);
+                    peopleRecyclerView.setVisibility(View.GONE);
+                }else{
+                    emptySearchSubscriptionList.setVisibility(View.GONE);
+                    peopleRecyclerView.setVisibility(View.VISIBLE);
+                    TransferMoneyAdapter transferMoneyAdapter=new TransferMoneyAdapter(userFromBase);
+                    peopleRecyclerView.setAdapter(transferMoneyAdapter);
+                    TransferMoneyAdapter.ItemClickListener itemClickListener=new TransferMoneyAdapter.ItemClickListener() {
+                        @Override
+                        public void onItemClick(View view, int position) {
+                            Subscriber user = transferMoneyAdapter.getItem(position);
+                            userNameToProfile=user.getSub();
+                            RecentMethods.setCurrentFragment(SendMoneyFragment.newInstance(userNameToProfile,fragment,userInformation,bundle), getActivity());
+                        }
+                    };
+                    transferMoneyAdapter.setClickListener(itemClickListener);
+                }
+            }
 
-                                }
-                                if (userFromBase.size() == 0) {
-                                    emptySearchSubscriptionList.setVisibility(View.VISIBLE);
-                                    peopleRecyclerView.setVisibility(View.GONE);
-                                }else{
-                                    emptySearchSubscriptionList.setVisibility(View.GONE);
-                                    peopleRecyclerView.setVisibility(View.VISIBLE);
-                                    TransferMoneyAdapter transferMoneyAdapter=new TransferMoneyAdapter(userFromBase);
-                                    peopleRecyclerView.setAdapter(transferMoneyAdapter);
-                                    TransferMoneyAdapter.ItemClickListener itemClickListener=new TransferMoneyAdapter.ItemClickListener() {
-                                        @Override
-                                        public void onItemClick(View view, int position) {
-                                            Subscriber user = transferMoneyAdapter.getItem(position);
-                                            userNameToProfile=user.getSub();
-                                            RecentMethods.setCurrentFragment(SendMoneyFragment.newInstance(userNameToProfile,fragment,userInformation,bundle), getActivity());
-                                        }
-                                    };
-                                    transferMoneyAdapter.setClickListener(itemClickListener);
-                                }
-                            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
 
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
-
-                            }
-                        });
-                    }
-
-                    @Override
-                    public void afterTextChanged(Editable editable) {
-                        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-                            @Override
-                            public void PassUserNick(String nick) {
-                            }
-                        });
-                    }
-                });
             }
         });
     }

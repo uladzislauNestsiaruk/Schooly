@@ -81,6 +81,12 @@ public class MyClothesFragment extends Fragment {
     }
 
     @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        bundle.putString("EDIT_MYCLOTHES_TAG",searchMyClothes.getText().toString().trim());
+    }
+
+    @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_myclothes, container, false);
@@ -147,22 +153,15 @@ public class MyClothesFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                editGetText=searchMyClothes.getText().toString();
+                editGetText=searchMyClothes.getText().toString().trim();
                 editGetText=editGetText.toLowerCase();
                 if (editGetText.length()>0) {
-                    searchMyClothes.setVisibility(View.VISIBLE);
                     searchMyClothes(editGetText);
                 }else if(editGetText.length()==0){
                     recyclerMyClothes.setVisibility(View.VISIBLE);
                     notFound.setVisibility(View.GONE);
-                    RecentMethods.getMyClothes(nick, firebaseModel, new Callbacks.GetClothes() {
-                        @Override
-                        public void getClothes(ArrayList<Clothes> allClothes) {
-                            Collections.reverse(allClothes);
-                            MyClothesAdapter myClothesAdapter=new MyClothesAdapter(allClothes,itemClickListener);
-                            recyclerMyClothes.setAdapter(myClothesAdapter);
-                        }
-                    });
+                    MyClothesAdapter myClothesAdapter=new MyClothesAdapter(userInformation.getMyClothes(),itemClickListener);
+                    recyclerMyClothes.setAdapter(myClothesAdapter);
                 }
             }
 
@@ -201,9 +200,22 @@ public class MyClothesFragment extends Fragment {
             createClothesBig.setVisibility(View.GONE);
             relativeFirstClothes.setVisibility(View.GONE);
             createClothes.setVisibility(View.VISIBLE);
+            if (bundle!=null){
+                if(bundle.getString("EDIT_MYCLOTHES_TAG")!=null) {
+                    String bundleEditText = bundle.getString("EDIT_MYCLOTHES_TAG").trim();
+                    if (bundleEditText.length() != 0) {
+                        searchMyClothes.setText(bundleEditText);
+                        searchMyClothes(bundleEditText);
+                    }else{
+                        MyClothesAdapter myClothesAdapter=new MyClothesAdapter(clothesArrayList,itemClickListener);
+                        recyclerMyClothes.setAdapter(myClothesAdapter);
+                    }
+                }else{
+                    MyClothesAdapter myClothesAdapter=new MyClothesAdapter(clothesArrayList,itemClickListener);
+                    recyclerMyClothes.setAdapter(myClothesAdapter);
+                }
+            }
             clothes.setText("Одежда "+String.valueOf(userInformation.getMyClothes().size())+":");
-            MyClothesAdapter myClothesAdapter=new MyClothesAdapter(clothesArrayList,itemClickListener);
-            recyclerMyClothes.setAdapter(myClothesAdapter);
             createClothes.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

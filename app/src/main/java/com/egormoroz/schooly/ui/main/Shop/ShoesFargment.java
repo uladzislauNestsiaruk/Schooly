@@ -59,7 +59,6 @@ public class ShoesFargment extends Fragment {
         firebaseModel.initAll();
         clothes=root.findViewById(R.id.newchlothesinshop);
         popularClothes=root.findViewById(R.id.popularchlothesinshop);
-        loadClothesFromBase();
         return root;
     }
 
@@ -67,7 +66,6 @@ public class ShoesFargment extends Fragment {
     public void onResume() {
         super.onResume();
         getView().requestLayout();
-
     }
 
     @Override
@@ -88,41 +86,49 @@ public class ShoesFargment extends Fragment {
                 ((MainActivity)getActivity()).setCurrentFragment(ViewingClothesPopular.newInstance(userInformation,bundle));
             }
         };
+        loadClothesFromBase();
     }
 
 
     public void loadClothesFromBase(){
-        RecentMethods.getClothes(firebaseModel, new Callbacks.GetClothes() {
-            @Override
-            public void getClothes(ArrayList<Clothes> allClothes) {
-                clothesArrayList.addAll(allClothes);
-                for(int i=0;i<clothesArrayList.size();i++){
-                    Clothes cl=clothesArrayList.get(i);
-                    if (cl.getClothesType().equals("shoes")){
-                        shoesArrayList.add(cl);
-                    }
+        if(bundle.getSerializable("SHOES_NEW")!=null){
+            ArrayList<Clothes> newClothesArrayList= (ArrayList<Clothes>) bundle.getSerializable("SHOES_NEW");
+            NewClothesAdapter newClothesAdapter=new NewClothesAdapter(newClothesArrayList,itemClickListener);
+            clothes.setAdapter(newClothesAdapter);
+        }else{
+            ArrayList<Clothes> allClothes= (ArrayList<Clothes>) bundle.getSerializable("ALL_CLOTHES");
+            for(int i=0;i<allClothes.size();i++){
+                Clothes cl=allClothes.get(i);
+                if (cl.getClothesType().equals("shoes")){
+                    shoesArrayList.add(cl);
+                }
 
-                }
-                NewClothesAdapter newClothesAdapter=new NewClothesAdapter(shoesArrayList,itemClickListener);
-                clothes.setAdapter(newClothesAdapter);
             }
-        });
-        RecentMethods.getPopular( firebaseModel, new Callbacks.GetClothes() {
-            @Override
-            public void getClothes(ArrayList<Clothes> allClothes) {
-                popularClothesArrayList.addAll(allClothes);
-                for(int i=0;i<popularClothesArrayList.size();i++){
-                    Clothes cl=popularClothesArrayList.get(i);
-                    if (cl.getClothesType().equals("shoes")){
-                        popularSortShoesArrayList.add(cl);
-                    }
+            bundle.putSerializable("SHOES_NEW",shoesArrayList);
+            NewClothesAdapter newClothesAdapter=new NewClothesAdapter(shoesArrayList,itemClickListener);
+            clothes.setAdapter(newClothesAdapter);
+        }
+        if(bundle.getSerializable("SHOES_POPULAR")!=null){
+            popularClothesArrayList= (ArrayList<Clothes>) bundle.getSerializable("SHOES_POPULAR");
+            PopularClothesAdapter popularClothesAdapter=new PopularClothesAdapter(popularClothesArrayList,itemClickListenerPopular);
+            popularClothes.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+            popularClothes.setNestedScrollingEnabled(false);
+            popularClothes.setAdapter(popularClothesAdapter);
+        }else{
+            ArrayList<Clothes> allClothes= (ArrayList<Clothes>) bundle.getSerializable("ALL_CLOTHES");
+            for(int i=0;i<allClothes.size();i++){
+                Clothes cl=allClothes.get(i);
+                if (cl.getClothesType().equals("shoes")){
+                    popularSortShoesArrayList.add(cl);
                 }
-                PopularClothesAdapter popularClothesAdapter=new PopularClothesAdapter(popularSortShoesArrayList,itemClickListenerPopular);
-                popularClothes.setLayoutManager(new GridLayoutManager(getActivity(), 2));
-                popularClothes.setNestedScrollingEnabled(false);
-                popularClothes.setAdapter(popularClothesAdapter);
+
             }
-        });
+            bundle.putSerializable("SHOES_POPULAR",popularSortShoesArrayList);
+            PopularClothesAdapter popularClothesAdapter=new PopularClothesAdapter(popularSortShoesArrayList,itemClickListenerPopular);
+            popularClothes.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+            popularClothes.setNestedScrollingEnabled(false);
+            popularClothes.setAdapter(popularClothesAdapter);
+        }
     }
 
     public static ArrayList<Integer> get_max(int amount, ArrayList<Integer> nums){
