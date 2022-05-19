@@ -21,6 +21,9 @@ import androidx.work.WorkManager;
 
 
 import com.egormoroz.schooly.ui.main.Mining.Miner;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DatabaseReference;
 
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
@@ -143,6 +146,12 @@ public class SchoolyApplication extends Application implements Application.Activ
         if (++activityReferences == 1 && !isActivityChangingConfigurations) {
             miningCheckValue=0;
             startMining();
+            RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+                @Override
+                public void PassUserNick(String nick) {
+                    firebaseModel.getUsersReference().child(nick).child("Status").setValue("online");
+                }
+            });
         }
     }
 
@@ -162,6 +171,12 @@ public class SchoolyApplication extends Application implements Application.Activ
         if (--activityReferences == 0 && !isActivityChangingConfigurations) {
             handler.removeCallbacks(runnable);
             miningCheckValue=1;
+            RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+                @Override
+                public void PassUserNick(String nick) {
+                    firebaseModel.getUsersReference().child(nick).child("Status").setValue("offline");
+                }
+            });
         }
     }
 

@@ -396,19 +396,28 @@ public class ViewingClothes extends Fragment {
                 }
             }
         };
-
-        RecentMethods.getSubscriptionList(userInformation.getNick(), firebaseModel, new Callbacks.getFriendsList() {
-            @Override
-            public void getFriendsList(ArrayList<Subscriber> friends) {
-                if (friends.size()==0){
-                    emptyList.setVisibility(View.VISIBLE);
-                    recyclerView.setVisibility(View.GONE);
-                }else {
-                    SendLookAdapter sendLookAdapter = new SendLookAdapter(friends,itemClickListener);
-                    recyclerView.setAdapter(sendLookAdapter);
+        if(userInformation.getSubscription()==null){
+            RecentMethods.getSubscriptionList(userInformation.getNick(), firebaseModel, new Callbacks.getFriendsList() {
+                @Override
+                public void getFriendsList(ArrayList<Subscriber> friends) {
+                    if (friends.size()==0){
+                        emptyList.setVisibility(View.VISIBLE);
+                        recyclerView.setVisibility(View.GONE);
+                    }else {
+                        SendLookAdapter sendLookAdapter = new SendLookAdapter(friends,itemClickListener);
+                        recyclerView.setAdapter(sendLookAdapter);
+                    }
                 }
+            });
+        }else {
+            if (userInformation.getSubscription().size()==0){
+                emptyList.setVisibility(View.VISIBLE);
+                recyclerView.setVisibility(View.GONE);
+            }else {
+                SendLookAdapter sendLookAdapter = new SendLookAdapter(userInformation.getSubscription(),itemClickListener);
+                recyclerView.setAdapter(sendLookAdapter);
             }
-        });
+        }
 
         initUserEnter();
 
@@ -446,8 +455,15 @@ public class ViewingClothes extends Fragment {
                             }
 
                         }
-                        SendLookAdapter sendLookAdapter = new SendLookAdapter(userFromBase,itemClickListener);
-                        recyclerView.setAdapter(sendLookAdapter);
+                        if(userFromBase.size()==0){
+                            emptyList.setVisibility(View.VISIBLE);
+                            recyclerView.setVisibility(View.GONE);
+                        }else {
+                            emptyList.setVisibility(View.GONE);
+                            recyclerView.setVisibility(View.VISIBLE);
+                            SendLookAdapter sendLookAdapter = new SendLookAdapter(userFromBase,itemClickListener);
+                            recyclerView.setAdapter(sendLookAdapter);
+                        }
                     }
 
                     @Override
@@ -459,11 +475,6 @@ public class ViewingClothes extends Fragment {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-                    @Override
-                    public void PassUserNick(String nick) {
-                    }
-                });
             }
         });
     }

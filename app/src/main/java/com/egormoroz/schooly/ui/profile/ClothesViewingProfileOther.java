@@ -340,7 +340,7 @@ public class ClothesViewingProfileOther extends Fragment {
         linearElse=bottomSheetDialog.findViewById(R.id.linearElse);
         linearTelegram=bottomSheetDialog.findViewById(R.id.linearTelegram);
         linearInstagram=bottomSheetDialog.findViewById(R.id.linearInstagram);
-        editText=bottomSheetDialog.findViewById(R.id.message);
+        messageEdit=bottomSheetDialog.findViewById(R.id.message);
 
         linearElse.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -367,17 +367,17 @@ public class ClothesViewingProfileOther extends Fragment {
                 if(type.equals("send")){
                     String messageText = messageEdit.getText().toString();
 
-                    String messageSenderRef = otherUserNick + "/Chats/" + nick + "/Messages";
-                    String messageReceiverRef = nick + "/Chats/" + otherUserNick+ "/Messages";
+                    String messageSenderRef = otherUserNick + "/Chats/" + userInformation.getNick() + "/Messages";
+                    String messageReceiverRef = userInformation.getNick()  + "/Chats/" + otherUserNick+ "/Messages";
                     otherUserNickString=otherUserNick;
 
-                    DatabaseReference userMessageKeyRef = firebaseModel.getUsersReference().child(nick).child("Chats").child(otherUserNick).child("Messages").push();
+                    DatabaseReference userMessageKeyRef = firebaseModel.getUsersReference().child(userInformation.getNick() ).child("Chats").child(otherUserNick).child("Messages").push();
                     String messagePushID = userMessageKeyRef.getKey();
 
                     Map<String, String> messageTextBody = new HashMap<>();
                     messageTextBody.put("message", messageText);
                     messageTextBody.put("type", "text");
-                    messageTextBody.put("from", nick);
+                    messageTextBody.put("from", userInformation.getNick() );
                     messageTextBody.put("to", otherUserNick);
                     messageTextBody.put("time", RecentMethods.getCurrentTime());
                     messageTextBody.put("messageID", messagePushID);
@@ -391,29 +391,28 @@ public class ClothesViewingProfileOther extends Fragment {
                 }
             }
         };
-        itemClickListener=new SendLookAdapter.ItemClickListener() {
-            @Override
-            public void onItemClick(String otherUserNick, String type) {
-                if(type.equals("send")){
-                    Log.d("###", type);
-                }else {
-                    Log.d("####", type);
+        if(userInformation.getSubscription()==null){
+            RecentMethods.getSubscriptionList(userInformation.getNick(), firebaseModel, new Callbacks.getFriendsList() {
+                @Override
+                public void getFriendsList(ArrayList<Subscriber> friends) {
+                    if (friends.size()==0){
+                        emptyList.setVisibility(View.VISIBLE);
+                        recyclerView.setVisibility(View.GONE);
+                    }else {
+                        SendLookAdapter sendLookAdapter = new SendLookAdapter(friends,itemClickListener);
+                        recyclerView.setAdapter(sendLookAdapter);
+                    }
                 }
+            });
+        }else {
+            if (userInformation.getSubscription().size()==0){
+                emptyList.setVisibility(View.VISIBLE);
+                recyclerView.setVisibility(View.GONE);
+            }else {
+                SendLookAdapter sendLookAdapter = new SendLookAdapter(userInformation.getSubscription(),itemClickListener);
+                recyclerView.setAdapter(sendLookAdapter);
             }
-        };
-
-        RecentMethods.getSubscriptionList(nick, firebaseModel, new Callbacks.getFriendsList() {
-            @Override
-            public void getFriendsList(ArrayList<Subscriber> friends) {
-                if (friends.size()==0){
-                    emptyList.setVisibility(View.VISIBLE);
-                    recyclerView.setVisibility(View.GONE);
-                }else {
-                    SendLookAdapter sendLookAdapter = new SendLookAdapter(friends,itemClickListener);
-                    recyclerView.setAdapter(sendLookAdapter);
-                }
-            }
-        });
+        }
 
         initUserEnter();
 
@@ -430,32 +429,41 @@ public class ClothesViewingProfileOther extends Fragment {
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 userName = String.valueOf(editText.getText()).trim();
                 userName = userName.toLowerCase();
-                firebaseModel.getUsersReference().child(nick).child("subscription")
-                .get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                Query query = firebaseModel.getUsersReference().child(userInformation.getNick()).child("subscription");
+                query.addValueEventListener(new ValueEventListener() {
                     @Override
-                    public void onComplete(@NonNull Task<DataSnapshot> task) {
-                        if (task.isSuccessful()){
-                            DataSnapshot snapshot= task.getResult();
-                            ArrayList<Subscriber> userFromBase = new ArrayList<>();
-                            for (DataSnapshot snap : snapshot.getChildren()) {
-                                Subscriber subscriber = new Subscriber();
-                                subscriber.setSub(snap.getValue(String.class));
-                                String nick = subscriber.getSub();
-                                int valueLetters = userName.length();
-                                nick = nick.toLowerCase();
-                                if (nick.length() < valueLetters) {
-                                    if (nick.equals(userName))
-                                        userFromBase.add(subscriber);
-                                } else {
-                                    nick = nick.substring(0, valueLetters);
-                                    if (nick.equals(userName))
-                                        userFromBase.add(subscriber);
-                                }
-
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        ArrayList<Subscriber> userFromBase = new ArrayList<>();
+                        for (DataSnapshot snap : snapshot.getChildren()) {
+                            Subscriber subscriber = new Subscriber();
+                            subscriber.setSub(snap.getValue(String.class));
+                            String nick = subscriber.getSub();
+                            int valueLetters = userName.length();
+                            nick = nick.toLowerCase();
+                            if (nick.length() < valueLetters) {
+                                if (nick.equals(userName))
+                                    userFromBase.add(subscriber);
+                            } else {
+                                nick = nick.substring(0, valueLetters);
+                                if (nick.equals(userName))
+                                    userFromBase.add(subscriber);
                             }
+
+                        }
+                        if(userFromBase.size()==0){
+                            emptyList.setVisibility(View.VISIBLE);
+                            recyclerView.setVisibility(View.GONE);
+                        }else {
+                            emptyList.setVisibility(View.GONE);
+                            recyclerView.setVisibility(View.VISIBLE);
                             SendLookAdapter sendLookAdapter = new SendLookAdapter(userFromBase,itemClickListener);
                             recyclerView.setAdapter(sendLookAdapter);
                         }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
                     }
                 });
             }

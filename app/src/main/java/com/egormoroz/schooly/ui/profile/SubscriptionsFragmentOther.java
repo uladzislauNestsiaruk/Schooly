@@ -43,6 +43,7 @@ public class SubscriptionsFragmentOther extends Fragment {
     UserInformation userInformation;
     Fragment fragment;
     Bundle bundle;
+    ArrayList<Subscriber> userFromBase;
 
     public SubscriptionsFragmentOther(Fragment fragment,String otherUserNick,UserInformation userInformation,Bundle bundle) {
         this.fragment=fragment;
@@ -54,6 +55,13 @@ public class SubscriptionsFragmentOther extends Fragment {
     public static SubscriptionsFragmentOther newInstance( Fragment fragment,String otherUserNick
             ,UserInformation userInformation,Bundle bundle) {
         return new SubscriptionsFragmentOther(fragment,otherUserNick,userInformation,bundle);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        bundle.putString("EDIT_SUBSCRIPTIONS_OTHER_TAG",searchUser.getText().toString().trim());
+        bundle.putSerializable("SEARCH_SUBSCRIPTIONS_OTHER_LIST", userFromBase);
     }
 
     @Override
@@ -90,6 +98,47 @@ public class SubscriptionsFragmentOther extends Fragment {
         };
 
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
+
+        if(bundle!=null){
+            if(bundle.getString("EDIT_SUBSCRIPTIONS_OTHER_TAG")!=null){
+                String textEdit=bundle.getString("EDIT_SUBSCRIPTIONS_OTHER_TAG").trim();
+                if(textEdit.length()>0){
+                    searchUser.setText(textEdit);
+                    userFromBase= (ArrayList<Subscriber>) bundle.getSerializable("SEARCH_SUBSCRIPTIONS_OTHER_LIST");
+                    if (userFromBase.size()==0){
+                        emptyList.setVisibility(View.VISIBLE);
+                        recyclerView.setVisibility(View.GONE);
+                    }else {
+                        emptyList.setVisibility(View.GONE);
+                        recyclerView.setVisibility(View.VISIBLE);
+                        SubscriptionsAdapterOther subscriptionsAdapterOther = new SubscriptionsAdapterOther(userFromBase);
+                        recyclerView.setAdapter(subscriptionsAdapterOther);
+                        SubscriptionsAdapterOther.ItemClickListener clickListener =
+                                new SubscriptionsAdapterOther.ItemClickListener() {
+                                    @Override
+                                    public void onItemClick(View view, int position) {
+                                        Subscriber subscriber = subscriptionsAdapterOther.getItem(position);
+                                        userNameToProfile = subscriber.getSub();
+                                        if(userNameToProfile.equals(nick)){
+                                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback",nick,SubscriptionsFragmentOther.newInstance(fragment,otherUserNick,userInformation,bundle),userInformation,bundle),getActivity());
+                                        }else {
+                                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile,SubscriptionsFragmentOther.newInstance(fragment,otherUserNick,userInformation,bundle),userInformation,bundle),
+                                                    getActivity());
+                                        }
+                                    }
+                                };
+                        subscriptionsAdapterOther.setClickListener(clickListener);
+                    }
+                }else {
+                    putSubscriptionListInAdapter();
+                }
+            }else {
+                putSubscriptionListInAdapter();
+            }
+        }
+        initUserEnter();
+    }
+    public void putSubscriptionListInAdapter(){
         RecentMethods.getSubscriptionList(otherUserNick, firebaseModel, new Callbacks.getFriendsList() {
             @Override
             public void getFriendsList(ArrayList<Subscriber> friends) {
@@ -119,7 +168,6 @@ public class SubscriptionsFragmentOther extends Fragment {
                 }
             }
         });
-        initUserEnter();
     }
     public void initUserEnter() {
         searchUser.addTextChangedListener(new TextWatcher() {
@@ -137,7 +185,7 @@ public class SubscriptionsFragmentOther extends Fragment {
                     public void onComplete(@NonNull Task<DataSnapshot> task) {
                         if(task.isSuccessful()){
                             DataSnapshot snapshot= task.getResult();
-                            ArrayList<Subscriber> userFromBase = new ArrayList<>();
+                            userFromBase = new ArrayList<>();
                             for (DataSnapshot snap : snapshot.getChildren()) {
                                 Subscriber subscriber = new Subscriber();
                                 subscriber.setSub(snap.getValue(String.class));

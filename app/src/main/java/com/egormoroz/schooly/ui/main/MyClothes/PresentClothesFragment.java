@@ -111,27 +111,49 @@ public class PresentClothesFragment extends Fragment {
             }
         });
         firebaseModel.initAll();
-        RecentMethods.getSubscriptionList(nick, firebaseModel, new Callbacks.getFriendsList() {
-            @Override
-            public void getFriendsList(ArrayList<Subscriber> friends) {
-                if (friends.size()==0){
-                    emptySubscriptionList.setVisibility(View.VISIBLE);
-                }else {
-                    emptySubscriptionList.setVisibility(View.GONE);
-                    PresentClothesAdapter presentClothesAdapter = new PresentClothesAdapter(friends,clothes);
-                    peopleRecyclerView.setAdapter(presentClothesAdapter);
-                    PresentClothesAdapter.ItemClickListener itemClickListener = new PresentClothesAdapter.ItemClickListener() {
-                        @Override
-                        public void onItemClick(int alreadyHave, int position) {
-                            Subscriber user = presentClothesAdapter.getItem(position);
-                            userNameToProfile = user.getSub();
-                            showDialog(alreadyHave);
-                        }
-                    };
-                    presentClothesAdapter.setClickListener(itemClickListener);
+        if(userInformation.getSubscription()==null){
+            RecentMethods.getSubscriptionList(nick, firebaseModel, new Callbacks.getFriendsList() {
+                @Override
+                public void getFriendsList(ArrayList<Subscriber> friends) {
+                    if (friends.size()==0){
+                        emptySubscriptionList.setVisibility(View.VISIBLE);
+                        peopleRecyclerView.setVisibility(View.GONE);
+                    }else {
+                        emptySubscriptionList.setVisibility(View.GONE);
+                        PresentClothesAdapter presentClothesAdapter = new PresentClothesAdapter(friends,clothes);
+                        peopleRecyclerView.setAdapter(presentClothesAdapter);
+                        PresentClothesAdapter.ItemClickListener itemClickListener = new PresentClothesAdapter.ItemClickListener() {
+                            @Override
+                            public void onItemClick(int alreadyHave, int position) {
+                                Subscriber user = presentClothesAdapter.getItem(position);
+                                userNameToProfile = user.getSub();
+                                showDialog(alreadyHave);
+                            }
+                        };
+                        presentClothesAdapter.setClickListener(itemClickListener);
+                    }
                 }
+            });
+        }else {
+            if (userInformation.getSubscription().size()==0){
+                emptySubscriptionList.setVisibility(View.VISIBLE);
+                peopleRecyclerView.setVisibility(View.GONE);
+            }else {
+                emptySubscriptionList.setVisibility(View.GONE);
+                peopleRecyclerView.setVisibility(View.VISIBLE);
+                PresentClothesAdapter presentClothesAdapter = new PresentClothesAdapter(userInformation.getSubscription(),clothes);
+                peopleRecyclerView.setAdapter(presentClothesAdapter);
+                PresentClothesAdapter.ItemClickListener itemClickListener = new PresentClothesAdapter.ItemClickListener() {
+                    @Override
+                    public void onItemClick(int alreadyHave, int position) {
+                        Subscriber user = presentClothesAdapter.getItem(position);
+                        userNameToProfile = user.getSub();
+                        showDialog(alreadyHave);
+                    }
+                };
+                presentClothesAdapter.setClickListener(itemClickListener);
             }
-        });
+        }
         initUserEnter();
     }
 
@@ -167,17 +189,24 @@ public class PresentClothesFragment extends Fragment {
                                 }
 
                             }
-                            PresentClothesAdapter presentClothesAdapter=new PresentClothesAdapter(userFromBase,clothes);
-                            peopleRecyclerView.setAdapter(presentClothesAdapter);
-                            PresentClothesAdapter.ItemClickListener itemClickListener=new PresentClothesAdapter.ItemClickListener() {
-                                @Override
-                                public void onItemClick(int alreadyHave,int position) {
-                                    Subscriber user = presentClothesAdapter.getItem(position);
-                                    userNameToProfile=user.getSub();
-                                    showDialog(alreadyHave);
-                                }
-                            };
-                            presentClothesAdapter.setClickListener(itemClickListener);
+                            if(userFromBase.size()==0){
+                                emptySubscriptionList.setVisibility(View.VISIBLE);
+                                peopleRecyclerView.setVisibility(View.GONE);
+                            }else{
+                                emptySubscriptionList.setVisibility(View.GONE);
+                                peopleRecyclerView.setVisibility(View.VISIBLE);
+                                PresentClothesAdapter presentClothesAdapter=new PresentClothesAdapter(userFromBase,clothes);
+                                peopleRecyclerView.setAdapter(presentClothesAdapter);
+                                PresentClothesAdapter.ItemClickListener itemClickListener=new PresentClothesAdapter.ItemClickListener() {
+                                    @Override
+                                    public void onItemClick(int alreadyHave,int position) {
+                                        Subscriber user = presentClothesAdapter.getItem(position);
+                                        userNameToProfile=user.getSub();
+                                        showDialog(alreadyHave);
+                                    }
+                                };
+                                presentClothesAdapter.setClickListener(itemClickListener);
+                            }
                         }
                     }
                 });

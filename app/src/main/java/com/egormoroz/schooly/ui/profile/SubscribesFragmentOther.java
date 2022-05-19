@@ -44,6 +44,7 @@ public class SubscribesFragmentOther extends Fragment {
     UserInformation userInformation;
     Fragment fragment;
     Bundle bundle;
+    ArrayList<Subscriber> userFromBase;
 
     public SubscribesFragmentOther(Fragment fragment,String otherUserNick,UserInformation userInformation,Bundle bundle) {
         this.fragment=fragment;
@@ -56,6 +57,13 @@ public class SubscribesFragmentOther extends Fragment {
             ,UserInformation userInformation,Bundle bundle) {
         return new SubscribesFragmentOther(fragment,otherUserNick,userInformation,bundle);
 
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        bundle.putString("EDIT_SUBSCRIBERS_OTHER_TAG",searchUser.getText().toString().trim());
+        bundle.putSerializable("SEARCH_SUBSCRIBERS_OTHER_LIST", userFromBase);
     }
 
     @Override
@@ -94,6 +102,46 @@ public class SubscribesFragmentOther extends Fragment {
 
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
 
+        if(bundle!=null){
+            if(bundle.getString("EDIT_SUBSCRIBERS_OTHER_TAG")!=null){
+                String textEdit=bundle.getString("EDIT_SUBSCRIBERS_OTHER_TAG");
+                if(textEdit.length()>0){
+                    searchUser.setText(textEdit);
+                    userFromBase= (ArrayList<Subscriber>) bundle.getSerializable("SEARCH_SUBSCRIBERS_OTHER_LIST");
+                    if (userFromBase.size() == 0) {
+                        emptyList.setVisibility(View.VISIBLE);
+                        recyclerView.setVisibility(View.GONE);
+                    } else {
+                        emptyList.setVisibility(View.GONE);
+                        recyclerView.setVisibility(View.VISIBLE);
+                        SubscribersAdapterOther subscribersAdapterOther = new SubscribersAdapterOther(userFromBase);
+                        recyclerView.setAdapter(subscribersAdapterOther);
+                        SubscribersAdapterOther.ItemClickListener clickListener =
+                                new SubscribersAdapterOther.ItemClickListener() {
+                                    @Override
+                                    public void onItemClick(View view, int position) {
+                                        Subscriber subscriber = subscribersAdapterOther.getItem(position);
+                                        userNameToProfile = subscriber.getSub();
+                                        if(userNameToProfile.equals(nick)){
+                                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback",nick,SubscribesFragmentOther.newInstance(fragment,otherUserNick,userInformation,bundle),userInformation,bundle),getActivity());
+                                        }else {
+                                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile,SubscribesFragmentOther.newInstance(fragment,otherUserNick,userInformation,bundle),userInformation,bundle),
+                                                    getActivity());
+                                        }
+                                    }
+                                };
+                        subscribersAdapterOther.setClickListener(clickListener);
+                    }
+                }else {
+                    putSubscribersListInAdapter();
+                }
+            }else {
+                putSubscribersListInAdapter();
+            }
+        }
+        initUserEnter();
+    }
+    public void putSubscribersListInAdapter() {
         RecentMethods.getSubscribersList(otherUserNick, firebaseModel, new Callbacks.getSubscribersList() {
             @Override
             public void getSubscribersList(ArrayList<Subscriber> subscribers) {
@@ -123,7 +171,6 @@ public class SubscribesFragmentOther extends Fragment {
                 }
             }
         });
-        initUserEnter();
     }
 
     public void initUserEnter() {
@@ -142,7 +189,7 @@ public class SubscribesFragmentOther extends Fragment {
                     public void onComplete(@NonNull Task<DataSnapshot> task) {
                         if(task.isSuccessful()){
                             DataSnapshot snapshot= task.getResult();
-                            ArrayList<Subscriber> userFromBase = new ArrayList<>();
+                            userFromBase = new ArrayList<>();
                             for (DataSnapshot snap : snapshot.getChildren()) {
                                 Subscriber subscriber = new Subscriber();
                                 subscriber.setSub(snap.getValue(String.class));

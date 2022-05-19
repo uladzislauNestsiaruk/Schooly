@@ -362,17 +362,17 @@ public class ViewingClothesPopular extends Fragment {
                 if(type.equals("send")){
                     String messageText = messageEdit.getText().toString();
 
-                    String messageSenderRef = otherUserNick + "/Chats/" + nick + "/Messages";
-                    String messageReceiverRef = nick + "/Chats/" + otherUserNick+ "/Messages";
+                    String messageSenderRef = otherUserNick + "/Chats/" + userInformation.getNick() + "/Messages";
+                    String messageReceiverRef = userInformation.getNick()  + "/Chats/" + otherUserNick+ "/Messages";
                     otherUserNickString=otherUserNick;
 
-                    DatabaseReference userMessageKeyRef = firebaseModel.getUsersReference().child(nick).child("Chats").child(otherUserNick).child("Messages").push();
+                    DatabaseReference userMessageKeyRef = firebaseModel.getUsersReference().child(userInformation.getNick() ).child("Chats").child(otherUserNick).child("Messages").push();
                     String messagePushID = userMessageKeyRef.getKey();
 
                     Map<String, String> messageTextBody = new HashMap<>();
                     messageTextBody.put("message", messageText);
                     messageTextBody.put("type", "text");
-                    messageTextBody.put("from", nick);
+                    messageTextBody.put("from", userInformation.getNick() );
                     messageTextBody.put("to", otherUserNick);
                     messageTextBody.put("time", RecentMethods.getCurrentTime());
                     messageTextBody.put("messageID", messagePushID);
@@ -386,20 +386,28 @@ public class ViewingClothesPopular extends Fragment {
                 }
             }
         };
-
-
-        RecentMethods.getSubscriptionList(nick, firebaseModel, new Callbacks.getFriendsList() {
-            @Override
-            public void getFriendsList(ArrayList<Subscriber> friends) {
-                if (friends.size()==0){
-                    emptyList.setVisibility(View.VISIBLE);
-                    recyclerView.setVisibility(View.GONE);
-                }else {
-                    SendLookAdapter sendLookAdapter = new SendLookAdapter(friends,itemClickListenerSendClothes);
-                    recyclerView.setAdapter(sendLookAdapter);
+        if(userInformation.getSubscription()==null){
+            RecentMethods.getSubscriptionList(userInformation.getNick(), firebaseModel, new Callbacks.getFriendsList() {
+                @Override
+                public void getFriendsList(ArrayList<Subscriber> friends) {
+                    if (friends.size()==0){
+                        emptyList.setVisibility(View.VISIBLE);
+                        recyclerView.setVisibility(View.GONE);
+                    }else {
+                        SendLookAdapter sendLookAdapter = new SendLookAdapter(friends,itemClickListenerSendClothes);
+                        recyclerView.setAdapter(sendLookAdapter);
+                    }
                 }
+            });
+        }else {
+            if (userInformation.getSubscription().size()==0){
+                emptyList.setVisibility(View.VISIBLE);
+                recyclerView.setVisibility(View.GONE);
+            }else {
+                SendLookAdapter sendLookAdapter = new SendLookAdapter(userInformation.getSubscription(),itemClickListenerSendClothes);
+                recyclerView.setAdapter(sendLookAdapter);
             }
-        });
+        }
 
         initUserEnter();
 
@@ -416,7 +424,7 @@ public class ViewingClothesPopular extends Fragment {
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 userName = String.valueOf(editText.getText()).trim();
                 userName = userName.toLowerCase();
-                Query query = firebaseModel.getUsersReference().child(nick).child("subscription");
+                Query query = firebaseModel.getUsersReference().child(userInformation.getNick()).child("subscription");
                 query.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -437,8 +445,15 @@ public class ViewingClothesPopular extends Fragment {
                             }
 
                         }
-                        SendLookAdapter sendLookAdapter = new SendLookAdapter(userFromBase,itemClickListenerSendClothes);
-                        recyclerView.setAdapter(sendLookAdapter);
+                        if(userFromBase.size()==0){
+                            emptyList.setVisibility(View.VISIBLE);
+                            recyclerView.setVisibility(View.GONE);
+                        }else {
+                            emptyList.setVisibility(View.GONE);
+                            recyclerView.setVisibility(View.VISIBLE);
+                            SendLookAdapter sendLookAdapter = new SendLookAdapter(userFromBase,itemClickListenerSendClothes);
+                            recyclerView.setAdapter(sendLookAdapter);
+                        }
                     }
 
                     @Override
@@ -450,15 +465,9 @@ public class ViewingClothesPopular extends Fragment {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-                    @Override
-                    public void PassUserNick(String nick) {
-                    }
-                });
             }
         });
     }
-
     private void addLastMessage(String type, String Message){
         switch (type) {
             case "text":

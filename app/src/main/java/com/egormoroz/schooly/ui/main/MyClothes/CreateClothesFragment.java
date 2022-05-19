@@ -104,6 +104,16 @@ public class CreateClothesFragment extends Fragment {
     }
 
     @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        bundle.putString("EDIT_CLOTHES_NAME_TAG",editTextClothes.getText().toString().trim());
+        bundle.putString("EDIT_CLOTHES_PRICE_TAG", editClothesPrice.getText().toString().trim());
+        bundle.putString("EDIT_CLOTHES_DESCRIPTION_TAG", addDescriptionEdit.getText().toString().trim());
+        bundle.putString("MODEL_CLOTHES_REQUEST", modelApplication);
+        bundle.putString("IMAGE_CLOTHES_REQUEST", imageApplication);
+    }
+
+    @Override
     public void onViewCreated(@Nullable View view,@NonNull Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
         nick=userInformation.getNick();
@@ -196,6 +206,7 @@ public class CreateClothesFragment extends Fragment {
                 });
             }
         });
+        getCreateClothesBundle();
         firebaseModel.getUsersReference().child(nick)
                 .child("version").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
@@ -304,7 +315,7 @@ public class CreateClothesFragment extends Fragment {
                                     DataSnapshot snapshot= task.getResult();
                                     modelPhoto.setVisibility(View.VISIBLE);
                                     imageApplication=snapshot.getValue(String.class);
-                                    Picasso.get().load(snapshot.getValue(String.class)).into(modelPhoto);
+                                    Picasso.get().load(imageApplication).into(modelPhoto);
                                     noPhoto.setVisibility(View.GONE);
                                 }
                             }
@@ -352,6 +363,30 @@ public class CreateClothesFragment extends Fragment {
 
                     }
                 });
+            }
+        }
+    }
+
+    public void getCreateClothesBundle(){
+        if(bundle!=null){
+            if(bundle.getString("EDIT_CLOTHES_NAME_TAG")!=null){
+                editTextClothes.setText(bundle.getString("EDIT_CLOTHES_NAME_TAG"));
+            }
+            if(bundle.getString("EDIT_CLOTHES_PRICE_TAG")!=null){
+                editClothesPrice.setText(bundle.getString("EDIT_CLOTHES_PRICE_TAG"));
+            }
+            if(bundle.getString("EDIT_CLOTHES_DESCRIPTION_TAG")!=null){
+                addDescriptionEdit.setText(bundle.getString("EDIT_CLOTHES_DESCRIPTION_TAG"));
+            }
+            if(bundle.getString("MODEL_CLOTHES_REQUEST")!=null){
+                modelScene.setVisibility(View.VISIBLE);
+                loadModels(Uri.parse(bundle.getString("MODEL_CLOTHES_REQUEST")), modelScene, CreateClothesFragment.this, 0.25f);
+                noModel.setVisibility(View.GONE);
+            }
+            if(bundle.getString("IMAGE_CLOTHES_REQUEST")!=null){
+                modelPhoto.setVisibility(View.VISIBLE);
+                Picasso.get().load(bundle.getString("IMAGE_CLOTHES_REQUEST")).into(modelPhoto);
+                noPhoto.setVisibility(View.GONE);
             }
         }
     }

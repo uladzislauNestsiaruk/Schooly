@@ -226,6 +226,8 @@ public class ShopFragment extends Fragment {
         FragmentManager fm = getChildFragmentManager();
         fragmentAdapter = new FragmentAdapter(fm, getLifecycle());
         viewPager.setAdapter(fragmentAdapter);
+        fragmentAdapter.createFragment(tabLayoutPosition);
+        checkTab=1;
         Log.d("###", "pos5 "+tabLayoutPosition);
 
         tabLayout.addTab(tabLayout.newTab().setText("Главная"));

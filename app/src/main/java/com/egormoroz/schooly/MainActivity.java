@@ -130,38 +130,38 @@ public class MainActivity extends AppCompatActivity {
                                                         userInformation.setTodayMining(snapshot.child("todayMining").getValue(Double.class));
                                                         getMyClothes(nick);
                                                         final DatabaseReference connectedRef = database.getReference(".info/connected");
-                                                        connectedRef.addValueEventListener(new ValueEventListener() {
-                                                            @Override
-                                                            public void onDataChange(DataSnapshot snapshot) {
-                                                                boolean connected = snapshot.getValue(Boolean.class);
-                                                                if (connected) {
-                                                                    firebaseModel.getUsersReference().child(nick).child("Status")
-                                                                            .setValue("Online").addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                                        @Override
-                                                                        public void onComplete(@NonNull Task<Void> task) {
-                                                                            if(task.isSuccessful()){
-                                                                                //WorkManager.getInstance(getApplicationContext()).cancelWorkById(miningWorkRequest.getId());
-                                                                            }
-                                                                        }
-                                                                    });
-
-                                                                    DatabaseReference presenceRef = firebaseModel.getReference().child("users").child(nick).child("Status");
-                                                                    presenceRef.onDisconnect().setValue("Offline").addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                                        @Override
-                                                                        public void onComplete(@NonNull Task<Void> task) {
-                                                                            if(task.isSuccessful()){
-                                                                                // WorkManager.getInstance(getApplicationContext()).cancelWorkById(miningWorkRequest.getId());
-                                                                            }
-                                                                        }
-                                                                    });
-                                                                }else{
-                                                                }
-                                                            }
-
-                                                            @Override
-                                                            public void onCancelled(DatabaseError error) {
-                                                            }
-                                                        });
+//                                                        connectedRef.addValueEventListener(new ValueEventListener() {
+//                                                            @Override
+//                                                            public void onDataChange(DataSnapshot snapshot) {
+//                                                                boolean connected = snapshot.getValue(Boolean.class);
+//                                                                if (connected) {
+//                                                                    firebaseModel.getUsersReference().child(nick).child("Status")
+//                                                                            .setValue("Online").addOnCompleteListener(new OnCompleteListener<Void>() {
+//                                                                        @Override
+//                                                                        public void onComplete(@NonNull Task<Void> task) {
+//                                                                            if(task.isSuccessful()){
+//                                                                                //WorkManager.getInstance(getApplicationContext()).cancelWorkById(miningWorkRequest.getId());
+//                                                                            }
+//                                                                        }
+//                                                                    });
+//
+//                                                                    DatabaseReference presenceRef = firebaseModel.getReference().child("users").child(nick).child("Status");
+//                                                                    presenceRef.onDisconnect().setValue("Offline").addOnCompleteListener(new OnCompleteListener<Void>() {
+//                                                                        @Override
+//                                                                        public void onComplete(@NonNull Task<Void> task) {
+//                                                                            if(task.isSuccessful()){
+//                                                                                // WorkManager.getInstance(getApplicationContext()).cancelWorkById(miningWorkRequest.getId());
+//                                                                            }
+//                                                                        }
+//                                                                    });
+//                                                                }else{
+//                                                                }
+//                                                            }
+//
+//                                                            @Override
+//                                                            public void onCancelled(DatabaseError error) {
+//                                                            }
+//                                                        });
                                                         getLists();
                                                     }
                                                 }
