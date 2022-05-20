@@ -119,36 +119,22 @@ public class EditingFragment extends Fragment {
     }
 
     public void changeBio(){
-        bioEdit.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                agree.setVisibility(View.VISIBLE);
-                agree.setOnClickListener(new View.OnClickListener() {
-                    String bioText= String.valueOf(bioEdit.getText().toString().trim());
-                    public void onClick(View v) {
-                        firebaseModel.getUsersReference().child(nickname).child("bio").setValue(bioText);
-                        Toast.makeText(getContext(), "Изменения сохранены", Toast.LENGTH_SHORT).show();
-                        firebaseModel.getUsersReference().child(nick).child("bio")
-                                .get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                                if(task.isSuccessful()){
-                                    DataSnapshot snapshot=task.getResult();
-                                    userInformation.setBio(snapshot.getValue(String.class));
-                                }
-                            }
-                        });
+        agree.setVisibility(View.VISIBLE);
+        agree.setOnClickListener(new View.OnClickListener() {
+            String bioText= String.valueOf(bioEdit.getText().toString().trim());
+            public void onClick(View v) {
+                firebaseModel.getUsersReference().child(nickname).child("bio").setValue(bioText);
+                Toast.makeText(getContext(), "Изменения сохранены", Toast.LENGTH_SHORT).show();
+                firebaseModel.getUsersReference().child(nick).child("bio")
+                        .get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DataSnapshot> task) {
+                        if(task.isSuccessful()){
+                            DataSnapshot snapshot=task.getResult();
+                            userInformation.setBio(snapshot.getValue(String.class));
+                        }
                     }
                 });
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
             }
         });
     }
