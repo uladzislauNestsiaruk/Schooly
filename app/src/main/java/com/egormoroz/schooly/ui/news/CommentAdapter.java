@@ -43,11 +43,11 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
     @Override
     public void onBindViewHolder(@NonNull CommentAdapter.ViewHolder holder, int position) {
         Comment comment=commentAdapterList.get(position);
-        holder.likesCount.setText(String.valueOf(comment.getLikes_count()));
+        holder.likesCount.setText(String.valueOf(558));
         holder.nick.setText(comment.getNick());
         Picasso.get().load(comment.getImage()).into(holder.image);
         holder.comment.setText(comment.getText());
-        holder.postTime.setText(comment.getPostTime());
+        holder.postTime.setText("12:54");
     }
 
 

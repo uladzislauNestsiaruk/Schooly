@@ -22,7 +22,27 @@
         android:layout_toRightOf="@+id/image"
         android:fontFamily="@font/montserrat_extrabold"
         android:textColor="@color/app_grey"
-        android:textSize="14dp" />
+        android:textSize="15dp" />
+
+    <View
+        android:id="@+id/roundView"
+        android:layout_width="6dp"
+        android:layout_height="6dp"
+        android:layout_marginTop="16.5dp"
+        android:layout_toRightOf="@+id/nick"
+        android:layout_marginStart="5dp"
+        android:background="@drawable/corners10grey" />
+
+    <TextView
+        android:id="@+id/postTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="6dp"
+        android:layout_marginTop="8.7dp"
+        android:layout_toRightOf="@+id/roundView"
+        android:fontFamily="@font/montserrat_bold"
+        android:textColor="@color/app_grey"
+        android:textSize="13sp" />
 
     <TextView
         android:id="@+id/comment"
@@ -34,34 +54,22 @@
         android:layout_marginEnd="18dp"
         android:layout_toLeftOf="@+id/relativeLike"
         android:layout_toRightOf="@+id/image"
+        android:autoLink="all"
         android:fontFamily="@font/montserrat_bold"
         android:textColor="@color/app_color"
-        android:textSize="16dp"
-        android:autoLink="all"/>
-
-    <TextView
-        android:id="@+id/postTime"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/comment"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="5dp"
-        android:layout_toRightOf="@+id/image"
-        android:fontFamily="@font/montserrat_bold"
-        android:textColor="@color/app_grey"
-        android:textSize="13dp" />
+        android:textSize="16dp" />
 
     <TextView
         android:id="@+id/answer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/comment"
-        android:layout_marginStart="12dp"
+        android:layout_marginStart="4dp"
         android:layout_marginTop="4dp"
-        android:layout_toRightOf="@+id/postTime"
         android:fontFamily="@font/montserrat_extrabold"
         android:text="@string/answer"
         android:textColor="@color/app_grey"
+        android:layout_toRightOf="@+id/image"
         android:textSize="14dp" />
 
     <RelativeLayout
@@ -76,7 +84,8 @@
             android:id="@+id/like"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_heart18dp" />
+            android:src="@drawable/ic_heart18dp"
+            android:layout_centerHorizontal="true"/>
 
         <TextView
             android:id="@+id/likesCount"
@@ -85,7 +94,7 @@
             android:layout_centerHorizontal="true"
             android:layout_below="@+id/like"
             android:textSize="12sp"
-            android:fontFamily="@font/montserrat_extrabold"
+            android:fontFamily="@font/montserrat_bold"
             android:textColor="@color/app_grey" />
 
     </RelativeLayout>

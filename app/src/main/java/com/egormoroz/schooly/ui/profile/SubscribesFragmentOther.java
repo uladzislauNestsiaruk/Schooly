@@ -62,8 +62,8 @@ public class SubscribesFragmentOther extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        bundle.putString("EDIT_SUBSCRIBERS_OTHER_TAG",searchUser.getText().toString().trim());
-        bundle.putSerializable("SEARCH_SUBSCRIBERS_OTHER_LIST", userFromBase);
+        bundle.putString(otherUserNick+"EDIT_SUBSCRIBERS_OTHER_TAG",searchUser.getText().toString().trim());
+        bundle.putSerializable(otherUserNick+"SEARCH_SUBSCRIBERS_OTHER_LIST", userFromBase);
     }
 
     @Override
@@ -103,11 +103,11 @@ public class SubscribesFragmentOther extends Fragment {
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
 
         if(bundle!=null){
-            if(bundle.getString("EDIT_SUBSCRIBERS_OTHER_TAG")!=null){
-                String textEdit=bundle.getString("EDIT_SUBSCRIBERS_OTHER_TAG");
+            if(bundle.getString(otherUserNick+"EDIT_SUBSCRIBERS_OTHER_TAG")!=null){
+                String textEdit=bundle.getString(otherUserNick+"EDIT_SUBSCRIBERS_OTHER_TAG");
                 if(textEdit.length()>0){
                     searchUser.setText(textEdit);
-                    userFromBase= (ArrayList<Subscriber>) bundle.getSerializable("SEARCH_SUBSCRIBERS_OTHER_LIST");
+                    userFromBase= (ArrayList<Subscriber>) bundle.getSerializable(otherUserNick+"SEARCH_SUBSCRIBERS_OTHER_LIST");
                     if (userFromBase.size() == 0) {
                         emptyList.setVisibility(View.VISIBLE);
                         recyclerView.setVisibility(View.GONE);
@@ -188,6 +188,7 @@ public class SubscribesFragmentOther extends Fragment {
                     @Override
                     public void onComplete(@NonNull Task<DataSnapshot> task) {
                         if(task.isSuccessful()){
+                            Log.d("####", "DDD");
                             DataSnapshot snapshot= task.getResult();
                             userFromBase = new ArrayList<>();
                             for (DataSnapshot snap : snapshot.getChildren()) {

@@ -39,9 +39,11 @@ public class ClothesFragmentProfileOther extends Fragment {
     FirebaseModel firebaseModel=new FirebaseModel();
     String otherUserNick,nick;
     ClothesAdapterOther.ItemClickListener itemClickListener;
+    UserInformation info;
     Fragment fragment;
     UserInformation userInformation;
     Bundle bundle;
+    ArrayList<Clothes> clothesFromBase;
 
     public ClothesFragmentProfileOther(String otherUserNick,Fragment fragment,UserInformation userInformation,Bundle bundle) {
         this.otherUserNick = otherUserNick;
@@ -85,43 +87,67 @@ public class ClothesFragmentProfileOther extends Fragment {
                 RecentMethods.setCurrentFragment(ClothesViewingProfileOther.newInstance(ProfileFragment.newInstance("other", otherUserNick, fragment,userInformation,bundle),userInformation,bundle), getActivity());
             }
         };
-        firebaseModel.getUsersReference().child(otherUserNick)
-                .child("myClothes").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if (task.isSuccessful()){
-                    DataSnapshot snapshot= task.getResult();
-                    ArrayList<Clothes> clothesFromBase=new ArrayList<>();
-                    for (DataSnapshot snap : snapshot.getChildren()) {
-                        Clothes clothes = new Clothes();
-                        clothes.setClothesImage(snap.child("clothesImage").getValue(String.class));
-                        clothes.setClothesPrice(snap.child("clothesPrice").getValue(Long.class));
-                        clothes.setPurchaseNumber(snap.child("purchaseNumber").getValue(Long.class));
-                        clothes.setClothesType(snap.child("clothesType").getValue(String.class));
-                        clothes.setClothesTitle(snap.child("clothesTitle").getValue(String.class));
-                        clothes.setCreator(snap.child("creator").getValue(String.class));
-                        clothes.setCurrencyType(snap.child("currencyType").getValue(String.class));
-                        clothes.setDescription(snap.child("description").getValue(String.class));
-                        clothes.setPurchaseToday(snap.child("purchaseToday").getValue(Long.class));
-                        clothes.setBodyType(snap.child("bodyType").getValue(String.class));
-                        clothes.setModel(snap.child("model").getValue(String.class));
-                        clothes.setUid(snap.child("uid").getValue(String.class));
-                        clothesFromBase.add(clothes);
-                    }
-                    if (clothesFromBase.size()==0){
-                        noLooksOther.setVisibility(View.VISIBLE);
-                        noLooksOther.setText(otherUserNick+" не создавал свою одежду :(");
-                        recyclerOther.setVisibility(View.GONE);
-                    }else {
-                        recyclerOther.setVisibility(View.VISIBLE);
-                        Collections.reverse(clothesFromBase);
-                        ClothesAdapterOther clothesAdapter=new ClothesAdapterOther(clothesFromBase,itemClickListener);
-                        GridLayoutManager gridLayoutManager=new GridLayoutManager(getContext(), 2);
-                        recyclerOther.setLayoutManager(gridLayoutManager);
-                        recyclerOther.setAdapter(clothesAdapter);
-                    }
-                }
-            }
-        });
+        setClothesInAdapter();
     }
+
+    public void setClothesInAdapter(){
+        if(bundle!=null){
+            if(bundle.getSerializable(otherUserNick+"CLOTHES_OTHER_BUNDLE")!=null){
+                clothesFromBase= (ArrayList<Clothes>) bundle.getSerializable(otherUserNick+"CLOTHES_OTHER_BUNDLE");
+                if (clothesFromBase.size()==0){
+                    noLooksOther.setVisibility(View.VISIBLE);
+                    noLooksOther.setText(otherUserNick+" не создавал свою одежду :(");
+                    recyclerOther.setVisibility(View.GONE);
+                }else {
+                    recyclerOther.setVisibility(View.VISIBLE);
+                    Collections.reverse(clothesFromBase);
+                    ClothesAdapterOther clothesAdapter=new ClothesAdapterOther(clothesFromBase,itemClickListener);
+                    GridLayoutManager gridLayoutManager=new GridLayoutManager(getContext(), 2);
+                    recyclerOther.setLayoutManager(gridLayoutManager);
+                    recyclerOther.setAdapter(clothesAdapter);
+                }
+            }else{
+                firebaseModel.getUsersReference().child(otherUserNick)
+                        .child("myClothes").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DataSnapshot> task) {
+                        if (task.isSuccessful()){
+                            DataSnapshot snapshot= task.getResult();
+                            clothesFromBase=new ArrayList<>();
+                            for (DataSnapshot snap : snapshot.getChildren()) {
+                                Clothes clothes = new Clothes();
+                                clothes.setClothesImage(snap.child("clothesImage").getValue(String.class));
+                                clothes.setClothesPrice(snap.child("clothesPrice").getValue(Long.class));
+                                clothes.setPurchaseNumber(snap.child("purchaseNumber").getValue(Long.class));
+                                clothes.setClothesType(snap.child("clothesType").getValue(String.class));
+                                clothes.setClothesTitle(snap.child("clothesTitle").getValue(String.class));
+                                clothes.setCreator(snap.child("creator").getValue(String.class));
+                                clothes.setCurrencyType(snap.child("currencyType").getValue(String.class));
+                                clothes.setDescription(snap.child("description").getValue(String.class));
+                                clothes.setPurchaseToday(snap.child("purchaseToday").getValue(Long.class));
+                                clothes.setBodyType(snap.child("bodyType").getValue(String.class));
+                                clothes.setModel(snap.child("model").getValue(String.class));
+                                clothes.setUid(snap.child("uid").getValue(String.class));
+                                clothesFromBase.add(clothes);
+                            }
+                            bundle.putSerializable(otherUserNick+"CLOTHES_OTHER_BUNDLE",clothesFromBase);
+                            if (clothesFromBase.size()==0){
+                                noLooksOther.setVisibility(View.VISIBLE);
+                                noLooksOther.setText(otherUserNick+" не создавал свою одежду :(");
+                                recyclerOther.setVisibility(View.GONE);
+                            }else {
+                                recyclerOther.setVisibility(View.VISIBLE);
+                                Collections.reverse(clothesFromBase);
+                                ClothesAdapterOther clothesAdapter=new ClothesAdapterOther(clothesFromBase,itemClickListener);
+                                GridLayoutManager gridLayoutManager=new GridLayoutManager(getContext(), 2);
+                                recyclerOther.setLayoutManager(gridLayoutManager);
+                                recyclerOther.setAdapter(clothesAdapter);
+                            }
+                        }
+                    }
+                });
+            }
+        }
+    }
+
 }

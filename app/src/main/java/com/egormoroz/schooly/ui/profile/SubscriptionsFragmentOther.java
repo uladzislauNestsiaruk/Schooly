@@ -60,8 +60,8 @@ public class SubscriptionsFragmentOther extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        bundle.putString("EDIT_SUBSCRIPTIONS_OTHER_TAG",searchUser.getText().toString().trim());
-        bundle.putSerializable("SEARCH_SUBSCRIPTIONS_OTHER_LIST", userFromBase);
+        bundle.putString(otherUserNick+"EDIT_SUBSCRIPTIONS_OTHER_TAG",searchUser.getText().toString().trim());
+        bundle.putSerializable(otherUserNick+"SEARCH_SUBSCRIPTIONS_OTHER_LIST", userFromBase);
     }
 
     @Override
@@ -100,11 +100,11 @@ public class SubscriptionsFragmentOther extends Fragment {
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
 
         if(bundle!=null){
-            if(bundle.getString("EDIT_SUBSCRIPTIONS_OTHER_TAG")!=null){
-                String textEdit=bundle.getString("EDIT_SUBSCRIPTIONS_OTHER_TAG").trim();
+            if(bundle.getString(otherUserNick+"EDIT_SUBSCRIPTIONS_OTHER_TAG")!=null){
+                String textEdit=bundle.getString(otherUserNick+"EDIT_SUBSCRIPTIONS_OTHER_TAG").trim();
                 if(textEdit.length()>0){
                     searchUser.setText(textEdit);
-                    userFromBase= (ArrayList<Subscriber>) bundle.getSerializable("SEARCH_SUBSCRIPTIONS_OTHER_LIST");
+                    userFromBase= (ArrayList<Subscriber>) bundle.getSerializable(otherUserNick+"SEARCH_SUBSCRIPTIONS_OTHER_LIST");
                     if (userFromBase.size()==0){
                         emptyList.setVisibility(View.VISIBLE);
                         recyclerView.setVisibility(View.GONE);

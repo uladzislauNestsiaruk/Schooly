@@ -31,6 +31,7 @@ public class LooksFragmentProfileOther extends Fragment {
   TextView noLooksOther;
   FirebaseModel firebaseModel=new FirebaseModel();
   String otherUserNick;
+  ArrayList<NewsItem> look;
   Fragment fragment;
   UserInformation userInformation;
   Bundle bundle;
@@ -74,15 +75,14 @@ public class LooksFragmentProfileOther extends Fragment {
   }
 
   public void checkLooksOther(){
-    RecentMethods.getLooksList(otherUserNick, firebaseModel, new Callbacks.getLooksList() {
-      @Override
-      public void getLooksList(ArrayList<NewsItem> look) {
+    if(bundle!=null){
+      if(bundle.getSerializable(otherUserNick+"LOOKS_OTHER_BUNDLE")!=null){
+        look= (ArrayList<NewsItem>) bundle.getSerializable(otherUserNick+"LOOKS_OTHER_BUNDLE");
         if (look.size()==0){
           noLooksOther.setVisibility(View.VISIBLE);
           noLooksOther.setText("У "+otherUserNick+" нет образов :(");
           looksRecyclerOther.setVisibility(View.GONE);
         }else{
-          Collections.reverse(look);
           LooksAdapter looksAdapter=new LooksAdapter(look,LooksFragmentProfileOther.newInstance(otherUserNick,fragment,userInformation,bundle),looksRecyclerOther);
           GridLayoutManager gridLayoutManager=new GridLayoutManager(getContext(), 3);
           looksRecyclerOther.setLayoutManager(gridLayoutManager);
@@ -96,7 +96,33 @@ public class LooksFragmentProfileOther extends Fragment {
           };
           looksAdapter.setClickListener(itemClickListener);
         }
+      }else {
+        RecentMethods.getLooksList(otherUserNick, firebaseModel, new Callbacks.getLooksList() {
+          @Override
+          public void getLooksList(ArrayList<NewsItem> look) {
+            bundle.putSerializable(otherUserNick+"LOOKS_OTHER_BUNDLE",look);
+            if (look.size()==0){
+              noLooksOther.setVisibility(View.VISIBLE);
+              noLooksOther.setText("У "+otherUserNick+" нет образов :(");
+              looksRecyclerOther.setVisibility(View.GONE);
+            }else{
+              Collections.reverse(look);
+              LooksAdapter looksAdapter=new LooksAdapter(look,LooksFragmentProfileOther.newInstance(otherUserNick,fragment,userInformation,bundle),looksRecyclerOther);
+              GridLayoutManager gridLayoutManager=new GridLayoutManager(getContext(), 3);
+              looksRecyclerOther.setLayoutManager(gridLayoutManager);
+              looksRecyclerOther.setAdapter(looksAdapter);
+              LooksAdapter.ItemClickListener itemClickListener=new LooksAdapter.ItemClickListener() {
+                @Override
+                public void onItemClick(NewsItem newsItem) {
+                  RecentMethods.setCurrentFragment(ViewingLookFragment.newInstance(ProfileFragment.
+                          newInstance("other", otherUserNick, fragment,userInformation,bundle),userInformation,bundle), getActivity());
+                }
+              };
+              looksAdapter.setClickListener(itemClickListener);
+            }
+          }
+        });
       }
-    });
+    }
   }
 }
