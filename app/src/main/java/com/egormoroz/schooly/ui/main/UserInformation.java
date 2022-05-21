@@ -1,5 +1,8 @@
 package com.egormoroz.schooly.ui.main;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.egormoroz.schooly.Nontification;
 import com.egormoroz.schooly.Subscriber;
 import com.egormoroz.schooly.ui.coins.Transfer;
@@ -9,10 +12,11 @@ import com.egormoroz.schooly.ui.news.NewsItem;
 import com.egormoroz.schooly.ui.people.UserPeopleAdapter;
 import com.google.firebase.database.IgnoreExtraProperties;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 @IgnoreExtraProperties
-public class UserInformation {
+public class UserInformation implements Serializable {
     private String Nick;
     private String chatsNontsType;
     private String groupChatsNontsType;
@@ -45,7 +49,7 @@ public class UserInformation {
     private String accountType;
     private String version;
     private long miningPremium;
-    public UserInformation(){
+    public UserInformation() {
     }
 
     public String getNick() {
@@ -327,5 +331,4 @@ public class UserInformation {
         this.savedLooks=savedLooks;
         this.blackList=blackList;
     }
-
 }
