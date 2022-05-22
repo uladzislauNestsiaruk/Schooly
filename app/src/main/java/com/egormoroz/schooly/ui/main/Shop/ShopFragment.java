@@ -80,6 +80,7 @@ public class ShopFragment extends Fragment {
     EditText searchClothes;
     static String editGetText;
     RecyclerView searchRecycler;
+    ArrayList<Clothes> clothesFromBase,allClothes;
     TabLayout tabLayout;
     PopularClothesAdapter.ItemClickListener itemClickListenerPopular;
     LinearLayout coinsLinear;
@@ -277,53 +278,88 @@ public class ShopFragment extends Fragment {
     }
 
     public void loadSearchClothes(String editTextText){
-        firebaseModel.getReference("AppData/Clothes/AllClothes").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if(task.isSuccessful()){
-                    DataSnapshot snapshot=task.getResult();
-                    ArrayList<Clothes> clothesFromBase=new ArrayList<>();
-                    for (DataSnapshot snap : snapshot.getChildren()) {
-                        Clothes clothes = new Clothes();
-                        clothes.setClothesImage(snap.child("clothesImage").getValue(String.class));
-                        clothes.setClothesPrice(snap.child("clothesPrice").getValue(Long.class));
-                        clothes.setPurchaseNumber(snap.child("purchaseNumber").getValue(Long.class));
-                        clothes.setClothesType(snap.child("clothesType").getValue(String.class));
-                        clothes.setClothesTitle(snap.child("clothesTitle").getValue(String.class));
-                        clothes.setCreator(snap.child("creator").getValue(String.class));
-                        clothes.setCurrencyType(snap.child("currencyType").getValue(String.class));
-                        clothes.setDescription(snap.child("description").getValue(String.class));
-                        clothes.setPurchaseToday(snap.child("purchaseToday").getValue(Long.class));
-                        clothes.setModel(snap.child("model").getValue(String.class));
-                        clothes.setBodyType(snap.child("bodyType").getValue(String.class));
-                        clothes.setUid(snap.child("uid").getValue(String.class));
-                        clothes.setExclusive(snap.child("exclusive").getValue(String.class));
-                        String clothesTitle=clothes.getClothesTitle();
-                        String title=clothesTitle;
-                        int valueLetters=editTextText.length();
-                        title=title.toLowerCase();
-                        if(title.length()<valueLetters){
-                            if(title.equals(editTextText))
-                                clothesFromBase.add(clothes);
-                        }else{
-                            title=title.substring(0, valueLetters);
-                            if(title.equals(editTextText))
-                                clothesFromBase.add(clothes);
+        if(bundle!=null){
+            if(bundle.getSerializable("ALL_CLOTHES")==null){
+                firebaseModel.getReference("AppData/Clothes/AllClothes").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DataSnapshot> task) {
+                        if(task.isSuccessful()){
+                            DataSnapshot snapshot=task.getResult();
+                            clothesFromBase=new ArrayList<>();
+                            allClothes=new ArrayList<>();
+                            for (DataSnapshot snap : snapshot.getChildren()) {
+                                Clothes clothes = new Clothes();
+                                clothes.setClothesImage(snap.child("clothesImage").getValue(String.class));
+                                clothes.setClothesPrice(snap.child("clothesPrice").getValue(Long.class));
+                                clothes.setPurchaseNumber(snap.child("purchaseNumber").getValue(Long.class));
+                                clothes.setClothesType(snap.child("clothesType").getValue(String.class));
+                                clothes.setClothesTitle(snap.child("clothesTitle").getValue(String.class));
+                                clothes.setCreator(snap.child("creator").getValue(String.class));
+                                clothes.setCurrencyType(snap.child("currencyType").getValue(String.class));
+                                clothes.setDescription(snap.child("description").getValue(String.class));
+                                clothes.setPurchaseToday(snap.child("purchaseToday").getValue(Long.class));
+                                clothes.setModel(snap.child("model").getValue(String.class));
+                                clothes.setBodyType(snap.child("bodyType").getValue(String.class));
+                                clothes.setUid(snap.child("uid").getValue(String.class));
+                                clothes.setExclusive(snap.child("exclusive").getValue(String.class));
+                                allClothes.add(clothes);
+                                String clothesTitle=clothes.getClothesTitle();
+                                String title=clothesTitle;
+                                int valueLetters=editTextText.length();
+                                title=title.toLowerCase();
+                                if(title.length()<valueLetters){
+                                    if(title.equals(editTextText))
+                                        clothesFromBase.add(clothes);
+                                }else{
+                                    title=title.substring(0, valueLetters);
+                                    if(title.equals(editTextText))
+                                        clothesFromBase.add(clothes);
+                                }
+                            }
+                            bundle.putSerializable("ALL_CLOTHES", allClothes);
+                            if (clothesFromBase.size()==0){
+                                searchRecycler.setVisibility(View.GONE);
+                                notFound.setVisibility(View.VISIBLE);
+                            }else {
+                                searchRecycler.setVisibility(View.VISIBLE);
+                                PopularClothesAdapter popularClothesAdapter=new PopularClothesAdapter(clothesFromBase,itemClickListenerPopular);
+                                searchRecycler.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+                                searchRecycler.setAdapter(popularClothesAdapter);
+                                notFound.setVisibility(View.GONE);
+                            }
                         }
                     }
-                    if (clothesFromBase.size()==0){
-                        searchRecycler.setVisibility(View.GONE);
-                        notFound.setVisibility(View.VISIBLE);
-                    }else {
-                        searchRecycler.setVisibility(View.VISIBLE);
-                        PopularClothesAdapter popularClothesAdapter=new PopularClothesAdapter(clothesFromBase,itemClickListenerPopular);
-                        searchRecycler.setLayoutManager(new GridLayoutManager(getActivity(), 2));
-                        searchRecycler.setAdapter(popularClothesAdapter);
-                        notFound.setVisibility(View.GONE);
+                });
+            }else{
+                allClothes= (ArrayList<Clothes>) bundle.getSerializable("ALL_CLOTHES");
+                clothesFromBase=new ArrayList<>();
+                for (int i=0;i<allClothes.size();i++) {
+                    Clothes clothes = allClothes.get(i);
+                    String clothesTitle=clothes.getClothesTitle();
+                    String title=clothesTitle;
+                    int valueLetters=editTextText.length();
+                    title=title.toLowerCase();
+                    if(title.length()<valueLetters){
+                        if(title.equals(editTextText))
+                            clothesFromBase.add(clothes);
+                    }else{
+                        title=title.substring(0, valueLetters);
+                        if(title.equals(editTextText))
+                            clothesFromBase.add(clothes);
                     }
                 }
+                if (clothesFromBase.size()==0){
+                    searchRecycler.setVisibility(View.GONE);
+                    notFound.setVisibility(View.VISIBLE);
+                }else {
+                    searchRecycler.setVisibility(View.VISIBLE);
+                    PopularClothesAdapter popularClothesAdapter=new PopularClothesAdapter(clothesFromBase,itemClickListenerPopular);
+                    searchRecycler.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+                    searchRecycler.setAdapter(popularClothesAdapter);
+                    notFound.setVisibility(View.GONE);
+                }
             }
-        });
+        }
     }
 
 //    public void loadModelInBase(){

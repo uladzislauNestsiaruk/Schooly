@@ -299,7 +299,7 @@ public class UserInformation implements Serializable {
                            String accountType, String chatsNontsType,
                            String groupChatsNontsType, String profileNontsType, ArrayList<Clothes> myClothes, String version,
                            ArrayList<NewsItem> looks,long miningPremium,ArrayList<Clothes> lookClothes,ArrayList<Clothes> clothes,ArrayList<Nontification> notifications
-    ,ArrayList<Transfer> transfers, ArrayList<NewsItem> savedLooks,ArrayList<Subscriber> blackList) {
+            ,ArrayList<Transfer> transfers, ArrayList<NewsItem> savedLooks,ArrayList<Subscriber> blackList) {
         this.Nick = nick;
         this.uid = uid;
         this.phone = phone;

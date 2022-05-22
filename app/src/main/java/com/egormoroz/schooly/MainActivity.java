@@ -181,10 +181,6 @@ public class MainActivity extends AppCompatActivity {
         AuthenticationBase = FirebaseAuth.getInstance();
     }
 
-    public interface GetTimeStamp{
-        public void GetTimeStamp(long timestamp);
-    }
-
     public void getMyClothes(String nick){
         RecentMethods.getMyClothes(nick, firebaseModel, new Callbacks.GetClothes() {
             @Override

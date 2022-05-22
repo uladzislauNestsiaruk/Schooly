@@ -207,56 +207,99 @@ public class SubscriptionsFragment extends Fragment {
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 userName = String.valueOf(searchUser.getText()).trim();
                 userName = userName.toLowerCase();
-                firebaseModel.getUsersReference().child(nick).child("subscription")
-                .get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DataSnapshot> task) {
-                        if(task.isSuccessful()){
-                            DataSnapshot snapshot= task.getResult();
-                            userFromBase = new ArrayList<>();
-                            for (DataSnapshot snap : snapshot.getChildren()) {
-                                Subscriber subscriber = new Subscriber();
-                                subscriber.setSub(snap.getValue(String.class));
-                                String nick = subscriber.getSub();
-                                int valueLetters = userName.length();
-                                nick = nick.toLowerCase();
-                                if (nick.length() < valueLetters) {
-                                    if (nick.equals(userName))
-                                        userFromBase.add(subscriber);
-                                } else {
-                                    nick = nick.substring(0, valueLetters);
-                                    if (nick.equals(userName))
-                                        userFromBase.add(subscriber);
-                                }
+                if(userInformation.getSubscription()==null){
+                    firebaseModel.getUsersReference().child(nick).child("subscription")
+                            .get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DataSnapshot> task) {
+                            if(task.isSuccessful()){
+                                DataSnapshot snapshot= task.getResult();
+                                userFromBase = new ArrayList<>();
+                                for (DataSnapshot snap : snapshot.getChildren()) {
+                                    Subscriber subscriber = new Subscriber();
+                                    subscriber.setSub(snap.getValue(String.class));
+                                    String nick = subscriber.getSub();
+                                    int valueLetters = userName.length();
+                                    nick = nick.toLowerCase();
+                                    if (nick.length() < valueLetters) {
+                                        if (nick.equals(userName))
+                                            userFromBase.add(subscriber);
+                                    } else {
+                                        nick = nick.substring(0, valueLetters);
+                                        if (nick.equals(userName))
+                                            userFromBase.add(subscriber);
+                                    }
 
-                            }
-                            if (userFromBase.size()==0){
-                                emptyList.setVisibility(View.VISIBLE);
-                                recyclerView.setVisibility(View.GONE);
-                            }else {
-                                emptyList.setVisibility(View.GONE);
-                                recyclerView.setVisibility(View.VISIBLE);
-                                SubscriptionsAdapter subscriptionsAdapter = new SubscriptionsAdapter(userFromBase);
-                                recyclerView.setAdapter(subscriptionsAdapter);
-                                SubscriptionsAdapter.ItemClickListener clickListener =
-                                        new SubscriptionsAdapter.ItemClickListener() {
-                                            @Override
-                                            public void onItemClick(View view, int position) {
-                                                Subscriber user = subscriptionsAdapter.getItem(position);
-                                                userNameToProfile=user.getSub();
-                                                if(userNameToProfile.equals(nick)){
-                                                    RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback",nick,fragment,userInformation,bundle),getActivity());
-                                                }else {
-                                                    RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile,SubscriptionsFragment.newInstance(type,fragment,userInformation,bundle),userInformation,bundle),
-                                                            getActivity());
+                                }
+                                if (userFromBase.size()==0){
+                                    emptyList.setVisibility(View.VISIBLE);
+                                    recyclerView.setVisibility(View.GONE);
+                                }else {
+                                    emptyList.setVisibility(View.GONE);
+                                    recyclerView.setVisibility(View.VISIBLE);
+                                    SubscriptionsAdapter subscriptionsAdapter = new SubscriptionsAdapter(userFromBase);
+                                    recyclerView.setAdapter(subscriptionsAdapter);
+                                    SubscriptionsAdapter.ItemClickListener clickListener =
+                                            new SubscriptionsAdapter.ItemClickListener() {
+                                                @Override
+                                                public void onItemClick(View view, int position) {
+                                                    Subscriber user = subscriptionsAdapter.getItem(position);
+                                                    userNameToProfile=user.getSub();
+                                                    if(userNameToProfile.equals(nick)){
+                                                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback",nick,fragment,userInformation,bundle),getActivity());
+                                                    }else {
+                                                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile,SubscriptionsFragment.newInstance(type,fragment,userInformation,bundle),userInformation,bundle),
+                                                                getActivity());
+                                                    }
                                                 }
-                                            }
-                                        };
-                                subscriptionsAdapter.setClickListener(clickListener);
+                                            };
+                                    subscriptionsAdapter.setClickListener(clickListener);
+                                }
                             }
                         }
+                    });
+                }else {
+                    userFromBase=new ArrayList<>();
+                    for (int s=0;s<userInformation.getSubscription().size();s++) {
+                        Subscriber subscriber = userInformation.getSubscription().get(s);
+                        String nick = subscriber.getSub();
+                        int valueLetters = userName.length();
+                        nick = nick.toLowerCase();
+                        if (nick.length() < valueLetters) {
+                            if (nick.equals(userName))
+                                userFromBase.add(subscriber);
+                        } else {
+                            nick = nick.substring(0, valueLetters);
+                            if (nick.equals(userName))
+                                userFromBase.add(subscriber);
+                        }
+
                     }
-                });
+                    if (userFromBase.size()==0){
+                        emptyList.setVisibility(View.VISIBLE);
+                        recyclerView.setVisibility(View.GONE);
+                    }else {
+                        emptyList.setVisibility(View.GONE);
+                        recyclerView.setVisibility(View.VISIBLE);
+                        SubscriptionsAdapter subscriptionsAdapter = new SubscriptionsAdapter(userFromBase);
+                        recyclerView.setAdapter(subscriptionsAdapter);
+                        SubscriptionsAdapter.ItemClickListener clickListener =
+                                new SubscriptionsAdapter.ItemClickListener() {
+                                    @Override
+                                    public void onItemClick(View view, int position) {
+                                        Subscriber user = subscriptionsAdapter.getItem(position);
+                                        userNameToProfile=user.getSub();
+                                        if(userNameToProfile.equals(nick)){
+                                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback",nick,fragment,userInformation,bundle),getActivity());
+                                        }else {
+                                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile,SubscriptionsFragment.newInstance(type,fragment,userInformation,bundle),userInformation,bundle),
+                                                    getActivity());
+                                        }
+                                    }
+                                };
+                        subscriptionsAdapter.setClickListener(clickListener);
+                    }
+                }
             }
 
             @Override
