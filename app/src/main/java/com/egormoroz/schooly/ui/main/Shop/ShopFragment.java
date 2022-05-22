@@ -84,8 +84,7 @@ public class ShopFragment extends Fragment {
     TabLayout tabLayout;
     PopularClothesAdapter.ItemClickListener itemClickListenerPopular;
     LinearLayout coinsLinear;
-    Fragment fragment;
-    int tabLayoutPosition,checkTab=0;
+    int tabLayoutPosition;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -146,7 +145,6 @@ public class ShopFragment extends Fragment {
 
         if (bundle!=null){
             tabLayoutPosition=bundle.getInt("TAB_INT_SHOP");
-            Log.d("###", "pos1 "+tabLayoutPosition);
             if(bundle.getString("EDIT_SHOP_TAG")!=null){
                 String bundleEditText=bundle.getString("EDIT_SHOP_TAG").trim();
                 if(bundleEditText.length()!=0){
@@ -179,19 +177,12 @@ public class ShopFragment extends Fragment {
                     FragmentManager fm = getChildFragmentManager();
                     fragmentAdapter = new FragmentAdapter(fm, getLifecycle());
                     viewPager.setAdapter(fragmentAdapter);
-
-                    tabLayout.addTab(tabLayout.newTab().setText("Главная"));
-                    tabLayout.addTab(tabLayout.newTab().setText("Эксклюзивная"));
-                    tabLayout.addTab(tabLayout.newTab().setText("Обувь"));
-                    tabLayout.addTab(tabLayout.newTab().setText("Одежда"));
-                    tabLayout.addTab(tabLayout.newTab().setText("Головные уборы"));
-                    tabLayout.addTab(tabLayout.newTab().setText("Акскссуары"));
+                    viewPager.setCurrentItem(tabLayoutPosition, false);
 
                     tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
                         @Override
                         public void onTabSelected(TabLayout.Tab tab) {
                             tabLayoutPosition=tab.getPosition();
-                            Log.d("###", "pos2 "+tabLayoutPosition);
                             viewPager.setCurrentItem(tabLayoutPosition);
                         }
 
@@ -206,12 +197,11 @@ public class ShopFragment extends Fragment {
                         }
                     });
 
-
+                    tabLayout.selectTab(tabLayout.getTabAt(tabLayoutPosition));
                     viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
                         @Override
                         public void onPageSelected(int position) {
                             tabLayoutPosition=position;
-                            Log.d("###", "pos3 "+tabLayoutPosition);
                             tabLayout.selectTab(tabLayout.getTabAt(tabLayoutPosition));
                         }
                     });
@@ -227,9 +217,7 @@ public class ShopFragment extends Fragment {
         FragmentManager fm = getChildFragmentManager();
         fragmentAdapter = new FragmentAdapter(fm, getLifecycle());
         viewPager.setAdapter(fragmentAdapter);
-        fragmentAdapter.createFragment(tabLayoutPosition);
-        checkTab=1;
-        Log.d("###", "pos5 "+tabLayoutPosition);
+        viewPager.setCurrentItem(tabLayoutPosition, false);
 
         tabLayout.addTab(tabLayout.newTab().setText("Главная"));
         tabLayout.addTab(tabLayout.newTab().setText("Эксклюзивная"));
@@ -241,9 +229,7 @@ public class ShopFragment extends Fragment {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 tabLayoutPosition=tab.getPosition();
-                Log.d("###", "pos4 "+tab.getPosition());
                 viewPager.setCurrentItem(tab.getPosition());
-                Log.d("###", "pos6 "+tab.getPosition());
             }
 
             @Override
@@ -261,7 +247,6 @@ public class ShopFragment extends Fragment {
             @Override
             public void onPageSelected(int position) {
                 tabLayoutPosition=position;
-                Log.d("###", "pos7 "+tabLayoutPosition);
                 tabLayout.selectTab(tabLayout.getTabAt(position));
             }
         });
@@ -395,39 +380,21 @@ public class ShopFragment extends Fragment {
         @NonNull
         @Override
         public Fragment createFragment ( int position){
-            fragment=null;
-            Log.d("###", "possss "+tabLayoutPosition);
-            if(position==0){
-                position=tabLayoutPosition;
-                Log.d("###", "pos10 "+tabLayoutPosition);
-                Log.d("###", "pos101 "+position);
-                fragment= new PopularFragment(userInformation, bundle);
-                viewPager.setCurrentItem(tabLayoutPosition);
-            }else if(position==1){
-                position=tabLayoutPosition;
-                Log.d("###", "pos11 "+tabLayoutPosition);
-                Log.d("###", "pos102 "+position);
-                fragment= new ExclusiveFragment(version,userInformation,bundle);
-                viewPager.setCurrentItem(tabLayoutPosition);
-            } else if(position==2){
-                position=tabLayoutPosition;
-                Log.d("###", "pos12 "+tabLayoutPosition);
-                fragment= new ShoesFargment(userInformation,bundle);
-                viewPager.setCurrentItem(tabLayoutPosition);
-            }else if(position==3){
-                position=tabLayoutPosition;
-                fragment= new ClothesFragment(userInformation,bundle);
-            }else if(position==4){
-                position=tabLayoutPosition;
-                Log.d("###", "pos14 "+tabLayoutPosition);
-                Log.d("###", "pos104 "+position);
-                fragment= new HatsFragment(userInformation,bundle);
-            }else if(position==5){
-                position=tabLayoutPosition;
-                fragment= new AccessoriesFragment(userInformation,bundle);
+            switch (position){
+                case 0:
+                    return new PopularFragment(userInformation, bundle);
+                case 1:
+                    return new ExclusiveFragment(version,userInformation,bundle);
+                case 2:
+                    return new ShoesFargment(userInformation,bundle);
+                case 3:
+                    return new ClothesFragment(userInformation,bundle);
+                case 4:
+                    return new HatsFragment(userInformation,bundle);
+                case 5:
+                    return new AccessoriesFragment(userInformation,bundle);
             }
-            viewPager.setCurrentItem(tabLayoutPosition);
-            return fragment;
+            return null;
         }
 
 
@@ -435,6 +402,7 @@ public class ShopFragment extends Fragment {
         public int getItemCount() {
             return 6;
         }
+
     }
 
 

@@ -253,15 +253,6 @@ public class MiningFragment extends Fragment {
             strongminersrecyclerview.setAdapter(strongMinersAdapter);
             strongminersrecyclerview.addItemDecoration(new StrongMinersAdapter.SpaceItemDecoration());
         }
-        RecentMethods.StrongMinersFromBase(firebaseModel, new Callbacks.GetMinerFromBase() {
-            @Override
-            public void GetMinerFromBase(ArrayList<Miner> minersFromBase) {
-                listAdapterStrongMiner.addAll(minersFromBase);
-                StrongMinersAdapter strongMinersAdapter=new StrongMinersAdapter(listAdapterStrongMiner,itemClickListenerStrong);
-                strongminersrecyclerview.setAdapter(strongMinersAdapter);
-                strongminersrecyclerview.addItemDecoration(new StrongMinersAdapter.SpaceItemDecoration());
-            }
-        });
     }
 
 

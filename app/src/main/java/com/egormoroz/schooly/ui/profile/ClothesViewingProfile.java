@@ -75,10 +75,9 @@ public class ClothesViewingProfile extends Fragment {
     TextView clothesTitleCV, description, noDescription,purchaseToday,purchaseAll,profitToday,profitAll
             ,perSentToday,perSentAll,clothesPrice;
     ImageView clothesImageCV, backToShop, coinsImage,coinsImageAll,coinsImagePurple,send;
-    long schoolyCoins, clothesPrise;
-    RelativeLayout checkBasket,presentClothes,resaleClothes;
-    int a = 0;
+    RelativeLayout presentClothes,resaleClothes;
     RecyclerView recyclerView;
+    ArrayList<Subscriber> userFromBase;
     SendLookAdapter.ItemClickListener itemClickListener;
     LinearLayout linearElse,linearTelegram,linearInstagram;
     TextView emptyList;
@@ -86,7 +85,6 @@ public class ClothesViewingProfile extends Fragment {
     String userName,otherUserNickString;
     Clothes clothesViewing;
     private FirebaseModel firebaseModel = new FirebaseModel();
-    NewClothesAdapter.ViewHolder viewHolder;
     double perCent;
     String clothesPriceString,purchaseTodayString,profitTodayString,profitAllString;
 
@@ -434,43 +432,71 @@ public class ClothesViewingProfile extends Fragment {
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 userName = String.valueOf(editText.getText()).trim();
                 userName = userName.toLowerCase();
-                Query query = firebaseModel.getUsersReference().child(userInformation.getNick()).child("subscription");
-                query.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        ArrayList<Subscriber> userFromBase = new ArrayList<>();
-                        for (DataSnapshot snap : snapshot.getChildren()) {
-                            Subscriber subscriber = new Subscriber();
-                            subscriber.setSub(snap.getValue(String.class));
-                            String nick = subscriber.getSub();
-                            int valueLetters = userName.length();
-                            nick = nick.toLowerCase();
-                            if (nick.length() < valueLetters) {
-                                if (nick.equals(userName))
-                                    userFromBase.add(subscriber);
-                            } else {
-                                nick = nick.substring(0, valueLetters);
-                                if (nick.equals(userName))
-                                    userFromBase.add(subscriber);
+                if(userInformation.getSubscription()==null){
+                    Query query = firebaseModel.getUsersReference().child(userInformation.getNick()).child("subscription");
+                    query.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            userFromBase = new ArrayList<>();
+                            for (DataSnapshot snap : snapshot.getChildren()) {
+                                Subscriber subscriber = new Subscriber();
+                                subscriber.setSub(snap.getValue(String.class));
+                                String nick = subscriber.getSub();
+                                int valueLetters = userName.length();
+                                nick = nick.toLowerCase();
+                                if (nick.length() < valueLetters) {
+                                    if (nick.equals(userName))
+                                        userFromBase.add(subscriber);
+                                } else {
+                                    nick = nick.substring(0, valueLetters);
+                                    if (nick.equals(userName))
+                                        userFromBase.add(subscriber);
+                                }
+
                             }
+                            if(userFromBase.size()==0){
+                                emptyList.setVisibility(View.VISIBLE);
+                                recyclerView.setVisibility(View.GONE);
+                            }else {
+                                emptyList.setVisibility(View.GONE);
+                                recyclerView.setVisibility(View.VISIBLE);
+                                SendLookAdapter sendLookAdapter = new SendLookAdapter(userFromBase,itemClickListener);
+                                recyclerView.setAdapter(sendLookAdapter);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
 
                         }
-                        if(userFromBase.size()==0){
-                            emptyList.setVisibility(View.VISIBLE);
-                            recyclerView.setVisibility(View.GONE);
-                        }else {
-                            emptyList.setVisibility(View.GONE);
-                            recyclerView.setVisibility(View.VISIBLE);
-                            SendLookAdapter sendLookAdapter = new SendLookAdapter(userFromBase,itemClickListener);
-                            recyclerView.setAdapter(sendLookAdapter);
+                    });
+                }else {
+                    userFromBase=new ArrayList<>();
+                    for (int s=0;s<userInformation.getSubscription().size();s++) {
+                        Subscriber subscriber = userInformation.getSubscription().get(s);
+                        String nick = subscriber.getSub();
+                        int valueLetters = userName.length();
+                        nick = nick.toLowerCase();
+                        if (nick.length() < valueLetters) {
+                            if (nick.equals(userName))
+                                userFromBase.add(subscriber);
+                        } else {
+                            nick = nick.substring(0, valueLetters);
+                            if (nick.equals(userName))
+                                userFromBase.add(subscriber);
                         }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
 
                     }
-                });
+                    if(userFromBase.size()==0){
+                        emptyList.setVisibility(View.VISIBLE);
+                        recyclerView.setVisibility(View.GONE);
+                    }else {
+                        emptyList.setVisibility(View.GONE);
+                        recyclerView.setVisibility(View.VISIBLE);
+                        SendLookAdapter sendLookAdapter = new SendLookAdapter(userFromBase,itemClickListener);
+                        recyclerView.setAdapter(sendLookAdapter);
+                    }
+                }
             }
 
             @Override

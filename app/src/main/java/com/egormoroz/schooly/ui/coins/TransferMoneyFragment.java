@@ -3,6 +3,7 @@ package com.egormoroz.schooly.ui.coins;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,6 +50,7 @@ public class TransferMoneyFragment extends Fragment {
     ImageView backToCoins,transferHistory;
     TextView emptySubscriptionList,emptySearchSubscriptionList;
     Bundle bundle;
+    ArrayList<Subscriber> userFromBase;
     Fragment fragment;
     UserInformation userInformation;
 
@@ -199,52 +201,89 @@ public class TransferMoneyFragment extends Fragment {
     }
 
     public void initUserEnter(String textEdit) {
-        Query query = firebaseModel.getUsersReference().child(nick).child("subscription");
-        query.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                ArrayList<Subscriber> userFromBase = new ArrayList<>();
-                for (DataSnapshot snap : snapshot.getChildren()) {
-                    Subscriber subscriber = new Subscriber();
-                    subscriber.setSub(snap.getValue(String.class));
-                    String nick = subscriber.getSub();
-                    int valueLetters = textEdit.length();
-                    nick = nick.toLowerCase();
-                    if (nick.length() < valueLetters) {
-                        if (nick.equals(textEdit))
-                            userFromBase.add(subscriber);
-                    } else {
-                        nick = nick.substring(0, valueLetters);
-                        if (nick.equals(textEdit))
-                            userFromBase.add(subscriber);
-                    }
-
-                }
-                if (userFromBase.size() == 0) {
-                    emptySearchSubscriptionList.setVisibility(View.VISIBLE);
-                    peopleRecyclerView.setVisibility(View.GONE);
-                }else{
-                    emptySearchSubscriptionList.setVisibility(View.GONE);
-                    peopleRecyclerView.setVisibility(View.VISIBLE);
-                    TransferMoneyAdapter transferMoneyAdapter=new TransferMoneyAdapter(userFromBase);
-                    peopleRecyclerView.setAdapter(transferMoneyAdapter);
-                    TransferMoneyAdapter.ItemClickListener itemClickListener=new TransferMoneyAdapter.ItemClickListener() {
-                        @Override
-                        public void onItemClick(View view, int position) {
-                            Subscriber user = transferMoneyAdapter.getItem(position);
-                            userNameToProfile=user.getSub();
-                            RecentMethods.setCurrentFragment(SendMoneyFragment.newInstance(userNameToProfile,fragment,userInformation,bundle), getActivity());
+        if(userInformation.getSubscription()==null){
+            Query query = firebaseModel.getUsersReference().child(nick).child("subscription");
+            query.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    userFromBase = new ArrayList<>();
+                    for (DataSnapshot snap : snapshot.getChildren()) {
+                        Subscriber subscriber = new Subscriber();
+                        subscriber.setSub(snap.getValue(String.class));
+                        String nick = subscriber.getSub();
+                        int valueLetters = textEdit.length();
+                        nick = nick.toLowerCase();
+                        if (nick.length() < valueLetters) {
+                            if (nick.equals(textEdit))
+                                userFromBase.add(subscriber);
+                        } else {
+                            nick = nick.substring(0, valueLetters);
+                            if (nick.equals(textEdit))
+                                userFromBase.add(subscriber);
                         }
-                    };
-                    transferMoneyAdapter.setClickListener(itemClickListener);
+
+                    }
+                    if (userFromBase.size() == 0) {
+                        emptySearchSubscriptionList.setVisibility(View.VISIBLE);
+                        peopleRecyclerView.setVisibility(View.GONE);
+                    }else{
+                        emptySearchSubscriptionList.setVisibility(View.GONE);
+                        peopleRecyclerView.setVisibility(View.VISIBLE);
+                        TransferMoneyAdapter transferMoneyAdapter=new TransferMoneyAdapter(userFromBase);
+                        peopleRecyclerView.setAdapter(transferMoneyAdapter);
+                        TransferMoneyAdapter.ItemClickListener itemClickListener=new TransferMoneyAdapter.ItemClickListener() {
+                            @Override
+                            public void onItemClick(View view, int position) {
+                                Subscriber user = transferMoneyAdapter.getItem(position);
+                                userNameToProfile=user.getSub();
+                                RecentMethods.setCurrentFragment(SendMoneyFragment.newInstance(userNameToProfile,fragment,userInformation,bundle), getActivity());
+                            }
+                        };
+                        transferMoneyAdapter.setClickListener(itemClickListener);
+                    }
                 }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+        }else {
+            userFromBase=new ArrayList<>();
+            for (int i=0;i<userInformation.getSubscription().size();i++) {
+                Subscriber subscriber = userInformation.getSubscription().get(i);
+                String nick = subscriber.getSub();
+                int valueLetters = textEdit.length();
+                nick = nick.toLowerCase();
+                if (nick.length() < valueLetters) {
+                    if (nick.equals(textEdit))
+                        userFromBase.add(subscriber);
+                } else {
+                    nick = nick.substring(0, valueLetters);
+                    if (nick.equals(textEdit))
+                        userFromBase.add(subscriber);
+                }
 
             }
-        });
+            if (userFromBase.size() == 0) {
+                emptySearchSubscriptionList.setVisibility(View.VISIBLE);
+                peopleRecyclerView.setVisibility(View.GONE);
+            }else{
+                emptySearchSubscriptionList.setVisibility(View.GONE);
+                peopleRecyclerView.setVisibility(View.VISIBLE);
+                TransferMoneyAdapter transferMoneyAdapter=new TransferMoneyAdapter(userFromBase);
+                peopleRecyclerView.setAdapter(transferMoneyAdapter);
+                TransferMoneyAdapter.ItemClickListener itemClickListener=new TransferMoneyAdapter.ItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        Subscriber user = transferMoneyAdapter.getItem(position);
+                        userNameToProfile=user.getSub();
+                        RecentMethods.setCurrentFragment(SendMoneyFragment.newInstance(userNameToProfile,fragment,userInformation,bundle), getActivity());
+                    }
+                };
+                transferMoneyAdapter.setClickListener(itemClickListener);
+            }
+        }
     }
 }
 

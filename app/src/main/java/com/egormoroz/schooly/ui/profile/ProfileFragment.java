@@ -126,6 +126,7 @@ public class ProfileFragment extends Fragment {
             otherSubscribersCount,otherUserBiography,subscribeClose,subscribe
             ,subscribeFirst,closeAccount,noClothes,buyClothesProfile,blockedAccount,emptyList;
     DatabaseReference user;
+    ArrayList<Subscriber> userFromBase;
     // SceneLoader scene;
     LinearLayout linearSubscribers,linearSubscriptions
             ,linearLooksProfile,linearSubscribersProfile,linearSubscriptionsProfile;
@@ -834,6 +835,9 @@ public class ProfileFragment extends Fragment {
                 firebaseModel.getUsersReference().child(userInformation.getNick())
                         .child("blackList").child(info.getNick())
                         .setValue(info.getNick());
+                subscribeClose.setText("Подписаться");
+                subscribeClose.setTextColor(Color.parseColor("#FEFEFE"));
+                subscribeClose.setBackgroundResource(R.drawable.corners10dpappcolor);
                 firebaseModel.getUsersReference().child(userInformation.getNick())
                         .child("subscription").child(info.getNick()).removeValue();
                 firebaseModel.getUsersReference().child(info.getNick())
@@ -842,6 +846,10 @@ public class ProfileFragment extends Fragment {
                         .child("subscription").child(userInformation.getNick()).removeValue();
                 firebaseModel.getUsersReference().child(userInformation.getNick())
                         .child("subscribers").child(info.getNick()).removeValue();
+                firebaseModel.getUsersReference().child(userInformation.getNick())
+                        .child("requests").child(info.getNick()).removeValue();
+                firebaseModel.getUsersReference().child(info.getNick())
+                        .child("requests").child(userInformation.getNick()).removeValue();
                 Toast.makeText(getContext(), "Пользователь добавлен в черный список", Toast.LENGTH_SHORT).show();
                 checkProfile();
                 dialog.dismiss();
@@ -1168,9 +1176,6 @@ public class ProfileFragment extends Fragment {
                                                         DataSnapshot snapshot = task.getResult();
                                                         if (snapshot.exists()) {
                                                             a = 5;
-                                                            subscribe.setText("Pазблокировать");
-                                                            subscribe.setTextColor(Color.parseColor("#F3A2E5"));
-                                                            subscribe.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
                                                         }
                                                         if (a != 0) {
                                                             if (a == 2) {
@@ -1253,9 +1258,59 @@ public class ProfileFragment extends Fragment {
                                                             if (a == 5) {
                                                                 firebaseModel.getUsersReference().child(userInformation.getNick()).child("blackList")
                                                                         .child(info.getNick()).removeValue();
-                                                                subscribe.setText("Подписаться");
-                                                                subscribe.setTextColor(Color.parseColor("#FFFEFE"));
-                                                                subscribe.setBackgroundResource(R.drawable.corners10dpappcolor);
+                                                                if(profileCheckValue!=1){
+                                                                    firebaseModel.getUsersReference().child(info.getNick())
+                                                                            .child("accountType").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                                                                        @Override
+                                                                        public void onComplete(@NonNull Task<DataSnapshot> task) {
+                                                                            if (task.isSuccessful()) {
+                                                                                DataSnapshot snapshot = task.getResult();
+                                                                                if (snapshot.getValue(String.class).equals("open")) {
+                                                                                    firebaseModel.getReference().child("users").child(userInformation.getNick()).child("subscription")
+                                                                                            .child(info.getNick()).setValue(info.getNick());
+                                                                                    firebaseModel.getReference().child("users").child(info.getNick()).child("subscribers")
+                                                                                            .child(userInformation.getNick()).setValue(userInformation.getNick());
+                                                                                    String numToBase = firebaseModel.getReference().child("users")
+                                                                                            .child(info.getNick()).child("nontifications")
+                                                                                            .push().getKey();
+                                                                                    Date date = new Date();
+                                                                                    SimpleDateFormat formatter = new SimpleDateFormat("EEE, MMM dd hh:mm a");
+                                                                                    String dateAndTime = formatter.format(date);
+                                                                                    firebaseModel.getReference().child("users")
+                                                                                            .child(info.getNick()).child("nontifications")
+                                                                                            .child(numToBase).setValue(new Nontification(userInformation.getNick(), "не отправлено", "обычный"
+                                                                                            , "", " ", " ", "не просмотрено", numToBase, 0));
+                                                                                    subscribe.setText("Отписаться");
+                                                                                    subscribe.setTextColor(Color.parseColor("#F3A2E5"));
+                                                                                    subscribe.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
+                                                                                    a = 0;
+                                                                                    checkProfile();
+                                                                                } else {
+                                                                                    firebaseModel.getReference().child("users").child(info.getNick()).child("requests")
+                                                                                            .child(userInformation.getNick()).setValue(userInformation.getNick());
+                                                                                    String numToBase = firebaseModel.getReference().child("users")
+                                                                                            .child(info.getNick()).child("nontifications")
+                                                                                            .push().getKey();
+                                                                                    Date date = new Date();
+                                                                                    SimpleDateFormat formatter = new SimpleDateFormat("EEE, MMM dd hh:mm a");
+                                                                                    String dateAndTime = formatter.format(date);
+                                                                                    firebaseModel.getReference().child("users")
+                                                                                            .child(info.getNick()).child("nontifications")
+                                                                                            .child(numToBase).setValue(new Nontification(userInformation.getNick(), "не отправлено", "запрос"
+                                                                                            , "", " ", " ", "не просмотрено", numToBase, 0));
+                                                                                    subscribe.setText("Запрошено");
+                                                                                    subscribe.setTextColor(Color.parseColor("#F3A2E5"));
+                                                                                    subscribe.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
+                                                                                    a = 0;
+                                                                                    checkProfile();
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    });
+                                                                }else {
+                                                                    Toast.makeText(getContext(), "Пользователь заблокировал тебя", Toast.LENGTH_SHORT).show();
+                                                                    a = 0;
+                                                                }
                                                                 a = 0;
                                                                 checkProfile();
                                                             }
@@ -1582,43 +1637,71 @@ public class ProfileFragment extends Fragment {
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 userName = String.valueOf(editText.getText()).trim();
                 userName = userName.toLowerCase();
-                Query query = firebaseModel.getUsersReference().child(userInformation.getNick()).child("subscription");
-                query.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        ArrayList<Subscriber> userFromBase = new ArrayList<>();
-                        for (DataSnapshot snap : snapshot.getChildren()) {
-                            Subscriber subscriber = new Subscriber();
-                            subscriber.setSub(snap.getValue(String.class));
-                            String nick = subscriber.getSub();
-                            int valueLetters = userName.length();
-                            nick = nick.toLowerCase();
-                            if (nick.length() < valueLetters) {
-                                if (nick.equals(userName))
-                                    userFromBase.add(subscriber);
-                            } else {
-                                nick = nick.substring(0, valueLetters);
-                                if (nick.equals(userName))
-                                    userFromBase.add(subscriber);
+                if(userInformation.getSubscription()==null){
+                    Query query = firebaseModel.getUsersReference().child(userInformation.getNick()).child("subscription");
+                    query.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            userFromBase = new ArrayList<>();
+                            for (DataSnapshot snap : snapshot.getChildren()) {
+                                Subscriber subscriber = new Subscriber();
+                                subscriber.setSub(snap.getValue(String.class));
+                                String nick = subscriber.getSub();
+                                int valueLetters = userName.length();
+                                nick = nick.toLowerCase();
+                                if (nick.length() < valueLetters) {
+                                    if (nick.equals(userName))
+                                        userFromBase.add(subscriber);
+                                } else {
+                                    nick = nick.substring(0, valueLetters);
+                                    if (nick.equals(userName))
+                                        userFromBase.add(subscriber);
+                                }
+
                             }
+                            if(userFromBase.size()==0){
+                                emptyList.setVisibility(View.VISIBLE);
+                                recyclerView.setVisibility(View.GONE);
+                            }else {
+                                emptyList.setVisibility(View.GONE);
+                                recyclerView.setVisibility(View.VISIBLE);
+                                SendLookAdapter sendLookAdapter = new SendLookAdapter(userFromBase,itemClickListenerSendLookAdapter);
+                                recyclerView.setAdapter(sendLookAdapter);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
 
                         }
-                        if(userFromBase.size()==0){
-                            emptyList.setVisibility(View.VISIBLE);
-                            recyclerView.setVisibility(View.GONE);
-                        }else {
-                            emptyList.setVisibility(View.GONE);
-                            recyclerView.setVisibility(View.VISIBLE);
-                            SendLookAdapter sendLookAdapter = new SendLookAdapter(userFromBase,itemClickListenerSendLookAdapter);
-                            recyclerView.setAdapter(sendLookAdapter);
+                    });
+                }else {
+                    userFromBase=new ArrayList<>();
+                    for (int s=0;s<userInformation.getSubscription().size();s++) {
+                        Subscriber subscriber = userInformation.getSubscription().get(s);
+                        String nick = subscriber.getSub();
+                        int valueLetters = userName.length();
+                        nick = nick.toLowerCase();
+                        if (nick.length() < valueLetters) {
+                            if (nick.equals(userName))
+                                userFromBase.add(subscriber);
+                        } else {
+                            nick = nick.substring(0, valueLetters);
+                            if (nick.equals(userName))
+                                userFromBase.add(subscriber);
                         }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
 
                     }
-                });
+                    if(userFromBase.size()==0){
+                        emptyList.setVisibility(View.VISIBLE);
+                        recyclerView.setVisibility(View.GONE);
+                    }else {
+                        emptyList.setVisibility(View.GONE);
+                        recyclerView.setVisibility(View.VISIBLE);
+                        SendLookAdapter sendLookAdapter = new SendLookAdapter(userFromBase,itemClickListenerSendLookAdapter);
+                        recyclerView.setAdapter(sendLookAdapter);
+                    }
+                }
             }
 
             @Override

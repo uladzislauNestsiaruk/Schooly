@@ -5,6 +5,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -74,9 +75,11 @@ public class WardrobeFragment extends Fragment {
     FirebaseModel firebaseModel=new FirebaseModel();
     private ViewPager2 viewPager;
     FragmentAdapter fragmentAdapter;
+    ArrayList<Clothes> clothesFromBase;
     RecyclerView searchRecycler;
     EditText searchText;
     TabLayout tabLayout;
+    int tabLayoutPosition;
     TextView notFound;
     SceneView sceneView;
     WardrobeClothesAdapter.ItemClickListener itemClickListener;
@@ -93,6 +96,13 @@ public class WardrobeFragment extends Fragment {
     }
 
     @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        bundle.putString("EDIT_WARDROBE_TAG",searchText.getText().toString().trim());
+        bundle.putInt("TAB_INT_WARDROBE", tabLayoutPosition);
+    }
+
+    @Override
     public void onViewCreated(@Nullable View view, @NonNull Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
         nick= userInformation.getNick();
@@ -100,7 +110,27 @@ public class WardrobeFragment extends Fragment {
         searchText=view.findViewById(R.id.searchClothesWardrobe);
         searchRecycler=view.findViewById(R.id.searchRecycler);
         notFound=view.findViewById(R.id.notFound);
+        tabLayout = view.findViewById(R.id.tabLayoutWardrobe);
+        viewPager=view.findViewById(R.id.frcontwardrobe);
+        itemClickListener=new WardrobeClothesAdapter.ItemClickListener() {
+            @Override
+            public void onItemClick(Clothes clothes) {
+                RecentMethods.setCurrentFragment(ViewingClothesWardrobe.newInstance(type,WardrobeFragment.newInstance(type, fragment, userInformation, bundle),userInformation,bundle), getActivity());
+            }
+        };
         loadModels(Uri.parse("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Funtitled.glb?alt=media&token=657b45d7-a84b-4f2a-89f4-a699029401f7"), sceneView, WardrobeFragment.this);
+        if (bundle!=null){
+            tabLayoutPosition=bundle.getInt("TAB_INT_WARDROBE");
+            if(bundle.getString("EDIT_WARDROBE_TAG")!=null){
+                String bundleEditText=bundle.getString("EDIT_WARDROBE_TAG").trim();
+                if(bundleEditText.length()!=0){
+                    searchText.setText(bundleEditText);
+                    viewPager.setVisibility(View.GONE);
+                    tabLayout.setVisibility(View.GONE);
+                    loadSearchClothes(bundleEditText);
+                }
+            }
+        }
         searchText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -118,21 +148,16 @@ public class WardrobeFragment extends Fragment {
                     searchRecycler.setVisibility(View.GONE);
                     tabLayout.setVisibility(View.VISIBLE);
                     notFound.setVisibility(View.GONE);
-                    tabLayout = view.findViewById(R.id.tabLayoutWardrobe);
-                    viewPager=view.findViewById(R.id.frcontwardrobe);
                     FragmentManager fm = getChildFragmentManager();
                     fragmentAdapter = new FragmentAdapter(fm, getLifecycle());
                     viewPager.setAdapter(fragmentAdapter);
-
-                    tabLayout.addTab(tabLayout.newTab().setText("Обувь"));
-                    tabLayout.addTab(tabLayout.newTab().setText("Одежда"));
-                    tabLayout.addTab(tabLayout.newTab().setText("Головные уборы"));
-                    tabLayout.addTab(tabLayout.newTab().setText("Акскссуары"));
+                    viewPager.setCurrentItem(tabLayoutPosition, false);
 
                     tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
                         @Override
                         public void onTabSelected(TabLayout.Tab tab) {
-                            viewPager.setCurrentItem(tab.getPosition());
+                            tabLayoutPosition=tab.getPosition();
+                            viewPager.setCurrentItem(tabLayoutPosition);
                         }
 
                         @Override
@@ -146,11 +171,12 @@ public class WardrobeFragment extends Fragment {
                         }
                     });
 
-
+                    tabLayout.selectTab(tabLayout.getTabAt(tabLayoutPosition));
                     viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
                         @Override
                         public void onPageSelected(int position) {
-                            tabLayout.selectTab(tabLayout.getTabAt(position));
+                            tabLayoutPosition=position;
+                            tabLayout.selectTab(tabLayout.getTabAt(tabLayoutPosition));
                         }
                     });
                 }
@@ -180,20 +206,20 @@ public class WardrobeFragment extends Fragment {
 
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
 
-        tabLayout = view.findViewById(R.id.tabLayoutWardrobe);
-        viewPager=view.findViewById(R.id.frcontwardrobe);
         FragmentManager fm = getChildFragmentManager();
         fragmentAdapter = new FragmentAdapter(fm, getLifecycle());
         viewPager.setAdapter(fragmentAdapter);
+        viewPager.setCurrentItem(tabLayoutPosition, false);
 
         tabLayout.addTab(tabLayout.newTab().setText("Обувь"));
         tabLayout.addTab(tabLayout.newTab().setText("Одежда"));
         tabLayout.addTab(tabLayout.newTab().setText("Головные уборы"));
         tabLayout.addTab(tabLayout.newTab().setText("Акскссуары"));
 
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener(){
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
+                tabLayoutPosition=tab.getPosition();
                 viewPager.setCurrentItem(tab.getPosition());
             }
 
@@ -207,11 +233,11 @@ public class WardrobeFragment extends Fragment {
 
             }
         });
-
-
+        tabLayout.selectTab(tabLayout.getTabAt(tabLayoutPosition));
         viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {
+                tabLayoutPosition=position;
                 tabLayout.selectTab(tabLayout.getTabAt(position));
             }
         });
@@ -224,23 +250,52 @@ public class WardrobeFragment extends Fragment {
         .get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if(task.isSuccessful()){
-                    DataSnapshot snapshot= task.getResult();
-                    ArrayList<Clothes> clothesFromBase=new ArrayList<>();
-                    for (DataSnapshot snap : snapshot.getChildren()) {
-                        Clothes clothes = new Clothes();
-                        clothes.setClothesImage(snap.child("clothesImage").getValue(String.class));
-                        clothes.setClothesPrice(snap.child("clothesPrice").getValue(Long.class));
-                        clothes.setPurchaseNumber(snap.child("purchaseNumber").getValue(Long.class));
-                        clothes.setClothesType(snap.child("clothesType").getValue(String.class));
-                        clothes.setClothesTitle(snap.child("clothesTitle").getValue(String.class));
-                        clothes.setCreator(snap.child("creator").getValue(String.class));
-                        clothes.setCurrencyType(snap.child("currencyType").getValue(String.class));
-                        clothes.setDescription(snap.child("description").getValue(String.class));
-                        clothes.setPurchaseToday(snap.child("purchaseToday").getValue(Long.class));
-                        clothes.setModel(snap.child("model").getValue(String.class));
-                        clothes.setBodyType(snap.child("bodyType").getValue(String.class));
-                        clothes.setUid(snap.child("uid").getValue(String.class));
+                if(userInformation.getClothes()==null){
+                    if(task.isSuccessful()){
+                        DataSnapshot snapshot= task.getResult();
+                        clothesFromBase=new ArrayList<>();
+                        for (DataSnapshot snap : snapshot.getChildren()) {
+                            Clothes clothes = new Clothes();
+                            clothes.setClothesImage(snap.child("clothesImage").getValue(String.class));
+                            clothes.setClothesPrice(snap.child("clothesPrice").getValue(Long.class));
+                            clothes.setPurchaseNumber(snap.child("purchaseNumber").getValue(Long.class));
+                            clothes.setClothesType(snap.child("clothesType").getValue(String.class));
+                            clothes.setClothesTitle(snap.child("clothesTitle").getValue(String.class));
+                            clothes.setCreator(snap.child("creator").getValue(String.class));
+                            clothes.setCurrencyType(snap.child("currencyType").getValue(String.class));
+                            clothes.setDescription(snap.child("description").getValue(String.class));
+                            clothes.setPurchaseToday(snap.child("purchaseToday").getValue(Long.class));
+                            clothes.setModel(snap.child("model").getValue(String.class));
+                            clothes.setBodyType(snap.child("bodyType").getValue(String.class));
+                            clothes.setUid(snap.child("uid").getValue(String.class));
+                            String clothesTitle=clothes.getClothesTitle();
+                            String title=clothesTitle;
+                            int valueLetters=editTextText.length();
+                            title=title.toLowerCase();
+                            if(title.length()<valueLetters){
+                                if(title.equals(editTextText))
+                                    clothesFromBase.add(clothes);
+                            }else{
+                                title=title.substring(0, valueLetters);
+                                if(title.equals(editTextText))
+                                    clothesFromBase.add(clothes);
+                            }
+                        }
+                        if(clothesFromBase.size()==0){
+                            searchRecycler.setVisibility(View.GONE);
+                            notFound.setVisibility(View.VISIBLE);
+                        }else{
+                            notFound.setVisibility(View.GONE);
+                            searchRecycler.setVisibility(View.VISIBLE);
+                            WardrobeClothesAdapter wardrobeClothesAdapter=new WardrobeClothesAdapter(clothesFromBase,itemClickListener);
+                            searchRecycler.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+                            searchRecycler.setAdapter(wardrobeClothesAdapter);
+                        }
+                    }
+                }else {
+                    clothesFromBase=new ArrayList<>();
+                    for (int i=0;i<userInformation.getClothes().size();i++) {
+                        Clothes clothes = userInformation.getClothes().get(i);
                         String clothesTitle=clothes.getClothesTitle();
                         String title=clothesTitle;
                         int valueLetters=editTextText.length();
@@ -282,14 +337,14 @@ public class WardrobeFragment extends Fragment {
             switch (position)
             {
                 case 1 :
-                    return new WardrobeClothes(type,fragment,userInformation,bundle);
+                    return new WardrobeClothes(type,WardrobeFragment.newInstance(type, fragment, userInformation, bundle),userInformation,bundle);
                 case 2 :
-                    return new WardrobeHats(type,fragment,userInformation,bundle);
+                    return new WardrobeHats(type,WardrobeFragment.newInstance(type, fragment, userInformation, bundle),userInformation,bundle);
                 case 3 :
-                    return new WardrobeAccessories(type,fragment,userInformation,bundle);
+                    return new WardrobeAccessories(type,WardrobeFragment.newInstance(type, fragment, userInformation, bundle),userInformation,bundle);
             }
 
-            return new WardrobeShoes(type,fragment,userInformation,bundle);
+            return new WardrobeShoes(type,WardrobeFragment.newInstance(type, fragment, userInformation, bundle),userInformation,bundle);
         }
 
         @Override

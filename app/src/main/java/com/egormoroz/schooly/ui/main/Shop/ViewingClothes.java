@@ -84,6 +84,7 @@ public class ViewingClothes extends Fragment {
             ,emptyList;
     ImageView clothesImageCV,backToShop,coinsImage,dollarImage,inBasket,notInBasket,send;
     long schoolyCoins,clothesPrise;
+    ArrayList<Subscriber> userFromBase;
     RelativeLayout checkBasket;
     int a=0;
     RecyclerView recyclerView;
@@ -434,43 +435,71 @@ public class ViewingClothes extends Fragment {
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 userName = String.valueOf(editText.getText()).trim();
                 userName = userName.toLowerCase();
-                Query query = firebaseModel.getUsersReference().child(userInformation.getNick()).child("subscription");
-                query.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        ArrayList<Subscriber> userFromBase = new ArrayList<>();
-                        for (DataSnapshot snap : snapshot.getChildren()) {
-                            Subscriber subscriber = new Subscriber();
-                            subscriber.setSub(snap.getValue(String.class));
-                            String nick = subscriber.getSub();
-                            int valueLetters = userName.length();
-                            nick = nick.toLowerCase();
-                            if (nick.length() < valueLetters) {
-                                if (nick.equals(userName))
-                                    userFromBase.add(subscriber);
-                            } else {
-                                nick = nick.substring(0, valueLetters);
-                                if (nick.equals(userName))
-                                    userFromBase.add(subscriber);
+                if(userInformation.getSubscription()==null){
+                    Query query = firebaseModel.getUsersReference().child(userInformation.getNick()).child("subscription");
+                    query.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            userFromBase = new ArrayList<>();
+                            for (DataSnapshot snap : snapshot.getChildren()) {
+                                Subscriber subscriber = new Subscriber();
+                                subscriber.setSub(snap.getValue(String.class));
+                                String nick = subscriber.getSub();
+                                int valueLetters = userName.length();
+                                nick = nick.toLowerCase();
+                                if (nick.length() < valueLetters) {
+                                    if (nick.equals(userName))
+                                        userFromBase.add(subscriber);
+                                } else {
+                                    nick = nick.substring(0, valueLetters);
+                                    if (nick.equals(userName))
+                                        userFromBase.add(subscriber);
+                                }
+
                             }
+                            if(userFromBase.size()==0){
+                                emptyList.setVisibility(View.VISIBLE);
+                                recyclerView.setVisibility(View.GONE);
+                            }else {
+                                emptyList.setVisibility(View.GONE);
+                                recyclerView.setVisibility(View.VISIBLE);
+                                SendLookAdapter sendLookAdapter = new SendLookAdapter(userFromBase,itemClickListener);
+                                recyclerView.setAdapter(sendLookAdapter);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
 
                         }
-                        if(userFromBase.size()==0){
-                            emptyList.setVisibility(View.VISIBLE);
-                            recyclerView.setVisibility(View.GONE);
-                        }else {
-                            emptyList.setVisibility(View.GONE);
-                            recyclerView.setVisibility(View.VISIBLE);
-                            SendLookAdapter sendLookAdapter = new SendLookAdapter(userFromBase,itemClickListener);
-                            recyclerView.setAdapter(sendLookAdapter);
+                    });
+                }else {
+                    userFromBase=new ArrayList<>();
+                    for (int s=0;s<userInformation.getSubscription().size();s++) {
+                        Subscriber subscriber = userInformation.getSubscription().get(s);
+                        String nick = subscriber.getSub();
+                        int valueLetters = userName.length();
+                        nick = nick.toLowerCase();
+                        if (nick.length() < valueLetters) {
+                            if (nick.equals(userName))
+                                userFromBase.add(subscriber);
+                        } else {
+                            nick = nick.substring(0, valueLetters);
+                            if (nick.equals(userName))
+                                userFromBase.add(subscriber);
                         }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
 
                     }
-                });
+                    if(userFromBase.size()==0){
+                        emptyList.setVisibility(View.VISIBLE);
+                        recyclerView.setVisibility(View.GONE);
+                    }else {
+                        emptyList.setVisibility(View.GONE);
+                        recyclerView.setVisibility(View.VISIBLE);
+                        SendLookAdapter sendLookAdapter = new SendLookAdapter(userFromBase,itemClickListener);
+                        recyclerView.setAdapter(sendLookAdapter);
+                    }
+                }
             }
 
             @Override

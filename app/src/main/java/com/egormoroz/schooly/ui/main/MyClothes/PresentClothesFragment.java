@@ -55,9 +55,9 @@ public class PresentClothesFragment extends Fragment {
     EditText searchUser;
     FirebaseModel firebaseModel=new FirebaseModel();
     String userNameToProfile,userName,nick;
-    ImageView back,transferHistory;
+    ImageView back;
     TextView emptySubscriptionList;
-
+    ArrayList<Subscriber> userFromBase;
     Clothes clothes;
     Fragment fragment;
     UserInformation userInformation;
@@ -167,49 +167,87 @@ public class PresentClothesFragment extends Fragment {
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 userName = String.valueOf(searchUser.getText()).trim();
                 userName = userName.toLowerCase();
-                firebaseModel.getUsersReference().child(nick).child("subscription").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DataSnapshot> task) {
-                        if(task.isSuccessful()){
-                            DataSnapshot snapshot= task.getResult();
-                            ArrayList<Subscriber> userFromBase = new ArrayList<>();
-                            for (DataSnapshot snap : snapshot.getChildren()) {
-                                Subscriber subscriber = new Subscriber();
-                                subscriber.setSub(snap.getValue(String.class));
-                                String nick = subscriber.getSub();
-                                int valueLetters = userName.length();
-                                nick = nick.toLowerCase();
-                                if (nick.length() < valueLetters) {
-                                    if (nick.equals(userName))
-                                        userFromBase.add(subscriber);
-                                } else {
-                                    nick = nick.substring(0, valueLetters);
-                                    if (nick.equals(userName))
-                                        userFromBase.add(subscriber);
-                                }
-
-                            }
-                            if(userFromBase.size()==0){
-                                emptySubscriptionList.setVisibility(View.VISIBLE);
-                                peopleRecyclerView.setVisibility(View.GONE);
-                            }else{
-                                emptySubscriptionList.setVisibility(View.GONE);
-                                peopleRecyclerView.setVisibility(View.VISIBLE);
-                                PresentClothesAdapter presentClothesAdapter=new PresentClothesAdapter(userFromBase,clothes);
-                                peopleRecyclerView.setAdapter(presentClothesAdapter);
-                                PresentClothesAdapter.ItemClickListener itemClickListener=new PresentClothesAdapter.ItemClickListener() {
-                                    @Override
-                                    public void onItemClick(int alreadyHave,int position) {
-                                        Subscriber user = presentClothesAdapter.getItem(position);
-                                        userNameToProfile=user.getSub();
-                                        showDialog(alreadyHave);
+                if(userInformation.getSubscription()==null){
+                    firebaseModel.getUsersReference().child(nick).child("subscription").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DataSnapshot> task) {
+                            if(task.isSuccessful()){
+                                DataSnapshot snapshot= task.getResult();
+                                userFromBase = new ArrayList<>();
+                                for (DataSnapshot snap : snapshot.getChildren()) {
+                                    Subscriber subscriber = new Subscriber();
+                                    subscriber.setSub(snap.getValue(String.class));
+                                    String nick = subscriber.getSub();
+                                    int valueLetters = userName.length();
+                                    nick = nick.toLowerCase();
+                                    if (nick.length() < valueLetters) {
+                                        if (nick.equals(userName))
+                                            userFromBase.add(subscriber);
+                                    } else {
+                                        nick = nick.substring(0, valueLetters);
+                                        if (nick.equals(userName))
+                                            userFromBase.add(subscriber);
                                     }
-                                };
-                                presentClothesAdapter.setClickListener(itemClickListener);
+
+                                }
+                                if(userFromBase.size()==0){
+                                    emptySubscriptionList.setVisibility(View.VISIBLE);
+                                    peopleRecyclerView.setVisibility(View.GONE);
+                                }else{
+                                    emptySubscriptionList.setVisibility(View.GONE);
+                                    peopleRecyclerView.setVisibility(View.VISIBLE);
+                                    PresentClothesAdapter presentClothesAdapter=new PresentClothesAdapter(userFromBase,clothes);
+                                    peopleRecyclerView.setAdapter(presentClothesAdapter);
+                                    PresentClothesAdapter.ItemClickListener itemClickListener=new PresentClothesAdapter.ItemClickListener() {
+                                        @Override
+                                        public void onItemClick(int alreadyHave,int position) {
+                                            Subscriber user = presentClothesAdapter.getItem(position);
+                                            userNameToProfile=user.getSub();
+                                            showDialog(alreadyHave);
+                                        }
+                                    };
+                                    presentClothesAdapter.setClickListener(itemClickListener);
+                                }
                             }
                         }
+                    });
+
+                }else {
+                    userFromBase=new ArrayList<>();
+                    for (int s=0;s<userInformation.getSubscription().size();s++) {
+                        Subscriber subscriber = userInformation.getSubscription().get(s);
+                        String nick = subscriber.getSub();
+                        int valueLetters = userName.length();
+                        nick = nick.toLowerCase();
+                        if (nick.length() < valueLetters) {
+                            if (nick.equals(userName))
+                                userFromBase.add(subscriber);
+                        } else {
+                            nick = nick.substring(0, valueLetters);
+                            if (nick.equals(userName))
+                                userFromBase.add(subscriber);
+                        }
+
                     }
-                });
+                    if(userFromBase.size()==0){
+                        emptySubscriptionList.setVisibility(View.VISIBLE);
+                        peopleRecyclerView.setVisibility(View.GONE);
+                    }else{
+                        emptySubscriptionList.setVisibility(View.GONE);
+                        peopleRecyclerView.setVisibility(View.VISIBLE);
+                        PresentClothesAdapter presentClothesAdapter=new PresentClothesAdapter(userFromBase,clothes);
+                        peopleRecyclerView.setAdapter(presentClothesAdapter);
+                        PresentClothesAdapter.ItemClickListener itemClickListener=new PresentClothesAdapter.ItemClickListener() {
+                            @Override
+                            public void onItemClick(int alreadyHave,int position) {
+                                Subscriber user = presentClothesAdapter.getItem(position);
+                                userNameToProfile=user.getSub();
+                                showDialog(alreadyHave);
+                            }
+                        };
+                        presentClothesAdapter.setClickListener(itemClickListener);
+                    }
+                }
             }
 
             @Override
