@@ -18,6 +18,7 @@ import com.egormoroz.schooly.Nontification;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.Subscriber;
+import com.egormoroz.schooly.ui.main.UserInformation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
@@ -38,11 +39,14 @@ public class SubscriptionsAdapter extends RecyclerView.Adapter<SubscriptionsAdap
     ArrayList<Subscriber> listAdapter;
     private SubscriptionsAdapter.ItemClickListener clickListener;
     private FirebaseModel firebaseModel = new FirebaseModel();
-    long subscriptionsCount,subscribersCount;
     int a;
+    ArrayList<Subscriber> subscriptions,blackList;
+    String nick;
+    UserInformation userInformation;
 
-    public SubscriptionsAdapter(ArrayList<Subscriber> listAdapter) {
+    public SubscriptionsAdapter(ArrayList<Subscriber> listAdapter,UserInformation userInformation) {
         this.listAdapter = listAdapter;
+        this.userInformation=userInformation;
     }
 
 
@@ -59,6 +63,7 @@ public class SubscriptionsAdapter extends RecyclerView.Adapter<SubscriptionsAdap
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Subscriber subscriber=listAdapter.get(position);
+        nick= userInformation.getNick();
         holder.otherUserNick.setText(subscriber.getSub());
         holder.otherUserNick.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,198 +71,188 @@ public class SubscriptionsAdapter extends RecyclerView.Adapter<SubscriptionsAdap
                 if (clickListener != null) clickListener.onItemClick(view, position);
             }
         });
-        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+        if(nick.equals(subscriber.getSub())){
+            holder.unsubscribe.setVisibility(View.GONE);
+        }
+        subscriptions= userInformation.getSubscription();
+        for(int i=0;i<userInformation.getSubscription().size();i++){
+            Subscriber sub=userInformation.getSubscription().get(i);
+            if(sub.getSub().equals(subscriber.getSub())){
+                holder.unsubscribe.setText("Отписаться");
+                holder.unsubscribe.setTextColor(Color.parseColor("#F3A2E5"));
+                holder.unsubscribe.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
+            }
+        }
+        blackList=userInformation.getBlackList();
+        for (int i=0;i<userInformation.getBlackList().size();i++){
+            Subscriber sub=userInformation.getBlackList().get(i);
+            if(sub.getSub().equals(subscriber.getSub())){
+                holder.unsubscribe.setText("Pазблокировать");
+                holder.unsubscribe.setTextColor(Color.parseColor("#F3A2E5"));
+                holder.unsubscribe.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
+            }
+        }
+        Query queryRequest2=firebaseModel.getUsersReference().child(subscriber.getSub())
+                .child("requests").child(nick);
+        queryRequest2.addValueEventListener(new ValueEventListener() {
             @Override
-            public void PassUserNick(String nick) {
-                if(nick.equals(subscriber.getSub())){
-                    holder.unsubscribe.setVisibility(View.GONE);
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists()){
+                    holder.unsubscribe.setText("Запрошено");
+                    holder.unsubscribe.setTextColor(Color.parseColor("#F3A2E5"));
+                    holder.unsubscribe.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
                 }
-                Query query=firebaseModel.getUsersReference().child(nick)
-                        .child("subscription").child(subscriber.getSub());
-                query.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if (snapshot.exists()){
-                            holder.unsubscribe.setText("Отписаться");
-                            holder.unsubscribe.setTextColor(Color.parseColor("#F3A2E5"));
-                            holder.unsubscribe.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
-                        }
-                    }
+            }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
 
-                    }
-                });
-                Query queryRequest2=firebaseModel.getUsersReference().child(subscriber.getSub())
-                        .child("requests").child(nick);
-                queryRequest2.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if(snapshot.exists()){
-                            holder.unsubscribe.setText("Запрошено");
-                            holder.unsubscribe.setTextColor(Color.parseColor("#F3A2E5"));
-                            holder.unsubscribe.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
             }
         });
         holder.unsubscribe.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+                firebaseModel.getUsersReference().child(nick)
+                        .child("subscription").child(subscriber.getSub()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                     @Override
-                    public void PassUserNick(String nick) {
-                        firebaseModel.getUsersReference().child(nick)
-                                .child("subscription").child(subscriber.getSub()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                                if(task.isSuccessful()){
-                                    DataSnapshot snapshot=task.getResult();
-                                    if (snapshot.exists()) {
-                                        a=1;
-                                    } else {
-                                        a=2;
-                                    }
-                                    firebaseModel.getUsersReference().child(subscriber.getSub())
-                                            .child("requests").child(nick).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<DataSnapshot> task) {
-                                            if(task.isSuccessful()){
-                                                DataSnapshot snapshot=task.getResult();
-                                                if (snapshot.exists()) {
-                                                    a=3;
-                                                }
-                                                firebaseModel.getUsersReference().child(subscriber.getSub())
-                                                        .child("blackList").child(nick).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                                                    @Override
-                                                    public void onComplete(@NonNull Task<DataSnapshot> task) {
-                                                        if(task.isSuccessful()){
-                                                            DataSnapshot snapshot=task.getResult();
-                                                            if (snapshot.exists()) {
-                                                                a=4;
-                                                            }
-                                                            firebaseModel.getUsersReference().child(nick)
-                                                                    .child("blackList").child(subscriber.getSub()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                                                                @Override
-                                                                public void onComplete(@NonNull Task<DataSnapshot> task) {
-                                                                    if(task.isSuccessful()){
-                                                                        DataSnapshot snapshot=task.getResult();
-                                                                        if (snapshot.exists()) {
-                                                                            a=5;
-                                                                            holder.unsubscribe.setText("Pазблокировать");
-                                                                            holder.unsubscribe.setTextColor(Color.parseColor("#F3A2E5"));
-                                                                            holder.unsubscribe.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
-                                                                        }
-                                                                        if(a!=0) {
-                                                                            if (a == 2) {
-                                                                                Log.d("#####", "ab  " + a);
-                                                                                Query query1=firebaseModel.getUsersReference().child(subscriber.getSub())
-                                                                                        .child("accountType");
-                                                                                query1.addListenerForSingleValueEvent(new ValueEventListener() {
-                                                                                    @Override
-                                                                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                                                        if(snapshot.getValue(String.class).equals("open")){
-                                                                                            firebaseModel.getReference().child("users").child(nick).child("subscription")
-                                                                                                    .child(subscriber.getSub()).setValue(subscriber.getSub());
-                                                                                            firebaseModel.getReference().child("users").child(subscriber.getSub()).child("subscribers")
-                                                                                                    .child(nick).setValue(nick);
-                                                                                            String numToBase=firebaseModel.getReference().child("users")
-                                                                                                    .child(subscriber.getSub()).child("nontifications")
-                                                                                                    .push().getKey();
-                                                                                            Date date = new Date();
-                                                                                            SimpleDateFormat formatter = new SimpleDateFormat("EEE, MMM dd hh:mm a");
-                                                                                            String dateAndTime = formatter.format(date);
-                                                                                            firebaseModel.getReference().child("users")
-                                                                                                    .child(subscriber.getSub()).child("nontifications")
-                                                                                                    .child(numToBase).setValue(new Nontification(nick,"не отправлено","обычный"
-                                                                                                    ,""," "," ","не просмотрено",numToBase,0));
-                                                                                            holder.unsubscribe.setText("Отписаться");
-                                                                                            holder.unsubscribe.setTextColor(Color.parseColor("#F3A2E5"));
-                                                                                            holder.unsubscribe.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
-                                                                                            a=0;
-                                                                                        }else {
-                                                                                            firebaseModel.getReference().child("users").child(subscriber.getSub()).child("requests")
-                                                                                                    .child(nick).setValue(nick);
-                                                                                            String numToBase=firebaseModel.getReference().child("users")
-                                                                                                    .child(subscriber.getSub()).child("nontifications")
-                                                                                                    .push().getKey();
-                                                                                            Date date = new Date();
-                                                                                            SimpleDateFormat formatter = new SimpleDateFormat("EEE, MMM dd hh:mm a");
-                                                                                            String dateAndTime = formatter.format(date);
-                                                                                            firebaseModel.getReference().child("users")
-                                                                                                    .child(subscriber.getSub()).child("nontifications")
-                                                                                                    .child(numToBase).setValue(new Nontification(nick,"не отправлено","запрос"
-                                                                                                    ,""," "," ","не просмотрено",numToBase,0));
-                                                                                            holder.unsubscribe.setText("Запрошено");
-                                                                                            holder.unsubscribe.setTextColor(Color.parseColor("#F3A2E5"));
-                                                                                            holder.unsubscribe.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
-                                                                                            a=0;
-                                                                                        }
-                                                                                    }
-
-                                                                                    @Override
-                                                                                    public void onCancelled(@NonNull DatabaseError error) {
-
-                                                                                    }
-                                                                                });
+                    public void onComplete(@NonNull Task<DataSnapshot> task) {
+                        if(task.isSuccessful()){
+                            DataSnapshot snapshot=task.getResult();
+                            if (snapshot.exists()) {
+                                a=1;
+                            } else {
+                                a=2;
+                            }
+                            firebaseModel.getUsersReference().child(subscriber.getSub())
+                                    .child("requests").child(nick).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<DataSnapshot> task) {
+                                    if(task.isSuccessful()){
+                                        DataSnapshot snapshot=task.getResult();
+                                        if (snapshot.exists()) {
+                                            a=3;
+                                        }
+                                        firebaseModel.getUsersReference().child(subscriber.getSub())
+                                                .child("blackList").child(nick).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                                                if(task.isSuccessful()){
+                                                    DataSnapshot snapshot=task.getResult();
+                                                    if (snapshot.exists()) {
+                                                        a=4;
+                                                    }
+                                                    firebaseModel.getUsersReference().child(nick)
+                                                            .child("blackList").child(subscriber.getSub()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                                                        @Override
+                                                        public void onComplete(@NonNull Task<DataSnapshot> task) {
+                                                            if(task.isSuccessful()){
+                                                                DataSnapshot snapshot=task.getResult();
+                                                                if (snapshot.exists()) {
+                                                                    a=5;
+                                                                    holder.unsubscribe.setText("Pазблокировать");
+                                                                    holder.unsubscribe.setTextColor(Color.parseColor("#F3A2E5"));
+                                                                    holder.unsubscribe.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
+                                                                }
+                                                                if(a!=0) {
+                                                                    if (a == 2) {
+                                                                        Log.d("#####", "ab  " + a);
+                                                                        Query query1=firebaseModel.getUsersReference().child(subscriber.getSub())
+                                                                                .child("accountType");
+                                                                        query1.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                                            @Override
+                                                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                                                if(snapshot.getValue(String.class).equals("open")){
+                                                                                    firebaseModel.getReference().child("users").child(nick).child("subscription")
+                                                                                            .child(subscriber.getSub()).setValue(subscriber.getSub());
+                                                                                    firebaseModel.getReference().child("users").child(subscriber.getSub()).child("subscribers")
+                                                                                            .child(nick).setValue(nick);
+                                                                                    String numToBase=firebaseModel.getReference().child("users")
+                                                                                            .child(subscriber.getSub()).child("nontifications")
+                                                                                            .push().getKey();
+                                                                                    Date date = new Date();
+                                                                                    SimpleDateFormat formatter = new SimpleDateFormat("EEE, MMM dd hh:mm a");
+                                                                                    String dateAndTime = formatter.format(date);
+                                                                                    firebaseModel.getReference().child("users")
+                                                                                            .child(subscriber.getSub()).child("nontifications")
+                                                                                            .child(numToBase).setValue(new Nontification(nick,"не отправлено","обычный"
+                                                                                            ,""," "," ","не просмотрено",numToBase,0));
+                                                                                    holder.unsubscribe.setText("Отписаться");
+                                                                                    holder.unsubscribe.setTextColor(Color.parseColor("#F3A2E5"));
+                                                                                    holder.unsubscribe.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
+                                                                                    a=0;
+                                                                                }else {
+                                                                                    firebaseModel.getReference().child("users").child(subscriber.getSub()).child("requests")
+                                                                                            .child(nick).setValue(nick);
+                                                                                    String numToBase=firebaseModel.getReference().child("users")
+                                                                                            .child(subscriber.getSub()).child("nontifications")
+                                                                                            .push().getKey();
+                                                                                    Date date = new Date();
+                                                                                    SimpleDateFormat formatter = new SimpleDateFormat("EEE, MMM dd hh:mm a");
+                                                                                    String dateAndTime = formatter.format(date);
+                                                                                    firebaseModel.getReference().child("users")
+                                                                                            .child(subscriber.getSub()).child("nontifications")
+                                                                                            .child(numToBase).setValue(new Nontification(nick,"не отправлено","запрос"
+                                                                                            ,""," "," ","не просмотрено",numToBase,0));
+                                                                                    holder.unsubscribe.setText("Запрошено");
+                                                                                    holder.unsubscribe.setTextColor(Color.parseColor("#F3A2E5"));
+                                                                                    holder.unsubscribe.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
+                                                                                    a=0;
+                                                                                }
                                                                             }
-                                                                            if (a == 1) {
-                                                                                Log.d("#####", "one  " + a);
-                                                                                firebaseModel.getReference().child("users").child(nick).child("subscription")
-                                                                                        .child(subscriber.getSub()).removeValue();
-                                                                                firebaseModel.getReference().child("users").child(subscriber.getSub()).child("subscribers")
-                                                                                        .child(nick).removeValue();
-                                                                                holder.unsubscribe.setText("Подписаться");
-                                                                                holder.unsubscribe.setTextColor(Color.parseColor("#FFFEFE"));
-                                                                                holder.unsubscribe.setBackgroundResource(R.drawable.corners10dpappcolor);
-                                                                                a=0;
+
+                                                                            @Override
+                                                                            public void onCancelled(@NonNull DatabaseError error) {
 
                                                                             }
-                                                                            if (a == 3) {
-                                                                                firebaseModel.getReference().child("users").child(subscriber.getSub()).child("requests")
-                                                                                        .child(nick).removeValue();
-                                                                                holder.unsubscribe.setText("Подписаться");
-                                                                                holder.unsubscribe.setTextColor(Color.parseColor("#FFFEFE"));
-                                                                                holder.unsubscribe.setBackgroundResource(R.drawable.corners10dpappcolor);
-                                                                                a=0;
+                                                                        });
+                                                                    }
+                                                                    if (a == 1) {
+                                                                        Log.d("#####", "one  " + a);
+                                                                        firebaseModel.getReference().child("users").child(nick).child("subscription")
+                                                                                .child(subscriber.getSub()).removeValue();
+                                                                        firebaseModel.getReference().child("users").child(subscriber.getSub()).child("subscribers")
+                                                                                .child(nick).removeValue();
+                                                                        holder.unsubscribe.setText("Подписаться");
+                                                                        holder.unsubscribe.setTextColor(Color.parseColor("#FFFEFE"));
+                                                                        holder.unsubscribe.setBackgroundResource(R.drawable.corners10dpappcolor);
+                                                                        a=0;
 
-                                                                            }if (a == 4) {
-                                                                                Toast.makeText(v.getContext(), "Пользователь заблокировал тебя", Toast.LENGTH_SHORT).show();
-                                                                                a=0;
-                                                                            }
-                                                                            if (a == 5) {
-                                                                                firebaseModel.getUsersReference().child(nick).child("blackList")
-                                                                                        .child(subscriber.getSub()).removeValue();
-                                                                                holder.unsubscribe.setText("Подписаться");
-                                                                                holder.unsubscribe.setTextColor(Color.parseColor("#FFFEFE"));
-                                                                                holder.unsubscribe.setBackgroundResource(R.drawable.corners10dpappcolor);
-                                                                                a=0;
-                                                                            }
-                                                                        }
+                                                                    }
+                                                                    if (a == 3) {
+                                                                        firebaseModel.getReference().child("users").child(subscriber.getSub()).child("requests")
+                                                                                .child(nick).removeValue();
+                                                                        holder.unsubscribe.setText("Подписаться");
+                                                                        holder.unsubscribe.setTextColor(Color.parseColor("#FFFEFE"));
+                                                                        holder.unsubscribe.setBackgroundResource(R.drawable.corners10dpappcolor);
+                                                                        a=0;
+
+                                                                    }if (a == 4) {
+                                                                        Toast.makeText(v.getContext(), "Пользователь заблокировал тебя", Toast.LENGTH_SHORT).show();
+                                                                        a=0;
+                                                                    }
+                                                                    if (a == 5) {
+                                                                        firebaseModel.getUsersReference().child(nick).child("blackList")
+                                                                                .child(subscriber.getSub()).removeValue();
+                                                                        holder.unsubscribe.setText("Подписаться");
+                                                                        holder.unsubscribe.setTextColor(Color.parseColor("#FFFEFE"));
+                                                                        holder.unsubscribe.setBackgroundResource(R.drawable.corners10dpappcolor);
+                                                                        a=0;
                                                                     }
                                                                 }
-                                                            });
+                                                            }
                                                         }
-                                                    }
-                                                });
+                                                    });
+                                                }
                                             }
-                                        }
-                                    });
+                                        });
+                                    }
                                 }
-                            }
-                        });
+                            });
+                        }
                     }
                 });
             }
-        });
-    }
+        });    }
 
 
 

@@ -60,12 +60,6 @@ public class ActiveMinersAdapter extends RecyclerView.Adapter<ActiveMinersAdapte
                 firebaseModel.getUsersReference().child(nick)
                         .child("activeMiners").child(String.valueOf(miner.getMinerPrice())).removeValue();
                 holder.putAway.setText("Не активен");
-                RecentMethods.GetActiveMiner(nick, firebaseModel, new Callbacks.GetActiveMiners() {
-                    @Override
-                    public void GetActiveMiners(ArrayList<Miner> activeMinersFromBase) {
-                        userInformation.setMiners(activeMinersFromBase);
-                    }
-                });
             }
         });
     }

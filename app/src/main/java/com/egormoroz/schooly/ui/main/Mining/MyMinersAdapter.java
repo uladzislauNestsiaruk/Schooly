@@ -62,59 +62,34 @@ public class MyMinersAdapter extends RecyclerView.Adapter<MyMinersAdapter.ViewHo
         holder.inHour.setText("+"+String.valueOf(miner.getInHour())+"S");
         holder.minerImage.setVisibility(View.VISIBLE);
         Picasso.get().load(miner.getMinerImage()).into(holder.minerImage);
-        RecentMethods.GetActiveMiner(nick, firebaseModel, new Callbacks.GetActiveMiners() {
-            @Override
-            public void GetActiveMiners(ArrayList<Miner> activeMinersFromBase) {
-                firebaseModel.getUsersReference().child(nick)
-                        .child("activeMiners").child(String.valueOf(miner.getMinerPrice()))
-                .get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DataSnapshot> task) {
-                        if (task.isSuccessful()){
-                            DataSnapshot snapshot= task.getResult();
-                            if(snapshot.exists()){
-                                holder.use.setText("Используется");
-                                holder.use.setBackgroundResource(R.drawable.corners14dpappcolor2dpstroke);
-                                holder.use.setTextColor(Color.parseColor("#F3A2E5"));
-                            }
-                        }
-                    }
-                });
-                if(activeMinersFromBase.size()==5){
-                    holder.use.setBackgroundResource(R.drawable.corners14grey);
-                }
+        for (int i=0;i<userInformation.getMiners().size();i++){
+            Miner miner1=userInformation.getMiners().get(i);
+            if(String.valueOf(miner1.getMinerPrice()).equals(String.valueOf(miner.getMinerPrice()))){
+                holder.use.setText("Используется");
+                holder.use.setBackgroundResource(R.drawable.corners14dpappcolor2dpstroke);
+                holder.use.setTextColor(Color.parseColor("#F3A2E5"));
             }
-        });
+        }
         holder.use.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.GetActiveMiner(nick, firebaseModel, new Callbacks.GetActiveMiners() {
-                    @Override
-                    public void GetActiveMiners(ArrayList<Miner> activeMinersFromBase) {
-                        if(holder.use.getText().toString().equals("Используется")){
+                if(holder.use.getText().toString().equals("Используется")){
 
-                        }else{
-                            if(activeMinersFromBase.size()==5){
-                                holder.use.setBackgroundResource(R.drawable.corners14grey);
-                                Toast.makeText(v.getContext(), "Пять майнеров уже активны",Toast.LENGTH_SHORT).show();
-                            }else {int pos=holder.getAdapterPosition();
-                                holder.use.setText("Используется");
-                                holder.use.setBackgroundResource(R.drawable.corners14dpappcolor2dpstroke);
-                                holder.use.setTextColor(Color.parseColor("#F3A2E5"));
-                                firebaseModel.getUsersReference().child(nick)
-                                        .child("activeMiners")
-                                        .child(String.valueOf(miner.getMinerPrice())).setValue(listAdapter.get(pos));
-                                RecentMethods.GetActiveMiner(nick, firebaseModel, new Callbacks.GetActiveMiners() {
-                                    @Override
-                                    public void GetActiveMiners(ArrayList<Miner> activeMinersFromBase) {
-                                        userInformation.setMiners(activeMinersFromBase);
-                                    }
-                                });
+                }else{
+                    if(userInformation.getMiners().size()==5){
+                        holder.use.setBackgroundResource(R.drawable.corners14grey);
+                        Toast.makeText(v.getContext(), "Пять майнеров уже активны",Toast.LENGTH_SHORT).show();
+                    }else {
+                        int pos=holder.getAdapterPosition();
+                        holder.use.setText("Используется");
+                        holder.use.setBackgroundResource(R.drawable.corners14dpappcolor2dpstroke);
+                        holder.use.setTextColor(Color.parseColor("#F3A2E5"));
+                        firebaseModel.getUsersReference().child(nick)
+                                .child("activeMiners")
+                                .child(String.valueOf(miner.getMinerPrice())).setValue(listAdapter.get(pos));
 
-                            }
-                        }
                     }
-                });
+                }
             }
         });
     }

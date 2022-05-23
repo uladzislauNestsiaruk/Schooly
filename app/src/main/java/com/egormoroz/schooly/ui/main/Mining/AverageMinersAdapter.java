@@ -17,6 +17,7 @@ import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
+import com.egormoroz.schooly.ui.main.UserInformation;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.Query;
@@ -30,13 +31,15 @@ import java.util.ArrayList;
 public class AverageMinersAdapter extends RecyclerView.Adapter<AverageMinersAdapter.ViewHolder> {
 
     ArrayList<Miner> listAdapterAverageMiner;
-    private ItemClickListener clickListener;
+    String nick;
     private FirebaseModel firebaseModel = new FirebaseModel();
     AverageMinersAdapter.ItemClickListener itemClickListener;
+    UserInformation userInformation;
 
-    public AverageMinersAdapter(ArrayList<Miner> listAdapter, ItemClickListener itemClickListener) {
+    public AverageMinersAdapter(ArrayList<Miner> listAdapter, ItemClickListener itemClickListener, UserInformation userInformation) {
         this.listAdapterAverageMiner = listAdapter;
         this.itemClickListener= itemClickListener;
+        this.userInformation=userInformation;
     }
 
 
@@ -52,64 +55,39 @@ public class AverageMinersAdapter extends RecyclerView.Adapter<AverageMinersAdap
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         firebaseModel.initAll();
+        nick=userInformation.getNick();
         Miner miner=listAdapterAverageMiner.get(position);
         holder.minerPrice.setText(String.valueOf(miner.getMinerPrice()));
         holder.inHour.setText("+"+String.valueOf(miner.getInHour()+"S в час"));
         String minerPriceText= (String) holder.minerPrice.getText();
         holder.minerImage.setVisibility(View.VISIBLE);
         Picasso.get().load(miner.getMinerImage()).into(holder.minerImage);
-        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+        for(int i=0;i<userInformation.getMyMiners().size();i++){
+            Miner miner1=userInformation.getMyMiners().get(i);
+            if(String.valueOf(miner1.getMinerPrice()).equals(String.valueOf(miner.getMinerPrice()))){
+                holder.buy.setText("Куплено");
+                holder.buy.setBackgroundResource(R.drawable.corners14grey);
+            }
+        }
+        holder.buy.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void PassUserNick(String nick) {
-                RecentMethods.GetMoneyFromBase(nick, firebaseModel, new Callbacks.MoneyFromBase() {
+            public void onClick(View v) {
+                Query query=firebaseModel.getUsersReference().child(nick).child("miners")
+                        .child(String.valueOf(holder.getAdapterPosition())+"medium");
+                query.addValueEventListener(new ValueEventListener() {
                     @Override
-                    public void GetMoneyFromBase(long money) {
-                        Query query=firebaseModel.getUsersReference().child(nick).child("miners")
-                                .child(String.valueOf(holder.getAdapterPosition())+"medium");
-                        query.addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                if(snapshot.exists()){
-                                    holder.buy.setText("Куплено");
-                                    holder.buy.setBackgroundResource(R.drawable.corners14grey);
-                                }
-                            }
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if(snapshot.exists()){
+                            Toast.makeText(v.getContext(), "Майнер куплен", Toast.LENGTH_SHORT).show();
+                        }else{
+                            int pos=holder.getAdapterPosition();
+                            itemClickListener.onItemClick(pos,miner,"medium",userInformation.getmoney());
+                        }
+                    }
 
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
 
-                            }
-                        });
-                        holder.buy.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Query query=firebaseModel.getUsersReference().child(nick).child("miners")
-                                        .child(String.valueOf(holder.getAdapterPosition())+"medium");
-                                query.addValueEventListener(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                        if(snapshot.exists()){
-                                            Toast.makeText(v.getContext(), "Майнер куплен", Toast.LENGTH_SHORT).show();
-                                        }else{
-                                            int pos=holder.getAdapterPosition();
-                                            RecentMethods.GetMoneyFromBase(nick, firebaseModel, new Callbacks.MoneyFromBase() {
-                                                @Override
-                                                public void GetMoneyFromBase(long money) {
-                                                    if (money!=-1){
-                                                        itemClickListener.onItemClick(pos,miner,"medium",money);
-                                                    }
-                                                }
-                                            });
-                                        }
-                                    }
-
-                                    @Override
-                                    public void onCancelled(@NonNull DatabaseError error) {
-
-                                    }
-                                });
-                            }
-                        });
                     }
                 });
             }

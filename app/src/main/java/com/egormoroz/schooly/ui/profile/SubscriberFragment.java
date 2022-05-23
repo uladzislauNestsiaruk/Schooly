@@ -115,7 +115,7 @@ public class SubscriberFragment extends Fragment {
                     }else {
                         emptyList.setVisibility(View.GONE);
                         recyclerView.setVisibility(View.VISIBLE);
-                        SubscribersAdapter subscribersAdapter = new SubscribersAdapter(userFromBase);
+                        SubscribersAdapter subscribersAdapter = new SubscribersAdapter(userFromBase,userInformation);
                         recyclerView.setAdapter(subscribersAdapter);
                         SubscribersAdapter.ItemClickListener clickListener =
                                 new SubscribersAdapter.ItemClickListener() {
@@ -155,7 +155,7 @@ public class SubscriberFragment extends Fragment {
                     } else {
                         emptyList.setVisibility(View.GONE);
                         recyclerView.setVisibility(View.VISIBLE);
-                        SubscribersAdapter subscribersAdapter = new SubscribersAdapter(subscribers);
+                        SubscribersAdapter subscribersAdapter = new SubscribersAdapter(subscribers,userInformation);
                         recyclerView.setAdapter(subscribersAdapter);
                         SubscribersAdapter.ItemClickListener clickListener =
                                 new SubscribersAdapter.ItemClickListener() {
@@ -182,7 +182,7 @@ public class SubscriberFragment extends Fragment {
             } else {
                 emptyList.setVisibility(View.GONE);
                 recyclerView.setVisibility(View.VISIBLE);
-                SubscribersAdapter subscribersAdapter = new SubscribersAdapter(userInformation.getSubscribers());
+                SubscribersAdapter subscribersAdapter = new SubscribersAdapter(userInformation.getSubscribers(),userInformation);
                 recyclerView.setAdapter(subscribersAdapter);
                 SubscribersAdapter.ItemClickListener clickListener =
                         new SubscribersAdapter.ItemClickListener() {
@@ -243,7 +243,7 @@ public class SubscriberFragment extends Fragment {
                                 }else {
                                     emptyList.setVisibility(View.GONE);
                                     recyclerView.setVisibility(View.VISIBLE);
-                                    SubscribersAdapter subscribersAdapter = new SubscribersAdapter(userFromBase);
+                                    SubscribersAdapter subscribersAdapter = new SubscribersAdapter(userFromBase,userInformation);
                                     recyclerView.setAdapter(subscribersAdapter);
                                     SubscribersAdapter.ItemClickListener clickListener =
                                             new SubscribersAdapter.ItemClickListener() {
@@ -287,7 +287,7 @@ public class SubscriberFragment extends Fragment {
                     }else {
                         emptyList.setVisibility(View.GONE);
                         recyclerView.setVisibility(View.VISIBLE);
-                        SubscribersAdapter subscribersAdapter = new SubscribersAdapter(userFromBase);
+                        SubscribersAdapter subscribersAdapter = new SubscribersAdapter(userFromBase,userInformation);
                         recyclerView.setAdapter(subscribersAdapter);
                         SubscribersAdapter.ItemClickListener clickListener =
                                 new SubscribersAdapter.ItemClickListener() {

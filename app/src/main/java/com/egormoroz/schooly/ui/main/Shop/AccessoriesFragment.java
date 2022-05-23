@@ -86,40 +86,6 @@ public class AccessoriesFragment extends Fragment {
 
 
     public void loadClothesFromBase(){
-        RecentMethods.getClothes(firebaseModel, new Callbacks.GetClothes() {
-            @Override
-            public void getClothes(ArrayList<Clothes> allClothes) {
-                clothesArrayList.addAll(allClothes);
-                for(int i=0;i<clothesArrayList.size();i++){
-                    Clothes cl=clothesArrayList.get(i);
-                    if (cl.getClothesType().equals("accessories")){
-                        accessoriesArrayList.add(cl);
-                    }
-//                           if (cl.getPurchaseNumber()==1){
-//                               firebaseModel.getReference("AppData/Clothes/Popular").setValue()
-//                            }
-                }
-                Log.d("#####", "size  "+clothesArrayList);
-                NewClothesAdapter newClothesAdapter=new NewClothesAdapter(accessoriesArrayList,itemClickListener);
-                clothes.setAdapter(newClothesAdapter);
-            }
-        });
-        RecentMethods.getPopular( firebaseModel, new Callbacks.GetClothes() {
-            @Override
-            public void getClothes(ArrayList<Clothes> allClothes) {
-                popularClothesArrayList.addAll(allClothes);
-                for(int i=0;i<popularClothesArrayList.size();i++){
-                    Clothes cl=popularClothesArrayList.get(i);
-                    if (cl.getClothesType().equals("accessories")){
-                        popularSortAccessoriesArrayList.add(cl);
-                    }
-                }
-                PopularClothesAdapter popularClothesAdapter=new PopularClothesAdapter(popularSortAccessoriesArrayList,itemClickListenerPopular);
-                popularClothes.setLayoutManager(new GridLayoutManager(getActivity(), 2));
-                popularClothes.setNestedScrollingEnabled(false);
-                popularClothes.setAdapter(popularClothesAdapter);
-            }
-        });
         if(bundle.getSerializable("ACCESSORIES_NEW")!=null){
             ArrayList<Clothes> newClothesArrayList= (ArrayList<Clothes>) bundle.getSerializable("ACCESSORIES_NEW");
             NewClothesAdapter newClothesAdapter=new NewClothesAdapter(newClothesArrayList,itemClickListener);

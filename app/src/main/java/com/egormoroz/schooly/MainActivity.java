@@ -19,6 +19,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.egormoroz.schooly.ui.coins.CoinsMainFragment;
 import com.egormoroz.schooly.ui.coins.Transfer;
 import com.egormoroz.schooly.ui.main.MainFragment;
+import com.egormoroz.schooly.ui.main.Mining.Miner;
 import com.egormoroz.schooly.ui.main.RegisrtationstartFragment;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
 import com.egormoroz.schooly.ui.main.UserInformation;
@@ -300,6 +301,18 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void GetMoneyFromBase(long money) {
                         userInformation.setmoney(money);
+                    }
+                });
+                RecentMethods.GetActiveMiner(nick, firebaseModel, new Callbacks.GetActiveMiners() {
+                    @Override
+                    public void GetActiveMiners(ArrayList<Miner> activeMinersFromBase) {
+                        userInformation.setMiners(activeMinersFromBase);
+                    }
+                });
+                RecentMethods.MyMinersFromBase(nick, firebaseModel, new Callbacks.GetMyMinerFromBase() {
+                    @Override
+                    public void GetMyMinerFromBase(ArrayList<Miner> myMinersFromBase) {
+                        userInformation.setMyMiners(myMinersFromBase);
                     }
                 });
                 RecentMethods.getClothes(firebaseModel, new Callbacks.GetClothes() {

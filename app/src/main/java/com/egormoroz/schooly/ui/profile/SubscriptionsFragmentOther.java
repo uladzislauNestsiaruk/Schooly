@@ -40,7 +40,7 @@ public class SubscriptionsFragmentOther extends Fragment {
     String otherUserNick,userNameToProfile,userName,nick;
     TextView emptyList;
     EditText searchUser;
-    UserInformation userInformation;
+    UserInformation userInformation,info;
     Fragment fragment;
     Bundle bundle;
     ArrayList<Subscriber> userFromBase,allSubs;
@@ -111,7 +111,7 @@ public class SubscriptionsFragmentOther extends Fragment {
                     }else {
                         emptyList.setVisibility(View.GONE);
                         recyclerView.setVisibility(View.VISIBLE);
-                        SubscriptionsAdapterOther subscriptionsAdapterOther = new SubscriptionsAdapterOther(userFromBase);
+                        SubscriptionsAdapterOther subscriptionsAdapterOther = new SubscriptionsAdapterOther(userFromBase,userInformation);
                         recyclerView.setAdapter(subscriptionsAdapterOther);
                         SubscriptionsAdapterOther.ItemClickListener clickListener =
                                 new SubscriptionsAdapterOther.ItemClickListener() {
@@ -139,6 +139,44 @@ public class SubscriptionsFragmentOther extends Fragment {
         initUserEnter();
     }
     public void putSubscriptionListInAdapter(){
+        if(bundle!=null){
+            if(bundle.getSerializable(otherUserNick+"PROFILE_OTHER_BUNDLE")!=null){
+                info= (UserInformation) bundle.getSerializable(otherUserNick+"PROFILE_OTHER_BUNDLE");
+                if(info.getSubscription()!=null){
+                    if (info.getSubscription().size()==0){
+                        emptyList.setVisibility(View.VISIBLE);
+                        recyclerView.setVisibility(View.GONE);
+                    }else {
+                        emptyList.setVisibility(View.GONE);
+                        recyclerView.setVisibility(View.VISIBLE);
+                        SubscriptionsAdapterOther subscriptionsAdapterOther = new SubscriptionsAdapterOther(info.getSubscription(),userInformation);
+                        recyclerView.setAdapter(subscriptionsAdapterOther);
+                        SubscriptionsAdapterOther.ItemClickListener clickListener =
+                                new SubscriptionsAdapterOther.ItemClickListener() {
+                                    @Override
+                                    public void onItemClick(View view, int position) {
+                                        Subscriber user = subscriptionsAdapterOther.getItem(position);
+                                        userNameToProfile=user.getSub();
+                                        if(userNameToProfile.equals(nick)){
+                                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback",nick,SubscriptionsFragmentOther.newInstance(fragment,otherUserNick,userInformation,bundle),userInformation,bundle),getActivity());
+                                        }else {
+                                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile,SubscriptionsFragmentOther.newInstance(fragment,otherUserNick,userInformation,bundle),userInformation,bundle
+                                            ), getActivity());
+                                        }
+                                    }
+                                };
+                        subscriptionsAdapterOther.setClickListener(clickListener);
+                    }
+                }else{
+                    getOtherSubsList();
+                }
+            }else{
+                getOtherSubsList();
+            }
+        }
+    }
+
+    public void getOtherSubsList(){
         RecentMethods.getSubscriptionList(otherUserNick, firebaseModel, new Callbacks.getFriendsList() {
             @Override
             public void getFriendsList(ArrayList<Subscriber> friends) {
@@ -148,7 +186,7 @@ public class SubscriptionsFragmentOther extends Fragment {
                 }else {
                     emptyList.setVisibility(View.GONE);
                     recyclerView.setVisibility(View.VISIBLE);
-                    SubscriptionsAdapterOther subscriptionsAdapterOther = new SubscriptionsAdapterOther(friends);
+                    SubscriptionsAdapterOther subscriptionsAdapterOther = new SubscriptionsAdapterOther(friends,userInformation);
                     recyclerView.setAdapter(subscriptionsAdapterOther);
                     SubscriptionsAdapterOther.ItemClickListener clickListener =
                             new SubscriptionsAdapterOther.ItemClickListener() {
@@ -211,7 +249,7 @@ public class SubscriptionsFragmentOther extends Fragment {
                                 }else {
                                     emptyList.setVisibility(View.GONE);
                                     recyclerView.setVisibility(View.VISIBLE);
-                                    SubscriptionsAdapterOther subscriptionsAdapterOther = new SubscriptionsAdapterOther(userFromBase);
+                                    SubscriptionsAdapterOther subscriptionsAdapterOther = new SubscriptionsAdapterOther(userFromBase,userInformation);
                                     recyclerView.setAdapter(subscriptionsAdapterOther);
                                     SubscriptionsAdapterOther.ItemClickListener clickListener =
                                             new SubscriptionsAdapterOther.ItemClickListener() {
@@ -255,7 +293,7 @@ public class SubscriptionsFragmentOther extends Fragment {
                     }else {
                         emptyList.setVisibility(View.GONE);
                         recyclerView.setVisibility(View.VISIBLE);
-                        SubscriptionsAdapterOther subscriptionsAdapterOther = new SubscriptionsAdapterOther(userFromBase);
+                        SubscriptionsAdapterOther subscriptionsAdapterOther = new SubscriptionsAdapterOther(userFromBase,userInformation);
                         recyclerView.setAdapter(subscriptionsAdapterOther);
                         SubscriptionsAdapterOther.ItemClickListener clickListener =
                                 new SubscriptionsAdapterOther.ItemClickListener() {

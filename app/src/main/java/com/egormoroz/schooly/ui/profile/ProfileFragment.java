@@ -835,9 +835,12 @@ public class ProfileFragment extends Fragment {
                 firebaseModel.getUsersReference().child(userInformation.getNick())
                         .child("blackList").child(info.getNick())
                         .setValue(info.getNick());
-                subscribeClose.setText("Подписаться");
-                subscribeClose.setTextColor(Color.parseColor("#FEFEFE"));
-                subscribeClose.setBackgroundResource(R.drawable.corners10dpappcolor);
+                subscribeClose.setText("Разблокировать");
+                subscribeClose.setTextColor(Color.parseColor("#F3A2E5"));
+                subscribeClose.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
+                subscribe.setText("Разблокировать");
+                subscribe.setTextColor(Color.parseColor("#F3A2E5"));
+                subscribe.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
                 firebaseModel.getUsersReference().child(userInformation.getNick())
                         .child("subscription").child(info.getNick()).removeValue();
                 firebaseModel.getUsersReference().child(info.getNick())
@@ -1045,6 +1048,15 @@ public class ProfileFragment extends Fragment {
                     subscribe.setTextColor(Color.parseColor("#FFFEFE"));
                     subscribe.setBackgroundResource(R.drawable.corners10dpappcolor);
                 }
+                for(int i=0;i<userInformation.getBlackList().size();i++){
+                    Subscriber sub=userInformation.getBlackList().get(i);
+                    if(sub.getSub().equals(info.getNick())){
+                        a=5;
+                        subscribe.setText("Разблокировать");
+                        subscribe.setTextColor(Color.parseColor("#F3A2E5"));
+                        subscribe.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
+                    }
+                }
                 subscribe.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -1067,6 +1079,15 @@ public class ProfileFragment extends Fragment {
                         showBottomSheetDialog();
                     }
                 });
+                for(int i=0;i<userInformation.getBlackList().size();i++){
+                    Subscriber sub=userInformation.getBlackList().get(i);
+                    if(sub.getSub().equals(info.getNick())){
+                        a=5;
+                        subscribeClose.setText("Разблокировать");
+                        subscribeClose.setTextColor(Color.parseColor("#F3A2E5"));
+                        subscribeClose.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
+                    }
+                }
                 firebaseModel.getUsersReference().child(info.getNick())
                         .child("requests").child(userInformation.getNick()).addValueEventListener(new ValueEventListener() {
                     @Override
@@ -1095,7 +1116,7 @@ public class ProfileFragment extends Fragment {
                             subscribeClose.setBackgroundResource(R.drawable.corners10dpappcolor);
                             a = 0;
                             checkProfile();
-                        } else {
+                        } else if(a!=3 && a!=5){
                             firebaseModel.getReference().child("users").child(info.getNick()).child("requests")
                                     .child(userInformation.getNick()).setValue(userInformation.getNick());
                             String numToBase = firebaseModel.getReference().child("users")
@@ -1111,6 +1132,11 @@ public class ProfileFragment extends Fragment {
                             subscribeClose.setText("Запрошено");
                             subscribeClose.setTextColor(Color.parseColor("#F3A2E5"));
                             subscribeClose.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
+                            a = 0;
+                            checkProfile();
+                        }else if(a==5){
+                            firebaseModel.getUsersReference().child(userInformation.getNick()).child("blackList")
+                                    .child(info.getNick()).removeValue();
                             a = 0;
                             checkProfile();
                         }
@@ -1258,59 +1284,9 @@ public class ProfileFragment extends Fragment {
                                                             if (a == 5) {
                                                                 firebaseModel.getUsersReference().child(userInformation.getNick()).child("blackList")
                                                                         .child(info.getNick()).removeValue();
-                                                                if(profileCheckValue!=1){
-                                                                    firebaseModel.getUsersReference().child(info.getNick())
-                                                                            .child("accountType").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                                                                        @Override
-                                                                        public void onComplete(@NonNull Task<DataSnapshot> task) {
-                                                                            if (task.isSuccessful()) {
-                                                                                DataSnapshot snapshot = task.getResult();
-                                                                                if (snapshot.getValue(String.class).equals("open")) {
-                                                                                    firebaseModel.getReference().child("users").child(userInformation.getNick()).child("subscription")
-                                                                                            .child(info.getNick()).setValue(info.getNick());
-                                                                                    firebaseModel.getReference().child("users").child(info.getNick()).child("subscribers")
-                                                                                            .child(userInformation.getNick()).setValue(userInformation.getNick());
-                                                                                    String numToBase = firebaseModel.getReference().child("users")
-                                                                                            .child(info.getNick()).child("nontifications")
-                                                                                            .push().getKey();
-                                                                                    Date date = new Date();
-                                                                                    SimpleDateFormat formatter = new SimpleDateFormat("EEE, MMM dd hh:mm a");
-                                                                                    String dateAndTime = formatter.format(date);
-                                                                                    firebaseModel.getReference().child("users")
-                                                                                            .child(info.getNick()).child("nontifications")
-                                                                                            .child(numToBase).setValue(new Nontification(userInformation.getNick(), "не отправлено", "обычный"
-                                                                                            , "", " ", " ", "не просмотрено", numToBase, 0));
-                                                                                    subscribe.setText("Отписаться");
-                                                                                    subscribe.setTextColor(Color.parseColor("#F3A2E5"));
-                                                                                    subscribe.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
-                                                                                    a = 0;
-                                                                                    checkProfile();
-                                                                                } else {
-                                                                                    firebaseModel.getReference().child("users").child(info.getNick()).child("requests")
-                                                                                            .child(userInformation.getNick()).setValue(userInformation.getNick());
-                                                                                    String numToBase = firebaseModel.getReference().child("users")
-                                                                                            .child(info.getNick()).child("nontifications")
-                                                                                            .push().getKey();
-                                                                                    Date date = new Date();
-                                                                                    SimpleDateFormat formatter = new SimpleDateFormat("EEE, MMM dd hh:mm a");
-                                                                                    String dateAndTime = formatter.format(date);
-                                                                                    firebaseModel.getReference().child("users")
-                                                                                            .child(info.getNick()).child("nontifications")
-                                                                                            .child(numToBase).setValue(new Nontification(userInformation.getNick(), "не отправлено", "запрос"
-                                                                                            , "", " ", " ", "не просмотрено", numToBase, 0));
-                                                                                    subscribe.setText("Запрошено");
-                                                                                    subscribe.setTextColor(Color.parseColor("#F3A2E5"));
-                                                                                    subscribe.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
-                                                                                    a = 0;
-                                                                                    checkProfile();
-                                                                                }
-                                                                            }
-                                                                        }
-                                                                    });
-                                                                }else {
-                                                                    Toast.makeText(getContext(), "Пользователь заблокировал тебя", Toast.LENGTH_SHORT).show();
-                                                                    a = 0;
-                                                                }
+                                                                subscribe.setText("Подписаться");
+                                                                subscribe.setTextColor(Color.parseColor("#FFFEFE"));
+                                                                subscribe.setBackgroundResource(R.drawable.corners10dpappcolor);
                                                                 a = 0;
                                                                 checkProfile();
                                                             }

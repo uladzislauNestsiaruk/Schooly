@@ -41,7 +41,7 @@ public class SubscribesFragmentOther extends Fragment {
     String otherUserNick, userNameToProfile,userName,nick;
     TextView emptyList;
     EditText searchUser;
-    UserInformation userInformation;
+    UserInformation userInformation,info;
     Fragment fragment;
     Bundle bundle;
     ArrayList<Subscriber> userFromBase,allSubs;
@@ -114,7 +114,7 @@ public class SubscribesFragmentOther extends Fragment {
                     } else {
                         emptyList.setVisibility(View.GONE);
                         recyclerView.setVisibility(View.VISIBLE);
-                        SubscribersAdapterOther subscribersAdapterOther = new SubscribersAdapterOther(userFromBase);
+                        SubscribersAdapterOther subscribersAdapterOther = new SubscribersAdapterOther(userFromBase,userInformation);
                         recyclerView.setAdapter(subscribersAdapterOther);
                         SubscribersAdapterOther.ItemClickListener clickListener =
                                 new SubscribersAdapterOther.ItemClickListener() {
@@ -142,6 +142,44 @@ public class SubscribesFragmentOther extends Fragment {
         initUserEnter();
     }
     public void putSubscribersListInAdapter() {
+        if(bundle!=null){
+            if(bundle.getSerializable(otherUserNick+"PROFILE_OTHER_BUNDLE")!=null){
+                info= (UserInformation) bundle.getSerializable(otherUserNick+"PROFILE_OTHER_BUNDLE");
+                if(info.getSubscribers()!=null){
+                    if (info.getSubscribers().size() == 0) {
+                        emptyList.setVisibility(View.VISIBLE);
+                        recyclerView.setVisibility(View.GONE);
+                    } else {
+                        emptyList.setVisibility(View.GONE);
+                        recyclerView.setVisibility(View.VISIBLE);
+                        SubscribersAdapterOther subscribersAdapter = new SubscribersAdapterOther(info.getSubscribers(),userInformation);
+                        recyclerView.setAdapter(subscribersAdapter);
+                        SubscribersAdapterOther.ItemClickListener clickListener =
+                                new SubscribersAdapterOther.ItemClickListener() {
+                                    @Override
+                                    public void onItemClick(View view, int position) {
+                                        Subscriber user = subscribersAdapter.getItem(position);
+                                        userNameToProfile = user.getSub();
+                                        if(userNameToProfile.equals(nick)){
+                                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback",nick,SubscribesFragmentOther.newInstance(fragment,otherUserNick,userInformation,bundle),userInformation,bundle),getActivity());
+                                        }else {
+                                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile,SubscribesFragmentOther.newInstance(fragment,otherUserNick,userInformation,bundle),userInformation,bundle)
+                                                    ,getActivity());
+                                        }
+                                    }
+                                };
+                        subscribersAdapter.setClickListener(clickListener);
+                    }
+                }else {
+                    getOtherSubsList();
+                }
+            }else{
+                getOtherSubsList();
+            }
+        }
+    }
+
+    public void getOtherSubsList(){
         RecentMethods.getSubscribersList(otherUserNick, firebaseModel, new Callbacks.getSubscribersList() {
             @Override
             public void getSubscribersList(ArrayList<Subscriber> subscribers) {
@@ -151,7 +189,7 @@ public class SubscribesFragmentOther extends Fragment {
                 } else {
                     emptyList.setVisibility(View.GONE);
                     recyclerView.setVisibility(View.VISIBLE);
-                    SubscribersAdapterOther subscribersAdapter = new SubscribersAdapterOther(subscribers);
+                    SubscribersAdapterOther subscribersAdapter = new SubscribersAdapterOther(subscribers,userInformation);
                     recyclerView.setAdapter(subscribersAdapter);
                     SubscribersAdapterOther.ItemClickListener clickListener =
                             new SubscribersAdapterOther.ItemClickListener() {
@@ -216,7 +254,7 @@ public class SubscribesFragmentOther extends Fragment {
                                 } else {
                                     emptyList.setVisibility(View.GONE);
                                     recyclerView.setVisibility(View.VISIBLE);
-                                    SubscribersAdapterOther subscribersAdapterOther = new SubscribersAdapterOther(userFromBase);
+                                    SubscribersAdapterOther subscribersAdapterOther = new SubscribersAdapterOther(userFromBase,userInformation);
                                     recyclerView.setAdapter(subscribersAdapterOther);
                                     SubscribersAdapterOther.ItemClickListener clickListener =
                                             new SubscribersAdapterOther.ItemClickListener() {
@@ -261,7 +299,7 @@ public class SubscribesFragmentOther extends Fragment {
                     } else {
                         emptyList.setVisibility(View.GONE);
                         recyclerView.setVisibility(View.VISIBLE);
-                        SubscribersAdapterOther subscribersAdapterOther = new SubscribersAdapterOther(userFromBase);
+                        SubscribersAdapterOther subscribersAdapterOther = new SubscribersAdapterOther(userFromBase,userInformation);
                         recyclerView.setAdapter(subscribersAdapterOther);
                         SubscribersAdapterOther.ItemClickListener clickListener =
                                 new SubscribersAdapterOther.ItemClickListener() {
