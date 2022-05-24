@@ -86,7 +86,7 @@
         android:layout_below="@+id/sumText"
         android:layout_marginStart="20dp"
         android:fontFamily="@font/montserrat_extrabold"
-        android:inputType="numberDecimal"
+        android:inputType="numberSigned"
         android:maxLength="10"
         android:textColor="@color/app_color"
         android:textSize="22sp" />

@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -37,7 +38,8 @@ import java.util.Random;
 public class SendMoneyFragment extends Fragment {
 
     ImageView backToCoins;
-    TextView otherUserNickText,sum,balance;
+    TextView otherUserNickText,balance;
+    EditText sum;
     String otherUserNick,sumText,nick;
     long moneyBase,moneyBaseOther,sumLong;
     RelativeLayout transfer;
@@ -106,42 +108,46 @@ public class SendMoneyFragment extends Fragment {
 
     public void sendMoney(){
         sumText=sum.getText().toString();
-        if (sumText.length()==0){
-            Toast.makeText(getContext(), "Укажите сумму перевода", Toast.LENGTH_SHORT).show();
-        }else {
-            sumLong=Long.valueOf(sumText);
-            if(sumLong==0){
-                Toast.makeText(getContext(), "Сумма перевода должна быть больше нуля", Toast.LENGTH_SHORT).show();
-            }else if(sumLong>userInformation.getmoney()){
-                Toast.makeText(getContext(), "Недостаточно средств для перевода", Toast.LENGTH_SHORT).show();
-            }else if(sumLong<userInformation.getmoney() && !sumText.equals("0")){
-                firebaseModel.getUsersReference().child(otherUserNick).child("money")
-                        .setValue(sumLong+moneyBaseOther);
-                firebaseModel.getUsersReference().child(nick).child("money")
-                        .setValue(userInformation.getmoney()-sumLong);
-                Toast.makeText(getContext(), "Перевод выполнен", Toast.LENGTH_SHORT).show();
-                String num=firebaseModel.getUsersReference().child(otherUserNick).child("transferHistory")
-                        .push().getKey();
-                firebaseModel.getUsersReference().child(otherUserNick).child("transferHistory")
-                        .child(num).setValue(new Transfer(sumLong, nick, "from"));
-                firebaseModel.getUsersReference().child(nick).child("transferHistory")
-                        .child(num).setValue(new Transfer(sumLong, otherUserNick, "to"));
-                String uid=firebaseModel.getReference().child("users")
-                        .child(otherUserNick).child("nontifications").push().getKey();
-                firebaseModel.getReference().child("users")
-                        .child(otherUserNick).child("nontifications")
-                        .child(uid).setValue(new Nontification(nick,"не отправлено","перевод"
-                        , "",String.valueOf(sumLong)," ","не просмотрено",uid,0));
-                firebaseModel.getUsersReference().child(nick).child("money")
-                        .get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DataSnapshot> task) {
-                        if(task.isSuccessful()){}
-                        DataSnapshot snapshot= task.getResult();
-                        userInformation.setmoney(snapshot.getValue(Long.class));
-                        RecentMethods.setCurrentFragment(TransferMoneyFragment.newInstance(fragment,userInformation,bundle), getActivity());
-                    }
-                });
+        if(sumText.contains("-")){
+            Toast.makeText(getContext(), "Неправильно введена сумма", Toast.LENGTH_SHORT).show();
+        }else{
+            if (sumText.length()==0){
+                Toast.makeText(getContext(), "Укажите сумму перевода", Toast.LENGTH_SHORT).show();
+            }else {
+                sumLong=Long.parseLong(String.valueOf(sumText));
+                if(sumLong==0){
+                    Toast.makeText(getContext(), "Сумма перевода должна быть больше нуля", Toast.LENGTH_SHORT).show();
+                }else if(sumLong>userInformation.getmoney()){
+                    Toast.makeText(getContext(), "Недостаточно средств для перевода", Toast.LENGTH_SHORT).show();
+                }else if(sumLong<userInformation.getmoney() && !sumText.equals("0")){
+                    firebaseModel.getUsersReference().child(otherUserNick).child("money")
+                            .setValue(sumLong+moneyBaseOther);
+                    firebaseModel.getUsersReference().child(nick).child("money")
+                            .setValue(userInformation.getmoney()-sumLong);
+                    Toast.makeText(getContext(), "Перевод выполнен", Toast.LENGTH_SHORT).show();
+                    String num=firebaseModel.getUsersReference().child(otherUserNick).child("transferHistory")
+                            .push().getKey();
+                    firebaseModel.getUsersReference().child(otherUserNick).child("transferHistory")
+                            .child(num).setValue(new Transfer(sumLong, nick, "from"));
+                    firebaseModel.getUsersReference().child(nick).child("transferHistory")
+                            .child(num).setValue(new Transfer(sumLong, otherUserNick, "to"));
+                    String uid=firebaseModel.getReference().child("users")
+                            .child(otherUserNick).child("nontifications").push().getKey();
+                    firebaseModel.getReference().child("users")
+                            .child(otherUserNick).child("nontifications")
+                            .child(uid).setValue(new Nontification(nick,"не отправлено","перевод"
+                            , "",String.valueOf(sumLong)," ","не просмотрено",uid,0));
+                    firebaseModel.getUsersReference().child(nick).child("money")
+                            .get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DataSnapshot> task) {
+                            if(task.isSuccessful()){}
+                            DataSnapshot snapshot= task.getResult();
+                            userInformation.setmoney(snapshot.getValue(Long.class));
+                            RecentMethods.setCurrentFragment(TransferMoneyFragment.newInstance(fragment,userInformation,bundle), getActivity());
+                        }
+                    });
+                }
             }
         }
     }

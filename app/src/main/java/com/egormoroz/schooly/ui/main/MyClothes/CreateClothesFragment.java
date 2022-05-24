@@ -60,7 +60,7 @@ public class CreateClothesFragment extends Fragment {
     FirebaseModel firebaseModel=new FirebaseModel();
     EditText editTextClothes,editClothesPrice,addDescriptionEdit;
     ImageView addModelFile,addModelImage,modelPhoto;
-    TextView modelWay,before,criteria
+    TextView before,criteria
             ,noTitle,noModel,noPhoto,noSum,exclusivePremium;
     RelativeLayout publish;
     RadioGroup radioGroup,radioGroupCurrency,radioGroupExclusive;
@@ -226,7 +226,7 @@ public class CreateClothesFragment extends Fragment {
                 }else {
                     radioButtonDollar.setChecked(false);
                     radioButtonCoin.setChecked(true);
-                    Toast.makeText(getContext(), "К сожалению, вы не подписаны на Schooly Premium", Toast.LENGTH_SHORT).show();
+                    showDialogDollarCurrency();
                 }
             }
         });
@@ -540,6 +540,24 @@ public class CreateClothesFragment extends Fragment {
                         .setValue(new ClothesRequest(type, imageApplication, Long.valueOf(editClothesPrice.getText().toString()), editTextClothes.getText().toString()
                                 , 111, nick, currencyType,addDescriptionEdit.getText().toString() ,modelApplication , bodyType,uid,exclusiveType));
                 Toast.makeText(getContext(), "Заявка отправлена", Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+    }
+
+    public void showDialogDollarCurrency(){
+
+        final Dialog dialog = new Dialog(getContext());
+        dialog.setContentView(R.layout.dialog_layout_dollar_currency);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        RelativeLayout relative=dialog.findViewById(R.id.Relative);
+
+        relative.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 dialog.dismiss();
             }
         });

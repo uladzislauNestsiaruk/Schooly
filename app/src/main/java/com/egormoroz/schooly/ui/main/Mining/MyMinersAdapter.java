@@ -62,6 +62,9 @@ public class MyMinersAdapter extends RecyclerView.Adapter<MyMinersAdapter.ViewHo
         holder.inHour.setText("+"+String.valueOf(miner.getInHour())+"S");
         holder.minerImage.setVisibility(View.VISIBLE);
         Picasso.get().load(miner.getMinerImage()).into(holder.minerImage);
+        if(userInformation.getMiners().size()==5){
+            holder.use.setBackgroundResource(R.drawable.corners14grey);
+        }
         for (int i=0;i<userInformation.getMiners().size();i++){
             Miner miner1=userInformation.getMiners().get(i);
             if(String.valueOf(miner1.getMinerPrice()).equals(String.valueOf(miner.getMinerPrice()))){
