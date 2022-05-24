@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
+import com.egormoroz.schooly.ui.main.UserInformation;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
@@ -29,11 +30,13 @@ public class MyClothesAdapter extends RecyclerView.Adapter<MyClothesAdapter.View
     StorageReference storageReference=storage.getReference();
     MyClothesAdapter.ItemClickListener itemClickListener;
     String clothesPriceString,profitTodayString,purchaseTodayString;
+    UserInformation userInformation;
     double perCent;
 
-    public MyClothesAdapter(ArrayList<Clothes> clothesArrayList, MyClothesAdapter.ItemClickListener itemClickListener) {
+    public MyClothesAdapter(ArrayList<Clothes> clothesArrayList, MyClothesAdapter.ItemClickListener itemClickListener, UserInformation userInformation) {
         this.clothesArrayList= clothesArrayList;
         this.itemClickListener= itemClickListener;
+        this.userInformation=userInformation;
     }
 
     public static void singeClothesInfo(MyClothesAdapter.ItemClickListener itemClickListener){

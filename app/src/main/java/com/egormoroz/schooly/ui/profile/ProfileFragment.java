@@ -146,6 +146,7 @@ public class ProfileFragment extends Fragment {
     FragmentAdapterOther fragmentAdapterOther;
     Handler handler;
     TabLayout tabLayout,tabLayoutOther;
+    int tabLayoutPosition,tabLayoutPositionOther;
     private float[] backgroundColor = new float[]{0f, 0f, 0f, 1.0f};
     int a,profileCheckValue,checkOnSubscribeValue;
     UserInformation userInformation;
@@ -156,6 +157,16 @@ public class ProfileFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         profileContext = context;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if(type.equals("user") || type.equals("userback")){
+            bundle.putInt("TAB_INT_PROFILE", tabLayoutPosition);
+        }else{
+            bundle.putInt("TAB_INT_PROFILE_OTHER", tabLayoutPositionOther);
+        }
     }
 
     public ProfileFragment(String type, String sendNick,Fragment fragment,UserInformation userInformation,Bundle bundle) {
@@ -291,6 +302,9 @@ public class ProfileFragment extends Fragment {
                         ((MainActivity) getActivity()).setCurrentFragment(EditingFragment.newInstance("user",fragment,userInformation,bundle));
                     }
                 });
+                if (bundle!=null){
+                    tabLayoutPosition=bundle.getInt("TAB_INT_PROFILE");
+                }
                 //////////////////////////////
                 viewPager=view.findViewById(R.id.viewPager);
                 tabLayout=view.findViewById(R.id.tabsprofile);
@@ -298,13 +312,15 @@ public class ProfileFragment extends Fragment {
                 FragmentManager fm = getChildFragmentManager();
                 fragmentAdapter = new FragmentAdapter(fm, getLifecycle());
                 viewPager.setAdapter(fragmentAdapter);
+                viewPager.setCurrentItem(tabLayoutPosition, false);
 
                 tabLayout.addTab(tabLayout.newTab().setText("Образы"));
                 tabLayout.addTab(tabLayout.newTab().setText("Одежда"));
 
-                tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+                tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener(){
                     @Override
                     public void onTabSelected(TabLayout.Tab tab) {
+                        tabLayoutPosition=tab.getPosition();
                         viewPager.setCurrentItem(tab.getPosition());
                     }
 
@@ -318,11 +334,11 @@ public class ProfileFragment extends Fragment {
 
                     }
                 });
-
-
+                tabLayout.selectTab(tabLayout.getTabAt(tabLayoutPosition));
                 viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
                     @Override
                     public void onPageSelected(int position) {
+                        tabLayoutPosition=position;
                         tabLayout.selectTab(tabLayout.getTabAt(position));
                     }
                 });
@@ -423,6 +439,9 @@ public class ProfileFragment extends Fragment {
                 };
                 if(getActivity()!=null){
                     getActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
+                }
+                if (bundle!=null){
+                    tabLayoutPositionOther=bundle.getInt("TAB_INT_PROFILE_OTHER");
                 }
                 otherLooksCount = view.findViewById(R.id.looksCountOther);
                 otherSubscriptionCount = view.findViewById(R.id.subscriptionCountOther);
@@ -606,6 +625,10 @@ public class ProfileFragment extends Fragment {
                 };
 
                 requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callbackUserBack);
+
+                if (bundle!=null){
+                    tabLayoutPosition=bundle.getInt("TAB_INT_PROFILE");
+                }
                 newLook=view.findViewById(R.id.newLook);
                 newLook.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -636,14 +659,15 @@ public class ProfileFragment extends Fragment {
 
                 FragmentManager fm1 = getChildFragmentManager();
                 fragmentAdapter = new FragmentAdapter(fm1, getLifecycle());
-                viewPager.setAdapter(fragmentAdapter);
+                viewPager.setCurrentItem(tabLayoutPosition, false);
 
                 tabLayout.addTab(tabLayout.newTab().setText("Образы"));
                 tabLayout.addTab(tabLayout.newTab().setText("Одежда"));
 
-                tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+                tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener(){
                     @Override
                     public void onTabSelected(TabLayout.Tab tab) {
+                        tabLayoutPosition=tab.getPosition();
                         viewPager.setCurrentItem(tab.getPosition());
                     }
 
@@ -657,11 +681,11 @@ public class ProfileFragment extends Fragment {
 
                     }
                 });
-
-
+                tabLayout.selectTab(tabLayout.getTabAt(tabLayoutPosition));
                 viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
                     @Override
                     public void onPageSelected(int position) {
+                        tabLayoutPosition=position;
                         tabLayout.selectTab(tabLayout.getTabAt(position));
                     }
                 });
@@ -1450,6 +1474,7 @@ public class ProfileFragment extends Fragment {
                                 FragmentManager fm = getChildFragmentManager();
                                 fragmentAdapterOther = new FragmentAdapterOther(fm, getLifecycle());
                                 viewPagerOther.setAdapter(fragmentAdapterOther);
+                                viewPagerOther.setCurrentItem(tabLayoutPositionOther, false);
                             }
 
 
@@ -1460,9 +1485,10 @@ public class ProfileFragment extends Fragment {
                                 tabLayoutOther.addTab(tabLayoutOther.newTab().setText("Одежда"));
                             }
 
-                            tabLayoutOther.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+                            tabLayoutOther.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener(){
                                 @Override
                                 public void onTabSelected(TabLayout.Tab tab) {
+                                    tabLayoutPositionOther=tab.getPosition();
                                     viewPagerOther.setCurrentItem(tab.getPosition());
                                 }
 
@@ -1476,10 +1502,11 @@ public class ProfileFragment extends Fragment {
 
                                 }
                             });
-
+                            tabLayoutOther.selectTab(tabLayoutOther.getTabAt(tabLayoutPositionOther));
                             viewPagerOther.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
                                 @Override
                                 public void onPageSelected(int position) {
+                                    tabLayoutPositionOther=position;
                                     tabLayoutOther.selectTab(tabLayoutOther.getTabAt(position));
                                 }
                             });

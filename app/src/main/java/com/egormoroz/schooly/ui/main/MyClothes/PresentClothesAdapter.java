@@ -20,6 +20,7 @@ import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.Subscriber;
 import com.egormoroz.schooly.ui.coins.TransferMoneyAdapter;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
+import com.egormoroz.schooly.ui.main.UserInformation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
@@ -36,11 +37,14 @@ public class PresentClothesAdapter  extends RecyclerView.Adapter<PresentClothesA
     private PresentClothesAdapter.ItemClickListener clickListener;
     private FirebaseModel firebaseModel = new FirebaseModel();
     int alreadyHave=0;
+    String nick;
     Clothes clothes;
+    UserInformation userInformation;
 
-    public  PresentClothesAdapter(ArrayList<Subscriber> listAdapter,Clothes clothes) {
+    public  PresentClothesAdapter(ArrayList<Subscriber> listAdapter,Clothes clothes,UserInformation userInformation) {
         this.listAdapter = listAdapter;
         this.clothes=clothes;
+        this.userInformation=userInformation;
     }
 
     @NonNull
@@ -56,39 +60,31 @@ public class PresentClothesAdapter  extends RecyclerView.Adapter<PresentClothesA
     @Override
     public void onBindViewHolder(@NonNull PresentClothesAdapter.ViewHolder holder, int position) {
         Subscriber subscriber=listAdapter.get(position);
+        nick=userInformation.getNick();
         holder.otherUserNick.setText(subscriber.getSub());
-        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+        holder.presentClothes.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void PassUserNick(String nick) {
-                holder.presentClothes.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                firebaseModel.getUsersReference().child(subscriber.getSub())
+                        .child("clothes").child(clothes.getUid()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                     @Override
-                    public void onClick(View view) {
-                        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-                            @Override
-                            public void PassUserNick(String nick) {
-                                firebaseModel.getUsersReference().child(subscriber.getSub())
-                                        .child("clothes").child(clothes.getUid()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<DataSnapshot> task) {
-                                        if(task.isSuccessful()){
-                                            DataSnapshot snapshot=task.getResult();
-                                            if (snapshot.exists()) {
-                                                alreadyHave=1;
-                                            } else {
-                                                alreadyHave=2;
-                                            }
-                                            if(alreadyHave>0){
-                                                if (clickListener != null) clickListener.onItemClick(alreadyHave, position);
-                                            }
-                                        }
-                                    }
-                                });
+                    public void onComplete(@NonNull Task<DataSnapshot> task) {
+                        if(task.isSuccessful()){
+                            DataSnapshot snapshot=task.getResult();
+                            if (snapshot.exists()) {
+                                alreadyHave=1;
+                            } else {
+                                alreadyHave=2;
                             }
-                        });
+                            if(alreadyHave>0){
+                                if (clickListener != null) clickListener.onItemClick(alreadyHave, position);
+                            }
+                        }
                     }
                 });
             }
         });
+
     }
 
     @Override

@@ -120,7 +120,7 @@ public class PresentClothesFragment extends Fragment {
                         peopleRecyclerView.setVisibility(View.GONE);
                     }else {
                         emptySubscriptionList.setVisibility(View.GONE);
-                        PresentClothesAdapter presentClothesAdapter = new PresentClothesAdapter(friends,clothes);
+                        PresentClothesAdapter presentClothesAdapter = new PresentClothesAdapter(friends,clothes,userInformation);
                         peopleRecyclerView.setAdapter(presentClothesAdapter);
                         PresentClothesAdapter.ItemClickListener itemClickListener = new PresentClothesAdapter.ItemClickListener() {
                             @Override
@@ -141,7 +141,7 @@ public class PresentClothesFragment extends Fragment {
             }else {
                 emptySubscriptionList.setVisibility(View.GONE);
                 peopleRecyclerView.setVisibility(View.VISIBLE);
-                PresentClothesAdapter presentClothesAdapter = new PresentClothesAdapter(userInformation.getSubscription(),clothes);
+                PresentClothesAdapter presentClothesAdapter = new PresentClothesAdapter(userInformation.getSubscription(),clothes,userInformation);
                 peopleRecyclerView.setAdapter(presentClothesAdapter);
                 PresentClothesAdapter.ItemClickListener itemClickListener = new PresentClothesAdapter.ItemClickListener() {
                     @Override
@@ -196,7 +196,7 @@ public class PresentClothesFragment extends Fragment {
                                 }else{
                                     emptySubscriptionList.setVisibility(View.GONE);
                                     peopleRecyclerView.setVisibility(View.VISIBLE);
-                                    PresentClothesAdapter presentClothesAdapter=new PresentClothesAdapter(userFromBase,clothes);
+                                    PresentClothesAdapter presentClothesAdapter=new PresentClothesAdapter(userFromBase,clothes,userInformation);
                                     peopleRecyclerView.setAdapter(presentClothesAdapter);
                                     PresentClothesAdapter.ItemClickListener itemClickListener=new PresentClothesAdapter.ItemClickListener() {
                                         @Override
@@ -235,7 +235,7 @@ public class PresentClothesFragment extends Fragment {
                     }else{
                         emptySubscriptionList.setVisibility(View.GONE);
                         peopleRecyclerView.setVisibility(View.VISIBLE);
-                        PresentClothesAdapter presentClothesAdapter=new PresentClothesAdapter(userFromBase,clothes);
+                        PresentClothesAdapter presentClothesAdapter=new PresentClothesAdapter(userFromBase,clothes,userInformation);
                         peopleRecyclerView.setAdapter(presentClothesAdapter);
                         PresentClothesAdapter.ItemClickListener itemClickListener=new PresentClothesAdapter.ItemClickListener() {
                             @Override

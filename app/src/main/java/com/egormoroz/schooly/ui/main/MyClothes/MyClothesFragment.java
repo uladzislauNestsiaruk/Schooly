@@ -160,7 +160,7 @@ public class MyClothesFragment extends Fragment {
                 }else if(editGetText.length()==0){
                     recyclerMyClothes.setVisibility(View.VISIBLE);
                     notFound.setVisibility(View.GONE);
-                    MyClothesAdapter myClothesAdapter=new MyClothesAdapter(userInformation.getMyClothes(),itemClickListener);
+                    MyClothesAdapter myClothesAdapter=new MyClothesAdapter(userInformation.getMyClothes(),itemClickListener,userInformation);
                     recyclerMyClothes.setAdapter(myClothesAdapter);
                 }
             }
@@ -207,11 +207,11 @@ public class MyClothesFragment extends Fragment {
                         searchMyClothes.setText(bundleEditText);
                         searchMyClothes(bundleEditText);
                     }else{
-                        MyClothesAdapter myClothesAdapter=new MyClothesAdapter(clothesArrayList,itemClickListener);
+                        MyClothesAdapter myClothesAdapter=new MyClothesAdapter(clothesArrayList,itemClickListener,userInformation);
                         recyclerMyClothes.setAdapter(myClothesAdapter);
                     }
                 }else{
-                    MyClothesAdapter myClothesAdapter=new MyClothesAdapter(clothesArrayList,itemClickListener);
+                    MyClothesAdapter myClothesAdapter=new MyClothesAdapter(clothesArrayList,itemClickListener,userInformation);
                     recyclerMyClothes.setAdapter(myClothesAdapter);
                 }
             }
@@ -249,7 +249,7 @@ public class MyClothesFragment extends Fragment {
             notFound.setVisibility(View.VISIBLE);
         } else {
             recyclerMyClothes.setVisibility(View.VISIBLE);
-            MyClothesAdapter myClothesAdapter=new MyClothesAdapter(clothesFromBase,itemClickListener);
+            MyClothesAdapter myClothesAdapter=new MyClothesAdapter(clothesFromBase,itemClickListener,userInformation);
             recyclerMyClothes.setAdapter(myClothesAdapter);
             notFound.setVisibility(View.GONE);
         }
