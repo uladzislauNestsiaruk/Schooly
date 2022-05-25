@@ -298,6 +298,12 @@ public class MainActivity extends AppCompatActivity {
                         userInformation.setAlreadySearched(searchedUserFromBase);
                     }
                 });
+                RecentMethods.getClothesInWardrobe(nick, firebaseModel, new Callbacks.GetClothes() {
+                    @Override
+                    public void getClothes(ArrayList<Clothes> allClothes) {
+                        userInformation.setClothes(allClothes);
+                    }
+                });
                 RecentMethods.GetMoneyFromBase(nick, firebaseModel, new Callbacks.MoneyFromBase() {
                     @Override
                     public void GetMoneyFromBase(long money) {

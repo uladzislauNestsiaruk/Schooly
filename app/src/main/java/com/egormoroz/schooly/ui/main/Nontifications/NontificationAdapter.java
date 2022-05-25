@@ -21,6 +21,7 @@ import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.Subscriber;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
 import com.egormoroz.schooly.ui.main.Shop.NewClothesAdapter;
+import com.egormoroz.schooly.ui.main.UserInformation;
 import com.egormoroz.schooly.ui.profile.ProfileFragment;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -38,12 +39,14 @@ public class NontificationAdapter extends RecyclerView.Adapter<NontificationAdap
     ArrayList<Nontification> listAdapter;
     private NontificationAdapter.ItemClickListener clickListener;
     private FirebaseModel firebaseModel = new FirebaseModel();
-    String accountType;
+    String nick;
+    UserInformation userInformation;
     static Nontification sendNont;
-    static String clothesUid,type;
+    static String type;
 
-    public  NontificationAdapter(ArrayList<Nontification> listAdapter) {
+    public  NontificationAdapter(ArrayList<Nontification> listAdapter, UserInformation userInformation) {
         this.listAdapter = listAdapter;
+        this.userInformation=userInformation;
     }
 
 
@@ -60,176 +63,132 @@ public class NontificationAdapter extends RecyclerView.Adapter<NontificationAdap
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Nontification nontification=listAdapter.get(position);
+        nick = userInformation.getNick();
         if (!nontification.getType().equals("запрос")){
             holder.addFriend.setVisibility(View.GONE);
         }
-        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-            @Override
-            public void PassUserNick(String nick) {
-                RecentMethods.getNontificationsList(nick, firebaseModel, new Callbacks.getNontificationsList() {
-                    @Override
-                    public void getNontificationsList(ArrayList<Nontification> nontifications) {
-                        for (int i=0;i<nontifications.size();i++){
-                            Nontification nontification=nontifications.get(i);
-                            if(nontification.getType().equals("не просмотрено")){
-                                firebaseModel.getUsersReference().child(nick).child("nontifications")
-                                        .child(nontification.getUid()).child("type")
-                                        .setValue("просмотрено");
-                            }
-                        }
+        if(nontification.getType().equals("не просмотрено")){
+            firebaseModel.getUsersReference().child(nick).child("nontifications")
+                    .child(nontification.getUid()).child("type")
+                    .setValue("просмотрено");
+        }
+        if(nontification.getTypeView().equals("запрос")) {
+            holder.otherUserNick.setVisibility(View.VISIBLE);
+            holder.userImage.setVisibility(View.VISIBLE);
+            holder.otherUserNick.setText(nontification.getNick()+" хочет подписаться на тебя");
+            holder.addFriend.setVisibility(View.VISIBLE);
+            holder.addFriend.setText("Добавить");
+            holder.otherUserNick.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (clickListener != null) clickListener.onItemClick(listAdapter.get(holder.getAdapterPosition()),"sub");
+                    sendNont=listAdapter.get(holder.getAdapterPosition());
+                }
+            });
+            holder.addFriend.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    firebaseModel.getReference().child("users")
+                            .child(nick).child("subscribers")
+                            .child(nontification.getNick()).setValue(nontification.getNick());
+                    firebaseModel.getReference().child("users")
+                            .child(nontification.getNick()).child("subscription")
+                            .child(nick).setValue(nick);
+                    if (nontification.getTypeView().equals("запрос")){
+                        firebaseModel.getUsersReference().child(nick).child("nontifications")
+                                .child(nontification.getUid()).removeValue();
+                        Toast.makeText(v.getContext(), "Подписчик добавлен", Toast.LENGTH_SHORT).show();
                     }
-                });
-            }
-        });
-        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-            @Override
-            public void PassUserNick(String nick) {
-                if(nontification.getTypeView().equals("запрос")) {
-                    holder.otherUserNick.setVisibility(View.VISIBLE);
-                    holder.userImage.setVisibility(View.VISIBLE);
-                    holder.otherUserNick.setText(nontification.getNick()+" хочет подписаться на тебя");
-                    holder.addFriend.setVisibility(View.VISIBLE);
-                    holder.addFriend.setText("Добавить");
-                    holder.otherUserNick.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            if (clickListener != null) clickListener.onItemClick(listAdapter.get(holder.getAdapterPosition()),"sub");
-                            sendNont=listAdapter.get(holder.getAdapterPosition());
-                        }
-                    });
-                    holder.addFriend.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-                                @Override
-                                public void PassUserNick(String nick) {
-                                    firebaseModel.getReference().child("users")
-                                            .child(nick).child("subscribers")
-                                            .child(nontification.getNick()).setValue(nontification.getNick());
-                                    firebaseModel.getReference().child("users")
-                                            .child(nontification.getNick()).child("subscription")
-                                            .child(nick).setValue(nick);
-                                    Query query=firebaseModel.getReference().child("users").child(nick).child("nontifications");
-                                    query.addValueEventListener(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                            for (DataSnapshot snap:snapshot.getChildren()){
-                                                Nontification nontification=new Nontification();
-                                                nontification.setNick(snap.child("nick").getValue(String.class));
-                                                nontification.setTypeDispatch(snap.child("typeDispatch").getValue(String.class));
-                                                nontification.setTypeView(snap.child("typeView").getValue(String.class));
-                                                nontification.setTimestamp(snap.child("timestamp").getValue(String.class));
-                                                nontification.setClothesName(snap.child("clothesName").getValue(String.class));
-                                                nontification.setClothesImage(snap.child("clothesImage").getValue(String.class));
-                                                nontification.setType(snap.child("type").getValue(String.class));
-                                                nontification.setUid(snap.child("uid").getValue(String.class));
-                                                if (nontification.getTypeView().equals("запрос")){
-                                                    firebaseModel.getUsersReference().child(nick).child("nontifications")
-                                                            .child(nontification.getUid()).removeValue();
-                                                    Toast.makeText(v.getContext(), "Подписчик добавлен", Toast.LENGTH_SHORT).show();
-                                                }
-                                            }
-                                        }
-
-                                        @Override
-                                        public void onCancelled(@NonNull DatabaseError error) {
-
-                                        }
-                                    });
-                                    firebaseModel.getReference().child("users").child(nick).child("requests")
-                                            .child(nontification.getNick()).removeValue();
-                                    holder.addFriend.setText("Добавлен");
-                                }
-                            });
-                        }
-                    });
-                }else if(nontification.getTypeView().equals("обычный")) {
-                    holder.otherUserNick.setVisibility(View.VISIBLE);
-                    holder.userImage.setVisibility(View.VISIBLE);
-                    holder.otherUserNick.setText(nontification.getNick()+" подписался на тебя");
-                    holder.otherUserNick.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            if (clickListener != null) clickListener.onItemClick(listAdapter.get(holder.getAdapterPosition()),"sub");
-                            sendNont=listAdapter.get(holder.getAdapterPosition());
-                        }
-                    });
-                }else if(nontification.getTypeView().equals("одежда")) {
-                    holder.otherUserNick.setVisibility(View.VISIBLE);
-                    holder.userImage.setVisibility(View.VISIBLE);
-                    holder.otherUserNick.setText(nontification.getNick()+" купил у тебя "+nontification.getClothesName());
-                    holder.otherUserNick.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            if (clickListener != null) clickListener.onItemClick(listAdapter.get(holder.getAdapterPosition()),"sub");
-                            sendNont=listAdapter.get(holder.getAdapterPosition());
-                        }
-                    });
-                }else if (nontification.getTypeView().equals("перевод")){
-                    holder.otherUserNick.setVisibility(View.VISIBLE);
-                    holder.userImage.setVisibility(View.VISIBLE);
-                    holder.otherUserNick.setText(nontification.getNick()+" перевел тебе "+nontification.getClothesName()+"S коинов");
-                    holder.otherUserNick.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            if (clickListener != null) clickListener.onItemClick(listAdapter.get(holder.getAdapterPosition()),"sub");
-                            sendNont=listAdapter.get(holder.getAdapterPosition());
-                        }
-                    });
-                }else if (nontification.getTypeView().equals("запросодежда")){
-                    holder.otherUserNick.setVisibility(View.VISIBLE);
-                    holder.userImage.setVisibility(View.VISIBLE);
-                    Picasso.get().load(nontification.getClothesImage()).into(holder.userImage);
-                    holder.otherUserNick.setText("Пришел ответ на заявку "+nontification.getClothesName());
-                    holder.addFriend.setVisibility(View.VISIBLE);
-                    holder.addFriend.setText("Перейти");
+                    firebaseModel.getReference().child("users").child(nick).child("requests")
+                            .child(nontification.getNick()).removeValue();
+                    holder.addFriend.setText("Добавлен");
                 }
-                else if (nontification.getTypeView().equals("подарок")){
-                    holder.otherUserNick.setVisibility(View.VISIBLE);
-                    holder.userImage.setVisibility(View.VISIBLE);
-                    holder.otherUserNick.setText(nontification.getNick()+" подарил тебе "+nontification.getClothesName()+" !!!");
-                    holder.addFriend.setVisibility(View.GONE);
-                    holder.otherUserNick.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            if (clickListener != null) clickListener.onItemClick(listAdapter.get(holder.getAdapterPosition()),"sub");
-                            sendNont=listAdapter.get(holder.getAdapterPosition());
-                        }
-                    });
-                    holder.addFriend.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                        }
-                    });
+            });
+        }else if(nontification.getTypeView().equals("обычный")) {
+            holder.otherUserNick.setVisibility(View.VISIBLE);
+            holder.userImage.setVisibility(View.VISIBLE);
+            holder.otherUserNick.setText(nontification.getNick()+" подписался на тебя");
+            holder.otherUserNick.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (clickListener != null) clickListener.onItemClick(listAdapter.get(holder.getAdapterPosition()),"sub");
+                    sendNont=listAdapter.get(holder.getAdapterPosition());
                 }
-                else if (nontification.getTypeView().equals("майнинг")){
-                    holder.imageCoins.setVisibility(View.VISIBLE);
-                    holder.fromWho.setVisibility(View.VISIBLE);
-                    holder.sum.setVisibility(View.VISIBLE);
-                    holder.type.setVisibility(View.VISIBLE);
-                    holder.remittanceTime.setVisibility(View.VISIBLE);
-                    holder.type.setText("Начисление");
-                    holder.fromWho.setText("Майнинг");
-                    holder.sum.setText("+"+String.valueOf(nontification.getClothesProfit()));
-                    holder.otherUserNick.setVisibility(View.GONE);
-                    holder.addFriend.setVisibility(View.GONE);
-                    holder.userImage.setVisibility(View.GONE);
+            });
+        }else if(nontification.getTypeView().equals("одежда")) {
+            holder.otherUserNick.setVisibility(View.VISIBLE);
+            holder.userImage.setVisibility(View.VISIBLE);
+            holder.otherUserNick.setText(nontification.getNick()+" купил у тебя "+nontification.getClothesName());
+            holder.otherUserNick.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (clickListener != null) clickListener.onItemClick(listAdapter.get(holder.getAdapterPosition()),"sub");
+                    sendNont=listAdapter.get(holder.getAdapterPosition());
                 }
-                else if (nontification.getTypeView().equals("одеждаприбыль")){
-                    holder.imageCoins.setVisibility(View.VISIBLE);
-                    holder.fromWho.setVisibility(View.VISIBLE);
-                    holder.sum.setVisibility(View.VISIBLE);
-                    holder.type.setVisibility(View.VISIBLE);
-                    holder.remittanceTime.setVisibility(View.VISIBLE);
-                    holder.type.setText("Начисление");
-                    holder.fromWho.setText("Одежда");
-                    holder.sum.setText("+"+String.valueOf(nontification.getClothesProfit()));
-                    holder.otherUserNick.setVisibility(View.GONE);
-                    holder.addFriend.setVisibility(View.GONE);
-                    holder.userImage.setVisibility(View.GONE);
+            });
+        }else if (nontification.getTypeView().equals("перевод")){
+            holder.otherUserNick.setVisibility(View.VISIBLE);
+            holder.userImage.setVisibility(View.VISIBLE);
+            holder.otherUserNick.setText(nontification.getNick()+" перевел тебе "+nontification.getClothesName()+"S коинов");
+            holder.otherUserNick.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (clickListener != null) clickListener.onItemClick(listAdapter.get(holder.getAdapterPosition()),"sub");
+                    sendNont=listAdapter.get(holder.getAdapterPosition());
                 }
-            }
-        });
+            });
+        }else if (nontification.getTypeView().equals("запросодежда")){
+            holder.otherUserNick.setVisibility(View.VISIBLE);
+            holder.userImage.setVisibility(View.VISIBLE);
+            Picasso.get().load(nontification.getClothesImage()).into(holder.userImage);
+            holder.otherUserNick.setText("Пришел ответ на заявку "+nontification.getClothesName());
+            holder.addFriend.setVisibility(View.VISIBLE);
+            holder.addFriend.setText("Перейти");
+        }
+        else if (nontification.getTypeView().equals("подарок")){
+            holder.otherUserNick.setVisibility(View.VISIBLE);
+            holder.userImage.setVisibility(View.VISIBLE);
+            holder.otherUserNick.setText(nontification.getNick()+" подарил тебе "+nontification.getClothesName()+" !!!");
+            holder.addFriend.setVisibility(View.GONE);
+            holder.otherUserNick.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (clickListener != null) clickListener.onItemClick(listAdapter.get(holder.getAdapterPosition()),"sub");
+                    sendNont=listAdapter.get(holder.getAdapterPosition());
+                }
+            });
+            holder.addFriend.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                }
+            });
+        }
+        else if (nontification.getTypeView().equals("майнинг")){
+            holder.imageCoins.setVisibility(View.VISIBLE);
+            holder.fromWho.setVisibility(View.VISIBLE);
+            holder.sum.setVisibility(View.VISIBLE);
+            holder.type.setVisibility(View.VISIBLE);
+            holder.remittanceTime.setVisibility(View.VISIBLE);
+            holder.type.setText("Начисление");
+            holder.fromWho.setText("Майнинг");
+            holder.sum.setText("+"+String.valueOf(nontification.getClothesProfit()));
+            holder.otherUserNick.setVisibility(View.GONE);
+            holder.addFriend.setVisibility(View.GONE);
+            holder.userImage.setVisibility(View.GONE);
+        }
+        else if (nontification.getTypeView().equals("одеждаприбыль")){
+            holder.imageCoins.setVisibility(View.VISIBLE);
+            holder.fromWho.setVisibility(View.VISIBLE);
+            holder.sum.setVisibility(View.VISIBLE);
+            holder.type.setVisibility(View.VISIBLE);
+            holder.remittanceTime.setVisibility(View.VISIBLE);
+            holder.type.setText("Начисление");
+            holder.fromWho.setText("Одежда");
+            holder.sum.setText("+"+String.valueOf(nontification.getClothesProfit()));
+            holder.otherUserNick.setVisibility(View.GONE);
+            holder.addFriend.setVisibility(View.GONE);
+            holder.userImage.setVisibility(View.GONE);
+        }
     }
 
 

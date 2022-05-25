@@ -307,7 +307,7 @@ public class ShopFragment extends Fragment {
                                 notFound.setVisibility(View.VISIBLE);
                             }else {
                                 searchRecycler.setVisibility(View.VISIBLE);
-                                PopularClothesAdapter popularClothesAdapter=new PopularClothesAdapter(clothesFromBase,itemClickListenerPopular);
+                                PopularClothesAdapter popularClothesAdapter=new PopularClothesAdapter(clothesFromBase,itemClickListenerPopular,userInformation);
                                 searchRecycler.setLayoutManager(new GridLayoutManager(getActivity(), 2));
                                 searchRecycler.setAdapter(popularClothesAdapter);
                                 notFound.setVisibility(View.GONE);
@@ -338,7 +338,7 @@ public class ShopFragment extends Fragment {
                     notFound.setVisibility(View.VISIBLE);
                 }else {
                     searchRecycler.setVisibility(View.VISIBLE);
-                    PopularClothesAdapter popularClothesAdapter=new PopularClothesAdapter(clothesFromBase,itemClickListenerPopular);
+                    PopularClothesAdapter popularClothesAdapter=new PopularClothesAdapter(clothesFromBase,itemClickListenerPopular,userInformation);
                     searchRecycler.setLayoutManager(new GridLayoutManager(getActivity(), 2));
                     searchRecycler.setAdapter(popularClothesAdapter);
                     notFound.setVisibility(View.GONE);

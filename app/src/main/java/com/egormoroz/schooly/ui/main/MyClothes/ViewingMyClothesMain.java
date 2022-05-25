@@ -337,7 +337,6 @@ public class ViewingMyClothesMain extends Fragment {
     }
 
     private void showBottomSheetDialog() {
-
         final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(getContext());
         bottomSheetDialog.setContentView(R.layout.bottom_sheet_dialog_layout);
 

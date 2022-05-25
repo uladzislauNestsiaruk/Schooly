@@ -132,10 +132,6 @@ public class MyClothesAdapterMain extends RecyclerView.Adapter<MyClothesAdapterM
             perCent=clothes.getPurchaseToday()*100/clothes.getPurchaseNumber();
         }
         holder.perSentPurchase.setText("("+String.valueOf(perCent)+"%)");
-//        if (clothes.getCurrencyType().equals("dollar")){
-//            holder.dollarImage.setVisibility(View.VISIBLE);
-//            holder.coinsImage.setVisibility(View.GONE);
-//        }
         Picasso.get().load(clothes.getClothesImage()).into(holder.clothesImage);
         holder.itemView.setOnClickListener(new View.OnClickListener(){
             @Override

@@ -95,7 +95,7 @@ public class PopularFragment extends Fragment {
     public void loadClothesFromBase(){
         if(bundle.getSerializable("CLOTHES_NEW")!=null){
             ArrayList<Clothes> newClothesArrayList= (ArrayList<Clothes>) bundle.getSerializable("CLOTHES_NEW");
-            NewClothesAdapter newClothesAdapter=new NewClothesAdapter(newClothesArrayList,itemClickListener);
+            NewClothesAdapter newClothesAdapter=new NewClothesAdapter(newClothesArrayList,itemClickListener,userInformation);
             clothes.setAdapter(newClothesAdapter);
         }else{
             ArrayList<Clothes> allClothes= (ArrayList<Clothes>) bundle.getSerializable("ALL_CLOTHES");
@@ -105,12 +105,12 @@ public class PopularFragment extends Fragment {
 
             }
             bundle.putSerializable("CLOTHES_NEW",newClothesArrayList);
-            NewClothesAdapter newClothesAdapter=new NewClothesAdapter(newClothesArrayList,itemClickListener);
+            NewClothesAdapter newClothesAdapter=new NewClothesAdapter(newClothesArrayList,itemClickListener,userInformation);
             clothes.setAdapter(newClothesAdapter);
         }
         if(bundle.getSerializable("CLOTHES_POPULAR")!=null){
             popularClothesArrayList= (ArrayList<Clothes>) bundle.getSerializable("CLOTHES_POPULAR");
-            PopularClothesAdapter popularClothesAdapter=new PopularClothesAdapter(popularClothesArrayList,itemClickListenerPopular);
+            PopularClothesAdapter popularClothesAdapter=new PopularClothesAdapter(popularClothesArrayList,itemClickListenerPopular,userInformation);
             popularClothes.setLayoutManager(new GridLayoutManager(getActivity(), 2));
             popularClothes.setNestedScrollingEnabled(false);
             popularClothes.setAdapter(popularClothesAdapter);
@@ -118,12 +118,12 @@ public class PopularFragment extends Fragment {
             ArrayList<Clothes> allClothes= (ArrayList<Clothes>) bundle.getSerializable("ALL_CLOTHES");
             for(int i=0;i<allClothes.size();i++){
                 Clothes cl=allClothes.get(i);
-                newClothesArrayList.add(cl);
+                popularClothesArrayList.add(cl);
 
             }
             popularClothesArrayList=allClothes;
-            bundle.putSerializable("CLOTHES_POPULAR",newClothesArrayList);
-            PopularClothesAdapter popularClothesAdapter=new PopularClothesAdapter(popularClothesArrayList,itemClickListenerPopular);
+            bundle.putSerializable("CLOTHES_POPULAR",popularClothesArrayList);
+            PopularClothesAdapter popularClothesAdapter=new PopularClothesAdapter(popularClothesArrayList,itemClickListenerPopular,userInformation);
             popularClothes.setLayoutManager(new GridLayoutManager(getActivity(), 2));
             popularClothes.setNestedScrollingEnabled(false);
             popularClothes.setAdapter(popularClothesAdapter);

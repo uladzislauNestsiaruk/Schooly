@@ -120,7 +120,7 @@ public class ExclusiveFragment extends Fragment {
     public void loadClothesFromBase(){
         if(bundle.getSerializable("EXCLUSIVE_NEW")!=null){
             ArrayList<Clothes> newClothesArrayList= (ArrayList<Clothes>) bundle.getSerializable("EXCLUSIVE_NEW");
-            NewClothesAdapter newClothesAdapter=new NewClothesAdapter(newClothesArrayList,itemClickListener);
+            NewClothesAdapter newClothesAdapter=new NewClothesAdapter(newClothesArrayList,itemClickListener,userInformation);
             clothes.setAdapter(newClothesAdapter);
         }else{
             ArrayList<Clothes> allClothes= (ArrayList<Clothes>) bundle.getSerializable("ALL_CLOTHES");
@@ -132,12 +132,12 @@ public class ExclusiveFragment extends Fragment {
 
             }
             bundle.putSerializable("EXCLUSIVE_NEW",exclusiveClothesArrayList);
-            NewClothesAdapter newClothesAdapter=new NewClothesAdapter(exclusiveClothesArrayList,itemClickListener);
+            NewClothesAdapter newClothesAdapter=new NewClothesAdapter(exclusiveClothesArrayList,itemClickListener,userInformation);
             clothes.setAdapter(newClothesAdapter);
         }
         if(bundle.getSerializable("EXCLUSIVE_POPULAR")!=null){
             popularClothesArrayList= (ArrayList<Clothes>) bundle.getSerializable("EXCLUSIVE_POPULAR");
-            PopularClothesAdapter popularClothesAdapter=new PopularClothesAdapter(popularClothesArrayList,itemClickListenerPopular);
+            PopularClothesAdapter popularClothesAdapter=new PopularClothesAdapter(popularClothesArrayList,itemClickListenerPopular,userInformation);
             popularClothes.setLayoutManager(new GridLayoutManager(getActivity(), 2));
             popularClothes.setNestedScrollingEnabled(false);
             popularClothes.setAdapter(popularClothesAdapter);
@@ -151,7 +151,7 @@ public class ExclusiveFragment extends Fragment {
 
             }
             bundle.putSerializable("EXCLUSIVE_POPULAR",exclusivePopularArrayList);
-            PopularClothesAdapter popularClothesAdapter=new PopularClothesAdapter(exclusivePopularArrayList,itemClickListenerPopular);
+            PopularClothesAdapter popularClothesAdapter=new PopularClothesAdapter(exclusivePopularArrayList,itemClickListenerPopular,userInformation);
             popularClothes.setLayoutManager(new GridLayoutManager(getActivity(), 2));
             popularClothes.setNestedScrollingEnabled(false);
             popularClothes.setAdapter(popularClothesAdapter);

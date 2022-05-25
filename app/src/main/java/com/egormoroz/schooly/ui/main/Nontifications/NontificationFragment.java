@@ -95,7 +95,7 @@ public class NontificationFragment extends Fragment {
                         emptyNonts.setVisibility(View.GONE);
                     }
                     Collections.reverse(nontifications);
-                    NontificationAdapter nontificationAdapter=new NontificationAdapter(nontifications);
+                    NontificationAdapter nontificationAdapter=new NontificationAdapter(nontifications,userInformation);
                     LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
                     nontsRecyclerView.setLayoutManager(layoutManager);
                     nontsRecyclerView.setAdapter(nontificationAdapter);
@@ -119,7 +119,7 @@ public class NontificationFragment extends Fragment {
             }else {
                 emptyNonts.setVisibility(View.GONE);
             }
-            NontificationAdapter nontificationAdapter=new NontificationAdapter(userInformation.getNontifications());
+            NontificationAdapter nontificationAdapter=new NontificationAdapter(userInformation.getNontifications(),userInformation);
             LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
             nontsRecyclerView.setLayoutManager(layoutManager);
             nontsRecyclerView.setAdapter(nontificationAdapter);

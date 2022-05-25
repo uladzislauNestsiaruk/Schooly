@@ -407,7 +407,7 @@ public class MainFragment extends Fragment{
     public void loadClothesFromBase(){
         if(bundle.getSerializable("MAIN_REC_CLOTHES")!=null){
             popularClothesArrayList = (ArrayList<Clothes>) bundle.getSerializable("MAIN_REC_CLOTHES");
-            NewClothesAdapter newClothesAdapter=new NewClothesAdapter(popularClothesArrayList,itemClickListener);
+            NewClothesAdapter newClothesAdapter=new NewClothesAdapter(popularClothesArrayList,itemClickListener,userInformation);
             clothesRecyclerMain.setAdapter(newClothesAdapter);
         }else {
             RecentMethods.getClothes(firebaseModel, new Callbacks.GetClothes() {
@@ -419,7 +419,7 @@ public class MainFragment extends Fragment{
                         popularClothesArrayList.add(cl);
                     }
                     bundle.putSerializable("MAIN_REC_CLOTHES",popularClothesArrayList);
-                    NewClothesAdapter newClothesAdapter=new NewClothesAdapter(popularClothesArrayList,itemClickListener);
+                    NewClothesAdapter newClothesAdapter=new NewClothesAdapter(popularClothesArrayList,itemClickListener,userInformation);
                     clothesRecyclerMain.setAdapter(newClothesAdapter);
                 }
             });
