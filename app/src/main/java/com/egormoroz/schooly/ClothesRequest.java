@@ -1,6 +1,8 @@
 package com.egormoroz.schooly;
 
-public class ClothesRequest {
+import java.io.Serializable;
+
+public class ClothesRequest implements Serializable {
     private String type;
     private String clothesImage;
     private long clothesPrice=1;

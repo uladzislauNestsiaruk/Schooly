@@ -85,7 +85,7 @@ public class PeopleFragment extends Fragment {
                     }else{
                         peopleRecyclerView.setVisibility(View.VISIBLE);
                         userNotSearch.setVisibility(View.GONE);
-                        PeopleAdapter peopleAdapter = new PeopleAdapter(searchUserFromBase);
+                        PeopleAdapter peopleAdapter = new PeopleAdapter(searchUserFromBase,userInformation);
                         peopleRecyclerView.setAdapter(peopleAdapter);
                         PeopleAdapter.ItemClickListener clickListener =
                                 new PeopleAdapter.ItemClickListener() {
@@ -146,7 +146,7 @@ public class PeopleFragment extends Fragment {
                 @Override
                 public void getAlreadySearched(ArrayList<UserPeopleAdapter> searchedUserFromBase) {
                     userInformation.setAlreadySearched(searchedUserFromBase);
-                    AlreadySearchAdapter alreadySearchAdapter=new AlreadySearchAdapter(searchedUserFromBase);
+                    AlreadySearchAdapter alreadySearchAdapter=new AlreadySearchAdapter(searchedUserFromBase,userInformation);
                     peopleRecyclerView.setAdapter(alreadySearchAdapter);
                     AlreadySearchAdapter.ItemClickListener itemClickListener=new AlreadySearchAdapter.ItemClickListener() {
                         @Override
@@ -165,7 +165,7 @@ public class PeopleFragment extends Fragment {
                 }
             });
         }else {
-            AlreadySearchAdapter alreadySearchAdapter=new AlreadySearchAdapter(userInformation.getAlreadySearched());
+            AlreadySearchAdapter alreadySearchAdapter=new AlreadySearchAdapter(userInformation.getAlreadySearched(),userInformation);
             peopleRecyclerView.setAdapter(alreadySearchAdapter);
             AlreadySearchAdapter.ItemClickListener itemClickListener=new AlreadySearchAdapter.ItemClickListener() {
                 @Override
@@ -226,7 +226,7 @@ public class PeopleFragment extends Fragment {
                     }else{
                         peopleRecyclerView.setVisibility(View.VISIBLE);
                         userNotSearch.setVisibility(View.GONE);
-                        PeopleAdapter peopleAdapter = new PeopleAdapter(searchUserFromBase);
+                        PeopleAdapter peopleAdapter = new PeopleAdapter(searchUserFromBase,userInformation);
                         peopleRecyclerView.setAdapter(peopleAdapter);
                         PeopleAdapter.ItemClickListener clickListener =
                                 new PeopleAdapter.ItemClickListener() {

@@ -149,20 +149,15 @@ public class MainFragment extends Fragment{
         relativeMyClothes=view.findViewById(R.id.relativeClothes);
         relativeMining=view.findViewById(R.id.relativeMining);
         relativeShop=view.findViewById(R.id.relativeshop);
-        //                firebaseModel.getUsersReference().child(nick).child("clothesRequest")
+//                        firebaseModel.getUsersReference().child(nick).child("clothesRequest")
 //                        .child("-MxuHf_f26Lr39Vx2Tx8").setValue(new ClothesRequest("shoes", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
-//                , 100, "Jordan 1", 123, nick, "coin", "d", " https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Funtitled.glb?alt=media&token=657b45d7-a84b-4f2a-89f4-a699029401f7"
+//                , 100, "Jordan 4", 123, nick, "coin", "d", " https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Funtitled.glb?alt=media&token=657b45d7-a84b-4f2a-89f4-a699029401f7"
 //                , "shoes", "okey", "no", "no", "-MxuHf_f26Lr39Vx2Tx8"));
 //                firebaseModel.getReference().child("users")
 //                        .child(nick).child("nontifications")
 //                        .child("-MxuHf_f26Lr39Vx2Tx8").setValue(new Nontification(nick,"не отправлено","запросодежда"
-//                        ,""," "," ","не просмотрено","-MxuHf_f26Lr39Vx2Tx8",0));
-        RecentMethods.getMyClothes(nick, firebaseModel, new Callbacks.GetClothes() {
-            @Override
-            public void getClothes(ArrayList<Clothes> allClothes) {
-                myClothesListSize=allClothes.size();
-            }
-        });
+//                        ,"","Jordan 4","https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500",
+//                        "не просмотрено","-MxuHf_f26Lr39Vx2Tx8",0));
         ImageView chat=view.findViewById(R.id.chat);
         chat.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -183,14 +178,6 @@ public class MainFragment extends Fragment{
 //                startActivity(intent);
             }
         });
-        Random random = new Random();
-        int num1 =random.nextInt(1000000000);
-        int num2 =random.nextInt(1000000000);
-        String numToBase=String.valueOf(num1+num2);
-        int num3 =random.nextInt(1000000000);
-        int num4=random.nextInt(1000000000);
-        String numToBase1=String.valueOf(num3+num4);
-
 //        firebaseModel.getUsersReference().child("tyomaa6").child("subscription").child("Spaccacrani")
 //                .setValue("Spaccacrani");
 //        firebaseModel.getUsersReference().child("Spaccacrani").child("subscribers").child("tyomaa6")
@@ -460,10 +447,8 @@ public class MainFragment extends Fragment{
                     relativeMyClothes.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            if(myClothesListSize>-1) {
-                                RecentMethods.setCurrentFragment(MyClothesFragment.newInstance(clothesFromBase
-                                        ,totalProfitLong,totalPurchaseLong,totalProfitDollarLong,userInformation,bundle), getActivity());
-                            }
+                            RecentMethods.setCurrentFragment(MyClothesFragment.newInstance(clothesFromBase
+                                    ,totalProfitLong,totalPurchaseLong,totalProfitDollarLong,userInformation,bundle), getActivity());
                         }
                     });
                     if(clothesFromBase.size()==0){
@@ -527,10 +512,8 @@ public class MainFragment extends Fragment{
                 relativeMyClothes.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if(myClothesListSize>-1) {
-                            RecentMethods.setCurrentFragment(MyClothesFragment.newInstance(userInformation.getMyClothes()
-                                    ,totalProfitLong,totalPurchaseLong,totalProfitDollarLong,userInformation,bundle), getActivity());
-                        }
+                        RecentMethods.setCurrentFragment(MyClothesFragment.newInstance(userInformation.getMyClothes()
+                                ,totalProfitLong,totalPurchaseLong,totalProfitDollarLong,userInformation,bundle), getActivity());
                     }
                 });
             }

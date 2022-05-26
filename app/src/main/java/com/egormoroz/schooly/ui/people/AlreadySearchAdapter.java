@@ -14,6 +14,7 @@ import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
+import com.egormoroz.schooly.ui.main.UserInformation;
 import com.squareup.picasso.Picasso;
 
 import org.jetbrains.annotations.NotNull;
@@ -25,10 +26,13 @@ public class AlreadySearchAdapter extends RecyclerView.Adapter<AlreadySearchAdap
 
     List<UserPeopleAdapter> listAdapterPeople;
     private AlreadySearchAdapter.ItemClickListener clickListener;
+    String nick;
     private FirebaseModel firebaseModel = new FirebaseModel();
+    UserInformation userInformation;
 
-    public  AlreadySearchAdapter(ArrayList<UserPeopleAdapter> listAdapter) {
+    public  AlreadySearchAdapter(ArrayList<UserPeopleAdapter> listAdapter, UserInformation userInformation) {
         this.listAdapterPeople = listAdapter;
+        this.userInformation=userInformation;
     }
 
     @NotNull
@@ -45,6 +49,7 @@ public class AlreadySearchAdapter extends RecyclerView.Adapter<AlreadySearchAdap
     @Override
     public void onBindViewHolder(AlreadySearchAdapter.ViewHolder holder, int position) {
         UserPeopleAdapter userInformation=listAdapterPeople.get(position);
+        nick= userInformation.getNick();
         holder.usernickname.setText(userInformation.getNick());
         Picasso.get().load(userInformation.getAvatar()).into( holder.userAvatar);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -56,13 +61,8 @@ public class AlreadySearchAdapter extends RecyclerView.Adapter<AlreadySearchAdap
         holder.cross.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-                    @Override
-                    public void PassUserNick(String nick) {
-                        firebaseModel.getUsersReference().child(nick).child("alreadySearched")
-                                .child(userInformation.getNick()).removeValue();
-                    }
-                });
+                firebaseModel.getUsersReference().child(nick).child("alreadySearched")
+                        .child(userInformation.getNick()).removeValue();
             }
         });
     }

@@ -137,16 +137,7 @@ public class SendMoneyFragment extends Fragment {
                             .child(otherUserNick).child("nontifications")
                             .child(uid).setValue(new Nontification(nick,"не отправлено","перевод"
                             , "",String.valueOf(sumLong)," ","не просмотрено",uid,0));
-                    firebaseModel.getUsersReference().child(nick).child("money")
-                            .get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<DataSnapshot> task) {
-                            if(task.isSuccessful()){}
-                            DataSnapshot snapshot= task.getResult();
-                            userInformation.setmoney(snapshot.getValue(Long.class));
-                            RecentMethods.setCurrentFragment(TransferMoneyFragment.newInstance(fragment,userInformation,bundle), getActivity());
-                        }
-                    });
+                    RecentMethods.setCurrentFragment(TransferMoneyFragment.newInstance(fragment,userInformation,bundle), getActivity());
                 }
             }
         }

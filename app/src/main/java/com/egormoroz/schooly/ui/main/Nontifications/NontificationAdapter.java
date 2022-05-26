@@ -94,11 +94,8 @@ public class NontificationAdapter extends RecyclerView.Adapter<NontificationAdap
                     firebaseModel.getReference().child("users")
                             .child(nontification.getNick()).child("subscription")
                             .child(nick).setValue(nick);
-                    if (nontification.getTypeView().equals("запрос")){
-                        firebaseModel.getUsersReference().child(nick).child("nontifications")
-                                .child(nontification.getUid()).removeValue();
-                        Toast.makeText(v.getContext(), "Подписчик добавлен", Toast.LENGTH_SHORT).show();
-                    }
+                    firebaseModel.getUsersReference().child(nick).child("nontifications")
+                            .child(nontification.getUid()).removeValue();
                     firebaseModel.getReference().child("users").child(nick).child("requests")
                             .child(nontification.getNick()).removeValue();
                     holder.addFriend.setText("Добавлен");
@@ -144,6 +141,13 @@ public class NontificationAdapter extends RecyclerView.Adapter<NontificationAdap
             holder.otherUserNick.setText("Пришел ответ на заявку "+nontification.getClothesName());
             holder.addFriend.setVisibility(View.VISIBLE);
             holder.addFriend.setText("Перейти");
+            holder.addFriend.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (clickListener != null) clickListener.onItemClick(listAdapter.get(holder.getAdapterPosition()),"clothesRequest");
+                    sendNont=listAdapter.get(holder.getAdapterPosition());
+                }
+            });
         }
         else if (nontification.getTypeView().equals("подарок")){
             holder.otherUserNick.setVisibility(View.VISIBLE);
@@ -155,11 +159,6 @@ public class NontificationAdapter extends RecyclerView.Adapter<NontificationAdap
                 public void onClick(View view) {
                     if (clickListener != null) clickListener.onItemClick(listAdapter.get(holder.getAdapterPosition()),"sub");
                     sendNont=listAdapter.get(holder.getAdapterPosition());
-                }
-            });
-            holder.addFriend.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
                 }
             });
         }

@@ -45,6 +45,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import java.io.Serializable;
 import java.util.function.Consumer;
 
 public class ClothesRequestFragment extends Fragment {
@@ -57,6 +58,7 @@ public class ClothesRequestFragment extends Fragment {
     UserInformation userInformation;
     Fragment fragment;
     String clothesUid;
+    ClothesRequest clothesRequest;
     Bundle bundle;
 
     public ClothesRequestFragment(Fragment fragment,String clothesUid,UserInformation userInformation,Bundle bundle) {
@@ -79,8 +81,6 @@ public class ClothesRequestFragment extends Fragment {
         BottomNavigationView bnv = getActivity().findViewById(R.id.bottomNavigationView);
         bnv.setVisibility(bnv.GONE);
         firebaseModel.initAll();
-//        AppBarLayout abl = getActivity().findViewById(R.id.AppBarLayout);
-//        abl.setVisibility(abl.GONE);
         return root;
     }
 
@@ -106,47 +106,72 @@ public class ClothesRequestFragment extends Fragment {
                 RecentMethods.setCurrentFragment(fragment, getActivity());
             }
         });
-        firebaseModel.getUsersReference().child(userInformation.getNick())
-                .child("clothesRequest").child(clothesUid).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if (task.isSuccessful()){
-                    DataSnapshot snapshot=task.getResult();
-                    ClothesRequest clothesRequest=new ClothesRequest();
-                    clothesRequest.setClothesImage(snapshot.child("clothesImage").getValue(String.class));
-                    clothesRequest.setClothesPrice(snapshot.child("clothesPrice").getValue(Long.class));
-                    clothesRequest.setClothesType(snapshot.child("clothesType").getValue(String.class));
-                    clothesRequest.setClothesTitle(snapshot.child("clothesTitle").getValue(String.class));
-                    clothesRequest.setCreator(snapshot.child("creator").getValue(String.class));
-                    clothesRequest.setCurrencyType(snapshot.child("currencyType").getValue(String.class));
-                    clothesRequest.setDescription(snapshot.child("description").getValue(String.class));
-                    clothesRequest.setModel(snapshot.child("model").getValue(String.class));
-                    clothesRequest.setBodyType(snapshot.child("bodyType").getValue(String.class));
-                    clothesRequest.setReason(snapshot.child("reason").getValue(String.class));
-                    clothesRequest.setResult(snapshot.child("result").getValue(String.class));
-                    clothesRequest.setReasonDescription(snapshot.child("reasonDescription").getValue(String.class));
-                    clothesRequest.setUid(snapshot.child("uid").getValue(String.class));
-                    clothesTitleCV.setText(clothesRequest.getClothesTitle());
-                    Picasso.get().load(clothesRequest.getClothesImage()).into(clothesImageCV);
-                    clothesPrice.setText(String.valueOf(clothesRequest.getClothesPrice()));
-                    clothesType.setText(clothesRequest.getClothesType());
-                    loadModels(Uri.parse(clothesRequest.getModel()), sceneView, ClothesRequestFragment.this, 0.25f);
-                    if(clothesRequest.getResult().equals("okey")){
-                        result.setTextColor(Color.parseColor("#53B35C"));
-                        result.setText("Модель добавлена в магазин одежды Schooly");
-                    }else {
-                        result.setTextColor(Color.parseColor("#EA4646"));
-                        result.setText("Запрос на добавление отказан");
-                        reason.setVisibility(View.VISIBLE);
-                        reasonText.setVisibility(View.VISIBLE);
-                        addReason.setVisibility(View.VISIBLE);
-                        addReasonText.setVisibility(View.VISIBLE);
-                        reason.setText(clothesRequest.getReason());
-                        addReason.setText(clothesRequest.getReasonDescription());
-                    }
+        if(bundle!=null){
+            if(bundle.getSerializable(clothesUid+"CLOTHES_REQUEST_BUNDLE")!=null){
+                clothesRequest= (ClothesRequest) bundle.getSerializable(clothesUid+"CLOTHES_REQUEST_BUNDLE");
+                clothesTitleCV.setText(clothesRequest.getClothesTitle());
+                Picasso.get().load(clothesRequest.getClothesImage()).into(clothesImageCV);
+                clothesPrice.setText(String.valueOf(clothesRequest.getClothesPrice()));
+                clothesType.setText(clothesRequest.getClothesType());
+                loadModels(Uri.parse(clothesRequest.getModel()), sceneView, ClothesRequestFragment.this, 0.25f);
+                if(clothesRequest.getResult().equals("okey")){
+                    result.setTextColor(Color.parseColor("#53B35C"));
+                    result.setText("Модель добавлена в магазин одежды Schooly");
+                }else {
+                    result.setTextColor(Color.parseColor("#EA4646"));
+                    result.setText("Запрос на добавление отказан");
+                    reason.setVisibility(View.VISIBLE);
+                    reasonText.setVisibility(View.VISIBLE);
+                    addReason.setVisibility(View.VISIBLE);
+                    addReasonText.setVisibility(View.VISIBLE);
+                    reason.setText(clothesRequest.getReason());
+                    addReason.setText(clothesRequest.getReasonDescription());
                 }
+            }else {
+                firebaseModel.getUsersReference().child(userInformation.getNick())
+                        .child("clothesRequest").child(clothesUid).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DataSnapshot> task) {
+                        if (task.isSuccessful()){
+                            DataSnapshot snapshot=task.getResult();
+                            clothesRequest=new ClothesRequest();
+                            clothesRequest.setClothesImage(snapshot.child("clothesImage").getValue(String.class));
+                            clothesRequest.setClothesPrice(snapshot.child("clothesPrice").getValue(Long.class));
+                            clothesRequest.setClothesType(snapshot.child("clothesType").getValue(String.class));
+                            clothesRequest.setClothesTitle(snapshot.child("clothesTitle").getValue(String.class));
+                            clothesRequest.setCreator(snapshot.child("creator").getValue(String.class));
+                            clothesRequest.setCurrencyType(snapshot.child("currencyType").getValue(String.class));
+                            clothesRequest.setDescription(snapshot.child("description").getValue(String.class));
+                            clothesRequest.setModel(snapshot.child("model").getValue(String.class));
+                            clothesRequest.setBodyType(snapshot.child("bodyType").getValue(String.class));
+                            clothesRequest.setReason(snapshot.child("reason").getValue(String.class));
+                            clothesRequest.setResult(snapshot.child("result").getValue(String.class));
+                            clothesRequest.setReasonDescription(snapshot.child("reasonDescription").getValue(String.class));
+                            clothesRequest.setUid(snapshot.child("uid").getValue(String.class));
+                            bundle.putSerializable(clothesUid+"CLOTHES_REQUEST_BUNDLE", (Serializable) clothesRequest);
+                            clothesTitleCV.setText(clothesRequest.getClothesTitle());
+                            Picasso.get().load(clothesRequest.getClothesImage()).into(clothesImageCV);
+                            clothesPrice.setText(String.valueOf(clothesRequest.getClothesPrice()));
+                            clothesType.setText(clothesRequest.getClothesType());
+                            loadModels(Uri.parse(clothesRequest.getModel()), sceneView, ClothesRequestFragment.this, 0.25f);
+                            if(clothesRequest.getResult().equals("okey")){
+                                result.setTextColor(Color.parseColor("#53B35C"));
+                                result.setText("Модель добавлена в магазин одежды Schooly");
+                            }else {
+                                result.setTextColor(Color.parseColor("#EA4646"));
+                                result.setText("Запрос на добавление отказан");
+                                reason.setVisibility(View.VISIBLE);
+                                reasonText.setVisibility(View.VISIBLE);
+                                addReason.setVisibility(View.VISIBLE);
+                                addReasonText.setVisibility(View.VISIBLE);
+                                reason.setText(clothesRequest.getReason());
+                                addReason.setText(clothesRequest.getReasonDescription());
+                            }
+                        }
+                    }
+                });
             }
-        });
+        }
 
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override

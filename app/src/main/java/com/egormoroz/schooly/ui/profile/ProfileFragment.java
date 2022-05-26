@@ -184,34 +184,27 @@ public class ProfileFragment extends Fragment {
 
 
     public void open() {
-        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+        user.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void PassUserNick(String nick) {
-                {
-                    user.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot snapshot) {
-                            if (snapshot.child(nick).exists()) {
-                                AcceptChatRequest();
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-                    });
+            public void onDataChange(DataSnapshot snapshot) {
+                if (snapshot.child(userInformation.getNick()).exists()) {
+                    AcceptChatRequest();
                 }
-                Intent i = new Intent(getActivity(), ChatActivity.class);
-                //Getting information about user(friend)
-                i.putExtra("othUser", info.getNick());
-                i.putExtra("curUser", nick);
-                i.putExtra("groupName", "one");
-                i.putExtra("visit_user_id", info.getUid());
-                i.putExtra("visit_image", ChatActivity.class);
-                startActivity(i);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
             }
         });
+        Intent i = new Intent(getActivity(), ChatActivity.class);
+        //Getting information about user(friend)
+        i.putExtra("othUser", info.getNick());
+        i.putExtra("curUser", userInformation.getNick());
+        i.putExtra("groupName", "one");
+        i.putExtra("visit_user_id", info.getUid());
+        i.putExtra("visit_image", ChatActivity.class);
+        startActivity(i);
         ((Activity) getActivity()).overridePendingTransition(0, 0);
     }
 

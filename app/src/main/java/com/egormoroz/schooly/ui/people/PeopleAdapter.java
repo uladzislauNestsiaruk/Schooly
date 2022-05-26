@@ -24,9 +24,11 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.ViewHolder
 
     List<UserPeopleAdapter> listAdapterPeople;
     private ItemClickListener clickListener;
+    UserInformation userInformation;
 
-    public  PeopleAdapter(ArrayList<UserPeopleAdapter> listAdapter) {
+    public  PeopleAdapter(ArrayList<UserPeopleAdapter> listAdapter,UserInformation userInformation) {
         this.listAdapterPeople = listAdapter;
+        this.userInformation=userInformation;
     }
 
     @NotNull

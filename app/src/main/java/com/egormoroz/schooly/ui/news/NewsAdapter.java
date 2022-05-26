@@ -28,10 +28,8 @@ import java.util.List;
 public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolder> {
 
     private List<NewsItem> newsList;
-    public static String newsId, likeWord;
     FirebaseModel firebaseModel = new FirebaseModel();
     long value;
-    Activity activity;
     UserInformation userInformation;
     Bundle bundle;
 
