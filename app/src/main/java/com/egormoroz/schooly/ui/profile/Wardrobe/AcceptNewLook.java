@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
@@ -39,6 +40,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.io.FileReader;
+import java.sql.Time;
 import java.util.ArrayList;
 
 public class AcceptNewLook extends Fragment {
@@ -87,7 +89,6 @@ public class AcceptNewLook extends Fragment {
         super.onDestroyView();
         if(descriptionLook.getText().toString().length()>0){
             bundle.putString("EDIT_DESCRIPTION_LOOK",descriptionLook.getText().toString().trim());
-            Log.d("####", descriptionLook.getText().toString());
         }
     }
 
@@ -157,6 +158,7 @@ public class AcceptNewLook extends Fragment {
                         .setValue(new NewsItem(model, descriptionLook.getText().toString(), "0", lookId,
                                 "", userInformation.getLookClothes(), 1200, 0,"",nick,0));
                 descriptionLook.getText().clear();
+                Toast.makeText(getContext(), "Образ успешно опубликован!", Toast.LENGTH_SHORT).show();
                 RecentMethods.setCurrentFragment(ProfileFragment.newInstance(type, nick, fragment,userInformation,bundle), getActivity());
             }
         });
@@ -191,47 +193,29 @@ public class AcceptNewLook extends Fragment {
             schoolyCoin.setVisibility(View.GONE);
             lookPrice.setVisibility(View.GONE);
             lookPriceDollarString=String.valueOf(lookPriceDollarLong);
-            if(lookPriceDollarLong<1000){
-                lookPriceDollar.setText(lookPriceDollarString+"$");
-            }else if(lookPriceDollarLong>1000 && lookPriceDollarLong<10000){
-                lookPriceDollar.setText(lookPriceDollarString.substring(0, 1)+"."+lookPriceDollarString.substring(1, 2)+"K"+"$");
-            }
-            else if(lookPriceDollarLong>10000 && lookPriceDollarLong<100000){
-                lookPriceDollar.setText(lookPriceDollarString.substring(0, 2)+"."+lookPriceDollarString.substring(2,3)+"K"+"$");
-            }
-            else if(lookPriceDollarLong>10000 && lookPriceDollarLong<100000){
-                lookPriceDollar.setText(lookPriceDollarString.substring(0, 2)+"."+lookPriceDollarString.substring(2,3)+"K"+"$");
-            }else if(lookPriceDollarLong>100000 && lookPriceDollarLong<1000000){
-                lookPriceDollar.setText(lookPriceDollarString.substring(0, 3)+"K"+"$");
-            }
-            else if(lookPriceDollarLong>1000000 && lookPriceDollarLong<10000000){
-                lookPriceDollar.setText(lookPriceDollarString.substring(0, 1)+"KK"+"$");
-            }
-            else if(lookPriceDollarLong>10000000 && lookPriceDollarLong<100000000){
-                lookPriceDollar.setText(lookPriceDollarString.substring(0, 2)+"KK"+"$");
-            }
+            checkCounts(lookPriceDollar, lookPriceDollarLong, lookPriceDollarString);
         }else {
             lookPriceString=String.valueOf(lookPriceLong);
-            if(lookPriceLong<1000){
-                lookPrice.setText(String.valueOf(lookPriceString));
-            }else if(lookPriceLong>1000 && lookPriceLong<10000){
-                lookPrice.setText(lookPriceString.substring(0, 1)+"."+lookPriceString.substring(1, 2)+"K");
-            }
-            else if(lookPriceLong>10000 && lookPriceLong<100000){
-                lookPrice.setText(lookPriceString.substring(0, 2)+"."+lookPriceString.substring(2,3)+"K");
-            }
-            else if(lookPriceLong>10000 && lookPriceLong<100000){
-                lookPrice.setText(lookPriceString.substring(0, 2)+"."+lookPriceString.substring(2,3)+"K");
-            }else if(lookPriceLong>100000 && lookPriceLong<1000000){
-                lookPrice.setText(lookPriceString.substring(0, 3)+"K");
-            }
-            else if(lookPriceLong>1000000 && lookPriceLong<10000000){
-                lookPrice.setText(lookPriceString.substring(0, 1)+"KK");
-            }
-            else if(lookPriceLong>10000000 && lookPriceLong<100000000){
-                lookPrice.setText(lookPriceString.substring(0, 2)+"KK");
-            }
+            checkCounts(lookPrice, lookPriceLong, lookPriceString);
         }
     }
 
+    public void checkCounts(TextView textView,Long count,String stringCount){
+        if(count<1000){
+            textView.setText(String.valueOf(count));
+        }else if(count>1000 && count<10000){
+            textView.setText(stringCount.substring(0, 1)+"."+stringCount.substring(1, 2)+"K");
+        }
+        else if(count>10000 && count<100000){
+            textView.setText(stringCount.substring(0, 2)+"."+stringCount.substring(2,3)+"K");
+        }else if(count>100000 && count<1000000){
+            textView.setText(stringCount.substring(0, 3)+"K");
+        }
+        else if(count>1000000 && count<10000000){
+            textView.setText(stringCount.substring(0, 1)+"KK");
+        }
+        else if(count>10000000 && count<100000000){
+            textView.setText(stringCount.substring(0, 2)+"KK");
+        }
+    }
 }

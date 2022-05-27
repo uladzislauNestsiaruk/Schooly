@@ -1,5 +1,8 @@
 package com.egormoroz.schooly.ui.profile;
 
+import android.app.Dialog;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -92,7 +95,12 @@ public class EditingFragment extends Fragment {
         nickEdit=view.findViewById(R.id.edittextnickname);
         bioEdit=view.findViewById(R.id.edittextbio);
         agree=view.findViewById(R.id.agree);
-
+        nickEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDialog();
+            }
+        });
         nickEdit.setText(nick);
         nickname=nick;
         bioEdit.setText(userInformation.getBio());
@@ -137,5 +145,25 @@ public class EditingFragment extends Fragment {
                 });
             }
         });
+    }
+
+    public void showDialog(){
+
+        final Dialog dialog = new Dialog(getContext());
+        dialog.setContentView(R.layout.dialog_layout);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        RelativeLayout Relative=dialog.findViewById(R.id.Relative);
+        TextView textView=dialog.findViewById(R.id.Text);
+        textView.setText("Смена недоступна");
+
+        Relative.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
     }
 }

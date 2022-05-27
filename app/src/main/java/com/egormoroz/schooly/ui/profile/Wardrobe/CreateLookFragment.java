@@ -303,7 +303,7 @@ public class CreateLookFragment extends Fragment {
                         }else{
                             notFound.setVisibility(View.GONE);
                             searchRecycler.setVisibility(View.VISIBLE);
-                            WardrobeClothesAdapter wardrobeClothesAdapter=new WardrobeClothesAdapter(clothesFromBase,itemClickListener);
+                            WardrobeClothesAdapter wardrobeClothesAdapter=new WardrobeClothesAdapter(clothesFromBase,itemClickListener,userInformation);
                             searchRecycler.setLayoutManager(new GridLayoutManager(getActivity(), 2));
                             searchRecycler.setAdapter(wardrobeClothesAdapter);
                         }
@@ -331,7 +331,7 @@ public class CreateLookFragment extends Fragment {
                     }else{
                         notFound.setVisibility(View.GONE);
                         searchRecycler.setVisibility(View.VISIBLE);
-                        WardrobeClothesAdapter wardrobeClothesAdapter=new WardrobeClothesAdapter(clothesFromBase,itemClickListener);
+                        WardrobeClothesAdapter wardrobeClothesAdapter=new WardrobeClothesAdapter(clothesFromBase,itemClickListener,userInformation);
                         searchRecycler.setLayoutManager(new GridLayoutManager(getActivity(), 2));
                         searchRecycler.setAdapter(wardrobeClothesAdapter);
                     }

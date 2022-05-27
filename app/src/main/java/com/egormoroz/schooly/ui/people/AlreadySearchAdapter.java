@@ -48,21 +48,22 @@ public class AlreadySearchAdapter extends RecyclerView.Adapter<AlreadySearchAdap
 
     @Override
     public void onBindViewHolder(AlreadySearchAdapter.ViewHolder holder, int position) {
-        UserPeopleAdapter userInformation=listAdapterPeople.get(position);
+        UserPeopleAdapter userInfo=listAdapterPeople.get(position);
         nick= userInformation.getNick();
-        holder.usernickname.setText(userInformation.getNick());
+        holder.usernickname.setText(userInfo.getNick());
         Picasso.get().load(userInformation.getAvatar()).into( holder.userAvatar);
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
+        holder.usernickname.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (clickListener != null) clickListener.onItemClick(v, position);
+                if (clickListener != null) clickListener.onItemClick(v, position,"profile");
             }
         });
         holder.cross.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (clickListener != null) clickListener.onItemClick(v, position,"delete");
                 firebaseModel.getUsersReference().child(nick).child("alreadySearched")
-                        .child(userInformation.getNick()).removeValue();
+                        .child(userInfo.getNick()).removeValue();
             }
         });
     }
@@ -92,6 +93,6 @@ public class AlreadySearchAdapter extends RecyclerView.Adapter<AlreadySearchAdap
     }
 
     public interface ItemClickListener {
-        void onItemClick(View view, int position);
+        void onItemClick(View view, int position,String type);
     }
 }

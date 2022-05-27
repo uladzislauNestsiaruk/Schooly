@@ -652,6 +652,7 @@ public class ProfileFragment extends Fragment {
 
                 FragmentManager fm1 = getChildFragmentManager();
                 fragmentAdapter = new FragmentAdapter(fm1, getLifecycle());
+                viewPager.setAdapter(fragmentAdapter);
                 viewPager.setCurrentItem(tabLayoutPosition, false);
 
                 tabLayout.addTab(tabLayout.newTab().setText("Образы"));

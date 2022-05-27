@@ -110,7 +110,7 @@ public class WardrobeAccessories extends Fragment {
                         });
                     }else {
                         Collections.reverse(sortAccessoriesArrayListWardrobe);
-                        WardrobeClothesAdapter newClothesAdapter = new WardrobeClothesAdapter(sortAccessoriesArrayListWardrobe, itemClickListener);
+                        WardrobeClothesAdapter newClothesAdapter = new WardrobeClothesAdapter(sortAccessoriesArrayListWardrobe, itemClickListener,userInformation);
                         wardrobeRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
                         wardrobeRecyclerView.setAdapter(newClothesAdapter);
                     }
@@ -136,7 +136,7 @@ public class WardrobeAccessories extends Fragment {
                 });
             }else {
                 Collections.reverse(sortAccessoriesArrayListWardrobe);
-                WardrobeClothesAdapter newClothesAdapter = new WardrobeClothesAdapter(sortAccessoriesArrayListWardrobe, itemClickListener);
+                WardrobeClothesAdapter newClothesAdapter = new WardrobeClothesAdapter(sortAccessoriesArrayListWardrobe, itemClickListener,userInformation);
                 wardrobeRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
                 wardrobeRecyclerView.setAdapter(newClothesAdapter);
             }

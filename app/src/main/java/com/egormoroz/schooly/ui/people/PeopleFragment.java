@@ -150,14 +150,18 @@ public class PeopleFragment extends Fragment {
                     peopleRecyclerView.setAdapter(alreadySearchAdapter);
                     AlreadySearchAdapter.ItemClickListener itemClickListener=new AlreadySearchAdapter.ItemClickListener() {
                         @Override
-                        public void onItemClick(View view, int position) {
+                        public void onItemClick(View view, int position,String type) {
                             UserPeopleAdapter user = alreadySearchAdapter.getItem(position);
                             userNameToProfile = user.getNick();
-                            if (userNameToProfile.equals(nick)) {
-                                RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback", nick, PeopleFragment.newInstance(userInformation,bundle),userInformation,bundle), getActivity());
-                            } else {
-                                RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile, PeopleFragment.newInstance(userInformation,bundle),userInformation,bundle),
-                                        getActivity());
+                            if(type.equals("profile")){
+                                if (userNameToProfile.equals(nick)) {
+                                    RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback", nick, PeopleFragment.newInstance(userInformation,bundle),userInformation,bundle), getActivity());
+                                } else {
+                                    RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile, PeopleFragment.newInstance(userInformation,bundle),userInformation,bundle),
+                                            getActivity());
+                                }
+                            }else {
+                               setAlreadySearchedInAdapter();
                             }
                         }
                     };
@@ -169,14 +173,18 @@ public class PeopleFragment extends Fragment {
             peopleRecyclerView.setAdapter(alreadySearchAdapter);
             AlreadySearchAdapter.ItemClickListener itemClickListener=new AlreadySearchAdapter.ItemClickListener() {
                 @Override
-                public void onItemClick(View view, int position) {
+                public void onItemClick(View view, int position,String type) {
                     UserPeopleAdapter user = alreadySearchAdapter.getItem(position);
                     userNameToProfile = user.getNick();
-                    if (userNameToProfile.equals(nick)) {
-                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback", nick, PeopleFragment.newInstance(userInformation,bundle),userInformation,bundle), getActivity());
-                    } else {
-                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile, PeopleFragment.newInstance(userInformation,bundle),userInformation,bundle),
-                                getActivity());
+                    if(type.equals("profile")){
+                        if (userNameToProfile.equals(nick)) {
+                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback", nick, PeopleFragment.newInstance(userInformation,bundle),userInformation,bundle), getActivity());
+                        } else {
+                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile, PeopleFragment.newInstance(userInformation,bundle),userInformation,bundle),
+                                    getActivity());
+                        }
+                    }else {
+                        setAlreadySearchedInAdapter();
                     }
                 }
             };
@@ -237,10 +245,10 @@ public class PeopleFragment extends Fragment {
                                         if (userNameToProfile.equals(nick)) {
                                             RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback", nick, PeopleFragment.newInstance(userInformation,bundle),userInformation,bundle), getActivity());
                                         } else {
-//                                        firebaseModel.getReference().child("users").child(nick).child("alreadySearched").child(userNameToProfile)
-//                                                .setValue(new UserPeopleAdapter(userNameToProfile, avatar, bio));
                                             RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile, PeopleFragment.newInstance(userInformation,bundle),userInformation,bundle),
                                                     getActivity());
+                                            firebaseModel.getReference("users").child(nick).child("alreadySearched").child(userNameToProfile)
+                                                    .setValue(new UserPeopleAdapter(userNameToProfile, avatar, bio));
                                         }
                                     }
                                 };

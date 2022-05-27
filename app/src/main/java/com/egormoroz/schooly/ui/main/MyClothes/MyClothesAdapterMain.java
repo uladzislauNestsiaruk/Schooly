@@ -151,9 +151,6 @@ public class MyClothesAdapterMain extends RecyclerView.Adapter<MyClothesAdapterM
         }
         else if(count>10000 && count<100000){
             textView.setText(stringCount.substring(0, 2)+"."+stringCount.substring(2,3)+"K");
-        }
-        else if(count>10000 && count<100000){
-            textView.setText(stringCount.substring(0, 2)+"."+stringCount.substring(2,3)+"K");
         }else if(count>100000 && count<1000000){
             textView.setText(stringCount.substring(0, 3)+"K");
         }
