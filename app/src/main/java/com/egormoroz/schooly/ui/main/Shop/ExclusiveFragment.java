@@ -30,15 +30,17 @@ public class ExclusiveFragment extends Fragment {
     String version;
     UserInformation userInformation;
     Bundle bundle;
+    Fragment fragment;
 
-    public ExclusiveFragment(String version,UserInformation userInformation,Bundle bundle) {
+    public ExclusiveFragment(String version,UserInformation userInformation,Bundle bundle,Fragment fragment) {
         this.version = version;
         this.userInformation=userInformation;
         this.bundle=bundle;
+        this.fragment=fragment;
     }
 
-    public static ExclusiveFragment newInstance(String version,UserInformation userInformation,Bundle bundle) {
-        return new ExclusiveFragment(version,userInformation,bundle);
+    public static ExclusiveFragment newInstance(String version,UserInformation userInformation,Bundle bundle,Fragment fragment) {
+        return new ExclusiveFragment(version,userInformation,bundle,fragment);
 
     }
 
@@ -89,13 +91,13 @@ public class ExclusiveFragment extends Fragment {
             itemClickListener=new NewClothesAdapter.ItemClickListener() {
                 @Override
                 public void onItemClick(Clothes clothes) {
-                    ((MainActivity)getActivity()).setCurrentFragment(ViewingClothes.newInstance(ShopFragment.newInstance(userInformation,bundle),userInformation,bundle));
+                    ((MainActivity)getActivity()).setCurrentFragment(ViewingClothes.newInstance(ShopFragment.newInstance(userInformation,bundle,fragment),userInformation,bundle));
                 }
             };
             itemClickListenerPopular=new PopularClothesAdapter.ItemClickListener() {
                 @Override
                 public void onItemClick(Clothes clothes) {
-                    ((MainActivity)getActivity()).setCurrentFragment(ViewingClothesPopular.newInstance(userInformation,bundle));
+                    ((MainActivity)getActivity()).setCurrentFragment(ViewingClothesPopular.newInstance(userInformation,bundle,ShopFragment.newInstance(userInformation,bundle,fragment)));
                 }
             };
             loadClothesFromBase();

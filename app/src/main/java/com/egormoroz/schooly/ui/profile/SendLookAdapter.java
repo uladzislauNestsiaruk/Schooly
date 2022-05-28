@@ -54,7 +54,6 @@ public class SendLookAdapter extends RecyclerView.Adapter<SendLookAdapter.ViewHo
                     holder.send.setText("Открыть чат");
                     holder.send.setTextColor(Color.parseColor("#F3A2E5"));
                     holder.send.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
-                    Log.d("###","f");
                     itemClickListener.onItemClick(subscriber.getSub(),"send");
                 }else {
                    itemClickListener.onItemClick(subscriber.getSub(),"chat");

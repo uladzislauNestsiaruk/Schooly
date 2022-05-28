@@ -30,14 +30,16 @@ import java.util.Collections;
 public class ShoesFargment extends Fragment {
     UserInformation userInformation;
     Bundle bundle;
+    Fragment fragment;
 
-    public ShoesFargment(UserInformation userInformation,Bundle bundle) {
+    public ShoesFargment(UserInformation userInformation,Bundle bundle,Fragment fragment) {
         this.userInformation=userInformation;
         this.bundle=bundle;
+        this.fragment=fragment;
     }
 
-    public static ShoesFargment newInstance(UserInformation userInformation,Bundle bundle) {
-        return new ShoesFargment(userInformation,bundle);
+    public static ShoesFargment newInstance(UserInformation userInformation,Bundle bundle,Fragment fragment) {
+        return new ShoesFargment(userInformation,bundle,fragment);
     }
     FirebaseModel firebaseModel=new FirebaseModel();
     ArrayList<Clothes> clothesArrayList=new ArrayList<Clothes>();
@@ -76,14 +78,14 @@ public class ShoesFargment extends Fragment {
         itemClickListener=new NewClothesAdapter.ItemClickListener() {
             @Override
             public void onItemClick(Clothes clothes) {
-                ((MainActivity)getActivity()).setCurrentFragment(ViewingClothes.newInstance(ShopFragment.newInstance(userInformation,bundle),userInformation,bundle));
+                ((MainActivity)getActivity()).setCurrentFragment(ViewingClothes.newInstance(ShopFragment.newInstance(userInformation,bundle,fragment),userInformation,bundle));
             }
         };
 
         itemClickListenerPopular=new PopularClothesAdapter.ItemClickListener() {
             @Override
             public void onItemClick(Clothes clothes) {
-                ((MainActivity)getActivity()).setCurrentFragment(ViewingClothesPopular.newInstance(userInformation,bundle));
+                ((MainActivity)getActivity()).setCurrentFragment(ViewingClothesPopular.newInstance(userInformation,bundle,ShopFragment.newInstance(userInformation,bundle,fragment)));
             }
         };
         loadClothesFromBase();

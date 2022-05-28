@@ -93,7 +93,7 @@ public  class BlackListFragment extends Fragment {
                         emptyList.setVisibility(View.VISIBLE);
                         recyclerView.setVisibility(View.GONE);
                     }else {
-                        BlackListAdapter blackListAdapter=new BlackListAdapter(subscribers);
+                        BlackListAdapter blackListAdapter=new BlackListAdapter(subscribers,userInformation);
                         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
                         recyclerView.setAdapter(blackListAdapter);
                         clickListener=new BlackListAdapter.ItemClickListener() {
@@ -118,7 +118,7 @@ public  class BlackListFragment extends Fragment {
                 emptyList.setVisibility(View.VISIBLE);
                 recyclerView.setVisibility(View.GONE);
             }else {
-                BlackListAdapter blackListAdapter=new BlackListAdapter(userInformation.getBlackList());
+                BlackListAdapter blackListAdapter=new BlackListAdapter(userInformation.getBlackList(),userInformation);
                 recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
                 recyclerView.setAdapter(blackListAdapter);
                 clickListener=new BlackListAdapter.ItemClickListener() {

@@ -16,6 +16,8 @@ import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.Subscriber;
+import com.egormoroz.schooly.ui.chat.User;
+import com.egormoroz.schooly.ui.main.UserInformation;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.Query;
@@ -29,10 +31,13 @@ public class BlackListAdapter extends RecyclerView.Adapter<BlackListAdapter.View
 
     ArrayList<Subscriber> listAdapter;
     private BlackListAdapter.ItemClickListener clickListener;
+    String nick;
     private FirebaseModel firebaseModel = new FirebaseModel();
+    UserInformation userInformation;
 
-    public  BlackListAdapter(ArrayList<Subscriber> listAdapter) {
+    public  BlackListAdapter(ArrayList<Subscriber> listAdapter, UserInformation userInformation) {
         this.listAdapter = listAdapter;
+        this.userInformation=userInformation;
     }
 
 
@@ -49,6 +54,7 @@ public class BlackListAdapter extends RecyclerView.Adapter<BlackListAdapter.View
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Subscriber subscriber=listAdapter.get(position);
+        nick=userInformation.getNick();
         holder.otherUserNick.setText(subscriber.getSub());
         holder.otherUserNick.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,15 +65,10 @@ public class BlackListAdapter extends RecyclerView.Adapter<BlackListAdapter.View
         holder.putAwayText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-                    @Override
-                    public void PassUserNick(String nick) {
-                        firebaseModel.getUsersReference().child(nick)
-                                .child("blackList").child(subscriber.getSub()).removeValue();
-                        holder.putAwayText.setText(R.string.putAwayDone);
-                        holder.putAwayText.setBackgroundResource(R.drawable.corners10grey);
-                    }
-                });
+                firebaseModel.getUsersReference().child(nick)
+                        .child("blackList").child(subscriber.getSub()).removeValue();
+                holder.putAwayText.setText(R.string.putAwayDone);
+                holder.putAwayText.setBackgroundResource(R.drawable.corners10grey);
             }
         });
     }

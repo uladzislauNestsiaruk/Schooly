@@ -19,13 +19,13 @@
             android:id="@+id/blackList"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
             android:layout_marginTop="11dp"
+            android:layout_marginStart="14dp"
             android:layout_toRightOf="@+id/back_tosettings"
+            android:fontFamily="@font/montserrat_bold"
             android:text="@string/blackList"
             android:textColor="@color/app_color"
-            android:textSize="22sp"
-            android:fontFamily="@font/montserrat_bold"/>
+            android:textSize="22sp" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/blackListRecycler"

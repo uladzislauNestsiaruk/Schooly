@@ -111,22 +111,6 @@ public class SubscribersAdapter extends RecyclerView.Adapter<SubscribersAdapter.
 
             }
         });
-        Query queryBlackListOther=firebaseModel.getUsersReference().child(subscriber.getSub())
-                .child("blackList").child(nick);
-        queryBlackListOther.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.exists()){
-                    a=4;
-
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
         holder.addFriend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

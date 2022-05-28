@@ -60,14 +60,16 @@ import java.util.Random;
 public class ViewingClothesBasket extends Fragment {
     UserInformation userInformation;
     Bundle bundle;
+    Fragment fragment;
 
-    public ViewingClothesBasket(UserInformation userInformation,Bundle bundle) {
+    public ViewingClothesBasket(UserInformation userInformation,Bundle bundle,Fragment fragment) {
         this.userInformation=userInformation;
         this.bundle=bundle;
+        this.fragment=fragment;
     }
 
-    public static ViewingClothesBasket newInstance(UserInformation userInformation,Bundle bundle) {
-        return new ViewingClothesBasket(userInformation,bundle);
+    public static ViewingClothesBasket newInstance(UserInformation userInformation,Bundle bundle,Fragment fragment) {
+        return new ViewingClothesBasket(userInformation,bundle,fragment);
 
     }
 
@@ -126,7 +128,7 @@ public class ViewingClothesBasket extends Fragment {
         fittingClothes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(FittingFragment.newInstance(ViewingClothesBasket.newInstance(userInformation,bundle),userInformation,bundle), getActivity());
+                RecentMethods.setCurrentFragment(FittingFragment.newInstance(ViewingClothesBasket.newInstance(userInformation,bundle,fragment),userInformation,bundle), getActivity());
             }
         });
         send.setOnClickListener(new View.OnClickListener() {
@@ -138,14 +140,14 @@ public class ViewingClothesBasket extends Fragment {
         coinsLinear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(CoinsFragmentSecond.newInstance(ViewingClothesBasket.newInstance(userInformation,bundle),userInformation,bundle), getActivity());
+                RecentMethods.setCurrentFragment(CoinsFragmentSecond.newInstance(ViewingClothesBasket.newInstance(userInformation,bundle,fragment),userInformation,bundle), getActivity());
             }
         });
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
 
-                RecentMethods.setCurrentFragment(BasketFragment.newInstance(userInformation,bundle), getActivity());
+                RecentMethods.setCurrentFragment(fragment, getActivity());
             }
         };
 
@@ -153,7 +155,7 @@ public class ViewingClothesBasket extends Fragment {
         backToShop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(BasketFragment.newInstance(userInformation,bundle), getActivity());
+                RecentMethods.setCurrentFragment(fragment, getActivity());
             }
         });
         BasketAdapter.singeClothesInfo(new BasketAdapter.ItemClickListener() {
@@ -168,9 +170,9 @@ public class ViewingClothesBasket extends Fragment {
                     @Override
                     public void onClick(View v) {
                         if (clothesViewing.getCreator().equals(userInformation.getNick())) {
-                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback", userInformation.getNick(), ViewingClothesBasket.newInstance(userInformation,bundle),userInformation,bundle), getActivity());
+                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback", userInformation.getNick(), ViewingClothesBasket.newInstance(userInformation,bundle,fragment),userInformation,bundle), getActivity());
                         }else {
-                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", clothesViewing.getCreator(), ViewingClothesBasket.newInstance(userInformation,bundle),userInformation,bundle), getActivity());
+                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", clothesViewing.getCreator(), ViewingClothesBasket.newInstance(userInformation,bundle,fragment),userInformation,bundle), getActivity());
                         }
                     }
                 });
@@ -661,7 +663,7 @@ public class ViewingClothesBasket extends Fragment {
                         a=3;
                     }else{
                         Toast.makeText(getContext(), "Не хватает коинов", Toast.LENGTH_SHORT).show();
-                        RecentMethods.setCurrentFragment(CoinsFragmentSecond.newInstance(ViewingClothesBasket.newInstance(userInformation,bundle),userInformation,bundle),getActivity());
+                        RecentMethods.setCurrentFragment(CoinsFragmentSecond.newInstance(ViewingClothesBasket.newInstance(userInformation,bundle,fragment),userInformation,bundle),getActivity());
                     }
                 }
                 dialog.dismiss();

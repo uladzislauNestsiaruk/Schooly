@@ -89,10 +89,15 @@
             android:layout_height="match_parent"
             android:layout_below="@+id/linearsearch"
             android:orientation="vertical"
+            android:paddingTop="10dp"
+            android:clipToPadding="false"
             android:layout_marginTop="16dp"
+            android:paddingStart="7dp"
+            android:paddingEnd="7dp"
             android:visibility="gone"
             android:scrollbars="none"
-            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"/>
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            android:overScrollMode="never"/>
 
         <TextView
             android:id="@+id/notFound"

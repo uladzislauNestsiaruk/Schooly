@@ -83,58 +83,29 @@ public class LooksAdapter extends RecyclerView.Adapter<LooksAdapter.ViewHolder> 
             }
         });
         viewLookCount=String.valueOf(newsItem.getViewCount());
-        if(newsItem.getViewCount()<1000){
-            holder.viewPurchase.setText(String.valueOf(newsItem.getViewCount()));
-        }else if(newsItem.getViewCount()>1000 && newsItem.getViewCount()<10000){
-            holder.viewPurchase.setText(viewLookCount.substring(0, 1)+"."+viewLookCount.substring(1, 2)+"K");
-        }
-        else if(newsItem.getViewCount()>10000 && newsItem.getViewCount()<100000){
-            holder.viewPurchase.setText(viewLookCount.substring(0, 2)+"."+viewLookCount.substring(2,3)+"K");
-        }
-        else if(newsItem.getViewCount()>10000 && newsItem.getViewCount()<100000){
-            holder.viewPurchase.setText(viewLookCount.substring(0, 2)+"."+viewLookCount.substring(2,3)+"K");
-        }else if(newsItem.getViewCount()>100000 && newsItem.getViewCount()<1000000){
-            holder.viewPurchase.setText(viewLookCount.substring(0, 3)+"K");
-        }
-        else if(newsItem.getViewCount()>1000000 && newsItem.getViewCount()<10000000){
-            holder.viewPurchase.setText(viewLookCount.substring(0, 1)+"KK");
-        }
-        else if(newsItem.getViewCount()>10000000 && newsItem.getViewCount()<100000000){
-            holder.viewPurchase.setText(viewLookCount.substring(0, 2)+"KK");
-        }
-
+        checkCounts(holder.viewPurchase, newsItem.getViewCount(), viewLookCount);
         loadModels(Uri.parse(newsItem.getImageUrl()), holder.lookScene,holder.lookScene.getContext() , 0.25f);
 
     }
 
-//    @Override
-//    public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
-//        super.onAttachedToRecyclerView(recyclerView);
-//        RecyclerView.LayoutManager manager = recyclerView.getLayoutManager();
-//        if(manager instanceof GridLayoutManager && getItemCount() > 0) {
-//            GridLayoutManager llm = (GridLayoutManager) manager;
-//            recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-//                @Override
-//                public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-//                    super.onScrollStateChanged(recyclerView, newState);
-//                }
-//
-//                @Override
-//                public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-//                    super.onScrolled(recyclerView, dx, dy);
-//                    int visiblePosition = llm.findFirstCompletelyVisibleItemPosition();
-//                    if(visiblePosition > -1) {
-//                        View v = llm.findViewByPosition(visiblePosition);
-//                        //do something
-//                        TextView purchase=v.findViewById(R.id.viewPurchase);
-//                        SceneView lookScene=v.findViewById(R.id.lookScene);
-//                        loadModels(Uri.parse(newsItem.getImageUrl()), lookScene,lookScene.getContext() , 0.25f);
-//
-//                    }
-//                }
-//            });
-//        }
-//    }
+    public void checkCounts(TextView textView,Long count,String stringCount){
+        if(count<1000){
+            textView.setText(String.valueOf(count));
+        }else if(count>1000 && count<10000){
+            textView.setText(stringCount.substring(0, 1)+"."+stringCount.substring(1, 2)+"K");
+        }
+        else if(count>10000 && count<100000){
+            textView.setText(stringCount.substring(0, 2)+"."+stringCount.substring(2,3)+"K");
+        }else if(count>100000 && count<1000000){
+            textView.setText(stringCount.substring(0, 3)+"K");
+        }
+        else if(count>1000000 && count<10000000){
+            textView.setText(stringCount.substring(0, 1)+"KK");
+        }
+        else if(count>10000000 && count<100000000){
+            textView.setText(stringCount.substring(0, 2)+"KK");
+        }
+    }
 
     @Override
     public int getItemCount() {

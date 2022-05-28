@@ -50,45 +50,9 @@ public class ClothesAdapter extends RecyclerView.Adapter<ClothesAdapter.ViewHold
         Clothes clothes=listAdapter.get(position);
         holder.clothesTitle.setText(clothes.getClothesTitle());
         clothesPriceString=String.valueOf(clothes.getClothesPrice());
-        if(clothes.getClothesPrice()<1000){
-            holder.clothesPrise.setText(String.valueOf(clothes.getClothesPrice()));
-        }else if(clothes.getClothesPrice()>1000 && clothes.getClothesPrice()<10000){
-            holder.clothesPrise.setText(clothesPriceString.substring(0, 1)+"."+clothesPriceString.substring(1, 2)+"K");
-        }
-        else if(clothes.getClothesPrice()>10000 && clothes.getClothesPrice()<100000){
-            holder.clothesPrise.setText(clothesPriceString.substring(0, 2)+"."+clothesPriceString.substring(2,3)+"K");
-        }
-        else if(clothes.getClothesPrice()>10000 && clothes.getClothesPrice()<100000){
-            holder.clothesPrise.setText(clothesPriceString.substring(0, 2)+"."+clothesPriceString.substring(2,3)+"K");
-        }else if(clothes.getClothesPrice()>100000 && clothes.getClothesPrice()<1000000){
-            holder.clothesPrise.setText(clothesPriceString.substring(0, 3)+"K");
-        }
-        else if(clothes.getClothesPrice()>1000000 && clothes.getClothesPrice()<10000000){
-            holder.clothesPrise.setText(clothesPriceString.substring(0, 1)+"KK");
-        }
-        else if(clothes.getClothesPrice()>10000000 && clothes.getClothesPrice()<100000000){
-            holder.clothesPrise.setText(clothesPriceString.substring(0, 2)+"KK");
-        }
+        checkCounts(holder.clothesPrise, clothes.getClothesPrice(), clothesPriceString);
         purchaseNumberString=String.valueOf(clothes.getPurchaseNumber());
-        if(clothes.getPurchaseNumber()<1000){
-            holder.purchaseNumber.setText(String.valueOf(clothes.getPurchaseNumber()));
-        }else if(clothes.getPurchaseNumber()>1000 && clothes.getPurchaseNumber()<10000){
-            holder.purchaseNumber.setText(purchaseNumberString.substring(0, 1)+"."+purchaseNumberString.substring(1, 2)+"K");
-        }
-        else if(clothes.getPurchaseNumber()>10000 && clothes.getPurchaseNumber()<100000){
-            holder.purchaseNumber.setText(purchaseNumberString.substring(0, 2)+"."+purchaseNumberString.substring(2,3)+"K");
-        }
-        else if(clothes.getPurchaseNumber()>10000 && clothes.getPurchaseNumber()<100000){
-            holder.purchaseNumber.setText(purchaseNumberString.substring(0, 2)+"."+purchaseNumberString.substring(2,3)+"K");
-        }else if(clothes.getPurchaseNumber()>100000 && clothes.getPurchaseNumber()<1000000){
-            holder.purchaseNumber.setText(purchaseNumberString.substring(0, 3)+"K");
-        }
-        else if(clothes.getPurchaseNumber()>1000000 && clothes.getPurchaseNumber()<10000000){
-            holder.purchaseNumber.setText(purchaseNumberString.substring(0, 1)+"KK");
-        }
-        else if(clothes.getPurchaseNumber()>10000000 && clothes.getPurchaseNumber()<100000000){
-            holder.purchaseNumber.setText(purchaseNumberString.substring(0, 2)+"KK");
-        }
+        checkCounts(holder.purchaseNumber, clothes.getPurchaseNumber(), purchaseNumberString);
         if (clothes.getCurrencyType().equals("dollar")){
             holder.dollarImage.setVisibility(View.VISIBLE);
             holder.coinsImage.setVisibility(View.GONE);
@@ -101,6 +65,25 @@ public class ClothesAdapter extends RecyclerView.Adapter<ClothesAdapter.ViewHold
                 trueClothes=listAdapter.get(holder.getAdapterPosition());
             }
         });
+    }
+
+    public void checkCounts(TextView textView,Long count,String stringCount){
+        if(count<1000){
+            textView.setText(String.valueOf(count));
+        }else if(count>1000 && count<10000){
+            textView.setText(stringCount.substring(0, 1)+"."+stringCount.substring(1, 2)+"K");
+        }
+        else if(count>10000 && count<100000){
+            textView.setText(stringCount.substring(0, 2)+"."+stringCount.substring(2,3)+"K");
+        }else if(count>100000 && count<1000000){
+            textView.setText(stringCount.substring(0, 3)+"K");
+        }
+        else if(count>1000000 && count<10000000){
+            textView.setText(stringCount.substring(0, 1)+"KK");
+        }
+        else if(count>10000000 && count<100000000){
+            textView.setText(stringCount.substring(0, 2)+"KK");
+        }
     }
 
 

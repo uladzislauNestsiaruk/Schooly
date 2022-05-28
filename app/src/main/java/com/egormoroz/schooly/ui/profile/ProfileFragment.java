@@ -148,7 +148,7 @@ public class ProfileFragment extends Fragment {
     TabLayout tabLayout,tabLayoutOther;
     int tabLayoutPosition,tabLayoutPositionOther;
     private float[] backgroundColor = new float[]{0f, 0f, 0f, 1.0f};
-    int a,profileCheckValue,checkOnSubscribeValue;
+    int a,profileCheckValue,checkOnSubscribeValue, b=0;
     UserInformation userInformation;
     Bundle bundle;
 
@@ -442,6 +442,7 @@ public class ProfileFragment extends Fragment {
                 if(bundle!=null){
                     if(bundle.getSerializable(sendNick+"PROFILE_OTHER_BUNDLE")!=null){
                         info= (UserInformation) bundle.getSerializable(sendNick+"PROFILE_OTHER_BUNDLE");
+                        b=1;
                         sendNickString=info.getNick();
                         user = firebaseModel.getUsersReference().child(info.getNick());
                         if(bundle.getString(sendNick+"PROFILE_OTHER_CHECK_VALUE")==null){
@@ -526,6 +527,7 @@ public class ProfileFragment extends Fragment {
                             @Override
                             public void onComplete(@NonNull Task<DataSnapshot> task) {
                                 if(task.isSuccessful()){
+                                    b=2;
                                     DataSnapshot snapshot=task.getResult();
                                     if(bundle!=null){
                                         info=new UserInformation();
@@ -871,6 +873,14 @@ public class ProfileFragment extends Fragment {
                         .child("requests").child(info.getNick()).removeValue();
                 firebaseModel.getUsersReference().child(info.getNick())
                         .child("requests").child(userInformation.getNick()).removeValue();
+                for (int i=0;i<info.getSubscribers().size();i++){
+                    Subscriber subscriber=info.getSubscribers().get(i);
+                    if(subscriber.getSub().equals(userInformation.getNick())){
+                        if(b==1){
+                            checkCounts(String.valueOf(info.getSubscribers().size()-1), otherSubscribersCount);
+                        }
+                    }
+                }
                 Toast.makeText(getContext(), "Пользователь добавлен в черный список", Toast.LENGTH_SHORT).show();
                 checkProfile();
                 dialog.dismiss();
@@ -921,7 +931,7 @@ public class ProfileFragment extends Fragment {
                         buyClothesProfile.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                RecentMethods.setCurrentFragment(ShopFragment.newInstance(userInformation,bundle), getActivity());
+                                RecentMethods.setCurrentFragment(ShopFragment.newInstance(userInformation,bundle,ProfileFragment.newInstance(type, sendNick, fragment, userInformation, bundle)), getActivity());
                             }
                         });
                     }else {
@@ -939,7 +949,7 @@ public class ProfileFragment extends Fragment {
                 buyClothesProfile.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        RecentMethods.setCurrentFragment(ShopFragment.newInstance(userInformation,bundle), getActivity());
+                        RecentMethods.setCurrentFragment(ShopFragment.newInstance(userInformation,bundle,fragment), getActivity());
                     }
                 });
             }else {
@@ -1244,6 +1254,9 @@ public class ProfileFragment extends Fragment {
                                                                                         .child(info.getNick()).child("nontifications")
                                                                                         .child(numToBase).setValue(new Nontification(userInformation.getNick(), "не отправлено", "обычный"
                                                                                         , "", " ", " ", "не просмотрено", numToBase, 0));
+                                                                                if(b==1){
+                                                                                    checkCounts(String.valueOf(info.getSubscribers().size()+1), otherSubscribersCount);
+                                                                                }
                                                                                 subscribe.setText("Отписаться");
                                                                                 subscribe.setTextColor(Color.parseColor("#F3A2E5"));
                                                                                 subscribe.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
@@ -1277,6 +1290,9 @@ public class ProfileFragment extends Fragment {
                                                                         .child(info.getNick()).removeValue();
                                                                 firebaseModel.getReference().child("users").child(info.getNick()).child("subscribers")
                                                                         .child(userInformation.getNick()).removeValue();
+                                                                if(b==1){
+                                                                    checkCounts(String.valueOf(info.getSubscribers().size()-1), otherSubscribersCount);
+                                                                }
                                                                 subscribe.setText("Подписаться");
                                                                 subscribe.setTextColor(Color.parseColor("#FFFEFE"));
                                                                 subscribe.setBackgroundResource(R.drawable.corners10dpappcolor);
@@ -1544,24 +1560,25 @@ public class ProfileFragment extends Fragment {
         deleteSubscriber.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                firebaseModel.getUsersReference().child(sendNick)
-                        .child("subscription").child(userInformation.getNick()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DataSnapshot> task) {
-                        if(task.isSuccessful()){
-                            DataSnapshot snapshot=task.getResult();
-                            if(snapshot.exists()){
-                                firebaseModel.getUsersReference().child(userInformation.getNick())
-                                        .child("subscribers").child(info.getNick()).removeValue();
-                                firebaseModel.getUsersReference().child(info.getNick())
-                                        .child("subscription").child(userInformation.getNick()).removeValue();
-                                Toast.makeText(getContext(), "Пользователь удален из подписчиков", Toast.LENGTH_SHORT).show();
-                            }else {
-                                Toast.makeText(getContext(), "Пользователь не подписан на тебя", Toast.LENGTH_SHORT).show();
+                if(info.getSubscription().size()>0){
+                    for(int i=0;i<info.getSubscription().size();i++){
+                        Subscriber subscriber=info.getSubscription().get(i);
+                        if(subscriber.getSub().equals(userInformation.getNick())){
+                            firebaseModel.getUsersReference().child(userInformation.getNick())
+                                    .child("subscribers").child(info.getNick()).removeValue();
+                            firebaseModel.getUsersReference().child(info.getNick())
+                                    .child("subscription").child(userInformation.getNick()).removeValue();
+                            if(b==1){
+                                checkCounts(String.valueOf(info.getSubscription().size()-1), otherSubscriptionCount);
                             }
+                            Toast.makeText(getContext(), "Пользователь удален из подписчиков", Toast.LENGTH_SHORT).show();
+                        }else {
+                            Toast.makeText(getContext(), "Пользователь не подписан на тебя", Toast.LENGTH_SHORT).show();
                         }
                     }
-                });
+                }else {
+                    Toast.makeText(getContext(), "Пользователь не подписан на тебя", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 

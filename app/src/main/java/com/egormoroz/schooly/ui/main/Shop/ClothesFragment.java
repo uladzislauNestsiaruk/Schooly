@@ -26,14 +26,16 @@ import java.util.ArrayList;
 public class ClothesFragment extends Fragment {
     UserInformation userInformation;
     Bundle bundle;
+    Fragment fragment;
 
-    public ClothesFragment(UserInformation userInformation,Bundle bundle) {
+    public ClothesFragment(UserInformation userInformation,Bundle bundle,Fragment fragment) {
         this.userInformation=userInformation;
         this.bundle=bundle;
+        this.fragment=fragment;
     }
 
-    public static ClothesFragment newInstance(UserInformation userInformation,Bundle bundle) {
-        return new ClothesFragment(userInformation,bundle);
+    public static ClothesFragment newInstance(UserInformation userInformation,Bundle bundle,Fragment fragment) {
+        return new ClothesFragment(userInformation,bundle,fragment);
     }
     FirebaseModel firebaseModel=new FirebaseModel();
     ArrayList<Clothes> clothesArrayList=new ArrayList<Clothes>();
@@ -71,13 +73,13 @@ public class ClothesFragment extends Fragment {
         itemClickListener=new NewClothesAdapter.ItemClickListener() {
             @Override
             public void onItemClick(Clothes clothes) {
-                ((MainActivity)getActivity()).setCurrentFragment(ViewingClothes.newInstance(ShopFragment.newInstance(userInformation,bundle),userInformation,bundle));
+                ((MainActivity)getActivity()).setCurrentFragment(ViewingClothes.newInstance(ShopFragment.newInstance(userInformation,bundle,fragment),userInformation,bundle));
             }
         };
         itemClickListenerPopular=new PopularClothesAdapter.ItemClickListener() {
             @Override
             public void onItemClick(Clothes clothes) {
-                ((MainActivity)getActivity()).setCurrentFragment(ViewingClothesPopular.newInstance(userInformation,bundle));
+                ((MainActivity)getActivity()).setCurrentFragment(ViewingClothesPopular.newInstance(userInformation,bundle,ShopFragment.newInstance(userInformation,bundle,fragment)));
             }
         };
         loadClothesFromBase();

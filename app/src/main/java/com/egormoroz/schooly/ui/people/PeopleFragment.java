@@ -96,10 +96,10 @@ public class PeopleFragment extends Fragment {
                                         if (userNameToProfile.equals(nick)) {
                                             RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback", nick, PeopleFragment.newInstance(userInformation,bundle),userInformation,bundle), getActivity());
                                         } else {
-//                                        firebaseModel.getReference().child("users").child(nick).child("alreadySearched").child(userNameToProfile)
-//                                                .setValue(new UserPeopleAdapter(userNameToProfile, avatar, bio));
                                             RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile, PeopleFragment.newInstance(userInformation,bundle),userInformation,bundle),
                                                     getActivity());
+                                            firebaseModel.getReference("users").child(nick).child("alreadySearched").child(userNameToProfile)
+                                                    .setValue(new UserPeopleAdapter(userNameToProfile, avatar, bio));
                                         }
                                     }
                                 };
@@ -141,33 +141,9 @@ public class PeopleFragment extends Fragment {
     public void setAlreadySearchedInAdapter(){
         peopleRecyclerView.setVisibility(View.VISIBLE);
         userNotSearch.setVisibility(View.GONE);
+        Log.d("####", "ffg");
         if(userInformation.getAlreadySearched()==null){
-            RecentMethods.getAlreadySearched(nick, firebaseModel, new Callbacks.GetAlreadySearched() {
-                @Override
-                public void getAlreadySearched(ArrayList<UserPeopleAdapter> searchedUserFromBase) {
-                    userInformation.setAlreadySearched(searchedUserFromBase);
-                    AlreadySearchAdapter alreadySearchAdapter=new AlreadySearchAdapter(searchedUserFromBase,userInformation);
-                    peopleRecyclerView.setAdapter(alreadySearchAdapter);
-                    AlreadySearchAdapter.ItemClickListener itemClickListener=new AlreadySearchAdapter.ItemClickListener() {
-                        @Override
-                        public void onItemClick(View view, int position,String type) {
-                            UserPeopleAdapter user = alreadySearchAdapter.getItem(position);
-                            userNameToProfile = user.getNick();
-                            if(type.equals("profile")){
-                                if (userNameToProfile.equals(nick)) {
-                                    RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback", nick, PeopleFragment.newInstance(userInformation,bundle),userInformation,bundle), getActivity());
-                                } else {
-                                    RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile, PeopleFragment.newInstance(userInformation,bundle),userInformation,bundle),
-                                            getActivity());
-                                }
-                            }else {
-                               setAlreadySearchedInAdapter();
-                            }
-                        }
-                    };
-                    alreadySearchAdapter.setClickListener(itemClickListener);
-                }
-            });
+            checkAlreadySearchedFromBase();
         }else {
             AlreadySearchAdapter alreadySearchAdapter=new AlreadySearchAdapter(userInformation.getAlreadySearched(),userInformation);
             peopleRecyclerView.setAdapter(alreadySearchAdapter);
@@ -184,12 +160,41 @@ public class PeopleFragment extends Fragment {
                                     getActivity());
                         }
                     }else {
-                        setAlreadySearchedInAdapter();
+                        checkAlreadySearchedFromBase();
                     }
                 }
             };
             alreadySearchAdapter.setClickListener(itemClickListener);
         }
+    }
+
+    public void checkAlreadySearchedFromBase(){
+        RecentMethods.getAlreadySearched(nick, firebaseModel, new Callbacks.GetAlreadySearched() {
+            @Override
+            public void getAlreadySearched(ArrayList<UserPeopleAdapter> searchedUserFromBase) {
+                userInformation.setAlreadySearched(searchedUserFromBase);
+                AlreadySearchAdapter alreadySearchAdapter=new AlreadySearchAdapter(searchedUserFromBase,userInformation);
+                peopleRecyclerView.setAdapter(alreadySearchAdapter);
+                AlreadySearchAdapter.ItemClickListener itemClickListener=new AlreadySearchAdapter.ItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position,String type) {
+                        UserPeopleAdapter user = alreadySearchAdapter.getItem(position);
+                        userNameToProfile = user.getNick();
+                        if(type.equals("profile")){
+                            if (userNameToProfile.equals(nick)) {
+                                RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback", nick, PeopleFragment.newInstance(userInformation,bundle),userInformation,bundle), getActivity());
+                            } else {
+                                RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile, PeopleFragment.newInstance(userInformation,bundle),userInformation,bundle),
+                                        getActivity());
+                            }
+                        }else {
+                            setAlreadySearchedInAdapter();
+                        }
+                    }
+                };
+                alreadySearchAdapter.setClickListener(itemClickListener);
+            }
+        });
     }
     public void setPeopleData(){
         listAdapterPeople.add(new UserInformation("nick", "fidjfif", "gk",

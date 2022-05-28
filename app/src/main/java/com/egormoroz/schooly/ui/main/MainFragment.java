@@ -281,7 +281,7 @@ public class MainFragment extends Fragment{
         relativeShop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((MainActivity)getActivity()).setCurrentFragment((ShopFragment.newInstance(userInformation,bundle)));
+                ((MainActivity)getActivity()).setCurrentFragment((ShopFragment.newInstance(userInformation,bundle,MainFragment.newInstance(userInformation, bundle))));
             }
         });
         if (userInformation.getMiners()==null){
