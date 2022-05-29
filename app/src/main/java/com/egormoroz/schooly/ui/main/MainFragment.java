@@ -82,17 +82,14 @@ public class MainFragment extends Fragment{
     ArrayList<Nontification > noViewedNonts=new ArrayList<>();
     ArrayList<Clothes> popularClothesArrayList=new ArrayList<Clothes>();
     RecyclerView clothesRecyclerMain,myClothesRecycler;
-    RelativeLayout relativeFirstLayout,createClothes;
     String todayMiningFormatted,nick;
-    int myClothesListSize;
     NewClothesAdapter.ItemClickListener itemClickListener;
     private static final int NOTIFY_ID = 101;
-    RelativeLayout relativeShop,relativeMining,relativeMyClothes;
+    RelativeLayout relativeShop,relativeMining,relativeMyClothes,relativeFirstLayout,createClothes;
     CircularProgressIndicator circularProgressIndicator;
     MyClothesAdapterMain.ItemClickListener itemClickListenerMyClothes;
     LinearLayout coinsLinear;
     long totalProfitLong,totalPurchaseLong,totalProfitDollarLong;
-
     private static final String CHANNEL_ID = "Tyomaa channel";
 
 
@@ -242,6 +239,7 @@ public class MainFragment extends Fragment{
         coin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                RecentMethods.setCurrentFragment(CoinsFragmentSecond.newInstance(MainFragment.newInstance(userInformation, bundle), userInformation, bundle), getActivity());
             }
         });
         //              firebaseModel.getReference().child("usersNicks").child("Spaccacrani").setValue(new UserPeopleAdapter("Spaccacrani", "5", "hello"));
@@ -333,7 +331,7 @@ public class MainFragment extends Fragment{
         appName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(CreateCharacterFragment.newInstance(userInformation,bundle), getActivity());
+                RecentMethods.setCurrentFragment(GenderFragment.newInstance(userInformation,bundle,MainFragment.newInstance(userInformation, bundle)), getActivity());
             }
         });
         todayMiningMain=view.findViewById(R.id.todayminingmain);
@@ -526,23 +524,9 @@ public class MainFragment extends Fragment{
             int importance = NotificationManager.IMPORTANCE_DEFAULT;
             NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
             channel.setDescription(description);
-            // Register the channel with the system; you can't change the importance
-            // or other notification behaviors after this
             NotificationManager notificationManager = getSystemService(getActivity(),NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
         }
-    }
-
-    private boolean isAppInstalled(String packageName) {
-        PackageManager pm = getContext().getPackageManager();
-        boolean installed = false;
-        try {
-            pm.getPackageInfo(packageName, PackageManager.GET_ACTIVITIES);
-            installed = true;
-        } catch (PackageManager.NameNotFoundException e) {
-            installed = false;
-        }
-        return installed;
     }
 
     private void shareToInstagram() {

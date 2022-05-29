@@ -8,8 +8,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -23,9 +25,11 @@ import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.MainActivity;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
+import com.egormoroz.schooly.ui.main.GenderFragment;
 import com.egormoroz.schooly.ui.main.MainFragment;
 import com.egormoroz.schooly.ui.main.Mining.Miner;
 import com.egormoroz.schooly.ui.main.Mining.MiningFragment;
+import com.egormoroz.schooly.ui.main.MyClothes.CreateClothesFragment;
 import com.egormoroz.schooly.ui.main.Shop.AccessoriesFragment;
 import com.egormoroz.schooly.ui.main.Shop.ClothesFragment;
 import com.egormoroz.schooly.ui.main.Shop.HatsFragment;
@@ -43,17 +47,17 @@ public class CreateCharacterFragment extends Fragment {
     FragmentAdapter fragmentAdapter;
     private FirebaseModel firebaseModel = new FirebaseModel();
     Bundle bundle;
-
-
     UserInformation userInformation;
+    Fragment fragment;
 
-    public CreateCharacterFragment(UserInformation userInformation,Bundle bundle) {
+    public CreateCharacterFragment(UserInformation userInformation,Bundle bundle,Fragment fragment) {
         this.userInformation=userInformation;
         this.bundle=bundle;
+        this.fragment=fragment;
     }
 
-    public static CreateCharacterFragment newInstance(UserInformation userInformation,Bundle bundle) {
-        return new CreateCharacterFragment(userInformation,bundle);
+    public static CreateCharacterFragment newInstance(UserInformation userInformation,Bundle bundle,Fragment fragment) {
+        return new CreateCharacterFragment(userInformation,bundle,fragment);
     }
 
     @Override
@@ -87,9 +91,19 @@ public class CreateCharacterFragment extends Fragment {
         leftarrowtoreg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((MainActivity)getActivity()).setCurrentFragment(MainFragment.newInstance(userInformation,bundle));
+                ((MainActivity)getActivity()).setCurrentFragment(GenderFragment.newInstance(userInformation, bundle, fragment));
             }
         });
+
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+
+                ((MainActivity)getActivity()).setCurrentFragment(GenderFragment.newInstance(userInformation, bundle, fragment));
+            }
+        };
+
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
 
         FragmentManager fm = getChildFragmentManager();
         fragmentAdapter = new FragmentAdapter(fm, getLifecycle());
@@ -138,8 +152,8 @@ public class CreateCharacterFragment extends Fragment {
         dialog.setContentView(R.layout.accept_character_dialog);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-        TextView no=dialog.findViewById(R.id.no);
-        TextView yes=dialog.findViewById(R.id.yes);
+        RelativeLayout no=dialog.findViewById(R.id.no);
+        RelativeLayout yes=dialog.findViewById(R.id.yes);
 
 
         no.setOnClickListener(new View.OnClickListener() {
@@ -153,6 +167,7 @@ public class CreateCharacterFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
+                RecentMethods.setCurrentFragment(fragment, getActivity());
             }
         });
 

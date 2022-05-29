@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="250dp"
-    android:layout_height="130dp"
+    android:layout_width="320dp"
+    android:layout_height="108dp"
     android:layout_centerInParent="true"
     android:background="@drawable/corners14dpwhite">
 
@@ -14,41 +14,56 @@
         android:fontFamily="@font/montserrat_bold"
         android:text="@string/acceptCharacter"
         android:textColor="@color/app_grey"
-        android:textSize="15sp" />
+        android:textSize="17sp" />
 
-    <TextView
-        android:id="@+id/yes"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/yes"
-        android:textSize="18dp"
+        android:layout_below="@+id/acceptText"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginEnd="16dp"
-        android:paddingStart="34dp"
-        android:paddingEnd="34dp"
-        android:paddingBottom="6dp"
-        android:paddingTop="6dp"
-        android:layout_marginBottom="16dp"
-        android:fontFamily="@font/montserrat_bold"
-        android:background="@drawable/corners14appcolor"
-        android:textColor="@color/white"/>
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp">
 
-    <TextView
-        android:id="@+id/no"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="16dp"
-        android:layout_marginBottom="16dp"
-        android:background="@drawable/corners14grey"
-        android:fontFamily="@font/montserrat_bold"
-        android:paddingStart="34dp"
-        android:paddingEnd="34dp"
-        android:paddingBottom="6dp"
-        android:paddingTop="4dp"
-        android:text="@string/no"
-        android:textColor="@color/white"
-        android:textSize="18sp" />
+        <RelativeLayout
+            android:id="@+id/no"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="4dp"
+            android:layout_weight="1"
+            android:background="@drawable/corners10dpgreylight">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:fontFamily="@font/montserrat_bold"
+                android:text="@string/no"
+                android:textColor="@color/app_grey"
+                android:textSize="18dp" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/yes"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="4dp"
+            android:layout_weight="1"
+            android:background="@drawable/corners10dpappcolor">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:fontFamily="@font/montserrat_bold"
+                android:text="@string/yes"
+                android:textColor="@color/white"
+                android:textSize="18dp" />
+        </RelativeLayout>
+
+    </LinearLayout>
 
 </RelativeLayout>

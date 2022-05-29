@@ -43,7 +43,7 @@
     <string name="sendnewcode">Отправить повторно</string>
 
     <string name="warning">Важно!</string>
-    <string name="choosegender">Укажи свой пол</string>
+    <string name="choosegender">Укажи свой пол:</string>
     <string name="man">МУЖСКОЙ</string>
     <string name="woman">ЖЕНСКИЙ</string>
 
