@@ -69,16 +69,14 @@ public class PhoneCodeActivity extends AppCompatActivity {
         timerText = findViewById(R.id.time);
         errorText = findViewById(R.id.errorMessage);
         context = getBaseContext();
-        Log.d("AAA", "ok");
     }
     public void initData(){
         data = new Intent();
         phone = getIntent().getStringExtra("Phone");
-        Log.d("AAA", "okk");
+        Log.d("###", phone);
     }
     public void initFirebase(){
         AuthenticationBase = FirebaseAuth.getInstance();
-        Log.d("AAA", "okk  "+FirebaseAuth.getInstance());
     }
     //////////////////////// TOOLS ///////////////////////////
     public void startTimer(){
@@ -110,10 +108,9 @@ public class PhoneCodeActivity extends AppCompatActivity {
             }
             @Override
             public void onVerificationFailed(@NonNull @NotNull FirebaseException e) {
-                Log.d("AAA", "Verification failed with: " + e);
                 data.putExtra("IsPhoneValid", false);
                 setResult(RESULT_OK, data);
-                Log.d("AAA", "o");
+                Log.d("####", "q  "+e);
                 finish();
             }
             @Override
@@ -123,7 +120,6 @@ public class PhoneCodeActivity extends AppCompatActivity {
                 currentVerificationCode = verificationId;
                 currentResendToken = token;
                 startTimer();
-                Log.d("AAA", "okkk");
             }
         };
         phoneVerification(phone);
@@ -158,7 +154,6 @@ public class PhoneCodeActivity extends AppCompatActivity {
                 signInWithPhoneAuthCredential(credential);
             }
         });
-        Log.d("AAA", "okkkkk");
     }
     public void resendSMS(){
         resendCode.setOnClickListener(new View.OnClickListener() {
@@ -166,12 +161,12 @@ public class PhoneCodeActivity extends AppCompatActivity {
             public void onClick(View view) {
                 sendSMS();
                 startTimer();
-                Log.d("AAA", "okkkk");
             }
         });
     }
     ////////////////////// PHONE VERIFICATION METHODS ////////
     public void phoneVerification(String phone){
+        Log.d("####", "fgg");
         PhoneAuthOptions options = PhoneAuthOptions.newBuilder(AuthenticationBase)
                 .setPhoneNumber(phone)       // Phone number to verify
                 .setTimeout(30L, TimeUnit.SECONDS) // Timeout and unit
@@ -191,6 +186,7 @@ public class PhoneCodeActivity extends AppCompatActivity {
                             FirebaseUser user = task.getResult().getUser();
                             user.delete();
                             data.putExtra("IsPhoneValid", true);
+                            Log.d("####", "fucknk");
                             setResult(RESULT_OK, data);
                             finish();
                             // Update UI
@@ -208,6 +204,5 @@ public class PhoneCodeActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        Log.d("AAA", "stop");
     }
 }

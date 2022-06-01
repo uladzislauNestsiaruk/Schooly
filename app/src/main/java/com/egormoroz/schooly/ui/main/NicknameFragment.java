@@ -10,12 +10,15 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.egormoroz.schooly.CONST;
+import com.egormoroz.schooly.MainActivity;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.ui.main.Mining.MiningFragment;
@@ -41,7 +44,7 @@ public class NicknameFragment extends Fragment {
     DatabaseReference ref;
     String userId;
     EditText nicknameEditText;
-    ImageView continueButton;
+    ImageView continueButton,back;
     TextView nicknameTextView;
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -58,7 +61,7 @@ public class NicknameFragment extends Fragment {
     public void initFirebase(){
         authenticationDatabase = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance(CONST.RealtimeDatabaseUrl);
-        userId = authenticationDatabase.getCurrentUser().getUid();
+        //userId = authenticationDatabase.getCurrentUser().getUid();
         ref = database.getReference();
         ref = ref.child("users");
     }
@@ -66,6 +69,26 @@ public class NicknameFragment extends Fragment {
         nicknameTextView = root.findViewById(R.id.errornick);
         nicknameEditText = root.findViewById(R.id.nickname);
         continueButton = root.findViewById(R.id.continueButton);
+        back=root.findViewById(R.id.backfromnick);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RecentMethods.setCurrentFragment(RegFragment.newInstance(userInformation, bundle), getActivity());
+            }
+        });
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+
+                RecentMethods.setCurrentFragment(RegFragment.newInstance(userInformation, bundle), getActivity());
+            }
+        };
+        if(bundle!=null){
+            if(bundle.getString("NICKNAMEFRAGMENT")!=null){
+                nicknameEditText.setText(bundle.getString("NICKNAMEFRAGMENT"));
+            }
+        }
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
         nicknameEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -91,11 +114,16 @@ public class NicknameFragment extends Fragment {
         continueButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String nickname = String.valueOf(nicknameEditText.getText()).trim();
-                String error = String.valueOf(nicknameTextView.getText()).trim();
-                if(error.isEmpty()) {
-                    RecentMethods.saveData(ref, authenticationDatabase.getCurrentUser(), nickname);
-                    RecentMethods.setCurrentFragment(MainFragment.newInstance(userInformation,bundle), getActivity());
+                if(nicknameEditText.getText().toString().trim().length()==0){
+                    Toast.makeText(getContext(), "Никнейм не введён", Toast.LENGTH_SHORT).show();
+                }else {
+                    String nickname = String.valueOf(nicknameEditText.getText()).trim();
+                    String error = String.valueOf(nicknameTextView.getText()).trim();
+                    if(error.isEmpty()) {
+                        bundle.putString("NICKNAMEFRAGMENT",nickname);
+                        bundle.putString("FRAGMENT", "nick");
+                        RecentMethods.setCurrentFragment(GenderFragment.newInstance(userInformation,bundle,NicknameFragment.newInstance(userInformation, bundle)), getActivity());
+                    }
                 }
             }
         });

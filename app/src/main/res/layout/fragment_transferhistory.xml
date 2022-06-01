@@ -43,6 +43,7 @@
             android:layout_height="match_parent"
             android:text="@string/notransfer"
             android:layout_centerInParent="true"
+            android:textSize="16sp"
             android:layout_marginTop="670dp"
             android:textColor="@color/app_grey"
             android:fontFamily="@font/montserrat_bold"

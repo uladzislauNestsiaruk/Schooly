@@ -14,10 +14,19 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class RegisrtationstartFragment extends Fragment {
-    public static RegisrtationstartFragment newInstance(){return new RegisrtationstartFragment();}
+    UserInformation userInformation;
+    Bundle bundle;
+
+    public RegisrtationstartFragment(UserInformation userInformation,Bundle bundle) {
+        this.userInformation=userInformation;
+        this.bundle=bundle;
+    }
+
+    public static RegisrtationstartFragment newInstance(UserInformation userInformation,Bundle bundle) {
+        return new RegisrtationstartFragment(userInformation,bundle);
+    }
     Button RegistrationButton;
     Button EnterButton;
-    Bundle bundle;
     FirebaseAuth AuthBase;
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -33,7 +42,7 @@ public class RegisrtationstartFragment extends Fragment {
         RegistrationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                RecentMethods.setCurrentFragment(RegFragment.newInstance(), getActivity());
+                RecentMethods.setCurrentFragment(RegFragment.newInstance(userInformation,bundle), getActivity());
             }
         });
         EnterButton.setOnClickListener(new View.OnClickListener() {
@@ -46,7 +55,7 @@ public class RegisrtationstartFragment extends Fragment {
         return root;
     }
     void isUserLoggedIn(){
-       // if(AuthBase.getCurrentUser() != null)
-            //RecentMethods.setCurrentFragment(MainFragment.newInstance(), getActivity());
+        // if(AuthBase.getCurrentUser() != null)
+        //RecentMethods.setCurrentFragment(MainFragment.newInstance(), getActivity());
     }
 }

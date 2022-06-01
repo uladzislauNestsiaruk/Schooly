@@ -1,15 +1,18 @@
 package com.egormoroz.schooly.ui.main.CreateCharacter;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
@@ -20,6 +23,7 @@ import androidx.lifecycle.Lifecycle;
 import androidx.viewpager2.widget.ViewPager2;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
+import com.egormoroz.schooly.CONST;
 import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.MainActivity;
@@ -30,22 +34,49 @@ import com.egormoroz.schooly.ui.main.MainFragment;
 import com.egormoroz.schooly.ui.main.Mining.Miner;
 import com.egormoroz.schooly.ui.main.Mining.MiningFragment;
 import com.egormoroz.schooly.ui.main.MyClothes.CreateClothesFragment;
+import com.egormoroz.schooly.ui.main.NicknameFragment;
+import com.egormoroz.schooly.ui.main.RegFragment;
 import com.egormoroz.schooly.ui.main.Shop.AccessoriesFragment;
 import com.egormoroz.schooly.ui.main.Shop.ClothesFragment;
 import com.egormoroz.schooly.ui.main.Shop.HatsFragment;
 import com.egormoroz.schooly.ui.main.Shop.PopularFragment;
 import com.egormoroz.schooly.ui.main.Shop.ShoesFargment;
 import com.egormoroz.schooly.ui.main.UserInformation;
+import com.egormoroz.schooly.ui.people.UserPeopleAdapter;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.ArrayList;
 
 public class CreateCharacterFragment extends Fragment {
 
     TabLayout tabLayout;
     TextView ready;
+    final String databaseUrl = CONST.RealtimeDatabaseUrl;
     ViewPager2 viewPager;
     FragmentAdapter fragmentAdapter;
+    FirebaseAuth authenticationDatabase;
+    FirebaseDatabase database;
     private FirebaseModel firebaseModel = new FirebaseModel();
+    final int GOOGLE_SIGN_IN = 101;
+    FirebaseAuth AuthenticationBase;
+    GoogleSignInOptions gso;
+    GoogleSignInClient signInClient;
+    DatabaseReference reference;
     Bundle bundle;
     UserInformation userInformation;
     Fragment fragment;
@@ -75,7 +106,14 @@ public class CreateCharacterFragment extends Fragment {
     @Override
     public void onViewCreated(@Nullable View view,@NonNull Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
-
+        AuthenticationBase = FirebaseAuth.getInstance();
+        gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+        signInClient = GoogleSignIn.getClient(getActivity(), gso);
+        database = FirebaseDatabase.getInstance(databaseUrl);
+        reference = database.getReference("users");
         tabLayout=view.findViewById(R.id.tabsCharacter);
         ready=view.findViewById(R.id.ready);
         viewPager=view.findViewById(R.id.viewPagerCharacter);
@@ -146,6 +184,20 @@ public class CreateCharacterFragment extends Fragment {
 
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+        try {
+            // Google Sign In was successful, authenticate with Firebase
+            GoogleSignInAccount account = task.getResult(ApiException.class);
+            firebaseAuthWithGoogle(account.getIdToken());
+            Log.d("#####", "ggds");
+        } catch (ApiException e) {
+            // Google Sign In failed, update UI appropriately
+        }
+    }
+
     public void showDialog(){
 
         final Dialog dialog = new Dialog(getContext());
@@ -154,7 +206,7 @@ public class CreateCharacterFragment extends Fragment {
 
         RelativeLayout no=dialog.findViewById(R.id.no);
         RelativeLayout yes=dialog.findViewById(R.id.yes);
-
+        TextView textView=dialog.findViewById(R.id.acceptText);
 
         no.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -166,12 +218,73 @@ public class CreateCharacterFragment extends Fragment {
         yes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d("#####", "gg"+bundle.getString("FRAGMENT"));
+                if(bundle.getString("FRAGMENT").equals("reg")){
+                    Log.d("#####", "ggd"+bundle.getString("PHONE"));
+                    if(bundle.getString("PHONE")!=null&&bundle.getString("PASSWORD")!=null&bundle.getString("NICK")!=null) {
+                        Log.d("#####", "gg");
+                        createNewEmailUser(RecentMethods.makeEmail(bundle.getString("PHONE")),
+                                bundle.getString("PASSWORD"), bundle.getString("NICK"));
+                    }
+                }else if(bundle.getString("FRAGMENT").equals("nick")){
+                    if(bundle.getString("NICKNAMEFRAGMENT")!=null){
+                        Log.d("#####", "ggd");
+                        authenticationDatabase = FirebaseAuth.getInstance();
+                        AuthorizationThrowGoogle();
+                    }
+                }
                 dialog.dismiss();
-                RecentMethods.setCurrentFragment(fragment, getActivity());
             }
         });
 
         dialog.show();
+    }
+
+    public void createNewEmailUser(String email, String password, String nick) {
+        AuthenticationBase.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d("###", "createUserWithEmail:success");
+                            FirebaseUser user = AuthenticationBase.getCurrentUser();
+                            UserInformation res = new UserInformation(nick, RecentMethods.getPhone(email), user.getUid(),
+                                    "6", password, "Helicopter", 1000, new ArrayList<>(),new ArrayList<>(),1,100,0
+                                    , new ArrayList<>(), new ArrayList<>(), ""," ","open","open","open","open"
+                                    ,new ArrayList<>(),"regular", new ArrayList<>(),0,new ArrayList<>(),new ArrayList<>()
+                                    ,new ArrayList<>(),new ArrayList<>(),new ArrayList<>(),new ArrayList<>());
+                            reference.child(nick).setValue(res);
+                            database.getReference("usersNicks")
+                                    .child(nick).setValue(new UserPeopleAdapter(nick,"6"," "));
+                            ((MainActivity)getActivity()).IsEntered();
+                            RecentMethods.setCurrentFragment(MainFragment.newInstance(res,bundle), getActivity());
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.w("###", "createUserWithEmail:failure", task.getException());
+                            Toast.makeText(getActivity(), "Authentication failed.",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
+
+    private void firebaseAuthWithGoogle(String idToken) {
+        AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
+        AuthenticationBase.signInWithCredential(credential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if(task.isSuccessful()){
+                    RecentMethods.saveData(reference, authenticationDatabase.getCurrentUser()
+                            , bundle.getString("NICKNAMEFRAGMENT"),bundle,getActivity());
+                    ((MainActivity)getActivity()).IsEntered();
+                }
+            }
+        });
+    }
+    public void AuthorizationThrowGoogle() {
+        Intent signInIntent = signInClient.getSignInIntent();
+        startActivityForResult(signInIntent, GOOGLE_SIGN_IN);
     }
 
     public class FragmentAdapter extends FragmentStateAdapter {

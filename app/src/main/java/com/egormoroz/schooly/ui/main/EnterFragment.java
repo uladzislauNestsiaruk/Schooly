@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -98,7 +99,7 @@ public class EnterFragment extends Fragment {
             @Override
             public void HasUidCallback(boolean HasUid) {
                 if(!HasUid)
-                    RecentMethods.setCurrentFragment(RegFragment.newInstance(), getActivity());
+                    RecentMethods.setCurrentFragment(RegFragment.newInstance(userInformation,bundle), getActivity());
                 else{
                     AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
                     AuthenticationBase.signInWithCredential(credential)
@@ -129,9 +130,18 @@ public class EnterFragment extends Fragment {
         gotostartreg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(new RegisrtationstartFragment(), getActivity());
+                RecentMethods.setCurrentFragment(new RegisrtationstartFragment(userInformation,bundle), getActivity());
             }
         });
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+
+                RecentMethods.setCurrentFragment(new RegisrtationstartFragment(userInformation,bundle), getActivity());
+            }
+        };
+
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
     }
     ///////////////////////////// INITIALIZATION ////////////////
     public void initElements(View root){

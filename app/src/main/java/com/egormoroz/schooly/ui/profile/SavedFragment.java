@@ -67,7 +67,7 @@ public class SavedFragment extends Fragment {
         nick=userInformation.getNick();
         recyclerView=view.findViewById(R.id.blackListRecycler);
         back=view.findViewById(R.id.back_tosettings);
-        emptyList=view.findViewById(R.id.emptyBlackList);
+        emptyList=view.findViewById(R.id.noSaved);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

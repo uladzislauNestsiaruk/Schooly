@@ -95,6 +95,7 @@
             android:text="@string/lookConstituents"
             android:textColor="@color/app_grey" />
 
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/constituentsRecycler"
             android:layout_width="match_parent"

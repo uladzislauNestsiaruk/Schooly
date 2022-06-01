@@ -256,8 +256,14 @@ public class CreateClothesFragment extends Fragment {
                         editClothesPrice.getText().toString().equals("0") ){
                         noSum.setVisibility(View.VISIBLE);
                 }else {
-                    noSum.setVisibility(View.GONE);
-                }if(modelPhoto.getVisibility()==View.GONE){
+                    if(editClothesPrice.getText().toString().contains("-")){
+                        noSum.setVisibility(View.VISIBLE);
+                        noSum.setText("Неправильно введена цена одежды");
+                    }else {
+                        noSum.setVisibility(View.GONE);
+                    }
+                }
+                if(modelPhoto.getVisibility()==View.GONE){
                     noPhoto.setVisibility(View.VISIBLE);
                 }else {
                     noPhoto.setVisibility(View.GONE);
@@ -269,7 +275,7 @@ public class CreateClothesFragment extends Fragment {
                 }
                 if(editTextClothes.getText().toString().length()>0 && editClothesPrice.getText().toString().length()>0 &&
                         !editClothesPrice.getText().toString().equals("0")&& modelPhoto.getVisibility()==View.VISIBLE
-                        && modelScene.getVisibility()==View.VISIBLE
+                        && modelScene.getVisibility()==View.VISIBLE && !editClothesPrice.getText().toString().contains("-")
                 ){
                     showDialogSendClothes();
                 }else {

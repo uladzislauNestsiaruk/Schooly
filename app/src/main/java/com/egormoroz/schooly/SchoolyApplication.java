@@ -23,6 +23,8 @@ import androidx.work.WorkManager;
 import com.egormoroz.schooly.ui.main.Mining.Miner;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 
 import java.util.ArrayList;
@@ -31,11 +33,11 @@ import java.util.concurrent.TimeUnit;
 public class SchoolyApplication extends Application implements Application.ActivityLifecycleCallbacks {
 
     FirebaseModel firebaseModel=new FirebaseModel();
-        Miner firstMiner,secondMiner,thirdMiner,fourthMiner,fifthMiner;
+    Miner firstMiner,secondMiner,thirdMiner,fourthMiner,fifthMiner;
     double firstMinerHour,secondMinerHour,thirdMinerHour,fourthMinerHour,fifthMinerHour;
     double firstMinerInHour,secondMinerInHour,thirdMinerInHour,fourthMinerInHour,fifthMinerInHour;
     static double todayMining;
-    ArrayList<Miner> getActiveMinersFromBase1;
+    private FirebaseAuth AuthenticationBase;
     int miningCheckValue=0;
     private int activityReferences = 0;
     private boolean isActivityChangingConfigurations = false;
@@ -48,7 +50,16 @@ public class SchoolyApplication extends Application implements Application.Activ
         super.onCreate();
         firebaseModel.initAll();
         registerActivityLifecycleCallbacks(this);
-        checkActiveMiners();
+        AuthenticationBase = FirebaseAuth.getInstance();
+        FirebaseUser firebaseUser=AuthenticationBase.getCurrentUser();
+        RecentMethods.hasThisUser(AuthenticationBase, firebaseUser, new Callbacks.hasGoogleUser() {
+            @Override
+            public void hasGoogleUserCallback(boolean hasThisUser) {
+                if(hasThisUser){
+                    checkActiveMiners();
+                }
+            }
+        });
     }
 
     public void startMining(){
@@ -87,7 +98,7 @@ public class SchoolyApplication extends Application implements Application.Activ
                             miningCheckValue=0;
                             Log.d("####", "aaa  "+miningCheckValue);
                         }else{
-                           miningCheckValue=1;
+                            miningCheckValue=1;
                         }
                     }
                 });
@@ -145,11 +156,19 @@ public class SchoolyApplication extends Application implements Application.Activ
     public void onActivityStarted(@NonNull Activity activity) {
         if (++activityReferences == 1 && !isActivityChangingConfigurations) {
             miningCheckValue=0;
-            startMining();
-            RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+            FirebaseUser firebaseUser=AuthenticationBase.getCurrentUser();
+            RecentMethods.hasThisUser(AuthenticationBase, firebaseUser, new Callbacks.hasGoogleUser() {
                 @Override
-                public void PassUserNick(String nick) {
-                    firebaseModel.getUsersReference().child(nick).child("Status").setValue("online");
+                public void hasGoogleUserCallback(boolean hasThisUser) {
+                    if(hasThisUser){
+                        startMining();
+                        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+                            @Override
+                            public void PassUserNick(String nick) {
+                                firebaseModel.getUsersReference().child(nick).child("Status").setValue("online");
+                            }
+                        });
+                    }
                 }
             });
         }
@@ -171,10 +190,19 @@ public class SchoolyApplication extends Application implements Application.Activ
         if (--activityReferences == 0 && !isActivityChangingConfigurations) {
             handler.removeCallbacks(runnable);
             miningCheckValue=1;
-            RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+            FirebaseUser firebaseUser=AuthenticationBase.getCurrentUser();
+            RecentMethods.hasThisUser(AuthenticationBase, firebaseUser, new Callbacks.hasGoogleUser() {
                 @Override
-                public void PassUserNick(String nick) {
-                    firebaseModel.getUsersReference().child(nick).child("Status").setValue("offline");
+                public void hasGoogleUserCallback(boolean hasThisUser) {
+                    if(hasThisUser){
+                        startMining();
+                        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+                            @Override
+                            public void PassUserNick(String nick) {
+                                firebaseModel.getUsersReference().child(nick).child("Status").setValue("offline");
+                            }
+                        });
+                    }
                 }
             });
         }

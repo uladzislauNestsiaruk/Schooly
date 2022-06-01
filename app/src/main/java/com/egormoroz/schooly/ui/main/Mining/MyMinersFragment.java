@@ -59,14 +59,6 @@ public class MyMinersFragment extends Fragment {
     public void onViewCreated(@Nullable View view,@NonNull Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         nick=userInformation.getNick();
-        if (savedInstanceState != null) {
-            //probably orientation change
-            Log.d("####", "yeah");
-            listAdapter=(ArrayList<Miner>)savedInstanceState.getSerializable("MY_MINERS");
-        } else {
-            Log.d("####", "yeah(");
-            listAdapter=userInformation.getMyMiners();
-        }
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
@@ -99,7 +91,9 @@ public class MyMinersFragment extends Fragment {
                     userInformation.setMyMiners(myMinersFromBase);
                     if (myMinersFromBase.size()==0){
                         emptyMyMiners.setVisibility(View.VISIBLE);
+                        recyclerviewMining.setVisibility(View.GONE);
                     }else {
+                        recyclerviewMining.setVisibility(View.VISIBLE);
                         emptyMyMiners.setVisibility(View.GONE);
                         buyMiner.setVisibility(View.GONE);
                     }
@@ -113,7 +107,9 @@ public class MyMinersFragment extends Fragment {
         } else {
             if (userInformation.getMyMiners().size()==0){
                 emptyMyMiners.setVisibility(View.VISIBLE);
+                recyclerviewMining.setVisibility(View.GONE);
             }else {
+                recyclerviewMining.setVisibility(View.VISIBLE);
                 emptyMyMiners.setVisibility(View.GONE);
                 buyMiner.setVisibility(View.GONE);
             }

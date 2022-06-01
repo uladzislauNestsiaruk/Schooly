@@ -1,5 +1,6 @@
 package com.egormoroz.schooly;
 import android.app.Activity;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.egormoroz.schooly.ui.coins.Transfer;
 import com.egormoroz.schooly.ui.coins.TransferHistoryAdapter;
+import com.egormoroz.schooly.ui.main.MainFragment;
 import com.egormoroz.schooly.ui.main.Mining.Miner;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
 import com.egormoroz.schooly.ui.main.UserInformation;
@@ -115,7 +117,7 @@ public class RecentMethods {
         res = res.replace("@gmail.com", "");
         return "+" + res;
     }
-    public static boolean saveData(DatabaseReference ref, FirebaseUser user, String nick) {
+    public static boolean saveData(DatabaseReference ref, FirebaseUser user, String nick, Bundle bundle, Activity activity) {
 
         UserInformation res = new UserInformation(nick, "unknown", user.getUid(),
                 "6", "unknown", "Helicopter", 1000
@@ -124,6 +126,7 @@ public class RecentMethods {
                 "open",new ArrayList<>(),"regular", new ArrayList<>(),0,new ArrayList<>(),new ArrayList<>(),new ArrayList<>()
         ,new ArrayList<>(),new ArrayList<>(),new ArrayList<>());
         ref.child(nick).setValue(res);
+        RecentMethods.setCurrentFragment(MainFragment.newInstance(res, bundle),activity );
         return nick.isEmpty();
     }
     public static void hasThisUserFun(FirebaseAuth AuthenticationBase, FirebaseUser user,

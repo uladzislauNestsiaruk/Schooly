@@ -105,7 +105,12 @@ public class ClothesFragmentProfile extends Fragment {
                         createNewLookText.setVisibility(View.VISIBLE);
                         createNewLookText.setText("Создай свою одежду!");
                         createNewLook.setVisibility(View.VISIBLE);
-                        RecentMethods.setCurrentFragment(CreateClothesFragment.newInstance(ProfileFragment.newInstance("user", nick, fragment,userInformation,bundle),userInformation,bundle), getActivity());
+                        createNewLook.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                RecentMethods.setCurrentFragment(CreateClothesFragment.newInstance(ProfileFragment.newInstance(type, nick, fragment,userInformation,bundle),userInformation,bundle), getActivity());
+                            }
+                        });
                         looksRecycler.setVisibility(View.GONE);
                     }else {
                         looksRecycler.setVisibility(View.VISIBLE);
@@ -125,7 +130,12 @@ public class ClothesFragmentProfile extends Fragment {
                 createNewLookText.setVisibility(View.VISIBLE);
                 createNewLookText.setText("Создай свою одежду!");
                 createNewLook.setVisibility(View.VISIBLE);
-                RecentMethods.setCurrentFragment(CreateClothesFragment.newInstance(ProfileFragment.newInstance("user", nick, fragment,userInformation,bundle),userInformation,bundle), getActivity());
+                createNewLook.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        RecentMethods.setCurrentFragment(CreateClothesFragment.newInstance(ProfileFragment.newInstance(type, nick, fragment,userInformation,bundle),userInformation,bundle), getActivity());
+                    }
+                });
                 looksRecycler.setVisibility(View.GONE);
             }else {
                 looksRecycler.setVisibility(View.VISIBLE);

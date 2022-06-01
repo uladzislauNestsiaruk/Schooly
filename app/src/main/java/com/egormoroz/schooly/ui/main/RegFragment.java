@@ -14,6 +14,8 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -44,8 +46,16 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class RegFragment extends Fragment {
-    public static RegFragment newInstance() {
-        return new RegFragment();
+    UserInformation userInformation;
+    Bundle bundle;
+
+    public RegFragment(UserInformation userInformation,Bundle bundle) {
+        this.userInformation=userInformation;
+        this.bundle=bundle;
+    }
+
+    public static RegFragment newInstance(UserInformation userInformation,Bundle bundle) {
+        return new RegFragment(userInformation,bundle);
     }
     final int GOOGLE_SIGN_IN = 101;
     final String databaseUrl = CONST.RealtimeDatabaseUrl;
@@ -59,7 +69,6 @@ public class RegFragment extends Fragment {
     FirebaseDatabase database;
     DatabaseReference reference;
     RelativeLayout GoogleEnter;
-    Bundle bundle;
     EditText passwordEditText, nickNameEditText, phoneEditText;
     TextView continueRegistrationButton, errorTextnickname, errorTextphone, errorTextPassword;
     @Override
@@ -99,8 +108,14 @@ public class RegFragment extends Fragment {
                 String phone = String.valueOf(phoneEditText.getText()).trim();
                 String password = String.valueOf(passwordEditText.getText()).trim();
                 String nick = String.valueOf(nickNameEditText.getText()).trim();
-                if (isPhoneValid)
-                    createNewEmailUser(RecentMethods.makeEmail(phone), password, nick);
+                if (isPhoneValid) {
+                    bundle.putString("PHONE", phone);
+                    bundle.putString("NICK", nick);
+                    bundle.putString("PASSWORD", password);
+                    bundle.putString("FRAGMENT", "reg");
+                    UserInformation userInformation = new UserInformation();
+                    RecentMethods.setCurrentFragment(GenderFragment.newInstance(userInformation, bundle, RegFragment.newInstance(userInformation, bundle)), getActivity());
+                }
                 break;
         }
     }
@@ -111,9 +126,18 @@ public class RegFragment extends Fragment {
         gotostartregfromreg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(new RegisrtationstartFragment(), getActivity());
+                RecentMethods.setCurrentFragment(new RegisrtationstartFragment(userInformation,bundle), getActivity());
             }
         });
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+
+                RecentMethods.setCurrentFragment(new RegisrtationstartFragment(userInformation,bundle), getActivity());
+            }
+        };
+
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
     }
     /////////////////////// INITIALIZATION /////////////////////
     public void initElements(View root) {
@@ -136,6 +160,15 @@ public class RegFragment extends Fragment {
         });
         passwordEditText = root.findViewById(R.id.editpassword);
         phoneEditText = root.findViewById(R.id.editphone);
+        if(bundle.getString("PHONE")!=null){
+            phoneEditText.setText(bundle.getString("PHONE"));
+        }
+        if(bundle.getString("PASSWORD")!=null){
+            passwordEditText.setText(bundle.getString("PASSWORD"));
+        }
+        if(bundle.getString("NICK")!=null){
+            nickNameEditText.setText(bundle.getString("NICK"));
+        }
         GoogleEnter = root.findViewById(R.id.GoogleEnter);
         continueRegistrationButton = root.findViewById(R.id.next);
         passwordEditText.addTextChangedListener(new TextWatcher() {
@@ -237,9 +270,9 @@ public class RegFragment extends Fragment {
                             String nick = String.valueOf(nickNameEditText.getText()).trim();
                             UserInformation userInformation=new UserInformation();
                             //if(nick.isEmpty())
-                                RecentMethods.setCurrentFragment(NicknameFragment.newInstance(userInformation,bundle), getActivity());
+                            RecentMethods.setCurrentFragment(NicknameFragment.newInstance(userInformation,bundle), getActivity());
                             //else
-                               // RecentMethods.setCurrentFragment(MainFragment.newInstance(), getActivity());
+                            // RecentMethods.setCurrentFragment(MainFragment.newInstance(), getActivity());
                         } else {
                             GoogleEnter.setEnabled(true);
                             // If sign in fails, display a message to the user.
@@ -266,7 +299,7 @@ public class RegFragment extends Fragment {
                                     RecentMethods.setCurrentFragment(new EnterFragment(userInformation,bundle), getActivity());
                                 }
                                 else
-                                    AuthorizationThrowGoogle();
+                                    RecentMethods.setCurrentFragment(NicknameFragment.newInstance(userInformation,bundle), getActivity());
                             }
                         });
             }
@@ -311,7 +344,7 @@ public class RegFragment extends Fragment {
                                     "6", password, "Helicopter", 1000, new ArrayList<>(),new ArrayList<>(),1,100,0
                                     , new ArrayList<>(), new ArrayList<>(), ""," ","open","open","open","open"
                                     ,new ArrayList<>(),"regular", new ArrayList<>(),0,new ArrayList<>(),new ArrayList<>()
-                            ,new ArrayList<>(),new ArrayList<>(),new ArrayList<>(),new ArrayList<>());
+                                    ,new ArrayList<>(),new ArrayList<>(),new ArrayList<>(),new ArrayList<>());
                             reference.child(nick).setValue(res);
                             database.getReference("usersNicks")
                                     .child(nick).setValue(new UserPeopleAdapter(nick,"6"," "));

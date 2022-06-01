@@ -38,6 +38,7 @@
             android:background="@drawable/corners12_2dpstrokeappcolor"
             android:fontFamily="@font/montserrat_bold"
             android:maxLength="24"
+            android:maxLines="1"
             android:paddingStart="16sp"
             android:paddingTop="11dp"
             android:paddingBottom="11dp"
@@ -51,6 +52,7 @@
             android:layout_below="@+id/nickname"
             android:layout_centerHorizontal="true"
             android:textSize="12sp"
+            android:fontFamily="@font/montserrat_bold"
             android:textColor="@color/app_grey"
             android:layout_marginTop="100dp"/>
 

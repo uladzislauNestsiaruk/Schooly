@@ -91,7 +91,7 @@ public class LooksFragmentProfile extends Fragment {
                         createNewLook.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                RecentMethods.setCurrentFragment(CreateLookFragment.newInstance(type,fragment,userInformation,bundle), getActivity());
+                                RecentMethods.setCurrentFragment(CreateLookFragment.newInstance(type,fragment,userInformation,bundle,"newlook"), getActivity());
                             }
                         });
                     }else {
@@ -123,7 +123,7 @@ public class LooksFragmentProfile extends Fragment {
                 createNewLook.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        RecentMethods.setCurrentFragment(CreateLookFragment.newInstance(type,fragment,userInformation,bundle), getActivity());
+                        RecentMethods.setCurrentFragment(CreateLookFragment.newInstance(type,fragment,userInformation,bundle,"newlook"), getActivity());
                     }
                 });
             }else {

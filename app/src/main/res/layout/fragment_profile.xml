@@ -170,6 +170,16 @@
             android:layout_marginEnd="24dp"
             android:background="@color/pinkLight" />
 
+        <ImageView
+            android:id="@+id/edit_main_look"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/bigLinear1"
+            android:layout_marginTop="40dp"
+            android:layout_marginEnd="34dp"
+            android:layout_alignParentEnd="true"
+            android:src="@drawable/ic_edit_square"/>
+
         <TextView
             android:id="@+id/shielf"
             android:layout_width="wrap_content"

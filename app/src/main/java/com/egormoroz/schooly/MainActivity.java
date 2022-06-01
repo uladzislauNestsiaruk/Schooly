@@ -76,11 +76,8 @@ public class MainActivity extends AppCompatActivity {
         FirebaseUser mFirebaseUser = AuthenticationBase.getCurrentUser();
         if(mFirebaseUser != null) {
             currentUserID = mFirebaseUser.getUid();
-        }else{
         }
-        ///////////
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -94,9 +91,11 @@ public class MainActivity extends AppCompatActivity {
         ft.commit();
     }
     void RegistrationOrEnter(){
-        setCurrentFragment(RegisrtationstartFragment.newInstance());
+        s.setVisibility(View.GONE);
+        loading.setVisibility(View.GONE);
+        setCurrentFragment(RegisrtationstartFragment.newInstance(userInformation,bundle));
     }
-    void IsEntered(){
+    public void IsEntered(){
         FirebaseUser user = AuthenticationBase.getCurrentUser();
         RecentMethods.hasThisUser(AuthenticationBase, user,
                 new Callbacks.hasGoogleUser() {
@@ -132,38 +131,6 @@ public class MainActivity extends AppCompatActivity {
                                                         userInformation.setTodayMining(snapshot.child("todayMining").getValue(Double.class));
                                                         getMyClothes(nick);
                                                         final DatabaseReference connectedRef = database.getReference(".info/connected");
-//                                                        connectedRef.addValueEventListener(new ValueEventListener() {
-//                                                            @Override
-//                                                            public void onDataChange(DataSnapshot snapshot) {
-//                                                                boolean connected = snapshot.getValue(Boolean.class);
-//                                                                if (connected) {
-//                                                                    firebaseModel.getUsersReference().child(nick).child("Status")
-//                                                                            .setValue("Online").addOnCompleteListener(new OnCompleteListener<Void>() {
-//                                                                        @Override
-//                                                                        public void onComplete(@NonNull Task<Void> task) {
-//                                                                            if(task.isSuccessful()){
-//                                                                                //WorkManager.getInstance(getApplicationContext()).cancelWorkById(miningWorkRequest.getId());
-//                                                                            }
-//                                                                        }
-//                                                                    });
-//
-//                                                                    DatabaseReference presenceRef = firebaseModel.getReference().child("users").child(nick).child("Status");
-//                                                                    presenceRef.onDisconnect().setValue("Offline").addOnCompleteListener(new OnCompleteListener<Void>() {
-//                                                                        @Override
-//                                                                        public void onComplete(@NonNull Task<Void> task) {
-//                                                                            if(task.isSuccessful()){
-//                                                                                // WorkManager.getInstance(getApplicationContext()).cancelWorkById(miningWorkRequest.getId());
-//                                                                            }
-//                                                                        }
-//                                                                    });
-//                                                                }else{
-//                                                                }
-//                                                            }
-//
-//                                                            @Override
-//                                                            public void onCancelled(DatabaseError error) {
-//                                                            }
-//                                                        });
                                                         getLists();
                                                     }
                                                 }
@@ -212,12 +179,16 @@ public class MainActivity extends AppCompatActivity {
                                 setCurrentFragment(PeopleFragment.newInstance(userInformation,bundle));
                                 return true;
                             case R.id.bottom_nav_profile:
-                                RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-                                    @Override
-                                    public void PassUserNick(String nick) {
-                                        setCurrentFragment(ProfileFragment.newInstance("user", nick,MainFragment.newInstance(userInformation,bundle),userInformation,bundle));
-                                    }
-                                });
+                                if(userInformation.getNick()==null){
+                                    RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+                                        @Override
+                                        public void PassUserNick(String nick) {
+                                            setCurrentFragment(ProfileFragment.newInstance("user", nick,MainFragment.newInstance(userInformation,bundle),userInformation,bundle));
+                                        }
+                                    });
+                                }else {
+                                    setCurrentFragment(ProfileFragment.newInstance("user", userInformation.getNick(),MainFragment.newInstance(userInformation,bundle),userInformation,bundle));
+                                }
                                 CoordinatorLayout.LayoutParams coordinatorLayoutParams = (CoordinatorLayout.LayoutParams) fragmentContainer.getLayoutParams();
                                 coordinatorLayoutParams.setBehavior(null);
                                 return true;
@@ -336,11 +307,5 @@ public class MainActivity extends AppCompatActivity {
     protected void onStop(){
         super.onStop();
         Log.d(TAG, "onStop");
-//        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-//            @Override
-//            public void PassUserNick(String nick) {
-//                firebaseModel.getUsersReference().child(nick).child("timesTamp").setValue(ServerValue.TIMESTAMP);
-//            }
-//        });
     }
 }

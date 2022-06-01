@@ -115,7 +115,6 @@ import java.util.Random;
 import java.util.function.Consumer;
 
 public class ProfileFragment extends Fragment {
-    private static String sendNickString;
     FirebaseModel firebaseModel = new FirebaseModel();
     Context profileContext, context;
     EditText editText,messageEdit;
@@ -135,7 +134,7 @@ public class ProfileFragment extends Fragment {
     SendLookAdapter.ItemClickListener itemClickListenerSendLookAdapter;
     // ModelRenderer modelRenderer;
     RecyclerView wardrobeRecycler,recyclerView;
-    ImageView moreSquare,back,newLook;
+    ImageView moreSquare,back,newLook,editMainLook,editMainLookBack;
     String sendNick,subscriptionsCountString,subscribersCountString
             ,otherSubscriptionCountString,
             otherSubscribersCountString,type,nicknameCallback,userName;
@@ -277,7 +276,7 @@ public class ProfileFragment extends Fragment {
                 newLook.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        RecentMethods.setCurrentFragment(CreateLookFragment.newInstance("user",fragment,userInformation,bundle), getActivity());
+                        RecentMethods.setCurrentFragment(CreateLookFragment.newInstance("user",fragment,userInformation,bundle,"newlook"), getActivity());
                     }
                 });
                 ///////// I want GM on CF
@@ -298,6 +297,13 @@ public class ProfileFragment extends Fragment {
                 if (bundle!=null){
                     tabLayoutPosition=bundle.getInt("TAB_INT_PROFILE");
                 }
+                editMainLook=view.findViewById(R.id.edit_main_look);
+                editMainLook.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        RecentMethods.setCurrentFragment(CreateLookFragment.newInstance("user",fragment,userInformation,bundle,"mainlook"),getActivity());
+                    }
+                });
                 //////////////////////////////
                 viewPager=view.findViewById(R.id.viewPager);
                 tabLayout=view.findViewById(R.id.tabsprofile);
@@ -443,7 +449,6 @@ public class ProfileFragment extends Fragment {
                     if(bundle.getSerializable(sendNick+"PROFILE_OTHER_BUNDLE")!=null){
                         info= (UserInformation) bundle.getSerializable(sendNick+"PROFILE_OTHER_BUNDLE");
                         b=1;
-                        sendNickString=info.getNick();
                         user = firebaseModel.getUsersReference().child(info.getNick());
                         if(bundle.getString(sendNick+"PROFILE_OTHER_CHECK_VALUE")==null){
                             firebaseModel.getUsersReference().child(info.getNick())
@@ -628,7 +633,7 @@ public class ProfileFragment extends Fragment {
                 newLook.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        RecentMethods.setCurrentFragment(CreateLookFragment.newInstance("userback",fragment,userInformation,bundle), getActivity());
+                        RecentMethods.setCurrentFragment(CreateLookFragment.newInstance("userback",fragment,userInformation,bundle,"newlook"), getActivity());
                     }
                 });
                 ///////// I want GM on CF
@@ -639,8 +644,16 @@ public class ProfileFragment extends Fragment {
                         RecentMethods.setCurrentFragment(WardrobeFragment.newInstance("userback",fragment,userInformation,bundle), getActivity());
                     }
                 });
-                TextView editing1 = view.findViewById(R.id.redact);
 
+                editMainLookBack=view.findViewById(R.id.edit_main_look_back);
+                editMainLookBack.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        RecentMethods.setCurrentFragment(CreateLookFragment.newInstance("userback",fragment,userInformation,bundle,"mainlook"),getActivity());
+                    }
+                });
+
+                TextView editing1 = view.findViewById(R.id.redact);
                 editing1.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -949,7 +962,7 @@ public class ProfileFragment extends Fragment {
                 buyClothesProfile.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        RecentMethods.setCurrentFragment(ShopFragment.newInstance(userInformation,bundle,fragment), getActivity());
+                        RecentMethods.setCurrentFragment(ShopFragment.newInstance(userInformation,bundle,ProfileFragment.newInstance(type, sendNick, fragment, userInformation, bundle)), getActivity());
                     }
                 });
             }else {

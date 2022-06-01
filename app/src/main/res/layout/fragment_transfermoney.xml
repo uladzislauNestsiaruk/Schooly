@@ -89,7 +89,7 @@
             android:layout_centerInParent="true"
             android:textColor="@color/app_grey"
             android:layout_marginTop="680dp"
-            android:textSize="14sp"
+            android:textSize="16sp"
             android:fontFamily="@font/montserrat_bold"
             android:visibility="gone"/>
 

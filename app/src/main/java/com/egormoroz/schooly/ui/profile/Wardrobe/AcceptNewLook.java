@@ -47,28 +47,29 @@ public class AcceptNewLook extends Fragment {
 
     FirebaseModel firebaseModel=new FirebaseModel();
     RelativeLayout publish;
-    TextView lookPrice,lookPriceDollar;
+    TextView lookPrice,lookPriceDollar,constituentsText;
     EditText descriptionLook;
     ImageView schoolyCoin;
     RecyclerView recyclerView;
     long lookPriceLong,lookPriceDollarLong;
-    String lookPriceString,lookPriceDollarString,nick,model;
+    String lookPriceString,lookPriceDollarString,nick,model,type;
     ConstituentsAdapter.ItemClickListener itemClickListener;
-    String type;
     Fragment fragment;
     UserInformation userInformation;
     Bundle bundle;
+    String lookType;
 
-    public AcceptNewLook(String model,String type,Fragment fragment,UserInformation userInformation,Bundle bundle) {
+    public AcceptNewLook(String model,String type,Fragment fragment,UserInformation userInformation,Bundle bundle,String lookType) {
         this.model = model;
         this.type = type;
         this.fragment=fragment;
         this.userInformation=userInformation;
         this.bundle=bundle;
+        this.lookType=lookType;
     }
 
-    public static AcceptNewLook newInstance(String model,String type,Fragment fragment,UserInformation userInformation,Bundle bundle) {
-        return new AcceptNewLook(model,type,fragment,userInformation,bundle);
+    public static AcceptNewLook newInstance(String model,String type,Fragment fragment,UserInformation userInformation,Bundle bundle,String lookType) {
+        return new AcceptNewLook(model,type,fragment,userInformation,bundle,lookType);
 
     }
 
@@ -103,11 +104,12 @@ public class AcceptNewLook extends Fragment {
         descriptionLook=view.findViewById(R.id.addDescriptionEdit);
         recyclerView=view.findViewById(R.id.constituentsRecycler);
         schoolyCoin=view.findViewById(R.id.schoolyCoin);
+        constituentsText=view.findViewById(R.id.lookConstituentsText);
 
         itemClickListener=new ConstituentsAdapter.ItemClickListener() {
             @Override
             public void onItemClick(Clothes clothes) {
-                RecentMethods.setCurrentFragment(ViewingClothesNews.newInstance(AcceptNewLook.newInstance(model,type,fragment, userInformation,bundle),userInformation,bundle), getActivity());
+                RecentMethods.setCurrentFragment(ViewingClothesNews.newInstance(AcceptNewLook.newInstance(model,type,fragment, userInformation,bundle,lookType),userInformation,bundle), getActivity());
             }
         };
 
@@ -115,13 +117,13 @@ public class AcceptNewLook extends Fragment {
         backfromwardrobe.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(CreateLookFragment.newInstance(type,fragment,userInformation,bundle), getActivity());
+                RecentMethods.setCurrentFragment(CreateLookFragment.newInstance(type,fragment,userInformation,bundle,lookType), getActivity());
             }
         });
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                RecentMethods.setCurrentFragment(CreateLookFragment.newInstance(type,fragment,userInformation,bundle), getActivity());
+                RecentMethods.setCurrentFragment(CreateLookFragment.newInstance(type,fragment,userInformation,bundle,lookType), getActivity());
             }
         };
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
@@ -136,32 +138,43 @@ public class AcceptNewLook extends Fragment {
     }
 
     public void getLookClothes(){
-        for (int i=0;i<userInformation.getLookClothes().size();i++){
-            Clothes clothes=userInformation.getLookClothes().get(i);
-            if(clothes.getCurrencyType().equals("dollar")){
-                lookPriceDollarLong+=clothes.getClothesPrice();
-            }else {
-                lookPriceLong+=clothes.getClothesPrice();
+        if(userInformation.getLookClothes().size()!=0){
+            for (int i=0;i<userInformation.getLookClothes().size();i++){
+                Clothes clothes=userInformation.getLookClothes().get(i);
+                if(clothes.getCurrencyType().equals("dollar")){
+                    lookPriceDollarLong+=clothes.getClothesPrice();
+                }else {
+                    lookPriceLong+=clothes.getClothesPrice();
+                }
             }
-        }
-        if(lookPriceDollarLong>0 || lookPriceLong>0){
-            setTextInLookPrice();
-        }
-        ConstituentsAdapter constituentsAdapter=new ConstituentsAdapter(userInformation.getLookClothes(), itemClickListener);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setAdapter(constituentsAdapter);
-        publish.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String lookId=firebaseModel.getUsersReference().child(nick).child("looks").push().getKey();
-                firebaseModel.getUsersReference().child(nick).child("looks").child(lookId)
-                        .setValue(new NewsItem(model, descriptionLook.getText().toString(), "0", lookId,
-                                "", userInformation.getLookClothes(), 1200, 0,"",nick,0));
-                descriptionLook.getText().clear();
-                Toast.makeText(getContext(), "Образ успешно опубликован!", Toast.LENGTH_SHORT).show();
-                RecentMethods.setCurrentFragment(ProfileFragment.newInstance(type, nick, fragment,userInformation,bundle), getActivity());
+            if(lookPriceDollarLong>0 || lookPriceLong>0){
+                setTextInLookPrice();
             }
-        });
+            ConstituentsAdapter constituentsAdapter=new ConstituentsAdapter(userInformation.getLookClothes(), itemClickListener);
+            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+            recyclerView.setAdapter(constituentsAdapter);
+            publish.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String lookId=firebaseModel.getUsersReference().child(nick).child("looks").push().getKey();
+                    firebaseModel.getUsersReference().child(nick).child("looks").child(lookId)
+                            .setValue(new NewsItem(model, descriptionLook.getText().toString(), "0", lookId,
+                                    "", userInformation.getLookClothes(), 1200, 0,"",nick,0));
+                    descriptionLook.getText().clear();
+                    Toast.makeText(getContext(), "Образ успешно опубликован!", Toast.LENGTH_SHORT).show();
+                    RecentMethods.setCurrentFragment(ProfileFragment.newInstance(type, nick, fragment,userInformation,bundle), getActivity());
+                }
+            });
+        }else{
+         lookPrice.setText("0");
+         constituentsText.setVisibility(View.GONE);
+         publish.setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View v) {
+                 Toast.makeText(getContext(), "Нет составляющих образа", Toast.LENGTH_SHORT).show();
+             }
+         });
+        }
     }
 
     public void setTextInLookPrice(){

@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
@@ -56,16 +57,18 @@ public class CreateLookFragment extends Fragment {
     int tabLayoutPosition;
     UserInformation userInformation;
     Bundle bundle;
+    String lookType;
 
-    public CreateLookFragment(String type,Fragment fragment,UserInformation userInformation,Bundle bundle) {
+    public CreateLookFragment(String type,Fragment fragment,UserInformation userInformation,Bundle bundle,String lookType) {
         this.type = type;
         this.fragment=fragment;
         this.userInformation=userInformation;
         this.bundle=bundle;
+        this.lookType=lookType;
     }
 
-    public static CreateLookFragment newInstance(String type,Fragment fragment,UserInformation userInformation,Bundle bundle) {
-        return new CreateLookFragment(type,fragment,userInformation,bundle);
+    public static CreateLookFragment newInstance(String type,Fragment fragment,UserInformation userInformation,Bundle bundle,String lookType) {
+        return new CreateLookFragment(type,fragment,userInformation,bundle,lookType);
 
     }
 
@@ -98,7 +101,7 @@ public class CreateLookFragment extends Fragment {
         itemClickListener=new WardrobeClothesAdapter.ItemClickListener() {
             @Override
             public void onItemClick(Clothes clothes) {
-                RecentMethods.setCurrentFragment(ViewingClothesWardrobe.newInstance(type,CreateLookFragment.newInstance(type, fragment, userInformation, bundle),userInformation,bundle), getActivity());
+                RecentMethods.setCurrentFragment(ViewingClothesWardrobe.newInstance(type,CreateLookFragment.newInstance(type, fragment, userInformation, bundle,lookType),userInformation,bundle), getActivity());
             }
         };
         if (bundle!=null){
@@ -196,10 +199,14 @@ public class CreateLookFragment extends Fragment {
                                 clothes.setUid(snap.child("uid").getValue(String.class));
                                 lookClothesFromBase.add(clothes);
                             }
-                            userInformation.setLookClothes(lookClothesFromBase);
-                            RecentMethods.setCurrentFragment(AcceptNewLook.newInstance("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Funtitled.glb?alt=media&token=657b45d7-a84b-4f2a-89f4-a699029401f7"
-                                    ,type,fragment,userInformation,bundle)
-                                    , getActivity());
+                            if(lookClothesFromBase.size()!=0){
+                                userInformation.setLookClothes(lookClothesFromBase);
+                                RecentMethods.setCurrentFragment(AcceptNewLook.newInstance("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Funtitled.glb?alt=media&token=657b45d7-a84b-4f2a-89f4-a699029401f7"
+                                        ,type,fragment,userInformation,bundle,lookType)
+                                        , getActivity());
+                            }else {
+                                Toast.makeText(getContext(), "Добавь составляющие образа", Toast.LENGTH_SHORT).show();
+                            }
                         }
                     }
                 });
@@ -353,14 +360,14 @@ public class CreateLookFragment extends Fragment {
             switch (position)
             {
                 case 1 :
-                    return new WardrobeClothes(type,CreateLookFragment.newInstance(type, fragment, userInformation, bundle),userInformation,bundle);
+                    return new WardrobeClothes(type,CreateLookFragment.newInstance(type, fragment, userInformation, bundle,lookType),userInformation,bundle);
                 case 2 :
-                    return new WardrobeHats(type,CreateLookFragment.newInstance(type, fragment, userInformation, bundle),userInformation,bundle);
+                    return new WardrobeHats(type,CreateLookFragment.newInstance(type, fragment, userInformation, bundle,lookType),userInformation,bundle);
                 case 3 :
-                    return new WardrobeAccessories(type,CreateLookFragment.newInstance(type, fragment, userInformation, bundle),userInformation,bundle);
+                    return new WardrobeAccessories(type,CreateLookFragment.newInstance(type, fragment, userInformation, bundle,lookType),userInformation,bundle);
             }
 
-            return new WardrobeShoes(type,CreateLookFragment.newInstance(type, fragment, userInformation, bundle),userInformation,bundle);
+            return new WardrobeShoes(type,CreateLookFragment.newInstance(type, fragment, userInformation, bundle,lookType),userInformation,bundle);
         }
 
         @Override

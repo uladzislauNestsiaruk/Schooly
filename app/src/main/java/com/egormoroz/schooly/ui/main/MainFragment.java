@@ -458,6 +458,13 @@ public class MainFragment extends Fragment{
                                 RecentMethods.setCurrentFragment(CreateClothesFragment.newInstance(MainFragment.newInstance(userInformation,bundle),userInformation,bundle), getActivity());
                             }
                         });
+                        relativeMyClothes.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                RecentMethods.setCurrentFragment(MyClothesFragment.newInstance(clothesFromBase
+                                        ,totalProfitLong,totalPurchaseLong,totalProfitDollarLong,userInformation,bundle), getActivity());
+                            }
+                        });
                     }else {
                         itemClickListenerMyClothes=new MyClothesAdapterMain.ItemClickListener() {
                             @Override
@@ -486,6 +493,13 @@ public class MainFragment extends Fragment{
                     @Override
                     public void onClick(View v) {
                         RecentMethods.setCurrentFragment(CreateClothesFragment.newInstance(MainFragment.newInstance(userInformation,bundle),userInformation,bundle), getActivity());
+                    }
+                });
+                relativeMyClothes.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        RecentMethods.setCurrentFragment(MyClothesFragment.newInstance(userInformation.getMyClothes()
+                                ,totalProfitLong,totalPurchaseLong,totalProfitDollarLong,userInformation,bundle), getActivity());
                     }
                 });
             }else {

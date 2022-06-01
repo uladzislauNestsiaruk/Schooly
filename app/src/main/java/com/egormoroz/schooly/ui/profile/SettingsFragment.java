@@ -142,7 +142,7 @@ public class SettingsFragment extends Fragment {
         exitAccout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(RegisrtationstartFragment.newInstance(), getActivity());
+                //RecentMethods.setCurrentFragment(RegisrtationstartFragment.newInstance(), getActivity());
             }
         });
 
