@@ -258,6 +258,7 @@ public class CreateCharacterFragment extends Fragment {
                             database.getReference("usersNicks")
                                     .child(nick).setValue(new UserPeopleAdapter(nick,"6"," "));
                             ((MainActivity)getActivity()).IsEntered();
+                            ((MainActivity)getActivity()).checkMining();
                             RecentMethods.setCurrentFragment(MainFragment.newInstance(res,bundle), getActivity());
                         } else {
                             // If sign in fails, display a message to the user.
@@ -278,6 +279,7 @@ public class CreateCharacterFragment extends Fragment {
                     RecentMethods.saveData(reference, authenticationDatabase.getCurrentUser()
                             , bundle.getString("NICKNAMEFRAGMENT"),bundle,getActivity());
                     ((MainActivity)getActivity()).IsEntered();
+                    ((MainActivity)getActivity()).checkMining();
                 }
             }
         });

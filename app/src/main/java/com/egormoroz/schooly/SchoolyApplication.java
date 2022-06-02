@@ -37,7 +37,6 @@ public class SchoolyApplication extends Application implements Application.Activ
     double firstMinerHour,secondMinerHour,thirdMinerHour,fourthMinerHour,fifthMinerHour;
     double firstMinerInHour,secondMinerInHour,thirdMinerInHour,fourthMinerInHour,fifthMinerInHour;
     static double todayMining;
-    private FirebaseAuth AuthenticationBase;
     int miningCheckValue=0;
     private int activityReferences = 0;
     private boolean isActivityChangingConfigurations = false;
@@ -50,16 +49,20 @@ public class SchoolyApplication extends Application implements Application.Activ
         super.onCreate();
         firebaseModel.initAll();
         registerActivityLifecycleCallbacks(this);
-        AuthenticationBase = FirebaseAuth.getInstance();
-        FirebaseUser firebaseUser=AuthenticationBase.getCurrentUser();
-        RecentMethods.hasThisUser(AuthenticationBase, firebaseUser, new Callbacks.hasGoogleUser() {
-            @Override
-            public void hasGoogleUserCallback(boolean hasThisUser) {
-                if(hasThisUser){
-                    checkActiveMiners();
-                }
-            }
-        });
+        if(firebaseModel.getUser().getUid()!=null){
+            checkActiveMiners();
+            Constraints constraints = new Constraints.Builder()
+                    .setRequiredNetworkType(NetworkType.CONNECTED)
+                    .build();
+
+//            PeriodicWorkRequest notificationWorkRequest = new
+//                    PeriodicWorkRequest.Builder(NontificationManager.class, 15, TimeUnit.MINUTES)
+//                    .setConstraints(constraints
+//                    )
+//                    .build();
+
+//            WorkManager.getInstance(getApplicationContext()).enqueueUniquePeriodicWork("NOTS_MANAGER",ExistingPeriodicWorkPolicy.KEEP,notificationWorkRequest);
+        }
     }
 
     public void startMining(){
@@ -96,7 +99,6 @@ public class SchoolyApplication extends Application implements Application.Activ
                         activeMinersFromBase1=activeMinersFromBase;
                         if(activeMinersFromBase.size()>0){
                             miningCheckValue=0;
-                            Log.d("####", "aaa  "+miningCheckValue);
                         }else{
                             miningCheckValue=1;
                         }
@@ -156,21 +158,15 @@ public class SchoolyApplication extends Application implements Application.Activ
     public void onActivityStarted(@NonNull Activity activity) {
         if (++activityReferences == 1 && !isActivityChangingConfigurations) {
             miningCheckValue=0;
-            FirebaseUser firebaseUser=AuthenticationBase.getCurrentUser();
-            RecentMethods.hasThisUser(AuthenticationBase, firebaseUser, new Callbacks.hasGoogleUser() {
-                @Override
-                public void hasGoogleUserCallback(boolean hasThisUser) {
-                    if(hasThisUser){
-                        startMining();
-                        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-                            @Override
-                            public void PassUserNick(String nick) {
-                                firebaseModel.getUsersReference().child(nick).child("Status").setValue("online");
-                            }
-                        });
+            if(firebaseModel.getUser().getUid()!=null){
+                startMining();
+                RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+                    @Override
+                    public void PassUserNick(String nick) {
+                        firebaseModel.getUsersReference().child(nick).child("Status").setValue("online");
                     }
-                }
-            });
+                });
+            }
         }
     }
 
@@ -190,21 +186,14 @@ public class SchoolyApplication extends Application implements Application.Activ
         if (--activityReferences == 0 && !isActivityChangingConfigurations) {
             handler.removeCallbacks(runnable);
             miningCheckValue=1;
-            FirebaseUser firebaseUser=AuthenticationBase.getCurrentUser();
-            RecentMethods.hasThisUser(AuthenticationBase, firebaseUser, new Callbacks.hasGoogleUser() {
-                @Override
-                public void hasGoogleUserCallback(boolean hasThisUser) {
-                    if(hasThisUser){
-                        startMining();
-                        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-                            @Override
-                            public void PassUserNick(String nick) {
-                                firebaseModel.getUsersReference().child(nick).child("Status").setValue("offline");
-                            }
-                        });
+            if(firebaseModel.getUser().getUid()!=null) {
+                RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+                    @Override
+                    public void PassUserNick(String nick) {
+                        firebaseModel.getUsersReference().child(nick).child("Status").setValue("offline");
                     }
-                }
-            });
+                });
+            }
         }
     }
 
@@ -217,22 +206,5 @@ public class SchoolyApplication extends Application implements Application.Activ
     public void onActivityDestroyed(@NonNull Activity activity) {
 
     }
-//        Constraints constraints = new Constraints.Builder()
-//                .setRequiredNetworkType(NetworkType.CONNECTED)
-//                .build();
-//
-//        PeriodicWorkRequest miningWorkRequest = new
-//                PeriodicWorkRequest.Builder(MiningManager.class,15,TimeUnit.MINUTES)
-//                .setConstraints(constraints)
-//                .build();
-//
-//        PeriodicWorkRequest notificationWorkRequest = new
-//                PeriodicWorkRequest.Builder(NontificationManager.class, 15, TimeUnit.MINUTES)
-//                .setConstraints(constraints
-//                )
-//                .build();
-//
-//        WorkManager.getInstance(getApplicationContext()).enqueue(notificationWorkRequest);
-//        WorkManager.getInstance(getApplicationContext()).enqueueUniquePeriodicWork("###", ExistingPeriodicWorkPolicy.KEEP,miningWorkRequest);
 }
 

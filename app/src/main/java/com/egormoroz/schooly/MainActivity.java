@@ -79,6 +79,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void checkMining(){
+        ((SchoolyApplication)getApplication()).checkActiveMiners();
+        ((SchoolyApplication)getApplication()).startMining();
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_top_nav, menu);

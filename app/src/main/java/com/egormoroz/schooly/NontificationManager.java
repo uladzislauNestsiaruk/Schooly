@@ -48,7 +48,7 @@
 //    @Override
 //    public Result doWork() {
 //        firebaseModel.initAll();
-////        getChangesInSubscribers();
+//        getChangesInSubscribers();
 //        Log.d("######", "great");
 //        return Result.success();
 //    }
@@ -67,7 +67,7 @@
 //    }
 //
 //    public void getChangesInSubscribers(){
-//        Log.d("SSS", "shiiiiiiiitttttttttttt");
+//        Log.d("###", "shiiiiiiiitttttttttttt");
 //        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
 //            @Override
 //            public void PassUserNick(String nick) {
@@ -76,7 +76,7 @@
 //                    @Override
 //                    public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 //                        nonts=dataSnapshot.getValue(Nontification.class);
-//                        Log.d("AAA", "shiiiiiiiitttttttttttt");
+//                        Log.d("###", "s");
 //                        if(nonts.getTypeDispatch().equals("не отправлено")) {
 //                            nickOther = nonts.getNick();
 //                            if(nonts.getTypeView().equals("обычный")) {
@@ -85,7 +85,7 @@
 //                                        .child("typeDispatch").setValue("отправлено");
 //                                createNotificationChannel();
 //                            }else if(nonts.getTypeView().equals("запросодежда")){
-//                                nontification("Пришел ответ на заявку","Рассмотрена заявка на добавление одежды"+nonts.getClothesName() ,NOTIFY_ID);
+//                                nontification("Пришел ответ на заявку","Рассмотрена заявка на добавление одежды "+nonts.getClothesName() ,NOTIFY_ID);
 //                                firebaseModel.getUsersReference().child(nick).child("nontifications").child(nonts.getUid())
 //                                        .child("typeDispatch").setValue("отправлено");
 //                                createNotificationChannel();
@@ -105,7 +105,7 @@
 //                                        .child("typeDispatch").setValue("отправлено");
 //                                createNotificationChannel();
 //                            }else if(nonts.getTypeView().equals("подарок")){
-//                                nontification("Ух ты! Новый подарок!",nickOther+" подарил тебе подарок",NOTIFY_ID);
+//                                nontification("Ух ты! Новый подарок!",nickOther+" подарил тебе подарок!",NOTIFY_ID);
 //                                firebaseModel.getUsersReference().child(nick).child("nontifications").child(nonts.getUid())
 //                                        .child("typeDispatch").setValue("отправлено");
 //                                createNotificationChannel();
