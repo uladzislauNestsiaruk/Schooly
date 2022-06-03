@@ -12,6 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ProcessLifecycleOwner;
 import androidx.work.Constraints;
+import androidx.work.Data;
 import androidx.work.ExistingPeriodicWorkPolicy;
 import androidx.work.ExistingWorkPolicy;
 import androidx.work.NetworkType;
@@ -38,6 +39,7 @@ public class SchoolyApplication extends Application implements Application.Activ
     double firstMinerInHour,secondMinerInHour,thirdMinerInHour,fourthMinerInHour,fifthMinerInHour;
     static double todayMining;
     int miningCheckValue=0;
+    String nickname;
     private int activityReferences = 0;
     private boolean isActivityChangingConfigurations = false;
     ArrayList<Miner> activeMinersFromBase1=new ArrayList<>();
@@ -50,18 +52,31 @@ public class SchoolyApplication extends Application implements Application.Activ
         firebaseModel.initAll();
         registerActivityLifecycleCallbacks(this);
         if(firebaseModel.getUser().getUid()!=null){
+            RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+                @Override
+                public void PassUserNick(String nick) {
+                    nickname=nick;
+                }
+            });
             checkActiveMiners();
-            Constraints constraints = new Constraints.Builder()
-                    .setRequiredNetworkType(NetworkType.CONNECTED)
+            if(nickname!=null){
+                Constraints constraints = new Constraints.Builder()
+                        .setRequiredNetworkType(NetworkType.CONNECTED)
+                        .build();
+
+                Data data= new Data.Builder()
+                        .putString("NICK_WORK", nickname)
+                        .build();
+
+
+            PeriodicWorkRequest notificationWorkRequest = new
+                    PeriodicWorkRequest.Builder(NontificationManager.class, 15, TimeUnit.MINUTES)
+                    .setConstraints(constraints)
+                    .setInputData(data)
                     .build();
 
-//            PeriodicWorkRequest notificationWorkRequest = new
-//                    PeriodicWorkRequest.Builder(NontificationManager.class, 15, TimeUnit.MINUTES)
-//                    .setConstraints(constraints
-//                    )
-//                    .build();
-
-//            WorkManager.getInstance(getApplicationContext()).enqueueUniquePeriodicWork("NOTS_MANAGER",ExistingPeriodicWorkPolicy.KEEP,notificationWorkRequest);
+            WorkManager.getInstance(getApplicationContext()).enqueueUniquePeriodicWork("NOTS_MANAGER",ExistingPeriodicWorkPolicy.KEEP,notificationWorkRequest);
+            }
         }
     }
 
@@ -69,7 +84,7 @@ public class SchoolyApplication extends Application implements Application.Activ
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @Override
             public void PassUserNick(String nick) {
-                RecentMethods.GetTodayMining(nick, firebaseModel, new Callbacks.GetTodayMining() {
+                RecentMethods.GetTodayMining(nickname, firebaseModel, new Callbacks.GetTodayMining() {
                     @Override
                     public void GetTodayMining(double todayMiningFromBase) {
                         todayMining=todayMiningFromBase;
@@ -77,7 +92,7 @@ public class SchoolyApplication extends Application implements Application.Activ
                             public void run() {
                                 if(activeMinersFromBase1.size()>-1){
                                     if(miningCheckValue==0){
-                                        miningMoneyFun(nick,activeMinersFromBase1);
+                                        miningMoneyFun(nickname,activeMinersFromBase1);
                                         Log.d("#####", "goofffffd" + todayMining);
                                     }
                                 }
@@ -93,7 +108,7 @@ public class SchoolyApplication extends Application implements Application.Activ
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @Override
             public void PassUserNick(String nick) {
-                RecentMethods.GetActiveMiner(nick, firebaseModel, new Callbacks.GetActiveMiners() {
+                RecentMethods.GetActiveMiner(nickname, firebaseModel, new Callbacks.GetActiveMiners() {
                     @Override
                     public void GetActiveMiners(ArrayList<Miner> activeMinersFromBase) {
                         activeMinersFromBase1=activeMinersFromBase;
