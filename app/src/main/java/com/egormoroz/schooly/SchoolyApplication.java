@@ -51,31 +51,33 @@ public class SchoolyApplication extends Application implements Application.Activ
         super.onCreate();
         firebaseModel.initAll();
         registerActivityLifecycleCallbacks(this);
-        if(firebaseModel.getUser().getUid()!=null){
-            RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-                @Override
-                public void PassUserNick(String nick) {
-                    nickname=nick;
+        if(FirebaseAuth.getInstance().getCurrentUser()!=null){
+            if(firebaseModel.getUser().getUid()!=null){
+                RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+                    @Override
+                    public void PassUserNick(String nick) {
+                        nickname=nick;
+                    }
+                });
+                checkActiveMiners();
+                if(nickname!=null){
+                    Constraints constraints = new Constraints.Builder()
+                            .setRequiredNetworkType(NetworkType.CONNECTED)
+                            .build();
+
+                    Data data= new Data.Builder()
+                            .putString("NICK_WORK", nickname)
+                            .build();
+
+
+                    PeriodicWorkRequest notificationWorkRequest = new
+                            PeriodicWorkRequest.Builder(NontificationManager.class, 15, TimeUnit.MINUTES)
+                            .setConstraints(constraints)
+                            .setInputData(data)
+                            .build();
+
+                    WorkManager.getInstance(getApplicationContext()).enqueueUniquePeriodicWork("NOTS_MANAGER",ExistingPeriodicWorkPolicy.KEEP,notificationWorkRequest);
                 }
-            });
-            checkActiveMiners();
-            if(nickname!=null){
-                Constraints constraints = new Constraints.Builder()
-                        .setRequiredNetworkType(NetworkType.CONNECTED)
-                        .build();
-
-                Data data= new Data.Builder()
-                        .putString("NICK_WORK", nickname)
-                        .build();
-
-
-            PeriodicWorkRequest notificationWorkRequest = new
-                    PeriodicWorkRequest.Builder(NontificationManager.class, 15, TimeUnit.MINUTES)
-                    .setConstraints(constraints)
-                    .setInputData(data)
-                    .build();
-
-            WorkManager.getInstance(getApplicationContext()).enqueueUniquePeriodicWork("NOTS_MANAGER",ExistingPeriodicWorkPolicy.KEEP,notificationWorkRequest);
             }
         }
     }
@@ -173,14 +175,16 @@ public class SchoolyApplication extends Application implements Application.Activ
     public void onActivityStarted(@NonNull Activity activity) {
         if (++activityReferences == 1 && !isActivityChangingConfigurations) {
             miningCheckValue=0;
-            if(firebaseModel.getUser().getUid()!=null){
-                startMining();
-                RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-                    @Override
-                    public void PassUserNick(String nick) {
-                        firebaseModel.getUsersReference().child(nick).child("Status").setValue("online");
-                    }
-                });
+            if(FirebaseAuth.getInstance().getCurrentUser()!=null){
+                if(firebaseModel.getUser().getUid()!=null){
+                    startMining();
+                    RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+                        @Override
+                        public void PassUserNick(String nick) {
+                            firebaseModel.getUsersReference().child(nick).child("Status").setValue("online");
+                        }
+                    });
+                }
             }
         }
     }
@@ -201,13 +205,15 @@ public class SchoolyApplication extends Application implements Application.Activ
         if (--activityReferences == 0 && !isActivityChangingConfigurations) {
             handler.removeCallbacks(runnable);
             miningCheckValue=1;
-            if(firebaseModel.getUser().getUid()!=null) {
-                RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-                    @Override
-                    public void PassUserNick(String nick) {
-                        firebaseModel.getUsersReference().child(nick).child("Status").setValue("offline");
-                    }
-                });
+            if(FirebaseAuth.getInstance().getCurrentUser()!=null){
+                if(firebaseModel.getUser().getUid()!=null){
+                    RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+                        @Override
+                        public void PassUserNick(String nick) {
+                            firebaseModel.getUsersReference().child(nick).child("Status").setValue("offline");
+                        }
+                    });
+                }
             }
         }
     }

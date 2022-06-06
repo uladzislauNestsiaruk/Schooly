@@ -152,7 +152,7 @@ public class EnterFragment extends Fragment {
     }
     public void initFirebase(){
         gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestIdToken("44838623612-du9vom4g3h9nvkoi4ml7aseaudolkoi1.apps.googleusercontent.com")
                 .requestEmail()
                 .build();
         signInClient = GoogleSignIn.getClient(getActivity(), gso);

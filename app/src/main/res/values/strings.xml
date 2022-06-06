@@ -80,7 +80,6 @@
     <string name="toolbar_news">Новости</string>
     <string name="toolbar_people">Люди</string>
     <string name="toolbar_profile">Профиль</string>
-    <string name="library">Библиотека</string>
     <string name="recomindation">Рекомендации</string>
     <string name="marks">Недавние оценки</string>
     <string name="plus">+</string>
@@ -100,7 +99,7 @@
     <string name="nontifications">Уведомления</string>
     <string name="lichnyechats">Личные сообщения</string>
     <string name="group">Групповые чаты</string>
-    <string name="profilereact">Действия с профилем</string>
+    <string name="profilereact">Действия с профилем(лайки, комментарии и т.д.)</string>
     <string name="likeandsubs">(Лайки, подписки и т.д.)</string>
     <string name="privacypolicy">Конфиденциальность</string>
     <string name="closeaccount">Закрытый аккаунт</string>
@@ -215,7 +214,7 @@
     <string name="putAway">Убрать</string>
     <string name="putAwayDone">Убран</string>
     <string name="emptyBlackList">Черный список пуст</string>
-    <string name="noSaved">Нет сохраненных образов</string>
+    <string name="noSaved">Нет сохранненых образов</string>
     <string name="emptySubscribersList">Нет подписчиков:(</string>
     <string name="writeComment">Напиши комментарий...</string>
     <string name="sendComment">ОТПР.</string>

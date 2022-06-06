@@ -26,10 +26,14 @@ import com.egormoroz.schooly.Subscriber;
 import com.egormoroz.schooly.ui.main.RegisrtationstartFragment;
 import com.egormoroz.schooly.ui.main.UserInformation;
 import com.egormoroz.schooly.ui.profile.Wardrobe.CreateLookFragment;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.switchmaterial.SwitchMaterial;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.Query;
@@ -44,6 +48,8 @@ public class SettingsFragment extends Fragment {
     Fragment fragment;
     UserInformation userInformation;
     Bundle bundle;
+    GoogleSignInClient signInClient;
+    GoogleSignInOptions gso;
 
     public SettingsFragment(String type,Fragment fragment,UserInformation userInformation,Bundle bundle) {
         this.type = type;
@@ -59,7 +65,7 @@ public class SettingsFragment extends Fragment {
     }
 
     FirebaseModel firebaseModel=new FirebaseModel();
-    TextView  userNick,userNumber,userPassword,changePassword,blackList,exitAccout,
+    TextView  userNick,userNumber,userPassword,changePassword,blackList,exitAccount,
             dataProtect,rules,support,saved;
     String userNickString;
     SwitchMaterial privateAccountSwitch,chatsSwitch,groupChatsSwitch,profileSwitch;
@@ -87,13 +93,18 @@ public class SettingsFragment extends Fragment {
         saved=view.findViewById(R.id.saved);
         userNick=view.findViewById(R.id.userNick);
         support=view.findViewById(R.id.support);
-        exitAccout=view.findViewById(R.id.exitAccount);
+        exitAccount=view.findViewById(R.id.exitAccount);
         changePassword=view.findViewById(R.id.changePassword);
         privateAccountSwitch=view.findViewById(R.id.privateAccountSwitch);
         blackList=view.findViewById(R.id.blackList);
         userPassword=view.findViewById(R.id.userPassword);
         userNumber=view.findViewById(R.id.userNumber);
         userNick.setText(nick);
+        gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken("44838623612-du9vom4g3h9nvkoi4ml7aseaudolkoi1.apps.googleusercontent.com")
+                .requestEmail()
+                .build();
+        signInClient = GoogleSignIn.getClient(getActivity(), gso);
 
         ImageView imageViewBack = view.findViewById(R.id.backtomainfromsettings);
         imageViewBack.setOnClickListener(new View.OnClickListener() {
@@ -139,10 +150,17 @@ public class SettingsFragment extends Fragment {
             }
         });
 
-        exitAccout.setOnClickListener(new View.OnClickListener() {
+        exitAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //RecentMethods.setCurrentFragment(RegisrtationstartFragment.newInstance(), getActivity());
+                FirebaseAuth.getInstance().signOut();
+                signInClient.signOut().addOnCompleteListener(getActivity(),
+                        new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                RecentMethods.setCurrentFragment(RegisrtationstartFragment.newInstance(userInformation,bundle), getActivity());
+                            }
+                        });
             }
         });
 

@@ -50,6 +50,7 @@ public class NontificationManager extends Worker {
         firebaseModel.initAll();
         nick= getInputData().getString("NICK_WORK");
         if(nick!=null){
+            Log.d("###", nick);
             getChangesInSubscribers();
         }
         Log.d("######", "great");

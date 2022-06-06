@@ -125,8 +125,14 @@ public class RecentMethods {
                 "","","open","open","open",
                 "open",new ArrayList<>(),"regular", new ArrayList<>(),0,new ArrayList<>(),new ArrayList<>(),new ArrayList<>()
         ,new ArrayList<>(),new ArrayList<>(),new ArrayList<>());
-        ref.child(nick).setValue(res);
-        RecentMethods.setCurrentFragment(MainFragment.newInstance(res, bundle),activity );
+        ref.child(nick).setValue(res).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                RecentMethods.setCurrentFragment(MainFragment.newInstance(res, bundle),activity );
+                ((MainActivity)activity).IsEntered();
+                ((MainActivity)activity).checkMining();
+            }
+        });
         return nick.isEmpty();
     }
     public static void hasThisUserFun(FirebaseAuth AuthenticationBase, FirebaseUser user,
@@ -467,26 +473,28 @@ public class RecentMethods {
 
     public static void GetActiveMiner(String nick,FirebaseModel model, Callbacks.GetActiveMiners callback) {
         model.initAll();
-         model.getUsersReference().child(nick).child("activeMiners")
-                 .addValueEventListener(new ValueEventListener() {
-                     @Override
-                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                         ArrayList<Miner> activeMinersFromBase=new ArrayList<>();
-                         for (DataSnapshot snap : snapshot.getChildren()) {
-                             Miner miner = new Miner();
-                             miner.setInHour(snap.child("inHour").getValue(Long.class));
-                             miner.setMinerPrice(snap.child("minerPrice").getValue(Long.class));
-                             miner.setMinerImage(snap.child("minerImage").getValue(String.class));
-                             activeMinersFromBase.add(miner);
-                         }
-                         callback.GetActiveMiners(activeMinersFromBase);
-                     }
+        if(model.getUsersReference().child(nick).child("activeMiners")!=null){
+            model.getUsersReference().child(nick).child("activeMiners")
+                    .addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            ArrayList<Miner> activeMinersFromBase=new ArrayList<>();
+                            for (DataSnapshot snap : snapshot.getChildren()) {
+                                Miner miner = new Miner();
+                                miner.setInHour(snap.child("inHour").getValue(Long.class));
+                                miner.setMinerPrice(snap.child("minerPrice").getValue(Long.class));
+                                miner.setMinerImage(snap.child("minerImage").getValue(String.class));
+                                activeMinersFromBase.add(miner);
+                            }
+                            callback.GetActiveMiners(activeMinersFromBase);
+                        }
 
-                     @Override
-                     public void onCancelled(@NonNull DatabaseError error) {
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
 
-                     }
-                 });
+                        }
+                    });
+        }
     }
 
     public static void GetMoneyFromBase(String nick,FirebaseModel firebaseModel,Callbacks.MoneyFromBase callback){

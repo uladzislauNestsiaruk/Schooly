@@ -278,8 +278,6 @@ public class CreateCharacterFragment extends Fragment {
                 if(task.isSuccessful()){
                     RecentMethods.saveData(reference, authenticationDatabase.getCurrentUser()
                             , bundle.getString("NICKNAMEFRAGMENT"),bundle,getActivity());
-                    ((MainActivity)getActivity()).IsEntered();
-                    ((MainActivity)getActivity()).checkMining();
                 }
             }
         });
