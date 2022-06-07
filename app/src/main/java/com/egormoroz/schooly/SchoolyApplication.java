@@ -167,6 +167,11 @@ public class SchoolyApplication extends Application implements Application.Activ
         }
     }
 
+    public void stopHandler(){
+        handler.removeCallbacks(runnable);
+        miningCheckValue=1;
+    }
+
     @Override
     public void onActivityCreated(@NonNull Activity activity, @Nullable Bundle savedInstanceState) {
     }

@@ -23,12 +23,15 @@ import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.MainActivity;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.Subscriber;
+import com.egormoroz.schooly.ui.main.Mining.Miner;
 import com.egormoroz.schooly.ui.main.RegisrtationstartFragment;
 import com.egormoroz.schooly.ui.main.UserInformation;
 import com.egormoroz.schooly.ui.profile.Wardrobe.CreateLookFragment;
+import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -46,6 +49,7 @@ public class SettingsFragment extends Fragment {
 
     String type,nick;
     Fragment fragment;
+    GoogleApiClient googleApiClient;
     UserInformation userInformation;
     Bundle bundle;
     GoogleSignInClient signInClient;
@@ -158,6 +162,7 @@ public class SettingsFragment extends Fragment {
                         new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
+                                ((MainActivity)getActivity()).stopHandler();
                                 RecentMethods.setCurrentFragment(RegisrtationstartFragment.newInstance(userInformation,bundle), getActivity());
                             }
                         });
@@ -178,7 +183,7 @@ public class SettingsFragment extends Fragment {
 
     public void clearRequests(){
         firebaseModel.getUsersReference().child(nick).child("requests")
-        .get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                .get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
                 if(task.isSuccessful()){

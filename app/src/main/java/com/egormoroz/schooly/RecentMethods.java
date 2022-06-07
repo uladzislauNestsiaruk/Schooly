@@ -124,7 +124,7 @@ public class RecentMethods {
                 , new ArrayList<>(),new ArrayList<>(), 1,100,0, new ArrayList<>(),new ArrayList<>(),
                 "","","open","open","open",
                 "open",new ArrayList<>(),"regular", new ArrayList<>(),0,new ArrayList<>(),new ArrayList<>(),new ArrayList<>()
-        ,new ArrayList<>(),new ArrayList<>(),new ArrayList<>());
+                ,new ArrayList<>(),new ArrayList<>(),new ArrayList<>());
         ref.child(nick).setValue(res).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
@@ -223,22 +223,6 @@ public class RecentMethods {
 
             }
         });
-    }
-    public static void UserNickByUid1(String uid, FirebaseModel model, Callbacks.GetUserNickByUid callback) {
-        model.initAll();
-        model.getUsersReference().orderByChild("uid").equalTo(uid).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if(task.isSuccessful()){
-                    DataSnapshot snapshot=task.getResult();
-                    for (DataSnapshot snap : snapshot.getChildren()) {
-                        Log.d("AAA", "uid  "+uid);
-                        callback.PassUserNick(snap.child("nick").getValue(String.class));
-                    }
-                }
-            }
-        });
-
     }
 
     public static void hasUid(String uid, FirebaseModel model, Callbacks.HasUid callback){
@@ -519,15 +503,15 @@ public class RecentMethods {
         model.initAll();
         model.getUsersReference().child(nick)
                 .child("todayMining").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DataSnapshot> task) {
-                        if(task.isSuccessful()){
-                            DataSnapshot snapshot=task.getResult();
-                            if (snapshot.getValue(Double.class) != null)
-                                callback.GetTodayMining(snapshot.getValue(Double.class));
-                        }
-                    }
-                });
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if(task.isSuccessful()){
+                    DataSnapshot snapshot=task.getResult();
+                    if (snapshot.getValue(Double.class) != null)
+                        callback.GetTodayMining(snapshot.getValue(Double.class));
+                }
+            }
+        });
     }
     public static void GetTodayMiningValue(String nick,FirebaseModel model,Callbacks.GetTodayMining callback){
         model.initAll();
@@ -834,7 +818,7 @@ public class RecentMethods {
                     clothes.setBodyType(snap.child("bodyType").getValue(String.class));
                     clothes.setUid(snap.child("uid").getValue(String.class));
                     clothes.setExclusive(snap.child("exclusive").getValue(String.class));
-                   clothesFromBase.add(clothes);
+                    clothesFromBase.add(clothes);
                 }
                 callback.getClothes(clothesFromBase);
             }
@@ -1332,7 +1316,7 @@ public class RecentMethods {
                     Clothes clothes=new Clothes();
                     clothes=snap.getValue(Clothes.class);
                     clothesArrayList.add(clothes);
-            }
+                }
                 callback.getLookClothes(clothesArrayList);
             }
 

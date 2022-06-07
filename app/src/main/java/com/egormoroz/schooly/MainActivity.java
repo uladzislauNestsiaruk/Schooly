@@ -84,6 +84,10 @@ public class MainActivity extends AppCompatActivity {
         ((SchoolyApplication)getApplication()).startMining();
     }
 
+    public void stopHandler(){
+        ((SchoolyApplication)getApplication()).stopHandler();
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_top_nav, menu);

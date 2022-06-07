@@ -19,6 +19,7 @@ import androidx.fragment.app.Fragment;
 import com.egormoroz.schooly.CONST;
 import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FirebaseModel;
+import com.egormoroz.schooly.MainActivity;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.ui.main.Mining.MiningFragment;
@@ -90,38 +91,39 @@ public class EnterFragment extends Fragment {
                 firebaseAuthWithGoogle(account.getIdToken());
             } catch (ApiException e) {
                 // Google Sign In failed, update UI appropriately
+                RecentMethods.setCurrentFragment(RegFragment.newInstance(userInformation, bundle), getActivity());
                 Log.w(TAG, "Google sign in failed", e);
             }
         }
     }
     private void firebaseAuthWithGoogle(String idToken) {
-        RecentMethods.hasUid(idToken, new FirebaseModel(), new Callbacks.HasUid() {
-            @Override
-            public void HasUidCallback(boolean HasUid) {
-                if(!HasUid)
-                    RecentMethods.setCurrentFragment(RegFragment.newInstance(userInformation,bundle), getActivity());
-                else{
-                    AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
-                    AuthenticationBase.signInWithCredential(credential)
-                            .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
+        AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
+        AuthenticationBase.signInWithCredential(credential)
+                .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d(TAG, "signInWithCredential:success");
+                            FirebaseModel firebaseModel=new FirebaseModel();
+                            firebaseModel.initAll();
+                            RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
                                 @Override
-                                public void onComplete(@NonNull Task<AuthResult> task) {
-                                    if (task.isSuccessful()) {
-                                        // Sign in success, update UI with the signed-in user's information
-                                        Log.d(TAG, "signInWithCredential:success");
-                                        FirebaseUser user = AuthenticationBase.getCurrentUser();
-                                        DatabaseReference ref = FirebaseDatabase.getInstance(CONST.RealtimeDatabaseUrl).
-                                                getReference("users");
-                                    } else {
-                                        GoogleEnter.setEnabled(true);
-                                        // If sign in fails, display a message to the user.
-                                        Log.w(TAG, "signInWithCredential:failure", task.getException());
-                                    }
+                                public void PassUserNick(String nick) {
+                                    userInformation.setNick(nick);
+                                    ((MainActivity)getActivity()).IsEntered();
+                                    ((MainActivity)getActivity()).checkMining();
+                                    RecentMethods.setCurrentFragment(MainFragment.newInstance(userInformation, bundle), getActivity());
                                 }
                             });
-                }
-            }
-        });
+                        } else {
+                            GoogleEnter.setEnabled(true);
+                            // If sign in fails, display a message to the user.
+                            RecentMethods.setCurrentFragment(RegFragment.newInstance(userInformation, bundle), getActivity());
+                            Log.w(TAG, "signInWithCredential:failure", task.getException());
+                        }
+                    }
+                });
     }
     @Override
     public void onViewCreated(@Nullable View view,@NonNull Bundle savedInstanceState) {
