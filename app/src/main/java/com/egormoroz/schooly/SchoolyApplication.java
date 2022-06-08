@@ -76,7 +76,7 @@ public class SchoolyApplication extends Application implements Application.Activ
                             .setInputData(data)
                             .build();
 
-                    WorkManager.getInstance(getApplicationContext()).enqueueUniquePeriodicWork("NOTS_MANAGER",ExistingPeriodicWorkPolicy.KEEP,notificationWorkRequest);
+//                    WorkManager.getInstance(getApplicationContext()).enqueueUniquePeriodicWork("NOTS_MANAGER",ExistingPeriodicWorkPolicy.KEEP,notificationWorkRequest);
                 }
             }
         }

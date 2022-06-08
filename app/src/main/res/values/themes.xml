@@ -32,6 +32,11 @@
         <item name="android:textSize">12sp</item>
     </style>
 
+    <style name="BottomNavTheme" parent="Widget.Design.BottomNavigationView">
+        <item name="colorPrimary">@color/white</item>
+        <item name="colorPrimaryDark">@color/black</item>
+    </style>
+
     <style name="AppTabLayout" parent="Widget.Design.TabLayout">
         <item name="tabPaddingStart">27dp</item>
         <item name="tabPaddingEnd">27dp</item>

@@ -255,7 +255,7 @@ public class CreateCharacterFragment extends Fragment {
                                     ,new ArrayList<>(),"regular", new ArrayList<>(),0,new ArrayList<>(),new ArrayList<>()
                                     ,new ArrayList<>(),new ArrayList<>(),new ArrayList<>(),new ArrayList<>());
                             reference.child(nick).setValue(res);
-                            database.getReference("usersNicks")
+                            FirebaseDatabase.getInstance().getReference("usersNicks")
                                     .child(nick).setValue(new UserPeopleAdapter(nick,"6"," "));
                             ((MainActivity)getActivity()).IsEntered();
                             ((MainActivity)getActivity()).checkMining();

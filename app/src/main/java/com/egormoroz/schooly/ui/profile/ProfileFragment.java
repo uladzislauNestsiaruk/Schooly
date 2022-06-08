@@ -165,6 +165,24 @@ public class ProfileFragment extends Fragment {
             bundle.putInt("TAB_INT_PROFILE", tabLayoutPosition);
         }else{
             bundle.putInt("TAB_INT_PROFILE_OTHER", tabLayoutPositionOther);
+            checkProfileAfterQuit();
+            firebaseModel.getUsersReference().child(userInformation.getNick()).child("subscription")
+                    .child(info.getNick()).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if(snapshot.exists()){
+                        checkOnSubscribeValue=1;
+                    }else {
+                        checkOnSubscribeValue=0;
+                    }
+                    bundle.putString(sendNick+"PROFILE_OTHER_CHECK_SUBSCRIBE_VALUE",String.valueOf(checkOnSubscribeValue));
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
         }
     }
 
@@ -468,7 +486,7 @@ public class ProfileFragment extends Fragment {
                                         }
                                         tabLayoutOther=view.findViewById(R.id.tabsprofileother);
                                         viewPagerOther=view.findViewById(R.id.viewPagerOther);
-                                        setFragmentOtherViewPager();
+                                        setFragmentOtherViewPager(profileCheckValue);
                                         setCountsOther();
                                         loadModels(Uri.parse("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Funtitled.glb?alt=media&token=657b45d7-a84b-4f2a-89f4-a699029401f7")
                                                 , otherMainLook, ProfileFragment.this, 0.25f);
@@ -497,13 +515,13 @@ public class ProfileFragment extends Fragment {
                         }else{
                             tabLayoutOther=view.findViewById(R.id.tabsprofileother);
                             viewPagerOther=view.findViewById(R.id.viewPagerOther);
-                            setFragmentOtherViewPager();
                             setCountsOther();
                             loadModels(Uri.parse("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Funtitled.glb?alt=media&token=657b45d7-a84b-4f2a-89f4-a699029401f7")
                                     , otherMainLook, ProfileFragment.this, 0.25f);
                             if(bundle.getString(sendNick+"PROFILE_OTHER_CHECK_SUBSCRIBE_VALUE")!=null){
                                 checkProfileValue(Integer.valueOf(bundle.getString(sendNick+"PROFILE_OTHER_CHECK_VALUE")),
                                         view,Integer.valueOf(bundle.getString(sendNick+"PROFILE_OTHER_CHECK_SUBSCRIBE_VALUE")));
+                                setFragmentOtherViewPager(Integer.valueOf(bundle.getString(sendNick+"PROFILE_OTHER_CHECK_VALUE")));
                             }else{
                                 firebaseModel.getUsersReference().child(userInformation.getNick()).child("subscription")
                                         .child(info.getNick()).addValueEventListener(new ValueEventListener() {
@@ -514,8 +532,8 @@ public class ProfileFragment extends Fragment {
                                         }else {
                                             checkOnSubscribeValue=0;
                                         }
-                                        bundle.putString("PROFILE_OTHER_CHECK_VALUE",String.valueOf(profileCheckValue));
-                                        bundle.putString("PROFILE_OTHER_CHECK_SUBSCRIBE_VALUE",String.valueOf(checkOnSubscribeValue));
+                                        bundle.putString(sendNick+"PROFILE_OTHER_CHECK_VALUE",String.valueOf(profileCheckValue));
+                                        bundle.putString(sendNick+"PROFILE_OTHER_CHECK_SUBSCRIBE_VALUE",String.valueOf(checkOnSubscribeValue));
                                         checkProfileValue(profileCheckValue,view,checkOnSubscribeValue);
                                     }
 
@@ -564,7 +582,7 @@ public class ProfileFragment extends Fragment {
                                                     }
                                                     tabLayoutOther=view.findViewById(R.id.tabsprofileother);
                                                     viewPagerOther=view.findViewById(R.id.viewPagerOther);
-                                                    setFragmentOtherViewPager();
+                                                    setFragmentOtherViewPager(profileCheckValue);
                                                     setCountsOther();
                                                     loadModels(Uri.parse("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Funtitled.glb?alt=media&token=657b45d7-a84b-4f2a-89f4-a699029401f7")
                                                             , otherMainLook, ProfileFragment.this, 0.25f);
@@ -795,10 +813,72 @@ public class ProfileFragment extends Fragment {
                     if(snapshot.exists()){
                         profileCheckValue=1;
                     }else {
-                        profileCheckValue=2;
-                        if(info.getAccountType().equals("close")){
-                            profileCheckValue=3;
-                        }
+                        firebaseModel.getUsersReference().child(info.getNick())
+                                .child("accountType").get()
+                                .addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<DataSnapshot> task) {
+                                        if(task.isSuccessful()){
+                                            DataSnapshot snapshot1=task.getResult();
+                                            if(snapshot1.getValue(String.class).equals("close")){
+                                                profileCheckValue=3;
+                                            }else {
+                                                profileCheckValue=2;
+                                            }
+                                            setFragmentOtherViewPager(profileCheckValue);
+                                            firebaseModel.getUsersReference().child(userInformation.getNick()).child("subscription")
+                                                    .child(info.getNick()).addValueEventListener(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                    if(snapshot.exists()){
+                                                        checkOnSubscribeValue=1;
+                                                    }else {
+                                                        checkOnSubscribeValue=0;
+                                                    }
+                                                    checkProfileValue(profileCheckValue,getView(),checkOnSubscribeValue);
+                                                }
+
+                                                @Override
+                                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                                }
+                                            });
+                                        }
+                                    }
+                                });
+                    }
+                }
+            }
+        });
+    }
+
+    public void checkProfileAfterQuit(){
+        firebaseModel.getUsersReference().child(info.getNick())
+                .child("blackList").child(userInformation.getNick())
+                .get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if(task.isSuccessful()){
+                    DataSnapshot snapshot=task.getResult();
+                    if(snapshot.exists()){
+                        profileCheckValue=1;
+                    }else {
+                        firebaseModel.getUsersReference().child(info.getNick())
+                                .child("accountType").get()
+                                .addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<DataSnapshot> task) {
+                                        if(task.isSuccessful()){
+                                            DataSnapshot snapshot1=task.getResult();
+                                            if(snapshot1.getValue(String.class).equals("close")){
+                                                profileCheckValue=3;
+                                            }else {
+                                                profileCheckValue=2;
+                                            }
+                                            bundle.putString(sendNick+"PROFILE_OTHER_CHECK_VALUE",String.valueOf(profileCheckValue));
+                                        }
+                                    }
+                                });
                     }
                 }
             }
@@ -1311,7 +1391,6 @@ public class ProfileFragment extends Fragment {
                                                                 subscribe.setBackgroundResource(R.drawable.corners10dpappcolor);
                                                                 a = 0;
                                                                 checkProfile();
-
                                                             }
                                                             if (a == 3) {
                                                                 firebaseModel.getReference().child("users").child(info.getNick()).child("requests")
@@ -1321,7 +1400,6 @@ public class ProfileFragment extends Fragment {
                                                                 subscribe.setBackgroundResource(R.drawable.corners10dpappcolor);
                                                                 a = 0;
                                                                 checkProfile();
-
                                                             }
                                                             if (a == 4) {
                                                                 Toast.makeText(getContext(), "Пользователь заблокировал тебя", Toast.LENGTH_SHORT).show();
@@ -1485,62 +1563,49 @@ public class ProfileFragment extends Fragment {
         }
     }
 
-    public void setFragmentOtherViewPager(){
-        firebaseModel.getUsersReference().child(info.getNick())
-                .child("blackList").child(userInformation.getNick())
-                .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if(snapshot.exists()){
-                        }else {
-                            if(getActivity()!=null && isAdded()){
-                                FragmentManager fm = getChildFragmentManager();
-                                fragmentAdapterOther = new FragmentAdapterOther(fm, getLifecycle());
-                                viewPagerOther.setAdapter(fragmentAdapterOther);
-                                viewPagerOther.setCurrentItem(tabLayoutPositionOther, false);
-                            }
+    public void setFragmentOtherViewPager(int checkValue){
+        if(checkValue!=1 && checkValue!=3){
+            if(getActivity()!=null && isAdded()){
+                FragmentManager fm = getChildFragmentManager();
+                fragmentAdapterOther = new FragmentAdapterOther(fm, getLifecycle());
+                viewPagerOther.setAdapter(fragmentAdapterOther);
+                viewPagerOther.setCurrentItem(tabLayoutPositionOther, false);
+            }
 
 
-                            if(tabLayoutOther.getTabCount()==2){
+            if(tabLayoutOther.getTabCount()==2){
 
-                            }else {
-                                tabLayoutOther.addTab(tabLayoutOther.newTab().setText("Образы"));
-                                tabLayoutOther.addTab(tabLayoutOther.newTab().setText("Одежда"));
-                            }
+            }else {
+                tabLayoutOther.addTab(tabLayoutOther.newTab().setText("Образы"));
+                tabLayoutOther.addTab(tabLayoutOther.newTab().setText("Одежда"));
+            }
 
-                            tabLayoutOther.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener(){
-                                @Override
-                                public void onTabSelected(TabLayout.Tab tab) {
-                                    tabLayoutPositionOther=tab.getPosition();
-                                    viewPagerOther.setCurrentItem(tab.getPosition());
-                                }
+            tabLayoutOther.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener(){
+                @Override
+                public void onTabSelected(TabLayout.Tab tab) {
+                    tabLayoutPositionOther=tab.getPosition();
+                    viewPagerOther.setCurrentItem(tab.getPosition());
+                }
 
-                                @Override
-                                public void onTabUnselected(TabLayout.Tab tab) {
+                @Override
+                public void onTabUnselected(TabLayout.Tab tab) {
 
-                                }
+                }
 
-                                @Override
-                                public void onTabReselected(TabLayout.Tab tab) {
+                @Override
+                public void onTabReselected(TabLayout.Tab tab) {
 
-                                }
-                            });
-                            tabLayoutOther.selectTab(tabLayoutOther.getTabAt(tabLayoutPositionOther));
-                            viewPagerOther.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-                                @Override
-                                public void onPageSelected(int position) {
-                                    tabLayoutPositionOther=position;
-                                    tabLayoutOther.selectTab(tabLayoutOther.getTabAt(position));
-                                }
-                            });
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
+                }
+            });
+            tabLayoutOther.selectTab(tabLayoutOther.getTabAt(tabLayoutPositionOther));
+            viewPagerOther.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+                @Override
+                public void onPageSelected(int position) {
+                    tabLayoutPositionOther=position;
+                    tabLayoutOther.selectTab(tabLayoutOther.getTabAt(position));
+                }
+            });
+        }
     }
 
     private void showBottomSheetDialog() {

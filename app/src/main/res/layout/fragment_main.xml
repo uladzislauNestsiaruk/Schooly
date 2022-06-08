@@ -29,16 +29,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="24dp"
+            android:layout_marginTop="2dp"
             android:src="@drawable/ic_chat" />
 
         <ImageView
             android:id="@+id/nontification"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="24dp"
+            android:layout_marginTop="1dp"
             android:layout_toLeftOf="@+id/chat"
             android:src="@drawable/ic_notification" />
 

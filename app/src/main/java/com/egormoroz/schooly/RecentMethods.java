@@ -128,6 +128,8 @@ public class RecentMethods {
         ref.child(nick).setValue(res).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
+                FirebaseDatabase.getInstance().getReference("usersNicks")
+                        .child(nick).setValue(new UserPeopleAdapter(nick,"6"," "));
                 RecentMethods.setCurrentFragment(MainFragment.newInstance(res, bundle),activity );
                 ((MainActivity)activity).IsEntered();
                 ((MainActivity)activity).checkMining();
