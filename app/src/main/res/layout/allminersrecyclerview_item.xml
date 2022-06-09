@@ -23,6 +23,7 @@
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/schoolycoin"
             android:textColor="@color/app_color"
+            android:layout_marginStart="2dp"
             android:fontFamily="@font/montserrat_extrabold"
             android:textSize="18sp"
             android:layout_centerVertical="true"/>
@@ -42,11 +43,11 @@
             android:id="@+id/inHour"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/app_color"
-            android:fontFamily="@font/montserrat_extrabold"
-            android:textSize="14sp"
+            android:layout_centerVertical="true"
             android:layout_toRightOf="@+id/s"
-            android:layout_centerVertical="true"/>
+            android:fontFamily="@font/montserrat_extrabold"
+            android:textColor="@color/app_color"
+            android:textSize="14sp" />
 
         <ImageView
             android:id="@+id/schoolycoin"

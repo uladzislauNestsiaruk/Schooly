@@ -86,7 +86,7 @@ public class SchoolyApplication extends Application implements Application.Activ
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @Override
             public void PassUserNick(String nick) {
-                RecentMethods.GetTodayMining(nickname, firebaseModel, new Callbacks.GetTodayMining() {
+                RecentMethods.GetTodayMining(nick, firebaseModel, new Callbacks.GetTodayMining() {
                     @Override
                     public void GetTodayMining(double todayMiningFromBase) {
                         todayMining=todayMiningFromBase;
@@ -110,7 +110,7 @@ public class SchoolyApplication extends Application implements Application.Activ
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @Override
             public void PassUserNick(String nick) {
-                RecentMethods.GetActiveMiner(nickname, firebaseModel, new Callbacks.GetActiveMiners() {
+                RecentMethods.GetActiveMiner(nick, firebaseModel, new Callbacks.GetActiveMiners() {
                     @Override
                     public void GetActiveMiners(ArrayList<Miner> activeMinersFromBase) {
                         activeMinersFromBase1=activeMinersFromBase;

@@ -18,8 +18,6 @@
                 android:id="@+id/back_toprofile"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_marginStart="24dp"
                 android:src="@drawable/left_arrow"/>
 
             <TextView
@@ -139,10 +137,8 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/searchclothes"
                 android:layout_marginTop="8dp"
-                app:tabBackground="?attr/colorOnPrimary"
                 app:tabMode="scrollable"
                 app:tabRippleColor="@android:color/transparent"
-                android:background="?attr/colorOnPrimary"
                 app:tabTextAppearance="@style/AppTabTextAppearanceShop" />
 
 
