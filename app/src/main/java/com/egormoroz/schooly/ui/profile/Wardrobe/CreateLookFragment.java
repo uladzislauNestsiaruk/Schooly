@@ -235,10 +235,10 @@ public class CreateLookFragment extends Fragment {
         viewPager.setAdapter(fragmentAdapter);
         viewPager.setCurrentItem(tabLayoutPosition, false);
 
-        tabLayout.addTab(tabLayout.newTab().setText("Обувь"));
-        tabLayout.addTab(tabLayout.newTab().setText("Одежда"));
-        tabLayout.addTab(tabLayout.newTab().setText("Головные уборы"));
-        tabLayout.addTab(tabLayout.newTab().setText("Акскссуары"));
+        tabLayout.addTab(tabLayout.newTab().setText(getContext().getResources().getText(R.string.shoes)));
+        tabLayout.addTab(tabLayout.newTab().setText(getContext().getResources().getText(R.string.clothes)));
+        tabLayout.addTab(tabLayout.newTab().setText(getContext().getResources().getText(R.string.hats)));
+        tabLayout.addTab(tabLayout.newTab().setText(getContext().getResources().getText(R.string.accessories)));
 
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener(){

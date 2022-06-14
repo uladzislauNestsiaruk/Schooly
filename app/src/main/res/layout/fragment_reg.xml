@@ -65,7 +65,7 @@
             android:layout_marginStart="40dp"
             android:layout_marginTop="-108dp"
             android:layout_marginEnd="40dp"
-            android:background="@drawable/corners30dpwhite"
+            android:background="@drawable/corners20white2dpwhitestroke"
             android:fontFamily="@font/montserratblack"
             android:paddingStart="26dp"
             android:paddingTop="21dp"

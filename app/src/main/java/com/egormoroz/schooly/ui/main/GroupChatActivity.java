@@ -49,7 +49,6 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.squareup.picasso.Picasso;
 
-import org.a3dexample.InputStream;
 
 import java.io.File;
 import java.io.IOException;

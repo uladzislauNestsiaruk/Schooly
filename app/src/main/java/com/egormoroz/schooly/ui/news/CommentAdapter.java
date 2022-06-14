@@ -17,7 +17,6 @@ import com.egormoroz.schooly.ui.profile.ComplainAdapter;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.squareup.picasso.Picasso;
 
-import org.a3dexample.jgltf_model.impl.v1.Image;
 
 import java.util.List;
 

@@ -3,6 +3,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="none"
+        android:overScrollMode="never">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
     <ImageView
         android:id="@+id/back_toshop"
         android:layout_width="wrap_content"
@@ -74,18 +84,17 @@
         android:layout_marginEnd="24dp"
         android:src="@drawable/ic_bag" />
 
-    <TextView
-        android:id="@+id/purchaseNumberViewing"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/shopText"
-        android:layout_marginTop="23dp"
-        android:layout_marginEnd="2dp"
-        android:layout_toLeftOf="@+id/bag"
-        android:fontFamily="@font/montserrat_bold"
-        android:text="144"
-        android:textColor="@color/app_grey"
-        android:textSize="14sp" />
+        <TextView
+            android:id="@+id/purchaseNumberViewing"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/shopText"
+            android:layout_marginTop="23dp"
+            android:layout_marginEnd="2dp"
+            android:layout_toLeftOf="@+id/bag"
+            android:fontFamily="@font/montserrat_bold"
+            android:textColor="@color/app_grey"
+            android:textSize="14sp" />
 
     <ImageView
         android:id="@+id/clothesImagecv"
@@ -159,6 +168,7 @@
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"
         android:layout_marginTop="4dp"
+        android:layout_marginBottom="128dp"
         android:autoLink="all"/>
 
     <TextView
@@ -173,16 +183,20 @@
         android:text="@string/noDescriptipon"
         android:visibility="gone"/>
 
+</RelativeLayout>
+
+    </androidx.core.widget.NestedScrollView>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"
-        android:layout_centerHorizontal="true"
         android:layout_marginBottom="24dp"
-        android:layout_alignParentBottom="true"
-        android:background="@drawable/corners20appcolor">
+        android:background="@drawable/corners20appcolor"
+        android:saveEnabled="false">
 
         <TextView
             android:id="@+id/buyClothesBottom"
@@ -215,26 +229,26 @@
             android:id="@+id/dollarImage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_dollarwhitebig"
             android:layout_centerVertical="true"
             android:layout_marginStart="20dp"
-            android:visibility="gone"/>
+            android:src="@drawable/ic_dollarwhitebig"
+            android:visibility="gone" />
 
         <RelativeLayout
             android:id="@+id/checkBasket"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toLeftOf="@+id/buyClothesBottom"
             android:layout_centerVertical="true"
+            android:layout_marginTop="16dp"
             android:layout_marginEnd="8dp"
-            android:layout_marginTop="16dp">
+            android:layout_toLeftOf="@+id/buyClothesBottom">
 
             <ImageView
                 android:id="@+id/inBasketClothes"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_inbasket"
-                android:visibility="gone"/>
+                android:visibility="gone" />
 
             <ImageView
                 android:id="@+id/notInBasketClothes"
@@ -256,9 +270,5 @@
 
 
     </RelativeLayout>
-
-
-
-
 
 </RelativeLayout>

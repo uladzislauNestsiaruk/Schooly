@@ -1,132 +1,131 @@
 <resources>
     <string name="app_name">Schooly</string>
-
-    <string name="hellosteve">Привет, я Стив!</string>
     <string name="virtualSteve">Твой виртуальный помощник \nSchooly. Чтобы начать работу с\nприложением, нужно пройти\nнесколько простых шагов.\nПриступим!</string>
-    <string name="regOrEnter">Ты уже есть в Schooly? Если да, то войди \nв свой аккаунт, если нет, то \nрегистрируйся!</string>
-    <string name="regSteps">Пройди несколько простых \nшагов регистрации или\nиспользуй свой аккаунт \nв Google Play</string>
+    <string name="hellosteve">Hello, I\'m Steve!</string>
+    <string name="regOrEnter">Are you already at Schooly? If yes, then log \ninto your account, if not, then \nregister!</string>
+    <string name="regSteps">Follow a few simple\nregistration steps or\nuse your Google Play account</string>
     <string name="belarus">from Belarus, with love)</string>
-    <string name="enterFast">Скорее производи вход в\nприложение, а мне нужно\nнемного времени вспомнить,\nгде мы могли видеться</string>
-    <string name="startregtext">Начнем регистрацию!</string>
-    <string name="go1">Шаг 1</string>
-    <string name="whriteyournick">Придумай никнейм</string>
-    <string name="go2">Шаг 2</string>
-    <string name="writephone">Укажи свой номер телефона</string>
-    <string name="go3">Шаг 3</string>
+    <string name="enterFast">Hurry, sign in to the\napplication, and I need\nto remember for a little while\nwhere we could see each other</string>
+    <string name="startregtext">Let\'s start registration!</string>
+    <string name="go1">Step 1</string>
+    <string name="whriteyournick">Come up with a nickname</string>
+    <string name="go2">Step 2</string>
+    <string name="writephone">Enter your phone number</string>
+    <string name="go3">Step 3</string>
     <string name="copy">copy</string>
     <string name="delete">delete</string>
-    <string name="writepassword">Придумай пароль</string>
-    <string name="writepasswordenter">Введи пароль</string>
-    <string name="meetearly">Мы уже знакомы?</string>
-    <string name="phone">Номер</string>
-    <string name="password">Пароль</string>
-    <string name="next">Продолжить</string>
-    <string name="ent">войти</string>
-    <string name="from">через</string>
+    <string name="writepassword">Create a password</string>
+    <string name="writepasswordenter">Enter password</string>
+    <string name="meetearly">Are we already familiar?</string>
+    <string name="phone">Phone number</string>
+    <string name="password">Password</string>
+    <string name="next">Continue</string>
+    <string name="ent">login</string>
+    <string name="from">via</string>
     <string name="googleplay">Google Play</string>
-    <string name="reg">регистрация</string>
-    <string name="redact">Редактировать</string>
+    <string name="reg">registration</string>
+    <string name="redact">Edit</string>
 
-    <string name="main">Главная</string>
+    <string name="main">Home</string>
 
-    <string name="createnickname">Придумай никнейм</string>
+    <string name="createnickname">Come up with a nickname</string>
 
-    <string name="searchfriends">Найди друзей!</string>
+    <string name="searchfriends">Find friends!</string>
 
-    <string name="send">Отправить</string>
+    <string name="send">Send</string>
 
-    <string name="add">Добавить</string>
-    <string name="mes">Сообщение</string>
+    <string name="add">Add</string>
+    <string name="mes">Message</string>
 
-    <string name="codeissended">Код отправлен на номер телефона</string>
-    <string name="writecode">Введи код</string>
-    <string name="sendnewcode">Отправить повторно</string>
+    <string name="codeissended">Code sent to phone number</string>
+    <string name="writecode">Enter code</string>
+    <string name="sendnewcode">Resend</string>
 
-    <string name="warning">Важно!</string>
-    <string name="choosegender">Укажи свой пол:</string>
-    <string name="man">МУЖСКОЙ</string>
-    <string name="woman">ЖЕНСКИЙ</string>
+    <string name="warning">Important!</string>
+    <string name="choosegender">Specify your gender:</string>
+    <string name="man">MALE</string>
+    <string name="woman">FEMALE</string>
 
-    <string name="subscribers">Подписчики</string>
-    <string name="friends">Друзья</string>
-    <string name="looks">Образы</string>
-    <string name="wardrobe">Гардероб</string>
-    <string name="newlook">Новый образ +</string>
+    <string name="subscribers">Subscribers</string>
+    <string name="friends">Friends</string>
+    <string name="looks">Looks</string>
+    <string name="wardrobe">Wardrobe</string>
+    <string name="newlook">New look +</string>
 
-    <string name="settings">Настройки</string>
+    <string name="settings">Settings</string>
 
     <string name="action_delete">Delete</string>
     <string name="action_copy">Copy</string>
 
+    <string name="exclusive1">Exclusive</string>
+    <string name="clothes">Clothes</string>
+    <string name="shoes">Shoes</string>
+    <string name="pants">Pants</string>
+    <string name="shorts">Shorts</string>
+    <string name="belt">Belt</string>
+    <string name="tshirt">T-shirt</string>
+    <string name="shirt">Shirt</string>
+    <string name="longsleeve">Longsleeve</string>
+    <string name="glasses">Glasses</string>
+    <string name="cap">Cap</string>
+    <string name="panama">Panama</string>
+    <string name="skirt">Skirt</string>
+    <string name="top">Top</string>
+    <string name="bag">Shoulder bag</string>
+    <string name="hats">Hats</string>
+    <string name="accessories">Accessories</string>
+    <string name="inbasket">Add to cart</string>
 
-    <string name="clothes">Одежда</string>
-    <string name="shoes">Обувь</string>
-    <string name="pants">Штаны</string>
-    <string name="shorts">Шорты</string>
-    <string name="belt">Ремень</string>
-    <string name="tshirt">Майка</string>
-    <string name="shirt">Рубашка</string>
-    <string name="longsleeve">Лонгслив</string>
-    <string name="glasses">Очки</string>
-    <string name="cap">Кепка</string>
-    <string name="panama">Панама</string>
-    <string name="skirt">Юбка</string>
-    <string name="top">Топ</string>
-    <string name="bag">Сумка через плечо</string>
-    <string name="hats">Головные уборы</string>
-    <string name="accessories">Аксессуары</string>
-    <string name="inbasket">В корзину</string>
-
-    <string name="toolbar_news">Новости</string>
-    <string name="toolbar_people">Люди</string>
-    <string name="toolbar_profile">Профиль</string>
-    <string name="recomindation">Рекомендации</string>
-    <string name="marks">Недавние оценки</string>
+    <string name="toolbar_news">News</string>
+    <string name="toolbar_people">People</string>
+    <string name="toolbar_profile">Profile</string>
+    <string name="recomindation">Recommendations</string>
+    <string name="marks">Recent grades</string>
     <string name="plus">+</string>
 
-    <string name="registration">РЕГИСТРАЦИЯ</string>
-    <string name="enter">ВОЙТИ</string>
-    <string name="zitats">Цитаты</string>
-    <string name="search">Поиск</string>
-    <string name="susriders">Подписчики</string>
+    <string name="registration">REGISTRATION</string>
+    <string name="enter">SIGN IN</string>
+    <string name="zitats">Quotes</string>
+    <string name="search">Search</string>
+    <string name="susriders">Subscribers</string>
 
-    <string name="editing">Редактиовать</string>
-    <string name="changeface">Изменить лицо</string>
-    <string name="usernameediting">Никнейм(смена недоступна)</string>
-    <string name="bio">Описание</string>
-    <string name="agree">Подтвердить</string>
+    <string name="editing">Edit</string>
+    <string name="changeface">Change face</string>
+    <string name="usernameediting">Nickname (change unavailable)</string>
+    <string name="bio">Bio</string>
+    <string name="agree">Confirm</string>
 
-    <string name="nontifications">Уведомления</string>
-    <string name="lichnyechats">Личные сообщения</string>
-    <string name="group">Групповые чаты</string>
-    <string name="profilereact">Действия с профилем(лайки, комментарии и т.д.)</string>
+    <string name="nontifications">Notifications</string>
+    <string name="lichnyechats">Private messages</string>
+    <string name="group">Group chats</string>
+    <string name="profilereact">Profile actions (likes, comments, etc.)</string>
     <string name="likeandsubs">(Лайки, подписки и т.д.)</string>
-    <string name="privacypolicy">Конфиденциальность</string>
-    <string name="closeaccount">Закрытый аккаунт</string>
-    <string name="support">Поддержка</string>
-    <string name="error">Сообщить о проблеме</string>
-    <string name="soobchi">Пожалуйста напиши нам
-        если ты заметил какую-то недоработку</string>
+    <string name="privacypolicy">Privacy policy</string>
+    <string name="closeaccount">Closed account</string>
+    <string name="support">Support</string>
+    <string name="error">Report a problem</string>
+    <string name="soobchi">Please write to us
+         if you notice any bug</string>
     <string name="personaldatastring">Личные данные</string>
-    <string name="nickstring">Никнейм</string>
+    <string name="nickstring">Nickname</string>
     <string name="aboutapp">О приложении</string>
     <string name="emailstring">E-mail</string>
     <string name="passwordstrind">Пароль</string>
-    <string name="message">Сообщения</string>
+    <string name="message">Messages</string>
     <string name="id">id</string>
 
-    <string name="privatemessages">Личные</string>
-    <string name="groupmessages">Беседы</string>
+    <string name="privatemessages">Private</string>
+    <string name="groupmessages">Group</string>
 
 
-    <string name="start_typing_status">Пишет</string>
+    <string name="start_typing_status">Typing</string>
     <string name="stop_typing_status">...</string>
 
-    <string name="messages">Сообщение...</string>
+    <string name="messages">Message...</string>
 
-    <string name="shop">Магазин</string>
+    <string name="shop">Shop</string>
     <string name="tests">Тесты</string>
-    <string name="popular">Популярные</string>
+    <string name="popular">Popular</string>
 
 
     <string name="searchtests">Поиск тестов</string>
@@ -137,115 +136,113 @@
 
 
     <string name="num">318</string>
-    <string name="newnew">Новое</string>
-    <string name="searchitem">Поиск одежды</string>
-    <string name="searchiteminbasket">Поиск одежды в корзине</string>
-    <string name="mining">Майнинг</string>
-    <string name="myminersallcars">МОИ МАЙНЕРЫ</string>
-    <string name="myminers">Мои майнеры</string>
-    <string name="today">Сегодня:</string>
-    <string name="moremoney">Майнить больше</string>
-    <string name="workingminers">Активные майнеры</string>
-    <string name="miners">Майнеры</string>
-    <string name="weak">Слабые</string>
-    <string name="buy">Купить</string>
-    <string name="inhour">в час</string>
-    <string name="noactiveminers">Нет активных майнеров</string>
-    <string name="use">Использовать</string>
-    <string name="upgrade">Улучшить</string>
-    <string name="average">Средние</string>
-    <string name="strong">Сильные</string>
-    <string name="getminer">Приобрести майнер?</string>
-    <string name="yes">Да</string>
-    <string name="no">Нет</string>
+    <string name="newnew">New</string>
+    <string name="searchitem">Search for clothes</string>
+    <string name="searchiteminbasket">Search for clothes in the shopping cart</string>
+    <string name="mining">Mining</string>
+    <string name="myminersallcars">MY MINERS</string>
+    <string name="myminers">My miners</string>
+    <string name="today">Today:</string>
+    <string name="moremoney">Mine more</string>
+    <string name="workingminers">Active miners</string>
+    <string name="miners">Miners</string>
+    <string name="weak">Weak</string>
+    <string name="buy">Buy</string>
+    <string name="inhour">per hour</string>
+    <string name="noactiveminers">No active miners</string>
+    <string name="use">Use</string>
+    <string name="upgrade">Improve</string>
+    <string name="average">Average</string>
+    <string name="strong">Powerful</string>
+    <string name="getminer">Buy a miner?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 
-    <string name="price">Цена:</string>
-    <string name="measure">Примерить</string>
+    <string name="price">Price:</string>
+    <string name="measure">Try on</string>
 
-    <string name="addFr">Добавить </string>
-    <string name="rejectFriend">Отказать</string>
-    <string name="subscribeyou">подписался на тебя</string>
+    <string name="addFr">Add </string>
+    <string name="rejectFriend">Refuse</string>
+    <string name="subscribeyou">subscribed to you</string>
 
-    <string name="account">АККАУНТ</string>
-    <string name="nontsBig">УВЕДОМЛЕНИЯ</string>
+    <string name="account">ACCOUNT</string>
+    <string name="nontsBig">NOTIFICATIONS</string>
 
-    <string name="dataProtect">Защита данных</string>
-    <string name="rules">Правила</string>
-    <string name="change">Изменить</string>
+    <string name="dataProtect">Data protection</string>
+    <string name="rules">Rules</string>
+    <string name="change">Change</string>
     <string name="fromBrest">From Brest to You</string>
 
-    <string name="deleteFriend">Удалить</string>
+    <string name="deleteFriend">Delete</string>
 
-    <string name="subscriptions">Подписки</string>
-    <string name="subscride">Подписаться</string>
-    <string name="unsubscride">Отписаться</string>
+    <string name="subscriptions">Subscriptions</string>
+    <string name="subscride">Subscride</string>
+    <string name="unsubscride">Unsubscribe</string>
 
-    <string name="changepassword">Смена пароля</string>
-    <string name="textEnterUsePassword">Введи действующий пароль</string>
-    <string name="errortext">Неверный пароль</string>
+    <string name="changepassword">Password change</string>
+    <string name="textEnterUsePassword">Please enter a valid password</string>
+    <string name="errortext">Invalid password</string>
+    <string name="сreate">Create</string>
+    <string name="сreateNewPassword">Think of a new password</string>
+    <string name="repeatPassword">Repeat password</string>
+    <string name="passwordNotEquals">Passwords do not match</string>
 
-    <string name="сreateYourFirstLook">Создай свой первый образ!</string>
-    <string name="сreate">Создать</string>
-    <string name="сreateNewPassword">Придумай новый пароль</string>
-    <string name="repeatPassword">Повтори пароль</string>
-    <string name="passwordNotEquals">Пароли не совпадают</string>
+    <string name="myClothes">My clothes</string>
 
-    <string name="myClothes">Моя одежда</string>
+    <string name="firstSubscribe">Subscribe to</string>
+    <string name="closeAccount">This user has a closed account(</string>
 
-    <string name="firstSubscribe">Подпишись на</string>
-    <string name="closeAccount">У этого пользователя закрытый аккаунт(</string>
+    <string name="createFirstClothes">Design clothes</string>
+    <string name="getSchoolyCoin">and get Schooly-coin!</string>
+    <string name="create">Create</string>
 
-    <string name="createFirstClothes">Создавай одежду</string>
-    <string name="getSchoolyCoin">и получай Schooly-coin!</string>
-    <string name="create">Создать</string>
+    <string name="noClothes">No clothes in wardrobe(</string>
 
-    <string name="noClothes">Нет одежды в гардеробе(</string>
+    <string name="noLooksOther">The user has no images(</string>
 
-    <string name="noLooksOther">У пользователя нет образов(</string>
+    <string name="block">Block</string>
+    <string name="save">Save</string>
+    <string name="saved">Saved</string>
+    <string name="complain">Complain</string>
+    <string name="deleteSubscriber">Delete subscriber</string>
 
-    <string name="block">Заблокировать</string>
-    <string name="save">Сохранить</string>
-    <string name="saved">Сохраненное</string>
-    <string name="complain">Пожаловаться</string>
-    <string name="deleteSubscriber">Удалить подписчика</string>
+    <string name="blackList">Black list</string>
 
-    <string name="blackList">Черный список</string>
+    <string name="putAway">Put away</string>
+    <string name="putAwayDone">Removed</string>
+    <string name="emptyBlackList">Blacklist is empty</string>
+    <string name="noSaved">No saved images</string>
+    <string name="emptySubscribersList">No followers :(</string>
+    <string name="writeComment">Write a comment...</string>
+    <string name="sendComment">SEND</string>
+    <string name="emptyCommentsList">No followers</string>
+    <string name="emptySubscriptionList">No subscriptions :(</string>
+    <string name="emptySearchSubscriptionList">In order to transfer coins to another user, you must be subscribed to him</string>
+    <string name="emptySubscriptionListOther">No subscriptions:(</string>
+    <string name="emptySubscribersListOther">No followers:(</string>
 
-    <string name="putAway">Убрать</string>
-    <string name="putAwayDone">Убран</string>
-    <string name="emptyBlackList">Черный список пуст</string>
-    <string name="noSaved">Нет сохранненых образов</string>
-    <string name="emptySubscribersList">Нет подписчиков:(</string>
-    <string name="writeComment">Напиши комментарий...</string>
-    <string name="sendComment">ОТПР.</string>
-    <string name="emptyCommentsList">Нет подписчиков</string>
-    <string name="emptySubscriptionList">Нет подписок:(</string>
-    <string name="emptySearchSubscriptionList">Для того, чтобы перевести коины другому пользователю, необходимо быть на него подписаным</string>
-    <string name="emptySubscriptionListOther">Нет подписок:(</string>
-    <string name="emptySubscribersListOther">Нет подписчиков:(</string>
+    <string name="toComplain">Complain</string>
+    <string name="complainReason">The reason for the complaint against</string>
 
-    <string name="toComplain">Пожаловаться</string>
-    <string name="complainReason">Причина жалобы на</string>
+    <string name="noClothesWardrobe">No clothes in wardrobe:(</string>
 
-    <string name="noClothesWardrobe">Нет одежды в гардеробе:(</string>
+    <string name="exitAccount">Sign out</string>
 
-    <string name="exitAccount">Выйти с аккаунта</string>
+    <string name="textReason">Reason for complaint:</string>
 
-    <string name="textReason">Причина жалобы:</string>
+    <string name="addDescription">Add description</string>
+    <string name="addDescription2">Add description:</string>
 
-    <string name="addDescription">Добавить описание</string>
-    <string name="addDescription2">Добавить описание:</string>
+    <string name="notFound">Nothing found:(</string>
 
-    <string name="notFound">Ничего не найдено:(</string>
+    <string name="newLook">New look</string>
 
-    <string name="newLook">Новый образ</string>
-
-    <string name="character">Персонаж</string>
-    <string name="ready">ГОТОВО</string>
-    <string name="acceptCharacter">Сохранить персонажа</string>
-    <string name="tryOnClothes">Примерить</string>
-    <string name="descriptipon">Описание:</string>
-    <string name="noDescriptipon">Нет описания:(</string>
+    <string name="character">Character</string>
+    <string name="ready">READY</string>
+    <string name="acceptCharacter">Save character</string>
+    <string name="tryOnClothes">Try on</string>
+    <string name="descriptipon">Description:</string>
+    <string name="noDescriptipon">No description :(</string>
 
     <string name="oneTh">1000</string>
     <string name="twoTh">2000</string>
@@ -260,72 +257,72 @@
     <string name="tenD">$14.99</string>
     <string name="twentyD">$19.99</string>
 
-    <string name="payment">Оплата</string>
-    <string name="customer">Покупатель:</string>
-    <string name="purchase">Покупка:</string>
-    <string name="cardData">Данные банковской карты:</string>
+    <string name="payment">Payment</string>
+    <string name="customer">Buyer:</string>
+    <string name="purchase">Purchase:</string>
+    <string name="cardData">Bank card details:</string>
 
-    <string name="messageLimit">Отправка сообщений ограничена</string>
+    <string name="messageLimit">Sending messages is limited</string>
 
     <string name="schoolyPremium">Schooly Premium</string>
-    <string name="buyPremium">Купить подписку</string>
-    <string name="publish">Опубликовать</string>
+    <string name="buyPremium">Buy a subscription</string>
+    <string name="publish">Publish</string>
 
-    <string name="purchases">Продажи</string>
-    <string name="today1">сегодня:</string>
-    <string name="purchasestoday">Продажи сегодня:</string>
-    <string name="profittoday">Прибыль за сегодня:</string>
-    <string name="allpurchases">Общие продажи:</string>
-    <string name="allprofit">Общая прибыль:</string>
-    <string name="profit">Прибыль(24h):</string>
-    <string name="total">Всего:</string>
-    <string name="lookPrice">Стоимость образа:</string>
-    <string name="addDesk">Добавить описание...</string>
+    <string name="purchases">Sales</string>
+    <string name="today1">today:</string>
+    <string name="purchasestoday">Sales today:</string>
+    <string name="profittoday">Profit for today:</string>
+    <string name="allpurchases">General sales:</string>
+    <string name="allprofit">Total profit:</string>
+    <string name="profit">Profit(24h):</string>
+    <string name="total">Total:</string>
+    <string name="lookPrice">Image cost:</string>
+    <string name="addDesk">Add description...</string>
 
-    <string name="sellClothesByDollars">Продавай одежду за реальные деньги</string>
-    <string name="moreCoinsMining">Увеличь заработок с майнинга</string>
-    <string name="eightyPerSentFromClothes">Получай 80% с продажи одежды</string>
-    <string name="closePremium">Отмена подписки в любой момент</string>
-    <string name="exclusive">Эксклюзивная одежда</string>
+    <string name="sellClothesByDollars">Sell clothes for real money</string>
+    <string name="moreCoinsMining">Increase earnings from mining</string>
+    <string name="eightyPerSentFromClothes">Get 80% from the sale of clothes</string>
+    <string name="closePremium">Cancel subscription at any time</string>
+    <string name="exclusive">Exclusive clothing</string>
 
-    <string name="createClothes">Создать одежду</string>
+    <string name="createClothes">Create clothes</string>
 
-    <string name="creatingClothes">Создание одежды</string>
+    <string name="creatingClothes">Making clothes</string>
 
-    <string name="statistics">Статистика:</string>
+    <string name="statistics">Statistics:</string>
 
-    <string name="info">Информация</string>
-    <string name="disconnectNonts">Отключить уведомления</string>
-    <string name="deleteHistory">Отчистить историю</string>
-    <string name="material">Материалы диалога</string>
+    <string name="info">Information</string>
+    <string name="disconnectNonts">Disable notifications</string>
+    <string name="deleteHistory">Clear the history</string>
+    <string name="material">Dialogue materials</string>
 
-    <string name="createAndGet">Создавай свою одежду и зарабатывай коины</string>
-    <string name="getMoney">Получай от 60% с продаж модели</string>
+    <string name="createAndGet">Design your clothes and earn coins</string>
+    <string name="getMoney">Get from 60% from model sales</string>
 
-    <string name="before">Перед публикайией модели следует ознакимиться с</string>
-    <string name="criteria">критериями</string>
-    <string name="enterTitleText">Введи название одежды:</string>
-    <string name="addModelFile">Добавь файл модели:</string>
-    <string name="modelFile">Файл модели:</string>
-    <string name="addModelImage">Добавь фото модели:</string>
-    <string name="clothesType">Выбери тип одежды:</string>
-    <string name="clothesTypeText">Тип одежды:</string>
-    <string name="currencyType">Тип валюты:</string>
-    <string name="clothesPrice">Введи цену одежды:</string>
-    <string name="wayToFile">Путь к файлу</string>
-    <string name="sendApplication">Отправить заявку</string>
+    <string name="before">Before publishing the model, you should familiarize yourself with</string>
+    <string name="criteria">criteria</string>
+    <string name="enterTitleText">Enter the name of the clothing:</string>
+    <string name="addModelFile">Add model file:</string>
+    <string name="modelFile">Model file:</string>
+    <string name="addModelImage">Add model photo:</string>
+    <string name="clothesType">Choose the type of clothing:</string>
+    <string name="clothesTypeText">Clothing type:</string>
+    <string name="currencyType">Currency type:</string>
+    <string name="clothesPrice">Enter the price of clothes:</string>
+    <string name="wayToFile">The path to the file</string>
+    <string name="sendApplication">Submit an application</string>
 
-    <string name="fitting">Примерка</string>
+    <string name="fitting">Fitting</string>
 
-    <string name="resale">Продать</string>
-    <string name="present">Подарить</string>
+    <string name="resale">Sell</string>
+    <string name="present">Give</string>
 
     <string name="schoolyCoin">Schooly Coin</string>
-    <string name="dollar">Dollar (необходим Premium)</string>
+    <string name="dollar">Dollar (requires Premium)</string>
 
-    <string name="transferCoins">Перевести коины</string>
+    <string name="transferCoins">Transfer coins</string>
 
-    <string name="sendCoins">Перевод коинов</string>
+    <string name="sendCoins">Coin transfer</string>
 
     <string name="toWhom">Кому:</string>
     <string name="toWhomTransfer">Кому перевод:</string>
