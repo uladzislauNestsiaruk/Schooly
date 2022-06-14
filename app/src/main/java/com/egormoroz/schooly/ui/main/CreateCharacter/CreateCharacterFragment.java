@@ -147,14 +147,14 @@ public class CreateCharacterFragment extends Fragment {
         fragmentAdapter = new FragmentAdapter(fm, getLifecycle());
         viewPager.setAdapter(fragmentAdapter);
 
-        tabLayout.addTab(tabLayout.newTab().setText("Цвет кожи"));
-        tabLayout.addTab(tabLayout.newTab().setText("Тело"));
-        tabLayout.addTab(tabLayout.newTab().setText("Форма лица"));
-        tabLayout.addTab(tabLayout.newTab().setText("Прическа"));
-        tabLayout.addTab(tabLayout.newTab().setText("Брови"));
-        tabLayout.addTab(tabLayout.newTab().setText("Глаза"));
-        tabLayout.addTab(tabLayout.newTab().setText("Нос"));
-        tabLayout.addTab(tabLayout.newTab().setText("Губы"));
+        tabLayout.addTab(tabLayout.newTab().setText(getContext().getResources().getText(R.string.skincolour)));
+        tabLayout.addTab(tabLayout.newTab().setText(getContext().getResources().getText(R.string.body)));
+        tabLayout.addTab(tabLayout.newTab().setText(getContext().getResources().getText(R.string.faceshape)));
+        tabLayout.addTab(tabLayout.newTab().setText(getContext().getResources().getText(R.string.hairstyle)));
+        tabLayout.addTab(tabLayout.newTab().setText(getContext().getResources().getText(R.string.brows)));
+        tabLayout.addTab(tabLayout.newTab().setText(getContext().getResources().getText(R.string.eyes)));
+        tabLayout.addTab(tabLayout.newTab().setText(getContext().getResources().getText(R.string.nose)));
+        tabLayout.addTab(tabLayout.newTab().setText(getContext().getResources().getText(R.string.lips)));
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override

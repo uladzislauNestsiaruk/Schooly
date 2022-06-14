@@ -68,7 +68,7 @@ public class MyMinersAdapter extends RecyclerView.Adapter<MyMinersAdapter.ViewHo
         for (int i=0;i<userInformation.getMiners().size();i++){
             Miner miner1=userInformation.getMiners().get(i);
             if(String.valueOf(miner1.getMinerPrice()).equals(String.valueOf(miner.getMinerPrice()))){
-                holder.use.setText("Используется");
+                holder.use.setText(holder.use.getContext().getResources().getText(R.string.used));
                 holder.use.setBackgroundResource(R.drawable.corners14dpappcolor2dpstroke);
                 holder.use.setTextColor(Color.parseColor("#F3A2E5"));
             }
@@ -76,15 +76,15 @@ public class MyMinersAdapter extends RecyclerView.Adapter<MyMinersAdapter.ViewHo
         holder.use.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(holder.use.getText().toString().equals("Используется")){
+                if(holder.use.getText().toString().equals(holder.use.getContext().getResources().getText(R.string.used))){
 
                 }else{
                     if(userInformation.getMiners().size()==5){
                         holder.use.setBackgroundResource(R.drawable.corners14grey);
-                        Toast.makeText(v.getContext(), "Пять майнеров уже активны",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(v.getContext(), v.getContext().getResources().getText(R.string.fiveminersarealreadyactive),Toast.LENGTH_SHORT).show();
                     }else {
                         int pos=holder.getAdapterPosition();
-                        holder.use.setText("Используется");
+                        holder.use.setText(holder.use.getContext().getResources().getText(R.string.used));
                         holder.use.setBackgroundResource(R.drawable.corners14dpappcolor2dpstroke);
                         holder.use.setTextColor(Color.parseColor("#F3A2E5"));
                         firebaseModel.getUsersReference().child(nick)

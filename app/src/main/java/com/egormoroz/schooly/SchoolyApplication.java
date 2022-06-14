@@ -94,7 +94,7 @@ public class SchoolyApplication extends Application implements Application.Activ
                             public void run() {
                                 if(activeMinersFromBase1.size()>-1){
                                     if(miningCheckValue==0){
-                                        miningMoneyFun(nickname,activeMinersFromBase1);
+                                        miningMoneyFun(nick,activeMinersFromBase1);
                                         Log.d("#####", "goofffffd" + todayMining);
                                     }
                                 }

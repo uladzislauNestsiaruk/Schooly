@@ -167,7 +167,7 @@ public class MiningFragment extends Fragment {
             @Override
             public void onItemClick(int position,Miner miner,String type,long money) {
                 if(money<miner.getMinerPrice()){
-                    showDialog("Не хватает коинов" );
+                    showDialog(getContext().getResources().getString(R.string.notenoughcoins) );
                 }else{
                     showDialog(position,miner,type,money);
                 }
@@ -177,7 +177,7 @@ public class MiningFragment extends Fragment {
             @Override
             public void onItemClick(int position, Miner miner, String type,long money) {
                 if(money<miner.getMinerPrice()){
-                    showDialog("Не хватает коинов" );
+                    showDialog(getContext().getResources().getString(R.string.notenoughcoins));
                 }else{
                     showDialog(position,miner,type,money);
                 }
@@ -187,7 +187,7 @@ public class MiningFragment extends Fragment {
             @Override
             public void onItemClick(int position, Miner miner, String type,long money) {
                 if(money<miner.getMinerPrice()){
-                    showDialog("Не хватает коинов" );
+                    showDialog(getContext().getResources().getString(R.string.notenoughcoins));
                 }else{
                     showDialog(position,miner,type,money);
                 }
@@ -275,7 +275,7 @@ public class MiningFragment extends Fragment {
                                         RecentMethods.setCurrentFragment(MyMinersFragment.newInstance(userInformation,bundle), getActivity());
                                     }
                                 });
-                                emptyActiveMiners.setText("Добавь активные майнеры!");
+                                emptyActiveMiners.setText(getContext().getResources().getText(R.string.addactiveminers));
                             }else {
                                 emptyActiveMiners.setVisibility(View.GONE);
                                 addActiveMiners.setVisibility(View.GONE);
@@ -298,7 +298,7 @@ public class MiningFragment extends Fragment {
                         RecentMethods.setCurrentFragment(MyMinersFragment.newInstance(userInformation,bundle), getActivity());
                     }
                 });
-                emptyActiveMiners.setText("Добавь активные майнеры!");
+                emptyActiveMiners.setText(getContext().getResources().getText(R.string.addactiveminers));
             }else {
                 emptyActiveMiners.setVisibility(View.GONE);
                 addActiveMiners.setVisibility(View.GONE);

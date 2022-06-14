@@ -41,12 +41,12 @@ public class TransferHistoryAdapter extends RecyclerView.Adapter<TransferHistory
         Transfer transfer=transfers.get(position);
         holder.fromWho.setText(transfer.getWho());
         if (transfer.getType().equals("from")){
-            holder.type.setText("Получение");
+            holder.type.setText(holder.type.getContext().getResources().getText(R.string.receipt));
             holder.sum.setTextColor(Color.parseColor("#53B35C"));
             holder.sum.setText("+"+String.valueOf(transfer.getSum()));
             holder.image.setImageResource(R.drawable.ic_greenschoolycoin);
         }else {
-            holder.type.setText("Перевод");
+            holder.type.setText(holder.type.getContext().getResources().getText(R.string.translation));
             holder.sum.setTextColor(Color.parseColor("#D0D0D0"));
             holder.sum.setText("-"+String.valueOf(transfer.getSum()));
             holder.image.setImageResource(R.drawable.ic_schoolycoin24dpgrey);

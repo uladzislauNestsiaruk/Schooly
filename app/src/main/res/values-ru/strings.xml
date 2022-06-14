@@ -149,7 +149,7 @@
     <string name="miners">Майнеры</string>
     <string name="weak">Слабые</string>
     <string name="buy">Купить</string>
-    <string name="inhour">в час</string>
+    <string name="inhour"> в час</string>
     <string name="noactiveminers">Нет активных майнеров</string>
     <string name="use">Использовать</string>
     <string name="upgrade">Улучшить</string>
@@ -389,7 +389,7 @@
     <string name="balance">Баланс:</string>
     <string name="shareProfile">Поделиться этим профилем</string>
     <string name="exclusiveText">Эксклюзивная одежда:</string>
-    <string name="noExclusive">Для просмотра премиум одежды необходимо быть подписаным на Schooly Premium</string>
+    <string name="noExclusive">Для просмотра премиум одежды необходимо быть подписанным на Schooly Premium</string>
     <string name="noClothesInBasket">Нет одежды в корзине:(</string>
     <string name="writeMessage">Введи сообщение...</string>
     <string name="instagram">Инстаграм</string>
@@ -423,6 +423,30 @@
     <string name="clothesApplication">Заявка на одежду может обрабатываться несколько дней. После обработки мы пришлем вам ответ.</string>
     <string name="loading">Загрузка...</string>
     <string name="userNotsearch">Пользователь не найден:(</string>
+    <string name="pay">Оплатить</string>
+    <string name="wrongamountentered">Неправильно введена сумма</string>
+    <string name="specifythetransferamount">Укажите сумму перевода</string>
+    <string name="transferamountmustbegreaterthanzero">Сумма перевода должна быть больше нуля</string>
+    <string name="insufficientfundstotransfer">Недостаточно средств для перевода</string>
+    <string name="translationdone">Перевод выполнен</string>
+    <string name="receipt">Поступление</string>
+    <string name="translation">Перевод</string>
+    <string name="nose">Нос</string>
+    <string name="lips">Губы</string>
+    <string name="eyes">Глаза</string>
+    <string name="brows">Брови</string>
+    <string name="skincolour">Цвет кожи</string>
+    <string name="faceshape">Форма лица</string>
+    <string name="body">Тело</string>
+    <string name="hairstyle">Прическа</string>
+    <string name="notactive">Не активен</string>
+    <string name="purchased">Куплено</string>
+    <string name="minerpurchased">Майнер куплен</string>
+    <string name="notenoughcoins">Не хватает коинов</string>
+    <string name="addactiveminers">Добавь активные майнеры!</string>
+    <string name="used">Используется</string>
+    <string name="fiveminersarealreadyactive">Пять майнеров уже активны</string>
+
 
 
 

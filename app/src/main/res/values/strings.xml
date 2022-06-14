@@ -148,7 +148,7 @@
     <string name="miners">Miners</string>
     <string name="weak">Weak</string>
     <string name="buy">Buy</string>
-    <string name="inhour">per hour</string>
+    <string name="inhour">/hour</string>
     <string name="noactiveminers">No active miners</string>
     <string name="use">Use</string>
     <string name="upgrade">Improve</string>
@@ -324,104 +324,127 @@
 
     <string name="sendCoins">Coin transfer</string>
 
-    <string name="toWhom">Кому:</string>
-    <string name="toWhomTransfer">Кому перевод:</string>
-    <string name="sum">Сумма:</string>
-    <string name="transfer">Перевести</string>
-    <string name="transferHistory">История переводов</string>
-    <string name="plusCoins">Поступление</string>
-    <string name="notransfer">Нет совершенных переводов</string>
+    <string name="toWhom">To whom:</string>
+    <string name="toWhomTransfer">To whom transfer:</string>
+    <string name="sum">Sum:</string>
+    <string name="transfer">Translate</string>
+    <string name="transferHistory">Translation history</string>
+    <string name="plusCoins">Admission</string>
+    <string name="notransfer">No perfect translations</string>
 
-    <string name="gotocreate">Перейти к созданию</string>
+    <string name="gotocreate">Go to creation</string>
 
-    <string name="coins">Коины</string>
+    <string name="coins">Coins</string>
 
-    <string name="uniqueClothes">Создавай уникальные и неповторимые модели</string>
-    <string name="eightyPerCent">Получай до 80% от стоимости одежды с продажи</string>
-    <string name="giveClothes">Дари одежду друзьям</string>
-    <string name="earn">Зарабатывай реальные деньги и Schooly-коины</string>
+    <string name="uniqueClothes">Create unique and inimitable models</string>
+    <string name="eightyPerCent">Get up to 80% of the sale price of clothes</string>
+    <string name="giveClothes">Give clothes to friends</string>
+    <string name="earn">Earn real money and schooly coins</string>
 
     <string name="ten">+10%</string>
     <string name="twenty">+20%</string>
     <string name="fifty">+50%</string>
-    <string name="toSum">к сумме, намайненной</string>
-    <string name="forDay">за день</string>
+    <string name="toSum">to the amount mined</string>
+    <string name="forDay">per day</string>
 
-    <string name="buyfor1">Купить за 1.99$</string>
-    <string name="buyfor2">Купить за 2.99$</string>
-    <string name="buyfor5">Купить за 4.99$</string>
+    <string name="buyfor1">Buy for 1.99$</string>
+    <string name="buyfor2">Buy for 2.99$</string>
+    <string name="buyfor5">Buy for 4.99$</string>
 
-    <string name="criterias">Критерии</string>
+    <string name="criterias">Criteria</string>
 
-    <string name="noClothesTitle">Название не введено</string>
+    <string name="noClothesTitle">Title not entered</string>
 
-    <string name="noFile">Добавь файл модели</string>
-    <string name="noPhoto">Добавь фото модели</string>
-    <string name="noSum">Введи цену одежды</string>
+    <string name="noFile">Add model file</string>
+    <string name="noPhoto">Add model photo</string>
+    <string name="noSum">Enter the price of the clothes</string>
 
-    <string name="presentClothes">Подарить</string>
-    <string name="presentClothesText">Подарить одежду</string>
+    <string name="presentClothes">Give</string>
+    <string name="presentClothesText">Вonate clothes</string>
 
-    <string name="requestAnswerMain">Ответ на заявку</string>
-    <string name="title">Название:</string>
+    <string name="requestAnswerMain">Application response</string>
+    <string name="title">Name:</string>
 
-    <string name="totalProfitText">Общая прибыль за сегодня:</string>
-    <string name="totalPurchaseText">Общие продажи за сегодня:</string>
-    <string name="clothes2">Одежда:</string>
+    <string name="totalProfitText">Total profit for today:</string>
+    <string name="totalPurchaseText">Total sales for today:</string>
+    <string name="clothes2">Clothing:</string>
 
-    <string name="help">ПОМОЩЬ</string>
+    <string name="help">HELP</string>
 
-    <string name="requestAnswer">Ответ на заявку:</string>
-    <string name="reasonAnswer">Причина отказа:</string>
-    <string name="answer">Ответить</string>
-    <string name="adding">Добавление:</string>
-    <string name="clothesCreators">Создатели одежды</string>
-    <string name="clothesCreators2">Создатели одежды:</string>
+    <string name="requestAnswer">Application response:</string>
+    <string name="reasonAnswer">Rejection reason:</string>
+    <string name="answer">Reply</string>
+    <string name="adding">Addendum:</string>
+    <string name="clothesCreators">Clothing Makers</string>
+    <string name="clothesCreators2">Clothing creators:</string>
 
-    <string name="lookConstituents">Составляющие образа:</string>
+    <string name="lookConstituents">Components of the image:</string>
 
-    <string name="good">Хорошо</string>
-    <string name="allFields">Необходимо заполнить все поля:)</string>
-    <string name="searchMyClothes">Поиск моей одежды</string>
-    <string name="noMyClothes">Не удалось найти одежду:(</string>
-    <string name="share">Поделиться</string>
-    <string name="balance">Баланс:</string>
-    <string name="shareProfile">Поделиться этим профилем</string>
-    <string name="exclusiveText">Эксклюзивная одежда:</string>
-    <string name="noExclusive">Для просмотра премиум одежды необходимо быть подписаным на Schooly Premium</string>
-    <string name="noClothesInBasket">Нет одежды в корзине:(</string>
-    <string name="writeMessage">Введи сообщение...</string>
-    <string name="instagram">Инстаграм</string>
+    <string name="good">Good</string>
+    <string name="allFields">All fields must be filled in :)</string>
+    <string name="searchMyClothes">Searching for my clothes</string>
+    <string name="noMyClothes">Can\'t find clothes:(</string>
+    <string name="share">Share</string>
+    <string name="balance">Balance:</string>
+    <string name="shareProfile">Share this profile</string>
+    <string name="exclusiveText">Exclusive clothes:</string>
+    <string name="noExclusive">To view premium clothes, you must be a subscriber to Schooly Premium</string>
+    <string name="noClothesInBasket">No clothes in cart :(</string>
+    <string name="writeMessage">Enter a message...</string>
+    <string name="instagram">Instagram</string>
     <string name="story">Story</string>
-    <string name="telegram">Телеграм</string>
-    <string name="elseways">Еще</string>
-    <string name="noComment">Нет комментариев:(</string>
-    <string name="correctType">1. Выбранный тип одежды должен соответствовать предоставленной модели</string>
-    <string name="correctPhoto">2. Фото модели должно соответствовать предоставленному файлу</string>
-    <string name="correctFormat">3. Формат фото только png. Заявка на публикацию одежды может быть отклонена
-    при предоставлении фото в плохом качестве</string>
-    <string name="appStyle">4. Важно! Заявляемая одежда должна придерживаться стилистике
-    приложения. Одежда не должна быть слишком реалистичной или малореалистичной</string>
-    <string name="model">5. Вес модели не должен превышать 10мб</string>
-    <string name="pricePolicy">6. Придерживайтесь ценовой политике магазина одежды. Не заявляйте модели с очень
-    высокой ценой, в таком случае заявка будет отклонена</string>
-    <string name="plagiarism">7. Заявки одежды, схожей с ранее опубликованной одеждой других пользователей
-    , не одобряются</string>
-    <string name="textOnClothes">8. Нельзя изображать запрещенные знаки и чужие товарные знаки, писать названия запрещенных
-    организаций и оскорбительные тексты на одежде</string>
-    <string name="exclusiveClothes">9. Если вы помечаете одежду как эксклюзивную, это значит, что ее смогут видеть
-    и покупать только обладатели Schooly Premium</string>
-    <string name="paidClothes">10. При выборе типа валюты "доллар" пользователи смогут
-    покупать заявляемую одежду только за реальные деньги. Ваша прибыть с продажи данной одежды
-    будет тоже в реальной валюте</string>
-    <string name="cantSellClothes">К сожалению, в данный момент эта функция недоступна. Она появится в следующих обновлениях:)</string>
-    <string name="buyClothes">Купить предмет?</string>
-    <string name="buyFirstMiner">Купи свой первый майнер!</string>
-    <string name="exclusivePremium">Только пользователи с подпиской Schooly Premium смогут купить эту одежду</string>
-    <string name="sendClothesApplication">Отправить заявку</string>
-    <string name="clothesApplication">Заявка на одежду может обрабатываться несколько дней. После обработки мы пришлем вам ответ.</string>
-    <string name="loading">Загрузка...</string>
-    <string name="userNotsearch">Пользователь не найден:(</string>
+    <string name="telegram">Telegram</string>
+    <string name="elseways">More</string>
+    <string name="noComment">No comments yet:(</string>
+    <string name="correctType">1. The type of clothing chosen must match the model provided</string>
+    <string name="correctPhoto">2. The photo of the model must match the provided file</string>
+    <string name="correctFormat">3. Photo format is only png. The application for the publication of clothing may be rejected
+     when providing a photo in poor quality</string>
+    <string name="appStyle">4. Important! The declared clothes must adhere to the style
+     applications. Clothing should not be too realistic or unrealistic.</string>
+    <string name="model">5. The weight of the model should not exceed 10mb</string>
+    <string name="pricePolicy">6. Stick to the price policy of the clothing store. Do not claim models with very
+     high price, in which case the application will be rejected</string>
+    <string name="plagiarism">7. Submissions of clothing similar to previously published clothing of other users
+     are not approved</string>
+    <string name="textOnClothes">8. You can not depict prohibited signs and other people\'s trademarks, write the names of prohibited
+     organizations and offensive texts on clothes</string>
+    <string name="exclusiveClothes">9. If you mark clothes as exclusive, it means that they can be seen.
+     and buy only Schooly Premium owners</string>
+    <string name="paidClothes">10. When choosing the currency type "dollar", users will be able to
+     buy the declared clothes only for real money. Your profit from the sale of this clothing
+     will also be in real currency</string>
+    <string name="cantSellClothes">Unfortunately, this feature is currently not available. It will appear in the next updates :)</string>
+    <string name="buyClothes">Buy item?</string>
+    <string name="buyFirstMiner">Buy your first miner!</string>
+    <string name="exclusivePremium">Only users with a Schooly Premium subscription will be able to buy these clothes</string>
+    <string name="sendClothesApplication">Submit an application</string>
+    <string name="clothesApplication">An application for clothes can be processed for several days. After processing, we will send you a response.</string>
+    <string name="loading">Loading...</string>
+    <string name="userNotsearch">User is not found:(</string>
+    <string name="pay">Pay</string>
+    <string name="wrongamountentered">Wrong amount entered</string>
+    <string name="specifythetransferamount">Specify the transfer amount</string>
+    <string name="transferamountmustbegreaterthanzero">Transfer amount must be greater than zero</string>
+    <string name="insufficientfundstotransfer">Not enough coins to transfer</string>
+    <string name="translationdone">Translation done</string>
+    <string name="receipt">Receipt</string>
+    <string name="translation">Translation</string>
+    <string name="nose">Nose</string>
+    <string name="lips">Lips</string>
+    <string name="eyes">Eyes</string>
+    <string name="brows">Brows</string>
+    <string name="skincolour">Skin colour</string>
+    <string name="faceshape">Face shape</string>
+    <string name="body">Body</string>
+    <string name="hairstyle">Hairstyle</string>
+    <string name="notactive">Not active</string>
+    <string name="purchased">Purchased</string>
+    <string name="minerpurchased">Miner purchased</string>
+    <string name="notenoughcoins">Not enough coins</string>
+    <string name="addactiveminers">Add active miners!</string>
+    <string name="used">Used</string>
+    <string name="fiveminersarealreadyactive">Five miners are already active</string>
 
 
 

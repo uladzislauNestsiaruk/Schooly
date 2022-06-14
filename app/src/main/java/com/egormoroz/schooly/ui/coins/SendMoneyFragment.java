@@ -109,22 +109,22 @@ public class SendMoneyFragment extends Fragment {
     public void sendMoney(){
         sumText=sum.getText().toString();
         if(sumText.contains("-")){
-            Toast.makeText(getContext(), "Неправильно введена сумма", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getContext().getResources().getText(R.string.wrongamountentered), Toast.LENGTH_SHORT).show();
         }else{
             if (sumText.length()==0){
-                Toast.makeText(getContext(), "Укажите сумму перевода", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getContext().getResources().getText(R.string.specifythetransferamount), Toast.LENGTH_SHORT).show();
             }else {
                 sumLong=Long.parseLong(String.valueOf(sumText));
                 if(sumLong==0){
-                    Toast.makeText(getContext(), "Сумма перевода должна быть больше нуля", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), getContext().getResources().getText(R.string.transferamountmustbegreaterthanzero), Toast.LENGTH_SHORT).show();
                 }else if(sumLong>userInformation.getmoney()){
-                    Toast.makeText(getContext(), "Недостаточно средств для перевода", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), getContext().getResources().getText(R.string.insufficientfundstotransfer), Toast.LENGTH_SHORT).show();
                 }else if(sumLong<userInformation.getmoney() && !sumText.equals("0")){
                     firebaseModel.getUsersReference().child(otherUserNick).child("money")
                             .setValue(sumLong+moneyBaseOther);
                     firebaseModel.getUsersReference().child(nick).child("money")
                             .setValue(userInformation.getmoney()-sumLong);
-                    Toast.makeText(getContext(), "Перевод выполнен", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), getContext().getResources().getText(R.string.translationdone), Toast.LENGTH_SHORT).show();
                     String num=firebaseModel.getUsersReference().child(otherUserNick).child("transferHistory")
                             .push().getKey();
                     firebaseModel.getUsersReference().child(otherUserNick).child("transferHistory")

@@ -58,14 +58,14 @@ public class AverageMinersAdapter extends RecyclerView.Adapter<AverageMinersAdap
         nick=userInformation.getNick();
         Miner miner=listAdapterAverageMiner.get(position);
         holder.minerPrice.setText(String.valueOf(miner.getMinerPrice()));
-        holder.inHour.setText("+"+String.valueOf(miner.getInHour()+"S в час"));
+        holder.inHour.setText("+"+String.valueOf(miner.getInHour()+"S"+holder.inHour.getContext().getResources().getString(R.string.inhour)));
         String minerPriceText= (String) holder.minerPrice.getText();
         holder.minerImage.setVisibility(View.VISIBLE);
         Picasso.get().load(miner.getMinerImage()).into(holder.minerImage);
         for(int i=0;i<userInformation.getMyMiners().size();i++){
             Miner miner1=userInformation.getMyMiners().get(i);
             if(String.valueOf(miner1.getMinerPrice()).equals(String.valueOf(miner.getMinerPrice()))){
-                holder.buy.setText("Куплено");
+                holder.buy.setText(holder.buy.getContext().getResources().getText(R.string.purchased));
                 holder.buy.setBackgroundResource(R.drawable.corners14grey);
             }
         }
@@ -78,7 +78,7 @@ public class AverageMinersAdapter extends RecyclerView.Adapter<AverageMinersAdap
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         if(snapshot.exists()){
-                            Toast.makeText(v.getContext(), "Майнер куплен", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(v.getContext(), v.getContext().getResources().getText(R.string.minerpurchased), Toast.LENGTH_SHORT).show();
                         }else{
                             int pos=holder.getAdapterPosition();
                             itemClickListener.onItemClick(pos,miner,"medium",userInformation.getmoney());

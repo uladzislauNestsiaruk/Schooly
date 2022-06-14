@@ -59,7 +59,7 @@ public class ActiveMinersAdapter extends RecyclerView.Adapter<ActiveMinersAdapte
             public void onClick(View v) {
                 firebaseModel.getUsersReference().child(nick)
                         .child("activeMiners").child(String.valueOf(miner.getMinerPrice())).removeValue();
-                holder.putAway.setText("Не активен");
+                holder.putAway.setText(holder.putAway.getContext().getResources().getText(R.string.notactive));
             }
         });
     }

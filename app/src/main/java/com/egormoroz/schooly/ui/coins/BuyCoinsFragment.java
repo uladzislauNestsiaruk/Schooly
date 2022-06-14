@@ -62,7 +62,7 @@ public class BuyCoinsFragment extends Fragment {
         });
         purchase.setText("+"+schoolyCoin);
         textAcceptPayment=view.findViewById(R.id.textAcceptPayment);
-        textAcceptPayment.setText("Оплатить "+dollar);
+        textAcceptPayment.setText(getContext().getResources().getText(R.string.pay)+dollar);
         backImage=view.findViewById(R.id.back_coins);
 
     }
