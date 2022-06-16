@@ -163,7 +163,7 @@
 
     <string name="addFr">Add </string>
     <string name="rejectFriend">Refuse</string>
-    <string name="subscribeyou">subscribed to you</string>
+    <string name="subscribeyou"> subscribed to you</string>
 
     <string name="account">ACCOUNT</string>
     <string name="nontsBig">NOTIFICATIONS</string>
@@ -445,6 +445,26 @@
     <string name="addactiveminers">Add active miners!</string>
     <string name="used">Used</string>
     <string name="fiveminersarealreadyactive">Five miners are already active</string>
+    <string name="incorrectlyenteredclothingprice">Incorrectly entered clothing price</string>
+    <string name="applicationsent">Application sent</string>
+    <string name="givetext">to</string>
+    <string name="givealreadytext"></string>
+    <string name="alreadнhasthisgift"> already has this gift</string>
+    <string name="giftsent">Gift sent </string>
+    <string name="themodelhasbeenadded">The model has been added to the Schooly clothing store</string>
+    <string name="addrequestdenied">Add request denied</string>
+    <string name="gaveyou"> gave you </string>
+    <string name="moveto">Move to</string>
+    <string name="applicationreceivedru"></string>
+    <string name="applicationreceiveden">\'s application received a response</string>
+    <string name="translatedtoyou"> translated to you </string>
+    <string name="boughtfromyou">bought from you</string>
+    <string name="added">Added</string>
+    <string name="wantstofollowyou"> wants to follow you</string>
+    <string name="nonotificationyet">No notification yet :)</string>
+    <string name="itemsincart">Items in cart:</string>
+    <string name="itempurchased">Item purchased</string>
+    <string name="itemalreadypurchased">Item already purchased</string>
 
 
 

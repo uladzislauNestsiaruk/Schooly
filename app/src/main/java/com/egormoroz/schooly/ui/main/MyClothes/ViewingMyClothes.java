@@ -161,7 +161,6 @@ public class ViewingMyClothes extends Fragment {
                 });
                 clothesTitleCV.setText(clothes.getClothesTitle());
                 purchaseTodayString=String.valueOf(clothesViewing.getPurchaseToday());
-                Log.d("###", "h "+purchaseTodayString);
                 if(clothes.getPurchaseToday()<1000){
                     purchaseToday.setText(String.valueOf(clothes.getPurchaseToday()));
                 }else if(clothes.getPurchaseToday()>1000 && clothes.getPurchaseToday()<10000){

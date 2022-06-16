@@ -229,7 +229,7 @@ public class ViewingClothesPopular extends Fragment {
             @Override
             public void onClick(View v) {
                 if (a==3){
-                    showDialogAlreadyBuy("Предмет куплен");
+                    showDialogAlreadyBuy(getContext().getResources().getText(R.string.itempurchased).toString());
                 }else {
                     showDialog();
                 }
@@ -249,7 +249,7 @@ public class ViewingClothesPopular extends Fragment {
                             DataSnapshot snapshot= task.getResult();
                             if(snapshot.exists()){
                                 a=3;
-                                showDialogBasket("Предмет уже куплен");
+                                showDialogBasket(getContext().getResources().getText(R.string.itemalreadypurchased).toString());
                             }else {}
                             if(a!=0 && a!=3){
                                 if(a==1){
@@ -313,9 +313,9 @@ public class ViewingClothesPopular extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists()){
-                    buyClothesBottom.setText("Куплено");
+                    buyClothesBottom.setText(getContext().getResources().getText(R.string.purchased));
                 }else {
-                    buyClothesBottom.setText("Купить");
+                    buyClothesBottom.setText(getContext().getResources().getText(R.string.buy));
                 }
             }
 
@@ -579,7 +579,7 @@ public class ViewingClothesPopular extends Fragment {
                                 if(task.isSuccessful()){
                                     DataSnapshot snapshot= task.getResult();
                                     if(snapshot.exists()){
-                                        Toast.makeText(getContext(), "Предмет куплен", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(getContext(), getContext().getResources().getText(R.string.itempurchased), Toast.LENGTH_SHORT).show();
                                     }else {
                                         firebaseModel.getUsersReference().child(nick).child("clothes")
                                                 .child(clothesViewing.getUid()).setValue(clothesViewing);
@@ -637,7 +637,7 @@ public class ViewingClothesPopular extends Fragment {
                             }
                         });
                     }else{
-                        Toast.makeText(getContext(), "Не хватает коинов", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), getContext().getResources().getText(R.string.notenoughcoins), Toast.LENGTH_SHORT).show();
                         RecentMethods.setCurrentFragment(CoinsFragmentSecond.newInstance(ViewingClothesPopular.newInstance(userInformation,bundle,fragment),userInformation,bundle), getActivity());
                     }
                 }

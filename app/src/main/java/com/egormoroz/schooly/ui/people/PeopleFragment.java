@@ -141,7 +141,6 @@ public class PeopleFragment extends Fragment {
     public void setAlreadySearchedInAdapter(){
         peopleRecyclerView.setVisibility(View.VISIBLE);
         userNotSearch.setVisibility(View.GONE);
-        Log.d("####", "ffg");
         if(userInformation.getAlreadySearched()==null){
             checkAlreadySearchedFromBase();
         }else {

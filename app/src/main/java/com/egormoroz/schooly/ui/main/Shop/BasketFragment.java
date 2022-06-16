@@ -119,7 +119,7 @@ public class BasketFragment extends Fragment {
       }
     });
     numberOfClothes=view.findViewById(R.id.numberofclothes);
-    numberOfClothes.setText("Элементов в корзине:"+String.valueOf(userInformation.getClothesBasket().size()));
+    numberOfClothes.setText(getContext().getResources().getText(R.string.itemsincart)+String.valueOf(userInformation.getClothesBasket().size()));
     basketRecycler=view.findViewById(R.id.basketrecycler);
     if (bundle!=null){
       if(bundle.getString("EDIT_BASKET_TAG")!=null) {
@@ -168,7 +168,7 @@ public class BasketFragment extends Fragment {
         @Override
         public void getClothes(ArrayList<Clothes> allClothes) {
           clothesArrayList.addAll(allClothes);
-          numberOfClothes.setText("Элементов в корзине:"+String.valueOf(clothesArrayList.size()));
+          numberOfClothes.setText(getContext().getResources().getText(R.string.itemsincart)+String.valueOf(clothesArrayList.size()));
           userInformation.setClothesBasket(allClothes);
           if(clothesArrayList.size()==0){
             notFound.setVisibility(View.VISIBLE);
@@ -183,7 +183,7 @@ public class BasketFragment extends Fragment {
         }
       });
     }else {
-      numberOfClothes.setText("Элементов в корзине:"+String.valueOf(userInformation.getClothesBasket().size()));
+      numberOfClothes.setText(getContext().getResources().getText(R.string.itemsincart)+String.valueOf(userInformation.getClothesBasket().size()));
       userInformation.setClothesBasket(userInformation.getClothesBasket());
       if(userInformation.getClothesBasket().size()==0){
         notFound.setVisibility(View.VISIBLE);

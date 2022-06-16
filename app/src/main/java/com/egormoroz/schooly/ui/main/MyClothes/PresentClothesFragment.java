@@ -263,7 +263,7 @@ public class PresentClothesFragment extends Fragment {
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
         TextView text=dialog.findViewById(R.id.acceptText);
-        text.setText("Подарить "+clothes.getClothesTitle()+" "+userNameToProfile);
+        text.setText(getContext().getResources().getText(R.string.present)+" "+clothes.getClothesTitle()+getContext().getResources().getString(R.string.givetext)+userNameToProfile);
 
         RelativeLayout no=dialog.findViewById(R.id.no);
         RelativeLayout yes=dialog.findViewById(R.id.yes);
@@ -280,7 +280,8 @@ public class PresentClothesFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (alreadyHave==1) {
-                    Toast.makeText(getContext(), "У " + userNameToProfile + " уже есть этот предмет одежды", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), getContext().getResources().getText(R.string.givealreadytext)
+                            + userNameToProfile + getContext().getResources().getString(R.string.alreadнhasthisgift), Toast.LENGTH_SHORT).show();
                 } else {
                     firebaseModel.getUsersReference().child(userNameToProfile).child("clothes")
                             .child(clothes.getUid()).setValue(clothes);
@@ -290,7 +291,7 @@ public class PresentClothesFragment extends Fragment {
                             .child(userNameToProfile).child("nontifications")
                             .child(numToBase).setValue(new Nontification(nick, "не отправлено", "подарок"
                             , "", clothes.getClothesTitle(), clothes.getClothesImage(), "не просмотрено", numToBase,0));
-                    Toast.makeText(getContext(), "Подарок отправлен", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), getContext().getResources().getText(R.string.giftsent), Toast.LENGTH_SHORT).show();
                 }
                 dialog.dismiss();
             }

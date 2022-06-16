@@ -90,7 +90,7 @@ public class NontificationFragment extends Fragment {
                 public void getNontificationsList(ArrayList<Nontification> nontifications) {
                     if (nontifications.size()==0){
                         emptyNonts.setVisibility(View.VISIBLE);
-                        emptyNonts.setText("Пока нет уведомлений :)");
+                        emptyNonts.setText(getContext().getResources().getText(R.string.nonotificationyet));
                     }else {
                         emptyNonts.setVisibility(View.GONE);
                     }
@@ -115,7 +115,7 @@ public class NontificationFragment extends Fragment {
         }else{
             if (userInformation.getNontifications().size()==0){
                 emptyNonts.setVisibility(View.VISIBLE);
-                emptyNonts.setText("Пока нет уведомлений :)");
+                emptyNonts.setText(getContext().getResources().getText(R.string.nonotificationyet));
             }else {
                 emptyNonts.setVisibility(View.GONE);
             }

@@ -258,7 +258,7 @@ public class CreateClothesFragment extends Fragment {
                 }else {
                     if(editClothesPrice.getText().toString().contains("-")){
                         noSum.setVisibility(View.VISIBLE);
-                        noSum.setText("Неправильно введена цена одежды");
+                        noSum.setText(getContext().getResources().getText(R.string.incorrectlyenteredclothingprice));
                     }else {
                         noSum.setVisibility(View.GONE);
                     }
@@ -545,7 +545,7 @@ public class CreateClothesFragment extends Fragment {
                 firebaseModel.getReference().child("clothesReqests").child(uid)
                         .setValue(new ClothesRequest(type, imageApplication, Long.valueOf(editClothesPrice.getText().toString()), editTextClothes.getText().toString()
                                 , 111, nick, currencyType,addDescriptionEdit.getText().toString() ,modelApplication , bodyType,uid,exclusiveType));
-                Toast.makeText(getContext(), "Заявка отправлена", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getContext().getResources().getText(R.string.applicationsent), Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
             }
         });

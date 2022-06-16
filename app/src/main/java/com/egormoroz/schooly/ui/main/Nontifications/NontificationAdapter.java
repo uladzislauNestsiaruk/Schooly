@@ -75,9 +75,9 @@ public class NontificationAdapter extends RecyclerView.Adapter<NontificationAdap
         if(nontification.getTypeView().equals("запрос")) {
             holder.otherUserNick.setVisibility(View.VISIBLE);
             holder.userImage.setVisibility(View.VISIBLE);
-            holder.otherUserNick.setText(nontification.getNick()+" хочет подписаться на тебя");
+            holder.otherUserNick.setText(nontification.getNick()+holder.otherUserNick.getContext().getResources().getString(R.string.wantstofollowyou));
             holder.addFriend.setVisibility(View.VISIBLE);
-            holder.addFriend.setText("Добавить");
+            holder.addFriend.setText(holder.addFriend.getContext().getResources().getText(R.string.added));
             holder.otherUserNick.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -98,13 +98,13 @@ public class NontificationAdapter extends RecyclerView.Adapter<NontificationAdap
                             .child(nontification.getUid()).removeValue();
                     firebaseModel.getReference().child("users").child(nick).child("requests")
                             .child(nontification.getNick()).removeValue();
-                    holder.addFriend.setText("Добавлен");
+                    holder.addFriend.setText(holder.addFriend.getContext().getResources().getText(R.string.added));
                 }
             });
         }else if(nontification.getTypeView().equals("обычный")) {
             holder.otherUserNick.setVisibility(View.VISIBLE);
             holder.userImage.setVisibility(View.VISIBLE);
-            holder.otherUserNick.setText(nontification.getNick()+" подписался на тебя");
+            holder.otherUserNick.setText(nontification.getNick()+holder.otherUserNick.getContext().getResources().getString(R.string.subscribeyou));
             holder.otherUserNick.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -115,7 +115,7 @@ public class NontificationAdapter extends RecyclerView.Adapter<NontificationAdap
         }else if(nontification.getTypeView().equals("одежда")) {
             holder.otherUserNick.setVisibility(View.VISIBLE);
             holder.userImage.setVisibility(View.VISIBLE);
-            holder.otherUserNick.setText(nontification.getNick()+" купил у тебя "+nontification.getClothesName());
+            holder.otherUserNick.setText(nontification.getNick()+holder.otherUserNick.getContext().getResources().getString(R.string.boughtfromyou)+nontification.getClothesName());
             holder.otherUserNick.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -126,7 +126,7 @@ public class NontificationAdapter extends RecyclerView.Adapter<NontificationAdap
         }else if (nontification.getTypeView().equals("перевод")){
             holder.otherUserNick.setVisibility(View.VISIBLE);
             holder.userImage.setVisibility(View.VISIBLE);
-            holder.otherUserNick.setText(nontification.getNick()+" перевел тебе "+nontification.getClothesName()+"S коинов");
+            holder.otherUserNick.setText(nontification.getNick()+holder.otherUserNick.getContext().getResources().getString(R.string.translatedtoyou)+nontification.getClothesName()+"S коинов");
             holder.otherUserNick.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -138,9 +138,10 @@ public class NontificationAdapter extends RecyclerView.Adapter<NontificationAdap
             holder.otherUserNick.setVisibility(View.VISIBLE);
             holder.userImage.setVisibility(View.VISIBLE);
             Picasso.get().load(nontification.getClothesImage()).into(holder.userImage);
-            holder.otherUserNick.setText("Пришел ответ на заявку "+nontification.getClothesName());
+            holder.otherUserNick.setText(holder.otherUserNick.getContext().getResources().getText(R.string.applicationreceivedru)
+                    +nontification.getClothesName()+holder.otherUserNick.getContext().getResources().getText(R.string.applicationreceiveden));
             holder.addFriend.setVisibility(View.VISIBLE);
-            holder.addFriend.setText("Перейти");
+            holder.addFriend.setText(holder.addFriend.getContext().getResources().getText(R.string.moveto));
             holder.addFriend.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -152,7 +153,7 @@ public class NontificationAdapter extends RecyclerView.Adapter<NontificationAdap
         else if (nontification.getTypeView().equals("подарок")){
             holder.otherUserNick.setVisibility(View.VISIBLE);
             holder.userImage.setVisibility(View.VISIBLE);
-            holder.otherUserNick.setText(nontification.getNick()+" подарил тебе "+nontification.getClothesName()+" !!!");
+            holder.otherUserNick.setText(nontification.getNick()+holder.otherUserNick.getContext().getResources().getString(R.string.gaveyou)+nontification.getClothesName()+" !!!");
             holder.addFriend.setVisibility(View.GONE);
             holder.otherUserNick.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -168,8 +169,8 @@ public class NontificationAdapter extends RecyclerView.Adapter<NontificationAdap
             holder.sum.setVisibility(View.VISIBLE);
             holder.type.setVisibility(View.VISIBLE);
             holder.remittanceTime.setVisibility(View.VISIBLE);
-            holder.type.setText("Начисление");
-            holder.fromWho.setText("Майнинг");
+            holder.type.setText(holder.type.getContext().getResources().getText(R.string.receipt));
+            holder.fromWho.setText(holder.fromWho.getContext().getResources().getText(R.string.mining));
             holder.sum.setText("+"+String.valueOf(nontification.getClothesProfit()));
             holder.otherUserNick.setVisibility(View.GONE);
             holder.addFriend.setVisibility(View.GONE);
@@ -181,8 +182,8 @@ public class NontificationAdapter extends RecyclerView.Adapter<NontificationAdap
             holder.sum.setVisibility(View.VISIBLE);
             holder.type.setVisibility(View.VISIBLE);
             holder.remittanceTime.setVisibility(View.VISIBLE);
-            holder.type.setText("Начисление");
-            holder.fromWho.setText("Одежда");
+            holder.type.setText(holder.type.getContext().getResources().getText(R.string.receipt));
+            holder.fromWho.setText(holder.fromWho.getContext().getResources().getText(R.string.clothes));
             holder.sum.setText("+"+String.valueOf(nontification.getClothesProfit()));
             holder.otherUserNick.setVisibility(View.GONE);
             holder.addFriend.setVisibility(View.GONE);

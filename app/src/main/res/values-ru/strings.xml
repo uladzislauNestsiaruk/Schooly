@@ -164,7 +164,7 @@
 
     <string name="addFr">Добавить </string>
     <string name="rejectFriend">Отказать</string>
-    <string name="subscribeyou">подписался на тебя</string>
+    <string name="subscribeyou"> подписался на тебя</string>
 
     <string name="account">АККАУНТ</string>
     <string name="nontsBig">УВЕДОМЛЕНИЯ</string>
@@ -446,7 +446,26 @@
     <string name="addactiveminers">Добавь активные майнеры!</string>
     <string name="used">Используется</string>
     <string name="fiveminersarealreadyactive">Пять майнеров уже активны</string>
-
+    <string name="incorrectlyenteredclothingprice">Неправильно введена цена одежды</string>
+    <string name="applicationsent">Заявка отправлена</string>
+    <string name="givetext"> </string>
+    <string name="givealreadytext">У</string>
+    <string name="alreadнhasthisgift"> уже есть этот предмет одежды</string>
+    <string name="giftsent">Подарок отправлен</string>
+    <string name="themodelhasbeenadded">Модель добавлена в магазин одежды Schooly</string>
+    <string name="addrequestdenied">Запрос на добавление отказан</string>
+    <string name="gaveyou"> подарил тебе </string>
+    <string name="moveto">Перейти</string>
+    <string name="applicationreceivedru">Пришел ответ на заявку </string>
+    <string name="applicationreceiveden"></string>
+    <string name="translatedtoyou"> перевел тебе </string>
+    <string name="boughtfromyou"> купил у тебя </string>
+    <string name="added">Добавлен</string>
+    <string name="wantstofollowyou"> хочет подписаться на тебя</string>
+    <string name="nonotificationyet">Пока нет уведомлений :)</string>
+    <string name="itemsincart">Элементов в корзине:</string>
+    <string name="itempurchased">Предмет куплен</string>
+    <string name="itemalreadypurchased">Предмет уже куплен</string>
 
 
 

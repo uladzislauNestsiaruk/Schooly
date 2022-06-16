@@ -215,7 +215,7 @@ public class MyClothesFragment extends Fragment {
                     recyclerMyClothes.setAdapter(myClothesAdapter);
                 }
             }
-            clothes.setText("Одежда "+String.valueOf(userInformation.getMyClothes().size())+":");
+            clothes.setText(getContext().getResources().getText(R.string.clothes)+" "+String.valueOf(userInformation.getMyClothes().size())+":");
             createClothes.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

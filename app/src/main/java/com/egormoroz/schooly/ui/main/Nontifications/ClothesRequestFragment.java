@@ -116,10 +116,10 @@ public class ClothesRequestFragment extends Fragment {
                 loadModels(Uri.parse(clothesRequest.getModel()), sceneView, ClothesRequestFragment.this, 0.25f);
                 if(clothesRequest.getResult().equals("okey")){
                     result.setTextColor(Color.parseColor("#53B35C"));
-                    result.setText("Модель добавлена в магазин одежды Schooly");
+                    result.setText(getContext().getResources().getText(R.string.themodelhasbeenadded));
                 }else {
                     result.setTextColor(Color.parseColor("#EA4646"));
-                    result.setText("Запрос на добавление отказан");
+                    result.setText(getContext().getResources().getText(R.string.addrequestdenied));
                     reason.setVisibility(View.VISIBLE);
                     reasonText.setVisibility(View.VISIBLE);
                     addReason.setVisibility(View.VISIBLE);
@@ -156,10 +156,10 @@ public class ClothesRequestFragment extends Fragment {
                             loadModels(Uri.parse(clothesRequest.getModel()), sceneView, ClothesRequestFragment.this, 0.25f);
                             if(clothesRequest.getResult().equals("okey")){
                                 result.setTextColor(Color.parseColor("#53B35C"));
-                                result.setText("Модель добавлена в магазин одежды Schooly");
+                                result.setText(getContext().getResources().getText(R.string.themodelhasbeenadded));
                             }else {
                                 result.setTextColor(Color.parseColor("#EA4646"));
-                                result.setText("Запрос на добавление отказан");
+                                result.setText(getContext().getResources().getText(R.string.addrequestdenied));
                                 reason.setVisibility(View.VISIBLE);
                                 reasonText.setVisibility(View.VISIBLE);
                                 addReason.setVisibility(View.VISIBLE);
