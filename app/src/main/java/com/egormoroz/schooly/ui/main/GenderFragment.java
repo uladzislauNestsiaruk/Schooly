@@ -104,7 +104,7 @@ public class GenderFragment extends Fragment {
                     }
                     RecentMethods.setCurrentFragment(CreateCharacterFragment.newInstance(userInformation,bundle,fragment), getActivity());
                 }else {
-                    Toast.makeText(getContext(), "Для продолжения необходимо выбрать пол", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), getContext().getResources().getText(R.string.mustselectagender), Toast.LENGTH_SHORT).show();
                 }
             }
         });

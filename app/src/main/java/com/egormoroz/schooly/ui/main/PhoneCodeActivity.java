@@ -86,14 +86,14 @@ public class PhoneCodeActivity extends AppCompatActivity {
             @Override
             public void onTick(long l) {
                 timerText.setTextColor(getColor(R.color.app_grey));
-                timerText.setText("You can resend SMS after: " + l / Second);
+                timerText.setText(timerText.getContext().getResources().getText(R.string.youcanresendafter).toString() + l / Second);
             }
             @Override
             public void onFinish() {
                 timerText.setVisibility(View.GONE);
                 resendCode.setVisibility(View.VISIBLE);
                 resendCode.setEnabled(true);
-                timerText.setText("You can resend SMS");
+                timerText.setText(timerText.getContext().getResources().getText(R.string.youcanresend).toString());
             }
         };
         timer.start();

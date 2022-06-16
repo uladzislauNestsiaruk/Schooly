@@ -103,7 +103,7 @@ public class ClothesFragmentProfile extends Fragment {
                 public void getClothes(ArrayList<Clothes> allClothes) {
                     if (allClothes.size()==0){
                         createNewLookText.setVisibility(View.VISIBLE);
-                        createNewLookText.setText("Создай свою одежду!");
+                        createNewLookText.setText(R.string.designyourclothes);
                         createNewLook.setVisibility(View.VISIBLE);
                         createNewLook.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -128,7 +128,7 @@ public class ClothesFragmentProfile extends Fragment {
         }else {
             if (userInformation.getMyClothes().size()==0){
                 createNewLookText.setVisibility(View.VISIBLE);
-                createNewLookText.setText("Создай свою одежду!");
+                createNewLookText.setText(R.string.designyourclothes);
                 createNewLook.setVisibility(View.VISIBLE);
                 createNewLook.setOnClickListener(new View.OnClickListener() {
                     @Override

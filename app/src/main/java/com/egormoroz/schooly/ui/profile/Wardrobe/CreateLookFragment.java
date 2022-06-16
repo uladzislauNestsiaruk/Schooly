@@ -205,7 +205,7 @@ public class CreateLookFragment extends Fragment {
                                         ,type,fragment,userInformation,bundle,lookType)
                                         , getActivity());
                             }else {
-                                Toast.makeText(getContext(), "Добавь составляющие образа", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getContext(), getContext().getResources().getText(R.string.addlookcomponents), Toast.LENGTH_SHORT).show();
                             }
                         }
                     }

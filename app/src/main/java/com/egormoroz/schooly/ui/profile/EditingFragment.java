@@ -132,7 +132,7 @@ public class EditingFragment extends Fragment {
             String bioText= String.valueOf(bioEdit.getText().toString().trim());
             public void onClick(View v) {
                 firebaseModel.getUsersReference().child(nickname).child("bio").setValue(bioText);
-                Toast.makeText(getContext(), "Изменения сохранены", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), R.string.changessaved, Toast.LENGTH_SHORT).show();
                 firebaseModel.getUsersReference().child(nick).child("bio")
                         .get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                     @Override
@@ -155,7 +155,7 @@ public class EditingFragment extends Fragment {
 
         RelativeLayout Relative=dialog.findViewById(R.id.Relative);
         TextView textView=dialog.findViewById(R.id.Text);
-        textView.setText("Смена недоступна");
+        textView.setText(R.string.changenotavailable);
 
         Relative.setOnClickListener(new View.OnClickListener() {
             @Override

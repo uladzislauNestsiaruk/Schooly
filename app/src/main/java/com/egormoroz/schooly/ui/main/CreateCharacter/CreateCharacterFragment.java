@@ -265,7 +265,7 @@ public class CreateCharacterFragment extends Fragment {
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w("###", "createUserWithEmail:failure", task.getException());
-                            Toast.makeText(getActivity(), "Authentication failed.",
+                            Toast.makeText(getActivity(), getContext().getResources().getText(R.string.authenticationfailed),
                                     Toast.LENGTH_SHORT).show();
                         }
                     }

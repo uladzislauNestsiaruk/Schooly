@@ -73,7 +73,7 @@ class WardrobeClothesAdapter extends RecyclerView.Adapter<WardrobeClothesAdapter
             public void onClick(View v) {
                 holder.fittingClothes.setVisibility(View.GONE);
                 holder.activeFittingClothes.setVisibility(View.VISIBLE);
-                Toast.makeText(v.getContext(), "Предмет надет", Toast.LENGTH_SHORT).show();
+                Toast.makeText(v.getContext(), v.getContext().getResources().getText(R.string.itemisequipped), Toast.LENGTH_SHORT).show();
                 firebaseModel.getUsersReference().child(nick).child("lookClothes")
                         .child(clothes.getUid()).setValue(clothes);
             }

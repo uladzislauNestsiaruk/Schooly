@@ -263,14 +263,14 @@
             android:textSize="20sp" />
 
         <TextView
-            android:id="@+id/dataProtect"
+            android:id="@+id/privacyPolicy"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/help"
             android:layout_marginStart="24dp"
             android:layout_marginTop="20dp"
             android:fontFamily="@font/montserrat_bold"
-            android:text="@string/dataProtect"
+            android:text="@string/privacypolicy"
             android:textColor="@color/app_grey"
             android:textSize="16sp" />
 
@@ -279,7 +279,7 @@
             android:id="@+id/rules"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/dataProtect"
+            android:layout_below="@+id/privacyPolicy"
             android:layout_marginStart="24dp"
             android:layout_marginTop="20dp"
             android:fontFamily="@font/montserrat_bold"

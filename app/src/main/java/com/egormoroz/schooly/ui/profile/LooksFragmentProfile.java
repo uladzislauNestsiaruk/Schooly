@@ -85,7 +85,7 @@ public class LooksFragmentProfile extends Fragment {
                     looksListSize=look.size();
                     if (looksListSize==0){
                         createNewLookText.setVisibility(View.VISIBLE);
-                        createNewLookText.setText("Создай свой первый образ!");
+                        createNewLookText.setText(R.string.createyourfirstlook);
                         createNewLook.setVisibility(View.VISIBLE);
                         looksRecycler.setVisibility(View.GONE);
                         createNewLook.setOnClickListener(new View.OnClickListener() {
@@ -117,7 +117,7 @@ public class LooksFragmentProfile extends Fragment {
         }else {
             if (userInformation.getLooks().size()==0){
                 createNewLookText.setVisibility(View.VISIBLE);
-                createNewLookText.setText("Создай свой первый образ!");
+                createNewLookText.setText(R.string.createyourfirstlook);
                 createNewLook.setVisibility(View.VISIBLE);
                 looksRecycler.setVisibility(View.GONE);
                 createNewLook.setOnClickListener(new View.OnClickListener() {

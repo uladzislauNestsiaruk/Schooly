@@ -90,7 +90,7 @@ public class ComplainFragmentToBase extends Fragment {
                 String uid=firebaseModel.getReference().child("complains").push().getKey();
                 firebaseModel.getReference().child("complains").child(uid)
                         .setValue(new Complain(nick,otherUserNick, reasonTextString,descriptionText));
-                Toast.makeText(getContext(), "Жалоба отправлена", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), R.string.complaintsent, Toast.LENGTH_SHORT).show();
                 RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", otherUserNick, fragment,userInformation,bundle), getActivity());
             }
         });

@@ -168,8 +168,7 @@
     <string name="account">ACCOUNT</string>
     <string name="nontsBig">NOTIFICATIONS</string>
 
-    <string name="dataProtect">Data protection</string>
-    <string name="rules">Rules</string>
+    <string name="rules">Terms of use</string>
     <string name="change">Change</string>
     <string name="fromBrest">From Brest to You</string>
 
@@ -465,6 +464,24 @@
     <string name="itemsincart">Items in cart:</string>
     <string name="itempurchased">Item purchased</string>
     <string name="itemalreadypurchased">Item already purchased</string>
+    <string name="mustselectagender">You must select a gender to continue</string>
+    <string name="nicknamenotentered">Nickname not entered</string>
+    <string name="youcanresendafter">You can resend SMS after: </string>
+    <string name="youcanresend">You can resend SMS</string>
+    <string name="authenticationfailed">Authentication failed</string>
+    <string name="lookpublishedsuccessfully">Look published successfully!</string>
+    <string name="nolookcomponents">No look components</string>
+    <string name="addlookcomponents">Add look components</string>
+    <string name="itemisequipped">Item is equipped</string>
+    <string name="designyourclothes">Design your clothes!</string>
+    <string name="didnotdesign"> didn\'t create their clothes :(</string>
+    <string name="complaintsent">Complaint sent</string>
+    <string name="changessaved">Changes saved</string>
+    <string name="changenotavailable">Сhange not available</string>
+    <string name="createyourfirstlook">Создай свой первый образ!</string>
+    <string name="nolooks1"></string>
+    <string name="nolooks2"> has no looks :(</string>
+
 
 
 

@@ -101,7 +101,7 @@
     <string name="group">Групповые чаты</string>
     <string name="profilereact">Действия с профилем(лайки, комментарии и т.д.)</string>
     <string name="likeandsubs">(Лайки, подписки и т.д.)</string>
-    <string name="privacypolicy">Конфиденциальность</string>
+    <string name="privacypolicy">Политика конфиденциальности</string>
     <string name="closeaccount">Закрытый аккаунт</string>
     <string name="support">Поддержка</string>
     <string name="error">Сообщить о проблеме</string>
@@ -168,9 +168,7 @@
 
     <string name="account">АККАУНТ</string>
     <string name="nontsBig">УВЕДОМЛЕНИЯ</string>
-
-    <string name="dataProtect">Защита данных</string>
-    <string name="rules">Правила</string>
+    <string name="rules">Условия пользования</string>
     <string name="change">Изменить</string>
     <string name="fromBrest">From Brest to You</string>
 
@@ -466,6 +464,25 @@
     <string name="itemsincart">Элементов в корзине:</string>
     <string name="itempurchased">Предмет куплен</string>
     <string name="itemalreadypurchased">Предмет уже куплен</string>
+    <string name="mustselectagender">Для продолжения необходимо выбрать пол</string>
+    <string name="nicknamenotentered">Никнейм не введён</string>
+    <string name="youcanresendafter">Отправить SMS повторно через:</string>
+    <string name="youcanresend">Повторно полуть SMS</string>
+    <string name="authenticationfailed">Ошибка аутентификации</string>
+    <string name="lookpublishedsuccessfully">Образ успешно опубликован!</string>
+    <string name="nolookcomponents">Нет составляющих образа</string>
+    <string name="addlookcomponents">Добавь составляющие образа</string>
+    <string name="itemisequipped">Предмет надет</string>
+    <string name="designyourclothes">Создай свою одежду!</string>
+    <string name="didnotdesign"> не создавал свою одежду :(</string>
+    <string name="complaintsent">Жалоба отправлена</string>
+    <string name="changessaved">Изменения сохранены</string>
+    <string name="changenotavailable">Смена недоступна</string>
+    <string name="createyourfirstlook">Создай свой первый образ!</string>
+    <string name="nolooks1">У </string>
+    <string name="nolooks2"> нет образов :(</string>
+
+
 
 
 

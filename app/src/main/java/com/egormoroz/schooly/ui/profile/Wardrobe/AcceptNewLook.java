@@ -161,7 +161,7 @@ public class AcceptNewLook extends Fragment {
                             .setValue(new NewsItem(model, descriptionLook.getText().toString(), "0", lookId,
                                     "", userInformation.getLookClothes(), 1200, 0,"",nick,0));
                     descriptionLook.getText().clear();
-                    Toast.makeText(getContext(), "Образ успешно опубликован!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), getContext().getResources().getText(R.string.lookpublishedsuccessfully), Toast.LENGTH_SHORT).show();
                     RecentMethods.setCurrentFragment(ProfileFragment.newInstance(type, nick, fragment,userInformation,bundle), getActivity());
                 }
             });
@@ -171,7 +171,7 @@ public class AcceptNewLook extends Fragment {
          publish.setOnClickListener(new View.OnClickListener() {
              @Override
              public void onClick(View v) {
-                 Toast.makeText(getContext(), "Нет составляющих образа", Toast.LENGTH_SHORT).show();
+                 Toast.makeText(getContext(), getContext().getResources().getText(R.string.nolookcomponents), Toast.LENGTH_SHORT).show();
              }
          });
         }

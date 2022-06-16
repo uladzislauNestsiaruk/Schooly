@@ -1,5 +1,7 @@
 package com.egormoroz.schooly.ui.profile;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -70,7 +72,7 @@ public class SettingsFragment extends Fragment {
 
     FirebaseModel firebaseModel=new FirebaseModel();
     TextView  userNick,userNumber,userPassword,changePassword,blackList,exitAccount,
-            dataProtect,rules,support,saved;
+            privacyPolicy,rules,support,saved;
     String userNickString;
     SwitchMaterial privateAccountSwitch,chatsSwitch,groupChatsSwitch,profileSwitch;
     boolean checkType;
@@ -92,7 +94,7 @@ public class SettingsFragment extends Fragment {
         chatsSwitch=view.findViewById(R.id.chatsSwitch);
         groupChatsSwitch=view.findViewById(R.id.groupChatsSwitch);
         profileSwitch=view.findViewById(R.id.profileSwitch);
-        dataProtect=view.findViewById(R.id.dataProtect);
+        privacyPolicy=view.findViewById(R.id.privacyPolicy);
         rules=view.findViewById(R.id.rules);
         saved=view.findViewById(R.id.saved);
         userNick=view.findViewById(R.id.userNick);
@@ -133,17 +135,19 @@ public class SettingsFragment extends Fragment {
             }
         });
 
-        dataProtect.setOnClickListener(new View.OnClickListener() {
+        privacyPolicy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://pages.flycricket.io/schooly-1/privacy.html"));
+                startActivity(browserIntent);
             }
         });
 
         rules.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://pages.flycricket.io/schooly-1/terms.html"));
+                startActivity(browserIntent);
             }
         });
 

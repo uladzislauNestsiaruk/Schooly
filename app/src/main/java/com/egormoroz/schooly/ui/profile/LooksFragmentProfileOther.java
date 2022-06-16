@@ -54,8 +54,6 @@ public class LooksFragmentProfileOther extends Fragment {
     BottomNavigationView bnv = getActivity().findViewById(R.id.bottomNavigationView);
     bnv.setVisibility(bnv.VISIBLE);
     firebaseModel.initAll();
-//        AppBarLayout abl = getActivity().findViewById(R.id.AppBarLayout);
-//        abl.setVisibility(abl.GONE);
     return root;
   }
 
@@ -80,7 +78,7 @@ public class LooksFragmentProfileOther extends Fragment {
         look= (ArrayList<NewsItem>) bundle.getSerializable(otherUserNick+"LOOKS_OTHER_BUNDLE");
         if (look.size()==0){
           noLooksOther.setVisibility(View.VISIBLE);
-          noLooksOther.setText("У "+otherUserNick+" нет образов :(");
+          noLooksOther.setText(R.string.nolooks1+otherUserNick+R.string.nolooks2);
           looksRecyclerOther.setVisibility(View.GONE);
         }else{
           LooksAdapter looksAdapter=new LooksAdapter(look,LooksFragmentProfileOther.newInstance(otherUserNick,fragment,userInformation,bundle),looksRecyclerOther);
@@ -103,7 +101,7 @@ public class LooksFragmentProfileOther extends Fragment {
             bundle.putSerializable(otherUserNick+"LOOKS_OTHER_BUNDLE",look);
             if (look.size()==0){
               noLooksOther.setVisibility(View.VISIBLE);
-              noLooksOther.setText("У "+otherUserNick+" нет образов :(");
+              noLooksOther.setText(R.string.nolooks1+otherUserNick+R.string.nolooks2);
               looksRecyclerOther.setVisibility(View.GONE);
             }else{
               Collections.reverse(look);

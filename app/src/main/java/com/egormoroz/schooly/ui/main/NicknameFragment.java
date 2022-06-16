@@ -115,7 +115,8 @@ public class NicknameFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 if(nicknameEditText.getText().toString().trim().length()==0){
-                    Toast.makeText(getContext(), "Никнейм не введён", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), getContext().getResources().getText(R.string.nicknamenotentered), Toast.LENGTH_SHORT).show();
+
                 }else {
                     String nickname = String.valueOf(nicknameEditText.getText()).trim();
                     String error = String.valueOf(nicknameTextView.getText()).trim();
