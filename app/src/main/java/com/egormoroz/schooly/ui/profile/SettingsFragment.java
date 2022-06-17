@@ -232,12 +232,12 @@ public class SettingsFragment extends Fragment {
 
     public void checkRegistrationType(){
         if(userInformation.getPhone().equals("unknown")) {
-            userNumber.setText("Вход через Google Play");
+            userNumber.setText(getContext().getResources().getText(R.string.loginwithGoogle));
         }else {
             userNumber.setText(userInformation.getPassword());
         }
         if(userInformation.getPassword().equals("unknown")) {
-            userPassword.setText("Вход через Google Play");
+            userPassword.setText(getContext().getResources().getText(R.string.loginwithGoogle));
             changePassword.setVisibility(View.GONE);
         }else {
             userPassword.setText(userInformation.getPassword());

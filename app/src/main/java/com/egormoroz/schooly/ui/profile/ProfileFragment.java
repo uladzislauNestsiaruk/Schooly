@@ -331,8 +331,8 @@ public class ProfileFragment extends Fragment {
                 viewPager.setAdapter(fragmentAdapter);
                 viewPager.setCurrentItem(tabLayoutPosition, false);
 
-                tabLayout.addTab(tabLayout.newTab().setText("Образы"));
-                tabLayout.addTab(tabLayout.newTab().setText("Одежда"));
+                tabLayout.addTab(tabLayout.newTab().setText(getContext().getResources().getText(R.string.looks)));
+                tabLayout.addTab(tabLayout.newTab().setText(getContext().getResources().getText(R.string.clothes)));
 
                 tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener(){
                     @Override
@@ -362,7 +362,7 @@ public class ProfileFragment extends Fragment {
 
                 biographyTextView=view.findViewById(R.id.biography);
                 if(userInformation.getBio().length()==0){
-                    biographyTextView.setText("Добавь описание!");
+                    biographyTextView.setText(getContext().getResources().getText(R.string.addadescription));
                 }else {
                     biographyTextView.setText(userInformation.getBio());
                 }
@@ -688,8 +688,8 @@ public class ProfileFragment extends Fragment {
                 viewPager.setAdapter(fragmentAdapter);
                 viewPager.setCurrentItem(tabLayoutPosition, false);
 
-                tabLayout.addTab(tabLayout.newTab().setText("Образы"));
-                tabLayout.addTab(tabLayout.newTab().setText("Одежда"));
+                tabLayout.addTab(tabLayout.newTab().setText(getContext().getResources().getText(R.string.looks)));
+                tabLayout.addTab(tabLayout.newTab().setText(getContext().getResources().getText(R.string.clothes)));
 
                 tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener(){
                     @Override
@@ -933,7 +933,7 @@ public class ProfileFragment extends Fragment {
         RelativeLayout no=dialog.findViewById(R.id.no);
         RelativeLayout yes=dialog.findViewById(R.id.yes);
 
-        complainTitle.setText("Заблокировать "+info.getNick()+"?");
+        complainTitle.setText(getContext().getResources().getText(R.string.blockUser)+info.getNick()+"?");
 
         no.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -948,10 +948,10 @@ public class ProfileFragment extends Fragment {
                 firebaseModel.getUsersReference().child(userInformation.getNick())
                         .child("blackList").child(info.getNick())
                         .setValue(info.getNick());
-                subscribeClose.setText("Разблокировать");
+                subscribeClose.setText(getContext().getResources().getText(R.string.unlock));
                 subscribeClose.setTextColor(Color.parseColor("#F3A2E5"));
                 subscribeClose.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
-                subscribe.setText("Разблокировать");
+                subscribe.setText(getContext().getResources().getText(R.string.unlock));
                 subscribe.setTextColor(Color.parseColor("#F3A2E5"));
                 subscribe.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
                 firebaseModel.getUsersReference().child(userInformation.getNick())
@@ -974,7 +974,7 @@ public class ProfileFragment extends Fragment {
                         }
                     }
                 }
-                Toast.makeText(getContext(), "Пользователь добавлен в черный список", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getContext().getResources().getText(R.string.useraddedtoblacklist), Toast.LENGTH_SHORT).show();
                 checkProfile(view);
                 dialog.dismiss();
             }
@@ -1169,9 +1169,9 @@ public class ProfileFragment extends Fragment {
                 if (subscribeValue==1) {
                     subscribe.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
                     subscribe.setTextColor(Color.parseColor("#F3A2E5"));
-                    subscribe.setText("Отписаться");
+                    subscribe.setText(getContext().getResources().getText(R.string.unsubscride));
                 } else {
-                    subscribe.setText("Подписаться");
+                    subscribe.setText(getContext().getResources().getText(R.string.subscride));
                     subscribe.setTextColor(Color.parseColor("#FFFEFE"));
                     subscribe.setBackgroundResource(R.drawable.corners10dpappcolor);
                 }
@@ -1179,7 +1179,7 @@ public class ProfileFragment extends Fragment {
                     Subscriber sub=userInformation.getBlackList().get(i);
                     if(sub.getSub().equals(info.getNick())){
                         a=5;
-                        subscribe.setText("Разблокировать");
+                        subscribe.setText(getContext().getResources().getText(R.string.unlock));
                         subscribe.setTextColor(Color.parseColor("#F3A2E5"));
                         subscribe.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
                     }
@@ -1197,7 +1197,7 @@ public class ProfileFragment extends Fragment {
                 blockedAccount.setVisibility(View.GONE);
                 tabLayoutOther.setVisibility(View.GONE);
                 viewPagerOther.setVisibility(View.GONE);
-                subscribeFirst.setText("Подпишись на " + " " + info.getNick() + " !");
+                subscribeFirst.setText(getContext().getResources().getText(R.string.subscribeto)+ info.getNick() + " !");
                 message.setVisibility(View.GONE);
                 subscribe.setVisibility(View.GONE);
                 moreSquare.setOnClickListener(new View.OnClickListener() {
@@ -1210,7 +1210,7 @@ public class ProfileFragment extends Fragment {
                     Subscriber sub=userInformation.getBlackList().get(i);
                     if(sub.getSub().equals(info.getNick())){
                         a=5;
-                        subscribeClose.setText("Разблокировать");
+                        subscribeClose.setText(getContext().getResources().getText(R.string.unlock));
                         subscribeClose.setTextColor(Color.parseColor("#F3A2E5"));
                         subscribeClose.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
                     }
@@ -1221,11 +1221,11 @@ public class ProfileFragment extends Fragment {
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         if (snapshot.exists()) {
                             a = 3;
-                            subscribeClose.setText("Запрошено");
+                            subscribeClose.setText(getContext().getResources().getText(R.string.requested));
                             subscribeClose.setTextColor(Color.parseColor("#F3A2E5"));
                             subscribeClose.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
                         }else{
-                            subscribeClose.setText("Подписаться");
+                            subscribeClose.setText(getContext().getResources().getText(R.string.subscride));
                             subscribeClose.setTextColor(Color.parseColor("#FFFEFE"));
                             subscribeClose.setBackgroundResource(R.drawable.corners10dpappcolor);
                         }
@@ -1276,7 +1276,7 @@ public class ProfileFragment extends Fragment {
                 });
                 subscribeClose.setTextColor(Color.parseColor("#FEFEFE"));
                 blockedAccount.setVisibility(View.VISIBLE);
-                blockedAccount.setText(info.getNick() + " заблокировал тебя");
+                blockedAccount.setText(info.getNick() +getContext().getResources().getString(R.string.blockedyou));
                 message.setVisibility(View.GONE);
                 tabLayoutOther.setVisibility(View.GONE);
                 viewPagerOther.setVisibility(View.GONE);
@@ -1356,7 +1356,7 @@ public class ProfileFragment extends Fragment {
                                                                                     if(b==1){
                                                                                         checkCounts(String.valueOf(info.getSubscribers().size()+1), otherSubscribersCount);
                                                                                     }
-                                                                                    subscribe.setText("Отписаться");
+                                                                                    subscribe.setText(getContext().getResources().getText(R.string.unsubscride));
                                                                                     subscribe.setTextColor(Color.parseColor("#F3A2E5"));
                                                                                     subscribe.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
                                                                                     a = 0;
@@ -1383,7 +1383,7 @@ public class ProfileFragment extends Fragment {
                                                                                     checkCounts(String.valueOf(info.getSubscribers().size()-1), otherSubscribersCount);
                                                                                 }
                                                                                 if(snapshot1.getValue(String.class).equals("open")){
-                                                                                    subscribe.setText("Подписаться");
+                                                                                    subscribe.setText(getContext().getResources().getText(R.string.subscride));
                                                                                     subscribe.setTextColor(Color.parseColor("#FFFEFE"));
                                                                                     subscribe.setBackgroundResource(R.drawable.corners10dpappcolor);
                                                                                     a = 0;
@@ -1400,7 +1400,7 @@ public class ProfileFragment extends Fragment {
                                                                                 checkProfile(view);
                                                                             }
                                                                             if (a == 4) {
-                                                                                Toast.makeText(getContext(), "Пользователь заблокировал тебя", Toast.LENGTH_SHORT).show();
+                                                                                Toast.makeText(getContext(), getContext().getResources().getText(R.string.theuserhasblockedyou), Toast.LENGTH_SHORT).show();
                                                                                 a = 0;
                                                                                 checkProfile(view);
                                                                             }
@@ -1408,7 +1408,7 @@ public class ProfileFragment extends Fragment {
                                                                                 firebaseModel.getUsersReference().child(userInformation.getNick()).child("blackList")
                                                                                         .child(info.getNick()).removeValue();
                                                                                 if(snapshot1.getValue(String.class).equals("open") && v==0){
-                                                                                    subscribe.setText("Подписаться");
+                                                                                    subscribe.setText(getContext().getResources().getText(R.string.subscride));
                                                                                     subscribe.setTextColor(Color.parseColor("#FFFEFE"));
                                                                                     subscribe.setBackgroundResource(R.drawable.corners10dpappcolor);
                                                                                     a = 0;
@@ -1577,8 +1577,8 @@ public class ProfileFragment extends Fragment {
             if(tabLayoutOther.getTabCount()==2){
 
             }else {
-                tabLayoutOther.addTab(tabLayoutOther.newTab().setText("Образы"));
-                tabLayoutOther.addTab(tabLayoutOther.newTab().setText("Одежда"));
+                tabLayoutOther.addTab(tabLayoutOther.newTab().setText(getContext().getResources().getText(R.string.looks)));
+                tabLayoutOther.addTab(tabLayoutOther.newTab().setText(getContext().getResources().getText(R.string.clothes)));
             }
 
             tabLayoutOther.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener(){
@@ -1650,13 +1650,13 @@ public class ProfileFragment extends Fragment {
                             if(b==1){
                                 checkCounts(String.valueOf(info.getSubscription().size()-1), otherSubscriptionCount);
                             }
-                            Toast.makeText(getContext(), "Пользователь удален из подписчиков", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), getContext().getResources().getText(R.string.userremovedfromsubscribers), Toast.LENGTH_SHORT).show();
                         }else {
-                            Toast.makeText(getContext(), "Пользователь не подписан на тебя", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), getContext().getResources().getText(R.string.theuserisnotfollowingyou), Toast.LENGTH_SHORT).show();
                         }
                     }
                 }else {
-                    Toast.makeText(getContext(), "Пользователь не подписан на тебя", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), getContext().getResources().getText(R.string.theuserisnotfollowingyou), Toast.LENGTH_SHORT).show();
                 }
             }
         });

@@ -78,7 +78,7 @@ public class SubscriptionsAdapter extends RecyclerView.Adapter<SubscriptionsAdap
         for(int i=0;i<userInformation.getSubscription().size();i++){
             Subscriber sub=userInformation.getSubscription().get(i);
             if(sub.getSub().equals(subscriber.getSub())){
-                holder.unsubscribe.setText("Отписаться");
+                holder.unsubscribe.setText(holder.unsubscribe.getContext().getResources().getText(R.string.unsubscride));
                 holder.unsubscribe.setTextColor(Color.parseColor("#F3A2E5"));
                 holder.unsubscribe.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
             }
@@ -87,7 +87,7 @@ public class SubscriptionsAdapter extends RecyclerView.Adapter<SubscriptionsAdap
         for (int i=0;i<userInformation.getBlackList().size();i++){
             Subscriber sub=userInformation.getBlackList().get(i);
             if(sub.getSub().equals(subscriber.getSub())){
-                holder.unsubscribe.setText("Pазблокировать");
+                holder.unsubscribe.setText(holder.unsubscribe.getContext().getResources().getText(R.string.unlock));
                 holder.unsubscribe.setTextColor(Color.parseColor("#F3A2E5"));
                 holder.unsubscribe.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
             }
@@ -98,7 +98,7 @@ public class SubscriptionsAdapter extends RecyclerView.Adapter<SubscriptionsAdap
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists()){
-                    holder.unsubscribe.setText("Запрошено");
+                    holder.unsubscribe.setText(holder.unsubscribe.getContext().getResources().getText(R.string.requested));
                     holder.unsubscribe.setTextColor(Color.parseColor("#F3A2E5"));
                     holder.unsubscribe.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
                 }
@@ -149,7 +149,7 @@ public class SubscriptionsAdapter extends RecyclerView.Adapter<SubscriptionsAdap
                                                                 DataSnapshot snapshot=task.getResult();
                                                                 if (snapshot.exists()) {
                                                                     a=5;
-                                                                    holder.unsubscribe.setText("Pазблокировать");
+                                                                    holder.unsubscribe.setText(holder.unsubscribe.getContext().getResources().getText(R.string.unlock));
                                                                     holder.unsubscribe.setTextColor(Color.parseColor("#F3A2E5"));
                                                                     holder.unsubscribe.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
                                                                 }
@@ -176,7 +176,7 @@ public class SubscriptionsAdapter extends RecyclerView.Adapter<SubscriptionsAdap
                                                                                             .child(subscriber.getSub()).child("nontifications")
                                                                                             .child(numToBase).setValue(new Nontification(nick,"не отправлено","обычный"
                                                                                             ,""," "," ","не просмотрено",numToBase,0));
-                                                                                    holder.unsubscribe.setText("Отписаться");
+                                                                                    holder.unsubscribe.setText(holder.unsubscribe.getContext().getResources().getText(R.string.unsubscride));
                                                                                     holder.unsubscribe.setTextColor(Color.parseColor("#F3A2E5"));
                                                                                     holder.unsubscribe.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
                                                                                     a=0;
@@ -193,7 +193,7 @@ public class SubscriptionsAdapter extends RecyclerView.Adapter<SubscriptionsAdap
                                                                                             .child(subscriber.getSub()).child("nontifications")
                                                                                             .child(numToBase).setValue(new Nontification(nick,"не отправлено","запрос"
                                                                                             ,""," "," ","не просмотрено",numToBase,0));
-                                                                                    holder.unsubscribe.setText("Запрошено");
+                                                                                    holder.unsubscribe.setText(holder.unsubscribe.getContext().getResources().getText(R.string.requested));
                                                                                     holder.unsubscribe.setTextColor(Color.parseColor("#F3A2E5"));
                                                                                     holder.unsubscribe.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
                                                                                     a=0;
@@ -212,7 +212,7 @@ public class SubscriptionsAdapter extends RecyclerView.Adapter<SubscriptionsAdap
                                                                                 .child(subscriber.getSub()).removeValue();
                                                                         firebaseModel.getReference().child("users").child(subscriber.getSub()).child("subscribers")
                                                                                 .child(nick).removeValue();
-                                                                        holder.unsubscribe.setText("Подписаться");
+                                                                        holder.unsubscribe.setText(holder.unsubscribe.getContext().getResources().getText(R.string.subscride));
                                                                         holder.unsubscribe.setTextColor(Color.parseColor("#FFFEFE"));
                                                                         holder.unsubscribe.setBackgroundResource(R.drawable.corners10dpappcolor);
                                                                         a=0;
@@ -221,19 +221,19 @@ public class SubscriptionsAdapter extends RecyclerView.Adapter<SubscriptionsAdap
                                                                     if (a == 3) {
                                                                         firebaseModel.getReference().child("users").child(subscriber.getSub()).child("requests")
                                                                                 .child(nick).removeValue();
-                                                                        holder.unsubscribe.setText("Подписаться");
+                                                                        holder.unsubscribe.setText(holder.unsubscribe.getContext().getResources().getText(R.string.subscride));
                                                                         holder.unsubscribe.setTextColor(Color.parseColor("#FFFEFE"));
                                                                         holder.unsubscribe.setBackgroundResource(R.drawable.corners10dpappcolor);
                                                                         a=0;
 
                                                                     }if (a == 4) {
-                                                                        Toast.makeText(v.getContext(), "Пользователь заблокировал тебя", Toast.LENGTH_SHORT).show();
+                                                                        Toast.makeText(v.getContext(), v.getContext().getResources().getText(R.string.theuserhasblockedyou), Toast.LENGTH_SHORT).show();
                                                                         a=0;
                                                                     }
                                                                     if (a == 5) {
                                                                         firebaseModel.getUsersReference().child(nick).child("blackList")
                                                                                 .child(subscriber.getSub()).removeValue();
-                                                                        holder.unsubscribe.setText("Подписаться");
+                                                                        holder.unsubscribe.setText(holder.unsubscribe.getContext().getResources().getText(R.string.subscride));
                                                                         holder.unsubscribe.setTextColor(Color.parseColor("#FFFEFE"));
                                                                         holder.unsubscribe.setBackgroundResource(R.drawable.corners10dpappcolor);
                                                                         a=0;

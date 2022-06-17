@@ -132,7 +132,7 @@ public class PasswordFragment extends Fragment {
                             }
                         });
                     }else {
-                        errorTextNewPassword.setText(R.string.passwordNotEquals);
+                        errorTextNewPassword.setText(getContext().getResources().getString(R.string.passwordNotEquals));
                     }
                 }
             }

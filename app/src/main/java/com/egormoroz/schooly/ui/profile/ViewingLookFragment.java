@@ -382,7 +382,7 @@ public class ViewingLookFragment extends Fragment {
                 String uid=firebaseModel.getReference().child("complains").push().getKey();
                 firebaseModel.getReference().child("complains").child(uid)
                         .setValue(new Complain(nick,newsItem.getNick(), reasonTextString,descriptionText));
-                Toast.makeText(getContext(), "Жалоба отправлена", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getContext().getResources().getText(R.string.complaintsent), Toast.LENGTH_SHORT).show();
                 bottomSheetDialog.dismiss();
             }
         });
@@ -444,7 +444,7 @@ public class ViewingLookFragment extends Fragment {
             public void onClick(View v) {
                 firebaseModel.getUsersReference().child(nick).child("saved").child(newsItem.getNewsId())
                         .setValue(newsItem);
-                Toast.makeText(getContext(), "Образ сохранен", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), v.getContext().getResources().getText(R.string.looksaved), Toast.LENGTH_SHORT).show();
             }
         });
 

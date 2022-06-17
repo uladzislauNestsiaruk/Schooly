@@ -96,7 +96,7 @@ public class ClothesFragmentProfileOther extends Fragment {
                 clothesFromBase= (ArrayList<Clothes>) bundle.getSerializable(otherUserNick+"CLOTHES_OTHER_BUNDLE");
                 if (clothesFromBase.size()==0){
                     noLooksOther.setVisibility(View.VISIBLE);
-                    noLooksOther.setText(otherUserNick+R.string.didnotdesign);
+                    noLooksOther.setText(otherUserNick+getContext().getResources().getString(R.string.didnotdesign));
                     recyclerOther.setVisibility(View.GONE);
                 }else {
                     recyclerOther.setVisibility(View.VISIBLE);
@@ -133,7 +133,7 @@ public class ClothesFragmentProfileOther extends Fragment {
                             bundle.putSerializable(otherUserNick+"CLOTHES_OTHER_BUNDLE",clothesFromBase);
                             if (clothesFromBase.size()==0){
                                 noLooksOther.setVisibility(View.VISIBLE);
-                                noLooksOther.setText(otherUserNick+R.string.didnotdesign);
+                                noLooksOther.setText(otherUserNick+getContext().getResources().getString(R.string.didnotdesign));
                                 recyclerOther.setVisibility(View.GONE);
                             }else {
                                 recyclerOther.setVisibility(View.VISIBLE);

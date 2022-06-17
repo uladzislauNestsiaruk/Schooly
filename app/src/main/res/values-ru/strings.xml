@@ -481,6 +481,19 @@
     <string name="createyourfirstlook">Создай свой первый образ!</string>
     <string name="nolooks1">У </string>
     <string name="nolooks2"> нет образов :(</string>
+    <string name="addadescription">Добавь описание!</string>
+    <string name="blockUser">Заблокировать </string>
+    <string name="unlock">Разблокировать</string>
+    <string name="useraddedtoblacklist">Пользователь добавлен в черный список</string>
+    <string name="subscribeto">Подпишись на </string>
+    <string name="requested">Запрошено</string>
+    <string name="blockedyou"> заблокировал тебя</string>
+    <string name="theuserhasblockedyou">Пользователь заблокировал тебя</string>
+    <string name="userremovedfromsubscribers">Пользователь удален из подписчиков</string>
+    <string name="theuserisnotfollowingyou">Пользователь не подписан на тебя</string>
+    <string name="openchat">Открыть чат</string>
+    <string name="loginwithGoogle">Вход через Google</string>
+    <string name="looksaved">Образ сохранен</string>
 
 
 

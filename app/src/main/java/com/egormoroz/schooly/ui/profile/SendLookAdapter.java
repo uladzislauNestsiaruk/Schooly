@@ -50,8 +50,8 @@ public class SendLookAdapter extends RecyclerView.Adapter<SendLookAdapter.ViewHo
         holder.send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(holder.send.getText().equals("Отправить")){
-                    holder.send.setText("Открыть чат");
+                if(holder.send.getText().equals(holder.send.getContext().getResources().getText(R.string.send))){
+                    holder.send.setText(holder.send.getContext().getResources().getText(R.string.openchat));
                     holder.send.setTextColor(Color.parseColor("#F3A2E5"));
                     holder.send.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
                     itemClickListener.onItemClick(subscriber.getSub(),"send");

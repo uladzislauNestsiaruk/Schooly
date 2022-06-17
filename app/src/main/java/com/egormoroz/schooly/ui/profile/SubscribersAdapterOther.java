@@ -79,7 +79,7 @@ public class SubscribersAdapterOther extends RecyclerView.Adapter<SubscribersAda
         for(int i=0;i<userInformation.getSubscription().size();i++){
             Subscriber sub=userInformation.getSubscription().get(i);
             if(sub.getSub().equals(subscriber.getSub())){
-                holder.newSubscribe.setText("Отписаться");
+                holder.newSubscribe.setText(holder.newSubscribe.getContext().getResources().getText(R.string.unsubscride));
                 holder.newSubscribe.setTextColor(Color.parseColor("#F3A2E5"));
                 holder.newSubscribe.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
             }
@@ -88,7 +88,7 @@ public class SubscribersAdapterOther extends RecyclerView.Adapter<SubscribersAda
         for (int i=0;i<userInformation.getBlackList().size();i++){
             Subscriber sub=userInformation.getBlackList().get(i);
             if(sub.getSub().equals(subscriber.getSub())){
-                holder.newSubscribe.setText("Pазблокировать");
+                holder.newSubscribe.setText(holder.newSubscribe.getContext().getResources().getText(R.string.unlock));
                 holder.newSubscribe.setTextColor(Color.parseColor("#F3A2E5"));
                 holder.newSubscribe.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
             }
@@ -99,7 +99,7 @@ public class SubscribersAdapterOther extends RecyclerView.Adapter<SubscribersAda
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists()){
-                    holder.newSubscribe.setText("Запрошено");
+                    holder.newSubscribe.setText(holder.newSubscribe.getContext().getResources().getText(R.string.requested));
                     holder.newSubscribe.setTextColor(Color.parseColor("#F3A2E5"));
                     holder.newSubscribe.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
                 }
@@ -150,7 +150,7 @@ public class SubscribersAdapterOther extends RecyclerView.Adapter<SubscribersAda
                                                                 DataSnapshot snapshot=task.getResult();
                                                                 if (snapshot.exists()) {
                                                                     a=5;
-                                                                    holder.newSubscribe.setText("Pазблокировать");
+                                                                    holder.newSubscribe.setText(holder.newSubscribe.getContext().getResources().getText(R.string.unlock));
                                                                     holder.newSubscribe.setTextColor(Color.parseColor("#F3A2E5"));
                                                                     holder.newSubscribe.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
                                                                 }
@@ -177,7 +177,7 @@ public class SubscribersAdapterOther extends RecyclerView.Adapter<SubscribersAda
                                                                                             .child(subscriber.getSub()).child("nontifications")
                                                                                             .child(numToBase).setValue(new Nontification(nick,"не отправлено","обычный"
                                                                                             ,""," "," ","не просмотрено",numToBase,0));
-                                                                                    holder.newSubscribe.setText("Отписаться");
+                                                                                    holder.newSubscribe.setText(holder.newSubscribe.getContext().getResources().getText(R.string.unsubscride));
                                                                                     holder.newSubscribe.setTextColor(Color.parseColor("#F3A2E5"));
                                                                                     holder.newSubscribe.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
                                                                                     a=0;
@@ -194,7 +194,7 @@ public class SubscribersAdapterOther extends RecyclerView.Adapter<SubscribersAda
                                                                                             .child(subscriber.getSub()).child("nontifications")
                                                                                             .child(numToBase).setValue(new Nontification(nick,"не отправлено","запрос"
                                                                                             ,""," "," ","не просмотрено",numToBase,0));
-                                                                                    holder.newSubscribe.setText("Запрошено");
+                                                                                    holder.newSubscribe.setText(holder.newSubscribe.getContext().getResources().getText(R.string.requested));
                                                                                     holder.newSubscribe.setTextColor(Color.parseColor("#F3A2E5"));
                                                                                     holder.newSubscribe.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
                                                                                     a=0;
@@ -213,7 +213,7 @@ public class SubscribersAdapterOther extends RecyclerView.Adapter<SubscribersAda
                                                                                 .child(subscriber.getSub()).removeValue();
                                                                         firebaseModel.getReference().child("users").child(subscriber.getSub()).child("subscribers")
                                                                                 .child(nick).removeValue();
-                                                                        holder.newSubscribe.setText("Подписаться");
+                                                                        holder.newSubscribe.setText(holder.newSubscribe.getContext().getResources().getText(R.string.subscride));
                                                                         holder.newSubscribe.setTextColor(Color.parseColor("#FFFEFE"));
                                                                         holder.newSubscribe.setBackgroundResource(R.drawable.corners10dpappcolor);
                                                                         a=0;
@@ -222,19 +222,19 @@ public class SubscribersAdapterOther extends RecyclerView.Adapter<SubscribersAda
                                                                     if (a == 3) {
                                                                         firebaseModel.getReference().child("users").child(subscriber.getSub()).child("requests")
                                                                                 .child(nick).removeValue();
-                                                                        holder.newSubscribe.setText("Подписаться");
+                                                                        holder.newSubscribe.setText(holder.newSubscribe.getContext().getResources().getText(R.string.subscride));
                                                                         holder.newSubscribe.setTextColor(Color.parseColor("#FFFEFE"));
                                                                         holder.newSubscribe.setBackgroundResource(R.drawable.corners10dpappcolor);
                                                                         a=0;
 
                                                                     }if (a == 4) {
-                                                                        Toast.makeText(v.getContext(), "Пользователь заблокировал тебя", Toast.LENGTH_SHORT).show();
+                                                                        Toast.makeText(v.getContext(), v.getContext().getResources().getText(R.string.theuserhasblockedyou), Toast.LENGTH_SHORT).show();
                                                                         a=0;
                                                                     }
                                                                     if (a == 5) {
                                                                         firebaseModel.getUsersReference().child(nick).child("blackList")
                                                                                 .child(subscriber.getSub()).removeValue();
-                                                                        holder.newSubscribe.setText("Подписаться");
+                                                                        holder.newSubscribe.setText(holder.newSubscribe.getContext().getResources().getText(R.string.subscride));
                                                                         holder.newSubscribe.setTextColor(Color.parseColor("#FFFEFE"));
                                                                         holder.newSubscribe.setBackgroundResource(R.drawable.corners10dpappcolor);
                                                                         a=0;
