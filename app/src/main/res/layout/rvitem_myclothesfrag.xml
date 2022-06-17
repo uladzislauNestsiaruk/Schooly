@@ -19,7 +19,6 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/montserratblack"
         android:textSize="22sp"
-        android:text="Jordan 1"
         android:textColor="@color/app_color"
         />
 

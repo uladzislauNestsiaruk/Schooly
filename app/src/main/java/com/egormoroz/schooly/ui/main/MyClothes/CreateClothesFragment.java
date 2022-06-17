@@ -254,7 +254,7 @@ public class CreateClothesFragment extends Fragment {
                 }
                 if(editClothesPrice.getText().toString().length()==0 ||
                         editClothesPrice.getText().toString().equals("0") ){
-                        noSum.setVisibility(View.VISIBLE);
+                    noSum.setVisibility(View.VISIBLE);
                 }else {
                     if(editClothesPrice.getText().toString().contains("-")){
                         noSum.setVisibility(View.VISIBLE);

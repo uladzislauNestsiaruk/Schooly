@@ -374,8 +374,8 @@
     <string name="reasonAnswer">Rejection reason:</string>
     <string name="answer">Reply</string>
     <string name="adding">Addendum:</string>
-    <string name="clothesCreators">Clothing Makers</string>
-    <string name="clothesCreators2">Clothing creators:</string>
+    <string name="clothesCreators">Look components</string>
+    <string name="clothesCreators2">Look components:</string>
 
     <string name="lookConstituents">Components of the image:</string>
 

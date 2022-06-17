@@ -374,8 +374,8 @@
     <string name="reasonAnswer">Причина отказа:</string>
     <string name="answer">Ответить</string>
     <string name="adding">Добавление:</string>
-    <string name="clothesCreators">Создатели одежды</string>
-    <string name="clothesCreators2">Создатели одежды:</string>
+    <string name="clothesCreators">Составляющие образа</string>
+    <string name="clothesCreators2">Составляющие образа:</string>
 
     <string name="lookConstituents">Составляющие образа:</string>
 
