@@ -1,6 +1,7 @@
 package com.egormoroz.schooly.ui.coins;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -120,24 +121,33 @@ public class SendMoneyFragment extends Fragment {
                 }else if(sumLong>userInformation.getmoney()){
                     Toast.makeText(getContext(), getContext().getResources().getText(R.string.insufficientfundstotransfer), Toast.LENGTH_SHORT).show();
                 }else if(sumLong<userInformation.getmoney() && !sumText.equals("0")){
-                    firebaseModel.getUsersReference().child(otherUserNick).child("money")
-                            .setValue(sumLong+moneyBaseOther);
-                    firebaseModel.getUsersReference().child(nick).child("money")
-                            .setValue(userInformation.getmoney()-sumLong);
-                    Toast.makeText(getContext(), getContext().getResources().getText(R.string.translationdone), Toast.LENGTH_SHORT).show();
-                    String num=firebaseModel.getUsersReference().child(otherUserNick).child("transferHistory")
-                            .push().getKey();
-                    firebaseModel.getUsersReference().child(otherUserNick).child("transferHistory")
-                            .child(num).setValue(new Transfer(sumLong, nick, "from"));
-                    firebaseModel.getUsersReference().child(nick).child("transferHistory")
-                            .child(num).setValue(new Transfer(sumLong, otherUserNick, "to"));
-                    String uid=firebaseModel.getReference().child("users")
-                            .child(otherUserNick).child("nontifications").push().getKey();
-                    firebaseModel.getReference().child("users")
-                            .child(otherUserNick).child("nontifications")
-                            .child(uid).setValue(new Nontification(nick,"не отправлено","перевод"
-                            , "",String.valueOf(sumLong)," ","не просмотрено",uid,0));
-                    RecentMethods.setCurrentFragment(TransferMoneyFragment.newInstance(fragment,userInformation,bundle), getActivity());
+                    firebaseModel.getUsersReference().child(otherUserNick).child("money").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DataSnapshot> task) {
+                            if (task.isSuccessful()){
+                                DataSnapshot snapshot=task.getResult();
+                                moneyBaseOther=snapshot.getValue(Long.class);
+                                firebaseModel.getUsersReference().child(otherUserNick).child("money")
+                                        .setValue(sumLong+moneyBaseOther);
+                                firebaseModel.getUsersReference().child(nick).child("money")
+                                        .setValue(userInformation.getmoney()-sumLong);
+                                Toast.makeText(getContext(), getContext().getResources().getText(R.string.translationdone), Toast.LENGTH_SHORT).show();
+                                String num=firebaseModel.getUsersReference().child(otherUserNick).child("transferHistory")
+                                        .push().getKey();
+                                firebaseModel.getUsersReference().child(otherUserNick).child("transferHistory")
+                                        .child(num).setValue(new Transfer(sumLong, nick, "from"));
+                                firebaseModel.getUsersReference().child(nick).child("transferHistory")
+                                        .child(num).setValue(new Transfer(sumLong, otherUserNick, "to"));
+                                String uid=firebaseModel.getReference().child("users")
+                                        .child(otherUserNick).child("nontifications").push().getKey();
+                                firebaseModel.getReference().child("users")
+                                        .child(otherUserNick).child("nontifications")
+                                        .child(uid).setValue(new Nontification(nick,"не отправлено","перевод"
+                                        , "",String.valueOf(sumLong)," ","не просмотрено",uid,0));
+                                RecentMethods.setCurrentFragment(TransferMoneyFragment.newInstance(fragment,userInformation,bundle), getActivity());
+                            }
+                        }
+                    });
                 }
             }
         }

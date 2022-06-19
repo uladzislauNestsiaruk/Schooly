@@ -860,6 +860,7 @@ public class ProfileFragment extends Fragment {
                     DataSnapshot snapshot=task.getResult();
                     if(snapshot.exists()){
                         profileCheckValue=1;
+                        bundle.putString(sendNick+"PROFILE_OTHER_CHECK_VALUE",String.valueOf(profileCheckValue));
                     }else {
                         firebaseModel.getUsersReference().child(info.getNick())
                                 .child("accountType").get()
@@ -1276,7 +1277,7 @@ public class ProfileFragment extends Fragment {
                 });
                 subscribeClose.setTextColor(Color.parseColor("#FEFEFE"));
                 blockedAccount.setVisibility(View.VISIBLE);
-                blockedAccount.setText(info.getNick() +getContext().getResources().getString(R.string.blockedyou));
+                blockedAccount.setText(info.getNick() +" "+blockedAccount.getContext().getResources().getString(R.string.blockedyou));
                 message.setVisibility(View.GONE);
                 tabLayoutOther.setVisibility(View.GONE);
                 viewPagerOther.setVisibility(View.GONE);
