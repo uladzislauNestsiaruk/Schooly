@@ -12,7 +12,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="12dp"
         android:layout_marginEnd="16dp"
-        android:text="К сожалению, вы не подписаны на Schooly Premium"
+        android:text="@string/youarenotsubscribedtoSchoolyPremium"
         android:fontFamily="@font/montserrat_bold"
         android:textColor="@color/app_grey"
         android:textSize="16sp" />

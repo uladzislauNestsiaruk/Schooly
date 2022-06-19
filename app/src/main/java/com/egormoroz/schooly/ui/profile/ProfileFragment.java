@@ -1169,9 +1169,9 @@ public class ProfileFragment extends Fragment {
                 if (subscribeValue==1) {
                     subscribe.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
                     subscribe.setTextColor(Color.parseColor("#F3A2E5"));
-                    subscribe.setText(getContext().getResources().getText(R.string.unsubscride));
+                    subscribe.setText(R.string.unsubscride);
                 } else {
-                    subscribe.setText(getContext().getResources().getText(R.string.subscride));
+                    subscribe.setText(R.string.subscride);
                     subscribe.setTextColor(Color.parseColor("#FFFEFE"));
                     subscribe.setBackgroundResource(R.drawable.corners10dpappcolor);
                 }
@@ -1179,7 +1179,7 @@ public class ProfileFragment extends Fragment {
                     Subscriber sub=userInformation.getBlackList().get(i);
                     if(sub.getSub().equals(info.getNick())){
                         a=5;
-                        subscribe.setText(getContext().getResources().getText(R.string.unlock));
+                        subscribe.setText(R.string.unlock);
                         subscribe.setTextColor(Color.parseColor("#F3A2E5"));
                         subscribe.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
                     }
@@ -1197,7 +1197,7 @@ public class ProfileFragment extends Fragment {
                 blockedAccount.setVisibility(View.GONE);
                 tabLayoutOther.setVisibility(View.GONE);
                 viewPagerOther.setVisibility(View.GONE);
-                subscribeFirst.setText(getContext().getResources().getText(R.string.subscribeto)+ info.getNick() + " !");
+                subscribeFirst.setText(getContext().getResources().getText(R.string.subscribeto)+" "+ info.getNick() +" "+" !");
                 message.setVisibility(View.GONE);
                 subscribe.setVisibility(View.GONE);
                 moreSquare.setOnClickListener(new View.OnClickListener() {
@@ -1210,7 +1210,7 @@ public class ProfileFragment extends Fragment {
                     Subscriber sub=userInformation.getBlackList().get(i);
                     if(sub.getSub().equals(info.getNick())){
                         a=5;
-                        subscribeClose.setText(getContext().getResources().getText(R.string.unlock));
+                        subscribeClose.setText(R.string.unlock);
                         subscribeClose.setTextColor(Color.parseColor("#F3A2E5"));
                         subscribeClose.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
                     }
@@ -1221,11 +1221,11 @@ public class ProfileFragment extends Fragment {
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         if (snapshot.exists()) {
                             a = 3;
-                            subscribeClose.setText(getContext().getResources().getText(R.string.requested));
+                            subscribeClose.setText(R.string.requested);
                             subscribeClose.setTextColor(Color.parseColor("#F3A2E5"));
                             subscribeClose.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
                         }else{
-                            subscribeClose.setText(getContext().getResources().getText(R.string.subscride));
+                            subscribeClose.setText(R.string.subscride);
                             subscribeClose.setTextColor(Color.parseColor("#FFFEFE"));
                             subscribeClose.setBackgroundResource(R.drawable.corners10dpappcolor);
                         }
@@ -1356,7 +1356,7 @@ public class ProfileFragment extends Fragment {
                                                                                     if(b==1){
                                                                                         checkCounts(String.valueOf(info.getSubscribers().size()+1), otherSubscribersCount);
                                                                                     }
-                                                                                    subscribe.setText(getContext().getResources().getText(R.string.unsubscride));
+                                                                                    subscribe.setText(R.string.unsubscride);
                                                                                     subscribe.setTextColor(Color.parseColor("#F3A2E5"));
                                                                                     subscribe.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
                                                                                     a = 0;
@@ -1383,7 +1383,7 @@ public class ProfileFragment extends Fragment {
                                                                                     checkCounts(String.valueOf(info.getSubscribers().size()-1), otherSubscribersCount);
                                                                                 }
                                                                                 if(snapshot1.getValue(String.class).equals("open")){
-                                                                                    subscribe.setText(getContext().getResources().getText(R.string.subscride));
+                                                                                    subscribe.setText(R.string.subscride);
                                                                                     subscribe.setTextColor(Color.parseColor("#FFFEFE"));
                                                                                     subscribe.setBackgroundResource(R.drawable.corners10dpappcolor);
                                                                                     a = 0;
@@ -1408,7 +1408,7 @@ public class ProfileFragment extends Fragment {
                                                                                 firebaseModel.getUsersReference().child(userInformation.getNick()).child("blackList")
                                                                                         .child(info.getNick()).removeValue();
                                                                                 if(snapshot1.getValue(String.class).equals("open") && v==0){
-                                                                                    subscribe.setText(getContext().getResources().getText(R.string.subscride));
+                                                                                    subscribe.setText(R.string.subscride);
                                                                                     subscribe.setTextColor(Color.parseColor("#FFFEFE"));
                                                                                     subscribe.setBackgroundResource(R.drawable.corners10dpappcolor);
                                                                                     a = 0;

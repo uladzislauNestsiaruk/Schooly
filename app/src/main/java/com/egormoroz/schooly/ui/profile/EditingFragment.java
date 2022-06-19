@@ -129,12 +129,11 @@ public class EditingFragment extends Fragment {
     public void changeBio(){
         agree.setVisibility(View.VISIBLE);
         agree.setOnClickListener(new View.OnClickListener() {
-            String bioText= String.valueOf(bioEdit.getText().toString().trim());
             public void onClick(View v) {
-                firebaseModel.getUsersReference().child(nickname).child("bio").setValue(bioText);
+                String bioText= String.valueOf(bioEdit.getText().toString().trim());
+                firebaseModel.getUsersReference().child(nick).child("bio").setValue(bioText);
                 Toast.makeText(getContext(), R.string.changessaved, Toast.LENGTH_SHORT).show();
-                firebaseModel.getUsersReference().child(nick).child("bio")
-                        .get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                firebaseModel.getUsersReference().child(nick).child("bio").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DataSnapshot> task) {
                         if(task.isSuccessful()){
@@ -143,6 +142,7 @@ public class EditingFragment extends Fragment {
                         }
                     }
                 });
+
             }
         });
     }

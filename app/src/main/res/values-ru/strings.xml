@@ -494,6 +494,8 @@
     <string name="openchat">Открыть чат</string>
     <string name="loginwithGoogle">Вход через Google</string>
     <string name="looksaved">Образ сохранен</string>
+    <string name="youarenotsubscribedtoSchoolyPremium">К сожалению, вы не подписаны на Schooly Premium</string>
+    <string name="coins1"> коинов</string>
 
 
 

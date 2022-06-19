@@ -114,8 +114,7 @@
                 android:paddingTop="8dp"
                 android:textColor="@color/white"
                 android:textSize="14sp"
-                android:fontFamily="@font/montserrat_extrabold"
-                android:text="@string/subscride"/>
+                android:fontFamily="@font/montserrat_extrabold" />
 
         </LinearLayout>
 

@@ -104,7 +104,7 @@ public class NontificationAdapter extends RecyclerView.Adapter<NontificationAdap
         }else if(nontification.getTypeView().equals("обычный")) {
             holder.otherUserNick.setVisibility(View.VISIBLE);
             holder.userImage.setVisibility(View.VISIBLE);
-            holder.otherUserNick.setText(nontification.getNick()+holder.otherUserNick.getContext().getResources().getString(R.string.subscribeyou));
+            holder.otherUserNick.setText(nontification.getNick()+" "+holder.otherUserNick.getContext().getResources().getString(R.string.subscribeyou));
             holder.otherUserNick.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -115,7 +115,7 @@ public class NontificationAdapter extends RecyclerView.Adapter<NontificationAdap
         }else if(nontification.getTypeView().equals("одежда")) {
             holder.otherUserNick.setVisibility(View.VISIBLE);
             holder.userImage.setVisibility(View.VISIBLE);
-            holder.otherUserNick.setText(nontification.getNick()+holder.otherUserNick.getContext().getResources().getString(R.string.boughtfromyou)+nontification.getClothesName());
+            holder.otherUserNick.setText(nontification.getNick()+" "+holder.otherUserNick.getContext().getResources().getString(R.string.boughtfromyou)+" "+nontification.getClothesName());
             holder.otherUserNick.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -126,7 +126,8 @@ public class NontificationAdapter extends RecyclerView.Adapter<NontificationAdap
         }else if (nontification.getTypeView().equals("перевод")){
             holder.otherUserNick.setVisibility(View.VISIBLE);
             holder.userImage.setVisibility(View.VISIBLE);
-            holder.otherUserNick.setText(nontification.getNick()+holder.otherUserNick.getContext().getResources().getString(R.string.translatedtoyou)+nontification.getClothesName()+"S коинов");
+            holder.otherUserNick.setText(nontification.getNick()+" "+holder.otherUserNick.getContext().getResources().getString(R.string.translatedtoyou)+" "+nontification.getClothesName()+"S"+" "+
+                    holder.otherUserNick.getContext().getResources().getString(R.string.coins1));
             holder.otherUserNick.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -138,8 +139,7 @@ public class NontificationAdapter extends RecyclerView.Adapter<NontificationAdap
             holder.otherUserNick.setVisibility(View.VISIBLE);
             holder.userImage.setVisibility(View.VISIBLE);
             Picasso.get().load(nontification.getClothesImage()).into(holder.userImage);
-            holder.otherUserNick.setText(holder.otherUserNick.getContext().getResources().getText(R.string.applicationreceivedru)
-                    +nontification.getClothesName()+holder.otherUserNick.getContext().getResources().getText(R.string.applicationreceiveden));
+            holder.otherUserNick.setText(holder.otherUserNick.getContext().getResources().getText(R.string.applicationreceivedru)+" "+nontification.getClothesName()+" "+holder.otherUserNick.getContext().getResources().getText(R.string.applicationreceiveden));
             holder.addFriend.setVisibility(View.VISIBLE);
             holder.addFriend.setText(holder.addFriend.getContext().getResources().getText(R.string.moveto));
             holder.addFriend.setOnClickListener(new View.OnClickListener() {
@@ -153,7 +153,7 @@ public class NontificationAdapter extends RecyclerView.Adapter<NontificationAdap
         else if (nontification.getTypeView().equals("подарок")){
             holder.otherUserNick.setVisibility(View.VISIBLE);
             holder.userImage.setVisibility(View.VISIBLE);
-            holder.otherUserNick.setText(nontification.getNick()+holder.otherUserNick.getContext().getResources().getString(R.string.gaveyou)+nontification.getClothesName()+" !!!");
+            holder.otherUserNick.setText(nontification.getNick()+" "+holder.otherUserNick.getContext().getResources().getString(R.string.gaveyou)+" "+nontification.getClothesName()+" !!!");
             holder.addFriend.setVisibility(View.GONE);
             holder.otherUserNick.setOnClickListener(new View.OnClickListener() {
                 @Override
