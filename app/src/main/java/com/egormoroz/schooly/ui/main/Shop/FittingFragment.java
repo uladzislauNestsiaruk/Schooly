@@ -2,6 +2,9 @@ package com.egormoroz.schooly.ui.main.Shop;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Surface;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -22,6 +25,11 @@ import com.egormoroz.schooly.ui.main.MyClothes.MyClothesAdapter;
 import com.egormoroz.schooly.ui.main.MyClothes.MyClothesFragment;
 import com.egormoroz.schooly.ui.main.MyClothes.ViewingMyClothes;
 import com.egormoroz.schooly.ui.main.UserInformation;
+import com.google.android.filament.Engine;
+import com.google.android.filament.Filament;
+import com.google.android.filament.Renderer;
+import com.google.android.filament.Scene;
+import com.google.android.filament.SwapChain;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
@@ -33,6 +41,8 @@ public class FittingFragment extends Fragment {
     UserInformation userInformation;
     Bundle bundle;
     Fragment fragment;
+    SurfaceView surfaceView;
+    SurfaceHolder surfaceHolder;
 
     public FittingFragment(Fragment fragment,UserInformation userInformation,Bundle bundle) {
         this.fragment = fragment;
@@ -52,8 +62,6 @@ public class FittingFragment extends Fragment {
         BottomNavigationView bnv = getActivity().findViewById(R.id.bottomNavigationView);
         bnv.setVisibility(bnv.GONE);
         firebaseModel.initAll();
-//        AppBarLayout abl = getActivity().findViewById(R.id.AppBarLayout);
-//        abl.setVisibility(abl.GONE);
         return root;
     }
 
@@ -75,7 +83,21 @@ public class FittingFragment extends Fragment {
                 RecentMethods.setCurrentFragment(fragment, getActivity());
             }
         };
-
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
+
+        surfaceView=view.findViewById(R.id.surfaceView);
+        Filament.init();
+        Engine engine=Engine.create();
+        surfaceHolder=surfaceView.getHolder();
+        Surface surface=surfaceHolder.getSurface();
+        SwapChain swapChain= engine.createSwapChain(surface);
+        Renderer renderer=engine.createRenderer();
+        Scene scene=engine.createScene();
+        com.google.android.filament.View view1=engine.createView();
+        view1.setScene(scene);
+        if (renderer.beginFrame(swapChain)){}{
+            renderer.render(view1);
+            renderer.endFrame();
+        }
     }
 }
