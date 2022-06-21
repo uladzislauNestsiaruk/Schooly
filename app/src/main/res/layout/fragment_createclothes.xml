@@ -159,7 +159,7 @@
                 android:layout_marginTop="20dp"
                 android:src="@drawable/ic_addfile" />
 
-            <com.google.ar.sceneform.SceneView
+            <SurfaceView
                 android:id="@+id/modelFile"
                 android:layout_width="280dp"
                 android:layout_height="280dp"

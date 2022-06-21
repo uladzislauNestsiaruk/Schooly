@@ -54,7 +54,6 @@ import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 
 import com.egormoroz.schooly.Subscriber;
-import com.egormoroz.schooly.ui.Model.SceneViewModelActivity;
 import com.egormoroz.schooly.ui.chat.User;
 import com.egormoroz.schooly.ui.main.ChatActivity;
 import com.egormoroz.schooly.ui.main.MainFragment;
@@ -84,14 +83,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.progressindicator.CircularProgressIndicator;
 import com.google.android.material.tabs.TabLayout;
-import com.google.ar.core.exceptions.CameraNotAvailableException;
-import com.google.ar.sceneform.Node;
-import com.google.ar.sceneform.SceneView;
-import com.google.ar.sceneform.assets.RenderableSource;
-import com.google.ar.sceneform.math.Quaternion;
-import com.google.ar.sceneform.math.Vector3;
-import com.google.ar.sceneform.rendering.ModelRenderable;
-import com.google.ar.sceneform.ux.ArFragment;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -130,7 +121,7 @@ public class ProfileFragment extends Fragment {
     LinearLayout linearSubscribers,linearSubscriptions
             ,linearLooksProfile,linearSubscribersProfile,linearSubscriptionsProfile;
     // ModelSurfaceView modelSurfaceView;
-    SceneView mainLook, otherMainLook;
+   // SceneView mainLook, otherMainLook;
     SendLookAdapter.ItemClickListener itemClickListenerSendLookAdapter;
     // ModelRenderer modelRenderer;
     RecyclerView wardrobeRecycler,recyclerView;
@@ -409,7 +400,7 @@ public class ProfileFragment extends Fragment {
                 handler = new Handler(getMainLooper());
                 //      scene = new SceneLoader(this);
                 //               scene.init(Uri.parse("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2FSciFiHelmet.gltf?alt=media&token=a82512c1-14bf-4faf-8f67-abeb70da7697"));
-                mainLook=view.findViewById(R.id.mainlookview);
+                //mainLook=view.findViewById(R.id.mainlookview);
                 StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("Models");
                 StorageReference islandRef = storageReference.child("models/untitled.gltf");
                 File localFile = null;
@@ -430,8 +421,8 @@ public class ProfileFragment extends Fragment {
                         // Handle any errors
                     }
                 });
-                loadModels(Uri.parse("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Funtitled.glb?alt=media&token=657b45d7-a84b-4f2a-89f4-a699029401f7"), mainLook, ProfileFragment.this, 0.25f);
-                loadModels(Uri.parse("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Funtitled.glb?alt=media&token=657b45d7-a84b-4f2a-89f4-a699029401f7"), mainLook, ProfileFragment.this, 0.5f);
+                //loadModels(Uri.parse("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Funtitled.glb?alt=media&token=657b45d7-a84b-4f2a-89f4-a699029401f7"), mainLook, ProfileFragment.this, 0.25f);
+               // loadModels(Uri.parse("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Funtitled.glb?alt=media&token=657b45d7-a84b-4f2a-89f4-a699029401f7"), mainLook, ProfileFragment.this, 0.5f);
 
 
 
@@ -488,8 +479,8 @@ public class ProfileFragment extends Fragment {
                                         viewPagerOther=view.findViewById(R.id.viewPagerOther);
                                         setFragmentOtherViewPager(profileCheckValue);
                                         setCountsOther();
-                                        loadModels(Uri.parse("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Funtitled.glb?alt=media&token=657b45d7-a84b-4f2a-89f4-a699029401f7")
-                                                , otherMainLook, ProfileFragment.this, 0.25f);
+                                        //loadModels(Uri.parse("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Funtitled.glb?alt=media&token=657b45d7-a84b-4f2a-89f4-a699029401f7")
+                                        //        , otherMainLook, ProfileFragment.this, 0.25f);
                                         firebaseModel.getUsersReference().child(userInformation.getNick()).child("subscription")
                                                 .child(info.getNick()).addValueEventListener(new ValueEventListener() {
                                             @Override
@@ -516,8 +507,8 @@ public class ProfileFragment extends Fragment {
                             tabLayoutOther=view.findViewById(R.id.tabsprofileother);
                             viewPagerOther=view.findViewById(R.id.viewPagerOther);
                             setCountsOther();
-                            loadModels(Uri.parse("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Funtitled.glb?alt=media&token=657b45d7-a84b-4f2a-89f4-a699029401f7")
-                                    , otherMainLook, ProfileFragment.this, 0.25f);
+                            //loadModels(Uri.parse("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Funtitled.glb?alt=media&token=657b45d7-a84b-4f2a-89f4-a699029401f7")
+                                //    , otherMainLook, ProfileFragment.this, 0.25f);
                             if(bundle.getString(sendNick+"PROFILE_OTHER_CHECK_SUBSCRIBE_VALUE")!=null){
                                 checkProfileValue(Integer.valueOf(bundle.getString(sendNick+"PROFILE_OTHER_CHECK_VALUE")),
                                         view,Integer.valueOf(bundle.getString(sendNick+"PROFILE_OTHER_CHECK_SUBSCRIBE_VALUE")));
@@ -584,8 +575,8 @@ public class ProfileFragment extends Fragment {
                                                     viewPagerOther=view.findViewById(R.id.viewPagerOther);
                                                     setFragmentOtherViewPager(profileCheckValue);
                                                     setCountsOther();
-                                                    loadModels(Uri.parse("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Funtitled.glb?alt=media&token=657b45d7-a84b-4f2a-89f4-a699029401f7")
-                                                            , otherMainLook, ProfileFragment.this, 0.25f);
+                                                    //loadModels(Uri.parse("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Funtitled.glb?alt=media&token=657b45d7-a84b-4f2a-89f4-a699029401f7")
+                                                      //      , otherMainLook, ProfileFragment.this, 0.25f);
                                                     firebaseModel.getUsersReference().child(userInformation.getNick()).child("subscription")
                                                             .child(info.getNick()).addValueEventListener(new ValueEventListener() {
                                                         @Override
@@ -767,7 +758,7 @@ public class ProfileFragment extends Fragment {
                 handler = new Handler(getMainLooper());
                 //      scene = new SceneLoader(this);
                 //               scene.init(Uri.parse("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2FSciFiHelmet.gltf?alt=media&token=a82512c1-14bf-4faf-8f67-abeb70da7697"));
-                mainLook=view.findViewById(R.id.mainlookview);
+                //mainLook=view.findViewById(R.id.mainlookview);
                 StorageReference storageReference1 = FirebaseStorage.getInstance().getReference().child("Models");
                 StorageReference islandRef1 = storageReference1.child("models/untitled.gltf");
                 File localFile1 = null;
@@ -788,7 +779,7 @@ public class ProfileFragment extends Fragment {
                         // Handle any errors
                     }
                 });
-                loadModels(Uri.parse("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Funtitled.glb?alt=media&token=657b45d7-a84b-4f2a-89f4-a699029401f7"), mainLook, ProfileFragment.this, 0.25f);
+                //loadModels(Uri.parse("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Funtitled.glb?alt=media&token=657b45d7-a84b-4f2a-89f4-a699029401f7"), mainLook, ProfileFragment.this, 0.25f);
 
                 break;
 
@@ -1119,7 +1110,7 @@ public class ProfileFragment extends Fragment {
             circularProgressIndicator.setVisibility(View.GONE);
             otherUserBiography = view.findViewById(R.id.otheruserbiography);
             subscribeClose = view.findViewById(R.id.subscribeClose);
-            otherMainLook = view.findViewById(R.id.mainlookview);
+            //otherMainLook = view.findViewById(R.id.mainlookview);
             otherUserBiography.setText(info.getBio());
             subscribe = view.findViewById(R.id.addFriend);
             subscribeFirst = view.findViewById(R.id.SubscribeFirst);
@@ -1476,47 +1467,47 @@ public class ProfileFragment extends Fragment {
 //
 //    }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    public void loadModels(Uri url, SceneView sceneView, Fragment fragment, float scale) {
-        if(getContext()==null){
-
-        }else {
-            ModelRenderable.builder()
-                    .setSource(
-                            fragment.getContext(), new RenderableSource.Builder().setSource(
-                                    fragment.getContext(),
-                                    url,
-                                    RenderableSource.SourceType.GLB
-                            ).setScale(scale)
-                                    .setRecenterMode(RenderableSource.RecenterMode.CENTER)
-                                    .build()
-                    )
-                    .setRegistryId(url)
-                    .build()
-                    .thenAccept(new Consumer<ModelRenderable>() {
-                        @Override
-                        public void accept(ModelRenderable modelRenderable) {
-                            addNode(modelRenderable, sceneView);
-                        }
-                    });
-        }
-    }
-
-    public void addNode(ModelRenderable modelRenderable, SceneView sceneView) {
-        Node modelNode1 = new Node();
-        modelNode1.setRenderable(modelRenderable);
-        modelNode1.setLocalScale(new Vector3(0.3f, 0.3f, 0.3f));
-//        modelNode1.setLocalRotation(Quaternion.multiply(
-//                Quaternion.axisAngle(new Vector3(1f, 0f, 0f), 45),
-//                Quaternion.axisAngle(new Vector3(0f, 1f, 0f), 75)));
-        modelNode1.setLocalPosition(new Vector3(0f, 0f, -0.9f));
-        sceneView.getScene().addChild(modelNode1);
-        try {
-            sceneView.resume();
-        } catch (CameraNotAvailableException e) {
-            e.printStackTrace();
-        }
-    }
+//    @RequiresApi(api = Build.VERSION_CODES.N)
+//    public void loadModels(Uri url, SceneView sceneView, Fragment fragment, float scale) {
+//        if(getContext()==null){
+//
+//        }else {
+//            ModelRenderable.builder()
+//                    .setSource(
+//                            fragment.getContext(), new RenderableSource.Builder().setSource(
+//                                    fragment.getContext(),
+//                                    url,
+//                                    RenderableSource.SourceType.GLB
+//                            ).setScale(scale)
+//                                    .setRecenterMode(RenderableSource.RecenterMode.CENTER)
+//                                    .build()
+//                    )
+//                    .setRegistryId(url)
+//                    .build()
+//                    .thenAccept(new Consumer<ModelRenderable>() {
+//                        @Override
+//                        public void accept(ModelRenderable modelRenderable) {
+//                            addNode(modelRenderable, sceneView);
+//                        }
+//                    });
+//        }
+//    }
+//
+//    public void addNode(ModelRenderable modelRenderable, SceneView sceneView) {
+//        Node modelNode1 = new Node();
+//        modelNode1.setRenderable(modelRenderable);
+//        modelNode1.setLocalScale(new Vector3(0.3f, 0.3f, 0.3f));
+////        modelNode1.setLocalRotation(Quaternion.multiply(
+////                Quaternion.axisAngle(new Vector3(1f, 0f, 0f), 45),
+////                Quaternion.axisAngle(new Vector3(0f, 1f, 0f), 75)));
+//        modelNode1.setLocalPosition(new Vector3(0f, 0f, -0.9f));
+//        sceneView.getScene().addChild(modelNode1);
+//        try {
+//            sceneView.resume();
+//        } catch (CameraNotAvailableException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     public class FragmentAdapter extends FragmentStateAdapter {
 

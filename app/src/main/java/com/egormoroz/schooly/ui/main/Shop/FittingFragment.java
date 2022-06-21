@@ -1,5 +1,6 @@
 package com.egormoroz.schooly.ui.main.Shop;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Surface;
@@ -26,12 +27,24 @@ import com.egormoroz.schooly.ui.main.MyClothes.MyClothesFragment;
 import com.egormoroz.schooly.ui.main.MyClothes.ViewingMyClothes;
 import com.egormoroz.schooly.ui.main.UserInformation;
 import com.google.android.filament.Engine;
+import com.google.android.filament.EntityManager;
 import com.google.android.filament.Filament;
+import com.google.android.filament.RenderableManager;
 import com.google.android.filament.Renderer;
 import com.google.android.filament.Scene;
 import com.google.android.filament.SwapChain;
+import com.google.android.filament.android.UiHelper;
+import com.google.android.filament.gltfio.AssetLoader;
+import com.google.android.filament.gltfio.FilamentAsset;
+import com.google.android.filament.gltfio.Gltfio;
+import com.google.android.filament.gltfio.MaterialProvider;
+import com.google.android.filament.gltfio.UbershaderLoader;
+import com.google.android.filament.utils.AutomationEngine;
+import com.google.android.filament.utils.Manipulator;
+import com.google.android.filament.utils.ModelViewer;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.nio.Buffer;
 import java.util.ArrayList;
 
 public class FittingFragment extends Fragment {
@@ -87,15 +100,25 @@ public class FittingFragment extends Fragment {
 
         surfaceView=view.findViewById(R.id.surfaceView);
         Filament.init();
+        Gltfio.init();
+        AutomationEngine.ViewerContent viewerContent=new AutomationEngine.ViewerContent();
+//        viewerContent.renderer=e
         Engine engine=Engine.create();
+        MaterialProvider materialProvider=new UbershaderLoader(engine);
+        AssetLoader assetLoader=new AssetLoader(engine, materialProvider, EntityManager.get());
+        long a =100;
+//        ModelViewer modelViewer=new ModelViewer(surfaceView, engine, new UiHelper(), new Manipulator(a));
+ //       modelViewer.loadModelGlb(Uri.parse("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2FSciFiHelmet.gltf?alt=media&token=a82512c1-14bf-4faf-8f67-abeb70da7697"));
         surfaceHolder=surfaceView.getHolder();
         Surface surface=surfaceHolder.getSurface();
         SwapChain swapChain= engine.createSwapChain(surface);
         Renderer renderer=engine.createRenderer();
+        RenderableManager.Builder ren=new RenderableManager.Builder(10);
+        ren.build(engine, 10);
         Scene scene=engine.createScene();
         com.google.android.filament.View view1=engine.createView();
         view1.setScene(scene);
-        if (renderer.beginFrame(swapChain)){}{
+        if (renderer.beginFrame(swapChain,1000)){}{
             renderer.render(view1);
             renderer.endFrame();
         }

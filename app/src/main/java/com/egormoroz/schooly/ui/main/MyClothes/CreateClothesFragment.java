@@ -36,12 +36,6 @@ import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.ar.core.exceptions.CameraNotAvailableException;
-import com.google.ar.sceneform.Node;
-import com.google.ar.sceneform.SceneView;
-import com.google.ar.sceneform.assets.RenderableSource;
-import com.google.ar.sceneform.math.Vector3;
-import com.google.ar.sceneform.rendering.ModelRenderable;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -66,7 +60,7 @@ public class CreateClothesFragment extends Fragment {
     RadioGroup radioGroup,radioGroupCurrency,radioGroupExclusive;
     private String checker = "", myUrl = "";
     private Uri fileUri;
-    SceneView modelScene;
+    //SceneView modelScene;
     private StorageTask uploadTask;
     RadioButton radioButton1,radioButton2,radioButton3,radioButton4
             ,radioButton5,radioButton6,radioButton7,radioButton8
@@ -137,7 +131,7 @@ public class CreateClothesFragment extends Fragment {
         radioGroupExclusive=view.findViewById(R.id.radioGroupExclusive);
         radioButtonExclusiveYes=view.findViewById(R.id.radioButtonExclusiveYes);
         radioButtonExclusiveNo=view.findViewById(R.id.radioButtonExclusiveNo);
-        modelScene=view.findViewById(R.id.modelFile);
+        //modelScene=view.findViewById(R.id.modelFile);
         before=view.findViewById(R.id.before);
         criteria=view.findViewById(R.id.criteria);
         noPhoto=view.findViewById(R.id.noPhoto);
@@ -268,14 +262,15 @@ public class CreateClothesFragment extends Fragment {
                 }else {
                     noPhoto.setVisibility(View.GONE);
                 }
-                if(modelScene.getVisibility()==View.GONE){
-                    noModel.setVisibility(View.VISIBLE);
-                }else {
-                    noModel.setVisibility(View.GONE);
-                }
+//                if(modelScene.getVisibility()==View.GONE){
+//                    noModel.setVisibility(View.VISIBLE);
+//                }
+//                else {
+ //                   noModel.setVisibility(View.GONE);
+ //               }
                 if(editTextClothes.getText().toString().length()>0 && editClothesPrice.getText().toString().length()>0 &&
                         !editClothesPrice.getText().toString().equals("0")&& modelPhoto.getVisibility()==View.VISIBLE
-                        && modelScene.getVisibility()==View.VISIBLE && !editClothesPrice.getText().toString().contains("-")
+                        &&  !editClothesPrice.getText().toString().contains("-")
                 ){
                     showDialogSendClothes();
                 }else {
@@ -359,9 +354,9 @@ public class CreateClothesFragment extends Fragment {
                             public void onComplete(@NonNull Task<DataSnapshot> task) {
                                 if(task.isSuccessful()){
                                     DataSnapshot snapshot= task.getResult();
-                                    modelScene.setVisibility(View.VISIBLE);
+                                   // modelScene.setVisibility(View.VISIBLE);
                                     modelApplication=snapshot.getValue(String.class);
-                                    loadModels(Uri.parse(modelApplication), modelScene, CreateClothesFragment.this, 0.25f);
+                                   // loadModels(Uri.parse(modelApplication), modelScene, CreateClothesFragment.this, 0.25f);
                                     noModel.setVisibility(View.GONE);
                                 }
                             }
@@ -385,8 +380,8 @@ public class CreateClothesFragment extends Fragment {
                 addDescriptionEdit.setText(bundle.getString("EDIT_CLOTHES_DESCRIPTION_TAG"));
             }
             if(bundle.getString("MODEL_CLOTHES_REQUEST")!=null){
-                modelScene.setVisibility(View.VISIBLE);
-                loadModels(Uri.parse(bundle.getString("MODEL_CLOTHES_REQUEST")), modelScene, CreateClothesFragment.this, 0.25f);
+               // modelScene.setVisibility(View.VISIBLE);
+                //loadModels(Uri.parse(bundle.getString("MODEL_CLOTHES_REQUEST")), modelScene, CreateClothesFragment.this, 0.25f);
                 noModel.setVisibility(View.GONE);
             }
             if(bundle.getString("IMAGE_CLOTHES_REQUEST")!=null){
@@ -416,43 +411,43 @@ public class CreateClothesFragment extends Fragment {
         dialog.show();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    public void loadModels(Uri url, SceneView sceneView, Fragment fragment, float scale) {
-        ModelRenderable.builder()
-                .setSource(
-                        fragment.getContext(), new RenderableSource.Builder().setSource(
-                                fragment.getContext(),
-                                url,
-                                RenderableSource.SourceType.GLB
-                        ).setScale(scale)
-                                .setRecenterMode(RenderableSource.RecenterMode.CENTER)
-                                .build()
-                )
-                .setRegistryId(url)
-                .build()
-                .thenAccept(new Consumer<ModelRenderable>() {
-                    @Override
-                    public void accept(ModelRenderable modelRenderable) {
-                        addNode(modelRenderable, sceneView);
-                    }
-                });
-    }
-
-    public void addNode(ModelRenderable modelRenderable, SceneView sceneView) {
-        Node modelNode1 = new Node();
-        modelNode1.setRenderable(modelRenderable);
-        modelNode1.setLocalScale(new Vector3(0.3f, 0.3f, 0.3f));
-//        modelNode1.setLocalRotation(Quaternion.multiply(
-//                Quaternion.axisAngle(new Vector3(1f, 0f, 0f), 45),
-//                Quaternion.axisAngle(new Vector3(0f, 1f, 0f), 75)));
-        modelNode1.setLocalPosition(new Vector3(0f, 0f, -0.9f));
-        sceneView.getScene().addChild(modelNode1);
-        try {
-            sceneView.resume();
-        } catch (CameraNotAvailableException e) {
-            e.printStackTrace();
-        }
-    }
+//    @RequiresApi(api = Build.VERSION_CODES.N)
+//    public void loadModels(Uri url, SceneView sceneView, Fragment fragment, float scale) {
+//        ModelRenderable.builder()
+//                .setSource(
+//                        fragment.getContext(), new RenderableSource.Builder().setSource(
+//                                fragment.getContext(),
+//                                url,
+//                                RenderableSource.SourceType.GLB
+//                        ).setScale(scale)
+//                                .setRecenterMode(RenderableSource.RecenterMode.CENTER)
+//                                .build()
+//                )
+//                .setRegistryId(url)
+//                .build()
+//                .thenAccept(new Consumer<ModelRenderable>() {
+//                    @Override
+//                    public void accept(ModelRenderable modelRenderable) {
+//                        addNode(modelRenderable, sceneView);
+//                    }
+//                });
+//    }
+//
+//    public void addNode(ModelRenderable modelRenderable, SceneView sceneView) {
+//        Node modelNode1 = new Node();
+//        modelNode1.setRenderable(modelRenderable);
+//        modelNode1.setLocalScale(new Vector3(0.3f, 0.3f, 0.3f));
+////        modelNode1.setLocalRotation(Quaternion.multiply(
+////                Quaternion.axisAngle(new Vector3(1f, 0f, 0f), 45),
+////                Quaternion.axisAngle(new Vector3(0f, 1f, 0f), 75)));
+//        modelNode1.setLocalPosition(new Vector3(0f, 0f, -0.9f));
+//        sceneView.getScene().addChild(modelNode1);
+//        try {
+//            sceneView.resume();
+//        } catch (CameraNotAvailableException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     public void showDialogSendClothes(){
 

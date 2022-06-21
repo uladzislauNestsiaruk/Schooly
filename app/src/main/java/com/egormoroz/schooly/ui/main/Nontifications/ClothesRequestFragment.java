@@ -33,12 +33,6 @@ import com.egormoroz.schooly.ui.main.UserInformation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.ar.core.exceptions.CameraNotAvailableException;
-import com.google.ar.sceneform.Node;
-import com.google.ar.sceneform.SceneView;
-import com.google.ar.sceneform.assets.RenderableSource;
-import com.google.ar.sceneform.math.Vector3;
-import com.google.ar.sceneform.rendering.ModelRenderable;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.Query;
@@ -53,7 +47,7 @@ public class ClothesRequestFragment extends Fragment {
     FirebaseModel firebaseModel=new FirebaseModel();
     ImageView back;
     TextView clothesTitleCV,clothesPrice,clothesType,result,reason,addReason,reasonText,addReasonText;
-    SceneView sceneView;
+    //SceneView sceneView;
     ImageView clothesImageCV, coinsImage;
     UserInformation userInformation;
     Fragment fragment;
@@ -88,7 +82,7 @@ public class ClothesRequestFragment extends Fragment {
     public void onViewCreated(@Nullable View view,@NonNull Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
 
-        sceneView=view.findViewById(R.id.sceneView);
+        //sceneView=view.findViewById(R.id.sceneView);
         clothesType=view.findViewById(R.id.clothesType);
         reason=view.findViewById(R.id.reason);
         result=view.findViewById(R.id.result);
@@ -113,7 +107,7 @@ public class ClothesRequestFragment extends Fragment {
                 Picasso.get().load(clothesRequest.getClothesImage()).into(clothesImageCV);
                 clothesPrice.setText(String.valueOf(clothesRequest.getClothesPrice()));
                 clothesType.setText(clothesRequest.getClothesType());
-                loadModels(Uri.parse(clothesRequest.getModel()), sceneView, ClothesRequestFragment.this, 0.25f);
+                //loadModels(Uri.parse(clothesRequest.getModel()), sceneView, ClothesRequestFragment.this, 0.25f);
                 if(clothesRequest.getResult().equals("okey")){
                     result.setTextColor(Color.parseColor("#53B35C"));
                     result.setText(getContext().getResources().getText(R.string.themodelhasbeenadded));
@@ -153,7 +147,7 @@ public class ClothesRequestFragment extends Fragment {
                             Picasso.get().load(clothesRequest.getClothesImage()).into(clothesImageCV);
                             clothesPrice.setText(String.valueOf(clothesRequest.getClothesPrice()));
                             clothesType.setText(clothesRequest.getClothesType());
-                            loadModels(Uri.parse(clothesRequest.getModel()), sceneView, ClothesRequestFragment.this, 0.25f);
+                            //loadModels(Uri.parse(clothesRequest.getModel()), sceneView, ClothesRequestFragment.this, 0.25f);
                             if(clothesRequest.getResult().equals("okey")){
                                 result.setTextColor(Color.parseColor("#53B35C"));
                                 result.setText(getContext().getResources().getText(R.string.themodelhasbeenadded));
@@ -184,38 +178,38 @@ public class ClothesRequestFragment extends Fragment {
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    public void loadModels(Uri url, SceneView sceneView, Fragment fragment, float scale) {
-        ModelRenderable.builder()
-                .setSource(
-                        fragment.getContext(), new RenderableSource.Builder().setSource(
-                                fragment.getContext(),
-                                url,
-                                RenderableSource.SourceType.GLB
-                        ).setScale(scale)
-                                .setRecenterMode(RenderableSource.RecenterMode.CENTER)
-                                .build()
-                )
-                .setRegistryId(url)
-                .build()
-                .thenAccept(new Consumer<ModelRenderable>() {
-                    @Override
-                    public void accept(ModelRenderable modelRenderable) {
-                        addNode(modelRenderable, sceneView);
-                    }
-                });
-    }
-
-    public void addNode(ModelRenderable modelRenderable, SceneView sceneView) {
-        Node modelNode1 = new Node();
-        modelNode1.setRenderable(modelRenderable);
-        modelNode1.setLocalScale(new Vector3(0.3f, 0.3f, 0.3f));
-        modelNode1.setLocalPosition(new Vector3(0f, 0f, -0.9f));
-        sceneView.getScene().addChild(modelNode1);
-        try {
-            sceneView.resume();
-        } catch (CameraNotAvailableException e) {
-            e.printStackTrace();
-        }
-    }
+//    @RequiresApi(api = Build.VERSION_CODES.N)
+//    public void loadModels(Uri url, SceneView sceneView, Fragment fragment, float scale) {
+//        ModelRenderable.builder()
+//                .setSource(
+//                        fragment.getContext(), new RenderableSource.Builder().setSource(
+//                                fragment.getContext(),
+//                                url,
+//                                RenderableSource.SourceType.GLB
+//                        ).setScale(scale)
+//                                .setRecenterMode(RenderableSource.RecenterMode.CENTER)
+//                                .build()
+//                )
+//                .setRegistryId(url)
+//                .build()
+//                .thenAccept(new Consumer<ModelRenderable>() {
+//                    @Override
+//                    public void accept(ModelRenderable modelRenderable) {
+//                        addNode(modelRenderable, sceneView);
+//                    }
+//                });
+//    }
+//
+//    public void addNode(ModelRenderable modelRenderable, SceneView sceneView) {
+//        Node modelNode1 = new Node();
+//        modelNode1.setRenderable(modelRenderable);
+//        modelNode1.setLocalScale(new Vector3(0.3f, 0.3f, 0.3f));
+//        modelNode1.setLocalPosition(new Vector3(0f, 0f, -0.9f));
+//        sceneView.getScene().addChild(modelNode1);
+//        try {
+//            sceneView.resume();
+//        } catch (CameraNotAvailableException e) {
+//            e.printStackTrace();
+//        }
+//    }
 }

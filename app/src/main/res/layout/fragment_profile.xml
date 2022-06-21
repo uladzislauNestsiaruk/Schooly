@@ -159,7 +159,7 @@
 
 
 
-        <com.google.ar.sceneform.SceneView
+        <SurfaceView
             android:id="@+id/mainlookview"
             android:layout_width="match_parent"
             android:layout_height="384dp"

@@ -264,6 +264,8 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginStart="42dp"
+            android:layout_alignParentStart="true"
+            android:layout_toLeftOf="@+id/checkBasket"
             android:fontFamily="@font/montserratblack"
             android:textColor="@color/white"
             android:textSize="26sp" />

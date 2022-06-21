@@ -5,7 +5,7 @@
     android:layout_margin="2dp"
     android:background="@drawable/corners4dpgreylook">
 
-    <com.google.ar.sceneform.SceneView
+    <SurfaceView
         android:id="@+id/lookScene"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

@@ -46,12 +46,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
-import com.google.ar.core.exceptions.CameraNotAvailableException;
-import com.google.ar.sceneform.Node;
-import com.google.ar.sceneform.SceneView;
-import com.google.ar.sceneform.assets.RenderableSource;
-import com.google.ar.sceneform.math.Vector3;
-import com.google.ar.sceneform.rendering.ModelRenderable;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -72,7 +66,7 @@ public class ViewingLookFragment extends Fragment {
     TextView nickView,description,likesCount,lookPrice,lookPriceDollar,clothesCreator
             ,emptyList,comments,sendComment,noComment,save,complain,complainOtherUserText
             ,reasonText;
-    SceneView sceneView;
+    //SceneView sceneView;
     LinearLayout linearElse,linearTelegram,linearInstagram;
     EditText editText,messageEdit,addDescriptionEdit;
     RecyclerView clothesCreatorsRecycler,complainRecycler;
@@ -122,7 +116,6 @@ public class ViewingLookFragment extends Fragment {
         schoolyCoin=view.findViewById(R.id.schoolyCoin);
         clothesCreator=view.findViewById(R.id.clothesCreator);
         likesCount=view.findViewById(R.id.likesCount);
-        sceneView=view.findViewById(R.id.sceneView);
         lookPrice=view.findViewById(R.id.lookPrice);
         options=view.findViewById(R.id.options);
         lookPriceDollar=view.findViewById(R.id.lookPriceDollar);
@@ -146,7 +139,7 @@ public class ViewingLookFragment extends Fragment {
         LooksAdapter.lookInfo(new LooksAdapter.ItemClickListener() {
             @Override
             public void onItemClick(NewsItem newsItem) {
-                loadModels(Uri.parse(newsItem.getImageUrl()), sceneView, ViewingLookFragment.this, 0.25f);
+                //loadModels(Uri.parse(newsItem.getImageUrl()), sceneView, ViewingLookFragment.this, 0.25f);
                 nickView.setText(newsItem.getNick());
                 nickView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -633,44 +626,44 @@ public class ViewingLookFragment extends Fragment {
         });
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    public void loadModels(Uri url, SceneView sceneView, Fragment fragment, float scale) {
-        ModelRenderable.builder()
-                .setSource(
-                        fragment.getContext(), new RenderableSource.Builder().setSource(
-                                fragment.getContext(),
-                                url,
-                                RenderableSource.SourceType.GLB
-                        ).setScale(scale)
-                                .setRecenterMode(RenderableSource.RecenterMode.CENTER)
-                                .build()
-                )
-                .setRegistryId(url)
-                .build()
-                .thenAccept(new Consumer<ModelRenderable>() {
-                    @Override
-                    public void accept(ModelRenderable modelRenderable) {
-                        addNode(modelRenderable, sceneView);
-                    }
-                });
-    }
-
-    public void addNode(ModelRenderable modelRenderable, SceneView sceneView) {
-        Node modelNode1 = new Node();
-        modelNode1.setRenderable(modelRenderable);
-        modelNode1.setLocalScale(new Vector3(0.3f, 0.3f, 0.3f));
-//        modelNode1.setLocalRotation(Quaternion.multiply(
-//                Quaternion.axisAngle(new Vector3(1f, 0f, 0f), 45),
-//                Quaternion.axisAngle(new Vector3(0f, 1f, 0f), 75)));
-        modelNode1.setLocalPosition(new Vector3(0f, 0f, -0.9f));
-        sceneView.getScene().addChild(modelNode1);
-        try {
-            sceneView.resume();
-        } catch (CameraNotAvailableException e) {
-            e.printStackTrace();
-        }
-    }
-
+//    @RequiresApi(api = Build.VERSION_CODES.N)
+//    public void loadModels(Uri url, SceneView sceneView, Fragment fragment, float scale) {
+//        ModelRenderable.builder()
+//                .setSource(
+//                        fragment.getContext(), new RenderableSource.Builder().setSource(
+//                                fragment.getContext(),
+//                                url,
+//                                RenderableSource.SourceType.GLB
+//                        ).setScale(scale)
+//                                .setRecenterMode(RenderableSource.RecenterMode.CENTER)
+//                                .build()
+//                )
+//                .setRegistryId(url)
+//                .build()
+//                .thenAccept(new Consumer<ModelRenderable>() {
+//                    @Override
+//                    public void accept(ModelRenderable modelRenderable) {
+//                        addNode(modelRenderable, sceneView);
+//                    }
+//                });
+//    }
+//
+//    public void addNode(ModelRenderable modelRenderable, SceneView sceneView) {
+//        Node modelNode1 = new Node();
+//        modelNode1.setRenderable(modelRenderable);
+//        modelNode1.setLocalScale(new Vector3(0.3f, 0.3f, 0.3f));
+////        modelNode1.setLocalRotation(Quaternion.multiply(
+////                Quaternion.axisAngle(new Vector3(1f, 0f, 0f), 45),
+////                Quaternion.axisAngle(new Vector3(0f, 1f, 0f), 75)));
+//        modelNode1.setLocalPosition(new Vector3(0f, 0f, -0.9f));
+//        sceneView.getScene().addChild(modelNode1);
+//        try {
+//            sceneView.resume();
+//        } catch (CameraNotAvailableException e) {
+//            e.printStackTrace();
+//        }
+//    }
+//
     private void addLastMessage(String type, String Message){
         switch (type) {
             case "text":

@@ -67,7 +67,7 @@ public class SubscribersAdapter extends RecyclerView.Adapter<SubscribersAdapter.
         Subscriber subscriber=listAdapter.get(position);
         nick=userInformation.getNick();
         holder.otherUserNick.setText(subscriber.getSub());
-        holder.otherUserNick.setOnClickListener(new View.OnClickListener() {
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (clickListener != null) clickListener.onItemClick(view, position);

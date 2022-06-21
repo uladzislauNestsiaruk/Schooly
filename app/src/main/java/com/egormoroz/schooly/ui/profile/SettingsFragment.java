@@ -154,7 +154,7 @@ public class SettingsFragment extends Fragment {
         support.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                RecentMethods.setCurrentFragment(SupportFragment.newInstance(type, fragment, userInformation, bundle), getActivity());
             }
         });
 

@@ -27,12 +27,6 @@ import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.Subscriber;
 import com.egormoroz.schooly.ui.main.Shop.NewClothesAdapter;
 import com.egormoroz.schooly.ui.news.NewsItem;
-import com.google.ar.core.exceptions.CameraNotAvailableException;
-import com.google.ar.sceneform.Node;
-import com.google.ar.sceneform.SceneView;
-import com.google.ar.sceneform.assets.RenderableSource;
-import com.google.ar.sceneform.math.Vector3;
-import com.google.ar.sceneform.rendering.ModelRenderable;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.Query;
@@ -75,7 +69,7 @@ public class LooksAdapter extends RecyclerView.Adapter<LooksAdapter.ViewHolder> 
     public void onBindViewHolder(@NonNull LooksAdapter.ViewHolder holder, int position) {
         newsItem=listAdapter.get(position);
         newsItemToViewing=newsItem;
-        holder.lookScene.setOnClickListener(new View.OnClickListener() {
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (clickListener != null) clickListener.onItemClick(listAdapter.get(holder.getAdapterPosition()));
@@ -84,7 +78,7 @@ public class LooksAdapter extends RecyclerView.Adapter<LooksAdapter.ViewHolder> 
         });
         viewLookCount=String.valueOf(newsItem.getViewCount());
         checkCounts(holder.viewPurchase, newsItem.getViewCount(), viewLookCount);
-        loadModels(Uri.parse(newsItem.getImageUrl()), holder.lookScene,holder.lookScene.getContext() , 0.25f);
+        //loadModels(Uri.parse(newsItem.getImageUrl()), holder.lookScene,holder.lookScene.getContext() , 0.25f);
 
     }
 
@@ -113,11 +107,11 @@ public class LooksAdapter extends RecyclerView.Adapter<LooksAdapter.ViewHolder> 
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        final SceneView lookScene;
+//        final SceneView lookScene;
         TextView viewPurchase;
         ViewHolder(View itemView) {
             super(itemView);
-            lookScene=itemView.findViewById(R.id.lookScene);
+           // lookScene=itemView.findViewById(R.id.lookScene);
             viewPurchase=itemView.findViewById(R.id.viewPurchase);
 
         }
@@ -145,41 +139,41 @@ public class LooksAdapter extends RecyclerView.Adapter<LooksAdapter.ViewHolder> 
         void onItemClick(NewsItem newsItem);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    public void loadModels(Uri url, SceneView sceneView, Context context, float scale) {
-        ModelRenderable.builder()
-                .setSource(
-                        context, new RenderableSource.Builder().setSource(
-                                context,
-                                url,
-                                RenderableSource.SourceType.GLB
-                        ).setScale(scale)
-                                .setRecenterMode(RenderableSource.RecenterMode.CENTER)
-                                .build()
-                )
-                .setRegistryId(url)
-                .build()
-                .thenAccept(new Consumer<ModelRenderable>() {
-                    @Override
-                    public void accept(ModelRenderable modelRenderable) {
-                        addNode(modelRenderable, sceneView);
-                    }
-                });
-    }
-
-    public void addNode(ModelRenderable modelRenderable, SceneView sceneView) {
-        Node modelNode1 = new Node();
-        modelNode1.setRenderable(modelRenderable);
-        modelNode1.setLocalScale(new Vector3(0.3f, 0.3f, 0.3f));
-//        modelNode1.setLocalRotation(Quaternion.multiply(
-//                Quaternion.axisAngle(new Vector3(1f, 0f, 0f), 45),
-//                Quaternion.axisAngle(new Vector3(0f, 1f, 0f), 75)));
-        modelNode1.setLocalPosition(new Vector3(0f, 0f, -0.9f));
-        sceneView.getScene().addChild(modelNode1);
-        try {
-            sceneView.resume();
-        } catch (CameraNotAvailableException e) {
-            e.printStackTrace();
-        }
-    }
+//    @RequiresApi(api = Build.VERSION_CODES.N)
+//    public void loadModels(Uri url, SceneView sceneView, Context context, float scale) {
+//        ModelRenderable.builder()
+//                .setSource(
+//                        context, new RenderableSource.Builder().setSource(
+//                                context,
+//                                url,
+//                                RenderableSource.SourceType.GLB
+//                        ).setScale(scale)
+//                                .setRecenterMode(RenderableSource.RecenterMode.CENTER)
+//                                .build()
+//                )
+//                .setRegistryId(url)
+//                .build()
+//                .thenAccept(new Consumer<ModelRenderable>() {
+//                    @Override
+//                    public void accept(ModelRenderable modelRenderable) {
+//                        addNode(modelRenderable, sceneView);
+//                    }
+//                });
+//    }
+//
+//    public void addNode(ModelRenderable modelRenderable, SceneView sceneView) {
+//        Node modelNode1 = new Node();
+//        modelNode1.setRenderable(modelRenderable);
+//        modelNode1.setLocalScale(new Vector3(0.3f, 0.3f, 0.3f));
+////        modelNode1.setLocalRotation(Quaternion.multiply(
+////                Quaternion.axisAngle(new Vector3(1f, 0f, 0f), 45),
+////                Quaternion.axisAngle(new Vector3(0f, 1f, 0f), 75)));
+//        modelNode1.setLocalPosition(new Vector3(0f, 0f, -0.9f));
+//        sceneView.getScene().addChild(modelNode1);
+//        try {
+//            sceneView.resume();
+//        } catch (CameraNotAvailableException e) {
+//            e.printStackTrace();
+//        }
+//    }
 }

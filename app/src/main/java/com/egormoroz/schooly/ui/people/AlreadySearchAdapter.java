@@ -52,7 +52,7 @@ public class AlreadySearchAdapter extends RecyclerView.Adapter<AlreadySearchAdap
         nick= userInformation.getNick();
         holder.usernickname.setText(userInfo.getNick());
         Picasso.get().load(userInformation.getAvatar()).into( holder.userAvatar);
-        holder.usernickname.setOnClickListener(new View.OnClickListener() {
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (clickListener != null) clickListener.onItemClick(v, position,"profile");

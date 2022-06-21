@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.ui.main.Shop.BasketAdapter;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
-import com.google.ar.sceneform.SceneView;
 
 import java.util.ArrayList;
 
@@ -52,10 +51,10 @@ public class CharacterAdapter extends RecyclerView.Adapter<CharacterAdapter.View
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        SceneView sceneView;
+//        SceneView sceneView;
         ViewHolder(View itemView) {
             super(itemView);
-            sceneView=itemView.findViewById(R.id.sceneView);
+          //  sceneView=itemView.findViewById(R.id.sceneView);
 
         }
 

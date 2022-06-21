@@ -40,7 +40,6 @@ import com.egormoroz.schooly.SchoolyApplication;
 import com.egormoroz.schooly.SchoolyService;
 
 import com.egormoroz.schooly.Subscriber;
-import com.egormoroz.schooly.ui.Model.SceneViewModelActivity;
 import com.egormoroz.schooly.ui.coins.CoinsFragmentSecond;
 import com.egormoroz.schooly.ui.coins.CoinsMainFragment;
 import com.egormoroz.schooly.ui.main.CreateCharacter.CreateCharacterFragment;
