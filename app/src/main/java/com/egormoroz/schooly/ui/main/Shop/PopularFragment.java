@@ -124,7 +124,8 @@ public class PopularFragment extends Fragment {
                 popularClothesArrayList.add(cl);
 
             }
-            popularClothesArrayList=allClothes;
+
+            popularClothesArrayList=sort_clothes_by_purchase_number(allClothes);
             bundle.putSerializable("CLOTHES_POPULAR",popularClothesArrayList);
             PopularClothesAdapter popularClothesAdapter=new PopularClothesAdapter(popularClothesArrayList,itemClickListenerPopular,userInformation);
             popularClothes.setLayoutManager(new GridLayoutManager(getActivity(), 2));

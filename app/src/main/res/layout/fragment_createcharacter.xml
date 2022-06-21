@@ -34,7 +34,7 @@
         android:textColor="@color/app_grey"
         android:textSize="16sp" />
 
-    <com.google.ar.sceneform.SceneView
+    <SurfaceView
         android:id="@+id/sceneViewCreateCharacter"
         android:layout_width="match_parent"
         android:layout_height="312dp"
