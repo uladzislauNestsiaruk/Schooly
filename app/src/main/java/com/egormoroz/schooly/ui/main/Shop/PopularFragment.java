@@ -26,6 +26,7 @@ import com.egormoroz.schooly.ui.main.Mining.MiningFragment;
 import com.egormoroz.schooly.ui.main.UserInformation;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class PopularFragment extends Fragment {
@@ -131,13 +132,16 @@ public class PopularFragment extends Fragment {
             popularClothes.setAdapter(popularClothesAdapter);
         }
     }
-    public void sort_clothes_by_purchase_number(){
-        clothesArrayList.sort((Clothes a, Clothes b) -> -(int)(a.getPurchaseNumber() - b.getPurchaseNumber()));
+    public ArrayList<Clothes> sort_clothes_by_purchase_number(ArrayList<Clothes> cur){
+        cur.sort((Clothes a, Clothes b) -> -(int)(a.getPurchaseNumber() - b.getPurchaseNumber()));
+        return cur;
     }
-    public void sort_clothes_by_purchase_today(){
-        clothesArrayList.sort((Clothes a, Clothes b) -> -(int)(a.getPurchaseToday() - b.getPurchaseToday()));
+    public ArrayList<Clothes> sort_clothes_by_purchase_today(ArrayList<Clothes> cur){
+        cur.sort((Clothes a, Clothes b) -> -(int)(a.getPurchaseToday() - b.getPurchaseToday()));
+        return cur;
     }
-    public void sort_clothes_by_time(){
-        clothesArrayList.sort((Clothes a, Clothes b) -> (int)(a.getTimesTamp() - b.getTimesTamp()));
+    public ArrayList<Clothes> sort_clothes_by_time(ArrayList<Clothes> cur){
+        cur.sort((Clothes a, Clothes b) -> (int)(a.getTimesTamp() - b.getTimesTamp()));
+        return cur;
     }
 }
