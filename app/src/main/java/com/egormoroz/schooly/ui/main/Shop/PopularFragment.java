@@ -131,4 +131,13 @@ public class PopularFragment extends Fragment {
             popularClothes.setAdapter(popularClothesAdapter);
         }
     }
+    public void sort_clothes_by_purchase_number(){
+        clothesArrayList.sort((Clothes a, Clothes b) -> -(int)(a.getPurchaseNumber() - b.getPurchaseNumber()));
+    }
+    public void sort_clothes_by_purchase_today(){
+        clothesArrayList.sort((Clothes a, Clothes b) -> -(int)(a.getPurchaseToday() - b.getPurchaseToday()));
+    }
+    public void sort_clothes_by_time(){
+        clothesArrayList.sort((Clothes a, Clothes b) -> (int)(a.getTimesTamp() - b.getTimesTamp()));
+    }
 }

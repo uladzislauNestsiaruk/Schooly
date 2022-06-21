@@ -15,7 +15,7 @@ import com.google.firebase.database.IgnoreExtraProperties;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-@IgnoreExtraProperties
+@IgnoreExtraProperties  
 public class UserInformation implements Serializable {
     private String Nick;
     private String chatsNontsType;
