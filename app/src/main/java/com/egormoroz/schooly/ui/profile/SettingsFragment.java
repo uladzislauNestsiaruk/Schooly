@@ -1,6 +1,9 @@
 package com.egormoroz.schooly.ui.profile;
 
+import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -161,15 +165,7 @@ public class SettingsFragment extends Fragment {
         exitAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FirebaseAuth.getInstance().signOut();
-                signInClient.signOut().addOnCompleteListener(getActivity(),
-                        new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                ((MainActivity)getActivity()).stopHandler();
-                                RecentMethods.setCurrentFragment(RegisrtationstartFragment.newInstance(userInformation,bundle), getActivity());
-                            }
-                        });
+                showDialog();
             }
         });
 
@@ -369,5 +365,43 @@ public class SettingsFragment extends Fragment {
                         });
             }
         });
+    }
+
+    public void showDialog() {
+
+        final Dialog dialog = new Dialog(getContext());
+        dialog.setContentView(R.layout.dialog_layout_blacklist);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        TextView complainTitle = dialog.findViewById(R.id.complainText);
+        RelativeLayout no=dialog.findViewById(R.id.no);
+        RelativeLayout yes=dialog.findViewById(R.id.yes);
+
+        complainTitle.setText(getContext().getResources().getText(R.string.exitAccount)+"?");
+
+        no.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        yes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FirebaseAuth.getInstance().signOut();
+                signInClient.signOut().addOnCompleteListener(getActivity(),
+                        new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                ((MainActivity)getActivity()).stopHandler();
+                                RecentMethods.setCurrentFragment(RegisrtationstartFragment.newInstance(userInformation,bundle), getActivity());
+                            }
+                        });
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
     }
 }

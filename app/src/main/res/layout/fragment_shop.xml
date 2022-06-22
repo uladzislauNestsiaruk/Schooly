@@ -137,6 +137,9 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/searchclothes"
                 android:layout_marginTop="8dp"
+                android:paddingStart="12dp"
+                android:paddingEnd="14dp"
+                android:clipToPadding="false"
                 app:tabMode="scrollable"
                 app:tabRippleColor="@android:color/transparent"
                 app:tabTextAppearance="@style/AppTabTextAppearanceShop" />

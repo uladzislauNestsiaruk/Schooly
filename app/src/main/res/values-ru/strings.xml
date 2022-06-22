@@ -225,7 +225,7 @@
 
     <string name="noClothesWardrobe">Нет одежды в гардеробе:(</string>
 
-    <string name="exitAccount">Выйти с аккаунта</string>
+    <string name="exitAccount">Выйти из аккаунта</string>
 
     <string name="textReason">Причина жалобы:</string>
 
@@ -496,6 +496,7 @@
     <string name="looksaved">Образ сохранен</string>
     <string name="youarenotsubscribedtoSchoolyPremium">К сожалению, вы не подписаны на Schooly Premium</string>
     <string name="coins1"> коинов</string>
+    <string name="comments">Комментарии:</string>
 
 
 

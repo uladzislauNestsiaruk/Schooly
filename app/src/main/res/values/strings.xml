@@ -483,7 +483,7 @@
     <string name="nolooks2"> has no looks :(</string>
     <string name="addadescription">Add a description!</string>
     <string name="blockUser">Block </string>
-    <string name="unlock">Разблокировать</string>
+    <string name="unlock">Unlock</string>
     <string name="useraddedtoblacklist">User added to blacklist</string>
     <string name="subscribeto">Subscribe to</string>
     <string name="requested">Requested</string>
@@ -496,6 +496,7 @@
     <string name="looksaved">Look saved</string>
     <string name="youarenotsubscribedtoSchoolyPremium">Sorry, you are not subscribed to Schooly Premium</string>
     <string name="coins1"> coins</string>
+    <string name="comments">Comments:</string>
 
 
 

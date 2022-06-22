@@ -745,6 +745,9 @@
         <entry key="..\:/Users/User/Downloads/Schooly_NEW22.05/app/src/main/res/layout/fragment_wardrobe.xml" value="0.24592391304347827" />
         <entry key="..\:/Users/User/Downloads/Schooly_NEW22.05/app/src/main/res/layout/rvitemfriendsother.xml" value="0.12360688956433637" />
         <entry key="..\:/Users/User/Downloads/Schooly_NEW22.05/app/src/main/res/layout/rvitemsubscriptions.xml" value="0.24592391304347827" />
+        <entry key="..\:/Users/User/Downloads/Schooly_NEW22.06/app/src/main/res/layout/fragment_newlook.xml" value="0.16893115942028986" />
+        <entry key="..\:/Users/User/Downloads/Schooly_NEW22.06/app/src/main/res/layout/fragment_shop.xml" value="0.12360688956433637" />
+        <entry key="..\:/Users/User/Downloads/Schooly_NEW22.06/app/src/main/res/layout/fragment_wardrobe.xml" value="0.12360688956433637" />
         <entry key="..\:/Users/User/Downloads/Schooly_NEW23.04/app/src/main/res/layout/fragment_newlook.xml" value="0.12360688956433637" />
         <entry key="..\:/Users/User/Downloads/Schooly_NEW23.04/app/src/main/res/layout/fragment_nontifications.xml" value="0.264" />
         <entry key="..\:/Users/User/Downloads/Schooly_NEW23.04/app/src/main/res/layout/fragment_otheruser.xml" value="0.12360688956433637" />
@@ -1078,7 +1081,7 @@
     <option name="priority" value="Medium" />
     <option name="excludeFilter" value="" />
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">
