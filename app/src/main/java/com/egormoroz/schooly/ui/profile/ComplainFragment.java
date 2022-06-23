@@ -82,14 +82,15 @@ public class ComplainFragment extends Fragment {
                 RecentMethods.setCurrentFragment(ComplainFragmentToBase.newInstance(otherUserNick,fragment,userInformation,bundle), getActivity());
             }
         };
-        RecentMethods.getComplainReasonList(firebaseModel, new Callbacks.getComplainReasonsList() {
-            @Override
-            public void getComplainReasonsList(ArrayList<Reason> reason) {
-                ComplainAdapter complainAdapter=new ComplainAdapter(reason,itemClickListener);
-                recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-                recyclerView.setAdapter(complainAdapter);
-            }
-        });
+        ArrayList<Reason> arrayListReason=new ArrayList<>();
+        arrayListReason.add(new Reason(getContext().getResources().getString(R.string.fraud)));
+        arrayListReason.add(new Reason(getContext().getResources().getString(R.string.violenceordangerousorganizations)));
+        arrayListReason.add(new Reason(getContext().getResources().getString(R.string.hostilesayingsorsymbols)));
+        arrayListReason.add(new Reason(getContext().getResources().getString(R.string.saleofillegalgoods)));
+        arrayListReason.add(new Reason(getContext().getResources().getString(R.string.violationofintellectualpropertyrights)));
+        ComplainAdapter complainAdapter=new ComplainAdapter(arrayListReason,itemClickListener);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setAdapter(complainAdapter);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

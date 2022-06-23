@@ -89,7 +89,6 @@ public class PopularClothesAdapter extends RecyclerView.Adapter<PopularClothesAd
         checkCounts(holder.purchaseNumber, clothes.getPurchaseNumber(), purchaseNumberString);
 
         if (clothes.getCurrencyType().equals("dollar")){
-            holder.dollarImage.setVisibility(View.VISIBLE);
             holder.coinsImage.setVisibility(View.GONE);
         }
         if(userInformation.getClothes()!=null){
@@ -112,24 +111,38 @@ public class PopularClothesAdapter extends RecyclerView.Adapter<PopularClothesAd
     }
 
     public void checkCounts(TextView textView,Long count,String stringCount){
-        if(count<1000){
-            textView.setText(String.valueOf(count));
-        }else if(count>1000 && count<10000){
-            textView.setText(stringCount.substring(0, 1)+"."+stringCount.substring(1, 2)+"K");
-        }
-        else if(count>10000 && count<100000){
-            textView.setText(stringCount.substring(0, 2)+"."+stringCount.substring(2,3)+"K");
-        }
-        else if(count>10000 && count<100000){
-            textView.setText(stringCount.substring(0, 2)+"."+stringCount.substring(2,3)+"K");
-        }else if(count>100000 && count<1000000){
-            textView.setText(stringCount.substring(0, 3)+"K");
-        }
-        else if(count>1000000 && count<10000000){
-            textView.setText(stringCount.substring(0, 1)+"KK");
-        }
-        else if(count>10000000 && count<100000000){
-            textView.setText(stringCount.substring(0, 2)+"KK");
+        if(clothes.getCurrencyType().equals("dollar")){
+            if (count < 1000) {
+                textView.setText("$"+String.valueOf(count));
+            } else if (count > 1000 && count < 10000) {
+                textView.setText("$"+stringCount.substring(0, 1) + "." + stringCount.substring(1, 2) + "K");
+            } else if (count > 10000 && count < 100000) {
+                textView.setText("$"+stringCount.substring(0, 2) + "." + stringCount.substring(2, 3) + "K");
+            } else if (count > 10000 && count < 100000) {
+                textView.setText("$"+stringCount.substring(0, 2) + "." + stringCount.substring(2, 3) + "K");
+            } else if (count > 100000 && count < 1000000) {
+                textView.setText("$"+stringCount.substring(0, 3) + "K");
+            } else if (count > 1000000 && count < 10000000) {
+                textView.setText("$"+stringCount.substring(0, 1) + "." + stringCount.substring(1, 2) + "KK");
+            } else if (count > 10000000 && count < 100000000) {
+                textView.setText("$"+stringCount.substring(0, 2) + "." + stringCount.substring(2, 3) + "KK");
+            }
+        }else {
+            if (count < 1000) {
+                textView.setText(String.valueOf(count));
+            } else if (count > 1000 && count < 10000) {
+                textView.setText(stringCount.substring(0, 1) + "." + stringCount.substring(1, 2) + "K");
+            } else if (count > 10000 && count < 100000) {
+                textView.setText(stringCount.substring(0, 2) + "." + stringCount.substring(2, 3) + "K");
+            } else if (count > 10000 && count < 100000) {
+                textView.setText(stringCount.substring(0, 2) + "." + stringCount.substring(2, 3) + "K");
+            } else if (count > 100000 && count < 1000000) {
+                textView.setText(stringCount.substring(0, 3) + "K");
+            } else if (count > 1000000 && count < 10000000) {
+                textView.setText(stringCount.substring(0, 1) + "." + stringCount.substring(1, 2) + "KK");
+            } else if (count > 10000000 && count < 100000000) {
+                textView.setText(stringCount.substring(0, 2) + "." + stringCount.substring(2, 3) + "KK");
+            }
         }
     }
 

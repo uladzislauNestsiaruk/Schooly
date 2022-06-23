@@ -40,6 +40,7 @@ public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.ViewHolder
   StorageReference storageReference=storage.getReference();
   static Clothes clothes,trueClothes;
   BasketAdapter.ItemClickListener onClothesClick;
+  String clothesPriceString,purchaseNumberString;
   static int pos;
 
   public BasketAdapter(ArrayList<Clothes> clothesArrayList, ItemClickListener onClothesClick) {
@@ -62,7 +63,8 @@ public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.ViewHolder
     firebaseModel.initAll();
     clothes=clothesArrayList.get(position);
     holder.clothesTitle.setText(clothes.getClothesTitle());
-    holder.clothesPrice.setText(String.valueOf(clothes.getClothesPrice()));
+    clothesPriceString=String.valueOf(clothes.getClothesPrice());
+    checkCounts(holder.clothesPrice, clothes.getClothesPrice(), clothesPriceString);
     File file=new File(clothes.getClothesImage());
     storageReference.child("clothes").getFile(file);
     holder.clothesImage.setVisibility(View.VISIBLE);
@@ -73,7 +75,10 @@ public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.ViewHolder
     query.addValueEventListener(new ValueEventListener() {
       @Override
       public void onDataChange(@NonNull DataSnapshot snapshot) {
-        holder.purchaseNumber.setText(String.valueOf(snapshot.getValue(Long.class)));
+        purchaseNumberString=String.valueOf(snapshot.getValue(Long.class));
+        if(snapshot.getValue(Long.class)!=null){
+          checkCounts(holder.purchaseNumber, snapshot.getValue(Long.class), purchaseNumberString);
+        }
       }
 
       @Override
@@ -82,7 +87,6 @@ public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.ViewHolder
       }
     });
     if (clothes.getCurrencyType().equals("dollar")){
-      holder.dollarImage.setVisibility(View.VISIBLE);
       holder.coinsImage.setVisibility(View.GONE);
     }
     holder.itemView.setOnClickListener(new View.OnClickListener(){
@@ -93,6 +97,42 @@ public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.ViewHolder
         trueClothes=clothesArrayList.get(holder.getAdapterPosition());
       }
     });
+  }
+
+  public void checkCounts(TextView textView,Long count,String stringCount){
+    if(clothes.getCurrencyType().equals("dollar")){
+      if (count < 1000) {
+        textView.setText("$"+String.valueOf(count));
+      } else if (count > 1000 && count < 10000) {
+        textView.setText("$"+stringCount.substring(0, 1) + "." + stringCount.substring(1, 2) + "K");
+      } else if (count > 10000 && count < 100000) {
+        textView.setText("$"+stringCount.substring(0, 2) + "." + stringCount.substring(2, 3) + "K");
+      } else if (count > 10000 && count < 100000) {
+        textView.setText("$"+stringCount.substring(0, 2) + "." + stringCount.substring(2, 3) + "K");
+      } else if (count > 100000 && count < 1000000) {
+        textView.setText("$"+stringCount.substring(0, 3) + "K");
+      } else if (count > 1000000 && count < 10000000) {
+        textView.setText("$"+stringCount.substring(0, 1) + "." + stringCount.substring(1, 2) + "KK");
+      } else if (count > 10000000 && count < 100000000) {
+        textView.setText("$"+stringCount.substring(0, 2) + "." + stringCount.substring(2, 3) + "KK");
+      }
+    }else {
+      if (count < 1000) {
+        textView.setText(String.valueOf(count));
+      } else if (count > 1000 && count < 10000) {
+        textView.setText(stringCount.substring(0, 1) + "." + stringCount.substring(1, 2) + "K");
+      } else if (count > 10000 && count < 100000) {
+        textView.setText(stringCount.substring(0, 2) + "." + stringCount.substring(2, 3) + "K");
+      } else if (count > 10000 && count < 100000) {
+        textView.setText(stringCount.substring(0, 2) + "." + stringCount.substring(2, 3) + "K");
+      } else if (count > 100000 && count < 1000000) {
+        textView.setText(stringCount.substring(0, 3) + "K");
+      } else if (count > 1000000 && count < 10000000) {
+        textView.setText(stringCount.substring(0, 1) + "." + stringCount.substring(1, 2) + "KK");
+      } else if (count > 10000000 && count < 100000000) {
+        textView.setText(stringCount.substring(0, 2) + "." + stringCount.substring(2, 3) + "KK");
+      }
+    }
   }
 
 

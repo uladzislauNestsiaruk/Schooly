@@ -497,6 +497,13 @@
     <string name="youarenotsubscribedtoSchoolyPremium">К сожалению, вы не подписаны на Schooly Premium</string>
     <string name="coins1"> коинов</string>
     <string name="comments">Комментарии:</string>
+    <string name="submitcomplaint">Отправить жалобу</string>
+    <string name="thereasonforthecomplaintisnotentered">Причина жалобы не введена</string>
+    <string name="fraud">Мошенничество</string>
+    <string name="violenceordangerousorganizations">Насилие или опасные организации</string>
+    <string name="hostilesayingsorsymbols">Враждебные высказывания или символы</string>
+    <string name="saleofillegalgoods">Продажа незаконных товаров</string>
+    <string name="violationofintellectualpropertyrights">Нарушение прав на интеллектуальную собственность</string>
 
 
 

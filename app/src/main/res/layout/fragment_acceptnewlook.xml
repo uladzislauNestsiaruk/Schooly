@@ -26,7 +26,7 @@
             android:textColor="@color/app_color"
             android:textSize="22sp" />
 
-        <com.google.ar.sceneform.SceneView
+        <SurfaceView
             android:id="@+id/sceneView"
             android:layout_width="match_parent"
             android:layout_height="400dp"

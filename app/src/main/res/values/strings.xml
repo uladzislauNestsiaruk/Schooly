@@ -497,6 +497,13 @@
     <string name="youarenotsubscribedtoSchoolyPremium">Sorry, you are not subscribed to Schooly Premium</string>
     <string name="coins1"> coins</string>
     <string name="comments">Comments:</string>
+    <string name="submitcomplaint">Submit a complaint</string>
+    <string name="thereasonforthecomplaintisnotentered">The reason for the complaint is not entered</string>
+    <string name="fraud">Fraud</string>
+    <string name="violenceordangerousorganizations">Violence or dangerous organizations</string>
+    <string name="hostilesayingsorsymbols">Hostile sayings or symbols</string>
+    <string name="saleofillegalgoods">Sale of illegal goods</string>
+    <string name="violationofintellectualpropertyrights">Violation of intellectual property rights</string>
 
 
 

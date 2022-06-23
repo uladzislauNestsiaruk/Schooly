@@ -50,7 +50,8 @@
       android:layout_height="wrap_content"
       android:layout_below="@+id/price"
       android:textSize="16sp"
-      android:layout_marginStart="20dp"
+      android:layout_toRightOf="@+id/coinsImage"
+      android:layout_marginStart="2dp"
       android:textColor="@color/app_color"
       android:fontFamily="@font/montserrat_extrabold"
       />

@@ -216,6 +216,7 @@ public class ViewingClothes extends Fragment {
                 Picasso.get().load(clothes.getClothesImage()).into(clothesImageCV);
                 if (clothesViewing.getCurrencyType().equals("dollar")){
                     dollarImage.setVisibility(View.VISIBLE);
+                    clothesPriceCV.setText("$"+String.valueOf(clothes.getClothesPrice()));
                     coinsImage.setVisibility(View.GONE);
                 }
             }

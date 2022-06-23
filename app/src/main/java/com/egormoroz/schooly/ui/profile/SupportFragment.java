@@ -4,8 +4,11 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
@@ -25,8 +28,10 @@ public class SupportFragment extends Fragment {
     ImageView back;
     String type,nick,userNameToProfile;
     Fragment fragment;
+    RelativeLayout submitcomplaint;
     UserInformation userInformation;
     Bundle bundle;
+    EditText aboutProblem;
 
     public SupportFragment(String type, Fragment fragment, UserInformation userInformation, Bundle bundle) {
         this.type = type;
@@ -53,7 +58,7 @@ public class SupportFragment extends Fragment {
     @Override
     public void onViewCreated(@Nullable View view, @NonNull Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        nick=userInformation.getNick();
         back=view.findViewById(R.id.back_tosettingssupport);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,6 +76,22 @@ public class SupportFragment extends Fragment {
         };
 
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
+
+        aboutProblem=view.findViewById(R.id.aboutproblem);
+        submitcomplaint=view.findViewById(R.id.submitcomplaint);
+        submitcomplaint.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (aboutProblem.getText().toString().length()==0){
+                    Toast.makeText(getContext(), getContext().getResources().getText(R.string.thereasonforthecomplaintisnotentered), Toast.LENGTH_SHORT).show();
+                }else{
+                    String uid=firebaseModel.getReference().child("support").push().getKey();
+                    firebaseModel.getReference().child("support").child(uid)
+                            .setValue(new Complain(nick,"",aboutProblem.getText().toString(),""));
+                    Toast.makeText(getContext(), getContext().getResources().getText(R.string.complaintsent), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
 
     }
 }

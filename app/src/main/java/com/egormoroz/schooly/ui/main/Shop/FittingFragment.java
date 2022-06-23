@@ -41,7 +41,8 @@ import com.google.android.filament.gltfio.MaterialProvider;
 import com.google.android.filament.gltfio.UbershaderLoader;
 import com.google.android.filament.utils.AutomationEngine;
 import com.google.android.filament.utils.Manipulator;
-import com.google.android.filament.utils.ModelViewer;
+import com.google.android.filament.utils.MatrixKt;
+import com.google.android.filament.utils.ModelViewerKt;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.nio.Buffer;
@@ -101,14 +102,10 @@ public class FittingFragment extends Fragment {
         surfaceView=view.findViewById(R.id.surfaceView);
         Filament.init();
         Gltfio.init();
-        AutomationEngine.ViewerContent viewerContent=new AutomationEngine.ViewerContent();
-//        viewerContent.renderer=e
         Engine engine=Engine.create();
         MaterialProvider materialProvider=new UbershaderLoader(engine);
         AssetLoader assetLoader=new AssetLoader(engine, materialProvider, EntityManager.get());
-        long a =100;
-//        ModelViewer modelViewer=new ModelViewer(surfaceView, engine, new UiHelper(), new Manipulator(a));
- //       modelViewer.loadModelGlb(Uri.parse("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2FSciFiHelmet.gltf?alt=media&token=a82512c1-14bf-4faf-8f67-abeb70da7697"));
+//        assetLoader.createAssetFromBinary()
         surfaceHolder=surfaceView.getHolder();
         Surface surface=surfaceHolder.getSurface();
         SwapChain swapChain= engine.createSwapChain(surface);

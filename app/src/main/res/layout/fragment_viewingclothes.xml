@@ -9,7 +9,7 @@
         android:scrollbars="none"
         android:overScrollMode="never">
 
-    <RelativeLayout
+    zzzzz<RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -217,22 +217,30 @@
             android:textColor="@color/app_color"
             android:textSize="18sp" />
 
-        <ImageView
-            android:id="@+id/coinsImage"
+        <RelativeLayout
+            android:id="@+id/checkCurrencyType"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="32dp"
-            android:src="@drawable/ic_schoolycoin24dp" />
+            android:layout_marginStart="16dp">
 
-        <ImageView
-            android:id="@+id/dollarImage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="20dp"
-            android:src="@drawable/ic_dollarwhitebig"
-            android:visibility="gone" />
+            <ImageView
+                android:id="@+id/coinsImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="32dp"
+                android:src="@drawable/ic_schoolycoin24dp" />
+
+            <ImageView
+                android:id="@+id/dollarImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="20dp"
+                android:visibility="gone" />
+
+        </RelativeLayout>
+
 
         <RelativeLayout
             android:id="@+id/checkBasket"
@@ -263,8 +271,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginStart="42dp"
-            android:layout_alignParentStart="true"
+            android:layout_toRightOf="@+id/checkCurrencyType"
             android:layout_toLeftOf="@+id/checkBasket"
             android:fontFamily="@font/montserratblack"
             android:textColor="@color/white"

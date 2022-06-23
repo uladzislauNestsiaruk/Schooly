@@ -219,6 +219,7 @@ public class ViewingClothesNews extends Fragment {
                 Picasso.get().load(clothes.getClothesImage()).into(clothesImageCV);
                 if (clothesViewing.getCurrencyType().equals("dollar")){
                     dollarImage.setVisibility(View.VISIBLE);
+                    clothesPriceCV.setText("$"+String.valueOf(clothes.getClothesPrice()));
                     coinsImage.setVisibility(View.GONE);
                 }
 
@@ -258,7 +259,7 @@ public class ViewingClothesNews extends Fragment {
             @Override
             public void onClick(View v) {
                 if (a==3){
-                    showDialogAlreadyBuy("Предмет куплен");
+                    showDialogAlreadyBuy(getContext().getResources().getString(R.string.itempurchased));
                 }else {
                     showDialog();
                 }
@@ -278,7 +279,7 @@ public class ViewingClothesNews extends Fragment {
                             DataSnapshot snapshot= task.getResult();
                             if(snapshot.exists()){
                                 a=3;
-                                showDialogBasket("Предмет уже куплен");
+                                showDialogBasket(getContext().getResources().getString(R.string.itemalreadypurchased));
                             }else {}
                             if(a!=0 && a!=3){
                                 if(a==1){
@@ -325,9 +326,9 @@ public class ViewingClothesNews extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists()){
-                    buyClothesBottom.setText("Куплено");
+                    buyClothesBottom.setText(R.string.purchased);
                 }else {
-                    buyClothesBottom.setText("Купить");
+                    buyClothesBottom.setText(R.string.buy);
                 }
             }
 
@@ -613,7 +614,7 @@ public class ViewingClothesNews extends Fragment {
                                 if (task.isSuccessful()) {
                                     DataSnapshot snapshot = task.getResult();
                                     if (snapshot.exists()) {
-                                        Toast.makeText(getContext(), "Предмет куплен", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(getContext(), getContext().getResources().getString(R.string.itempurchased), Toast.LENGTH_SHORT).show();
                                     } else {
                                         firebaseModel.getUsersReference().child(userInformation.getNick()).child("clothes")
                                                 .child(clothesViewing.getUid()).setValue(clothesViewing);
@@ -671,7 +672,7 @@ public class ViewingClothesNews extends Fragment {
                             }
                         });
                     }else{
-                        Toast.makeText(getContext(), "Не хватает коинов", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), getContext().getResources().getString(R.string.notenoughcoins), Toast.LENGTH_SHORT).show();
                         RecentMethods.setCurrentFragment(CoinsFragmentSecond.newInstance(ViewingClothes.newInstance(fragment,userInformation,bundle),userInformation,bundle), getActivity());
                     }
                 }
