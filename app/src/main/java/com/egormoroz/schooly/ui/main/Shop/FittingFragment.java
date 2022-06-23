@@ -1,5 +1,6 @@
 package com.egormoroz.schooly.ui.main.Shop;
 
+import android.content.res.AssetManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -15,17 +16,16 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.nio.ByteBuffer;
+
 import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
-import com.egormoroz.schooly.ui.chat.User;
-import com.egormoroz.schooly.ui.main.MainFragment;
-import com.egormoroz.schooly.ui.main.MyClothes.CreateClothesFragment;
-import com.egormoroz.schooly.ui.main.MyClothes.MyClothesAdapter;
-import com.egormoroz.schooly.ui.main.MyClothes.MyClothesFragment;
-import com.egormoroz.schooly.ui.main.MyClothes.ViewingMyClothes;
 import com.egormoroz.schooly.ui.main.UserInformation;
+import com.google.android.filament.Camera;
 import com.google.android.filament.Engine;
 import com.google.android.filament.EntityManager;
 import com.google.android.filament.Filament;
@@ -35,16 +35,16 @@ import com.google.android.filament.Scene;
 import com.google.android.filament.SwapChain;
 import com.google.android.filament.android.UiHelper;
 import com.google.android.filament.gltfio.AssetLoader;
+import com.google.android.filament.gltfio.ResourceLoader;
 import com.google.android.filament.gltfio.FilamentAsset;
 import com.google.android.filament.gltfio.Gltfio;
 import com.google.android.filament.gltfio.MaterialProvider;
 import com.google.android.filament.gltfio.UbershaderLoader;
-import com.google.android.filament.utils.AutomationEngine;
-import com.google.android.filament.utils.Manipulator;
-import com.google.android.filament.utils.MatrixKt;
-import com.google.android.filament.utils.ModelViewerKt;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.Buffer;
 import java.util.ArrayList;
 
@@ -57,6 +57,12 @@ public class FittingFragment extends Fragment {
     Fragment fragment;
     SurfaceView surfaceView;
     SurfaceHolder surfaceHolder;
+    AssetManager assetManager;
+    FilamentAsset filamentAsset;
+    InputStream inputStream;
+
+
+    byte[] buffer;
 
     public FittingFragment(Fragment fragment,UserInformation userInformation,Bundle bundle) {
         this.fragment = fragment;
@@ -102,22 +108,54 @@ public class FittingFragment extends Fragment {
         surfaceView=view.findViewById(R.id.surfaceView);
         Filament.init();
         Gltfio.init();
-        Engine engine=Engine.create();
-        MaterialProvider materialProvider=new UbershaderLoader(engine);
-        AssetLoader assetLoader=new AssetLoader(engine, materialProvider, EntityManager.get());
-//        assetLoader.createAssetFromBinary()
-        surfaceHolder=surfaceView.getHolder();
-        Surface surface=surfaceHolder.getSurface();
-        SwapChain swapChain= engine.createSwapChain(surface);
-        Renderer renderer=engine.createRenderer();
-        RenderableManager.Builder ren=new RenderableManager.Builder(10);
-        ren.build(engine, 10);
-        Scene scene=engine.createScene();
-        com.google.android.filament.View view1=engine.createView();
-        view1.setScene(scene);
-        if (renderer.beginFrame(swapChain,1000)){}{
-            renderer.render(view1);
-            renderer.endFrame();
+        try {
+            Engine engine=Engine.create();
+            MaterialProvider materialProvider=new UbershaderLoader(engine);
+            surfaceHolder=surfaceView.getHolder();
+            Surface surface=surfaceHolder.getSurface();
+            SwapChain swapChain= engine.createSwapChain(surface);
+            Renderer renderer=engine.createRenderer();
+            RenderableManager.Builder ren=new RenderableManager.Builder(10);
+            ren.build(engine, 10);
+            Scene scene=engine.createScene();
+            Camera camera=engine.createCamera(1);
+            camera.setProjection(45, 16.0/9.0, 0.1, 1.0, Camera.Fov.VERTICAL);
+            camera.lookAt(0, 1.60, 1, 0, 0, 0, 0, 1, 0);
+            AssetLoader assetLoader=new AssetLoader(engine, materialProvider, EntityManager.get());
+            ResourceLoader resourceLoader=new ResourceLoader(engine);
+            inputStream = getActivity().getContentResolver().openInputStream(Uri.parse("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Funtitled.glb?alt=media&token=657b45d7-a84b-4f2a-89f4-a699029401f7"));
+            buffer = getBytes(inputStream);
+            Buffer buffer1=ByteBuffer.wrap(buffer);
+            filamentAsset=assetLoader.createAssetFromBinary(buffer1);
+            resourceLoader.addResourceData("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Funtitled.glb?alt=media&token=657b45d7-a84b-4f2a-89f4-a699029401f7", buffer1);
+            resourceLoader.loadResources(filamentAsset);
+            resourceLoader.destroy();
+            filamentAsset.releaseSourceData();
+            scene.addEntities(filamentAsset.getEntities());
+            com.google.android.filament.View view1=engine.createView();
+            view1.setScene(scene);
+            if (renderer.beginFrame(swapChain,10000000)){}{
+                renderer.render(view1);
+                renderer.endFrame();
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+
     }
+
+    public byte[] getBytes(InputStream inputStream) throws IOException {
+        ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
+        int bufferSize = 1024;
+        byte[] buffer = new byte[bufferSize];
+
+        int len = 0;
+        while ((len = inputStream.read(buffer)) != -1) {
+            byteBuffer.write(buffer, 0, len);
+        }
+        return byteBuffer.toByteArray();
+    }
+
 }

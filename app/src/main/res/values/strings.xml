@@ -504,6 +504,7 @@
     <string name="hostilesayingsorsymbols">Hostile sayings or symbols</string>
     <string name="saleofillegalgoods">Sale of illegal goods</string>
     <string name="violationofintellectualpropertyrights">Violation of intellectual property rights</string>
+    <string name="profiledescriptioncannotbemorethan200characters">Profile description cannot be more than 200 characters</string>
 
 
 

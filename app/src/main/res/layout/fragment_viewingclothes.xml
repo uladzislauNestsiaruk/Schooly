@@ -9,7 +9,7 @@
         android:scrollbars="none"
         android:overScrollMode="never">
 
-    zzzzz<RelativeLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -227,7 +227,6 @@
                 android:id="@+id/coinsImage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
                 android:layout_marginTop="32dp"
                 android:src="@drawable/ic_schoolycoin24dp" />
 
@@ -236,7 +235,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginStart="20dp"
                 android:visibility="gone" />
 
         </RelativeLayout>
@@ -271,8 +269,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_toRightOf="@+id/checkCurrencyType"
             android:layout_toLeftOf="@+id/checkBasket"
+            android:layout_toRightOf="@+id/checkCurrencyType"
             android:fontFamily="@font/montserratblack"
             android:textColor="@color/white"
             android:textSize="26sp" />

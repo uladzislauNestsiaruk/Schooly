@@ -130,18 +130,22 @@ public class EditingFragment extends Fragment {
         agree.setVisibility(View.VISIBLE);
         agree.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                String bioText= String.valueOf(bioEdit.getText().toString().trim());
-                firebaseModel.getUsersReference().child(nick).child("bio").setValue(bioText);
-                Toast.makeText(getContext(), R.string.changessaved, Toast.LENGTH_SHORT).show();
-                firebaseModel.getUsersReference().child(nick).child("bio").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DataSnapshot> task) {
-                        if(task.isSuccessful()){
-                            DataSnapshot snapshot=task.getResult();
-                            userInformation.setBio(snapshot.getValue(String.class));
+                if(bioEdit.getText().toString().length()>=300){
+                    Toast.makeText(getContext(), getContext().getResources().getText(R.string.profiledescriptioncannotbemorethan200characters), Toast.LENGTH_SHORT).show();
+                }else{
+                    String bioText= String.valueOf(bioEdit.getText().toString().trim());
+                    firebaseModel.getUsersReference().child(nick).child("bio").setValue(bioText);
+                    Toast.makeText(getContext(), R.string.changessaved, Toast.LENGTH_SHORT).show();
+                    firebaseModel.getUsersReference().child(nick).child("bio").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DataSnapshot> task) {
+                            if(task.isSuccessful()){
+                                DataSnapshot snapshot=task.getResult();
+                                userInformation.setBio(snapshot.getValue(String.class));
+                            }
                         }
-                    }
-                });
+                    });
+                }
 
             }
         });

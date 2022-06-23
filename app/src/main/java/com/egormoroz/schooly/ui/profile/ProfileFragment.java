@@ -1111,7 +1111,17 @@ public class ProfileFragment extends Fragment {
             otherUserBiography = view.findViewById(R.id.otheruserbiography);
             subscribeClose = view.findViewById(R.id.subscribeClose);
             //otherMainLook = view.findViewById(R.id.mainlookview);
-            otherUserBiography.setText(info.getBio());
+            if (info.getBio().length()>80){
+                otherUserBiography.setText(info.getBio().substring(0, 80)+"...");
+                otherUserBiography.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        otherUserBiography.setText(info.getBio());
+                    }
+                });
+            }else{
+                otherUserBiography.setText(info.getBio());
+            }
             subscribe = view.findViewById(R.id.addFriend);
             subscribeFirst = view.findViewById(R.id.SubscribeFirst);
             closeAccount = view.findViewById(R.id.closeAccount);

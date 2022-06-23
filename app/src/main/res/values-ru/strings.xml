@@ -504,6 +504,7 @@
     <string name="hostilesayingsorsymbols">Враждебные высказывания или символы</string>
     <string name="saleofillegalgoods">Продажа незаконных товаров</string>
     <string name="violationofintellectualpropertyrights">Нарушение прав на интеллектуальную собственность</string>
+    <string name="profiledescriptioncannotbemorethan200characters">Описание профиля не может быть более 200 символов</string>
 
 
 
