@@ -18,21 +18,29 @@ import androidx.fragment.app.Fragment;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
+import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
 
 import com.egormoroz.schooly.Callbacks;
+import com.egormoroz.schooly.FilamentModel;
 import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.ui.main.UserInformation;
+import com.google.android.filament.Box;
 import com.google.android.filament.Camera;
 import com.google.android.filament.Engine;
 import com.google.android.filament.EntityManager;
 import com.google.android.filament.Filament;
+import com.google.android.filament.IndexBuffer;
+import com.google.android.filament.LightManager;
+import com.google.android.filament.Material;
+import com.google.android.filament.MaterialInstance;
 import com.google.android.filament.RenderableManager;
 import com.google.android.filament.Renderer;
 import com.google.android.filament.Scene;
 import com.google.android.filament.SwapChain;
+import com.google.android.filament.VertexBuffer;
 import com.google.android.filament.android.UiHelper;
 import com.google.android.filament.gltfio.AssetLoader;
 import com.google.android.filament.gltfio.ResourceLoader;
@@ -60,8 +68,10 @@ public class FittingFragment extends Fragment {
     AssetManager assetManager;
     FilamentAsset filamentAsset;
     InputStream inputStream;
-
-
+    IndexBuffer indexBuffer;
+    VertexBuffer vertexBuffer;
+    Material material;
+    MaterialInstance materialInstance;
     byte[] buffer;
 
     public FittingFragment(Fragment fragment,UserInformation userInformation,Bundle bundle) {
@@ -106,43 +116,51 @@ public class FittingFragment extends Fragment {
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
 
         surfaceView=view.findViewById(R.id.surfaceView);
-        Filament.init();
-        Gltfio.init();
+        FilamentModel filamentModel=new FilamentModel();
         try {
-            Engine engine=Engine.create();
-            MaterialProvider materialProvider=new UbershaderLoader(engine);
-            surfaceHolder=surfaceView.getHolder();
-            Surface surface=surfaceHolder.getSurface();
-            SwapChain swapChain= engine.createSwapChain(surface);
-            Renderer renderer=engine.createRenderer();
-            RenderableManager.Builder ren=new RenderableManager.Builder(10);
-            ren.build(engine, 10);
-            Scene scene=engine.createScene();
-            Camera camera=engine.createCamera(1);
-            camera.setProjection(45, 16.0/9.0, 0.1, 1.0, Camera.Fov.VERTICAL);
-            camera.lookAt(0, 1.60, 1, 0, 0, 0, 0, 1, 0);
-            AssetLoader assetLoader=new AssetLoader(engine, materialProvider, EntityManager.get());
-            ResourceLoader resourceLoader=new ResourceLoader(engine);
-            inputStream = getActivity().getContentResolver().openInputStream(Uri.parse("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Funtitled.glb?alt=media&token=657b45d7-a84b-4f2a-89f4-a699029401f7"));
-            buffer = getBytes(inputStream);
-            Buffer buffer1=ByteBuffer.wrap(buffer);
-            filamentAsset=assetLoader.createAssetFromBinary(buffer1);
-            resourceLoader.addResourceData("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Funtitled.glb?alt=media&token=657b45d7-a84b-4f2a-89f4-a699029401f7", buffer1);
-            resourceLoader.loadResources(filamentAsset);
-            resourceLoader.destroy();
-            filamentAsset.releaseSourceData();
-            scene.addEntities(filamentAsset.getEntities());
-            com.google.android.filament.View view1=engine.createView();
-            view1.setScene(scene);
-            if (renderer.beginFrame(swapChain,10000000)){}{
-                renderer.render(view1);
-                renderer.endFrame();
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+            filamentModel.initFilament(surfaceView,getActivity());
+        } catch (IOException | URISyntaxException e) {
             e.printStackTrace();
         }
+//        try {
+//            Engine engine=Engine.create();
+//            MaterialProvider materialProvider=new UbershaderLoader(engine);
+//            surfaceHolder=surfaceView.getHolder();
+//            Surface surface=surfaceHolder.getSurface();
+//            SwapChain swapChain= engine.createSwapChain(surface);
+////            Renderer renderer=engine.createRenderer();
+//            inputStream = getActivity().getContentResolver().openInputStream(Uri.parse("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Funtitled.glb?alt=media&token=657b45d7-a84b-4f2a-89f4-a699029401f7"));
+//            buffer = getBytes(inputStream);
+//            Buffer buffer1=ByteBuffer.wrap(buffer);
+//            Scene scene=engine.createScene();
+////            indexBuffer.setBuffer(engine, buffer1);
+////            vertexBuffer.setBufferAt(engine, buffer1.position(), buffer1);
+////            material=new Material.Builder().build(engine);
+////            materialInstance=material.createInstance();
+////            new RenderableManager.Builder(1)
+////                    .boundingBox(new Box(0.0f, 0.0f, 0.0f, 9000.0f, 9000.0f, 9000.0f))
+////                    .geometry(0, RenderableManager.PrimitiveType.TRIANGLES, vertexBuffer, indexBuffer,0,6*6)
+////                    .material(0, materialInstance)
+////                    .build(engine,renderable);
+//            int sun=EntityManager.get().create();
+//            new LightManager.Builder(LightManager.Type.SUN)
+//                    .castShadows(true)
+//                    .build(engine,sun);
+//            scene.addEntity(sun);
+//            Camera camera=engine.createCamera(EntityManager.get().create());
+//            camera.setProjection(45, 16.0/9.0, 0.1, 1.0, Camera.Fov.VERTICAL);
+//            camera.lookAt(0, 1.60, 1, 0, 0, 0, 0, 1, 0);
+//            com.google.android.filament.View view1=engine.createView();
+//            view1.setScene(scene);
+//            if (renderer.beginFrame(swapChain,10000000)){}{
+//                renderer.render(view1);
+//                renderer.endFrame();
+//            }
+//        } catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
 
     }
 

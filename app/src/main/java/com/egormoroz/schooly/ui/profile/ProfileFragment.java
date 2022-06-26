@@ -232,7 +232,6 @@ public class ProfileFragment extends Fragment {
             root=inflater.inflate(R.layout.fragment_profileback, container, false);
             nickname=root.findViewById(R.id.usernick);
         }
-        Filament.init();
 //        AppBarLayout abl=getActivity().findViewById(R.id.AppBarLayout);
 //        abl.setVisibility(abl.GONE);
         BottomNavigationView bnv = getActivity().findViewById(R.id.bottomNavigationView);
