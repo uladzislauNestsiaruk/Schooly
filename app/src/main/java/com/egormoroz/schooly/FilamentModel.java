@@ -2,6 +2,7 @@ package com.egormoroz.schooly;
 
 import android.app.Activity;
 import android.net.Uri;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Choreographer;
 import android.view.Surface;
@@ -63,15 +64,14 @@ public class FilamentModel {
     SurfaceHolder surfaceHolder;
     SwapChain swapChain;
 
-    public void initFilament(SurfaceView surfaceView,Activity activity) throws IOException, URISyntaxException {
+    public void initFilament(SurfaceView surfaceView,Buffer buffer) throws IOException, URISyntaxException {
         Filament.init();
         Gltfio.init();
-        choreographer=Choreographer.getInstance();
         displayHelper=new DisplayHelper(surfaceView.getContext());
         setupSurfaceView(surfaceView);
         setupFilament(surfaceView);
         setupView();
-        setupScene();
+        setupScene(buffer);
     }
 
     public void setupSurfaceView(SurfaceView surfaceView){
@@ -112,77 +112,30 @@ public class FilamentModel {
         view.setScene(scene);
     }
 
-    public void setupScene() throws IOException, URISyntaxException {
+    public void setupScene(Buffer buffer) throws IOException, URISyntaxException {
         Log.d("####", "init  "+view+"   "+scene+"   "+camera+"   "+scene.getSkybox());
-        StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("3d models");
-        StorageReference islandRef = storageReference.child("untitled.glb");
-        islandRef.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
-            @Override
-            public void onComplete(@NonNull Task<Uri> task) {
-                if(task.isSuccessful()){
-                    Uri uri1=task.getResult();
-                    Log.d("####", "fgg "+uri1);
-                    URI uri= null;
-                    try {
-                        uri = new URI(uri1.toString());
-                    } catch (URISyntaxException e) {
-                        e.printStackTrace();
-                    }
-                    try {
-                        buffer = getBytes(uri.toURL());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    Buffer buffer1= ByteBuffer.wrap(buffer);
-                    MaterialProvider materialProvider=new UbershaderLoader(engine);
-                    AssetLoader assetLoader=new AssetLoader(engine, materialProvider, EntityManager.get());
-                    ResourceLoader resourceLoader=new ResourceLoader(engine);
-                    filamentAsset=assetLoader.createAssetFromBinary(buffer1);
-                    resourceLoader.addResourceData("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Funtitled.glb?alt=media&token=657b45d7-a84b-4f2a-89f4-a699029401f7", buffer1);
-                    resourceLoader.loadResources(filamentAsset);
-                    resourceLoader.destroy();
-                    filamentAsset.releaseSourceData();
-                    scene.addEntities(filamentAsset.getEntities());
-                    light=EntityManager.get().create();
-                    color=Colors.cct(5_500.0f);
-                    new LightManager.Builder(LightManager.Type.DIRECTIONAL)
-                            .color(color[0],color[1],color[2])
-                            .intensity(110_000.0f)
-                            .direction(0.0f, -0.5f, -1.0f)
-                            .castShadows(true)
-                            .build(engine, light);
-                    scene.addEntity(light);
-                    camera.setExposure(16.0f, 1.0f / 125.0f, 100.0f);
-                    camera.lookAt(0.0, 0.0, 6.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
-                    if(renderer.beginFrame(swapChain,1000)) {
-                        renderer.render(view);
-                        renderer.endFrame();
-                    }
-                }
-            }
-        });
-    }
-
-    public byte[] getBytes( URL url) throws IOException {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        InputStream is = null;
-        try {
-            is = new BufferedInputStream(url.openStream ());
-            byte[] byteChunk = new byte[4096]; // Or whatever size you want to read in at a time.
-            int n;
-
-            while ( (n = is.read(byteChunk)) > 0 ) {
-                baos.write(byteChunk, 0, n);
-            }
+        MaterialProvider materialProvider=new UbershaderLoader(engine);
+        AssetLoader assetLoader=new AssetLoader(engine, materialProvider, EntityManager.get());
+        ResourceLoader resourceLoader=new ResourceLoader(engine);
+        filamentAsset=assetLoader.createAssetFromBinary(buffer);
+        resourceLoader.addResourceData("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Funtitled.glb?alt=media&token=657b45d7-a84b-4f2a-89f4-a699029401f7", buffer);
+        resourceLoader.loadResources(filamentAsset);
+        filamentAsset.releaseSourceData();
+        scene.addEntities(filamentAsset.getEntities());
+        light=EntityManager.get().create();
+        color=Colors.cct(5_500.0f);
+        new LightManager.Builder(LightManager.Type.DIRECTIONAL)
+                .color(color[0],color[1],color[2])
+                .intensity(110_000.0f)
+                .direction(0.0f, -0.5f, -1.0f)
+                .castShadows(true)
+                .build(engine, light);
+        scene.addEntity(light);
+        camera.setExposure(16.0f, 1.0f / 125.0f, 100.0f);
+        camera.lookAt(0.0, 0.0, 6.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+        if(renderer.beginFrame(swapChain,1000)) {
+            renderer.render(view);
         }
-        catch (IOException e) {
-            System.err.printf ("Failed while reading bytes from %s: %s", url.toExternalForm(), e.getMessage());
-            e.printStackTrace ();
-            // Perform any other exception handling that's appropriate.
-        }
-        finally {
-            if (is != null) { is.close(); }
-        }
-        return  baos.toByteArray();
+        Log.d("####", "initEnd  "+view+"   "+scene+"   "+camera+"   "+scene.getSkybox());
     }
 }

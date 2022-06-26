@@ -2,7 +2,11 @@ package com.egormoroz.schooly.ui.main.Shop;
 
 import android.content.res.AssetManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Surface;
 import android.view.SurfaceHolder;
@@ -16,11 +20,16 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
+import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.ByteBuffer;
 
+import com.bumptech.glide.request.Request;
 import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FilamentModel;
 import com.egormoroz.schooly.FirebaseModel;
@@ -55,6 +64,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.Buffer;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 public class FittingFragment extends Fragment {
 
@@ -64,15 +74,9 @@ public class FittingFragment extends Fragment {
     Bundle bundle;
     Fragment fragment;
     SurfaceView surfaceView;
-    SurfaceHolder surfaceHolder;
-    AssetManager assetManager;
-    FilamentAsset filamentAsset;
-    InputStream inputStream;
-    IndexBuffer indexBuffer;
-    VertexBuffer vertexBuffer;
-    Material material;
-    MaterialInstance materialInstance;
     byte[] buffer;
+    URI uri;
+    Buffer buffer1,bufferToFilament;
 
     public FittingFragment(Fragment fragment,UserInformation userInformation,Bundle bundle) {
         this.fragment = fragment;
@@ -116,64 +120,76 @@ public class FittingFragment extends Fragment {
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
 
         surfaceView=view.findViewById(R.id.surfaceView);
-        FilamentModel filamentModel=new FilamentModel();
+        MyAsyncTask myAsyncTask=new MyAsyncTask();
+        myAsyncTask.execute("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Funtitled.glb?alt=media&token=657b45d7-a84b-4f2a-89f4-a699029401f7");
         try {
-            filamentModel.initFilament(surfaceView,getActivity());
-        } catch (IOException | URISyntaxException e) {
+            bufferToFilament = myAsyncTask.get();
+            FilamentModel filamentModel=new FilamentModel();
+            Log.d("####", "ccc  "+bufferToFilament);
+            filamentModel.initFilament(surfaceView,bufferToFilament);
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (URISyntaxException e) {
             e.printStackTrace();
         }
-//        try {
-//            Engine engine=Engine.create();
-//            MaterialProvider materialProvider=new UbershaderLoader(engine);
-//            surfaceHolder=surfaceView.getHolder();
-//            Surface surface=surfaceHolder.getSurface();
-//            SwapChain swapChain= engine.createSwapChain(surface);
-////            Renderer renderer=engine.createRenderer();
-//            inputStream = getActivity().getContentResolver().openInputStream(Uri.parse("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Funtitled.glb?alt=media&token=657b45d7-a84b-4f2a-89f4-a699029401f7"));
-//            buffer = getBytes(inputStream);
-//            Buffer buffer1=ByteBuffer.wrap(buffer);
-//            Scene scene=engine.createScene();
-////            indexBuffer.setBuffer(engine, buffer1);
-////            vertexBuffer.setBufferAt(engine, buffer1.position(), buffer1);
-////            material=new Material.Builder().build(engine);
-////            materialInstance=material.createInstance();
-////            new RenderableManager.Builder(1)
-////                    .boundingBox(new Box(0.0f, 0.0f, 0.0f, 9000.0f, 9000.0f, 9000.0f))
-////                    .geometry(0, RenderableManager.PrimitiveType.TRIANGLES, vertexBuffer, indexBuffer,0,6*6)
-////                    .material(0, materialInstance)
-////                    .build(engine,renderable);
-//            int sun=EntityManager.get().create();
-//            new LightManager.Builder(LightManager.Type.SUN)
-//                    .castShadows(true)
-//                    .build(engine,sun);
-//            scene.addEntity(sun);
-//            Camera camera=engine.createCamera(EntityManager.get().create());
-//            camera.setProjection(45, 16.0/9.0, 0.1, 1.0, Camera.Fov.VERTICAL);
-//            camera.lookAt(0, 1.60, 1, 0, 0, 0, 0, 1, 0);
-//            com.google.android.filament.View view1=engine.createView();
-//            view1.setScene(scene);
-//            if (renderer.beginFrame(swapChain,10000000)){}{
-//                renderer.render(view1);
-//                renderer.endFrame();
-//            }
-//        } catch (FileNotFoundException e) {
-//            e.printStackTrace();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-
     }
 
-    public byte[] getBytes(InputStream inputStream) throws IOException {
-        ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
-        int bufferSize = 1024;
-        byte[] buffer = new byte[bufferSize];
+    public byte[] getBytes( URL url) throws IOException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        InputStream is = null;
+        try {
+            is = new BufferedInputStream(url.openStream ());
+            byte[] byteChunk = new byte[4096]; // Or whatever size you want to read in at a time.
+            int n;
 
-        int len = 0;
-        while ((len = inputStream.read(buffer)) != -1) {
-            byteBuffer.write(buffer, 0, len);
+            while ( (n = is.read(byteChunk)) > 0 ) {
+                baos.write(byteChunk, 0, n);
+            }
         }
-        return byteBuffer.toByteArray();
+        catch (IOException e) {
+            Log.d("####", "Failed while reading bytes from %s: %s"+ url.toExternalForm()+ e.getMessage());
+            e.printStackTrace ();
+            // Perform any other exception handling that's appropriate.
+        }
+        finally {
+            if (is != null) { is.close(); }
+        }
+        Log.d("####", "initUrl"+baos.toByteArray().toString());
+        return  baos.toByteArray();
     }
 
+    @Override
+    public void onPause() {
+        surfaceView.setVisibility(View.GONE);
+        super.onPause();
+    }
+
+    public class MyAsyncTask extends AsyncTask<String, Integer, Buffer> {
+        @Override
+        protected Buffer doInBackground(String... parameter) {
+            try {
+                uri = new URI(parameter[0]);
+                buffer = getBytes(uri.toURL());
+                Log.d("####", "initBuffer "+buffer);
+                buffer1= ByteBuffer.wrap(buffer);
+            } catch (URISyntaxException | MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return buffer1;
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... progress) {
+
+        }
+
+        protected void onPostExecute(Buffer... bufferTask) throws IOException, URISyntaxException {
+        }
+    }
 }
