@@ -192,7 +192,7 @@ public class ProfileFragment extends Fragment {
 
 
     public void open() {
-        user.addListenerForSingleValueEvent(new ValueEventListener() {
+        firebaseModel.getUsersReference().child(userInformation.getNick()).child("Chats").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 if (snapshot.child(userInformation.getNick()).exists()) {

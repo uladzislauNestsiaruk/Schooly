@@ -3,6 +3,9 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/AndroidProjects/Schooly/app/src/main/res/layout/activity_chat.xml" value="0.11041666666666666" />
+        <entry key="..\:/AndroidProjects/Schooly/app/src/main/res/layout/custom_messages_layout.xml" value="0.11041666666666666" />
+        <entry key="..\:/AndroidProjects/Schooly/app/src/main/res/layout/messages_types.xml" value="0.2" />
         <entry key="..\:/Users/User/AndroidStudioProjects/Schooly_NEW/app/src/main/res/layout/fragment_clothesrequest.xml" value="0.14130434782608695" />
         <entry key="..\:/Users/User/AndroidStudioProjects/Schooly_NEW/app/src/main/res/layout/fragment_createcharacter.xml" value="0.1" />
         <entry key="..\:/Users/User/AppData/Local/Android/Sdk/platforms/android-30/data/res/layout/simple_list_item_1.xml" value="0.16893115942028986" />
