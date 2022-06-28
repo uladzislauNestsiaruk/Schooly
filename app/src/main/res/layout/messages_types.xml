@@ -82,41 +82,55 @@
     <RelativeLayout
         android:id="@+id/outcomingVoice"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginStart="105dp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="4dp"
+        android:layout_marginTop="4dp"
+        android:background="@drawable/cornerstextmessagesfromme">
+
         <ImageView
-            android:clickable="true"
             android:id="@+id/imgPlay"
             android:layout_width="45dp"
             android:layout_height="45dp"
-            android:background="@drawable/play_pause_bg"
-            android:src="@drawable/ic_play_arrow_white_24dp"
-            android:focusable="true" />
-        <ImageView
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="210dp"
             android:clickable="true"
+            android:focusable="true"
+            android:src="@drawable/ic_play_arrow_white_24dp" />
+
+        <ImageView
             android:id="@+id/imgPause"
             android:layout_width="45dp"
             android:layout_height="45dp"
-            android:background="@drawable/play_pause_bg"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="210dp"
+            android:clickable="true"
+            android:focusable="true"
             android:src="@drawable/ic_pause_white_24dp"
-            android:visibility="gone"
-            android:focusable="true" />
+            android:visibility="gone" />
+
         <TextView
+            android:id="@+id/txtTime"
+            android:layout_alignParentRight="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/txtTime"
             android:layout_gravity="end"
+            android:layout_marginTop="30dp"
             android:layout_marginEnd="16dp"
-            android:textSize="10sp"
             android:text="00:00:00 / 00:00:00"
-            android:layout_marginRight="16dp" />
+            android:textSize="10sp" />
+
         <SeekBar
             android:id="@+id/seekBar"
             android:layout_width="225dp"
-            android:layout_marginStart="0dp"
-            android:layout_marginEnd="4dp"
+            android:layout_alignParentRight="true"
             android:layout_height="wrap_content"
-            android:layout_marginRight="4dp"
-            android:layout_marginLeft="0dp" />
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginLeft="0dp"
+            android:layout_marginEnd="4dp"
+            android:layout_marginRight="4dp" />
     </RelativeLayout>
 
     <RelativeLayout
