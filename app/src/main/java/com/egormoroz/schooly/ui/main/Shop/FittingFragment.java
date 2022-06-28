@@ -77,6 +77,7 @@ public class FittingFragment extends Fragment {
     byte[] buffer;
     URI uri;
     Buffer buffer1,bufferToFilament;
+    FilamentModel filamentModel;
 
     public FittingFragment(Fragment fragment,UserInformation userInformation,Bundle bundle) {
         this.fragment = fragment;
@@ -124,7 +125,7 @@ public class FittingFragment extends Fragment {
         myAsyncTask.execute("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Funtitled.glb?alt=media&token=657b45d7-a84b-4f2a-89f4-a699029401f7");
         try {
             bufferToFilament = myAsyncTask.get();
-            FilamentModel filamentModel=new FilamentModel();
+            filamentModel=new FilamentModel();
             Log.d("####", "ccc  "+bufferToFilament);
             filamentModel.initFilament(surfaceView,bufferToFilament);
         } catch (ExecutionException e) {
@@ -162,10 +163,26 @@ public class FittingFragment extends Fragment {
         return  baos.toByteArray();
     }
 
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        filamentModel.postFrameCallback();
+    }
+
     @Override
     public void onPause() {
-        surfaceView.setVisibility(View.GONE);
         super.onPause();
+
+        filamentModel.removeFrameCallback();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        filamentModel.removeFrameCallback();
     }
 
     public class MyAsyncTask extends AsyncTask<String, Integer, Buffer> {
