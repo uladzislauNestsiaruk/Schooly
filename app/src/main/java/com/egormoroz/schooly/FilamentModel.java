@@ -69,39 +69,37 @@ public class FilamentModel {
     Choreographer choreographer=Choreographer.getInstance();
     GestureDetector doubleTapDetector;
     AutomationEngine.ViewerContent viewerContent=new AutomationEngine.ViewerContent();
-    Float3 float3=new Float3(0.0f, 0.0f, -4.0f);
+    Float3 float3=new Float3(0.0f, 0.0f, -2.2f);
     long loadStartTime;
     Fence loadStartFence;
     byte[] buffer;
     URI uri;
     Buffer buffer1,bufferToFilament;
 
-    public void initFilament(SurfaceView surfaceView,Buffer buffer) throws IOException, URISyntaxException {
+    public void initFilament(SurfaceView surfaceView,Buffer buffer,boolean onTouch) throws IOException, URISyntaxException {
         Filament.init();
         Gltfio.init();
         Utils.INSTANCE.init();
         cameraManipulator=new Manipulator.Builder()
-                .targetPosition(0.0f, 0.0f, -4.0f)
+                .targetPosition(0.0f, 0.0f, -2.2f)
                 .viewport(surfaceView.getWidth(), surfaceView.getHeight())
                 .build(Manipulator.Mode.ORBIT);
         doubleTapDetector=new GestureDetector(surfaceView, cameraManipulator);
         uiHelper=new UiHelper(UiHelper.ContextErrorPolicy.DONT_CHECK);
         engine=Engine.create();
         modelViewer=new ModelViewer(surfaceView, engine,uiHelper,cameraManipulator);
-        Log.d("#####", "####");
         setupFilament();
         surfaceView.setOnTouchListener(new android.view.View.OnTouchListener() {
             @Override
             public boolean onTouch(android.view.View v, MotionEvent event) {
                 modelViewer.onTouchEvent(event);
                 doubleTapDetector.onTouchEvent(event);
-                return true;
+                return onTouch;
             }
         });
         loadGlb(buffer);
         Skybox skybox=new Skybox.Builder().build(modelViewer.getEngine());
         modelViewer.getScene().setSkybox(skybox);
-        postFrameCallback();
 
     }
 
@@ -109,7 +107,10 @@ public class FilamentModel {
         @Override
         public void doFrame(long frameTimeNanos) {
             choreographer.postFrameCallback(frameCallback);
-            modelViewer.render(frameTimeNanos);
+            Log.d("####", "####1");
+            if(modelViewer!=null){
+                modelViewer.render(frameTimeNanos);
+            }
         }
     };
 
@@ -122,7 +123,6 @@ public class FilamentModel {
     }
 
     public void postFrameCallback(){
-        Log.d("#####", "####1");
         choreographer.postFrameCallback(frameCallback);
     }
 
@@ -139,11 +139,15 @@ public class FilamentModel {
 
     }
 
-    public void executeTask(String url,SurfaceView surfaceView) throws ExecutionException, InterruptedException, IOException, URISyntaxException {
+    public void executeTask(String url,SurfaceView surfaceView,boolean onTouch,Buffer buffer) throws ExecutionException, InterruptedException, IOException, URISyntaxException {
         MyAsyncTask myAsyncTask=new MyAsyncTask();
-        myAsyncTask.execute(url);
-        bufferToFilament = myAsyncTask.get();
-        initFilament(surfaceView,bufferToFilament);
+        if(buffer==null){
+            myAsyncTask.execute(url);
+            bufferToFilament = myAsyncTask.get();
+            initFilament(surfaceView,bufferToFilament,onTouch);
+        }else{
+            initFilament(surfaceView,buffer,onTouch);
+        }
     }
 
     public byte[] getBytes( URL url) throws IOException {

@@ -11,6 +11,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.opengl.GLSurfaceView;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -21,6 +22,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -46,6 +48,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.egormoroz.schooly.Callbacks;
+import com.egormoroz.schooly.FilamentModel;
 import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.MainActivity;
 
@@ -93,9 +96,19 @@ import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.Buffer;
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -103,6 +116,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 
 public class ProfileFragment extends Fragment {
@@ -117,13 +131,9 @@ public class ProfileFragment extends Fragment {
             ,subscribeFirst,closeAccount,noClothes,buyClothesProfile,blockedAccount,emptyList;
     DatabaseReference user;
     ArrayList<Subscriber> userFromBase;
-    // SceneLoader scene;
     LinearLayout linearSubscribers,linearSubscriptions
             ,linearLooksProfile,linearSubscribersProfile,linearSubscriptionsProfile;
-    // ModelSurfaceView modelSurfaceView;
-    // SceneView mainLook, otherMainLook;
     SendLookAdapter.ItemClickListener itemClickListenerSendLookAdapter;
-    // ModelRenderer modelRenderer;
     RecyclerView wardrobeRecycler,recyclerView;
     ImageView moreSquare,back,newLook,editMainLook,editMainLookBack;
     String sendNick,subscriptionsCountString,subscribersCountString
@@ -135,12 +145,17 @@ public class ProfileFragment extends Fragment {
     FragmentAdapter fragmentAdapter;
     FragmentAdapterOther fragmentAdapterOther;
     Handler handler;
+    SurfaceView surfaceView,surfaceViewOther;
     TabLayout tabLayout,tabLayoutOther;
     int tabLayoutPosition,tabLayoutPositionOther;
     private float[] backgroundColor = new float[]{0f, 0f, 0f, 1.0f};
     int a,profileCheckValue,checkOnSubscribeValue, b=0,v;
     UserInformation userInformation;
     Bundle bundle;
+    FilamentModel filamentModel;
+    byte[] buffer;
+    URI uri;
+    Buffer buffer1,bufferToFilament;
 
 
     @Override
@@ -257,22 +272,39 @@ public class ProfileFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         firebaseModel.initAll();
+        filamentModel=new FilamentModel();
         switch (type) {
             case "user":
-//                Bundle b = getActivity().getIntent().getExtras();
-//                try {
-//                    String[] backgroundColors = b.getString("backgroundColor").split(" ");
-//                    backgroundColor[0] = Float.parseFloat(backgroundColors[0]);
-//                    backgroundColor[1] = Float.parseFloat(backgroundColors[1]);
-//                    backgroundColor[2] = Float.parseFloat(backgroundColors[2]);
-//                    backgroundColor[3] = Float.parseFloat(backgroundColors[3]);
-//                } catch (Exception ex) {
-//                    // Assuming default background color
-//                }
 
                 ///////////////////////// set nickname /////////////////////
                 nickname.setText(userInformation.getNick());
                 //////////////////////////////////////////////////
+                surfaceView=view.findViewById(R.id.mainlookview);
+                try {
+                    if(bundle.getSerializable("MAINLOOK")==null){
+                        MyAsyncTask myAsyncTask=new MyAsyncTask();
+                        myAsyncTask.execute(userInformation.getMainLook());
+                        bufferToFilament = myAsyncTask.get();
+                        Log.d("######", "0");
+                        ArrayList<Buffer> buffers=new ArrayList<>();
+                        buffers.add(bufferToFilament);
+                        bundle.putSerializable("MAINLOOK",buffers);
+                        filamentModel.initFilament(surfaceView,bufferToFilament,true);
+                    }else{
+                        Log.d("######", "1");
+                        ArrayList<Buffer> buffers= (ArrayList<Buffer>) bundle.getSerializable("MAINLOOK");
+                        Buffer buffer3=buffers.get(0);
+                        filamentModel.initFilament(surfaceView,buffer3 ,true);
+                    }
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (URISyntaxException e) {
+                    e.printStackTrace();
+                }
                 ImageView imageView = view.findViewById(R.id.settingsIcon);
                 imageView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -396,35 +428,6 @@ public class ProfileFragment extends Fragment {
                 checkWardrobe();
                 //////////////////////////////////////
 
-                handler = new Handler(getMainLooper());
-                //      scene = new SceneLoader(this);
-                //               scene.init(Uri.parse("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2FSciFiHelmet.gltf?alt=media&token=a82512c1-14bf-4faf-8f67-abeb70da7697"));
-                //mainLook=view.findViewById(R.id.mainlookview);
-                StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("Models");
-                StorageReference islandRef = storageReference.child("models/untitled.gltf");
-                File localFile = null;
-                try {
-                    localFile = File.createTempFile("model", ".gltf");
-                } catch (IOException ioException) {
-                    ioException.printStackTrace();
-                }
-
-                islandRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                        // Local temp file has been created
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-                        // Handle any errors
-                    }
-                });
-                //loadModels(Uri.parse("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Funtitled.glb?alt=media&token=657b45d7-a84b-4f2a-89f4-a699029401f7"), mainLook, ProfileFragment.this, 0.25f);
-                // loadModels(Uri.parse("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Funtitled.glb?alt=media&token=657b45d7-a84b-4f2a-89f4-a699029401f7"), mainLook, ProfileFragment.this, 0.5f);
-
-
-
                 break;
 
             case "other":
@@ -458,6 +461,18 @@ public class ProfileFragment extends Fragment {
                         info= (UserInformation) bundle.getSerializable(sendNick+"PROFILE_OTHER_BUNDLE");
                         b=1;
                         user = firebaseModel.getUsersReference().child(info.getNick());
+                        surfaceView=view.findViewById(R.id.mainlookview);
+                        try {
+                            filamentModel.executeTask(info.getMainLook(),surfaceView,true,null);
+                        } catch (ExecutionException e) {
+                            e.printStackTrace();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } catch (URISyntaxException e) {
+                            e.printStackTrace();
+                        }
                         if(bundle.getString(sendNick+"PROFILE_OTHER_CHECK_VALUE")==null){
                             firebaseModel.getUsersReference().child(info.getNick())
                                     .child("blackList").child(userInformation.getNick())
@@ -554,6 +569,19 @@ public class ProfileFragment extends Fragment {
                                         info.setQueue(snapshot.child("queue").getValue(String.class));
                                         info.setAccountType(snapshot.child("accountType").getValue(String.class));
                                         info.setBio(snapshot.child("bio").getValue(String.class));
+                                        info.setMainLook(snapshot.child("mainLook").getValue(String.class));
+                                        surfaceView=view.findViewById(R.id.mainlookview);
+                                        try {
+                                            filamentModel.executeTask(info.getMainLook(),surfaceView,true,null);
+                                        } catch (ExecutionException e) {
+                                            e.printStackTrace();
+                                        } catch (InterruptedException e) {
+                                            e.printStackTrace();
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        } catch (URISyntaxException e) {
+                                            e.printStackTrace();
+                                        }
                                         bundle.putSerializable(sendNick+"PROFILE_OTHER_BUNDLE", (Serializable) info);
                                         firebaseModel.getUsersReference().child(info.getNick())
                                                 .child("blackList").child(userInformation.getNick())
@@ -633,6 +661,19 @@ public class ProfileFragment extends Fragment {
                 };
 
                 requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callbackUserBack);
+
+                surfaceView=view.findViewById(R.id.mainlookview);
+                try {
+                    filamentModel.executeTask(info.getMainLook(),surfaceView,true,null);
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (URISyntaxException e) {
+                    e.printStackTrace();
+                }
 
                 if (bundle!=null){
                     tabLayoutPosition=bundle.getInt("TAB_INT_PROFILE");
@@ -755,9 +796,6 @@ public class ProfileFragment extends Fragment {
                 //////////////////////////////////////
 
                 handler = new Handler(getMainLooper());
-                //      scene = new SceneLoader(this);
-                //               scene.init(Uri.parse("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2FSciFiHelmet.gltf?alt=media&token=a82512c1-14bf-4faf-8f67-abeb70da7697"));
-                //mainLook=view.findViewById(R.id.mainlookview);
                 StorageReference storageReference1 = FirebaseStorage.getInstance().getReference().child("Models");
                 StorageReference islandRef1 = storageReference1.child("models/untitled.gltf");
                 File localFile1 = null;
@@ -778,7 +816,6 @@ public class ProfileFragment extends Fragment {
                         // Handle any errors
                     }
                 });
-                //loadModels(Uri.parse("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Funtitled.glb?alt=media&token=657b45d7-a84b-4f2a-89f4-a699029401f7"), mainLook, ProfileFragment.this, 0.25f);
 
                 break;
 
@@ -1802,6 +1839,71 @@ public class ProfileFragment extends Fragment {
             public void afterTextChanged(Editable editable) {
             }
         });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        filamentModel.postFrameCallback();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        filamentModel.removeFrameCallback();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        filamentModel.removeFrameCallback();
+    }
+
+    public byte[] getBytes( URL url) throws IOException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        InputStream is = null;
+        try {
+            is = new BufferedInputStream(url.openStream ());
+            byte[] byteChunk = new byte[4096];
+            int n;
+
+            while ( (n = is.read(byteChunk)) > 0 ) {
+                baos.write(byteChunk, 0, n);
+            }
+        }
+        catch (IOException e) {
+            Log.d("####", "Failed while reading bytes from %s: %s"+ url.toExternalForm()+ e.getMessage());
+            e.printStackTrace ();
+        }
+        finally {
+            if (is != null) { is.close(); }
+        }
+        return  baos.toByteArray();
+    }
+
+    public class MyAsyncTask extends AsyncTask<String, Integer, Buffer> {
+        @Override
+        protected Buffer doInBackground(String... parameter) {
+            try {
+                uri = new URI(parameter[0]);
+                buffer = getBytes(uri.toURL());
+                buffer1= ByteBuffer.wrap(buffer);
+            } catch (URISyntaxException | MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return buffer1;
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... progress) {
+
+        }
+
     }
 
 

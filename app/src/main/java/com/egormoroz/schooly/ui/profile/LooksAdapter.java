@@ -83,20 +83,18 @@ public class LooksAdapter extends RecyclerView.Adapter<LooksAdapter.ViewHolder> 
             }
         });
         viewLookCount=String.valueOf(newsItem.getViewCount());
-        try {
-            filamentModel.executeTask(newsItem.getImageUrl(), holder.surfaceView);
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            filamentModel.executeTask(newsItem.getImageUrl(), holder.surfaceView,false,null);
+//        } catch (ExecutionException e) {
+//            e.printStackTrace();
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        } catch (URISyntaxException e) {
+//            e.printStackTrace();
+//        }
         checkCounts(holder.viewPurchase, newsItem.getViewCount(), viewLookCount);
-
-        //loadModels(Uri.parse(newsItem.getImageUrl()), holder.lookScene,holder.lookScene.getContext() , 0.25f);
 
     }
 
