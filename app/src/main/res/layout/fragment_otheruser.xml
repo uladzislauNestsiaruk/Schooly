@@ -218,8 +218,7 @@
             android:layout_below="@+id/bigLinear"
             android:layout_marginStart="24dp"
             android:layout_marginTop="34dp"
-            android:layout_marginEnd="24dp"
-            android:background="@color/pinkLight" />
+            android:layout_marginEnd="24dp" />
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabsprofileother"

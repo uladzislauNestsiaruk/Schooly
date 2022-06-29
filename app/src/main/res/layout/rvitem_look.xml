@@ -8,8 +8,7 @@
     <SurfaceView
         android:id="@+id/lookScene"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/greylook"/>
+        android:layout_height="match_parent" />
 
     <RelativeLayout
         android:id="@+id/viewedRelative"

@@ -3,6 +3,7 @@ package com.egormoroz.schooly;
 import android.app.Activity;
 import android.content.res.AssetManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Handler;
 import android.util.Log;
 import android.view.Choreographer;
@@ -14,6 +15,7 @@ import android.view.SurfaceView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import com.egormoroz.schooly.ui.main.Shop.FittingFragment;
 import com.google.android.filament.Camera;
 import com.google.android.filament.Colors;
 import com.google.android.filament.Engine;
@@ -50,11 +52,13 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
+import java.util.concurrent.ExecutionException;
 
 public class FilamentModel {
 
@@ -62,18 +66,20 @@ public class FilamentModel {
     Engine engine;
     Manipulator cameraManipulator;
     ModelViewer modelViewer;
-    Choreographer choreographer;
+    Choreographer choreographer=Choreographer.getInstance();
     GestureDetector doubleTapDetector;
     AutomationEngine.ViewerContent viewerContent=new AutomationEngine.ViewerContent();
     Float3 float3=new Float3(0.0f, 0.0f, -4.0f);
     long loadStartTime;
     Fence loadStartFence;
+    byte[] buffer;
+    URI uri;
+    Buffer buffer1,bufferToFilament;
 
     public void initFilament(SurfaceView surfaceView,Buffer buffer) throws IOException, URISyntaxException {
         Filament.init();
         Gltfio.init();
         Utils.INSTANCE.init();
-        choreographer=Choreographer.getInstance();
         cameraManipulator=new Manipulator.Builder()
                 .targetPosition(0.0f, 0.0f, -4.0f)
                 .viewport(surfaceView.getWidth(), surfaceView.getHeight())
@@ -82,6 +88,7 @@ public class FilamentModel {
         uiHelper=new UiHelper(UiHelper.ContextErrorPolicy.DONT_CHECK);
         engine=Engine.create();
         modelViewer=new ModelViewer(surfaceView, engine,uiHelper,cameraManipulator);
+        Log.d("#####", "####");
         setupFilament();
         surfaceView.setOnTouchListener(new android.view.View.OnTouchListener() {
             @Override
@@ -94,6 +101,7 @@ public class FilamentModel {
         loadGlb(buffer);
         Skybox skybox=new Skybox.Builder().build(modelViewer.getEngine());
         modelViewer.getScene().setSkybox(skybox);
+        postFrameCallback();
 
     }
 
@@ -114,6 +122,7 @@ public class FilamentModel {
     }
 
     public void postFrameCallback(){
+        Log.d("#####", "####1");
         choreographer.postFrameCallback(frameCallback);
     }
 
@@ -127,6 +136,57 @@ public class FilamentModel {
         viewerContent.lightManager=modelViewer.getEngine().getLightManager();
         viewerContent.scene=modelViewer.getScene();
         viewerContent.renderer=modelViewer.getRenderer();
+
+    }
+
+    public void executeTask(String url,SurfaceView surfaceView) throws ExecutionException, InterruptedException, IOException, URISyntaxException {
+        MyAsyncTask myAsyncTask=new MyAsyncTask();
+        myAsyncTask.execute(url);
+        bufferToFilament = myAsyncTask.get();
+        initFilament(surfaceView,bufferToFilament);
+    }
+
+    public byte[] getBytes( URL url) throws IOException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        InputStream is = null;
+        try {
+            is = new BufferedInputStream(url.openStream ());
+            byte[] byteChunk = new byte[4096];
+            int n;
+
+            while ( (n = is.read(byteChunk)) > 0 ) {
+                baos.write(byteChunk, 0, n);
+            }
+        }
+        catch (IOException e) {
+            Log.d("####", "Failed while reading bytes from %s: %s"+ url.toExternalForm()+ e.getMessage());
+            e.printStackTrace ();
+        }
+        finally {
+            if (is != null) { is.close(); }
+        }
+        return  baos.toByteArray();
+    }
+
+    public class MyAsyncTask extends AsyncTask<String, Integer, Buffer> {
+        @Override
+        protected Buffer doInBackground(String... parameter) {
+            try {
+                uri = new URI(parameter[0]);
+                buffer = getBytes(uri.toURL());
+                buffer1= ByteBuffer.wrap(buffer);
+            } catch (URISyntaxException | MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return buffer1;
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... progress) {
+
+        }
 
     }
 

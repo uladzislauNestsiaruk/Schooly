@@ -253,7 +253,7 @@ public class CreateCharacterFragment extends Fragment {
                                     "6", password, "Helicopter", 1000, new ArrayList<>(),new ArrayList<>(),1,100,0
                                     , new ArrayList<>(), new ArrayList<>(), ""," ","open","open","open","open"
                                     ,new ArrayList<>(),"regular", new ArrayList<>(),0,new ArrayList<>(),new ArrayList<>()
-                                    ,new ArrayList<>(),new ArrayList<>(),new ArrayList<>(),new ArrayList<>());
+                                    ,new ArrayList<>(),new ArrayList<>(),new ArrayList<>(),new ArrayList<>(),"https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Funtitled.glb?alt=media&token=657b45d7-a84b-4f2a-89f4-a699029401f7");
                             reference.child(nick).setValue(res);
                             FirebaseModel firebaseModel=new FirebaseModel();
                             firebaseModel.initAll();
