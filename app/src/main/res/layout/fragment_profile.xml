@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.egormoroz.schooly.LockableNestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:scrollbars="none"
     tools:context=".MainActivity"
+    android:id="@+id/nestedScrollView"
     android:overScrollMode="never">
     <RelativeLayout
+        android:id="@+id/relative"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <TextView
@@ -257,6 +260,6 @@
             android:layout_height="match_parent"
             android:layout_below="@+id/tabsprofile" />
     </RelativeLayout>
-</androidx.core.widget.NestedScrollView>
+</com.egormoroz.schooly.LockableNestedScrollView>
 
 

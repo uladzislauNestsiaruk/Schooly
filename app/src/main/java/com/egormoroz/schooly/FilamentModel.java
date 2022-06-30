@@ -13,6 +13,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import androidx.annotation.NonNull;
+import androidx.core.view.MotionEventCompat;
 import androidx.fragment.app.Fragment;
 
 import com.egormoroz.schooly.ui.main.Shop.FittingFragment;
@@ -76,7 +77,7 @@ public class FilamentModel {
     URI uri;
     Buffer buffer1,bufferToFilament;
 
-    public void initFilament(SurfaceView surfaceView,Buffer buffer,boolean onTouch) throws IOException, URISyntaxException {
+    public void initFilament(SurfaceView surfaceView,Buffer buffer,boolean onTouch,LockableNestedScrollView lockableNestedScrollView) throws IOException, URISyntaxException {
         Filament.init();
         Gltfio.init();
         Utils.INSTANCE.init();
@@ -94,6 +95,29 @@ public class FilamentModel {
             public boolean onTouch(android.view.View v, MotionEvent event) {
                 modelViewer.onTouchEvent(event);
                 doubleTapDetector.onTouchEvent(event);
+                surfaceView.onTouchEvent(event);
+                int action = MotionEventCompat.getActionMasked(event);
+
+                switch(action) {
+                    case (MotionEvent.ACTION_DOWN) :
+                        lockableNestedScrollView.setScrollingEnabled(false);
+                        return true;
+                    case (MotionEvent.ACTION_MOVE) :
+                        lockableNestedScrollView.setScrollingEnabled(false);
+                        return true;
+                    case (MotionEvent.ACTION_UP) :
+                        lockableNestedScrollView.setScrollingEnabled(true);
+                        return true;
+                    case (MotionEvent.ACTION_CANCEL) :
+                        lockableNestedScrollView.setScrollingEnabled(true);
+                        return true;
+                    case (MotionEvent.ACTION_OUTSIDE) :
+                        lockableNestedScrollView.setScrollingEnabled(true);
+                        return true;
+                    case (MotionEvent.ACTION_SCROLL) :
+                        lockableNestedScrollView.setScrollingEnabled(true);
+                        return true;
+                }
                 return onTouch;
             }
         });
@@ -116,7 +140,6 @@ public class FilamentModel {
         @Override
         public void doFrame(long frameTimeNanos) {
             choreographer.postFrameCallback(frameCallback);
-            Log.d("####", "####1");
             if(modelViewer!=null){
                 modelViewer.render(frameTimeNanos);
             }
@@ -148,14 +171,15 @@ public class FilamentModel {
 
     }
 
-    public void executeTask(String url,SurfaceView surfaceView,boolean onTouch,Buffer buffer) throws ExecutionException, InterruptedException, IOException, URISyntaxException {
+    public void executeTask(String url,SurfaceView surfaceView,boolean onTouch,Buffer buffer,LockableNestedScrollView lockableNestedScrollView
+    ) throws ExecutionException, InterruptedException, IOException, URISyntaxException {
         MyAsyncTask myAsyncTask=new MyAsyncTask();
         if(buffer==null){
             myAsyncTask.execute(url);
             bufferToFilament = myAsyncTask.get();
-            initFilament(surfaceView,bufferToFilament,onTouch);
+            initFilament(surfaceView,bufferToFilament,onTouch,lockableNestedScrollView);
         }else{
-            initFilament(surfaceView,buffer,onTouch);
+            initFilament(surfaceView,buffer,onTouch,lockableNestedScrollView);
         }
     }
 

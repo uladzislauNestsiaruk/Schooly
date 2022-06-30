@@ -18,10 +18,12 @@ import android.os.Handler;
 import android.os.Parcelable;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +39,7 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
@@ -50,6 +53,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FilamentModel;
 import com.egormoroz.schooly.FirebaseModel;
+import com.egormoroz.schooly.LockableNestedScrollView;
 import com.egormoroz.schooly.MainActivity;
 
 import com.egormoroz.schooly.Nontification;
@@ -263,7 +267,6 @@ public class ProfileFragment extends Fragment {
         filamentModel=new FilamentModel();
         switch (type) {
             case "user":
-
                 ///////////////////////// set nickname /////////////////////
                 nickname.setText(userInformation.getNick());
 
@@ -278,6 +281,7 @@ public class ProfileFragment extends Fragment {
                 requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback1);
                 //////////////////////////////////////////////////
                 surfaceView=view.findViewById(R.id.mainlookview);
+                LockableNestedScrollView lockableNestedScrollView=view.findViewById(R.id.nestedScrollView);
                 try {
                     if(bundle.getSerializable("MAINLOOK")==null){
                         MyAsyncTask myAsyncTask=new MyAsyncTask();
@@ -286,11 +290,11 @@ public class ProfileFragment extends Fragment {
                         ArrayList<Buffer> buffers=new ArrayList<>();
                         buffers.add(bufferToFilament);
                         bundle.putSerializable("MAINLOOK",buffers);
-                        filamentModel.initFilament(surfaceView,bufferToFilament,true);
+                        filamentModel.initFilament(surfaceView,bufferToFilament,true,lockableNestedScrollView);
                     }else{
                         ArrayList<Buffer> buffers= (ArrayList<Buffer>) bundle.getSerializable("MAINLOOK");
                         Buffer buffer3=buffers.get(0);
-                        filamentModel.initFilament(surfaceView,buffer3 ,true);
+                        filamentModel.initFilament(surfaceView,buffer3 ,true,lockableNestedScrollView);
                     }
                 } catch (ExecutionException e) {
                     e.printStackTrace();
@@ -431,6 +435,7 @@ public class ProfileFragment extends Fragment {
                 circularProgressIndicator=view.findViewById(R.id.profileIndicator);
                 back=view.findViewById(R.id.back);
                 moreSquare=view.findViewById(R.id.moresquare);
+                LockableNestedScrollView lockableNestedScrollViewOther=view.findViewById(R.id.nestedScrollView);
                 back.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -466,11 +471,11 @@ public class ProfileFragment extends Fragment {
                                 ArrayList<Buffer> buffers=new ArrayList<>();
                                 buffers.add(bufferToFilament);
                                 bundle.putSerializable("MAINLOOK"+info.getNick(),buffers);
-                                filamentModel.initFilament(surfaceView,bufferToFilament,true);
+                                filamentModel.initFilament(surfaceView,bufferToFilament,true,lockableNestedScrollViewOther);
                             }else{
                                 ArrayList<Buffer> buffers= (ArrayList<Buffer>) bundle.getSerializable("MAINLOOK"+info.getNick());
                                 Buffer buffer3=buffers.get(0);
-                                filamentModel.initFilament(surfaceView,buffer3 ,true);
+                                filamentModel.initFilament(surfaceView,buffer3 ,true,lockableNestedScrollViewOther);
                             }
                         } catch (ExecutionException e) {
                             e.printStackTrace();
@@ -587,11 +592,11 @@ public class ProfileFragment extends Fragment {
                                                 ArrayList<Buffer> buffers=new ArrayList<>();
                                                 buffers.add(bufferToFilament);
                                                 bundle.putSerializable("MAINLOOK"+info.getNick(),buffers);
-                                                filamentModel.initFilament(surfaceView,bufferToFilament,true);
+                                                filamentModel.initFilament(surfaceView,bufferToFilament,true,lockableNestedScrollViewOther);
                                             }else{
                                                 ArrayList<Buffer> buffers= (ArrayList<Buffer>) bundle.getSerializable("MAINLOOK"+info.getNick());
                                                 Buffer buffer3=buffers.get(0);
-                                                filamentModel.initFilament(surfaceView,buffer3 ,true);
+                                                filamentModel.initFilament(surfaceView,buffer3 ,true,lockableNestedScrollViewOther);
                                             }
                                         } catch (ExecutionException e) {
                                             e.printStackTrace();
@@ -683,6 +688,7 @@ public class ProfileFragment extends Fragment {
                 requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callbackUserBack);
 
                 surfaceView=view.findViewById(R.id.mainlookview);
+                LockableNestedScrollView lockableNestedScrollViewBack=view.findViewById(R.id.nestedScrollView);
                 try {
                     if(bundle.getSerializable("MAINLOOK")==null){
                         MyAsyncTask myAsyncTask=new MyAsyncTask();
@@ -691,11 +697,11 @@ public class ProfileFragment extends Fragment {
                         ArrayList<Buffer> buffers=new ArrayList<>();
                         buffers.add(bufferToFilament);
                         bundle.putSerializable("MAINLOOK",buffers);
-                        filamentModel.initFilament(surfaceView,bufferToFilament,true);
+                        filamentModel.initFilament(surfaceView,bufferToFilament,true,lockableNestedScrollViewBack);
                     }else{
                         ArrayList<Buffer> buffers= (ArrayList<Buffer>) bundle.getSerializable("MAINLOOK");
                         Buffer buffer3=buffers.get(0);
-                        filamentModel.initFilament(surfaceView,buffer3 ,true);
+                        filamentModel.initFilament(surfaceView,buffer3 ,true,lockableNestedScrollViewBack);
                     }
                 } catch (ExecutionException e) {
                     e.printStackTrace();
