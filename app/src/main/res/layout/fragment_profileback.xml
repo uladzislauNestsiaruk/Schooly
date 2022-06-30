@@ -169,8 +169,7 @@
             android:layout_below="@+id/bigLinear1"
             android:layout_marginStart="24dp"
             android:layout_marginTop="30dp"
-            android:layout_marginEnd="24dp"
-            android:background="@color/background_primary" />
+            android:layout_marginEnd="24dp" />
 
         <ImageView
             android:id="@+id/edit_main_look_back"

@@ -10,6 +10,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -66,6 +67,16 @@ public class NewsFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_news, container, false);
         firebaseModel.initAll();
+
+        OnBackPressedCallback callback1 = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+
+                RecentMethods.setCurrentFragment(MainFragment.newInstance(userInformation, bundle), getActivity());
+            }
+        };
+
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback1);
 
         viewPager2 = root.findViewById(R.id.picturenewspager);
         addNews = root.findViewById(R.id.add_news);

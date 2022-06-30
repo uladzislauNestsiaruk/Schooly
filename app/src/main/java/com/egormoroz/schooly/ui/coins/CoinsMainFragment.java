@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -24,6 +25,7 @@ import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.ui.main.CreateCharacter.CharacterAdapter;
 import com.egormoroz.schooly.ui.main.CreateCharacter.EyebrowsFragment;
+import com.egormoroz.schooly.ui.main.MainFragment;
 import com.egormoroz.schooly.ui.main.Mining.Miner;
 import com.egormoroz.schooly.ui.main.Mining.MiningFragment;
 import com.egormoroz.schooly.ui.main.UserInformation;
@@ -67,6 +69,15 @@ public class CoinsMainFragment extends Fragment {
     public void onViewCreated(@Nullable View view,@NonNull Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
         nick=userInformation.getNick();
+        OnBackPressedCallback callback1 = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+
+                RecentMethods.setCurrentFragment(MainFragment.newInstance(userInformation, bundle), getActivity());
+            }
+        };
+
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback1);
         oneLinear=view.findViewById(R.id.oneThousand);
         twoLinear=view.findViewById(R.id.twoThousand);
         fiveLinear=view.findViewById(R.id.fiveThousand);

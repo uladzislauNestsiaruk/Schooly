@@ -247,21 +247,9 @@ public class ProfileFragment extends Fragment {
             root=inflater.inflate(R.layout.fragment_profileback, container, false);
             nickname=root.findViewById(R.id.usernick);
         }
-//        AppBarLayout abl=getActivity().findViewById(R.id.AppBarLayout);
-//        abl.setVisibility(abl.GONE);
         BottomNavigationView bnv = getActivity().findViewById(R.id.bottomNavigationView);
         bnv.setVisibility(bnv.VISIBLE);
         firebaseModel.initAll();
-        FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
-        StorageReference storageReference = firebaseStorage.getReference().child("3d models").child("untitled.glb");
-        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-            @Override
-            public void PassUserNick(String nick) {
-                nicknameCallback=nick;
-            }
-        });
-
-
 
         return root;
     }
@@ -278,6 +266,16 @@ public class ProfileFragment extends Fragment {
 
                 ///////////////////////// set nickname /////////////////////
                 nickname.setText(userInformation.getNick());
+
+                OnBackPressedCallback callback1 = new OnBackPressedCallback(true) {
+                    @Override
+                    public void handleOnBackPressed() {
+
+                        RecentMethods.setCurrentFragment(MainFragment.newInstance(userInformation, bundle), getActivity());
+                    }
+                };
+
+                requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback1);
                 //////////////////////////////////////////////////
                 surfaceView=view.findViewById(R.id.mainlookview);
                 try {
@@ -285,13 +283,11 @@ public class ProfileFragment extends Fragment {
                         MyAsyncTask myAsyncTask=new MyAsyncTask();
                         myAsyncTask.execute(userInformation.getMainLook());
                         bufferToFilament = myAsyncTask.get();
-                        Log.d("######", "0");
                         ArrayList<Buffer> buffers=new ArrayList<>();
                         buffers.add(bufferToFilament);
                         bundle.putSerializable("MAINLOOK",buffers);
                         filamentModel.initFilament(surfaceView,bufferToFilament,true);
                     }else{
-                        Log.d("######", "1");
                         ArrayList<Buffer> buffers= (ArrayList<Buffer>) bundle.getSerializable("MAINLOOK");
                         Buffer buffer3=buffers.get(0);
                         filamentModel.initFilament(surfaceView,buffer3 ,true);
@@ -463,7 +459,19 @@ public class ProfileFragment extends Fragment {
                         user = firebaseModel.getUsersReference().child(info.getNick());
                         surfaceView=view.findViewById(R.id.mainlookview);
                         try {
-                            filamentModel.executeTask(info.getMainLook(),surfaceView,true,null);
+                            if(bundle.getSerializable("MAINLOOK"+info.getNick())==null){
+                                MyAsyncTask myAsyncTask=new MyAsyncTask();
+                                myAsyncTask.execute(userInformation.getMainLook());
+                                bufferToFilament = myAsyncTask.get();
+                                ArrayList<Buffer> buffers=new ArrayList<>();
+                                buffers.add(bufferToFilament);
+                                bundle.putSerializable("MAINLOOK"+info.getNick(),buffers);
+                                filamentModel.initFilament(surfaceView,bufferToFilament,true);
+                            }else{
+                                ArrayList<Buffer> buffers= (ArrayList<Buffer>) bundle.getSerializable("MAINLOOK"+info.getNick());
+                                Buffer buffer3=buffers.get(0);
+                                filamentModel.initFilament(surfaceView,buffer3 ,true);
+                            }
                         } catch (ExecutionException e) {
                             e.printStackTrace();
                         } catch (InterruptedException e) {
@@ -572,7 +580,19 @@ public class ProfileFragment extends Fragment {
                                         info.setMainLook(snapshot.child("mainLook").getValue(String.class));
                                         surfaceView=view.findViewById(R.id.mainlookview);
                                         try {
-                                            filamentModel.executeTask(info.getMainLook(),surfaceView,true,null);
+                                            if(bundle.getSerializable("MAINLOOK"+info.getNick())==null){
+                                                MyAsyncTask myAsyncTask=new MyAsyncTask();
+                                                myAsyncTask.execute(info.getMainLook());
+                                                bufferToFilament = myAsyncTask.get();
+                                                ArrayList<Buffer> buffers=new ArrayList<>();
+                                                buffers.add(bufferToFilament);
+                                                bundle.putSerializable("MAINLOOK"+info.getNick(),buffers);
+                                                filamentModel.initFilament(surfaceView,bufferToFilament,true);
+                                            }else{
+                                                ArrayList<Buffer> buffers= (ArrayList<Buffer>) bundle.getSerializable("MAINLOOK"+info.getNick());
+                                                Buffer buffer3=buffers.get(0);
+                                                filamentModel.initFilament(surfaceView,buffer3 ,true);
+                                            }
                                         } catch (ExecutionException e) {
                                             e.printStackTrace();
                                         } catch (InterruptedException e) {
@@ -664,7 +684,19 @@ public class ProfileFragment extends Fragment {
 
                 surfaceView=view.findViewById(R.id.mainlookview);
                 try {
-                    filamentModel.executeTask(info.getMainLook(),surfaceView,true,null);
+                    if(bundle.getSerializable("MAINLOOK")==null){
+                        MyAsyncTask myAsyncTask=new MyAsyncTask();
+                        myAsyncTask.execute(userInformation.getMainLook());
+                        bufferToFilament = myAsyncTask.get();
+                        ArrayList<Buffer> buffers=new ArrayList<>();
+                        buffers.add(bufferToFilament);
+                        bundle.putSerializable("MAINLOOK",buffers);
+                        filamentModel.initFilament(surfaceView,bufferToFilament,true);
+                    }else{
+                        ArrayList<Buffer> buffers= (ArrayList<Buffer>) bundle.getSerializable("MAINLOOK");
+                        Buffer buffer3=buffers.get(0);
+                        filamentModel.initFilament(surfaceView,buffer3 ,true);
+                    }
                 } catch (ExecutionException e) {
                     e.printStackTrace();
                 } catch (InterruptedException e) {

@@ -69,7 +69,7 @@ public class FilamentModel {
     Choreographer choreographer=Choreographer.getInstance();
     GestureDetector doubleTapDetector;
     AutomationEngine.ViewerContent viewerContent=new AutomationEngine.ViewerContent();
-    Float3 float3=new Float3(0.0f, 0.0f, -2.2f);
+    Float3 float3=new Float3(0.0f, 0.0f, -2.0f);
     long loadStartTime;
     Fence loadStartFence;
     byte[] buffer;
@@ -81,7 +81,7 @@ public class FilamentModel {
         Gltfio.init();
         Utils.INSTANCE.init();
         cameraManipulator=new Manipulator.Builder()
-                .targetPosition(0.0f, 0.0f, -2.2f)
+                .targetPosition(0.0f, 0.0f, -2.0f)
                 .viewport(surfaceView.getWidth(), surfaceView.getHeight())
                 .build(Manipulator.Mode.ORBIT);
         doubleTapDetector=new GestureDetector(surfaceView, cameraManipulator);
@@ -98,7 +98,16 @@ public class FilamentModel {
             }
         });
         loadGlb(buffer);
-        Skybox skybox=new Skybox.Builder().build(modelViewer.getEngine());
+        Skybox skybox=new Skybox.Builder()
+                .build(modelViewer.getEngine());
+        int light=EntityManager.get().create();
+        new LightManager.Builder(LightManager.Type.POINT)
+                .color(254, 233, 251)
+                .castShadows(true)
+                .position(0, 0, 0)
+                .intensity(50000f)
+                .build(engine, light);
+        modelViewer.getScene().addEntity(light);
         modelViewer.getScene().setSkybox(skybox);
 
     }

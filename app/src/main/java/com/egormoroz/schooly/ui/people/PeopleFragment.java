@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -20,6 +21,7 @@ import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.Subscriber;
+import com.egormoroz.schooly.ui.main.MainFragment;
 import com.egormoroz.schooly.ui.main.UserInformation;
 import com.egormoroz.schooly.ui.news.ViewingClothesNews;
 import com.egormoroz.schooly.ui.profile.ProfileFragment;
@@ -69,6 +71,15 @@ public class PeopleFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         nick=userInformation.getNick();
         peopleRecyclerView=view.findViewById(R.id.peoplerecycler);
+        OnBackPressedCallback callback1 = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+
+                RecentMethods.setCurrentFragment(MainFragment.newInstance(userInformation, bundle), getActivity());
+            }
+        };
+
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback1);
         searchUser=view.findViewById(R.id.searchuser);
         userNotSearch=view.findViewById(R.id.notSearch);
         firebaseModel.initAll();
