@@ -74,7 +74,7 @@ public final class ChatActivity extends Activity {
     private ImageView userImage;
     FirebaseModel firebaseModel = new FirebaseModel();
 
-    ImageView back,info;
+    ImageView back, info;
     UserInformation userInformation;
     private DatabaseReference RootRef;
 
@@ -120,7 +120,8 @@ public final class ChatActivity extends Activity {
         //     messageReceiverImage = getIntent().getExtras().get("visit_image").toString();
         DatabaseReference ref = firebaseModel.getUsersReference().child(messageSenderName).child("Chats").child(messageReceiverName).child("Unread");
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override public void onDataChange(DataSnapshot dataSnapshot) {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     dataSnapshot.getRef().setValue(0);
                 }
@@ -134,16 +135,15 @@ public final class ChatActivity extends Activity {
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
             @Override
             public void PassUserNick(String nick) {
-                Query query=firebaseModel.getUsersReference().child(messageReceiverName).child("blackList")
+                Query query = firebaseModel.getUsersReference().child(messageReceiverName).child("blackList")
                         .child(nick);
                 query.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if(snapshot.exists()){
-                            chatCheckValue=1;
-                        }
-                        else {
-                            chatCheckValue=-1;
+                        if (snapshot.exists()) {
+                            chatCheckValue = 1;
+                        } else {
+                            chatCheckValue = -1;
                         }
                     }
 
@@ -152,16 +152,15 @@ public final class ChatActivity extends Activity {
 
                     }
                 });
-                Query query2=firebaseModel.getUsersReference().child(nick).child("blackList")
+                Query query2 = firebaseModel.getUsersReference().child(nick).child("blackList")
                         .child(messageReceiverName);
                 query2.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if(snapshot.exists()){
-                            chatCheckValue=2;
-                        }
-                        else {
-                            chatCheckValue=-1;
+                        if (snapshot.exists()) {
+                            chatCheckValue = 2;
+                        } else {
+                            chatCheckValue = -1;
                         }
                     }
 
@@ -175,10 +174,10 @@ public final class ChatActivity extends Activity {
 
         IntializeVoice();
         IntializeControllers();
-        if (chatCheckValue != 0 ){
-            if (chatCheckValue == -1){
+        if (chatCheckValue != 0) {
+            if (chatCheckValue == -1) {
                 ///////все окей//////
-            }else if (chatCheckValue == 1 || chatCheckValue == 2){
+            } else if (chatCheckValue == 1 || chatCheckValue == 2) {
                 MessageInputText.setText("Невозможно отправить сообщение");
                 SendFilesButton.setVisibility(View.GONE);
                 SendMessageButton.setVisibility(View.GONE);
@@ -190,7 +189,7 @@ public final class ChatActivity extends Activity {
             @Override
             public void onClick(View view) {
                 Intent chatIntent = new Intent(getContext(), ChatInformationFrgment.class);
-                Query query=firebaseModel.getUsersReference().child(messageReceiverName)
+                Query query = firebaseModel.getUsersReference().child(messageReceiverName)
                         .child("nick");
                 query.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -230,6 +229,7 @@ public final class ChatActivity extends Activity {
 
         });
     }
+
     public static Context getContext() {
         return instance.getApplicationContext();
     }
@@ -243,7 +243,7 @@ public final class ChatActivity extends Activity {
             @Override
             public void onClick(View v) {
                 finish();
-                RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", messageReceiverName, PeopleFragment.newInstance(userInformation,bundle),userInformation,bundle),
+                RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", messageReceiverName, PeopleFragment.newInstance(userInformation, bundle), userInformation, bundle),
                         getParent());
             }
         });
@@ -298,29 +298,10 @@ public final class ChatActivity extends Activity {
                     public void onComplete(@NonNull Task<Uri> task) {
                         Uri downloadUrl = task.getResult();
                         myUrl = downloadUrl.toString();
+                        Send(myUrl, "image");
 
-                        Map<String, String> messageTextBody = new HashMap<>();
-                        messageTextBody.put("message", myUrl);
-                        messageTextBody.put("name", fileUri.getLastPathSegment());
-                        messageTextBody.put("type", checker);
-                        messageTextBody.put("from", messageSenderName);
-                        messageTextBody.put("to", messageReceiverName);
-                        messageTextBody.put("time", RecentMethods.getCurrentTime());
-                        messageTextBody.put("messageID", messagePushID);
-
-
-                        Map<String, Object> messageBodyDetails = new HashMap<>();
-                        messageBodyDetails.put(messageSenderRef + "/" + messagePushID, messageTextBody);
-                        messageBodyDetails.put(messageReceiverRef + "/" + messagePushID, messageTextBody);
-                        RootRef.updateChildren(messageBodyDetails).addOnCompleteListener(new OnCompleteListener() {
-                            @Override
-                            public void onComplete(@NonNull Task task) {
-                                MessageInputText.setText("");
-                            }
-                        });
                     }
                 });
-
             }
         }
     }
@@ -402,39 +383,13 @@ public final class ChatActivity extends Activity {
         if (TextUtils.isEmpty(messageText)) {
             Toast.makeText(this, "first write your message...", Toast.LENGTH_SHORT).show();
         } else {
-            String messageSenderRef = messageReceiverName + "/Chats/" + messageSenderName + "/Messages";
-            String messageReceiverRef = messageSenderName + "/Chats/" + messageReceiverName + "/Messages";
-
-
-            DatabaseReference userMessageKeyRef = firebaseModel.getUsersReference().child(messageSenderName).child("Chats").child(messageReceiverName).child("Messages").push();
-            String messagePushID = userMessageKeyRef.getKey();
-
-            Map<String, String> messageTextBody = new HashMap<>();
-            messageTextBody.put("message", messageText);
-            messageTextBody.put("type", "text");
-            messageTextBody.put("from", messageSenderName);
-            messageTextBody.put("to", messageReceiverName);
-            messageTextBody.put("time", RecentMethods.getCurrentTime());
-            messageTextBody.put("messageID", messagePushID);
-            addLastMessage("text", messageText);
-
-            Map<String, Object> messageBodyDetails = new HashMap<String, Object>();
-            messageBodyDetails.put(messageSenderRef + "/" + messagePushID, messageTextBody);
-            messageBodyDetails.put(messageReceiverRef + "/" + messagePushID, messageTextBody);
-            RootRef.updateChildren(messageBodyDetails).addOnCompleteListener(new OnCompleteListener() {
-                @Override
-                public void onComplete(@NonNull Task task) {
-                    MessageInputText.setText("");
-                }
-            });
+            Send(messageText, "text");
         }
 
     }
 
 
     private void SendVoice() {
-
-
         StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("Voice");
         DatabaseReference userMessageKeyRef = firebaseModel.getUsersReference().child(messageSenderName).child("Chats").child(messageReceiverName).child("Messages").push();
         final String messagePushID = userMessageKeyRef.getKey();
@@ -455,43 +410,17 @@ public final class ChatActivity extends Activity {
             public void onComplete(@NonNull Task<Uri> task) {
                 Uri downloadUrl = task.getResult();
                 myUrl = downloadUrl.toString();
-                String messageSenderRef = messageReceiverName + "/Chats/" + messageSenderName + "/Messages";
-                String messageReceiverRef = messageSenderName + "/Chats/" + messageReceiverName + "/Messages";
-
-
-                DatabaseReference userMessageKeyRef = firebaseModel.getUsersReference().child(messageSenderName).child("Chats").child(messageReceiverName).child("Messages").push();
-                String messagePushID = userMessageKeyRef.getKey();
-
-                Map<String, String> messageTextBody = new HashMap<String, String>();
-                messageTextBody.put("message", myUrl);
-                messageTextBody.put("type", "voice");
-                messageTextBody.put("from", messageSenderName);
-                messageTextBody.put("to", messageReceiverName);
-                messageTextBody.put("time", RecentMethods.getCurrentTime());
-                messageTextBody.put("messageID", messagePushID);
-                addLastMessage("voice", myUrl);
-
-                Map<String, Object> messageBodyDetails = new HashMap<>();
-                messageBodyDetails.put(messageSenderRef + "/" + messagePushID, messageTextBody);
-                messageBodyDetails.put(messageReceiverRef + "/" + messagePushID, messageTextBody);
-                RootRef.updateChildren(messageBodyDetails).addOnCompleteListener(new OnCompleteListener() {
-                    @Override
-                    public void onComplete(@NonNull Task task) {
-
-                    }
-                });
+                Send(myUrl, "voice");
             }
         });
     }
 
 
-
-    private void IntializeVoice()
-    {
+    @SuppressLint("ClickableViewAccessibility")
+    private void IntializeVoice() {
         ImageView voice = findViewById(R.id.voiceinput);
 
         voice.setOnTouchListener(new View.OnTouchListener() {
-
             @SuppressLint("ClickableViewAccessibility")
             @RequiresApi(api = Build.VERSION_CODES.O)
             public boolean onTouch(View view, MotionEvent event) {
@@ -528,6 +457,7 @@ public final class ChatActivity extends Activity {
         recorder.start();
         Log.d("Voice", "Recording started");
     }
+
     private void stopRecording() {
         if (recorder != null) {
             recorder.reset();
@@ -535,11 +465,10 @@ public final class ChatActivity extends Activity {
             recorder = null;
 
             try {
-                duration = getDuration(myUrl);}
-            catch (Exception e){
+                duration = getDuration(myUrl);
+            } catch (Exception e) {
                 e.printStackTrace();
             }
-            Log.d("voice", "Recording stop" + duration);
             if (duration <= 9) Log.d("Voice", "Voice too small");
             else {
                 duration = duration / 10;
@@ -553,23 +482,23 @@ public final class ChatActivity extends Activity {
         MediaMetadataRetriever mmr = new MediaMetadataRetriever();
         mmr.setDataSource(mUri);
         String time = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-        duration = Integer.parseInt(time)/100;
+        duration = Integer.parseInt(time) / 100;
         mmr.release();
         return duration;
     }
 
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode){
+        switch (requestCode) {
             case REQUEST_RECORD_AUDIO_PERMISSION:
-                permissionToRecordAccepted  = grantResults[0] == PackageManager.PERMISSION_GRANTED;
+                permissionToRecordAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
                 break;
         }
-        if (!permissionToRecordAccepted ) finish();
+        if (!permissionToRecordAccepted) finish();
     }
 
 
-    private void sendDialog(String currUser, String otherUser){
+    private void sendDialog(String currUser, String otherUser) {
         firebaseModel.initAll();
         firebaseModel.getUsersReference().child(currUser).child("Dialogs").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -588,8 +517,7 @@ public final class ChatActivity extends Activity {
     }
 
 
-
-    private void addLastMessage(String type, String Message){
+    private void addLastMessage(String type, String Message) {
 
         switch (type) {
             case "text":
@@ -621,11 +549,11 @@ public final class ChatActivity extends Activity {
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()){
+                if (dataSnapshot.exists()) {
                     value[0] = (long) dataSnapshot.getValue();
                     value[0] = value[0] + 1;
-                    dataSnapshot.getRef().setValue(value[0]);}
-                else dataSnapshot.getRef().setValue(0);
+                    dataSnapshot.getRef().setValue(value[0]);
+                } else dataSnapshot.getRef().setValue(0);
             }
 
             @Override
@@ -636,7 +564,6 @@ public final class ChatActivity extends Activity {
 
         });
     }
-
 
 
     public void addType(String type) {
@@ -645,11 +572,11 @@ public final class ChatActivity extends Activity {
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()){
+                if (dataSnapshot.exists()) {
                     value[0] = (long) dataSnapshot.getValue();
                     value[0] = value[0] + 1;
-                    dataSnapshot.getRef().setValue(value[0]);}
-                else dataSnapshot.getRef().setValue(1);
+                    dataSnapshot.getRef().setValue(value[0]);
+                } else dataSnapshot.getRef().setValue(1);
             }
 
             @Override
@@ -660,5 +587,36 @@ public final class ChatActivity extends Activity {
 
         });
     }
+
+
+    public void Send(String message, String type) {
+        String messageSenderRef = messageReceiverName + "/Chats/" + messageSenderName + "/Messages";
+        String messageReceiverRef = messageSenderName + "/Chats/" + messageReceiverName + "/Messages";
+
+
+        DatabaseReference userMessageKeyRef = firebaseModel.getUsersReference().child(messageSenderName).child("Chats").child(messageReceiverName).child("Messages").push();
+        String messagePushID = userMessageKeyRef.getKey();
+        Map<String, String> messageTextBody = new HashMap<String, String>();
+        messageTextBody.put("message", message);
+        messageTextBody.put("type", type);
+        messageTextBody.put("from", messageSenderName);
+        messageTextBody.put("to", messageReceiverName);
+        messageTextBody.put("time", RecentMethods.getCurrentTime());
+        messageTextBody.put("messageID", messagePushID);
+        addLastMessage(type, myUrl);
+
+        Map<String, Object> messageBodyDetails = new HashMap<>();
+        messageBodyDetails.put(messageSenderRef + "/" + messagePushID, messageTextBody);
+        messageBodyDetails.put(messageReceiverRef + "/" + messagePushID, messageTextBody);
+        RootRef.updateChildren(messageBodyDetails).addOnCompleteListener(new OnCompleteListener() {
+            @Override
+            public void onComplete(@NonNull Task task) {
+                MessageInputText.setText("");
+            }
+        });
+    }
+
+
+
 }
 

@@ -6,6 +6,7 @@ import static com.google.android.material.transition.MaterialSharedAxis.X;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.ui.chat.holders.ImageViewerActivity;
+import com.egormoroz.schooly.ui.chat.holders.VoicePlayer;
+import com.egormoroz.schooly.ui.main.ChatActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -36,6 +39,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     private String fromUserID;
     private DatabaseReference reference;
     private String messageID;
+    private MessageAdapter instance = this;
 
 
 
@@ -58,6 +62,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         public ImageView messageSenderPicture, senderPlay, senderPause;
         public ImageView messageReceiverPicture;
         public SeekBar  senderSeekBar;
+
 
 
         private void handleShowView(View view) {
@@ -108,8 +113,26 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         Message messages = userMessagesList.get(position);
         fromUserID = messages.getFrom();
         String fromMessageType = messages.getType();
+        VoicePlayer voicePlayer = new VoicePlayer(messageViewHolder.itemView.getContext());
+        voicePlayer.setMediaPlayerListener(new VoicePlayer.MediaPlayerListener() {
+            @Override
+            public void isPlaying(int currentDuration) {
 
+            }
 
+            @Override
+            public void onPause() {
+                voicePlayer.release();
+                messageViewHolder.senderPlay.setVisibility(View.VISIBLE);
+                messageViewHolder.senderPause.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onStart() {
+                messageViewHolder.senderPlay.setVisibility(View.GONE);
+                messageViewHolder.senderPause.setVisibility(View.VISIBLE);
+            }
+        });
 
         usersRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -199,30 +222,66 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             case "voice":
                 if (fromUserID.equals(messageSenderNick)) {
                     messageViewHolder.outVoice.setVisibility(View.VISIBLE);
+                    messageViewHolder.senderPlay.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Log.d("Voice", messages.getMessage());
+                            voicePlayer.setUrlSource(messages.getMessage());
+                            if (voicePlayer.isPlaying()){
+                                messageViewHolder.senderPlay.setVisibility(View.VISIBLE);
+                                messageViewHolder.senderPause.setVisibility(View.GONE);
+                                voicePlayer.pause();
+                            } else {
+                                messageViewHolder.senderPlay.setVisibility(View.GONE);
+                                messageViewHolder.senderPause.setVisibility(View.VISIBLE);
+                                voicePlayer.start();
+                            }
+                        }
+                    });
 
-
-                 //   VoicePlayer.getInstance(messageViewHolder.itemView.getContext()).init(messages.getMessage(), messageViewHolder.senderPlay, messageViewHolder.senderPause, messageViewHolder.senderSeekBar, messageViewHolder.senderTimeVoice);
+                }
+                else {
+                    messageViewHolder.inVoice.setVisibility(View.VISIBLE);
+//                    messageViewHolder.senderPlay.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View view) {
+//                            Log.d("Voice", messages.getMessage());
+//                            voicePlayer.setUrlSource(messages.getMessage());
+//                            if (voicePlayer.isPlaying()){
+//                                voicePlayer.pause();
+//                            } else {
+//                                voicePlayer.start();
+//                            }
+//                        }
+//                    });
                 }
                 break;
+
         }
         
-        messageViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (fromUserID.equals(messageSenderNick)) {
-                    FirebaseDatabase.getInstance().getReference("users")
-                            .child(messageSenderNick)
-                            .child("Chats").child(messageReceiverNick).child("Messages")
-                            .child(userMessagesList.get(position).getMessageID()).removeValue();
-                    FirebaseDatabase.getInstance().getReference("users")
-                            .child(messageReceiverNick)
-                            .child("Chats").child(messageSenderNick).child("Messages")
-                            .child(userMessagesList.get(position).getMessageID()).removeValue();
-                    delete(position);
-                }
-            }
-        });
+//        messageViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                if (fromUserID.equals(messageSenderNick)) {
+//                    FirebaseDatabase.getInstance().getReference("users")
+//                            .child(messageSenderNick)
+//                            .child("Chats").child(messageReceiverNick).child("Messages")
+//                            .child(userMessagesList.get(position).getMessageID()).removeValue();
+//                    FirebaseDatabase.getInstance().getReference("users")
+//                            .child(messageReceiverNick)
+//                            .child("Chats").child(messageSenderNick).child("Messages")
+//                            .child(userMessagesList.get(position).getMessageID()).removeValue();
+//                    delete(position);
+//                }
+//            }
+//        });
+
+
+
+
     }
+
+
 
 
     @Override
@@ -235,5 +294,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         userMessagesList.remove(position);
         notifyItemRemoved(position);
     }
+
 
 }

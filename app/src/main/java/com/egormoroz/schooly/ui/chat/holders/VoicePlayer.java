@@ -1,209 +1,145 @@
 package com.egormoroz.schooly.ui.chat.holders;
 
 import android.app.Activity;
-import android.content.Context;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
-import android.os.Handler;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.SeekBar;
-import android.widget.TextView;
-
-import java.io.IOException;
+import android.app.*;
+import android.os.*;
+import android.content.*;
+import android.media.*;
+import android.net.*;
+import android.util.*;
+import java.util.*;
+import java.util.regex.*;
+import java.text.*;
 
 public class VoicePlayer {
 
-    private static VoicePlayer mInstance;
-    private Context context;
-    private ImageView imgPlay, imgPause;
-    private SeekBar seekBar;
-    private TextView txtProcess;
-    private MediaPlayer mediaPlayer;
+    private Context classContext;
+    public static MediaPlayerListener mpl;
+    public static Timer _timer;
+    public static MediaPlayer mediaplayer;
+    public static TimerTask timer;
 
     public VoicePlayer(Context context) {
-        this.context = context;
-    }
-
-    public static synchronized VoicePlayer getInstance(Context context) {
-        if (mInstance == null) {
-//            mInstance = new VoicePlayer(context);
-        }
-        return mInstance;
-    }
-
-
-
-    public void init(String path, final ImageView imgPlay, final ImageView imgPause, final SeekBar seekBar, final TextView txtProcess){
-
-        this.imgPlay = imgPlay;
-        this.imgPause = imgPause;
-        this.seekBar = seekBar;
-        this.txtProcess = txtProcess;
-
-
-        mediaPlayer = new MediaPlayer();
-        if (path != null) {
-            try {
-                mediaPlayer.setDataSource(path);
-                mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                mediaPlayer.prepare();
-                mediaPlayer.setVolume(10, 10);
-                //START and PAUSE are in other listeners
-                mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                    @Override
-                    public void onPrepared(MediaPlayer mp) {
-                        seekBar.setMax(mp.getDuration());
-                        txtProcess.setText("00:00/"+convertTime(mp.getDuration() / 1000));
-                    }
-                });
-                mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                    @Override
-                    public void onCompletion(MediaPlayer mp) {
-                        imgPause.setVisibility(View.GONE);
-                        imgPlay.setVisibility(View.VISIBLE);
-                    }
-                });
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-
-        this.seekBar.setOnSeekBarChangeListener(seekBarListener);
-        this.imgPlay.setOnClickListener(imgPlayClickListener);
-        this.imgPause.setOnClickListener(imgPauseClickListener);
-    }
-
-
-    //Convert long milli seconds to a formatted String to display it
-
-    private static String convertTime(long seconds) {
-        long s = seconds % 60;
-        long m = (seconds / 60) % 60;
-        return String.format("%02d:%02d", m,s);
-    }
-
-    //These both functions to avoid mediaplayer errors
-
-    public void onStop(){
-        try{
-            mediaPlayer.stop();
-            mediaPlayer.reset();
-            mediaPlayer.release();
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-    }
-
-    public void onPause(){
-        try{
-            if (mediaPlayer != null){
-                if (mediaPlayer.isPlaying())
-                    mediaPlayer.pause();
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        imgPause.setVisibility(View.GONE);
-        imgPlay.setVisibility(View.VISIBLE);
-    }
-
-
-
-    //Components' listeners
-
-    View.OnClickListener imgPlayClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            imgPause.setVisibility(View.VISIBLE);
-            imgPlay.setVisibility(View.GONE);
-            mediaPlayer.start();
-            try{
-                update(mediaPlayer, txtProcess, seekBar, context);
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-
-        }
-    };
-
-
-
-    private SeekBar.OnSeekBarChangeListener seekBarListener = new SeekBar.OnSeekBarChangeListener() {
-        @Override
-        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-            if (fromUser)
-            {
-                mediaPlayer.seekTo(progress);
-            }
-        }
-
-        @Override
-        public void onStartTrackingTouch(SeekBar seekBar) {
-            imgPause.setVisibility(View.GONE);
-            imgPlay.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        public void onStopTrackingTouch(SeekBar seekBar) {
-            imgPlay.setVisibility(View.GONE);
-            imgPause.setVisibility(View.VISIBLE);
-            mediaPlayer.start();
-
-        }
-    };
-
-    View.OnClickListener imgPauseClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            imgPause.setVisibility(View.GONE);
-            imgPlay.setVisibility(View.VISIBLE);
-            mediaPlayer.pause();
-        }
-    };
-
-
-
-    //Updating seekBar in realtime
-    private void update(final MediaPlayer mediaPlayer, final TextView time, final SeekBar seekBar, final Context context) {
-        ((Activity)context).runOnUiThread(new Runnable() {
+        classContext = context;
+        _timer = new Timer();
+        timer = new TimerTask() {
             @Override
             public void run() {
-                seekBar.setProgress(mediaPlayer.getCurrentPosition());
-                if (mediaPlayer.getDuration() - mediaPlayer.getCurrentPosition() > 100) {
-                    time.setText(convertTime(mediaPlayer.getCurrentPosition() / 1000) + " / " + convertTime(mediaPlayer.getDuration() / 1000));
-                }
-                else {
-                    time.setText(convertTime(mediaPlayer.getDuration() / 1000));
-                    seekBar.setProgress(0);
-                }
-                Handler handler = new Handler();
-                try{
-                    Runnable runnable = new Runnable() {
-                        @Override
-                        public void run() {
-                            try{
-                                if (mediaPlayer.getCurrentPosition() > -1) {
-                                    try {
-                                        update(mediaPlayer, time, seekBar, context);
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                    }
+                ((Activity) classContext).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (mediaplayer != null) {
+                            if (mediaplayer.isPlaying()) {
+                                if (mpl != null) {
+                                    mpl.isPlaying(mediaplayer.getCurrentPosition());
                                 }
-                            }catch (Exception e){
-                                e.printStackTrace();
                             }
                         }
-                    };
-                    handler.postDelayed(runnable, 2);
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-
+                    }
+                });
             }
-        });
+        };
+        _timer.scheduleAtFixedRate(timer, (int) (0), (int) (100));
+
+    }
+
+
+    public void setRawSource(int rawFileName) {
+
+        mediaplayer = MediaPlayer.create(classContext, rawFileName);
+
+    }
+
+    public void setPathSource(java.io.File file) {
+
+        mediaplayer = MediaPlayer.create(classContext, Uri.fromFile(file));
+
+    }
+
+    public void setAssetSource(String assetFileName) {
+        java.io.File mediaplayerFile = new java.io.File(classContext.getCacheDir(), assetFileName);
+        try {
+            java.io.InputStream mediaplayerIS = classContext.getAssets().open(assetFileName);
+            java.io.FileOutputStream mediaplayerFOS = null;
+            mediaplayerFOS = new java.io.FileOutputStream(mediaplayerFile);
+            final byte[] mediaplayerByte = new byte[1024];
+            int mediaplayerint;
+            while ((mediaplayerint = mediaplayerIS.read(mediaplayerByte)) != -1) {
+                mediaplayerFOS.write(mediaplayerByte, 0, mediaplayerint);
+            }
+            mediaplayerIS.close();
+            mediaplayerFOS.close();
+        } catch (Exception e) {
+        }
+        mediaplayer = MediaPlayer.create(classContext, Uri.fromFile(new java.io.File(mediaplayerFile.getAbsolutePath())));
+    }
+
+    public void setUrlSource(String urlSource) {
+        mediaplayer = MediaPlayer.create(classContext, Uri.parse(urlSource));
+    }
+
+    public interface MediaPlayerListener {
+
+        void isPlaying(int currentDuration);
+
+        void onPause();
+
+        void onStart();
+
+    }
+
+
+    public void setMediaPlayerListener(MediaPlayerListener mpl) {
+        this.mpl = mpl;
+    }
+
+    public void start() {
+        if (mediaplayer != null) {
+            mediaplayer.start();
+            if (mpl != null) {
+                mpl.onStart();
+            }
+        }
+    }
+
+    public void pause() {
+        if (mediaplayer != null) {
+            if (mediaplayer.isPlaying()) {
+                mediaplayer.pause();
+            }
+            if (mpl != null) {
+                mpl.onPause();
+            }
+        }
+    }
+
+    public void release() {
+        mediaplayer.release();
+        mediaplayer = null;
+    }
+
+    public boolean isPlaying() {
+        return mediaplayer.isPlaying();
+    }
+
+    public void setLooping(boolean isLooping) {
+        mediaplayer.setLooping(isLooping);
+    }
+
+    public int getCurrentDuration() {
+        return (int) mediaplayer.getCurrentPosition();
+    }
+
+    public int getDuration() {
+        return (int) mediaplayer.getDuration();
+    }
+
+    public void seekTo(int seekToValue) {
+        mediaplayer.seekTo(seekToValue);
+    }
+
+    public android.media.MediaPlayer getMediaPlayer() {
+        return mediaplayer;
     }
 
 }
