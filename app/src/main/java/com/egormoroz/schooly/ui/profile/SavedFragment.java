@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
@@ -23,7 +24,10 @@ import com.egormoroz.schooly.Subscriber;
 import com.egormoroz.schooly.ui.main.UserInformation;
 import com.egormoroz.schooly.ui.news.NewsItem;
 import com.egormoroz.schooly.ui.profile.Wardrobe.CreateLookFragment;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.database.DataSnapshot;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -105,7 +109,20 @@ public class SavedFragment extends Fragment {
                         LooksAdapter.ItemClickListener itemClickListener=new LooksAdapter.ItemClickListener() {
                             @Override
                             public void onItemClick(NewsItem newsItem) {
-                                RecentMethods.setCurrentFragment(ViewingLookFragment.newInstance(SavedFragment.newInstance(type,fragment,userInformation,bundle),userInformation,bundle), getActivity());
+                                firebaseModel.getUsersReference().child(newsItem.getNick()).child("looks")
+                                        .child(newsItem.getNewsId()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<DataSnapshot> task) {
+                                        if(task.isSuccessful()){
+                                            DataSnapshot snapshot=task.getResult();
+                                            if(snapshot.exists()){
+                                                RecentMethods.setCurrentFragment(ViewingLookFragment.newInstance(SavedFragment.newInstance(type,fragment,userInformation,bundle),userInformation,bundle), getActivity());
+                                            }else{
+                                                Toast.makeText(getContext(), R.string.thepublicationwasnotfound, Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+                                    }
+                                });
                             }
                         };
                         looksAdapter.setClickListener(itemClickListener);
@@ -123,7 +140,20 @@ public class SavedFragment extends Fragment {
                 LooksAdapter.ItemClickListener itemClickListener=new LooksAdapter.ItemClickListener() {
                     @Override
                     public void onItemClick(NewsItem newsItem) {
-                        RecentMethods.setCurrentFragment(ViewingLookFragment.newInstance(SavedFragment.newInstance(type,fragment,userInformation,bundle),userInformation,bundle), getActivity());
+                        firebaseModel.getUsersReference().child(newsItem.getNick()).child("looks")
+                                .child(newsItem.getNewsId()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                                if(task.isSuccessful()){
+                                    DataSnapshot snapshot=task.getResult();
+                                    if(snapshot.exists()){
+                                        RecentMethods.setCurrentFragment(ViewingLookFragment.newInstance(SavedFragment.newInstance(type,fragment,userInformation,bundle),userInformation,bundle), getActivity());
+                                    }else{
+                                        Toast.makeText(getContext(), R.string.thepublicationwasnotfound, Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            }
+                        });
                     }
                 };
                 looksAdapter.setClickListener(itemClickListener);

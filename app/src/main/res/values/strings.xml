@@ -335,10 +335,10 @@
 
     <string name="coins">Coins</string>
 
-    <string name="uniqueClothes">Create unique and inimitable models</string>
-    <string name="eightyPerCent">Get up to 80% of the sale price of clothes</string>
+    <string name="uniqueClothes">Create unique and inimitable models and publish them to the Schooly store</string>
+    <string name="eightyPerCent">Get up to 80% of the sale price of your clothes</string>
     <string name="giveClothes">Give clothes to friends</string>
-    <string name="earn">Earn real money and schooly coins</string>
+    <string name="earn">Earn real money and Schooly coins from selling clothes</string>
 
     <string name="ten">+10%</string>
     <string name="twenty">+20%</string>
@@ -510,6 +510,7 @@
     <string name="lookwasdeleted">Look was deleted</string>
     <string name="dontsave">Don\'t save</string>
     <string name="lookwasdeletedfromsaved">Look was deleted from saved</string>
+    <string name="thepublicationwasnotfound">The publication was not found. Most likely the user deleted the look</string>
 
 
 
