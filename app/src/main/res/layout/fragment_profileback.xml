@@ -6,6 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:scrollbars="none"
     tools:context=".MainActivity"
+    android:id="@+id/nestedScrollView"
     android:overScrollMode="never">
     <RelativeLayout
         android:layout_width="match_parent"

@@ -505,6 +505,12 @@
     <string name="saleofillegalgoods">Продажа незаконных товаров</string>
     <string name="violationofintellectualpropertyrights">Нарушение прав на интеллектуальную собственность</string>
     <string name="profiledescriptioncannotbemorethan200characters">Описание профиля не может быть более 200 символов</string>
+    <string name="nochangeshavebeenintroduced">Изменения не введены</string>
+    <string name="deletelook">Удалить образ</string>
+    <string name="lookwasdeleted">Образ удален</string>
+    <string name="dontsave">Не сохранять</string>
+    <string name="lookwasdeletedfromsaved">Образ удалён из сохранённых</string>
+
 
 
 

@@ -95,28 +95,29 @@ public class FilamentModel {
             public boolean onTouch(android.view.View v, MotionEvent event) {
                 modelViewer.onTouchEvent(event);
                 doubleTapDetector.onTouchEvent(event);
-                surfaceView.onTouchEvent(event);
-                int action = MotionEventCompat.getActionMasked(event);
+                if(lockableNestedScrollView!=null){
+                    int action = MotionEventCompat.getActionMasked(event);
 
-                switch(action) {
-                    case (MotionEvent.ACTION_DOWN) :
-                        lockableNestedScrollView.setScrollingEnabled(false);
-                        return true;
-                    case (MotionEvent.ACTION_MOVE) :
-                        lockableNestedScrollView.setScrollingEnabled(false);
-                        return true;
-                    case (MotionEvent.ACTION_UP) :
-                        lockableNestedScrollView.setScrollingEnabled(true);
-                        return true;
-                    case (MotionEvent.ACTION_CANCEL) :
-                        lockableNestedScrollView.setScrollingEnabled(true);
-                        return true;
-                    case (MotionEvent.ACTION_OUTSIDE) :
-                        lockableNestedScrollView.setScrollingEnabled(true);
-                        return true;
-                    case (MotionEvent.ACTION_SCROLL) :
-                        lockableNestedScrollView.setScrollingEnabled(true);
-                        return true;
+                    switch(action) {
+                        case (MotionEvent.ACTION_DOWN) :
+                            lockableNestedScrollView.setScrollingEnabled(false);
+                            return true;
+                        case (MotionEvent.ACTION_MOVE) :
+                            lockableNestedScrollView.setScrollingEnabled(false);
+                            return true;
+                        case (MotionEvent.ACTION_UP) :
+                            lockableNestedScrollView.setScrollingEnabled(true);
+                            return true;
+                        case (MotionEvent.ACTION_CANCEL) :
+                            lockableNestedScrollView.setScrollingEnabled(true);
+                            return true;
+                        case (MotionEvent.ACTION_OUTSIDE) :
+                            lockableNestedScrollView.setScrollingEnabled(true);
+                            return true;
+                        case (MotionEvent.ACTION_SCROLL) :
+                            lockableNestedScrollView.setScrollingEnabled(true);
+                            return true;
+                    }
                 }
                 return onTouch;
             }
