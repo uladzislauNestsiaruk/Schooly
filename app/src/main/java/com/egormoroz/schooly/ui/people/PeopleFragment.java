@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -20,6 +21,7 @@ import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.Subscriber;
+import com.egormoroz.schooly.ui.main.MainFragment;
 import com.egormoroz.schooly.ui.main.UserInformation;
 import com.egormoroz.schooly.ui.news.ViewingClothesNews;
 import com.egormoroz.schooly.ui.profile.ProfileFragment;
@@ -69,6 +71,15 @@ public class PeopleFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         nick=userInformation.getNick();
         peopleRecyclerView=view.findViewById(R.id.peoplerecycler);
+        OnBackPressedCallback callback1 = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+
+                RecentMethods.setCurrentFragment(MainFragment.newInstance(userInformation, bundle), getActivity());
+            }
+        };
+
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback1);
         searchUser=view.findViewById(R.id.searchuser);
         userNotSearch=view.findViewById(R.id.notSearch);
         firebaseModel.initAll();
@@ -200,7 +211,8 @@ public class PeopleFragment extends Fragment {
                 "6", "password", "Helicopter", 1000, new ArrayList<>(),new ArrayList<>(),1,100,0, new ArrayList<>()
                 , new ArrayList<>(), ""," ","open","open","open","open",
                 new ArrayList<>(),"regular", new ArrayList<>(),0,new ArrayList<>(),new ArrayList<>()
-        ,new ArrayList<>(),new ArrayList<>(),new ArrayList<>(),new ArrayList<>()));
+        ,new ArrayList<>(),new ArrayList<>(),new ArrayList<>(),new ArrayList<>()
+        ,"https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Funtitled.glb?alt=media&token=657b45d7-a84b-4f2a-89f4-a699029401f7"));
     }
     public void initUserEnter(){
         searchUser.addTextChangedListener(new TextWatcher() {

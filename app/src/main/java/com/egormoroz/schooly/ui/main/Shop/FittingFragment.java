@@ -74,9 +74,7 @@ public class FittingFragment extends Fragment {
     Bundle bundle;
     Fragment fragment;
     SurfaceView surfaceView;
-    byte[] buffer;
-    URI uri;
-    Buffer buffer1,bufferToFilament;
+    FilamentModel filamentModel;
 
     public FittingFragment(Fragment fragment,UserInformation userInformation,Bundle bundle) {
         this.fragment = fragment;
@@ -120,13 +118,10 @@ public class FittingFragment extends Fragment {
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
 
         surfaceView=view.findViewById(R.id.surfaceView);
-        MyAsyncTask myAsyncTask=new MyAsyncTask();
-        myAsyncTask.execute("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Funtitled.glb?alt=media&token=657b45d7-a84b-4f2a-89f4-a699029401f7");
+        filamentModel=new FilamentModel();
         try {
-            bufferToFilament = myAsyncTask.get();
-            FilamentModel filamentModel=new FilamentModel();
-            Log.d("####", "ccc  "+bufferToFilament);
-            filamentModel.initFilament(surfaceView,bufferToFilament);
+            filamentModel.executeTask("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Funtitled.glb?alt=media&token=657b45d7-a84b-4f2a-89f4-a699029401f7"
+                    ,surfaceView,true,null,null);
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
@@ -138,58 +133,24 @@ public class FittingFragment extends Fragment {
         }
     }
 
-    public byte[] getBytes( URL url) throws IOException {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        InputStream is = null;
-        try {
-            is = new BufferedInputStream(url.openStream ());
-            byte[] byteChunk = new byte[4096]; // Or whatever size you want to read in at a time.
-            int n;
+    @Override
+    public void onResume() {
+        super.onResume();
 
-            while ( (n = is.read(byteChunk)) > 0 ) {
-                baos.write(byteChunk, 0, n);
-            }
-        }
-        catch (IOException e) {
-            Log.d("####", "Failed while reading bytes from %s: %s"+ url.toExternalForm()+ e.getMessage());
-            e.printStackTrace ();
-            // Perform any other exception handling that's appropriate.
-        }
-        finally {
-            if (is != null) { is.close(); }
-        }
-        Log.d("####", "initUrl"+baos.toByteArray().toString());
-        return  baos.toByteArray();
+        filamentModel.postFrameCallback();
     }
 
     @Override
     public void onPause() {
-        surfaceView.setVisibility(View.GONE);
         super.onPause();
+
+        filamentModel.removeFrameCallback();
     }
 
-    public class MyAsyncTask extends AsyncTask<String, Integer, Buffer> {
-        @Override
-        protected Buffer doInBackground(String... parameter) {
-            try {
-                uri = new URI(parameter[0]);
-                buffer = getBytes(uri.toURL());
-                Log.d("####", "initBuffer "+buffer);
-                buffer1= ByteBuffer.wrap(buffer);
-            } catch (URISyntaxException | MalformedURLException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return buffer1;
-        }
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
 
-        @Override
-        protected void onProgressUpdate(Integer... progress) {
-
-        }
-
-        protected void onPostExecute(Buffer... bufferTask) throws IOException, URISyntaxException {
-        }
+        filamentModel.removeFrameCallback();
     }
 }

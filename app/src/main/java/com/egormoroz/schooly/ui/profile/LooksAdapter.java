@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -21,6 +22,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.egormoroz.schooly.Callbacks;
+import com.egormoroz.schooly.FilamentModel;
 import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
@@ -35,7 +37,10 @@ import com.squareup.picasso.Picasso;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 
 public class LooksAdapter extends RecyclerView.Adapter<LooksAdapter.ViewHolder> {
@@ -48,6 +53,7 @@ public class LooksAdapter extends RecyclerView.Adapter<LooksAdapter.ViewHolder> 
     View view;
     NewsItem  newsItem;
     String viewLookCount;
+    FilamentModel filamentModel=new FilamentModel();
 
     public LooksAdapter(ArrayList<NewsItem> listAdapter,Fragment fragment,RecyclerView recyclerView) {
         this.listAdapter = listAdapter;
@@ -77,8 +83,18 @@ public class LooksAdapter extends RecyclerView.Adapter<LooksAdapter.ViewHolder> 
             }
         });
         viewLookCount=String.valueOf(newsItem.getViewCount());
+//        try {
+//            filamentModel.executeTask(newsItem.getImageUrl(), holder.surfaceView,false,null);
+//        } catch (ExecutionException e) {
+//            e.printStackTrace();
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        } catch (URISyntaxException e) {
+//            e.printStackTrace();
+//        }
         checkCounts(holder.viewPurchase, newsItem.getViewCount(), viewLookCount);
-        //loadModels(Uri.parse(newsItem.getImageUrl()), holder.lookScene,holder.lookScene.getContext() , 0.25f);
 
     }
 
@@ -107,11 +123,11 @@ public class LooksAdapter extends RecyclerView.Adapter<LooksAdapter.ViewHolder> 
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-//        final SceneView lookScene;
+        SurfaceView surfaceView;
         TextView viewPurchase;
         ViewHolder(View itemView) {
             super(itemView);
-           // lookScene=itemView.findViewById(R.id.lookScene);
+           surfaceView=itemView.findViewById(R.id.lookScene);
             viewPurchase=itemView.findViewById(R.id.viewPurchase);
 
         }

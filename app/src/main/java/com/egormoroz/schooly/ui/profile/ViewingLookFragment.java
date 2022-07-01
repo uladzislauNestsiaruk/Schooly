@@ -425,31 +425,110 @@ public class ViewingLookFragment extends Fragment {
     }
 
     private void showBottomSheetDialogLookOptions(NewsItem newsItem) {
+        if(!newsItem.getNick().equals(nick)){
+            final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(getContext());
+            bottomSheetDialog.setContentView(R.layout.bottom_sheet_dialog_lookoptions);
 
-        final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(getContext());
-        bottomSheetDialog.setContentView(R.layout.bottom_sheet_dialog_lookoptions);
+            save=bottomSheetDialog.findViewById(R.id.save);
+            complain=bottomSheetDialog.findViewById(R.id.complain);
 
-        save=bottomSheetDialog.findViewById(R.id.save);
-        complain=bottomSheetDialog.findViewById(R.id.complain);
-
-        save.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                firebaseModel.getUsersReference().child(nick).child("saved").child(newsItem.getNewsId())
-                        .setValue(newsItem);
-                Toast.makeText(getContext(), v.getContext().getResources().getText(R.string.looksaved), Toast.LENGTH_SHORT).show();
+            if(userInformation.getSavedLooks().size()>0){
+                for(int i=0;i<userInformation.getSavedLooks().size();i++){
+                    NewsItem newsItem1=userInformation.getSavedLooks().get(i);
+                    if(newsItem1.getNewsId().equals(newsItem.getNewsId())){
+                        save.setText(R.string.dontsave);
+                        save.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                firebaseModel.getUsersReference().child(nick).child("saved").child(newsItem.getNewsId())
+                                        .removeValue();
+                                Toast.makeText(getContext(), v.getContext().getResources().getText(R.string.lookwasdeletedfromsaved), Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }else {
+                        save.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                firebaseModel.getUsersReference().child(nick).child("saved").child(newsItem.getNewsId())
+                                        .setValue(newsItem);
+                                Toast.makeText(getContext(), v.getContext().getResources().getText(R.string.looksaved), Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                }
+            }else {
+                save.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        firebaseModel.getUsersReference().child(nick).child("saved").child(newsItem.getNewsId())
+                                .setValue(newsItem);
+                        Toast.makeText(getContext(), v.getContext().getResources().getText(R.string.looksaved), Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
-        });
 
-        complain.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showBottomSheetDialogComplain(newsItem);
-                bottomSheetDialog.dismiss();
+            complain.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showBottomSheetDialogComplain(newsItem);
+                    bottomSheetDialog.dismiss();
+                }
+            });
+
+            bottomSheetDialog.show();
+        }else{
+            final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(getContext());
+            bottomSheetDialog.setContentView(R.layout.bottom_sheet_dialog_lookoptions);
+
+            save=bottomSheetDialog.findViewById(R.id.save);
+            complain=bottomSheetDialog.findViewById(R.id.complain);
+            complain.setText(R.string.deletelook);
+
+            if(userInformation.getSavedLooks().size()>0){
+                for(int i=0;i<userInformation.getSavedLooks().size();i++){
+                    NewsItem newsItem1=userInformation.getSavedLooks().get(i);
+                    if(newsItem1.getNewsId().equals(newsItem.getNewsId())){
+                        save.setText(R.string.dontsave);
+                        save.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                firebaseModel.getUsersReference().child(nick).child("saved").child(newsItem.getNewsId())
+                                        .removeValue();
+                                Toast.makeText(getContext(), v.getContext().getResources().getText(R.string.lookwasdeletedfromsaved), Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }else {
+                        save.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                firebaseModel.getUsersReference().child(nick).child("saved").child(newsItem.getNewsId())
+                                        .setValue(newsItem);
+                                Toast.makeText(getContext(), v.getContext().getResources().getText(R.string.looksaved), Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                }
+            }else {
+                save.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        firebaseModel.getUsersReference().child(nick).child("saved").child(newsItem.getNewsId())
+                                .setValue(newsItem);
+                        Toast.makeText(getContext(), v.getContext().getResources().getText(R.string.looksaved), Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
-        });
 
-        bottomSheetDialog.show();
+            complain.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    firebaseModel.getUsersReference().child(nick).child("looks")
+                            .child(newsItem.getNewsId()).removeValue();
+                    Toast.makeText(getContext(), R.string.lookwasdeleted, Toast.LENGTH_SHORT).show();
+                }
+            });
+            bottomSheetDialog.show();
+        }
     }
 
     private void showBottomSheetDialog() {

@@ -1,20 +1,27 @@
 package com.egormoroz.schooly;
 
 import android.app.Activity;
+import android.content.res.AssetManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Handler;
 import android.util.Log;
 import android.view.Choreographer;
+import android.view.MotionEvent;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import androidx.annotation.NonNull;
+import androidx.core.view.MotionEventCompat;
+import androidx.fragment.app.Fragment;
 
+import com.egormoroz.schooly.ui.main.Shop.FittingFragment;
 import com.google.android.filament.Camera;
 import com.google.android.filament.Colors;
 import com.google.android.filament.Engine;
 import com.google.android.filament.EntityManager;
+import com.google.android.filament.Fence;
 import com.google.android.filament.Filament;
 import com.google.android.filament.LightManager;
 import com.google.android.filament.Renderer;
@@ -30,6 +37,12 @@ import com.google.android.filament.gltfio.Gltfio;
 import com.google.android.filament.gltfio.MaterialProvider;
 import com.google.android.filament.gltfio.ResourceLoader;
 import com.google.android.filament.gltfio.UbershaderLoader;
+import com.google.android.filament.utils.AutomationEngine;
+import com.google.android.filament.utils.Float3;
+import com.google.android.filament.utils.GestureDetector;
+import com.google.android.filament.utils.Manipulator;
+import com.google.android.filament.utils.ModelViewer;
+import com.google.android.filament.utils.Utils;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.storage.FirebaseStorage;
@@ -40,102 +53,179 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
+import java.util.concurrent.ExecutionException;
 
 public class FilamentModel {
 
-    Choreographer choreographer;
-    DisplayHelper displayHelper;
     UiHelper uiHelper;
     Engine engine;
-    Renderer renderer;
-    Scene scene;
-    View view;
-    Camera camera;
-    int light;
-    float[] color;
-    InputStream inputStream;
+    Manipulator cameraManipulator;
+    ModelViewer modelViewer;
+    Choreographer choreographer=Choreographer.getInstance();
+    GestureDetector doubleTapDetector;
+    AutomationEngine.ViewerContent viewerContent=new AutomationEngine.ViewerContent();
+    Float3 float3=new Float3(0.0f, 0.0f, -2.0f);
+    long loadStartTime;
+    Fence loadStartFence;
     byte[] buffer;
-    FilamentAsset filamentAsset;
-    SurfaceHolder surfaceHolder;
-    SwapChain swapChain;
+    URI uri;
+    Buffer buffer1,bufferToFilament;
 
-    public void initFilament(SurfaceView surfaceView,Buffer buffer) throws IOException, URISyntaxException {
+    public void initFilament(SurfaceView surfaceView,Buffer buffer,boolean onTouch,LockableNestedScrollView lockableNestedScrollView) throws IOException, URISyntaxException {
         Filament.init();
         Gltfio.init();
-        displayHelper=new DisplayHelper(surfaceView.getContext());
-        setupSurfaceView(surfaceView);
-        setupFilament(surfaceView);
-        setupView();
-        setupScene(buffer);
-    }
-
-    public void setupSurfaceView(SurfaceView surfaceView){
+        Utils.INSTANCE.init();
+        cameraManipulator=new Manipulator.Builder()
+                .targetPosition(0.0f, 0.0f, -2.0f)
+                .viewport(surfaceView.getWidth(), surfaceView.getHeight())
+                .build(Manipulator.Mode.ORBIT);
+        doubleTapDetector=new GestureDetector(surfaceView, cameraManipulator);
         uiHelper=new UiHelper(UiHelper.ContextErrorPolicy.DONT_CHECK);
-        uiHelper.setRenderCallback(new UiHelper.RendererCallback() {
+        engine=Engine.create();
+        modelViewer=new ModelViewer(surfaceView, engine,uiHelper,cameraManipulator);
+        setupFilament();
+        surfaceView.setOnTouchListener(new android.view.View.OnTouchListener() {
             @Override
-            public void onNativeWindowChanged(Surface surface) {
+            public boolean onTouch(android.view.View v, MotionEvent event) {
+                modelViewer.onTouchEvent(event);
+                doubleTapDetector.onTouchEvent(event);
+                if(lockableNestedScrollView!=null){
+                    int action = MotionEventCompat.getActionMasked(event);
 
-            }
-
-            @Override
-            public void onDetachedFromSurface() {
-
-            }
-
-            @Override
-            public void onResized(int i, int i1) {
-
+                    switch(action) {
+                        case (MotionEvent.ACTION_DOWN) :
+                            lockableNestedScrollView.setScrollingEnabled(false);
+                            return true;
+                        case (MotionEvent.ACTION_MOVE) :
+                            lockableNestedScrollView.setScrollingEnabled(false);
+                            return true;
+                        case (MotionEvent.ACTION_UP) :
+                            lockableNestedScrollView.setScrollingEnabled(true);
+                            return true;
+                        case (MotionEvent.ACTION_CANCEL) :
+                            lockableNestedScrollView.setScrollingEnabled(true);
+                            return true;
+                        case (MotionEvent.ACTION_OUTSIDE) :
+                            lockableNestedScrollView.setScrollingEnabled(true);
+                            return true;
+                        case (MotionEvent.ACTION_SCROLL) :
+                            lockableNestedScrollView.setScrollingEnabled(true);
+                            return true;
+                    }
+                }
+                return onTouch;
             }
         });
-        uiHelper.attachTo(surfaceView);
-    }
-
-    public void setupFilament(SurfaceView surfaceView){
-        engine=Engine.create();
-        renderer=engine.createRenderer();
-        scene=engine.createScene();
-        view=engine.createView();
-        camera=engine.createCamera(EntityManager.get().create());
-        surfaceHolder=surfaceView.getHolder();
-        Surface surface=surfaceHolder.getSurface();
-        swapChain= engine.createSwapChain(surface);
-    }
-
-    public void setupView(){
-        scene.setSkybox(new Skybox.Builder().color(0.035f, 0.035f, 0.035f, 1.0f).build(engine));
-        view.setCamera(camera);
-        view.setScene(scene);
-    }
-
-    public void setupScene(Buffer buffer) throws IOException, URISyntaxException {
-        Log.d("####", "init  "+view+"   "+scene+"   "+camera+"   "+scene.getSkybox());
-        MaterialProvider materialProvider=new UbershaderLoader(engine);
-        AssetLoader assetLoader=new AssetLoader(engine, materialProvider, EntityManager.get());
-        ResourceLoader resourceLoader=new ResourceLoader(engine);
-        filamentAsset=assetLoader.createAssetFromBinary(buffer);
-        resourceLoader.addResourceData("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Funtitled.glb?alt=media&token=657b45d7-a84b-4f2a-89f4-a699029401f7", buffer);
-        resourceLoader.loadResources(filamentAsset);
-        filamentAsset.releaseSourceData();
-        scene.addEntities(filamentAsset.getEntities());
-        light=EntityManager.get().create();
-        color=Colors.cct(5_500.0f);
-        new LightManager.Builder(LightManager.Type.DIRECTIONAL)
-                .color(color[0],color[1],color[2])
-                .intensity(110_000.0f)
-                .direction(0.0f, -0.5f, -1.0f)
+        loadGlb(buffer);
+        Skybox skybox=new Skybox.Builder()
+                .build(modelViewer.getEngine());
+        int light=EntityManager.get().create();
+        new LightManager.Builder(LightManager.Type.POINT)
+                .color(254, 233, 251)
                 .castShadows(true)
+                .position(0, 0, 0)
+                .intensity(50000f)
                 .build(engine, light);
-        scene.addEntity(light);
-        camera.setExposure(16.0f, 1.0f / 125.0f, 100.0f);
-        camera.lookAt(0.0, 0.0, 6.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
-        if(renderer.beginFrame(swapChain,1000)) {
-            renderer.render(view);
-        }
-        Log.d("####", "initEnd  "+view+"   "+scene+"   "+camera+"   "+scene.getSkybox());
+        modelViewer.getScene().addEntity(light);
+        modelViewer.getScene().setSkybox(skybox);
+
     }
+
+    Choreographer.FrameCallback frameCallback=new Choreographer.FrameCallback() {
+        @Override
+        public void doFrame(long frameTimeNanos) {
+            choreographer.postFrameCallback(frameCallback);
+            if(modelViewer!=null){
+                modelViewer.render(frameTimeNanos);
+            }
+        }
+    };
+
+    public void loadGlb(Buffer buffer){
+        modelViewer.destroyModel();
+        modelViewer.loadModelGlb(buffer);
+        modelViewer.transformToUnitCube(float3);
+        loadStartTime=System.nanoTime();
+        loadStartFence=modelViewer.getEngine().createFence();
+    }
+
+    public void postFrameCallback(){
+        choreographer.postFrameCallback(frameCallback);
+    }
+
+    public void removeFrameCallback(){
+        choreographer.removeFrameCallback(frameCallback);
+    }
+
+    public void setupFilament(){
+        viewerContent.view=modelViewer.getView();
+        viewerContent.sunlight=modelViewer.getLight();
+        viewerContent.lightManager=modelViewer.getEngine().getLightManager();
+        viewerContent.scene=modelViewer.getScene();
+        viewerContent.renderer=modelViewer.getRenderer();
+
+    }
+
+    public void executeTask(String url,SurfaceView surfaceView,boolean onTouch,Buffer buffer,LockableNestedScrollView lockableNestedScrollView
+    ) throws ExecutionException, InterruptedException, IOException, URISyntaxException {
+        MyAsyncTask myAsyncTask=new MyAsyncTask();
+        if(buffer==null){
+            myAsyncTask.execute(url);
+            bufferToFilament = myAsyncTask.get();
+            initFilament(surfaceView,bufferToFilament,onTouch,lockableNestedScrollView);
+        }else{
+            initFilament(surfaceView,buffer,onTouch,lockableNestedScrollView);
+        }
+    }
+
+    public byte[] getBytes( URL url) throws IOException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        InputStream is = null;
+        try {
+            is = new BufferedInputStream(url.openStream ());
+            byte[] byteChunk = new byte[4096];
+            int n;
+
+            while ( (n = is.read(byteChunk)) > 0 ) {
+                baos.write(byteChunk, 0, n);
+            }
+        }
+        catch (IOException e) {
+            Log.d("####", "Failed while reading bytes from %s: %s"+ url.toExternalForm()+ e.getMessage());
+            e.printStackTrace ();
+        }
+        finally {
+            if (is != null) { is.close(); }
+        }
+        return  baos.toByteArray();
+    }
+
+    public class MyAsyncTask extends AsyncTask<String, Integer, Buffer> {
+        @Override
+        protected Buffer doInBackground(String... parameter) {
+            try {
+                uri = new URI(parameter[0]);
+                buffer = getBytes(uri.toURL());
+                buffer1= ByteBuffer.wrap(buffer);
+            } catch (URISyntaxException | MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return buffer1;
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... progress) {
+
+        }
+
+    }
+
 }

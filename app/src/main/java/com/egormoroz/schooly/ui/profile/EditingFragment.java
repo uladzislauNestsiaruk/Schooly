@@ -132,7 +132,9 @@ public class EditingFragment extends Fragment {
             public void onClick(View v) {
                 if(bioEdit.getText().toString().length()>=300){
                     Toast.makeText(getContext(), getContext().getResources().getText(R.string.profiledescriptioncannotbemorethan200characters), Toast.LENGTH_SHORT).show();
-                }else{
+                }else if (userInformation.getBio().equals(bioEdit.getText().toString())){
+                    Toast.makeText(getContext(), R.string.nochangeshavebeenintroduced, Toast.LENGTH_SHORT).show();
+                }else if(!userInformation.getBio().equals(bioEdit.getText().toString()) && bioEdit.getText().toString().length()<300){
                     String bioText= String.valueOf(bioEdit.getText().toString().trim());
                     firebaseModel.getUsersReference().child(nick).child("bio").setValue(bioText);
                     Toast.makeText(getContext(), R.string.changessaved, Toast.LENGTH_SHORT).show();

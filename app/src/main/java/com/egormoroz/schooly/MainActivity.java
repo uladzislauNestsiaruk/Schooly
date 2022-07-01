@@ -138,6 +138,7 @@ public class MainActivity extends AppCompatActivity {
                                                         userInformation.setAccountType(snapshot.child("accountType").getValue(String.class));
                                                         userInformation.setmoney(snapshot.child("money").getValue(Long.class));
                                                         userInformation.setTodayMining(snapshot.child("todayMining").getValue(Double.class));
+                                                        userInformation.setMainLook(snapshot.child("mainLook").getValue(String.class));
                                                         getMyClothes(nick);
                                                         final DatabaseReference connectedRef = database.getReference(".info/connected");
                                                         getLists();

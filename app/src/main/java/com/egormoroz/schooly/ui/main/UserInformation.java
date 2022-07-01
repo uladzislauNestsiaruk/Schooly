@@ -49,6 +49,7 @@ public class UserInformation implements Serializable {
     private String accountType;
     private String version;
     private long miningPremium;
+    private String mainLook;
     public UserInformation() {
     }
 
@@ -293,13 +294,21 @@ public class UserInformation implements Serializable {
         this.notifications = notifications;
     }
 
+    public String getMainLook() {
+        return mainLook;
+    }
+
+    public void setMainLook(String mainLook) {
+        this.mainLook = mainLook;
+    }
+
     public UserInformation(String nick, String phone, String uid, String Avatar, String password,
                            String gender, long age, ArrayList<Miner> activeMinerArrayList,ArrayList<Miner> minerArrayList, long level, long money, double todayMining,
                            ArrayList<Subscriber> subscription, ArrayList<Subscriber> subscribers, String queue, String bio,
                            String accountType, String chatsNontsType,
                            String groupChatsNontsType, String profileNontsType, ArrayList<Clothes> myClothes, String version,
                            ArrayList<NewsItem> looks,long miningPremium,ArrayList<Clothes> lookClothes,ArrayList<Clothes> clothes,ArrayList<Nontification> notifications
-            ,ArrayList<Transfer> transfers, ArrayList<NewsItem> savedLooks,ArrayList<Subscriber> blackList) {
+            ,ArrayList<Transfer> transfers, ArrayList<NewsItem> savedLooks,ArrayList<Subscriber> blackList,String mainLook) {
         this.Nick = nick;
         this.uid = uid;
         this.phone = phone;
@@ -330,5 +339,6 @@ public class UserInformation implements Serializable {
         this.transfers=transfers;
         this.savedLooks=savedLooks;
         this.blackList=blackList;
+        this.mainLook=mainLook;
     }
 }
