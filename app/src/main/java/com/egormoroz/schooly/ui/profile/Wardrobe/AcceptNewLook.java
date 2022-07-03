@@ -40,6 +40,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.io.FileReader;
+import java.nio.Buffer;
 import java.sql.Time;
 import java.util.ArrayList;
 
@@ -58,18 +59,21 @@ public class AcceptNewLook extends Fragment {
     UserInformation userInformation;
     Bundle bundle;
     String lookType;
+    Buffer buffer;
 
-    public AcceptNewLook(String model,String type,Fragment fragment,UserInformation userInformation,Bundle bundle,String lookType) {
+    public AcceptNewLook(String model,String type,Fragment fragment,UserInformation userInformation,Bundle bundle,String lookType
+    ,Buffer buffer) {
         this.model = model;
         this.type = type;
         this.fragment=fragment;
         this.userInformation=userInformation;
         this.bundle=bundle;
         this.lookType=lookType;
+        this.buffer=buffer;
     }
 
-    public static AcceptNewLook newInstance(String model,String type,Fragment fragment,UserInformation userInformation,Bundle bundle,String lookType) {
-        return new AcceptNewLook(model,type,fragment,userInformation,bundle,lookType);
+    public static AcceptNewLook newInstance(String model,String type,Fragment fragment,UserInformation userInformation,Bundle bundle,String lookType,Buffer buffer) {
+        return new AcceptNewLook(model,type,fragment,userInformation,bundle,lookType,buffer);
 
     }
 
@@ -109,7 +113,7 @@ public class AcceptNewLook extends Fragment {
         itemClickListener=new ConstituentsAdapter.ItemClickListener() {
             @Override
             public void onItemClick(Clothes clothes) {
-                RecentMethods.setCurrentFragment(ViewingClothesNews.newInstance(AcceptNewLook.newInstance(model,type,fragment, userInformation,bundle,lookType),userInformation,bundle), getActivity());
+                RecentMethods.setCurrentFragment(ViewingClothesNews.newInstance(AcceptNewLook.newInstance(model,type,fragment, userInformation,bundle,lookType,buffer),userInformation,bundle), getActivity());
             }
         };
 
@@ -159,7 +163,7 @@ public class AcceptNewLook extends Fragment {
                     String lookId=firebaseModel.getUsersReference().child(nick).child("looks").push().getKey();
                     firebaseModel.getUsersReference().child(nick).child("looks").child(lookId)
                             .setValue(new NewsItem(model, descriptionLook.getText().toString(), "0", lookId,
-                                    "", userInformation.getLookClothes(), 1200, 0,"",nick,0));
+                                    "", userInformation.getLookClothes(), 1200, 0,"",nick,0,buffer));
                     descriptionLook.getText().clear();
                     Toast.makeText(getContext(), getContext().getResources().getText(R.string.lookpublishedsuccessfully), Toast.LENGTH_SHORT).show();
                     RecentMethods.setCurrentFragment(ProfileFragment.newInstance(type, nick, fragment,userInformation,bundle), getActivity());

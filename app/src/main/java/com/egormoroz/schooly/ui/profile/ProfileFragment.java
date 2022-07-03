@@ -290,11 +290,12 @@ public class ProfileFragment extends Fragment {
                         ArrayList<Buffer> buffers=new ArrayList<>();
                         buffers.add(bufferToFilament);
                         bundle.putSerializable("MAINLOOK",buffers);
-                        filamentModel.initFilament(surfaceView,bufferToFilament,true,lockableNestedScrollView);
+                        filamentModel.initFilament(surfaceView,bufferToFilament,true,null);
                     }else{
                         ArrayList<Buffer> buffers= (ArrayList<Buffer>) bundle.getSerializable("MAINLOOK");
                         Buffer buffer3=buffers.get(0);
-                        filamentModel.initFilament(surfaceView,buffer3 ,true,lockableNestedScrollView);
+                        String v=buffer3.toString();
+                        filamentModel.initFilament(surfaceView,buffer3 ,true,null);
                     }
                 } catch (ExecutionException e) {
                     e.printStackTrace();

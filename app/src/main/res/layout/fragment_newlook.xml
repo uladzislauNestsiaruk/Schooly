@@ -40,6 +40,15 @@
             android:textColor="@color/app_grey"
             android:textSize="16sp" />
 
+        <SurfaceView
+            android:id="@+id/surfaceViewCreateClothes"
+            android:layout_width="match_parent"
+            android:layout_height="400dp"
+            android:layout_below="@+id/back_toprofile"
+            android:layout_marginStart="26dp"
+            android:layout_marginEnd="26dp"
+            android:background="@color/white" />
+
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabLayoutWardrobe"

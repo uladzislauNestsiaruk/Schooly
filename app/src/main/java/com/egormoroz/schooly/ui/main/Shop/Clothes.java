@@ -1,7 +1,10 @@
 package com.egormoroz.schooly.ui.main.Shop;
 
-import java.util.ArrayList;
+import com.google.firebase.database.IgnoreExtraProperties;
 
+import java.nio.Buffer;
+import java.util.ArrayList;
+@IgnoreExtraProperties
 public class Clothes {
     private String type;
     private String clothesImage;
@@ -17,11 +20,12 @@ public class Clothes {
     String model;
     String uid;
     long purchaseToday;
+    Buffer buffer;
 
 
     public Clothes(String type, String  clothesImage, long clothesPrice,String clothesTitle
             ,long purchaseNumber,long timesTamp,String creator,String currencyType,String description,
-                   String model,long purchaseToday,String bodyType,String uid,String exclusive){
+                   String model,long purchaseToday,String bodyType,String uid,String exclusive,Buffer buffer){
         this.type=type;
         this.clothesImage=clothesImage;
         this.clothesPrice=clothesPrice;
@@ -36,6 +40,7 @@ public class Clothes {
         this.bodyType=bodyType;
         this.uid=uid;
         this.exclusive=exclusive;
+        this.buffer=buffer;
     }
     public Clothes(){
     }
@@ -150,6 +155,14 @@ public class Clothes {
 
     public void setExclusive(String exclusive){
         this.exclusive=exclusive;
+    }
+
+    public Buffer getBuffer(){
+        return this.buffer;
+    }
+
+    public void setBuffer(Buffer buffer){
+        this.buffer=buffer;
     }
 
 }

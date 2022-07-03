@@ -275,6 +275,11 @@ public class MainFragment extends Fragment{
 //                firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").child(uid8).setValue(new Clothes("clothes", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
 //                        ,120,"Christian Dior",0,123,"Schooly","coin"," ","",0,"foot",uid8,"no"));
 
+//        String uid8=firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").push().getKey();
+//                firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").child(uid8).setValue(new Clothes("shoes", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fup.png?alt=media&token=8db7a818-1d7c-43ad-ab5f-24ab399cebf6"
+//                        ,100,"Rawler's",0,123,"Schooly","coin"," ","https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Fshoes2(bLUE)%20(3).glb?alt=media&token=f0ad3a18-8840-4ca1-8eb8-93d1247eaf40"
+//         ,0,"foot",uid8,"no",null));
+
         relativeShop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
