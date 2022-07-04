@@ -124,15 +124,44 @@ public class FilamentModel {
         });
         loadGlb(buffer);
         Skybox skybox=new Skybox.Builder()
+                .color(0.255f, 0.124f, 0.232f, 1.0f)
                 .build(modelViewer.getEngine());
         int light=EntityManager.get().create();
-        new LightManager.Builder(LightManager.Type.POINT)
-                .color(254, 233, 251)
+        float[] float1 = Colors.cct(5_500.0f);
+        new LightManager.Builder(LightManager.Type.DIRECTIONAL)
+                .color(float1[0], float1[1], float1[2])
+                .intensity(110_000.0f)
+                .direction(0.0f, -0.5f, -1.0f)
                 .castShadows(true)
-                .position(0, 0, 0)
-                .intensity(50000f)
                 .build(engine, light);
+        int light1=EntityManager.get().create();
+        new LightManager.Builder(LightManager.Type.POINT)
+                .color(float1[0], float1[1], float1[2])
+                .intensity(750_000.0f)
+                .falloff(10)
+                .position(0.0f, 0.0f, -3.0f)
+                .castShadows(true)
+                .build(engine, light1);
+        int light2=EntityManager.get().create();
+        new LightManager.Builder(LightManager.Type.POINT)
+                .color(float1[0], float1[1], float1[2])
+                .intensity(500_000.0f)
+                .falloff(10)
+                .position(0.0f, -0.5f, -3.0f)
+                .castShadows(true)
+                .build(engine, light2);
+        int light3=EntityManager.get().create();
+        new LightManager.Builder(LightManager.Type.POINT)
+                .color(float1[0], float1[1], float1[2])
+                .intensity(500_000.0f)
+                .falloff(10)
+                .position(0.0f, 0.5f, -3.0f)
+                .castShadows(true)
+                .build(engine, light3);
         modelViewer.getScene().addEntity(light);
+        modelViewer.getScene().addEntity(light1);
+        modelViewer.getScene().addEntity(light2);
+        modelViewer.getScene().addEntity(light3);
         modelViewer.getScene().setSkybox(skybox);
 
     }
