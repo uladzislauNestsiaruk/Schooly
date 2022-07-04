@@ -75,15 +75,17 @@ public class FittingFragment extends Fragment {
     Fragment fragment;
     SurfaceView surfaceView;
     FilamentModel filamentModel;
+    Clothes clothes;
 
-    public FittingFragment(Fragment fragment,UserInformation userInformation,Bundle bundle) {
+    public FittingFragment(Fragment fragment,UserInformation userInformation,Bundle bundle,Clothes clothes) {
         this.fragment = fragment;
         this.userInformation=userInformation;
         this.bundle=bundle;
+        this.clothes=clothes;
     }
 
-    public static FittingFragment newInstance(Fragment fragment, UserInformation userInformation,Bundle bundle) {
-        return new FittingFragment(fragment,userInformation,bundle);
+    public static FittingFragment newInstance(Fragment fragment, UserInformation userInformation,Bundle bundle,Clothes clothes) {
+        return new FittingFragment(fragment,userInformation,bundle,clothes);
 
     }
 
@@ -120,7 +122,7 @@ public class FittingFragment extends Fragment {
         surfaceView=view.findViewById(R.id.surfaceView);
         filamentModel=new FilamentModel();
         try {
-            filamentModel.executeTask("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Fshoes2(bLUE)%20(3).glb?alt=media&token=f0ad3a18-8840-4ca1-8eb8-93d1247eaf40"
+            filamentModel.executeTask(clothes.getModel()
                     ,surfaceView,true,null,null);
         } catch (ExecutionException e) {
             e.printStackTrace();

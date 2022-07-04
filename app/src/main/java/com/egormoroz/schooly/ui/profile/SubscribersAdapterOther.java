@@ -170,9 +170,6 @@ public class SubscribersAdapterOther extends RecyclerView.Adapter<SubscribersAda
                                                                                     String numToBase=firebaseModel.getReference().child("users")
                                                                                             .child(subscriber.getSub()).child("nontifications")
                                                                                             .push().getKey();
-                                                                                    Date date = new Date();
-                                                                                    SimpleDateFormat formatter = new SimpleDateFormat("EEE, MMM dd hh:mm a");
-                                                                                    String dateAndTime = formatter.format(date);
                                                                                     firebaseModel.getReference().child("users")
                                                                                             .child(subscriber.getSub()).child("nontifications")
                                                                                             .child(numToBase).setValue(new Nontification(nick,"не отправлено","обычный"
@@ -187,9 +184,6 @@ public class SubscribersAdapterOther extends RecyclerView.Adapter<SubscribersAda
                                                                                     String numToBase=firebaseModel.getReference().child("users")
                                                                                             .child(subscriber.getSub()).child("nontifications")
                                                                                             .push().getKey();
-                                                                                    Date date = new Date();
-                                                                                    SimpleDateFormat formatter = new SimpleDateFormat("EEE, MMM dd hh:mm a");
-                                                                                    String dateAndTime = formatter.format(date);
                                                                                     firebaseModel.getReference().child("users")
                                                                                             .child(subscriber.getSub()).child("nontifications")
                                                                                             .child(numToBase).setValue(new Nontification(nick,"не отправлено","запрос"

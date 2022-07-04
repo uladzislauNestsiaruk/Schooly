@@ -130,7 +130,7 @@ public class ViewingClothesPopular extends Fragment {
         fittingClothes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(FittingFragment.newInstance(ViewingClothesPopular.newInstance(userInformation,bundle,fragment),userInformation,bundle), getActivity());
+                RecentMethods.setCurrentFragment(FittingFragment.newInstance(ViewingClothesPopular.newInstance(userInformation,bundle,fragment),userInformation,bundle,clothesViewing), getActivity());
             }
         });
         send.setOnClickListener(new View.OnClickListener() {

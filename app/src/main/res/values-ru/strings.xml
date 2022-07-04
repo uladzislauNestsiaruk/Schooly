@@ -511,6 +511,7 @@
     <string name="dontsave">Не сохранять</string>
     <string name="lookwasdeletedfromsaved">Образ удалён из сохранённых</string>
     <string name="thepublicationwasnotfound">Публикация не найдена. Вероятнее всего пользователь удалил образ</string>
+    <string name="usernotfound">Пользователь не найден</string>
 
 
 

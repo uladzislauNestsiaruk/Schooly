@@ -1,5 +1,6 @@
 package com.egormoroz.schooly.ui.profile;
 
+import static android.content.Context.MODE_PRIVATE;
 import static android.os.Looper.getMainLooper;
 
 import android.annotation.SuppressLint;
@@ -82,6 +83,7 @@ import com.egormoroz.schooly.ui.profile.Wardrobe.WardrobeAdapterProfile;
 import com.egormoroz.schooly.ui.profile.Wardrobe.WardrobeClothes;
 import com.egormoroz.schooly.ui.profile.Wardrobe.WardrobeFragment;
 import com.google.android.filament.Filament;
+import com.google.android.gms.common.util.IOUtils;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -101,10 +103,17 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedWriter;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.OutputStreamWriter;
 import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -112,6 +121,8 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
+import java.nio.channels.ByteChannel;
+import java.nio.channels.FileChannel;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -160,6 +171,7 @@ public class ProfileFragment extends Fragment {
     byte[] buffer;
     URI uri;
     Buffer buffer1,bufferToFilament;
+    ByteBuffer byteBuffer;
 
 
     @Override
@@ -290,12 +302,11 @@ public class ProfileFragment extends Fragment {
                         ArrayList<Buffer> buffers=new ArrayList<>();
                         buffers.add(bufferToFilament);
                         bundle.putSerializable("MAINLOOK",buffers);
-                        filamentModel.initFilament(surfaceView,bufferToFilament,true,null);
+                        filamentModel.initFilament(surfaceView,bufferToFilament,true,lockableNestedScrollView);
                     }else{
                         ArrayList<Buffer> buffers= (ArrayList<Buffer>) bundle.getSerializable("MAINLOOK");
                         Buffer buffer3=buffers.get(0);
-                        String v=buffer3.toString();
-                        filamentModel.initFilament(surfaceView,buffer3 ,true,null);
+                        filamentModel.initFilament(surfaceView,buffer3 ,true,lockableNestedScrollView);
                     }
                 } catch (ExecutionException e) {
                     e.printStackTrace();
@@ -449,166 +460,52 @@ public class ProfileFragment extends Fragment {
                         RecentMethods.setCurrentFragment(fragment, getActivity());
                     }
                 };
-                if(getActivity()!=null){
-                    getActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
-                }
-                if (bundle!=null){
-                    tabLayoutPositionOther=bundle.getInt("TAB_INT_PROFILE_OTHER");
-                }
-                otherLooksCount = view.findViewById(R.id.looksCountOther);
-                otherSubscriptionCount = view.findViewById(R.id.subscriptionCountOther);
-                otherSubscribersCount = view.findViewById(R.id.subsCountOther);
-                if(bundle!=null){
-                    if(bundle.getSerializable(sendNick+"PROFILE_OTHER_BUNDLE")!=null){
-                        info= (UserInformation) bundle.getSerializable(sendNick+"PROFILE_OTHER_BUNDLE");
-                        b=1;
-                        user = firebaseModel.getUsersReference().child(info.getNick());
-                        surfaceView=view.findViewById(R.id.mainlookview);
-                        try {
-                            if(bundle.getSerializable("MAINLOOK"+info.getNick())==null){
-                                MyAsyncTask myAsyncTask=new MyAsyncTask();
-                                myAsyncTask.execute(userInformation.getMainLook());
-                                bufferToFilament = myAsyncTask.get();
-                                ArrayList<Buffer> buffers=new ArrayList<>();
-                                buffers.add(bufferToFilament);
-                                bundle.putSerializable("MAINLOOK"+info.getNick(),buffers);
-                                filamentModel.initFilament(surfaceView,bufferToFilament,true,lockableNestedScrollViewOther);
-                            }else{
-                                ArrayList<Buffer> buffers= (ArrayList<Buffer>) bundle.getSerializable("MAINLOOK"+info.getNick());
-                                Buffer buffer3=buffers.get(0);
-                                filamentModel.initFilament(surfaceView,buffer3 ,true,lockableNestedScrollViewOther);
+                requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
+                firebaseModel.getUsersReference().child(sendNick).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if(!snapshot.exists()){
+                            Toast.makeText(getContext(), R.string.usernotfound, Toast.LENGTH_SHORT).show();
+                        }else {
+                            if(getActivity()!=null){
+                                getActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
                             }
-                        } catch (ExecutionException e) {
-                            e.printStackTrace();
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        } catch (URISyntaxException e) {
-                            e.printStackTrace();
-                        }
-                        if(bundle.getString(sendNick+"PROFILE_OTHER_CHECK_VALUE")==null){
-                            firebaseModel.getUsersReference().child(info.getNick())
-                                    .child("blackList").child(userInformation.getNick())
-                                    .get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<DataSnapshot> task) {
-                                    if(task.isSuccessful()){
-                                        DataSnapshot snapshot=task.getResult();
-                                        if(snapshot.exists()){
-                                            profileCheckValue=1;
-                                        }else {
-                                            profileCheckValue=2;
-                                            if(info.getAccountType().equals("close")){
-                                                profileCheckValue=3;
-                                            }
-                                        }
-                                        tabLayoutOther=view.findViewById(R.id.tabsprofileother);
-                                        viewPagerOther=view.findViewById(R.id.viewPagerOther);
-                                        setFragmentOtherViewPager(profileCheckValue);
-                                        setCountsOther();
-                                        //loadModels(Uri.parse("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Funtitled.glb?alt=media&token=657b45d7-a84b-4f2a-89f4-a699029401f7")
-                                        //        , otherMainLook, ProfileFragment.this, 0.25f);
-                                        firebaseModel.getUsersReference().child(userInformation.getNick()).child("subscription")
-                                                .child(info.getNick()).addValueEventListener(new ValueEventListener() {
-                                            @Override
-                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                if(snapshot.exists()){
-                                                    checkOnSubscribeValue=1;
-                                                }else {
-                                                    checkOnSubscribeValue=0;
-                                                }
-                                                bundle.putString(sendNick+"PROFILE_OTHER_CHECK_VALUE",String.valueOf(profileCheckValue));
-                                                bundle.putString(sendNick+"PROFILE_OTHER_CHECK_SUBSCRIBE_VALUE",String.valueOf(checkOnSubscribeValue));
-                                                checkProfileValue(profileCheckValue,view,checkOnSubscribeValue);
-                                            }
-
-                                            @Override
-                                            public void onCancelled(@NonNull DatabaseError error) {
-
-                                            }
-                                        });
-                                    }
-                                }
-                            });
-                        }else{
-                            tabLayoutOther=view.findViewById(R.id.tabsprofileother);
-                            viewPagerOther=view.findViewById(R.id.viewPagerOther);
-                            setCountsOther();
-                            //loadModels(Uri.parse("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Funtitled.glb?alt=media&token=657b45d7-a84b-4f2a-89f4-a699029401f7")
-                            //    , otherMainLook, ProfileFragment.this, 0.25f);
-                            if(bundle.getString(sendNick+"PROFILE_OTHER_CHECK_SUBSCRIBE_VALUE")!=null){
-                                checkProfileValue(Integer.valueOf(bundle.getString(sendNick+"PROFILE_OTHER_CHECK_VALUE")),
-                                        view,Integer.valueOf(bundle.getString(sendNick+"PROFILE_OTHER_CHECK_SUBSCRIBE_VALUE")));
-                                setFragmentOtherViewPager(Integer.valueOf(bundle.getString(sendNick+"PROFILE_OTHER_CHECK_VALUE")));
-                            }else{
-                                firebaseModel.getUsersReference().child(userInformation.getNick()).child("subscription")
-                                        .child(info.getNick()).addValueEventListener(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                        if(snapshot.exists()){
-                                            checkOnSubscribeValue=1;
-                                        }else {
-                                            checkOnSubscribeValue=0;
-                                        }
-                                        bundle.putString(sendNick+"PROFILE_OTHER_CHECK_VALUE",String.valueOf(profileCheckValue));
-                                        bundle.putString(sendNick+"PROFILE_OTHER_CHECK_SUBSCRIBE_VALUE",String.valueOf(checkOnSubscribeValue));
-                                        checkProfileValue(profileCheckValue,view,checkOnSubscribeValue);
-                                    }
-
-                                    @Override
-                                    public void onCancelled(@NonNull DatabaseError error) {
-
-                                    }
-                                });
+                            if (bundle!=null){
+                                tabLayoutPositionOther=bundle.getInt("TAB_INT_PROFILE_OTHER");
                             }
-                        }
-                    }else{
-                        firebaseModel.getReference().child("users").child(sendNick)
-                                .get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                                if(task.isSuccessful()){
-                                    b=2;
-                                    DataSnapshot snapshot=task.getResult();
-                                    if(bundle!=null){
-                                        info=new UserInformation();
-                                        info.setAge(snapshot.child("age").getValue(Long.class));
-                                        info.setAvatar(snapshot.child("avatar").getValue(String.class));
-                                        info.setGender(snapshot.child("gender").getValue(String.class));
-                                        info.setNick(snapshot.child("nick").getValue(String.class));
-                                        info.setPassword(snapshot.child("password").getValue(String.class));
-                                        info.setPhone(snapshot.child("phone").getValue(String.class));
-                                        info.setUid(snapshot.child("uid").getValue(String.class));
-                                        info.setQueue(snapshot.child("queue").getValue(String.class));
-                                        info.setAccountType(snapshot.child("accountType").getValue(String.class));
-                                        info.setBio(snapshot.child("bio").getValue(String.class));
-                                        info.setMainLook(snapshot.child("mainLook").getValue(String.class));
-                                        surfaceView=view.findViewById(R.id.mainlookview);
-                                        try {
-                                            if(bundle.getSerializable("MAINLOOK"+info.getNick())==null){
-                                                MyAsyncTask myAsyncTask=new MyAsyncTask();
-                                                myAsyncTask.execute(info.getMainLook());
-                                                bufferToFilament = myAsyncTask.get();
-                                                ArrayList<Buffer> buffers=new ArrayList<>();
-                                                buffers.add(bufferToFilament);
-                                                bundle.putSerializable("MAINLOOK"+info.getNick(),buffers);
-                                                filamentModel.initFilament(surfaceView,bufferToFilament,true,lockableNestedScrollViewOther);
-                                            }else{
-                                                ArrayList<Buffer> buffers= (ArrayList<Buffer>) bundle.getSerializable("MAINLOOK"+info.getNick());
-                                                Buffer buffer3=buffers.get(0);
-                                                filamentModel.initFilament(surfaceView,buffer3 ,true,lockableNestedScrollViewOther);
-                                            }
-                                        } catch (ExecutionException e) {
-                                            e.printStackTrace();
-                                        } catch (InterruptedException e) {
-                                            e.printStackTrace();
-                                        } catch (IOException e) {
-                                            e.printStackTrace();
-                                        } catch (URISyntaxException e) {
-                                            e.printStackTrace();
+                            otherLooksCount = view.findViewById(R.id.looksCountOther);
+                            otherSubscriptionCount = view.findViewById(R.id.subscriptionCountOther);
+                            otherSubscribersCount = view.findViewById(R.id.subsCountOther);
+                            if(bundle!=null){
+                                if(bundle.getSerializable(sendNick+"PROFILE_OTHER_BUNDLE")!=null){
+                                    info= (UserInformation) bundle.getSerializable(sendNick+"PROFILE_OTHER_BUNDLE");
+                                    b=1;
+                                    user = firebaseModel.getUsersReference().child(info.getNick());
+                                    surfaceView=view.findViewById(R.id.mainlookview);
+                                    try {
+                                        if(bundle.getSerializable("MAINLOOK"+info.getNick())==null){
+                                            MyAsyncTask myAsyncTask=new MyAsyncTask();
+                                            myAsyncTask.execute(userInformation.getMainLook());
+                                            bufferToFilament = myAsyncTask.get();
+                                            ArrayList<Buffer> buffers=new ArrayList<>();
+                                            buffers.add(bufferToFilament);
+                                            bundle.putSerializable("MAINLOOK"+info.getNick(),buffers);
+                                            filamentModel.initFilament(surfaceView,bufferToFilament,true,lockableNestedScrollViewOther);
+                                        }else{
+                                            ArrayList<Buffer> buffers= (ArrayList<Buffer>) bundle.getSerializable("MAINLOOK"+info.getNick());
+                                            Buffer buffer3=buffers.get(0);
+                                            filamentModel.initFilament(surfaceView,buffer3 ,true,lockableNestedScrollViewOther);
                                         }
-                                        bundle.putSerializable(sendNick+"PROFILE_OTHER_BUNDLE", (Serializable) info);
+                                    } catch (ExecutionException e) {
+                                        e.printStackTrace();
+                                    } catch (InterruptedException e) {
+                                        e.printStackTrace();
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    } catch (URISyntaxException e) {
+                                        e.printStackTrace();
+                                    }
+                                    if(bundle.getString(sendNick+"PROFILE_OTHER_CHECK_VALUE")==null){
                                         firebaseModel.getUsersReference().child(info.getNick())
                                                 .child("blackList").child(userInformation.getNick())
                                                 .get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
@@ -629,7 +526,7 @@ public class ProfileFragment extends Fragment {
                                                     setFragmentOtherViewPager(profileCheckValue);
                                                     setCountsOther();
                                                     //loadModels(Uri.parse("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Funtitled.glb?alt=media&token=657b45d7-a84b-4f2a-89f4-a699029401f7")
-                                                    //      , otherMainLook, ProfileFragment.this, 0.25f);
+                                                    //        , otherMainLook, ProfileFragment.this, 0.25f);
                                                     firebaseModel.getUsersReference().child(userInformation.getNick()).child("subscription")
                                                             .child(info.getNick()).addValueEventListener(new ValueEventListener() {
                                                         @Override
@@ -652,12 +549,142 @@ public class ProfileFragment extends Fragment {
                                                 }
                                             }
                                         });
+                                    }else{
+                                        tabLayoutOther=view.findViewById(R.id.tabsprofileother);
+                                        viewPagerOther=view.findViewById(R.id.viewPagerOther);
+                                        setCountsOther();
+                                        //loadModels(Uri.parse("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Funtitled.glb?alt=media&token=657b45d7-a84b-4f2a-89f4-a699029401f7")
+                                        //    , otherMainLook, ProfileFragment.this, 0.25f);
+                                        if(bundle.getString(sendNick+"PROFILE_OTHER_CHECK_SUBSCRIBE_VALUE")!=null){
+                                            checkProfileValue(Integer.valueOf(bundle.getString(sendNick+"PROFILE_OTHER_CHECK_VALUE")),
+                                                    view,Integer.valueOf(bundle.getString(sendNick+"PROFILE_OTHER_CHECK_SUBSCRIBE_VALUE")));
+                                            setFragmentOtherViewPager(Integer.valueOf(bundle.getString(sendNick+"PROFILE_OTHER_CHECK_VALUE")));
+                                        }else{
+                                            firebaseModel.getUsersReference().child(userInformation.getNick()).child("subscription")
+                                                    .child(info.getNick()).addValueEventListener(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                    if(snapshot.exists()){
+                                                        checkOnSubscribeValue=1;
+                                                    }else {
+                                                        checkOnSubscribeValue=0;
+                                                    }
+                                                    bundle.putString(sendNick+"PROFILE_OTHER_CHECK_VALUE",String.valueOf(profileCheckValue));
+                                                    bundle.putString(sendNick+"PROFILE_OTHER_CHECK_SUBSCRIBE_VALUE",String.valueOf(checkOnSubscribeValue));
+                                                    checkProfileValue(profileCheckValue,view,checkOnSubscribeValue);
+                                                }
+
+                                                @Override
+                                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                                }
+                                            });
+                                        }
                                     }
+                                }else{
+                                    firebaseModel.getReference().child("users").child(sendNick)
+                                            .get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<DataSnapshot> task) {
+                                            if(task.isSuccessful()){
+                                                b=2;
+                                                DataSnapshot snapshot=task.getResult();
+                                                if(bundle!=null){
+                                                    info=new UserInformation();
+                                                    info.setAge(snapshot.child("age").getValue(Long.class));
+                                                    info.setAvatar(snapshot.child("avatar").getValue(String.class));
+                                                    info.setGender(snapshot.child("gender").getValue(String.class));
+                                                    info.setNick(snapshot.child("nick").getValue(String.class));
+                                                    info.setPassword(snapshot.child("password").getValue(String.class));
+                                                    info.setPhone(snapshot.child("phone").getValue(String.class));
+                                                    info.setUid(snapshot.child("uid").getValue(String.class));
+                                                    info.setQueue(snapshot.child("queue").getValue(String.class));
+                                                    info.setAccountType(snapshot.child("accountType").getValue(String.class));
+                                                    info.setBio(snapshot.child("bio").getValue(String.class));
+                                                    info.setMainLook(snapshot.child("mainLook").getValue(String.class));
+                                                    surfaceView=view.findViewById(R.id.mainlookview);
+                                                    try {
+                                                        if(bundle.getSerializable("MAINLOOK"+info.getNick())==null){
+                                                            MyAsyncTask myAsyncTask=new MyAsyncTask();
+                                                            myAsyncTask.execute(info.getMainLook());
+                                                            bufferToFilament = myAsyncTask.get();
+                                                            ArrayList<Buffer> buffers=new ArrayList<>();
+                                                            buffers.add(bufferToFilament);
+                                                            bundle.putSerializable("MAINLOOK"+info.getNick(),buffers);
+                                                            filamentModel.initFilament(surfaceView,bufferToFilament,true,lockableNestedScrollViewOther);
+                                                        }else{
+                                                            ArrayList<Buffer> buffers= (ArrayList<Buffer>) bundle.getSerializable("MAINLOOK"+info.getNick());
+                                                            Buffer buffer3=buffers.get(0);
+                                                            filamentModel.initFilament(surfaceView,buffer3 ,true,lockableNestedScrollViewOther);
+                                                        }
+                                                    } catch (ExecutionException e) {
+                                                        e.printStackTrace();
+                                                    } catch (InterruptedException e) {
+                                                        e.printStackTrace();
+                                                    } catch (IOException e) {
+                                                        e.printStackTrace();
+                                                    } catch (URISyntaxException e) {
+                                                        e.printStackTrace();
+                                                    }
+                                                    bundle.putSerializable(sendNick+"PROFILE_OTHER_BUNDLE", (Serializable) info);
+                                                    firebaseModel.getUsersReference().child(info.getNick())
+                                                            .child("blackList").child(userInformation.getNick())
+                                                            .get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                                                        @Override
+                                                        public void onComplete(@NonNull Task<DataSnapshot> task) {
+                                                            if(task.isSuccessful()){
+                                                                DataSnapshot snapshot=task.getResult();
+                                                                if(snapshot.exists()){
+                                                                    profileCheckValue=1;
+                                                                }else {
+                                                                    profileCheckValue=2;
+                                                                    if(info.getAccountType().equals("close")){
+                                                                        profileCheckValue=3;
+                                                                    }
+                                                                }
+                                                                tabLayoutOther=view.findViewById(R.id.tabsprofileother);
+                                                                viewPagerOther=view.findViewById(R.id.viewPagerOther);
+                                                                setFragmentOtherViewPager(profileCheckValue);
+                                                                setCountsOther();
+                                                                //loadModels(Uri.parse("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Funtitled.glb?alt=media&token=657b45d7-a84b-4f2a-89f4-a699029401f7")
+                                                                //      , otherMainLook, ProfileFragment.this, 0.25f);
+                                                                firebaseModel.getUsersReference().child(userInformation.getNick()).child("subscription")
+                                                                        .child(info.getNick()).addValueEventListener(new ValueEventListener() {
+                                                                    @Override
+                                                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                                        if(snapshot.exists()){
+                                                                            checkOnSubscribeValue=1;
+                                                                        }else {
+                                                                            checkOnSubscribeValue=0;
+                                                                        }
+                                                                        bundle.putString(sendNick+"PROFILE_OTHER_CHECK_VALUE",String.valueOf(profileCheckValue));
+                                                                        bundle.putString(sendNick+"PROFILE_OTHER_CHECK_SUBSCRIBE_VALUE",String.valueOf(checkOnSubscribeValue));
+                                                                        checkProfileValue(profileCheckValue,view,checkOnSubscribeValue);
+                                                                    }
+
+                                                                    @Override
+                                                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                                                    }
+                                                                });
+                                                            }
+                                                        }
+                                                    });
+                                                }
+                                            }
+                                        }
+                                    });
                                 }
                             }
-                        });
+                        }
                     }
-                }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
                 break;
             case "userback":
 
@@ -1905,7 +1932,7 @@ public class ProfileFragment extends Fragment {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         InputStream is = null;
         try {
-            is = new BufferedInputStream(url.openStream ());
+            is = new BufferedInputStream(url.openStream());
             byte[] byteChunk = new byte[4096];
             int n;
 

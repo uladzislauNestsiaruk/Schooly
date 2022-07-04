@@ -128,7 +128,7 @@ public class ViewingClothesBasket extends Fragment {
         fittingClothes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(FittingFragment.newInstance(ViewingClothesBasket.newInstance(userInformation,bundle,fragment),userInformation,bundle), getActivity());
+                RecentMethods.setCurrentFragment(FittingFragment.newInstance(ViewingClothesBasket.newInstance(userInformation,bundle,fragment),userInformation,bundle,clothesViewing), getActivity());
             }
         });
         send.setOnClickListener(new View.OnClickListener() {
