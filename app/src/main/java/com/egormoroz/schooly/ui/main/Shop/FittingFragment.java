@@ -123,7 +123,7 @@ public class FittingFragment extends Fragment {
         filamentModel=new FilamentModel();
         try {
             filamentModel.executeTask(clothes.getModel()
-                    ,surfaceView,true,null,null);
+                    ,surfaceView,true,null,null,"regularRender");
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {

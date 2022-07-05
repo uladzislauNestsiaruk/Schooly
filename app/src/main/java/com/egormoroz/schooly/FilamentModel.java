@@ -77,7 +77,7 @@ public class FilamentModel {
     URI uri;
     Buffer buffer1,bufferToFilament;
 
-    public void initFilament(SurfaceView surfaceView,Buffer buffer,boolean onTouch,LockableNestedScrollView lockableNestedScrollView) throws IOException, URISyntaxException {
+    public void initFilament(SurfaceView surfaceView,Buffer buffer,boolean onTouch,LockableNestedScrollView lockableNestedScrollView,String type) throws IOException, URISyntaxException {
         Filament.init();
         Gltfio.init();
         Utils.INSTANCE.init();
@@ -126,44 +126,62 @@ public class FilamentModel {
         Skybox skybox=new Skybox.Builder()
                 .color(0.255f, 0.124f, 0.232f, 1.0f)
                 .build(modelViewer.getEngine());
+        if(type.equals("regularRender")){
+            loadPointLights();
+        }else if(type.equals("looksRecycler")){
+            loadDefaultLight();
+        }
+        modelViewer.getScene().setSkybox(skybox);
+
+    }
+
+    public void loadDefaultLight(){
         int light=EntityManager.get().create();
         float[] float1 = Colors.cct(5_500.0f);
         new LightManager.Builder(LightManager.Type.DIRECTIONAL)
                 .color(float1[0], float1[1], float1[2])
-                .intensity(110_000.0f)
+                .intensity(120_000.0f)
                 .direction(0.0f, -0.5f, -1.0f)
+                .castShadows(true)
+                .build(engine, light);
+        modelViewer.getScene().addEntity(light);
+    }
+
+    public void loadPointLights(){
+        int light=EntityManager.get().create();
+        float[] float1 = Colors.cct(5_500.0f);
+        new LightManager.Builder(LightManager.Type.DIRECTIONAL)
+                .color(float1[0], float1[1], float1[2])
+                .intensity(100_000.0f)
+                .direction(0.0f, 0.0f, -1.0f)
                 .castShadows(true)
                 .build(engine, light);
         int light1=EntityManager.get().create();
         new LightManager.Builder(LightManager.Type.POINT)
                 .color(float1[0], float1[1], float1[2])
-                .intensity(750_000.0f)
-                .falloff(10)
-                .position(0.0f, 0.0f, -3.0f)
+                .intensity(19_000_000.0f)
+                .falloff(12)
+                .position(-4.0f, 0.0f, -5.0f)
                 .castShadows(true)
                 .build(engine, light1);
         int light2=EntityManager.get().create();
         new LightManager.Builder(LightManager.Type.POINT)
                 .color(float1[0], float1[1], float1[2])
-                .intensity(500_000.0f)
-                .falloff(10)
-                .position(0.0f, -0.5f, -3.0f)
+                .intensity(55_000_000.0f)
+                .falloff(14)
+                .position(4.0f, -0.7f, -8.0f)
                 .castShadows(true)
                 .build(engine, light2);
         int light3=EntityManager.get().create();
         new LightManager.Builder(LightManager.Type.POINT)
                 .color(float1[0], float1[1], float1[2])
-                .intensity(500_000.0f)
-                .falloff(10)
-                .position(0.0f, 0.5f, -3.0f)
+                .intensity(7_000_000.0f)
+                .falloff(5)
+                .position(0.0f, 4.0f, -3.0f)
                 .castShadows(true)
                 .build(engine, light3);
-        modelViewer.getScene().addEntity(light);
-        modelViewer.getScene().addEntity(light1);
-        modelViewer.getScene().addEntity(light2);
-        modelViewer.getScene().addEntity(light3);
-        modelViewer.getScene().setSkybox(skybox);
-
+        int[] lights={light,light1,light2,light3};
+        modelViewer.getScene().addEntities(lights);
     }
 
     Choreographer.FrameCallback frameCallback=new Choreographer.FrameCallback() {
@@ -182,6 +200,7 @@ public class FilamentModel {
         modelViewer.transformToUnitCube(float3);
         loadStartTime=System.nanoTime();
         loadStartFence=modelViewer.getEngine().createFence();
+        Log.d("###", "fff");
     }
 
     public void postFrameCallback(){
@@ -202,14 +221,15 @@ public class FilamentModel {
     }
 
     public void executeTask(String url,SurfaceView surfaceView,boolean onTouch,Buffer buffer,LockableNestedScrollView lockableNestedScrollView
+                            ,String type
     ) throws ExecutionException, InterruptedException, IOException, URISyntaxException {
         MyAsyncTask myAsyncTask=new MyAsyncTask();
         if(buffer==null){
             myAsyncTask.execute(url);
             bufferToFilament = myAsyncTask.get();
-            initFilament(surfaceView,bufferToFilament,onTouch,lockableNestedScrollView);
+            initFilament(surfaceView,bufferToFilament,onTouch,lockableNestedScrollView,type);
         }else{
-            initFilament(surfaceView,buffer,onTouch,lockableNestedScrollView);
+            initFilament(surfaceView,buffer,onTouch,lockableNestedScrollView,type);
         }
     }
 
