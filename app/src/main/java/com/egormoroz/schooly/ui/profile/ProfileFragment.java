@@ -299,16 +299,15 @@ public class ProfileFragment extends Fragment {
                         MyAsyncTask myAsyncTask=new MyAsyncTask();
                         myAsyncTask.execute(userInformation.getMainLook());
                         bufferToFilament = myAsyncTask.get();
-                        myAsyncTask.cancel(false);
                         ArrayList<Buffer> buffers=new ArrayList<>();
                         buffers.add(bufferToFilament);
                         bundle.putSerializable("MAINLOOK",buffers);
                         filamentModel.initFilament(surfaceView,bufferToFilament,true,lockableNestedScrollView,"regularRender");
                         MyAsyncTask myAsyncTask1=new MyAsyncTask();
                         myAsyncTask1.execute("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Frawler's.glb?alt=media&token=44be8081-774a-495c-958b-e7a1231f555a");
-                        Buffer b=myAsyncTask.get();
+                        Buffer b=myAsyncTask1.get();
                         Log.d("####", "ff  "+b);
-                        filamentModel.loadGlb(b);
+                        //filamentModel.loadGlb(b);
                     }else{
                         ArrayList<Buffer> buffers= (ArrayList<Buffer>) bundle.getSerializable("MAINLOOK");
                         Buffer buffer3=buffers.get(0);
@@ -1965,6 +1964,7 @@ public class ProfileFragment extends Fragment {
                 uri = new URI(parameter[0]);
                 buffer = getBytes(uri.toURL());
                 buffer1= ByteBuffer.wrap(buffer);
+                Log.d("####", "ok");
             } catch (URISyntaxException | MalformedURLException e) {
                 e.printStackTrace();
             } catch (IOException e) {

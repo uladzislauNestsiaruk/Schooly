@@ -94,9 +94,9 @@ public class NewClothesAdapter extends RecyclerView.Adapter<NewClothesAdapter.Vi
     holder.clothesImage.setVisibility(View.VISIBLE);
     holder.creator.setText(clothes.getCreator());
     clothesPriceString=String.valueOf(clothes.getClothesPrice());
-    checkCounts(holder.clothesPrise, clothes.getClothesPrice(), clothesPriceString);
+    checkCounts(holder.clothesPrise, clothes.getClothesPrice(), clothesPriceString,"price");
     purchaseNumberString=String.valueOf(clothes.getPurchaseNumber());
-    checkCounts(holder.purchaseNumber, clothes.getPurchaseNumber(), purchaseNumberString);
+    checkCounts(holder.purchaseNumber, clothes.getPurchaseNumber(), purchaseNumberString," ");
     if (clothes.getCurrencyType().equals("dollar")){
       holder.coinsImage.setVisibility(View.GONE);
     }
@@ -119,8 +119,8 @@ public class NewClothesAdapter extends RecyclerView.Adapter<NewClothesAdapter.Vi
     });
   }
 
-  public void checkCounts(TextView textView,Long count,String stringCount){
-    if(clothes.getCurrencyType().equals("dollar")){
+  public void checkCounts(TextView textView,Long count,String stringCount,String type){
+    if(clothes.getCurrencyType().equals("dollar")&&type.equals("price")){
       if (count < 1000) {
         textView.setText("$"+String.valueOf(count));
       } else if (count > 1000 && count < 10000) {

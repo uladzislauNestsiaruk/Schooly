@@ -195,12 +195,11 @@ public class FilamentModel {
     };
 
     public void loadGlb(Buffer buffer){
-        modelViewer.destroyModel();
         modelViewer.loadModelGlb(buffer);
         modelViewer.transformToUnitCube(float3);
         loadStartTime=System.nanoTime();
         loadStartFence=modelViewer.getEngine().createFence();
-        Log.d("###", "fff");
+        Log.d("###", "fff  "+modelViewer.getAsset().getEntities());
     }
 
     public void postFrameCallback(){
