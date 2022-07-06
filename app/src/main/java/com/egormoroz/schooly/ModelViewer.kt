@@ -8,6 +8,7 @@ import com.google.android.filament.*
 import com.google.android.filament.android.DisplayHelper
 import com.google.android.filament.android.UiHelper
 import com.google.android.filament.gltfio.*
+import com.google.android.filament.utils.*
 import kotlinx.coroutines.*
 import java.nio.Buffer
 
@@ -136,7 +137,6 @@ class ModelViewer(
      * Loads a monolithic binary glTF and populates the Filament scene.
      */
     fun loadModelGlb(buffer: Buffer) {
-        destroyModel()
         asset = assetLoader.createAssetFromBinary(buffer)
         asset?.let { asset ->
             resourceLoader.asyncBeginLoad(asset)
@@ -151,7 +151,6 @@ class ModelViewer(
      * The given callback is triggered for each requested resource.
      */
     fun loadModelGltf(buffer: Buffer, callback: (String) -> Buffer?) {
-        destroyModel()
         asset = assetLoader.createAssetFromJson(buffer)
         asset?.let { asset ->
             for (uri in asset.resourceUris) {
@@ -174,7 +173,6 @@ class ModelViewer(
      * The given callback is triggered from a worker thread for each requested resource.
      */
     fun loadModelGltfAsync(buffer: Buffer, callback: (String) -> Buffer) {
-        destroyModel()
         asset = assetLoader.createAssetFromJson(buffer)
         fetchResourcesJob = CoroutineScope(Dispatchers.IO).launch {
             fetchResources(asset!!, callback)
@@ -186,7 +184,7 @@ class ModelViewer(
      *
      * @param centerPoint Coordinate of center point of unit cube, defaults to < 0, 0, -4 >
      */
-    fun transformToUnitCube(centerPoint: Float3 = kDefaultObjectPosition) {
+    fun transformToUnitCube(centerPoint: Float3 = kDefaultObjectPosition,asset: FilamentAsset) {
         asset?.let { asset ->
             val tm = engine.transformManager
             var center = asset.boundingBox.center.let { v -> Float3(v[0], v[1], v[2]) }

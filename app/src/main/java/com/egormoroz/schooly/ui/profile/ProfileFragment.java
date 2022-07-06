@@ -307,7 +307,7 @@ public class ProfileFragment extends Fragment {
                         myAsyncTask1.execute("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Frawler's.glb?alt=media&token=44be8081-774a-495c-958b-e7a1231f555a");
                         Buffer b=myAsyncTask1.get();
                         Log.d("####", "ff  "+b);
-                        //filamentModel.loadGlb(b);
+                        filamentModel.loadGlb(b);
                     }else{
                         ArrayList<Buffer> buffers= (ArrayList<Buffer>) bundle.getSerializable("MAINLOOK");
                         Buffer buffer3=buffers.get(0);
