@@ -183,11 +183,24 @@ public class ViewingClothesNews extends Fragment {
                 creator.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (clothesViewing.getCreator().equals(userInformation.getNick())) {
-                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback", userInformation.getNick(), ViewingClothes.newInstance(fragment,userInformation,bundle),userInformation,bundle), getActivity());
-                        }else {
-                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", clothesViewing.getCreator(), ViewingClothes.newInstance(fragment,userInformation,bundle),userInformation,bundle), getActivity());
-                        }
+                        firebaseModel.getUsersReference().child(clothesViewing.getCreator()).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                if(!snapshot.exists()){
+                                    Toast.makeText(getContext(), R.string.usernotfound, Toast.LENGTH_SHORT).show();
+                                }else {
+                                    if (clothesViewing.getCreator().equals(userInformation.getNick())) {
+                                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback", userInformation.getNick(), ViewingClothesNews.newInstance(fragment,userInformation,bundle),userInformation,bundle), getActivity());
+                                    }else {
+                                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", clothesViewing.getCreator(), ViewingClothesNews.newInstance(fragment,userInformation,bundle),userInformation,bundle), getActivity());
+                                    }
+                                }                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
                     }
                 });
                 if (clothesViewing.getDescription().trim().length()==0){

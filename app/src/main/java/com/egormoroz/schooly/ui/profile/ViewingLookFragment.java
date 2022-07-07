@@ -145,12 +145,26 @@ public class ViewingLookFragment extends Fragment {
                     @Override
                     public void onClick(View v) {
                         String userNameToProfile=nickView.getText().toString();
-                        if(userNameToProfile.equals(nick)){
-                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback",nick,ViewingLookFragment.newInstance(fragment, userInformation,bundle),userInformation,bundle),getActivity());
-                        }else {
-                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile,ViewingLookFragment.newInstance(fragment, userInformation,bundle),userInformation,bundle
-                            ), getActivity());
-                        }
+                        firebaseModel.getUsersReference().child(userNameToProfile).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                if(!snapshot.exists()){
+                                    Toast.makeText(getContext(), R.string.usernotfound, Toast.LENGTH_SHORT).show();
+                                }else {
+                                    if(userNameToProfile.equals(nick)){
+                                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback",nick,ViewingLookFragment.newInstance(fragment, userInformation,bundle),userInformation,bundle),getActivity());
+                                    }else {
+                                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile,ViewingLookFragment.newInstance(fragment, userInformation,bundle),userInformation,bundle
+                                        ), getActivity());
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
                     }
                 });
                 likesCountString=String.valueOf(newsItem.getLikes_count());
@@ -286,7 +300,7 @@ public class ViewingLookFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         emptyList=bottomSheetDialog.findViewById(R.id.emptyCommentsList);
         comments=bottomSheetDialog.findViewById(R.id.comments);
-        comments.setText("Комментарии:");
+        comments.setText(R.string.comments);
         noComment=bottomSheetDialog.findViewById(R.id.noComment);
         sendComment=bottomSheetDialog.findViewById(R.id.send);
         bottomSheetDialog.getBehavior().setState(BottomSheetBehavior.STATE_EXPANDED);
@@ -434,7 +448,6 @@ public class ViewingLookFragment extends Fragment {
 
             if(userInformation.getSavedLooks().size()>0){
                 for(int i=0;i<userInformation.getSavedLooks().size();i++){
-                    Log.d("####", "####");
                     NewsItem newsItem1=userInformation.getSavedLooks().get(i);
                     if(newsItem1.getNewsId().equals(newsItem.getNewsId())) {
                         save.setText(R.string.dontsave);
@@ -495,7 +508,6 @@ public class ViewingLookFragment extends Fragment {
 
             if(userInformation.getSavedLooks().size()>0){
                 for(int i=0;i<userInformation.getSavedLooks().size();i++){
-                    Log.d("####", "####");
                     NewsItem newsItem1=userInformation.getSavedLooks().get(i);
                     if(newsItem1.getNewsId().equals(newsItem.getNewsId())) {
                         save.setText(R.string.dontsave);
@@ -517,7 +529,6 @@ public class ViewingLookFragment extends Fragment {
                                     Toast.makeText(getContext(), v.getContext().getResources().getText(R.string.lookwasdeletedfromsaved), Toast.LENGTH_SHORT).show();
                                 }else {
                                     save.setText(R.string.dontsave);
-                                    Log.d("####", "####11"+newsItem.getNewsId()+"  "+newsItem.getNewsId());
                                     firebaseModel.getUsersReference().child(nick).child("saved").child(newsItem.getNewsId())
                                             .setValue(newsItem);
                                     Toast.makeText(getContext(), v.getContext().getResources().getText(R.string.looksaved), Toast.LENGTH_SHORT).show();
@@ -723,44 +734,6 @@ public class ViewingLookFragment extends Fragment {
         });
     }
 
-    //    @RequiresApi(api = Build.VERSION_CODES.N)
-//    public void loadModels(Uri url, SceneView sceneView, Fragment fragment, float scale) {
-//        ModelRenderable.builder()
-//                .setSource(
-//                        fragment.getContext(), new RenderableSource.Builder().setSource(
-//                                fragment.getContext(),
-//                                url,
-//                                RenderableSource.SourceType.GLB
-//                        ).setScale(scale)
-//                                .setRecenterMode(RenderableSource.RecenterMode.CENTER)
-//                                .build()
-//                )
-//                .setRegistryId(url)
-//                .build()
-//                .thenAccept(new Consumer<ModelRenderable>() {
-//                    @Override
-//                    public void accept(ModelRenderable modelRenderable) {
-//                        addNode(modelRenderable, sceneView);
-//                    }
-//                });
-//    }
-//
-//    public void addNode(ModelRenderable modelRenderable, SceneView sceneView) {
-//        Node modelNode1 = new Node();
-//        modelNode1.setRenderable(modelRenderable);
-//        modelNode1.setLocalScale(new Vector3(0.3f, 0.3f, 0.3f));
-////        modelNode1.setLocalRotation(Quaternion.multiply(
-////                Quaternion.axisAngle(new Vector3(1f, 0f, 0f), 45),
-////                Quaternion.axisAngle(new Vector3(0f, 1f, 0f), 75)));
-//        modelNode1.setLocalPosition(new Vector3(0f, 0f, -0.9f));
-//        sceneView.getScene().addChild(modelNode1);
-//        try {
-//            sceneView.resume();
-//        } catch (CameraNotAvailableException e) {
-//            e.printStackTrace();
-//        }
-//    }
-//
     private void addLastMessage(String type, String Message){
         switch (type) {
             case "text":

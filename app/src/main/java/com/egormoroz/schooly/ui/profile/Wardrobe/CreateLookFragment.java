@@ -202,11 +202,11 @@ public class CreateLookFragment extends Fragment {
                 Log.d("####", "dd  "+bufferToFilament.toString());
                 buffers.add(bufferToFilament);
                 bundle.putSerializable("MAINLOOK",buffers);
-                filamentModel.initFilament(surfaceView,bufferToFilament,true,null,"regularRender");
+                filamentModel.initFilament(surfaceView,bufferToFilament,true,null,"regularRender",true);
             }else{
                 ArrayList<Buffer> buffers= (ArrayList<Buffer>) bundle.getSerializable("MAINLOOK");
                 buffer3=buffers.get(0);
-                filamentModel.initFilament(surfaceView,buffer3 ,true,null,"regularRender");
+                filamentModel.initFilament(surfaceView,buffer3 ,true,null,"regularRender",true);
             }
         } catch (ExecutionException e) {
             e.printStackTrace();

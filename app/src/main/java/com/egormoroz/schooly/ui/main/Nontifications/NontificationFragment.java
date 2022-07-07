@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
@@ -25,8 +26,12 @@ import com.egormoroz.schooly.Subscriber;
 import com.egormoroz.schooly.ui.main.MainFragment;
 import com.egormoroz.schooly.ui.main.Mining.MiningFragment;
 import com.egormoroz.schooly.ui.main.UserInformation;
+import com.egormoroz.schooly.ui.people.PeopleFragment;
 import com.egormoroz.schooly.ui.profile.ProfileFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -105,7 +110,20 @@ public class NontificationFragment extends Fragment {
                             if(type.equals("clothesRequest")){
                                 RecentMethods.setCurrentFragment(ClothesRequestFragment.newInstance(NontificationFragment.newInstance(userInformation,bundle),nontification.getUid(),userInformation,bundle), getActivity());
                             }else if(type.equals("sub")){
-                                RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", nontification.getNick(), NontificationFragment.newInstance(userInformation,bundle),userInformation,bundle),getActivity());
+                                firebaseModel.getUsersReference().child(nontification.getNick()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        if(!snapshot.exists()){
+                                            Toast.makeText(getContext(), R.string.usernotfound, Toast.LENGTH_SHORT).show();
+                                        }else {
+                                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", nontification.getNick(), NontificationFragment.newInstance(userInformation,bundle),userInformation,bundle),getActivity());
+                                        }                            }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                    }
+                                });
                             }
                         }
                     };
@@ -129,7 +147,20 @@ public class NontificationFragment extends Fragment {
                     if(type.equals("clothesRequest")){
                         RecentMethods.setCurrentFragment(ClothesRequestFragment.newInstance(NontificationFragment.newInstance(userInformation,bundle),nontification.getUid(),userInformation,bundle), getActivity());
                     }else if(type.equals("sub")){
-                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", nontification.getNick(), NontificationFragment.newInstance(userInformation,bundle),userInformation,bundle),getActivity());
+                        firebaseModel.getUsersReference().child(nontification.getNick()).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                if(!snapshot.exists()){
+                                    Toast.makeText(getContext(), R.string.usernotfound, Toast.LENGTH_SHORT).show();
+                                }else {
+                                    RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", nontification.getNick(), NontificationFragment.newInstance(userInformation,bundle),userInformation,bundle),getActivity());
+                                }                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
                     }
                 }
             };

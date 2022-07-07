@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
@@ -122,12 +123,26 @@ public class SubscribesFragmentOther extends Fragment {
                                     public void onItemClick(View view, int position) {
                                         Subscriber subscriber = subscribersAdapterOther.getItem(position);
                                         userNameToProfile = subscriber.getSub();
-                                        if(userNameToProfile.equals(nick)){
-                                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback",nick,SubscribesFragmentOther.newInstance(fragment,otherUserNick,userInformation,bundle),userInformation,bundle),getActivity());
-                                        }else {
-                                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile,SubscribesFragmentOther.newInstance(fragment,otherUserNick,userInformation,bundle),userInformation,bundle),
-                                                    getActivity());
-                                        }
+                                        firebaseModel.getUsersReference().child(userNameToProfile).addListenerForSingleValueEvent(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                if(!snapshot.exists()){
+                                                    Toast.makeText(getContext(), R.string.usernotfound, Toast.LENGTH_SHORT).show();
+                                                }else {
+                                                    if(userNameToProfile.equals(nick)){
+                                                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback",nick,SubscribesFragmentOther.newInstance(fragment,otherUserNick,userInformation,bundle),userInformation,bundle),getActivity());
+                                                    }else {
+                                                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile,SubscribesFragmentOther.newInstance(fragment,otherUserNick,userInformation,bundle),userInformation,bundle),
+                                                                getActivity());
+                                                    }
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onCancelled(@NonNull DatabaseError error) {
+
+                                            }
+                                        });
                                     }
                                 };
                         subscribersAdapterOther.setClickListener(clickListener);
@@ -160,12 +175,26 @@ public class SubscribesFragmentOther extends Fragment {
                                     public void onItemClick(View view, int position) {
                                         Subscriber user = subscribersAdapter.getItem(position);
                                         userNameToProfile = user.getSub();
-                                        if(userNameToProfile.equals(nick)){
-                                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback",nick,SubscribesFragmentOther.newInstance(fragment,otherUserNick,userInformation,bundle),userInformation,bundle),getActivity());
-                                        }else {
-                                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile,SubscribesFragmentOther.newInstance(fragment,otherUserNick,userInformation,bundle),userInformation,bundle)
-                                                    ,getActivity());
-                                        }
+                                        firebaseModel.getUsersReference().child(userNameToProfile).addListenerForSingleValueEvent(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                if(!snapshot.exists()){
+                                                    Toast.makeText(getContext(), R.string.usernotfound, Toast.LENGTH_SHORT).show();
+                                                }else {
+                                                    if(userNameToProfile.equals(nick)){
+                                                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback",nick,SubscribesFragmentOther.newInstance(fragment,otherUserNick,userInformation,bundle),userInformation,bundle),getActivity());
+                                                    }else {
+                                                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile,SubscribesFragmentOther.newInstance(fragment,otherUserNick,userInformation,bundle),userInformation,bundle),
+                                                                getActivity());
+                                                    }
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onCancelled(@NonNull DatabaseError error) {
+
+                                            }
+                                        });
                                     }
                                 };
                         subscribersAdapter.setClickListener(clickListener);
@@ -197,12 +226,26 @@ public class SubscribesFragmentOther extends Fragment {
                                 public void onItemClick(View view, int position) {
                                     Subscriber user = subscribersAdapter.getItem(position);
                                     userNameToProfile = user.getSub();
-                                    if(userNameToProfile.equals(nick)){
-                                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback",nick,SubscribesFragmentOther.newInstance(fragment,otherUserNick,userInformation,bundle),userInformation,bundle),getActivity());
-                                    }else {
-                                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile,SubscribesFragmentOther.newInstance(fragment,otherUserNick,userInformation,bundle),userInformation,bundle)
-                                                ,getActivity());
-                                    }
+                                    firebaseModel.getUsersReference().child(userNameToProfile).addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                            if(!snapshot.exists()){
+                                                Toast.makeText(getContext(), R.string.usernotfound, Toast.LENGTH_SHORT).show();
+                                            }else {
+                                                if(userNameToProfile.equals(nick)){
+                                                    RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback",nick,SubscribesFragmentOther.newInstance(fragment,otherUserNick,userInformation,bundle),userInformation,bundle),getActivity());
+                                                }else {
+                                                    RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile,SubscribesFragmentOther.newInstance(fragment,otherUserNick,userInformation,bundle),userInformation,bundle),
+                                                            getActivity());
+                                                }
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError error) {
+
+                                        }
+                                    });
                                 }
                             };
                     subscribersAdapter.setClickListener(clickListener);
@@ -262,12 +305,26 @@ public class SubscribesFragmentOther extends Fragment {
                                                 public void onItemClick(View view, int position) {
                                                     Subscriber subscriber = subscribersAdapterOther.getItem(position);
                                                     userNameToProfile = subscriber.getSub();
-                                                    if(userNameToProfile.equals(nick)){
-                                                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback",nick,SubscribesFragmentOther.newInstance(fragment,otherUserNick,userInformation,bundle),userInformation,bundle),getActivity());
-                                                    }else {
-                                                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile,SubscribesFragmentOther.newInstance(fragment,otherUserNick,userInformation,bundle),userInformation,bundle),
-                                                                getActivity());
-                                                    }
+                                                    firebaseModel.getUsersReference().child(userNameToProfile).addListenerForSingleValueEvent(new ValueEventListener() {
+                                                        @Override
+                                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                            if(!snapshot.exists()){
+                                                                Toast.makeText(getContext(), R.string.usernotfound, Toast.LENGTH_SHORT).show();
+                                                            }else {
+                                                                if(userNameToProfile.equals(nick)){
+                                                                    RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback",nick,SubscribesFragmentOther.newInstance(fragment,otherUserNick,userInformation,bundle),userInformation,bundle),getActivity());
+                                                                }else {
+                                                                    RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile,SubscribesFragmentOther.newInstance(fragment,otherUserNick,userInformation,bundle),userInformation,bundle),
+                                                                            getActivity());
+                                                                }
+                                                            }
+                                                        }
+
+                                                        @Override
+                                                        public void onCancelled(@NonNull DatabaseError error) {
+
+                                                        }
+                                                    });
                                                 }
                                             };
                                     subscribersAdapterOther.setClickListener(clickListener);
@@ -307,12 +364,26 @@ public class SubscribesFragmentOther extends Fragment {
                                     public void onItemClick(View view, int position) {
                                         Subscriber subscriber = subscribersAdapterOther.getItem(position);
                                         userNameToProfile = subscriber.getSub();
-                                        if(userNameToProfile.equals(nick)){
-                                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback",nick,SubscribesFragmentOther.newInstance(fragment,otherUserNick,userInformation,bundle),userInformation,bundle),getActivity());
-                                        }else {
-                                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile,SubscribesFragmentOther.newInstance(fragment,otherUserNick,userInformation,bundle),userInformation,bundle),
-                                                    getActivity());
-                                        }
+                                        firebaseModel.getUsersReference().child(userNameToProfile).addListenerForSingleValueEvent(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                if(!snapshot.exists()){
+                                                    Toast.makeText(getContext(), R.string.usernotfound, Toast.LENGTH_SHORT).show();
+                                                }else {
+                                                    if(userNameToProfile.equals(nick)){
+                                                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback",nick,SubscribesFragmentOther.newInstance(fragment,otherUserNick,userInformation,bundle),userInformation,bundle),getActivity());
+                                                    }else {
+                                                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile,SubscribesFragmentOther.newInstance(fragment,otherUserNick,userInformation,bundle),userInformation,bundle),
+                                                                getActivity());
+                                                    }
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onCancelled(@NonNull DatabaseError error) {
+
+                                            }
+                                        });
                                     }
                                 };
                         subscribersAdapterOther.setClickListener(clickListener);

@@ -218,17 +218,13 @@ public class CreateCharacterFragment extends Fragment {
         yes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("#####", "gg"+bundle.getString("FRAGMENT"));
                 if(bundle.getString("FRAGMENT").equals("reg")){
-                    Log.d("#####", "ggd"+bundle.getString("PHONE"));
                     if(bundle.getString("PHONE")!=null&&bundle.getString("PASSWORD")!=null&bundle.getString("NICK")!=null) {
-                        Log.d("#####", "gg");
                         createNewEmailUser(RecentMethods.makeEmail(bundle.getString("PHONE")),
                                 bundle.getString("PASSWORD"), bundle.getString("NICK"));
                     }
                 }else if(bundle.getString("FRAGMENT").equals("nick")){
                     if(bundle.getString("NICKNAMEFRAGMENT")!=null){
-                        Log.d("#####", "ggd");
                         authenticationDatabase = FirebaseAuth.getInstance();
                         AuthorizationThrowGoogle();
                     }

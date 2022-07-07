@@ -137,7 +137,13 @@ public class TransferMoneyFragment extends Fragment {
                 userName = userName.toLowerCase();
                 if(userName.length()>0){
                     initUserEnter(userName);
+                    emptySubscriptionList.setVisibility(View.GONE);
                 }else{
+                    if(userInformation.getSubscription().size()==0){
+                        emptySubscriptionList.setVisibility(View.VISIBLE);
+                    }else {
+                        emptySubscriptionList.setVisibility(View.GONE);
+                    }
                     emptySearchSubscriptionList.setVisibility(View.GONE);
                     peopleRecyclerView.setVisibility(View.VISIBLE);
                     TransferMoneyAdapter transferMoneyAdapter = new TransferMoneyAdapter(userInformation.getSubscription());

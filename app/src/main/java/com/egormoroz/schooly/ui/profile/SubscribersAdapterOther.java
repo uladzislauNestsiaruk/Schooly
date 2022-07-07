@@ -202,11 +202,27 @@ public class SubscribersAdapterOther extends RecyclerView.Adapter<SubscribersAda
                                                                         });
                                                                     }
                                                                     if (a == 1) {
-                                                                        Log.d("#####", "one  " + a);
                                                                         firebaseModel.getReference().child("users").child(nick).child("subscription")
                                                                                 .child(subscriber.getSub()).removeValue();
                                                                         firebaseModel.getReference().child("users").child(subscriber.getSub()).child("subscribers")
                                                                                 .child(nick).removeValue();
+                                                                        firebaseModel.getUsersReference().child(subscriber.getSub()).child("nontifications")
+                                                                                .get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                                                                            @Override
+                                                                            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                                                                                if(task.isSuccessful()){
+                                                                                    DataSnapshot snapshot2=task.getResult();
+                                                                                    for(DataSnapshot snap:snapshot2.getChildren()){
+                                                                                        if(snap.child("nick").getValue(String.class).equals(userInformation.getNick())
+                                                                                                && snap.child("typeView").getValue(String.class).equals("обычный")){
+                                                                                            firebaseModel.getUsersReference().child(subscriber.getSub())
+                                                                                                    .child("nontifications").child(snap.child("uid").getValue(String.class))
+                                                                                                    .removeValue();
+                                                                                        }
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        });
                                                                         holder.newSubscribe.setText(holder.newSubscribe.getContext().getResources().getText(R.string.subscride));
                                                                         holder.newSubscribe.setTextColor(Color.parseColor("#FFFEFE"));
                                                                         holder.newSubscribe.setBackgroundResource(R.drawable.corners10dpappcolor);
@@ -216,6 +232,23 @@ public class SubscribersAdapterOther extends RecyclerView.Adapter<SubscribersAda
                                                                     if (a == 3) {
                                                                         firebaseModel.getReference().child("users").child(subscriber.getSub()).child("requests")
                                                                                 .child(nick).removeValue();
+                                                                        firebaseModel.getUsersReference().child(subscriber.getSub()).child("nontifications")
+                                                                                .get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                                                                            @Override
+                                                                            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                                                                                if(task.isSuccessful()){
+                                                                                    DataSnapshot snapshot2=task.getResult();
+                                                                                    for(DataSnapshot snap:snapshot2.getChildren()){
+                                                                                        if(snap.child("nick").getValue(String.class).equals(userInformation.getNick())
+                                                                                                && snap.child("typeView").getValue(String.class).equals("запрос")){
+                                                                                            firebaseModel.getUsersReference().child(subscriber.getSub())
+                                                                                                    .child("nontifications").child(snap.child("uid").getValue(String.class))
+                                                                                                    .removeValue();
+                                                                                        }
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        });
                                                                         holder.newSubscribe.setText(holder.newSubscribe.getContext().getResources().getText(R.string.subscride));
                                                                         holder.newSubscribe.setTextColor(Color.parseColor("#FFFEFE"));
                                                                         holder.newSubscribe.setBackgroundResource(R.drawable.corners10dpappcolor);

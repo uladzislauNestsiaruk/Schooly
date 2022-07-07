@@ -253,7 +253,7 @@ class ModelViewer(
         }
     }
 
-    private fun populateScene(asset: FilamentAsset) {
+     fun populateScene(asset: FilamentAsset) {
         val rcm = engine.renderableManager
         var count = 0
         val popRenderables = { count = asset.popRenderables(readyRenderables); count != 0 }

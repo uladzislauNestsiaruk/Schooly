@@ -36,6 +36,7 @@ import com.egormoroz.schooly.ui.main.Shop.FittingFragment;
 import com.egormoroz.schooly.ui.main.Shop.NewClothesAdapter;
 import com.egormoroz.schooly.ui.main.Shop.ViewingClothes;
 import com.egormoroz.schooly.ui.main.UserInformation;
+import com.egormoroz.schooly.ui.profile.BlackListFragment;
 import com.egormoroz.schooly.ui.profile.ProfileFragment;
 import com.egormoroz.schooly.ui.profile.SendLookAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -174,11 +175,25 @@ public class ViewingClothesWardrobe extends Fragment {
         creator.setOnClickListener(new View.OnClickListener() {
           @Override
           public void onClick(View v) {
-            if (clothesViewing.getCreator().equals(userInformation.getNick())) {
-              RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback", userInformation.getNick(), ViewingClothes.newInstance(fragment,userInformation,bundle),userInformation,bundle), getActivity());
-            }else {
-              RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", clothesViewing.getCreator(), ViewingClothes.newInstance(fragment,userInformation,bundle),userInformation,bundle), getActivity());
-            }
+            firebaseModel.getUsersReference().child(clothesViewing.getCreator()).addListenerForSingleValueEvent(new ValueEventListener() {
+              @Override
+              public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(!snapshot.exists()){
+                  Toast.makeText(getContext(), R.string.usernotfound, Toast.LENGTH_SHORT).show();
+                }else {
+                  if (clothesViewing.getCreator().equals(userInformation.getNick())) {
+                    RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback", userInformation.getNick(), ViewingClothesWardrobe.newInstance(type,fragment,userInformation,bundle),userInformation,bundle), getActivity());
+                  }else {
+                    RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", clothesViewing.getCreator(), ViewingClothesWardrobe.newInstance(type,fragment,userInformation,bundle),userInformation,bundle), getActivity());
+                  }
+                }
+              }
+
+              @Override
+              public void onCancelled(@NonNull DatabaseError error) {
+
+              }
+            });
           }
         });
         if (clothesViewing.getDescription().trim().length()==0){

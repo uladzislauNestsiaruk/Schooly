@@ -38,6 +38,7 @@ import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.ui.chat.Message;
 import com.egormoroz.schooly.ui.chat.MessageAdapter;
+import com.egormoroz.schooly.ui.main.Nontifications.NontificationFragment;
 import com.egormoroz.schooly.ui.people.PeopleFragment;
 import com.egormoroz.schooly.ui.profile.ProfileFragment;
 import com.google.android.gms.tasks.Continuation;
@@ -243,8 +244,21 @@ public final class ChatActivity extends Activity {
             @Override
             public void onClick(View v) {
                 finish();
-                RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", messageReceiverName, PeopleFragment.newInstance(userInformation, bundle), userInformation, bundle),
-                        getParent());
+                firebaseModel.getUsersReference().child(messageReceiverName).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if(!snapshot.exists()){
+                            Toast.makeText(getContext(), R.string.usernotfound, Toast.LENGTH_SHORT).show();
+                        }else {
+                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", messageReceiverName, PeopleFragment.newInstance(userInformation, bundle), userInformation, bundle),
+                                    getParent());
+                        }                            }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
             }
         });
         userImage = findViewById(R.id.custom_profile_image);

@@ -64,7 +64,7 @@ public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.ViewHolder
     clothes=clothesArrayList.get(position);
     holder.clothesTitle.setText(clothes.getClothesTitle());
     clothesPriceString=String.valueOf(clothes.getClothesPrice());
-    checkCounts(holder.clothesPrice, clothes.getClothesPrice(), clothesPriceString);
+    checkCounts(holder.clothesPrice, clothes.getClothesPrice(), clothesPriceString,"price");
     File file=new File(clothes.getClothesImage());
     storageReference.child("clothes").getFile(file);
     holder.clothesImage.setVisibility(View.VISIBLE);
@@ -77,7 +77,7 @@ public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.ViewHolder
       public void onDataChange(@NonNull DataSnapshot snapshot) {
         purchaseNumberString=String.valueOf(snapshot.getValue(Long.class));
         if(snapshot.getValue(Long.class)!=null){
-          checkCounts(holder.purchaseNumber, snapshot.getValue(Long.class), purchaseNumberString);
+          checkCounts(holder.purchaseNumber, snapshot.getValue(Long.class), purchaseNumberString," ");
         }
       }
 
@@ -99,8 +99,8 @@ public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.ViewHolder
     });
   }
 
-  public void checkCounts(TextView textView,Long count,String stringCount){
-    if(clothes.getCurrencyType().equals("dollar")){
+  public void checkCounts(TextView textView,Long count,String stringCount,String type){
+    if(clothes.getCurrencyType().equals("dollar")&&type.equals("price")){
       if (count < 1000) {
         textView.setText("$"+String.valueOf(count));
       } else if (count > 1000 && count < 10000) {
