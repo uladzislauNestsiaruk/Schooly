@@ -335,7 +335,7 @@ public class ViewingClothes extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists()){
-                    buyClothesBottom.setText(getContext().getResources().getText(R.string.purchased));
+                    buyClothesBottom.setText(R.string.purchased);
                 }else {
                     buyClothesBottom.setText(getContext().getResources().getText(R.string.buy));
                 }

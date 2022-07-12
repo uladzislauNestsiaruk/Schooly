@@ -304,16 +304,16 @@ public class ProfileFragment extends Fragment {
                         ArrayList<Buffer> buffers=new ArrayList<>();
                         buffers.add(bufferToFilament);
                         bundle.putSerializable("MAINLOOK",buffers);
-                        filamentModel.initFilament(surfaceView,bufferToFilament,true,lockableNestedScrollView,"regularRender",true);
                         MyAsyncTask myAsyncTask1=new MyAsyncTask();
                         myAsyncTask1.execute("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Frawler's.glb?alt=media&token=44be8081-774a-495c-958b-e7a1231f555a");
                         Buffer b=myAsyncTask1.get();
-                        Log.d("####", "ff  "+b);
+                        filamentModel.initFilament(surfaceView,bufferToFilament,b,true,lockableNestedScrollView,"regularRender",true);
                         filamentModel.populateScene(b);
+                        Log.d("####", "ff  "+b);
                     }else{
                         ArrayList<Buffer> buffers= (ArrayList<Buffer>) bundle.getSerializable("MAINLOOK");
                         Buffer buffer3=buffers.get(0);
-                        filamentModel.initFilament(surfaceView,buffer3 ,true,lockableNestedScrollView,"regularRender",true);
+                        //filamentModel.initFilament(surfaceView,buffer3 ,true,lockableNestedScrollView,"regularRender",true);
                     }
                 } catch (ExecutionException e) {
                     e.printStackTrace();
@@ -491,19 +491,15 @@ public class ProfileFragment extends Fragment {
                                 ArrayList<Buffer> buffers=new ArrayList<>();
                                 buffers.add(bufferToFilament);
                                 bundle.putSerializable("MAINLOOK"+info.getNick(),buffers);
-                                filamentModel.initFilament(surfaceView,bufferToFilament,true,lockableNestedScrollViewOther,"regularRender",true);
+                                //filamentModel.initFilament(surfaceView,bufferToFilament,true,lockableNestedScrollViewOther,"regularRender",true);
                             }else{
                                 ArrayList<Buffer> buffers= (ArrayList<Buffer>) bundle.getSerializable("MAINLOOK"+info.getNick());
                                 Buffer buffer3=buffers.get(0);
-                                filamentModel.initFilament(surfaceView,buffer3 ,true,lockableNestedScrollViewOther,"regularRender",true);
+                                //filamentModel.initFilament(surfaceView,buffer3 ,true,lockableNestedScrollViewOther,"regularRender",true);
                             }
                         } catch (ExecutionException e) {
                             e.printStackTrace();
                         } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        } catch (URISyntaxException e) {
                             e.printStackTrace();
                         }
                         if(bundle.getString(sendNick+"PROFILE_OTHER_CHECK_VALUE")==null){
@@ -611,21 +607,17 @@ public class ProfileFragment extends Fragment {
                                                 ArrayList<Buffer> buffers=new ArrayList<>();
                                                 buffers.add(bufferToFilament);
                                                 bundle.putSerializable("MAINLOOK"+info.getNick(),buffers);
-                                                filamentModel.initFilament(surfaceView,bufferToFilament,true,lockableNestedScrollViewOther
-                                                        ,"regularRender",true);
+//                                                filamentModel.initFilament(surfaceView,bufferToFilament,true,lockableNestedScrollViewOther
+//                                                        ,"regularRender",true);
                                             }else{
                                                 ArrayList<Buffer> buffers= (ArrayList<Buffer>) bundle.getSerializable("MAINLOOK"+info.getNick());
                                                 Buffer buffer3=buffers.get(0);
-                                                filamentModel.initFilament(surfaceView,buffer3 ,true,lockableNestedScrollViewOther
-                                                        ,"regularRender",true);
+//                                                filamentModel.initFilament(surfaceView,buffer3 ,true,lockableNestedScrollViewOther
+//                                                        ,"regularRender",true);
                                             }
                                         } catch (ExecutionException e) {
                                             e.printStackTrace();
                                         } catch (InterruptedException e) {
-                                            e.printStackTrace();
-                                        } catch (IOException e) {
-                                            e.printStackTrace();
-                                        } catch (URISyntaxException e) {
                                             e.printStackTrace();
                                         }
                                         bundle.putSerializable(sendNick+"PROFILE_OTHER_BUNDLE", (Serializable) info);
@@ -718,19 +710,15 @@ public class ProfileFragment extends Fragment {
                         ArrayList<Buffer> buffers=new ArrayList<>();
                         buffers.add(bufferToFilament);
                         bundle.putSerializable("MAINLOOK",buffers);
-                        filamentModel.initFilament(surfaceView,bufferToFilament,true,lockableNestedScrollViewBack,"regularRender",true);
+                        //filamentModel.initFilament(surfaceView,bufferToFilament,true,lockableNestedScrollViewBack,"regularRender",true);
                     }else{
                         ArrayList<Buffer> buffers= (ArrayList<Buffer>) bundle.getSerializable("MAINLOOK");
                         Buffer buffer3=buffers.get(0);
-                        filamentModel.initFilament(surfaceView,buffer3 ,true,lockableNestedScrollViewBack,"regularRender",true);
+                        //filamentModel.initFilament(surfaceView,buffer3 ,true,lockableNestedScrollViewBack,"regularRender",true);
                     }
                 } catch (ExecutionException e) {
                     e.printStackTrace();
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (URISyntaxException e) {
                     e.printStackTrace();
                 }
 

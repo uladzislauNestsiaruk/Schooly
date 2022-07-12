@@ -11,15 +11,18 @@ import androidx.core.view.MotionEventCompat;
 
 import com.google.android.filament.Colors;
 import com.google.android.filament.Engine;
+import com.google.android.filament.EntityInstance;
 import com.google.android.filament.EntityManager;
 import com.google.android.filament.Fence;
 import com.google.android.filament.Filament;
 import com.google.android.filament.LightManager;
 import com.google.android.filament.Skybox;
+import com.google.android.filament.TransformManager;
 import com.google.android.filament.android.UiHelper;
 import com.google.android.filament.gltfio.Animator;
 import com.google.android.filament.gltfio.AssetLoader;
 import com.google.android.filament.gltfio.FilamentAsset;
+import com.google.android.filament.gltfio.FilamentInstance;
 import com.google.android.filament.gltfio.Gltfio;
 import com.google.android.filament.gltfio.MaterialProvider;
 import com.google.android.filament.gltfio.ResourceLoader;
@@ -53,26 +56,33 @@ public class FilamentModel {
     Choreographer choreographer=Choreographer.getInstance();
     GestureDetector doubleTapDetector;
     AutomationEngine.ViewerContent viewerContent=new AutomationEngine.ViewerContent();
-    Float3 float3=new Float3(0.0f, 0.0f, -2.0f);
+    Float3 float3=new Float3(0.0f, 10.0f, 0.0f);
+    Float3  float31=new Float3(-0.1f, 0.1f, 0.0f);
     long loadStartTime;
     Fence loadStartFence;
     byte[] buffer;
     FilamentAsset filamentAsset1;
     URI uri;
+    TransformManager transformManager;
     boolean normalizeSkinningWeights = true;
     boolean recomputeBoundingBoxes = false;
     boolean ignoreBindTransform = false;
     Buffer buffer1,bufferToFilament;
+    FilamentAsset filamentAsset;
+    int a;
+    int b=0;
 
-    public void initFilament(SurfaceView surfaceView,Buffer buffer,boolean onTouch
+    public void initFilament(SurfaceView surfaceView,Buffer buffer,Buffer buffer1,boolean onTouch
             ,LockableNestedScrollView lockableNestedScrollView,String type
     ,boolean transform) throws IOException, URISyntaxException {
         Filament.init();
         Gltfio.init();
         Utils.INSTANCE.init();
         cameraManipulator=new Manipulator.Builder()
-                .targetPosition(0.0f, 0.0f, -2.0f)
+                .targetPosition(0.0f, 10.0f, 0.0f)
+                .orbitHomePosition(0.0f, 10.0f, 28.0f)
                 .viewport(surfaceView.getWidth(), surfaceView.getHeight())
+                .zoomSpeed(0.07f)
                 .build(Manipulator.Mode.ORBIT);
         doubleTapDetector=new GestureDetector(surfaceView, cameraManipulator);
         uiHelper=new UiHelper(UiHelper.ContextErrorPolicy.DONT_CHECK);
@@ -86,7 +96,6 @@ public class FilamentModel {
                 doubleTapDetector.onTouchEvent(event);
                 if(lockableNestedScrollView!=null){
                     int action = MotionEventCompat.getActionMasked(event);
-
                     switch(action) {
                         case (MotionEvent.ACTION_DOWN) :
                             lockableNestedScrollView.setScrollingEnabled(false);
@@ -111,7 +120,7 @@ public class FilamentModel {
                 return onTouch;
             }
         });
-        loadGlb(buffer,true);
+        loadGlb(buffer,buffer1,true);
         Skybox skybox=new Skybox.Builder()
                 .color(0.255f, 0.124f, 0.232f, 1.0f)
                 .build(modelViewer.getEngine());
@@ -178,48 +187,47 @@ public class FilamentModel {
         public void doFrame(long frameTimeNanos) {
             choreographer.postFrameCallback(frameCallback);
             if(modelViewer!=null){
-                modelViewer.render(frameTimeNanos);
+                modelViewer.render(frameTimeNanos,filamentAsset);
             }
         }
     };
 
-    public void loadGlb(Buffer buffer,boolean transform){
+    public void loadGlb(Buffer buffer,Buffer buffer1,boolean transform){
         MaterialProvider materialProvider=new UbershaderLoader(engine);
         AssetLoader assetLoader=new AssetLoader(engine,materialProvider,EntityManager.get());
-        FilamentAsset filamentAsset=assetLoader.createAssetFromBinary(buffer);
+        filamentAsset=assetLoader.createAssetFromBinary(buffer);
+//        FilamentInstance[] instances={assetLoader.createInstance(filamentAsset)};
+//        filamentAsset=assetLoader.createInstancedAsset(buffer1, instances[0]);
         ResourceLoader resourceLoader=new ResourceLoader(engine, normalizeSkinningWeights, recomputeBoundingBoxes, ignoreBindTransform);
         resourceLoader.asyncBeginLoad(filamentAsset);
-        filamentAsset.popRenderable();
         Animator animator= filamentAsset.getAnimator();
         filamentAsset.releaseSourceData();
+        //modelViewer.transformToUnitCube(float3,filamentAsset);
         modelViewer.getScene().addEntities(filamentAsset.getEntities());
-//        if(modelViewer.getAsset()!=null){
-//            entities=modelViewer.getAsset().getEntities();
-//            Log.d("####", "ddc"+entities);
-//        }
-//        modelViewer.loadModelGlb(buffer);
-//        if(entities!=null){
-//            Log.d("####", "ddc1"+entities);
-//            modelViewer.getScene().addEntities(entities);
-//        }
-//        modelViewer.loadModelGlb(buffer);
-        modelViewer.transformToUnitCube(float3,filamentAsset);
         loadStartTime=System.nanoTime();
         loadStartFence=modelViewer.getEngine().createFence();
-        Log.d("###", "gg "+filamentAsset.getEntities());
     }
 
     public void populateScene(Buffer buffer){
+        FilamentAsset filamentAsset1=filamentAsset;
         MaterialProvider materialProvider=new UbershaderLoader(engine);
         AssetLoader assetLoader=new AssetLoader(engine,materialProvider,EntityManager.get());
         FilamentAsset filamentAsset=assetLoader.createAssetFromBinary(buffer);
         ResourceLoader resourceLoader=new ResourceLoader(engine, normalizeSkinningWeights, recomputeBoundingBoxes, ignoreBindTransform);
         resourceLoader.asyncBeginLoad(filamentAsset);
-        filamentAsset.popRenderable();
         filamentAsset.releaseSourceData();
         resourceLoader.asyncUpdateLoad();
         modelViewer.populateScene(filamentAsset);
-        modelViewer.transformToUnitCube(float3,filamentAsset);
+        int[] entities=new int[1];
+        entities=filamentAsset.getEntities();
+        Log.d("###", "gg "+filamentAsset.getEntities());
+        TransformManager tm=engine.getTransformManager();
+        tm.create(entities[0]);
+        //float[] f={-9.0f,0.0f,0.0f,-9.0f,0.0f,0.0f,-9.0f,0.0f,0.0f,-9.0f,0.0f,0.0f,0.0f,0.0f,-9.0f,0.0f,0.0f};
+        //tm.setTransform(tm.getInstance(filamentAsset.getRoot()), f);
+
+//        tm.create(entities[0],parent, new float[1] );
+        modelViewer.transformToUnitCube(float31,filamentAsset);
     }
 
     public void postFrameCallback(){
@@ -239,16 +247,16 @@ public class FilamentModel {
 
     }
 
-    public void executeTask(String url,SurfaceView surfaceView,boolean onTouch,Buffer buffer,LockableNestedScrollView lockableNestedScrollView
-                            ,String type,boolean transform
+    public void executeTask(String url, SurfaceView surfaceView, boolean onTouch, Buffer buffer,Buffer buffer1,LockableNestedScrollView lockableNestedScrollView
+                            , String type, boolean transform
     ) throws ExecutionException, InterruptedException, IOException, URISyntaxException {
         MyAsyncTask myAsyncTask=new MyAsyncTask();
         if(buffer==null){
             myAsyncTask.execute(url);
             bufferToFilament = myAsyncTask.get();
-            initFilament(surfaceView,bufferToFilament,onTouch,lockableNestedScrollView,type,transform);
+            initFilament(surfaceView,bufferToFilament,buffer1,onTouch,lockableNestedScrollView,type,transform);
         }else{
-            initFilament(surfaceView,buffer,onTouch,lockableNestedScrollView,type,transform);
+            initFilament(surfaceView,buffer,buffer1,onTouch,lockableNestedScrollView,type,transform);
         }
     }
 

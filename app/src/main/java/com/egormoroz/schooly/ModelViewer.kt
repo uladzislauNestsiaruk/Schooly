@@ -12,7 +12,7 @@ import com.google.android.filament.utils.*
 import kotlinx.coroutines.*
 import java.nio.Buffer
 
-private const val kNearPlane = 0.05     // 5 cm
+private const val kNearPlane = 0.5
 private const val kFarPlane = 1000.0    // 1 km
 private const val kAperture = 16f
 private const val kShutterSpeed = 1f / 125f
@@ -186,20 +186,18 @@ class ModelViewer(
      */
     fun transformToUnitCube(centerPoint: Float3 = kDefaultObjectPosition,asset: FilamentAsset) {
         asset?.let { asset ->
-            val tm = engine.transformManager
+            val tm=engine.transformManager
             var center = asset.boundingBox.center.let { v -> Float3(v[0], v[1], v[2]) }
             val halfExtent = asset.boundingBox.halfExtent.let { v -> Float3(v[0], v[1], v[2]) }
             val maxExtent = 2.0f * max(halfExtent)
             val scaleFactor = 2.0f / maxExtent
             center -= centerPoint / scaleFactor
-            val transform = scale(Float3(scaleFactor)) * translation(-center)
+            val transform =  translation(-center)
             tm.setTransform(tm.getInstance(asset.root), transpose(transform).toFloatArray())
         }
     }
 
-    /**
-     * Removes the transformation that was set up via transformToUnitCube.
-     */
+
     fun clearRootTransform() {
         asset?.let {
             val tm = engine.transformManager
@@ -228,7 +226,7 @@ class ModelViewer(
      * @param frameTimeNanos time in nanoseconds when the frame started being rendered,
      *                       typically comes from {@link android.view.Choreographer.FrameCallback}
      */
-    fun render(frameTimeNanos: Long) {
+    fun render(frameTimeNanos: Long, asset: FilamentAsset) {
         if (!uiHelper.isReadyToRender) {
             return
         }
@@ -253,7 +251,7 @@ class ModelViewer(
         }
     }
 
-     fun populateScene(asset: FilamentAsset) {
+    fun populateScene(asset: FilamentAsset) {
         val rcm = engine.renderableManager
         var count = 0
         val popRenderables = { count = asset.popRenderables(readyRenderables); count != 0 }

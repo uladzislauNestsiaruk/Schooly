@@ -193,30 +193,30 @@ public class CreateLookFragment extends Fragment {
 
             }
         });
-        try {
-            if(bundle.getSerializable("MAINLOOK")==null){
-                MyAsyncTask myAsyncTask=new MyAsyncTask();
-                myAsyncTask.execute(userInformation.getMainLook());
-                bufferToFilament = myAsyncTask.get();
-                ArrayList<Buffer> buffers=new ArrayList<>();
-                Log.d("####", "dd  "+bufferToFilament.toString());
-                buffers.add(bufferToFilament);
-                bundle.putSerializable("MAINLOOK",buffers);
-                filamentModel.initFilament(surfaceView,bufferToFilament,true,null,"regularRender",true);
-            }else{
-                ArrayList<Buffer> buffers= (ArrayList<Buffer>) bundle.getSerializable("MAINLOOK");
-                buffer3=buffers.get(0);
-                filamentModel.initFilament(surfaceView,buffer3 ,true,null,"regularRender",true);
-            }
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            if(bundle.getSerializable("MAINLOOK")==null){
+//                MyAsyncTask myAsyncTask=new MyAsyncTask();
+//                myAsyncTask.execute(userInformation.getMainLook());
+//                bufferToFilament = myAsyncTask.get();
+//                ArrayList<Buffer> buffers=new ArrayList<>();
+//                Log.d("####", "dd  "+bufferToFilament.toString());
+//                buffers.add(bufferToFilament);
+//                bundle.putSerializable("MAINLOOK",buffers);
+//                filamentModel.initFilament(surfaceView,bufferToFilament,true,null,"regularRender",true);
+//            }else{
+//                ArrayList<Buffer> buffers= (ArrayList<Buffer>) bundle.getSerializable("MAINLOOK");
+//                buffer3=buffers.get(0);
+//                filamentModel.initFilament(surfaceView,buffer3 ,true,null,"regularRender",true);
+//            }
+//        } catch (ExecutionException e) {
+//            e.printStackTrace();
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        } catch (URISyntaxException e) {
+//            e.printStackTrace();
+//        }
             ready = view.findViewById(R.id.ready);
             ready.setOnClickListener(new View.OnClickListener() {
                 @Override
