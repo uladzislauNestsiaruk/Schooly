@@ -57,7 +57,7 @@ public class FilamentModel {
     GestureDetector doubleTapDetector;
     AutomationEngine.ViewerContent viewerContent=new AutomationEngine.ViewerContent();
     Float3 float3=new Float3(0.0f, 10.0f, 0.0f);
-    Float3  float31=new Float3(-0.1f, 0.1f, 0.0f);
+    Float3  float31=new Float3(-0.18f, 0.1f, 0.12f);
     long loadStartTime;
     Fence loadStartFence;
     byte[] buffer;
@@ -157,28 +157,44 @@ public class FilamentModel {
         int light1=EntityManager.get().create();
         new LightManager.Builder(LightManager.Type.POINT)
                 .color(float1[0], float1[1], float1[2])
-                .intensity(19_000_000.0f)
-                .falloff(12)
-                .position(-4.0f, 0.0f, -5.0f)
+                .intensity(180_000_000.0f)
+                .falloff(20)
+                .position(-7.0f, 8.0f, -10.0f)
                 .castShadows(true)
                 .build(engine, light1);
         int light2=EntityManager.get().create();
         new LightManager.Builder(LightManager.Type.POINT)
                 .color(float1[0], float1[1], float1[2])
-                .intensity(55_000_000.0f)
-                .falloff(14)
-                .position(4.0f, -0.7f, -8.0f)
+                .intensity(110_000_000.0f)
+                .falloff(16)
+                .position(7.0f, 11.0f, -8.0f)
                 .castShadows(true)
                 .build(engine, light2);
         int light3=EntityManager.get().create();
         new LightManager.Builder(LightManager.Type.POINT)
                 .color(float1[0], float1[1], float1[2])
-                .intensity(7_000_000.0f)
-                .falloff(5)
-                .position(0.0f, 4.0f, -3.0f)
+                .intensity(100_000_000.0f)
+                .falloff(15)
+                .position(0.0f, 25.0f, -5.0f)
                 .castShadows(true)
                 .build(engine, light3);
-        int[] lights={light,light1,light2,light3};
+        int light4=EntityManager.get().create();
+        new LightManager.Builder(LightManager.Type.POINT)
+                .color(float1[0], float1[1], float1[2])
+                .intensity(40_000_000.0f)
+                .falloff(9)
+                .position(3.0f, 0.0f, -5.0f)
+                .castShadows(true)
+                .build(engine, light4);
+        int light5=EntityManager.get().create();
+        new LightManager.Builder(LightManager.Type.POINT)
+                .color(float1[0], float1[1], float1[2])
+                .intensity(1_000_000.0f)
+                .falloff(9)
+                .position(4.0f, 1.0f, 0.0f)
+                .castShadows(true)
+                .build(engine, light5);
+        int[] lights={light,light1,light2,light3,light4,light5};
         modelViewer.getScene().addEntities(lights);
     }
 
@@ -218,15 +234,7 @@ public class FilamentModel {
         filamentAsset.releaseSourceData();
         resourceLoader.asyncUpdateLoad();
         modelViewer.populateScene(filamentAsset);
-        int[] entities=new int[1];
-        entities=filamentAsset.getEntities();
         Log.d("###", "gg "+filamentAsset.getEntities());
-        TransformManager tm=engine.getTransformManager();
-        tm.create(entities[0]);
-        //float[] f={-9.0f,0.0f,0.0f,-9.0f,0.0f,0.0f,-9.0f,0.0f,0.0f,-9.0f,0.0f,0.0f,0.0f,0.0f,-9.0f,0.0f,0.0f};
-        //tm.setTransform(tm.getInstance(filamentAsset.getRoot()), f);
-
-//        tm.create(entities[0],parent, new float[1] );
         modelViewer.transformToUnitCube(float31,filamentAsset);
     }
 
