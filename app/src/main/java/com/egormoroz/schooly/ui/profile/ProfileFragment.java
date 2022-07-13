@@ -301,7 +301,7 @@ public class ProfileFragment extends Fragment {
                         MyAsyncTask myAsyncTask=new MyAsyncTask();
                         myAsyncTask.execute(userInformation.getMainLook());
                         bufferToFilament = myAsyncTask.get();
-                        ArrayList<Buffer> buffers=new ArrayList<>();
+                        ArrayList<Buffer> buffers = new ArrayList<>();
                         buffers.add(bufferToFilament);
                         bundle.putSerializable("MAINLOOK",buffers);
                         filamentModel.initFilament(surfaceView,bufferToFilament,true,lockableNestedScrollView,"regularRender",true);
@@ -1596,83 +1596,7 @@ public class ProfileFragment extends Fragment {
         return backgroundColor;
     }
 
-//
-//    @Override
-//    public void onPause() {
-//        super.onPause();
-//        switch (type) {
-//            case "user":
-//                //loadModels(loadUrl);
-//                mainLook.pause();
-//                break;
-//            case "other":
-//                otherMainLook.pause();
-//                break;
-//        }
-//
-//    }
-//    @Override
-//    public void onResume() {
-//        super.onResume();
-//        try {
-//            switch (type) {
-//                case "user":
-//                    //loadModels(loadUrl);
-//                    mainLook.resume();
-//                    break;
-//                case "other":
-//                    otherMainLook.resume();
-//                    break;
-//            }
-//
-//
-//        } catch (CameraNotAvailableException e) {
-//            e.printStackTrace();
-//        }
-//
-//    }
 
-//    @RequiresApi(api = Build.VERSION_CODES.N)
-//    public void loadModels(Uri url, SceneView sceneView, Fragment fragment, float scale) {
-//        if(getContext()==null){
-//
-//        }else {
-//            ModelRenderable.builder()
-//                    .setSource(
-//                            fragment.getContext(), new RenderableSource.Builder().setSource(
-//                                    fragment.getContext(),
-//                                    url,
-//                                    RenderableSource.SourceType.GLB
-//                            ).setScale(scale)
-//                                    .setRecenterMode(RenderableSource.RecenterMode.CENTER)
-//                                    .build()
-//                    )
-//                    .setRegistryId(url)
-//                    .build()
-//                    .thenAccept(new Consumer<ModelRenderable>() {
-//                        @Override
-//                        public void accept(ModelRenderable modelRenderable) {
-//                            addNode(modelRenderable, sceneView);
-//                        }
-//                    });
-//        }
-//    }
-//
-//    public void addNode(ModelRenderable modelRenderable, SceneView sceneView) {
-//        Node modelNode1 = new Node();
-//        modelNode1.setRenderable(modelRenderable);
-//        modelNode1.setLocalScale(new Vector3(0.3f, 0.3f, 0.3f));
-////        modelNode1.setLocalRotation(Quaternion.multiply(
-////                Quaternion.axisAngle(new Vector3(1f, 0f, 0f), 45),
-////                Quaternion.axisAngle(new Vector3(0f, 1f, 0f), 75)));
-//        modelNode1.setLocalPosition(new Vector3(0f, 0f, -0.9f));
-//        sceneView.getScene().addChild(modelNode1);
-//        try {
-//            sceneView.resume();
-//        } catch (CameraNotAvailableException e) {
-//            e.printStackTrace();
-//        }
-//    }
 
     public class FragmentAdapter extends FragmentStateAdapter {
 

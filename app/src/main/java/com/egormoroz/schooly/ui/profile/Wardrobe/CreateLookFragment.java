@@ -28,6 +28,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FilamentModel;
 import com.egormoroz.schooly.FirebaseModel;
+import com.egormoroz.schooly.LockableNestedScrollView;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.Subscriber;
@@ -78,6 +79,7 @@ public class CreateLookFragment extends Fragment {
     URI uri;
     Buffer buffer1,buffer3, bufferToFilament;
     FilamentModel filamentModel=new FilamentModel();
+    LockableNestedScrollView lockableNestedScrollView;
 
     public CreateLookFragment(String type, Fragment fragment, UserInformation userInformation, Bundle bundle, String lookType) {
         this.type = type;
@@ -136,6 +138,30 @@ public class CreateLookFragment extends Fragment {
                     loadSearchClothes(bundleEditText);
                 }
             }
+        }
+        lockableNestedScrollView=view.findViewById(R.id.lockableNestedScrollView);
+        try {
+            if(bundle.getSerializable("CHARACTERMODEL")==null){
+                MyAsyncTask myAsyncTask=new MyAsyncTask();
+                myAsyncTask.execute(userInformation.getMainLook());
+                bufferToFilament = myAsyncTask.get();
+                ArrayList<Buffer> buffers=new ArrayList<>();
+                buffers.add(bufferToFilament);
+                bundle.putSerializable("CHARACTERMODEL",buffers);
+                filamentModel.initFilament(surfaceView,bufferToFilament,true,lockableNestedScrollView,"regularRender",true);
+            }else{
+                ArrayList<Buffer> buffers= (ArrayList<Buffer>) bundle.getSerializable("CHARACTERMODEL");
+                Buffer buffer3=buffers.get(0);
+                filamentModel.initFilament(surfaceView,buffer3,true,lockableNestedScrollView,"regularRender",true);
+            }
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
         }
         searchText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -419,6 +445,27 @@ public class CreateLookFragment extends Fragment {
                 return 4;
             }
         }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        filamentModel.postFrameCallback();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        filamentModel.removeFrameCallback();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        filamentModel.removeFrameCallback();
+    }
 
     public byte[] getBytes( URL url) throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();

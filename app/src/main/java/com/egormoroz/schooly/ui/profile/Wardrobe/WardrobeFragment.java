@@ -1,12 +1,14 @@
 package com.egormoroz.schooly.ui.profile.Wardrobe;
 
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -26,7 +28,9 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.egormoroz.schooly.Callbacks;
+import com.egormoroz.schooly.FilamentModel;
 import com.egormoroz.schooly.FirebaseModel;
+import com.egormoroz.schooly.LockableNestedScrollView;
 import com.egormoroz.schooly.MainActivity;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
@@ -35,6 +39,7 @@ import com.egormoroz.schooly.ui.main.Shop.PopularClothesAdapter;
 import com.egormoroz.schooly.ui.main.Shop.ShopFragment;
 import com.egormoroz.schooly.ui.main.UserInformation;
 import com.egormoroz.schooly.ui.profile.ProfileFragment;
+import com.google.android.filament.Engine;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -44,7 +49,18 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.Buffer;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 
 public class WardrobeFragment extends Fragment {
@@ -65,7 +81,6 @@ public class WardrobeFragment extends Fragment {
 
     }
 
-    ArrayList<Clothes> clothesArrayListWardrobe = new ArrayList<Clothes>();
     FirebaseModel firebaseModel = new FirebaseModel();
     private ViewPager2 viewPager;
     FragmentAdapter fragmentAdapter;
@@ -75,8 +90,15 @@ public class WardrobeFragment extends Fragment {
     TabLayout tabLayout;
     int tabLayoutPosition;
     TextView notFound;
-   // SceneView sceneView;
+    SurfaceView surfaceView;
     WardrobeClothesAdapter.ItemClickListener itemClickListener;
+    LockableNestedScrollView lockableNestedScrollView;
+    ArrayList<Clothes> lookClothesList;
+    ArrayList<Clothes> clothesArrayListToRender=new ArrayList<>();
+    byte[] buffer;
+    URI uri;
+    Buffer buffer1,bufferToFilament;
+    FilamentModel filamentModel;
 
 
     @Override
@@ -86,6 +108,7 @@ public class WardrobeFragment extends Fragment {
         BottomNavigationView bnv = getActivity().findViewById(R.id.bottomNavigationView);
         bnv.setVisibility(bnv.GONE);
         firebaseModel.initAll();
+        filamentModel=new FilamentModel();
         return root;
     }
 
@@ -100,9 +123,34 @@ public class WardrobeFragment extends Fragment {
     public void onViewCreated(@Nullable View view, @NonNull Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         nick = userInformation.getNick();
-        //sceneView = view.findViewById(R.id.sceneViewWardrobe);
+        surfaceView=view.findViewById(R.id.surfaceViewWardrobe);
         searchText = view.findViewById(R.id.searchClothesWardrobe);
         searchRecycler = view.findViewById(R.id.searchRecycler);
+        lockableNestedScrollView=view.findViewById(R.id.lockableNestedScrollView);
+        try {
+            if(bundle.getSerializable("CHARACTERMODEL")==null){
+                MyAsyncTask myAsyncTask=new MyAsyncTask();
+                myAsyncTask.execute(userInformation.getMainLook());
+                bufferToFilament = myAsyncTask.get();
+                ArrayList<Buffer> buffers=new ArrayList<>();
+                buffers.add(bufferToFilament);
+                bundle.putSerializable("CHARACTERMODEL",buffers);
+                filamentModel.initFilament(surfaceView,bufferToFilament,true,lockableNestedScrollView,"regularRender",true);
+            }else{
+                ArrayList<Buffer> buffers= (ArrayList<Buffer>) bundle.getSerializable("CHARACTERMODEL");
+                Buffer buffer3=buffers.get(0);
+                Log.d("###", "ff");
+                filamentModel.initFilament(surfaceView,buffer3,true,lockableNestedScrollView,"regularRender",true);
+            }
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
         notFound = view.findViewById(R.id.notFound);
         tabLayout = view.findViewById(R.id.tabLayoutWardrobe);
         viewPager = view.findViewById(R.id.frcontwardrobe);
@@ -112,7 +160,6 @@ public class WardrobeFragment extends Fragment {
                 RecentMethods.setCurrentFragment(ViewingClothesWardrobe.newInstance(type, WardrobeFragment.newInstance(type, fragment, userInformation, bundle), userInformation, bundle), getActivity());
             }
         };
-        //loadModels(Uri.parse("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Funtitled.glb?alt=media&token=657b45d7-a84b-4f2a-89f4-a699029401f7"), sceneView, WardrobeFragment.this);
         if (bundle != null) {
             tabLayoutPosition = bundle.getInt("TAB_INT_WARDROBE");
             if (bundle.getString("EDIT_WARDROBE_TAG") != null) {
@@ -125,6 +172,8 @@ public class WardrobeFragment extends Fragment {
                 }
             }
         }
+
+        loadLookClothes();
         searchText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -345,62 +394,100 @@ public class WardrobeFragment extends Fragment {
             return 4;
         }
     }
+
+    public void loadLookClothes(){
+        firebaseModel.getUsersReference().child(nick).child("lookClothes")
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        lookClothesList=new ArrayList<>();
+                        for(DataSnapshot snap:dataSnapshot.getChildren()){
+                            Log.d("####", "d11 "+bufferToFilament);
+                            Clothes clothes=snap.getValue(Clothes.class);
+                            MyAsyncTask myAsyncTask=new MyAsyncTask();
+                            myAsyncTask.execute(clothes.getModel());
+                            try {
+                                bufferToFilament=myAsyncTask.get();
+                                Log.d("####", "d "+bufferToFilament);
+                                filamentModel.populateScene(bufferToFilament);
+                            } catch (ExecutionException e) {
+                                e.printStackTrace();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            lookClothesList.add(snap.getValue(Clothes.class));
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        filamentModel.postFrameCallback();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        filamentModel.removeFrameCallback();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        filamentModel.removeFrameCallback();
+    }
+
+    public byte[] getBytes( URL url) throws IOException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        InputStream is = null;
+        try {
+            is = new BufferedInputStream(url.openStream());
+            byte[] byteChunk = new byte[4096];
+            int n;
+
+            while ( (n = is.read(byteChunk)) > 0 ) {
+                baos.write(byteChunk, 0, n);
+            }
+        }
+        catch (IOException e) {
+            Log.d("####", "Failed while reading bytes from %s: %s"+ url.toExternalForm()+ e.getMessage());
+            e.printStackTrace ();
+        }
+        finally {
+            if (is != null) { is.close(); }
+        }
+        return  baos.toByteArray();
+    }
+
+    public class MyAsyncTask extends AsyncTask<String, Integer, Buffer> {
+        @Override
+        protected Buffer doInBackground(String... parameter) {
+            try {
+                uri = new URI(parameter[0]);
+                buffer = getBytes(uri.toURL());
+                buffer1= ByteBuffer.wrap(buffer);
+            } catch (URISyntaxException | MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return buffer1;
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... progress) {
+
+        }
+
+    }
 }
-
-//    @RequiresApi(api = Build.VERSION_CODES.N)
-//    public void loadModels(Uri url, SceneView sceneView, Fragment fragment) {
-//        ModelRenderable.builder()
-//                .setSource(
-//                        fragment.getContext(), new RenderableSource.Builder().setSource(
-//                                fragment.getContext(),
-//                                url,
-//                                RenderableSource.SourceType.GLB
-//                        ).setScale(0.25f)
-//                                .setRecenterMode(RenderableSource.RecenterMode.CENTER)
-//                                .build()
-//                )
-//                .setRegistryId(url)
-//                .build()
-//                .thenAccept(new Consumer<ModelRenderable>() {
-//                    @Override
-//                    public void accept(ModelRenderable modelRenderable) {
-//                        addNode(modelRenderable, sceneView);
-//                    }
-//                });
-//    }
-
-//    public void addNode(ModelRenderable modelRenderable, SceneView sceneView) {
-//        Node modelNode1 = new Node();
-//        modelNode1.setRenderable(modelRenderable);
-//        modelNode1.setLocalScale(new Vector3(0.3f, 0.3f, 0.3f));
-//        modelNode1.setLocalRotation(Quaternion.multiply(
-//                Quaternion.axisAngle(new Vector3(1f, 0f, 0f), 45),
-//                Quaternion.axisAngle(new Vector3(0f, 1f, 0f), 75)));
-//        modelNode1.setLocalPosition(new Vector3(0f, 0f, -0.9f));
-//        sceneView.getScene().addChild(modelNode1);
-//        try {
-//            sceneView.resume();
-//        } catch (CameraNotAvailableException e) {
-//            e.printStackTrace();
-//        }
-//    }
-
-//
-//} @Override
-//    public void onPause() {
-//        super.onPause();
-//        sceneView.pause();
-//
-//    }
-//    @Override
-//    public void onResume() {
-//        super.onResume();
-//        try {
-//            sceneView.resume();
-//
-//
-//        } catch (CameraNotAvailableException e) {
-//            e.printStackTrace();
-//        }
-//
-//    }

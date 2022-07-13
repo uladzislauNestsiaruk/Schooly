@@ -16,6 +16,7 @@ import com.google.android.filament.EntityManager;
 import com.google.android.filament.Fence;
 import com.google.android.filament.Filament;
 import com.google.android.filament.LightManager;
+import com.google.android.filament.RenderableManager;
 import com.google.android.filament.Skybox;
 import com.google.android.filament.TransformManager;
 import com.google.android.filament.android.UiHelper;
@@ -69,6 +70,9 @@ public class FilamentModel {
     boolean ignoreBindTransform = false;
     Buffer buffer1,bufferToFilament;
     FilamentAsset filamentAsset;
+    ResourceLoader resourceLoader;
+    MaterialProvider materialProvider;
+    AssetLoader assetLoader;
     int a;
     int b=0;
 
@@ -130,7 +134,6 @@ public class FilamentModel {
             loadDefaultLight();
         }
         modelViewer.getScene().setSkybox(skybox);
-
     }
 
     public void loadDefaultLight(){
@@ -209,29 +212,33 @@ public class FilamentModel {
     };
 
     public void loadGlb(Buffer buffer){
-        MaterialProvider materialProvider=new UbershaderLoader(engine);
-        AssetLoader assetLoader=new AssetLoader(engine,materialProvider,EntityManager.get());
+        materialProvider=new UbershaderLoader(engine);
+        assetLoader=new AssetLoader(engine,materialProvider,EntityManager.get());
         filamentAsset=assetLoader.createAssetFromBinary(buffer);
-        ResourceLoader resourceLoader=new ResourceLoader(engine, normalizeSkinningWeights, recomputeBoundingBoxes, ignoreBindTransform);
+        resourceLoader=new ResourceLoader(engine, normalizeSkinningWeights, recomputeBoundingBoxes, ignoreBindTransform);
         resourceLoader.asyncBeginLoad(filamentAsset);
         Animator animator= filamentAsset.getAnimator();
         filamentAsset.releaseSourceData();
         modelViewer.getScene().addEntities(filamentAsset.getEntities());
         loadStartTime=System.nanoTime();
         loadStartFence=modelViewer.getEngine().createFence();
+        RenderableManager renderableManager=engine.getRenderableManager();
+        int[] e=filamentAsset.getEntities();
+        Log.d("###", filamentAsset.getName(e[0]));
     }
 
     public void populateScene(Buffer buffer){
-        FilamentAsset filamentAsset1=filamentAsset;
-        MaterialProvider materialProvider=new UbershaderLoader(engine);
-        AssetLoader assetLoader=new AssetLoader(engine,materialProvider,EntityManager.get());
-        FilamentAsset filamentAsset=assetLoader.createAssetFromBinary(buffer);
-        ResourceLoader resourceLoader=new ResourceLoader(engine, normalizeSkinningWeights, recomputeBoundingBoxes, ignoreBindTransform);
+        filamentAsset=assetLoader.createAssetFromBinary(buffer);
         resourceLoader.asyncBeginLoad(filamentAsset);
         filamentAsset.releaseSourceData();
         resourceLoader.asyncUpdateLoad();
         modelViewer.populateScene(filamentAsset);
         modelViewer.transformToUnitCube(float31,filamentAsset);
+        int[] e=filamentAsset.getEntities();
+        //int[] a=getEntitiesByName
+        //         |
+        //for(a.length) тут маску наложить
+        Log.d("###", "  "+e.length);
     }
 
     public void postFrameCallback(){
@@ -306,6 +313,14 @@ public class FilamentModel {
 
         }
 
+    }
+
+    public Engine getEngine() {
+        return engine;
+    }
+
+    public void setEngine(Engine engine) {
+        this.engine = engine;
     }
 
 }

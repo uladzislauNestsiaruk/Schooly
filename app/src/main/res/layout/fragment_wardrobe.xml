@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.egormoroz.schooly.LockableNestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:scrollbars="none"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:overScrollMode="never">
+    android:overScrollMode="never"
+    android:id="@+id/lockableNestedScrollView">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -18,15 +19,6 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/left_arrow" />
 
-            <SurfaceView
-                android:id="@+id/sceneViewWardrobe"
-                android:layout_width="match_parent"
-                android:layout_height="400dp"
-                android:layout_below="@+id/wardrobe_text"
-                android:layout_marginStart="26dp"
-                android:layout_marginEnd="26dp"
-                android:background="@color/white" />
-
             <TextView
                 android:id="@+id/wardrobe_text"
                 android:layout_width="wrap_content"
@@ -38,6 +30,15 @@
                 android:text="@string/wardrobe"
                 android:textColor="@color/app_color"
                 android:textSize="22sp" />
+
+            <SurfaceView
+                android:id="@+id/surfaceViewWardrobe"
+                android:layout_width="370dp"
+                android:layout_height="400dp"
+                android:layout_below="@+id/wardrobe_text"
+                android:layout_marginStart="26dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="26dp" />
 
 
             <com.google.android.material.tabs.TabLayout
@@ -60,7 +61,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
-                android:layout_marginTop="454dp"
+                android:layout_marginTop="474dp"
                 android:layout_marginEnd="24dp"
                 android:background="@drawable/corners12_2dpstrokeappcolor"
                 android:orientation="horizontal"
@@ -75,9 +76,9 @@
                     android:layout_marginStart="16dp"
                     android:layout_weight="10"
                     android:background="@null"
-                    android:maxLines="1"
                     android:fontFamily="@font/montserrat_bold"
                     android:hint="@string/search"
+                    android:maxLines="1"
                     android:textColor="@color/app_grey"
                     android:textColorHint="@color/greysearch"
                     android:textSize="15sp" />
@@ -123,4 +124,4 @@
         </RelativeLayout>
 
 
-</androidx.core.widget.NestedScrollView>
+</com.egormoroz.schooly.LockableNestedScrollView>

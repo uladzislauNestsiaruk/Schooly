@@ -121,18 +121,18 @@ public class FittingFragment extends Fragment {
 
         surfaceView=view.findViewById(R.id.surfaceView);
         filamentModel=new FilamentModel();
-//        try {
-//            filamentModel.executeTask(clothes.getModel()
-//                    ,surfaceView,true,null,null,"regularRender",true);
-//        } catch (ExecutionException e) {
-//            e.printStackTrace();
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        } catch (URISyntaxException e) {
-//            e.printStackTrace();
-//        }
+        try {
+            filamentModel.executeTask(clothes.getModel()
+                    ,surfaceView,true,null,null,"regularRender",true);
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
