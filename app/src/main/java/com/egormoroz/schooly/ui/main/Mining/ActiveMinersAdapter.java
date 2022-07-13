@@ -53,7 +53,53 @@ public class ActiveMinersAdapter extends RecyclerView.Adapter<ActiveMinersAdapte
         Miner miner=listAdapterActivaMiner.get(holder.getAdapterPosition());
         holder.inHour.setText("+"+String.valueOf(miner.getInHour())+"S");
         holder.minerImage.setVisibility(View.VISIBLE);
-        Picasso.get().load(miner.getMinerImage()).into(holder.minerImage);
+        switch ((int) miner.getInHour()){
+            case 5:
+                holder.minerImage.setBackgroundResource(R.drawable.weak0);
+                break;
+            case 7:
+                holder.minerImage.setBackgroundResource(R.drawable.weak1);
+                break;
+            case 13:
+                holder.minerImage.setBackgroundResource(R.drawable.weak2);
+                break;
+            case 17:
+                holder.minerImage.setBackgroundResource(R.drawable.weak3);
+                break;
+            case 20:
+                holder.minerImage.setBackgroundResource(R.drawable.weak4);
+                break;
+            case 24:
+                holder.minerImage.setBackgroundResource(R.drawable.medium0);
+                break;
+            case 28:
+                holder.minerImage.setBackgroundResource(R.drawable.medium1);
+                break;
+            case 32:
+                holder.minerImage.setBackgroundResource(R.drawable.medium2);
+                break;
+            case 35:
+                holder.minerImage.setBackgroundResource(R.drawable.madium3);
+                break;
+            case 38:
+                holder.minerImage.setBackgroundResource(R.drawable.medium4);
+                break;
+            case 42:
+                holder.minerImage.setBackgroundResource(R.drawable.strong0);
+                break;
+            case 45:
+                holder.minerImage.setBackgroundResource(R.drawable.strong1);
+                break;
+            case 48:
+                holder.minerImage.setBackgroundResource(R.drawable.strong2);
+                break;
+            case 52:
+                holder.minerImage.setBackgroundResource(R.drawable.strong3);
+                break;
+            case 56:
+                holder.minerImage.setBackgroundResource(R.drawable.strong4);
+                break;
+        }
         holder.putAway.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

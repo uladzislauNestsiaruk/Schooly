@@ -61,7 +61,23 @@ public class AverageMinersAdapter extends RecyclerView.Adapter<AverageMinersAdap
         holder.inHour.setText("+"+String.valueOf(miner.getInHour()+"S"+holder.inHour.getContext().getResources().getString(R.string.inhour)));
         String minerPriceText= (String) holder.minerPrice.getText();
         holder.minerImage.setVisibility(View.VISIBLE);
-        Picasso.get().load(miner.getMinerImage()).into(holder.minerImage);
+        switch ((int) miner.getInHour()){
+            case 24:
+                holder.minerImage.setBackgroundResource(R.drawable.medium0);
+                break;
+            case 28:
+                holder.minerImage.setBackgroundResource(R.drawable.medium1);
+                break;
+            case 32:
+                holder.minerImage.setBackgroundResource(R.drawable.medium2);
+                break;
+            case 35:
+                holder.minerImage.setBackgroundResource(R.drawable.madium3);
+                break;
+            case 38:
+                holder.minerImage.setBackgroundResource(R.drawable.medium4);
+                break;
+        }
         for(int i=0;i<userInformation.getMyMiners().size();i++){
             Miner miner1=userInformation.getMyMiners().get(i);
             if(String.valueOf(miner1.getMinerPrice()).equals(String.valueOf(miner.getMinerPrice()))){

@@ -67,14 +67,14 @@
         android:layout_marginBottom="130dp"
         android:visibility="gone"/>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerviewmyminers"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/relativemyminers"
-        android:layout_marginTop="16dp"
-        android:overScrollMode="never"
-         />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerviewmyminers"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/relativemyminers"
+            android:layout_marginTop="16dp"
+            android:overScrollMode="never"
+            android:paddingBottom="24dp"/>
 
     </RelativeLayout>
 </androidx.core.widget.NestedScrollView>

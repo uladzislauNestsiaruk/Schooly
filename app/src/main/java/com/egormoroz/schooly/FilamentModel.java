@@ -57,7 +57,7 @@ public class FilamentModel {
     GestureDetector doubleTapDetector;
     AutomationEngine.ViewerContent viewerContent=new AutomationEngine.ViewerContent();
     Float3 float3=new Float3(0.0f, 10.0f, 0.0f);
-    Float3  float31=new Float3(-0.18f, 0.1f, 0.12f);
+    Float3  float31=new Float3(-0.15f, 0.1f, 0.13f);
     long loadStartTime;
     Fence loadStartFence;
     byte[] buffer;
@@ -72,7 +72,7 @@ public class FilamentModel {
     int a;
     int b=0;
 
-    public void initFilament(SurfaceView surfaceView,Buffer buffer,Buffer buffer1,boolean onTouch
+    public void initFilament(SurfaceView surfaceView,Buffer buffer,boolean onTouch
             ,LockableNestedScrollView lockableNestedScrollView,String type
     ,boolean transform) throws IOException, URISyntaxException {
         Filament.init();
@@ -120,7 +120,7 @@ public class FilamentModel {
                 return onTouch;
             }
         });
-        loadGlb(buffer,buffer1,true);
+        loadGlb(buffer);
         Skybox skybox=new Skybox.Builder()
                 .color(0.255f, 0.124f, 0.232f, 1.0f)
                 .build(modelViewer.getEngine());
@@ -208,17 +208,14 @@ public class FilamentModel {
         }
     };
 
-    public void loadGlb(Buffer buffer,Buffer buffer1,boolean transform){
+    public void loadGlb(Buffer buffer){
         MaterialProvider materialProvider=new UbershaderLoader(engine);
         AssetLoader assetLoader=new AssetLoader(engine,materialProvider,EntityManager.get());
         filamentAsset=assetLoader.createAssetFromBinary(buffer);
-//        FilamentInstance[] instances={assetLoader.createInstance(filamentAsset)};
-//        filamentAsset=assetLoader.createInstancedAsset(buffer1, instances[0]);
         ResourceLoader resourceLoader=new ResourceLoader(engine, normalizeSkinningWeights, recomputeBoundingBoxes, ignoreBindTransform);
         resourceLoader.asyncBeginLoad(filamentAsset);
         Animator animator= filamentAsset.getAnimator();
         filamentAsset.releaseSourceData();
-        //modelViewer.transformToUnitCube(float3,filamentAsset);
         modelViewer.getScene().addEntities(filamentAsset.getEntities());
         loadStartTime=System.nanoTime();
         loadStartFence=modelViewer.getEngine().createFence();
@@ -234,7 +231,6 @@ public class FilamentModel {
         filamentAsset.releaseSourceData();
         resourceLoader.asyncUpdateLoad();
         modelViewer.populateScene(filamentAsset);
-        Log.d("###", "gg "+filamentAsset.getEntities());
         modelViewer.transformToUnitCube(float31,filamentAsset);
     }
 
@@ -255,16 +251,16 @@ public class FilamentModel {
 
     }
 
-    public void executeTask(String url, SurfaceView surfaceView, boolean onTouch, Buffer buffer,Buffer buffer1,LockableNestedScrollView lockableNestedScrollView
+    public void executeTask(String url, SurfaceView surfaceView, boolean onTouch, Buffer buffer,LockableNestedScrollView lockableNestedScrollView
                             , String type, boolean transform
     ) throws ExecutionException, InterruptedException, IOException, URISyntaxException {
         MyAsyncTask myAsyncTask=new MyAsyncTask();
         if(buffer==null){
             myAsyncTask.execute(url);
             bufferToFilament = myAsyncTask.get();
-            initFilament(surfaceView,bufferToFilament,buffer1,onTouch,lockableNestedScrollView,type,transform);
+            initFilament(surfaceView,bufferToFilament,onTouch,lockableNestedScrollView,type,transform);
         }else{
-            initFilament(surfaceView,buffer,buffer1,onTouch,lockableNestedScrollView,type,transform);
+            initFilament(surfaceView,buffer,onTouch,lockableNestedScrollView,type,transform);
         }
     }
 

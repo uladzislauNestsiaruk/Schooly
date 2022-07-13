@@ -192,7 +192,7 @@ class ModelViewer(
             val maxExtent = 2.0f * max(halfExtent)
             val scaleFactor = 2.0f / maxExtent
             center -= centerPoint / scaleFactor
-            val transform =  scale(Float3(maxExtent/6.5f)) *  translation(-center)
+            val transform =  scale(Float3(maxExtent/6.2f)) *  translation(-center)
             tm.setTransform(tm.getInstance(asset.root), transpose(transform).toFloatArray())
         }
     }

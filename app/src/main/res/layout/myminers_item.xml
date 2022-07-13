@@ -9,8 +9,9 @@
     <ImageView
         android:id="@+id/viewrecycler"
         android:layout_width="256dp"
-        android:layout_height="160dp"
-        android:layout_centerHorizontal="true"/>
+        android:layout_height="170dp"
+        android:layout_centerHorizontal="true"
+         />
 
     <RelativeLayout
         android:layout_width="match_parent"
