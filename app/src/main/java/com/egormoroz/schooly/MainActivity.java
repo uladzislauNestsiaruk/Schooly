@@ -121,24 +121,7 @@ public class MainActivity extends AppCompatActivity {
                                                 public void onComplete(@NonNull Task<DataSnapshot> task) {
                                                     if (task.isSuccessful()){
                                                         DataSnapshot snapshot=task.getResult();
-                                                        userInformation=new UserInformation();
-                                                        userInformation.setAge(snapshot.child("age").getValue(Long.class));
-                                                        userInformation.setAvatar(snapshot.child("avatar").getValue(String.class));
-                                                        userInformation.setGender(snapshot.child("gender").getValue(String.class));
-                                                        userInformation.setNick(snapshot.child("nick").getValue(String.class));
-                                                        userInformation.setPassword(snapshot.child("password").getValue(String.class));
-                                                        userInformation.setPhone(snapshot.child("phone").getValue(String.class));
-                                                        userInformation.setUid(snapshot.child("uid").getValue(String.class));
-                                                        userInformation.setBio(snapshot.child("bio").getValue(String.class));
-                                                        userInformation.setVersion(snapshot.child("version").getValue(String.class));
-                                                        userInformation.setQueue(snapshot.child("queue").getValue(String.class));
-                                                        userInformation.setChatsNontsType(snapshot.child("chatsNontsType").getValue(String.class));
-                                                        userInformation.setGroupChatsNontsType(snapshot.child("groupChatsNontsType").getValue(String.class));
-                                                        userInformation.setProfileNontsType(snapshot.child("profileNontsType").getValue(String.class));
-                                                        userInformation.setAccountType(snapshot.child("accountType").getValue(String.class));
-                                                        userInformation.setmoney(snapshot.child("money").getValue(Long.class));
-                                                        userInformation.setTodayMining(snapshot.child("todayMining").getValue(Double.class));
-                                                        userInformation.setMainLook(snapshot.child("mainLook").getValue(String.class));
+                                                        userInformation = RecentMethods.ValidateSnapToUserInformation(snapshot);
                                                         getMyClothes(nick);
                                                         final DatabaseReference connectedRef = database.getReference(".info/connected");
                                                         getLists();

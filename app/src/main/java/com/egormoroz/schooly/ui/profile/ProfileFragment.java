@@ -1658,8 +1658,8 @@ public class ProfileFragment extends Fragment {
             if(tabLayoutOther.getTabCount()==2){
 
             }else {
-                tabLayoutOther.addTab(tabLayoutOther.newTab().setText(getContext().getResources().getText(R.string.looks)));
-                tabLayoutOther.addTab(tabLayoutOther.newTab().setText(getContext().getResources().getText(R.string.clothes)));
+                tabLayoutOther.addTab(tabLayoutOther.newTab().setText(R.string.looks));
+                tabLayoutOther.addTab(tabLayoutOther.newTab().setText(R.string.clothes));
             }
 
             tabLayoutOther.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener(){
