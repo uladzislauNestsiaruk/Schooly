@@ -45,9 +45,6 @@ class WardrobeClothesAdapter extends RecyclerView.Adapter<WardrobeClothesAdapter
         this.userInformation=userInformation;
     }
 
-
-
-
     @NotNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
@@ -73,15 +70,16 @@ class WardrobeClothesAdapter extends RecyclerView.Adapter<WardrobeClothesAdapter
             public void onClick(View v) {
                 holder.fittingClothes.setVisibility(View.GONE);
                 holder.activeFittingClothes.setVisibility(View.VISIBLE);
-                Toast.makeText(v.getContext(), v.getContext().getResources().getText(R.string.itemisequipped), Toast.LENGTH_SHORT).show();
+                onClothesClick.onItemClick(clothesArrayListWardrobe.get(holder.getAdapterPosition()),"tryOn");
+                trueClothes=clothesArrayListWardrobe.get(holder.getAdapterPosition());
                 firebaseModel.getUsersReference().child(nick).child("lookClothes")
-                        .child(clothes.getUid()).setValue(clothes);
+                        .child(trueClothes.getUid()).setValue(trueClothes);
             }
         });
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onClothesClick.onItemClick(clothesArrayListWardrobe.get(holder.getAdapterPosition()));
+                onClothesClick.onItemClick(clothesArrayListWardrobe.get(holder.getAdapterPosition()),"view");
                 trueClothes=clothesArrayListWardrobe.get(holder.getAdapterPosition());
             }
         });
@@ -109,11 +107,11 @@ class WardrobeClothesAdapter extends RecyclerView.Adapter<WardrobeClothesAdapter
 
     }
     public static void singeClothesInfo(ItemClickListener itemClickListener){
-        itemClickListener.onItemClick(trueClothes);
+        itemClickListener.onItemClick(trueClothes," ");
     }
 
     public interface ItemClickListener {
-        void onItemClick( Clothes clothes);
+        void onItemClick( Clothes clothes,String type);
     }
 
     static class SpaceItemDecoration extends RecyclerView.ItemDecoration {

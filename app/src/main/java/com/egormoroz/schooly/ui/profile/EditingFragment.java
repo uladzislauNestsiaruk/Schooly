@@ -75,7 +75,6 @@ public class EditingFragment extends Fragment {
         nick=userInformation.getNick();
         ImageView arrowtoprofileediting = view.findViewById(R.id.back_toprofile);
         arrowtoprofileediting.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View v) {
                 RecentMethods.setCurrentFragment(ProfileFragment.newInstance(type, nick,fragment,userInformation,bundle), getActivity());
@@ -89,7 +88,6 @@ public class EditingFragment extends Fragment {
                 RecentMethods.setCurrentFragment(ProfileFragment.newInstance(type, nick,fragment,userInformation,bundle), getActivity());
             }
         };
-
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
 
         nickEdit=view.findViewById(R.id.edittextnickname);
@@ -144,6 +142,7 @@ public class EditingFragment extends Fragment {
                             if(task.isSuccessful()){
                                 DataSnapshot snapshot=task.getResult();
                                 userInformation.setBio(snapshot.getValue(String.class));
+                                RecentMethods.setCurrentFragment(ProfileFragment.newInstance(type, nick,fragment,userInformation,bundle), getActivity());
                             }
                         }
                     });

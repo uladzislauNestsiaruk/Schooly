@@ -74,8 +74,12 @@ public class WardrobeShoes extends Fragment {
         wardrobeRecyclerView=view.findViewById(R.id.recyclerwardrobe);
         itemClickListener=new WardrobeClothesAdapter.ItemClickListener() {
             @Override
-            public void onItemClick(Clothes clothes) {
-                RecentMethods.setCurrentFragment(ViewingClothesWardrobe.newInstance(type,fragment,userInformation,bundle), getActivity());
+            public void onItemClick(Clothes clothes,String type) {
+                if(type.equals("view")){
+                    RecentMethods.setCurrentFragment(ViewingClothesWardrobe.newInstance(type,fragment,userInformation,bundle), getActivity());
+                }else{
+                    WardrobeFragment.tryOnClothes(clothes);
+                }
             }
         };
         buyToShop=view.findViewById(R.id.buyToShop);

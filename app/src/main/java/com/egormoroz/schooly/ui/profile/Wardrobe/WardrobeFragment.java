@@ -95,10 +95,10 @@ public class WardrobeFragment extends Fragment {
     LockableNestedScrollView lockableNestedScrollView;
     ArrayList<Clothes> lookClothesList;
     ArrayList<Clothes> clothesArrayListToRender=new ArrayList<>();
-    byte[] buffer;
-    URI uri;
-    Buffer buffer1,bufferToFilament;
-    FilamentModel filamentModel;
+    static byte[] buffer;
+    static URI uri;
+    static Buffer buffer1,bufferToFilament;
+    static FilamentModel filamentModel;
 
 
     @Override
@@ -154,12 +154,8 @@ public class WardrobeFragment extends Fragment {
         notFound = view.findViewById(R.id.notFound);
         tabLayout = view.findViewById(R.id.tabLayoutWardrobe);
         viewPager = view.findViewById(R.id.frcontwardrobe);
-        itemClickListener = new WardrobeClothesAdapter.ItemClickListener() {
-            @Override
-            public void onItemClick(Clothes clothes) {
-                RecentMethods.setCurrentFragment(ViewingClothesWardrobe.newInstance(type, WardrobeFragment.newInstance(type, fragment, userInformation, bundle), userInformation, bundle), getActivity());
-            }
-        };
+
+
         if (bundle != null) {
             tabLayoutPosition = bundle.getInt("TAB_INT_WARDROBE");
             if (bundle.getString("EDIT_WARDROBE_TAG") != null) {
@@ -397,33 +393,45 @@ public class WardrobeFragment extends Fragment {
 
     public void loadLookClothes(){
         firebaseModel.getUsersReference().child(nick).child("lookClothes")
-                .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        lookClothesList=new ArrayList<>();
-                        for(DataSnapshot snap:dataSnapshot.getChildren()){
-                            Log.d("####", "d11 "+bufferToFilament);
-                            Clothes clothes=snap.getValue(Clothes.class);
-                            MyAsyncTask myAsyncTask=new MyAsyncTask();
-                            myAsyncTask.execute(clothes.getModel());
-                            try {
-                                bufferToFilament=myAsyncTask.get();
-                                Log.d("####", "d "+bufferToFilament);
-                                filamentModel.populateScene(bufferToFilament);
-                            } catch (ExecutionException e) {
-                                e.printStackTrace();
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                            lookClothesList.add(snap.getValue(Clothes.class));
+                .get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if(task.isSuccessful()){
+                    DataSnapshot snapshot= task.getResult();
+                    lookClothesList=new ArrayList<>();
+                    for(DataSnapshot snap:snapshot.getChildren()){
+                        Log.d("####", "d11 "+bufferToFilament);
+                        Clothes clothes=snap.getValue(Clothes.class);
+                        MyAsyncTask myAsyncTask=new MyAsyncTask();
+                        myAsyncTask.execute(clothes.getModel());
+                        try {
+                            bufferToFilament=myAsyncTask.get();
+                            Log.d("####", "d "+bufferToFilament);
+                            filamentModel.populateScene(bufferToFilament);
+                        } catch (ExecutionException e) {
+                            e.printStackTrace();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
                         }
+                        lookClothesList.add(snap.getValue(Clothes.class));
                     }
+                }
+            }
+        });
+    }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
+    public static void tryOnClothes(Clothes clothes){
+        Log.d("####", "d ");
+        MyAsyncTask myAsyncTask=new MyAsyncTask();
+        myAsyncTask.execute(clothes.getModel());
+        try {
+            bufferToFilament=myAsyncTask.get();
+            filamentModel.populateScene(bufferToFilament);
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -447,7 +455,7 @@ public class WardrobeFragment extends Fragment {
         filamentModel.removeFrameCallback();
     }
 
-    public byte[] getBytes( URL url) throws IOException {
+    public static byte[] getBytes( URL url) throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         InputStream is = null;
         try {
@@ -469,7 +477,7 @@ public class WardrobeFragment extends Fragment {
         return  baos.toByteArray();
     }
 
-    public class MyAsyncTask extends AsyncTask<String, Integer, Buffer> {
+    public static class MyAsyncTask extends AsyncTask<String, Integer, Buffer> {
         @Override
         protected Buffer doInBackground(String... parameter) {
             try {

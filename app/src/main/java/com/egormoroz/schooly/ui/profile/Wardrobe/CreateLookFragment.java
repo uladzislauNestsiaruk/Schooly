@@ -123,7 +123,7 @@ public class CreateLookFragment extends Fragment {
         surfaceView=view.findViewById(R.id.surfaceViewCreateClothes);
         itemClickListener = new WardrobeClothesAdapter.ItemClickListener() {
             @Override
-            public void onItemClick(Clothes clothes) {
+            public void onItemClick(Clothes clothes,String type) {
                 RecentMethods.setCurrentFragment(ViewingClothesWardrobe.newInstance(type, CreateLookFragment.newInstance(type, fragment, userInformation, bundle, lookType), userInformation, bundle), getActivity());
             }
         };

@@ -165,7 +165,7 @@ public class ViewingClothesWardrobe extends Fragment {
 
     WardrobeClothesAdapter.singeClothesInfo(new WardrobeClothesAdapter.ItemClickListener() {
       @Override
-      public void onItemClick(Clothes clothes) {
+      public void onItemClick(Clothes clothes,String type) {
         clothesViewing=clothes;
         clothesPriceCV.setText(String.valueOf(clothes.getClothesPrice()));
         clothesTitleCV.setText(clothes.getClothesTitle());
