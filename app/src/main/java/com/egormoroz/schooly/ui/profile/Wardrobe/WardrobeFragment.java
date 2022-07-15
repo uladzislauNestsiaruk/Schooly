@@ -64,9 +64,10 @@ import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 
 public class WardrobeFragment extends Fragment {
-    String type, nick;
+    String type;
+    static String nick;
     Fragment fragment;
-    UserInformation userInformation;
+    static UserInformation userInformation;
     Bundle bundle;
 
     public WardrobeFragment(String type, Fragment fragment, UserInformation userInformation, Bundle bundle) {
@@ -81,7 +82,7 @@ public class WardrobeFragment extends Fragment {
 
     }
 
-    FirebaseModel firebaseModel = new FirebaseModel();
+    static FirebaseModel firebaseModel = new FirebaseModel();
     private ViewPager2 viewPager;
     FragmentAdapter fragmentAdapter;
     ArrayList<Clothes> clothesFromBase;
@@ -421,7 +422,6 @@ public class WardrobeFragment extends Fragment {
     }
 
     public static void tryOnClothes(Clothes clothes){
-        Log.d("####", "d ");
         MyAsyncTask myAsyncTask=new MyAsyncTask();
         myAsyncTask.execute(clothes.getModel());
         try {
@@ -432,6 +432,25 @@ public class WardrobeFragment extends Fragment {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+
+    public static void makeClothesInvisible(Clothes clothes){
+        String type=clothes.getClothesType();
+        for(int i=0;i<userInformation.getLookClothes().size();i++){
+            Clothes clothes1=userInformation.getLookClothes().get(i);
+            if(clothes1.getClothesType().equals(type)){
+                firebaseModel.getUsersReference().child(nick).child("lookClothes")
+                        .child(clothes1.getUid()).removeValue();
+                firebaseModel.getUsersReference().child(nick).child("lookClothes")
+                        .child(clothes.getUid()).setValue(clothes);
+            }else{
+                firebaseModel.getUsersReference().child(nick).child("lookClothes")
+                        .child(clothes.getUid()).setValue(clothes);
+            }
+        }
+        tryOnClothes(clothes);
+
     }
 
     @Override

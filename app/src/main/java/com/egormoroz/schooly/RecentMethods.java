@@ -1,6 +1,8 @@
 package com.egormoroz.schooly;
 import android.app.Activity;
 import android.os.Bundle;
+import android.renderscript.Matrix4f;
+import android.telecom.Call;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -1306,6 +1308,28 @@ public class RecentMethods {
         });
 
 
+    }
+
+    public static void getMyLookClothes(String nick, FirebaseModel firebaseModel, Callbacks.getLookClothes callback){
+        firebaseModel.initAll();
+        Query query=firebaseModel.getUsersReference().child(nick).child("lookClothes");
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                ArrayList<Clothes> clothesArrayList=new ArrayList<>();
+                for(DataSnapshot snap:dataSnapshot.getChildren()){
+                    Clothes clothes=new Clothes();
+                    clothes=snap.getValue(Clothes.class);
+                    clothesArrayList.add(clothes);
+                }
+                callback.getLookClothes(clothesArrayList);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     public static void getLookClothes(String nick,String uid,FirebaseModel firebaseModel,Callbacks.getLookClothes callback){

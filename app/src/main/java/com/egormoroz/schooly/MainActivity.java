@@ -246,6 +246,12 @@ public class MainActivity extends AppCompatActivity {
                         userInformation.setNotifications(nontifications);
                     }
                 });
+                RecentMethods.getMyLookClothes(nick, firebaseModel, new Callbacks.getLookClothes() {
+                    @Override
+                    public void getLookClothes(ArrayList<Clothes> clothesArrayList) {
+                        userInformation.setLookClothes(clothesArrayList);
+                    }
+                });
                 RecentMethods.getLooksList(nick, firebaseModel, new Callbacks.getLooksList() {
                     @Override
                     public void getLooksList(ArrayList<NewsItem> look) {
@@ -253,6 +259,7 @@ public class MainActivity extends AppCompatActivity {
                         userInformation.setLooks(look);
                     }
                 });
+
                 RecentMethods.getTransferHistory(nick, firebaseModel, new Callbacks.getTransferHistory() {
                     @Override
                     public void getTransferHistory(ArrayList<Transfer> transfers) {

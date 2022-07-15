@@ -3,8 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="240dp"
     android:paddingStart="14dp"
-    android:paddingEnd="14dp"
-    android:paddingTop="10dp"
     android:layout_marginBottom="23dp"
     android:background="@drawable/corners_clothes"
     android:layout_marginStart="7dp"
@@ -12,49 +10,56 @@
     android:layout_marginTop="-7dp"
     android:elevation="8dp">
 
-    <TextView
-        android:id="@+id/clothesTitle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="30dp"
-        android:fontFamily="@font/montserrat_extrabold"
-        android:textColor="@color/app_color"
-        android:textSize="18sp" />
+  <TextView
+      android:id="@+id/clothesTitle"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginEnd="30dp"
+      android:fontFamily="@font/montserrat_extrabold"
+      android:textColor="@color/app_color"
+      android:textSize="18sp"
+      android:layout_marginTop="10dp"
+      android:paddingEnd="14dp"
+      android:paddingTop="10dp"/>
 
 
-    <ImageView
-        android:id="@+id/clothesImage"
-        android:layout_width="match_parent"
-        android:layout_height="170dp"
-        android:layout_marginTop="12dp"
-        android:layout_below="@+id/clothesTitle"  />
+  <ImageView
+      android:id="@+id/clothesImage"
+      android:layout_width="match_parent"
+      android:layout_height="170dp"
+      android:layout_marginTop="12dp"
+      android:layout_marginEnd="14dp"
+      android:layout_below="@+id/clothesTitle"  />
 
-    <ImageView
-        android:id="@+id/fittingClothes"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="4dp"
-        android:src="@drawable/ic_fittingclothes" />
+  <ImageView
+      android:id="@+id/fittingClothes"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_alignParentEnd="true"
+      android:paddingTop="14dp"
+      android:paddingEnd="14dp"
+      android:src="@drawable/ic_fittingclothes" />
 
-    <ImageView
-        android:id="@+id/fittingClothesActive"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="4dp"
-        android:src="@drawable/ic_activefittingclothes"
-        android:visibility="gone"/>
+  <ImageView
+      android:id="@+id/fittingClothesActive"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_alignParentEnd="true"
+      android:paddingTop="14dp"
+      android:paddingEnd="14dp"
+      android:src="@drawable/ic_activefittingclothes"
+      android:visibility="gone"/>
 
-    <TextView
-        android:id="@+id/creator"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="14sp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:textColor="@color/app_color"
-        android:fontFamily="@font/montserrat_extrabold"/>
+  <TextView
+      android:id="@+id/creator"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:textSize="14sp"
+      android:layout_alignParentBottom="true"
+      android:layout_marginEnd="14dp"
+      android:layout_alignParentEnd="true"
+      android:textColor="@color/app_color"
+      android:fontFamily="@font/montserrat_extrabold"/>
 
 
 </RelativeLayout>

@@ -20,6 +20,9 @@ import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
 import com.egormoroz.schooly.ui.main.Shop.NewClothesAdapter;
 import com.egormoroz.schooly.ui.main.UserInformation;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
@@ -65,6 +68,27 @@ class WardrobeClothesAdapter extends RecyclerView.Adapter<WardrobeClothesAdapter
         holder.clothesImage.setVisibility(View.VISIBLE);
         holder.creator.setText(clothes.getCreator());
         Picasso.get().load(clothes.getClothesImage()).into(holder.clothesImage);
+        firebaseModel.getUsersReference().child(nick).child("lookClothes").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot snap:dataSnapshot.getChildren()){
+                    Clothes clothes1=new Clothes();
+                    clothes=snap.getValue(Clothes.class);
+                    if(clothes.getUid().equals(clothes1.getUid())){
+                        holder.activeFittingClothes.setVisibility(View.VISIBLE);
+                        holder.fittingClothes.setVisibility(View.GONE);
+                    }else {
+                        holder.fittingClothes.setVisibility(View.VISIBLE);
+                        holder.activeFittingClothes.setVisibility(View.GONE);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
         holder.fittingClothes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -72,8 +96,6 @@ class WardrobeClothesAdapter extends RecyclerView.Adapter<WardrobeClothesAdapter
                 holder.activeFittingClothes.setVisibility(View.VISIBLE);
                 onClothesClick.onItemClick(clothesArrayListWardrobe.get(holder.getAdapterPosition()),"tryOn");
                 trueClothes=clothesArrayListWardrobe.get(holder.getAdapterPosition());
-                firebaseModel.getUsersReference().child(nick).child("lookClothes")
-                        .child(trueClothes.getUid()).setValue(trueClothes);
             }
         });
         holder.itemView.setOnClickListener(new View.OnClickListener() {

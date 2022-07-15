@@ -78,6 +78,8 @@ public class WardrobeClothes extends Fragment {
                 if(type.equals("view ")){
                     RecentMethods.setCurrentFragment(ViewingClothesWardrobe.newInstance(type,fragment
                             ,userInformation,bundle), getActivity());
+                }else{
+                    WardrobeFragment.makeClothesInvisible(clothes);
                 }
             }
         };
