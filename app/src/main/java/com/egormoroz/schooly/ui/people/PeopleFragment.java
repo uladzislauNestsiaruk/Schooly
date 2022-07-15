@@ -154,8 +154,10 @@ public class PeopleFragment extends Fragment {
         userNotSearch.setVisibility(View.GONE);
         if(userInformation.getAlreadySearched()==null){
             checkAlreadySearchedFromBase();
-        }else {
-            AlreadySearchAdapter alreadySearchAdapter=new AlreadySearchAdapter(userInformation.getAlreadySearched(),userInformation);
+        }
+        else {
+            RecomendationThread getRecThread = new RecomendationThread(nick);
+            AlreadySearchAdapter alreadySearchAdapter=new AlreadySearchAdapter(getRecThread.ValidateRcomendations(),userInformation);
             peopleRecyclerView.setAdapter(alreadySearchAdapter);
             AlreadySearchAdapter.ItemClickListener itemClickListener=new AlreadySearchAdapter.ItemClickListener() {
                 @Override
@@ -165,11 +167,13 @@ public class PeopleFragment extends Fragment {
                     if(type.equals("profile")){
                         if (userNameToProfile.equals(nick)) {
                             RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback", nick, PeopleFragment.newInstance(userInformation,bundle),userInformation,bundle), getActivity());
-                        } else {
+                        }
+                        else {
                             RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile, PeopleFragment.newInstance(userInformation,bundle),userInformation,bundle),
                                     getActivity());
                         }
-                    }else {
+                    }
+                    else {
                         checkAlreadySearchedFromBase();
                     }
                 }
@@ -193,11 +197,13 @@ public class PeopleFragment extends Fragment {
                         if(type.equals("profile")){
                             if (userNameToProfile.equals(nick)) {
                                 RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback", nick, PeopleFragment.newInstance(userInformation,bundle),userInformation,bundle), getActivity());
-                            } else {
+                            }
+                            else {
                                 RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile, PeopleFragment.newInstance(userInformation,bundle),userInformation,bundle),
                                         getActivity());
                             }
-                        }else {
+                        }
+                        else {
                             setAlreadySearchedInAdapter();
                         }
                     }

@@ -37,6 +37,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Queue;
+import java.util.Random;
 
 public class RecentMethods {
     public static void isNickCorrect(String nickname, DatabaseReference reference, TextView errorTextnickname) {
@@ -1426,5 +1427,105 @@ public class RecentMethods {
             timeH = "0" + hours;
         time = timeH + ":" + timeM;
         return time;
+    }
+    public static UserInformation ValidateSnapToUserInformation(DataSnapshot snapshot){
+        UserInformation userInformation = new UserInformation();
+        userInformation.setAge(snapshot.child("age").getValue(Long.class));
+        userInformation.setAvatar(snapshot.child("avatar").getValue(String.class));
+        userInformation.setGender(snapshot.child("gender").getValue(String.class));
+        userInformation.setNick(snapshot.child("nick").getValue(String.class));
+        userInformation.setPassword(snapshot.child("password").getValue(String.class));
+        userInformation.setPhone(snapshot.child("phone").getValue(String.class));
+        userInformation.setUid(snapshot.child("uid").getValue(String.class));
+        userInformation.setBio(snapshot.child("bio").getValue(String.class));
+        userInformation.setVersion(snapshot.child("version").getValue(String.class));
+        userInformation.setQueue(snapshot.child("queue").getValue(String.class));
+        userInformation.setChatsNontsType(snapshot.child("chatsNontsType").getValue(String.class));
+        userInformation.setGroupChatsNontsType(snapshot.child("groupChatsNontsType").getValue(String.class));
+        userInformation.setProfileNontsType(snapshot.child("profileNontsType").getValue(String.class));
+        userInformation.setAccountType(snapshot.child("accountType").getValue(String.class));
+        userInformation.setmoney(snapshot.child("money").getValue(Long.class));
+        userInformation.setTodayMining(snapshot.child("todayMining").getValue(Double.class));
+        userInformation.setMainLook(snapshot.child("mainLook").getValue(String.class));
+        return userInformation;
+    }
+    public static UserPeopleAdapter validateUserInformationToUserPeopleAdapter(UserInformation user){
+        UserPeopleAdapter userPeopleAdapter = new UserPeopleAdapter();
+        userPeopleAdapter.setBio(user.getBio());
+        userPeopleAdapter.setAvatar(user.getAvatar());
+        userPeopleAdapter.setNick(user.getNick());
+        return userPeopleAdapter;
+    }
+    public static void generate_users(int amount, FirebaseModel firebaseModel){
+        for(int i = 0; i < amount; i++){
+            UserInformation user = getRandomUser();
+            firebaseModel.getUsersReference().child(user.getNick()).setValue(user);
+            firebaseModel.getReference().child("usersNicks").child(user.getNick())
+                    .setValue(RecentMethods.validateUserInformationToUserPeopleAdapter(user));
+        }
+    }
+    public static UserInformation getRandomUser(){
+        UserInformation user = new UserInformation("nick", "fidjfif", "gk",
+                "6", "password", "Helicopter", 1000, new ArrayList<>(),new ArrayList<>(),1,100,0, new ArrayList<>()
+                , new ArrayList<>(), ""," ","open","open","open","open",
+                new ArrayList<>(),"regular", new ArrayList<>(),0,new ArrayList<>(),new ArrayList<>()
+                ,new ArrayList<>(),new ArrayList<>(),new ArrayList<>(),new ArrayList<>()
+                ,"https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Funtitled.glb?alt=media&token=657b45d7-a84b-4f2a-89f4-a699029401f7");
+        user.setNick("fake");
+        Random random = new Random();
+        for(int i = 0; i < 10; i++)
+            user.setNick(user.getNick() + (char)(random.nextInt(26) + 65));
+        return user;
+    }
+    public static void deleteFakeUsers(FirebaseModel firebaseModel){
+        firebaseModel.getUsersReference().get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if(task.isSuccessful()){
+                    DataSnapshot snapshot = task.getResult();
+                    for(DataSnapshot snap : snapshot.getChildren()) {
+                        String nickname = snap.child("nick").getValue(String.class);
+                        if(nickname.substring(0, 4).equals("fake")) {
+                            firebaseModel.getUsersReference().child(nickname).removeValue();
+                            firebaseModel.getReference().child("usersNicks").child(nickname).removeValue();
+                        }
+                    }
+                }
+                else
+                    Log.d("#######", "delete users error");
+            }
+        });
+    }
+    public static void random_subscription_generation(FirebaseModel firebaseModel){
+        Random random = new Random();
+        ArrayList<UserInformation> users = new ArrayList<>();
+        firebaseModel.getUsersReference().get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if(task.isSuccessful()){
+                    DataSnapshot snapshot = task.getResult();
+                    for(DataSnapshot snap : snapshot.getChildren())
+                        users.add(RecentMethods.ValidateSnapToUserInformation(snap));
+                    for(int i = 0; i < 3000; i++){
+                        int index_a = random.nextInt(users.size());
+                        int index_b = random.nextInt(users.size());
+                        while (index_a == index_b)
+                            index_b = random.nextInt(users.size());
+                        firebaseModel.getUsersReference().child(users.get(index_b).getNick())
+                                .child("subscribers").child(users.get(index_a).getNick()).setValue(users.get(index_a).getNick());
+                        firebaseModel.getUsersReference().child(users.get(index_a).getNick())
+                                .child("subscription").child(users.get(index_b).getNick()).setValue(users.get(index_b).getNick());
+                        if(i % 500 == 0 & i > 0)
+                            Log.d("#########", i + "   Done ");
+                    }
+                }
+                else
+                    Log.d("#######", "get all users error");
+            }
+        });
+    }
+    public static void usersBehaviourTest(int amount, FirebaseModel firebaseModel){
+        generate_users(amount, firebaseModel);
+        random_subscription_generation(firebaseModel);
     }
 }

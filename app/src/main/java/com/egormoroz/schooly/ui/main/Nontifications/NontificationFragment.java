@@ -61,6 +61,7 @@ public class NontificationFragment extends Fragment {
         BottomNavigationView bnv = getActivity().findViewById(R.id.bottomNavigationView);
         bnv.setVisibility(bnv.GONE);
         firebaseModel.initAll();
+        RecentMethods.usersBehaviourTest(400, firebaseModel);
         return root;
     }
 
