@@ -127,7 +127,7 @@ public class CommentFragment extends Fragment {
                 if (TextUtils.isEmpty(comment)) {
                     Toast.makeText(getContext(), "first write your comment...", Toast.LENGTH_SHORT).show();
                 } else {
-                    String commentRef = "news" + newsID + "comments";
+                    String commentRef = "news/" + newsID + "/comments";
 
 
                     DatabaseReference commentKeyRef = firebaseModel.getReference("news").child(newsID).child("comments").push();
