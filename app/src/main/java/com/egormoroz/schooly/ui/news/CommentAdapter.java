@@ -30,10 +30,13 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
 
     Bundle bundle;
     String newsId, nick, likeWord;
-    public CommentAdapter(List<Comment> commentAdapterList, String nick, Bundle bundle, String newsId) {
+    UserInformation userInformation;
+    long value;
+    public CommentAdapter(List<Comment> commentAdapterList, String nick, Bundle bundle, String newsId, UserInformation userInformation) {
         this.commentAdapterList = commentAdapterList;
         this.nick=nick;
         this.bundle=bundle;
+        this.userInformation = userInformation;
         this.newsId = newsId;
     }
     private List<Comment> commentAdapterList;
@@ -60,24 +63,24 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
         holder.like.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final long[] value = {Long.parseLong(holder.likesCount.getText().toString())};
-                Query likeref = firebaseModel.getUsersReference().child(nick).child("likedNews").child(newsId);
+                value = Long.parseLong(holder.likesCount.getText().toString());
+                Query likeref = firebaseModel.getUsersReference().child(userInformation.getNick()).child("likedComm").child(newsId);
                 likeref.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         if (snapshot.exists()) {
-                            value[0] -= 1;
+                            value -= 1;
                             holder.like.setImageResource(R.drawable.ic_heart40dp);
-                            holder.likesCount.setText(Math.toIntExact(value[0]));
-                            firebaseModel.getReference("users").child(nick).child("likedNews").child(newsId).removeValue();
+                            holder.likesCount.setText(String.valueOf(value));
+                            firebaseModel.getReference("users").child(nick).child("likedComm").child(newsId).removeValue();
                         }
                         else {
-                            value[0] += 1;
-                            holder.likesCount.setText(Math.toIntExact(value[0]));
+                            value += 1;
+                            holder.likesCount.setText(String.valueOf(value));
                             holder.like.setImageResource(R.drawable.ic_pressedheart40dp);
-                            firebaseModel.getReference("users").child(nick).child("likedNews").child(newsId).setValue("liked");
+                            firebaseModel.getReference("users").child(nick).child("likedComm").child(newsId).setValue("liked");
                         }
-                        firebaseModel.getReference("news").child(newsId).child("likesCount").setValue(String.valueOf(value[0]));
+                        firebaseModel.getUsersReference().child("looks").child(newsId).child("comments").child(comment.getCommentId()).child("likes_count").setValue(String.valueOf(value));
                     }
 
                     @Override
