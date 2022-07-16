@@ -5,7 +5,7 @@ public class Comment {
             comments,type,image;
     private   long likes_count;
 
-    public Comment(){
+    public Comment(String text, String s, String commentId, String postTime, String nick, String image, String comment){
 
     }
 

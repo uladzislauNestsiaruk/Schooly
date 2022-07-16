@@ -133,9 +133,10 @@ public class CommentFragment extends Fragment {
                     DatabaseReference commentKeyRef = firebaseModel.getReference("news").child(newsID).child("comments").push();
                     String commentID = commentKeyRef.getKey();
                     Map<String, String> commentTextBody = new HashMap<String, String>();
-                    commentTextBody.put("message", comment);
-                    commentTextBody.put("from", userInformation.getNick());
-                    commentTextBody.put("time", RecentMethods.getCurrentTime());
+                    commentTextBody.put("comment", comment);
+                    commentTextBody.put("likesCount", "0");
+                    commentTextBody.put("nick", userInformation.getNick());
+                    commentTextBody.put("postTime", RecentMethods.getCurrentTime());
                     commentTextBody.put("commentID", commentID);
 
                     Map<String, Object> messageBodyDetails = new HashMap<>();
@@ -155,7 +156,7 @@ public class CommentFragment extends Fragment {
     public void initControls(){
 
         RootRef = firebaseModel.getReference("news");
-        commentAdapter = new CommentAdapter(commentsArray);
+        //commentAdapter = new CommentAdapter(commentsArray);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         commentList.setLayoutManager(linearLayoutManager);

@@ -325,7 +325,7 @@ public class ViewingLookFragment extends Fragment {
                                     .child(newsItem.getNewsId()).child("comments").push().getKey();
                             firebaseModel.getUsersReference().child(newsItem.getNick()).child("looks")
                                     .child(newsItem.getNewsId()).child("comments").child(commentId)
-                                    .setValue(new Comment(editText.getText().toString(), 0, commentId,"0",nick,"image","comment"));
+                                    .setValue(new Comment(editText.getText().toString(), "0", commentId,RecentMethods.getCurrentTime(),nick,"image","comment"));
                             editText.getText().clear();
                             loadComments(newsItem);
                         }
@@ -407,7 +407,7 @@ public class ViewingLookFragment extends Fragment {
                 }else {
                     noComment.setVisibility(View.GONE);
                     recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-                    CommentAdapter commentAdapter = new CommentAdapter(comment);
+                    CommentAdapter commentAdapter = new CommentAdapter(comment, newsItem.getNick(), bundle, newsItem.getNewsId());
                     recyclerView.setAdapter(commentAdapter);
                 }
             }
