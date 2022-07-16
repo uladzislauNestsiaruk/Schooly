@@ -68,10 +68,12 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
                         if (snapshot.exists()) {
                             value[0] -= 1;
                             holder.like.setImageResource(R.drawable.ic_heart40dp);
+                            holder.likesCount.setText(Math.toIntExact(value[0]));
                             firebaseModel.getReference("users").child(nick).child("likedNews").child(newsId).removeValue();
                         }
                         else {
                             value[0] += 1;
+                            holder.likesCount.setText(Math.toIntExact(value[0]));
                             holder.like.setImageResource(R.drawable.ic_pressedheart40dp);
                             firebaseModel.getReference("users").child(nick).child("likedNews").child(newsId).setValue("liked");
                         }
