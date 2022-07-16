@@ -401,13 +401,11 @@ public class WardrobeFragment extends Fragment {
                     DataSnapshot snapshot= task.getResult();
                     lookClothesList=new ArrayList<>();
                     for(DataSnapshot snap:snapshot.getChildren()){
-                        Log.d("####", "d11 "+bufferToFilament);
                         Clothes clothes=snap.getValue(Clothes.class);
                         MyAsyncTask myAsyncTask=new MyAsyncTask();
                         myAsyncTask.execute(clothes.getModel());
                         try {
                             bufferToFilament=myAsyncTask.get();
-                            Log.d("####", "d "+bufferToFilament);
                             filamentModel.populateScene(bufferToFilament);
                         } catch (ExecutionException e) {
                             e.printStackTrace();
@@ -444,11 +442,13 @@ public class WardrobeFragment extends Fragment {
                         .child(clothes1.getUid()).removeValue();
                 firebaseModel.getUsersReference().child(nick).child("lookClothes")
                         .child(clothes.getUid()).setValue(clothes);
+                filamentModel.setMask(clothes1);
             }else{
                 firebaseModel.getUsersReference().child(nick).child("lookClothes")
                         .child(clothes.getUid()).setValue(clothes);
             }
         }
+
         tryOnClothes(clothes);
 
     }

@@ -111,8 +111,6 @@ public class MainFragment extends Fragment{
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_main, container, false);
-//        AppBarLayout abl = getActivity().findViewById(R.id.AppBarLayout);
-//        abl.setVisibility(abl.GONE);
         BottomNavigationView bnv = getActivity().findViewById(R.id.bottomNavigationView);
         bnv.setVisibility(View.VISIBLE);
         firebaseModel.initAll();
@@ -277,14 +275,23 @@ public class MainFragment extends Fragment{
 //                firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").child(uid8).setValue(new Clothes("clothes", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
 //                        ,120,"Christian Dior",0,123,"Schooly","coin"," ","",0,"foot",uid8,"no"));
 
-//        String uid8=firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").push().getKey();
-//        String uid7=firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").push().getKey();
-//                firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").child(uid8).setValue(new Clothes("shoes", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fdrag.png?alt=media&token=f5dccc5d-81ea-4dad-a62b-b39ee5e35487"
-//                        ,100,"Drewgons",0,123,"Schooly","coin"," ","https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Fgad.glb?alt=media&token=7c4a808a-19c1-40f8-95e4-631c901c8d2a"
-//         ,0,"foot",uid8,"no",null));
-//        firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").child(uid7).setValue(new Clothes("shoes", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Funtit%D0%B0le%D0%BD%D0%B3d.png?alt=media&token=361153c1-79bd-4d9e-93cc-4f3d4d600f21"
-//                ,120,"Pinkey",0,123,"Schooly","coin"," ","https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2FCROSSOVRS1%20(2).glb?alt=media&token=36a024c8-85c4-4b72-afa9-04023efb9d92"
-//                ,0,"foot",uid7,"no",null));
+
+        firebaseModel.getUsersReference()
+                .get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if(task.isSuccessful()){
+                    DataSnapshot snapshot=task.getResult();
+                    for(DataSnapshot snapshot1:snapshot.getChildren()){
+                        UserInformation userInformation=new UserInformation();
+                        userInformation.setNick(snapshot1.child("nick").getValue(String.class));
+                        if(userInformation.getNick().contains("fake")) {
+                            firebaseModel.getUsersReference()
+                                    .child(userInformation.getNick()).removeValue();
+                        }
+                    }                }
+            }
+        });
 
         relativeShop.setOnClickListener(new View.OnClickListener() {
             @Override

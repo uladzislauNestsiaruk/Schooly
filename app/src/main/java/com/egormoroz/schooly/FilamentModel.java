@@ -9,6 +9,7 @@ import android.view.SurfaceView;
 
 import androidx.core.view.MotionEventCompat;
 
+import com.egormoroz.schooly.ui.main.Shop.Clothes;
 import com.google.android.filament.Colors;
 import com.google.android.filament.Engine;
 import com.google.android.filament.EntityInstance;
@@ -46,6 +47,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 public class FilamentModel {
@@ -58,7 +60,7 @@ public class FilamentModel {
     GestureDetector doubleTapDetector;
     AutomationEngine.ViewerContent viewerContent=new AutomationEngine.ViewerContent();
     Float3 float3=new Float3(0.0f, 10.0f, 0.0f);
-    Float3  float31=new Float3(-0.15f, 0.1f, 0.13f);
+    Float3  float31=new Float3(-0.11f, 0.1f, -0.11f);
     long loadStartTime;
     Fence loadStartFence;
     byte[] buffer;
@@ -75,6 +77,7 @@ public class FilamentModel {
     AssetLoader assetLoader;
     int a;
     int b=0;
+    ArrayList<FilamentAsset> filamentAssets=new ArrayList<>();
 
     public void initFilament(SurfaceView surfaceView,Buffer buffer,boolean onTouch
             ,LockableNestedScrollView lockableNestedScrollView,String type
@@ -222,13 +225,13 @@ public class FilamentModel {
         modelViewer.getScene().addEntities(filamentAsset.getEntities());
         loadStartTime=System.nanoTime();
         loadStartFence=modelViewer.getEngine().createFence();
-        RenderableManager renderableManager=engine.getRenderableManager();
         int[] e=filamentAsset.getEntities();
         Log.d("###", filamentAsset.getName(e[0]));
     }
 
     public void populateScene(Buffer buffer){
-        filamentAsset=assetLoader.createAssetFromBinary(buffer);
+        FilamentAsset filamentAsset=assetLoader.createAssetFromBinary(buffer);
+        filamentAssets.add(filamentAsset);
         resourceLoader.asyncBeginLoad(filamentAsset);
         filamentAsset.releaseSourceData();
         resourceLoader.asyncUpdateLoad();
@@ -239,6 +242,24 @@ public class FilamentModel {
         //         |
         //for(a.length) тут маску наложить
         Log.d("###", "  "+e.length);
+        Log.d("###", "a "+filamentAssets.size());
+    }
+
+    public void setMask(Clothes clothes){
+        RenderableManager renderableManager=engine.getRenderableManager();
+        for(int i=0;i<filamentAssets.size();i++){
+            FilamentAsset filamentAsset=filamentAssets.get(i);
+            int[] entities=filamentAsset.getEntitiesByName(clothes.getClothesTitle()+"1");
+            if(entities.length!=0){
+                int rendarable=renderableManager.getInstance(entities[0]);
+                if(rendarable!=0){
+                    renderableManager.setLayerMask(rendarable,0xff,0x00);
+                }
+            }
+
+            Log.d("####", "v  "+entities.length);
+
+        }
     }
 
     public void postFrameCallback(){
