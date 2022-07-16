@@ -213,7 +213,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                             notifyDataSetChanged();
                         }
                     });
-
                 } else {
                     messageViewHolder.receiverProfileImage.setVisibility(View.VISIBLE);
                     messageViewHolder.messageReceiverPicture.setVisibility(View.VISIBLE);
@@ -225,7 +224,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                     messageViewHolder.senderPlay.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            Log.d("Voice", messages.getMessage());
                             voicePlayer.setUrlSource(messages.getMessage());
                             if (voicePlayer.isPlaying()){
                                 messageViewHolder.senderPlay.setVisibility(View.VISIBLE);

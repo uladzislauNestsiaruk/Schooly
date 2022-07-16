@@ -110,7 +110,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
                 holder.comment.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        RecentMethods.setCurrentFragment(NewsFragment.newInstance(userInformation,bundle), NewsFragment.newInstance(userInformation,bundle).getActivity());
+                        RecentMethods.setCurrentFragment(CommentFragment.newInstance(userInformation,bundle), CommentFragment.newInstance(userInformation,bundle).getActivity());
                     }
                 });
 

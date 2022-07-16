@@ -21,7 +21,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_marginEnd="8dp"
-        android:layout_toStartOf="@+id/send_message_btn"
+        android:layout_toStartOf="@+id/send_comment_btn"
         android:background="@color/app_color"
         android:fontFamily="@font/montserrat_bold"
         android:hint="Комментарий..."
@@ -32,7 +32,7 @@
         android:textSize="16sp" />
 
     <ImageButton
-        android:id="@+id/send_message_btn"
+        android:id="@+id/send_comment_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
