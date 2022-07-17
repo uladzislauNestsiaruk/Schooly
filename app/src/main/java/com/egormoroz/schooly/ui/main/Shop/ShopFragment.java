@@ -289,6 +289,10 @@ public class ShopFragment extends Fragment {
                                 clothes.setBodyType(snap.child("bodyType").getValue(String.class));
                                 clothes.setUid(snap.child("uid").getValue(String.class));
                                 clothes.setExclusive(snap.child("exclusive").getValue(String.class));
+                                clothes.setX(snap.child("x").getValue(Float.class));
+                                clothes.setY(snap.child("y").getValue(Float.class));
+                                clothes.setZ(snap.child("z").getValue(Float.class));
+                                clothes.setTransformRatio(snap.child("transformRatio").getValue(Float.class));
                                 allClothes.add(clothes);
                                 String clothesTitle=clothes.getClothesTitle();
                                 String title=clothesTitle;

@@ -21,11 +21,13 @@ public class Clothes {
     String uid;
     long purchaseToday;
     Buffer buffer;
+    Float x,y,z,transformRatio;
 
 
     public Clothes(String type, String  clothesImage, long clothesPrice,String clothesTitle
             ,long purchaseNumber,long timesTamp,String creator,String currencyType,String description,
-                   String model,long purchaseToday,String bodyType,String uid,String exclusive,Buffer buffer){
+                   String model,long purchaseToday,String bodyType,String uid,String exclusive,Buffer buffer
+    ,Float x,Float y,Float z,Float transformRatio){
         this.type=type;
         this.clothesImage=clothesImage;
         this.clothesPrice=clothesPrice;
@@ -41,6 +43,10 @@ public class Clothes {
         this.uid=uid;
         this.exclusive=exclusive;
         this.buffer=buffer;
+        this.x=x;
+        this.y=y;
+        this.z=z;
+        this.transformRatio=transformRatio;
     }
     public Clothes(){
     }
@@ -163,6 +169,38 @@ public class Clothes {
 
     public void setBuffer(Buffer buffer){
         this.buffer=buffer;
+    }
+
+    public Float getX(){
+        return this.x;
+    }
+
+    public void setX(Float x){
+        this.x=x;
+    }
+
+    public Float getY(){
+        return this.y;
+    }
+
+    public void setY(Float y){
+        this.y=y;
+    }
+
+    public Float getZ(){
+        return this.z;
+    }
+
+    public void setZ(Float z){
+        this.z=z;
+    }
+
+    public Float getTransformRatio(){
+        return this.transformRatio;
+    }
+
+    public void setTransformRatio(Float transformRatio){
+        this.transformRatio=transformRatio;
     }
 
 }

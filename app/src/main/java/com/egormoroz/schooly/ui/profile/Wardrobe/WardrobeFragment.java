@@ -1,5 +1,6 @@
 package com.egormoroz.schooly.ui.profile.Wardrobe;
 
+import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -14,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
@@ -100,6 +102,7 @@ public class WardrobeFragment extends Fragment {
     static URI uri;
     static Buffer buffer1,bufferToFilament;
     static FilamentModel filamentModel;
+    static Context context;
 
 
     @Override
@@ -140,7 +143,6 @@ public class WardrobeFragment extends Fragment {
             }else{
                 ArrayList<Buffer> buffers= (ArrayList<Buffer>) bundle.getSerializable("CHARACTERMODEL");
                 Buffer buffer3=buffers.get(0);
-                Log.d("###", "ff");
                 filamentModel.initFilament(surfaceView,buffer3,true,lockableNestedScrollView,"regularRender",true);
             }
         } catch (ExecutionException e) {
@@ -308,6 +310,10 @@ public class WardrobeFragment extends Fragment {
                             clothes.setModel(snap.child("model").getValue(String.class));
                             clothes.setBodyType(snap.child("bodyType").getValue(String.class));
                             clothes.setUid(snap.child("uid").getValue(String.class));
+                            clothes.setX(snap.child("x").getValue(Float.class));
+                            clothes.setY(snap.child("y").getValue(Float.class));
+                            clothes.setZ(snap.child("z").getValue(Float.class));
+                            clothes.setTransformRatio(snap.child("transformRatio").getValue(Float.class));
                             String clothesTitle = clothes.getClothesTitle();
                             String title = clothesTitle;
                             int valueLetters = editTextText.length();
@@ -406,7 +412,7 @@ public class WardrobeFragment extends Fragment {
                         myAsyncTask.execute(clothes.getModel());
                         try {
                             bufferToFilament=myAsyncTask.get();
-                            filamentModel.populateScene(bufferToFilament);
+                            filamentModel.populateScene(bufferToFilament,clothes);
                         } catch (ExecutionException e) {
                             e.printStackTrace();
                         } catch (InterruptedException e) {
@@ -424,7 +430,7 @@ public class WardrobeFragment extends Fragment {
         myAsyncTask.execute(clothes.getModel());
         try {
             bufferToFilament=myAsyncTask.get();
-            filamentModel.populateScene(bufferToFilament);
+            filamentModel.populateScene(bufferToFilament,clothes);
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
@@ -437,18 +443,22 @@ public class WardrobeFragment extends Fragment {
         String type=clothes.getClothesType();
         for(int i=0;i<userInformation.getLookClothes().size();i++){
             Clothes clothes1=userInformation.getLookClothes().get(i);
-            if(clothes1.getClothesType().equals(type)){
-                firebaseModel.getUsersReference().child(nick).child("lookClothes")
-                        .child(clothes1.getUid()).removeValue();
-                firebaseModel.getUsersReference().child(nick).child("lookClothes")
-                        .child(clothes.getUid()).setValue(clothes);
-                filamentModel.setMask(clothes1);
-            }else{
-                firebaseModel.getUsersReference().child(nick).child("lookClothes")
-                        .child(clothes.getUid()).setValue(clothes);
+            if(clothes1.getUid().equals(clothes.getUid())){
+                Log.d("####", "gg");
+            } else {
+                Log.d("####", "gg1");
+                if(clothes1.getClothesType().equals(type)){
+                    firebaseModel.getUsersReference().child(nick).child("lookClothes")
+                            .child(clothes1.getUid()).removeValue();
+                    firebaseModel.getUsersReference().child(nick).child("lookClothes")
+                            .child(clothes.getUid()).setValue(clothes);
+                    filamentModel.setMask(clothes1);
+                }else{
+                    firebaseModel.getUsersReference().child(nick).child("lookClothes")
+                            .child(clothes.getUid()).setValue(clothes);
+                }
             }
         }
-
         tryOnClothes(clothes);
 
     }

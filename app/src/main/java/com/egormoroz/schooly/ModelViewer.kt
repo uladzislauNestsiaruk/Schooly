@@ -184,7 +184,7 @@ class ModelViewer(
      *
      * @param centerPoint Coordinate of center point of unit cube, defaults to < 0, 0, -4 >
      */
-    fun transformToUnitCube(centerPoint: Float3 = kDefaultObjectPosition,asset: FilamentAsset) {
+    fun transformToUnitCube(centerPoint: Float3 = kDefaultObjectPosition,asset: FilamentAsset,transformRatio:Float) {
         asset?.let { asset ->
             val tm=engine.transformManager
             var center = asset.boundingBox.center.let { v -> Float3(v[0], v[1], v[2]) }
@@ -192,7 +192,7 @@ class ModelViewer(
             val maxExtent = 2.0f * max(halfExtent)
             val scaleFactor = 2.0f / maxExtent
             center -= centerPoint / scaleFactor
-            val transform =  scale(Float3(maxExtent/8.0f)) *  translation(-center)
+            val transform =  scale(Float3(maxExtent/transformRatio)) *  translation(-center)
             tm.setTransform(tm.getInstance(asset.root), transpose(transform).toFloatArray())
         }
     }

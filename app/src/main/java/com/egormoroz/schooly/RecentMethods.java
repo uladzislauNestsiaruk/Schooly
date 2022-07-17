@@ -594,6 +594,10 @@ public class RecentMethods {
                         clothes.setBodyType(snap.child("bodyType").getValue(String.class));
                         clothes.setUid(snap.child("uid").getValue(String.class));
                         clothes.setExclusive(snap.child("exclusive").getValue(String.class));
+                        clothes.setX(snap.child("x").getValue(Float.class));
+                        clothes.setY(snap.child("y").getValue(Float.class));
+                        clothes.setZ(snap.child("z").getValue(Float.class));
+                        clothes.setTransformRatio(snap.child("transformRatio").getValue(Float.class));
                         clothesFromBase.add(clothes);
                     }
                     callback.getClothes(clothesFromBase);
@@ -789,6 +793,10 @@ public class RecentMethods {
                     clothes.setModel(snap.child("model").getValue(String.class));
                     clothes.setUid(snap.child("uid").getValue(String.class));
                     clothes.setExclusive(snap.child("exclusive").getValue(String.class));
+                    clothes.setX(snap.child("x").getValue(Float.class));
+                    clothes.setY(snap.child("y").getValue(Float.class));
+                    clothes.setZ(snap.child("z").getValue(Float.class));
+                    clothes.setTransformRatio(snap.child("transformRatio").getValue(Float.class));
                     clothesFromBase.add(clothes);
                 }
                 callback.getClothes(clothesFromBase);
@@ -825,6 +833,10 @@ public class RecentMethods {
                     clothes.setBodyType(snap.child("bodyType").getValue(String.class));
                     clothes.setUid(snap.child("uid").getValue(String.class));
                     clothes.setExclusive(snap.child("exclusive").getValue(String.class));
+                    clothes.setX(snap.child("x").getValue(Float.class));
+                    clothes.setY(snap.child("y").getValue(Float.class));
+                    clothes.setZ(snap.child("z").getValue(Float.class));
+                    clothes.setTransformRatio(snap.child("transformRatio").getValue(Float.class));
                     clothesFromBase.add(clothes);
                 }
                 callback.getClothes(clothesFromBase);
@@ -1295,8 +1307,7 @@ public class RecentMethods {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 ArrayList<Comment> commentsList = new ArrayList<>();
                 for (DataSnapshot snap:snapshot.getChildren()){
-                    Comment comment=new Comment();
-                    comment=snap.getValue(Comment.class);
+                    Comment comment=snap.getValue(Comment.class);
                     commentsList.add(comment);
                 }
                 callback.getCommentsList(commentsList);

@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.egormoroz.schooly.Callbacks;
@@ -114,7 +115,6 @@ public class WardrobeShoes extends Fragment {
                     }else {
                         Collections.reverse(sortShoesArrayListWardrobe);
                         WardrobeClothesAdapter newClothesAdapter = new WardrobeClothesAdapter(sortShoesArrayListWardrobe, itemClickListener,userInformation);
-                        wardrobeRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
                         wardrobeRecyclerView.setAdapter(newClothesAdapter);
                     }
                 }
@@ -140,7 +140,6 @@ public class WardrobeShoes extends Fragment {
             }else {
                 Collections.reverse(sortShoesArrayListWardrobe);
                 WardrobeClothesAdapter newClothesAdapter = new WardrobeClothesAdapter(sortShoesArrayListWardrobe, itemClickListener,userInformation);
-                wardrobeRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
                 wardrobeRecyclerView.setAdapter(newClothesAdapter);
             }
         }

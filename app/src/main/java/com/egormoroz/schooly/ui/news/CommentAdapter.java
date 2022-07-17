@@ -73,14 +73,17 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
                             holder.like.setImageResource(R.drawable.ic_heart40dp);
                             holder.likesCount.setText(String.valueOf(value));
                             firebaseModel.getReference("users").child(userInformation.getNick()).child("likedComm").child(newsId).removeValue();
+                            firebaseModel.getUsersReference().child(nick).child("looks").child(newsId).child("comments").child(comment.getCommentId()).child("likes_count").setValue(value);
+
                         }
                         else {
                             value += 1;
                             holder.likesCount.setText(String.valueOf(value));
                             holder.like.setImageResource(R.drawable.ic_pressedheart40dp);
                             firebaseModel.getReference("users").child(userInformation.getNick()).child("likedComm").child(newsId).setValue("liked");
+                            firebaseModel.getUsersReference().child(nick).child("looks").child(newsId).child("comments").child(comment.getCommentId()).child("likes_count").setValue(value);
+
                         }
-                        firebaseModel.getUsersReference().child(nick).child("looks").child(newsId).child("comments").child(comment.getCommentId()).child("likes_count").setValue(String.valueOf(value));
                     }
 
                     @Override

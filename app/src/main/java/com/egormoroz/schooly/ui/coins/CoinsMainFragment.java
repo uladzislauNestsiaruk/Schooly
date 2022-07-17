@@ -32,6 +32,8 @@ import com.egormoroz.schooly.ui.main.Shop.Clothes;
 import com.egormoroz.schooly.ui.main.UserInformation;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.nio.Buffer;
+
 public class CoinsMainFragment extends Fragment {
     private FirebaseModel firebaseModel = new FirebaseModel();
     LinearLayout oneLinear,twoLinear,fiveLinear
@@ -46,6 +48,7 @@ public class CoinsMainFragment extends Fragment {
     String nick;
     UserInformation userInformation;
     Bundle bundle;
+    Buffer buffer;
 
     public CoinsMainFragment(UserInformation userInformation,Bundle bundle) {
         this.userInformation=userInformation;
@@ -77,6 +80,22 @@ public class CoinsMainFragment extends Fragment {
                 RecentMethods.setCurrentFragment(MainFragment.newInstance(userInformation, bundle), getActivity());
             }
         };
+
+        Float x=-0.02f;
+        Float y=0.19f;
+        Float z=-0.14f;
+        Float transformRatio=6.7f;
+
+//        String uid8=firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").push().getKey();
+//        firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").child(uid8)
+//                .setValue(new Clothes("shoes", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Funtitled%20(7).png?alt=media&token=3b195cab-df73-4186-925f-88d382270c5b"
+//                , 270, "Plurixx", 0, 0, "tyomaa6", "coin", "", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Fplurixx.glb?alt=media&token=9f879dc8-3b92-41a6-bf28-2c1095ca5865",
+//                        0, "foot", uid8, "no",buffer , x,y,z,transformRatio));
+//        firebaseModel.getUsersReference().child("tyomaa6").child("myClothes").child(uid8)
+//                .setValue(new Clothes("shoes", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Funtitled%20(7).png?alt=media&token=3b195cab-df73-4186-925f-88d382270c5b"
+//                        , 270, "Plurixx", 0, 0, "tyomaa6", "coin", "", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Fplurixx.glb?alt=media&token=9f879dc8-3b92-41a6-bf28-2c1095ca5865",
+//                        0, "foot", uid8, "no",buffer , x,y,z,transformRatio));
+
 
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback1);
         oneLinear=view.findViewById(R.id.oneThousand);

@@ -60,7 +60,7 @@ public class FilamentModel {
     GestureDetector doubleTapDetector;
     AutomationEngine.ViewerContent viewerContent=new AutomationEngine.ViewerContent();
     Float3 float3=new Float3(0.0f, 10.0f, 0.0f);
-    Float3  float31=new Float3(-0.11f, 0.1f, -0.11f);
+    Float3  float31=new Float3(-0.02f, 0.19f, -0.14f);
     long loadStartTime;
     Fence loadStartFence;
     byte[] buffer;
@@ -81,12 +81,12 @@ public class FilamentModel {
 
     public void initFilament(SurfaceView surfaceView,Buffer buffer,boolean onTouch
             ,LockableNestedScrollView lockableNestedScrollView,String type
-    ,boolean transform) throws IOException, URISyntaxException {
+            ,boolean transform) throws IOException, URISyntaxException {
         Filament.init();
         Gltfio.init();
         Utils.INSTANCE.init();
         cameraManipulator=new Manipulator.Builder()
-                .targetPosition(0.0f, 10.0f, 0.0f)
+                .targetPosition(0.0f, 10.0f, -1.0f)
                 .orbitHomePosition(0.0f, 10.0f, 28.0f)
                 .viewport(surfaceView.getWidth(), surfaceView.getHeight())
                 .zoomSpeed(0.07f)
@@ -229,14 +229,16 @@ public class FilamentModel {
         Log.d("###", filamentAsset.getName(e[0]));
     }
 
-    public void populateScene(Buffer buffer){
+    public void populateScene(Buffer buffer,Clothes clothes){
+        Log.d("####","dd  "+buffer);
         FilamentAsset filamentAsset=assetLoader.createAssetFromBinary(buffer);
         filamentAssets.add(filamentAsset);
         resourceLoader.asyncBeginLoad(filamentAsset);
         filamentAsset.releaseSourceData();
         resourceLoader.asyncUpdateLoad();
         modelViewer.populateScene(filamentAsset);
-        modelViewer.transformToUnitCube(float31,filamentAsset);
+        Float3 float3=new Float3(clothes.getX(), clothes.getY(), clothes.getZ());
+        modelViewer.transformToUnitCube(float3,filamentAsset,clothes.getTransformRatio());
         int[] e=filamentAsset.getEntities();
         //int[] a=getEntitiesByName
         //         |
@@ -249,16 +251,13 @@ public class FilamentModel {
         RenderableManager renderableManager=engine.getRenderableManager();
         for(int i=0;i<filamentAssets.size();i++){
             FilamentAsset filamentAsset=filamentAssets.get(i);
-            int[] entities=filamentAsset.getEntitiesByName(clothes.getClothesTitle()+"1");
+            int[] entities=filamentAsset.getEntitiesByName(clothes.getClothesTitle());
             if(entities.length!=0){
                 int rendarable=renderableManager.getInstance(entities[0]);
                 if(rendarable!=0){
                     renderableManager.setLayerMask(rendarable,0xff,0x00);
                 }
             }
-
-            Log.d("####", "v  "+entities.length);
-
         }
     }
 
@@ -280,7 +279,7 @@ public class FilamentModel {
     }
 
     public void executeTask(String url, SurfaceView surfaceView, boolean onTouch, Buffer buffer,LockableNestedScrollView lockableNestedScrollView
-                            , String type, boolean transform
+            , String type, boolean transform
     ) throws ExecutionException, InterruptedException, IOException, URISyntaxException {
         MyAsyncTask myAsyncTask=new MyAsyncTask();
         if(buffer==null){
