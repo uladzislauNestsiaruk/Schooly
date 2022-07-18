@@ -19,8 +19,7 @@
       android:textColor="@color/app_color"
       android:textSize="18sp"
       android:layout_marginTop="10dp"
-      android:paddingEnd="14dp"
-      android:paddingTop="10dp"/>
+      android:paddingEnd="14dp" />
 
 
   <ImageView

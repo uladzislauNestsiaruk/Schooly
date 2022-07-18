@@ -1390,6 +1390,10 @@ public class RecentMethods {
                     clothes.setBodyType(snap.child("bodyType").getValue(String.class));
                     clothes.setModel(snap.child("model").getValue(String.class));
                     clothes.setUid(snap.child("uid").getValue(String.class));
+                    clothes.setX(snap.child("x").getValue(Float.class));
+                    clothes.setY(snap.child("y").getValue(Float.class));
+                    clothes.setZ(snap.child("z").getValue(Float.class));
+                    clothes.setTransformRatio(snap.child("transformRatio").getValue(Float.class));
                     clothesFromBase.add(clothes);
                 }
                 callback.getClothes(clothesFromBase);

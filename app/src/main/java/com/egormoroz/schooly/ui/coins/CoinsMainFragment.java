@@ -81,16 +81,30 @@ public class CoinsMainFragment extends Fragment {
             }
         };
 
-        Float x=-0.02f;
-        Float y=0.19f;
-        Float z=-0.14f;
-        Float transformRatio=6.7f;
+        Float x=-0.01f;
+        Float y=0.21f;
+        Float z=-0.17f;
+        Float transformRatio=5.65f;
+        Float x1=-0.01f;
+        Float y1=0.21f;
+        Float z1=-0.12f;
+        Float transformRatio1=5.55f;
 
-//        String uid8=firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").push().getKey();
+        String uid8=firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").push().getKey();
+        String uid7=firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").push().getKey();
+        String uid9=firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").push().getKey();
 //        firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").child(uid8)
-//                .setValue(new Clothes("shoes", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Funtitled%20(7).png?alt=media&token=3b195cab-df73-4186-925f-88d382270c5b"
-//                , 270, "Plurixx", 0, 0, "tyomaa6", "coin", "", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Fplurixx.glb?alt=media&token=9f879dc8-3b92-41a6-bf28-2c1095ca5865",
-//                        0, "foot", uid8, "no",buffer , x,y,z,transformRatio));
+//                .setValue(new Clothes("shoes", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fu%D0%90%D0%90tit%D0%90%D0%90led.png?alt=media&token=8a15061c-e753-4797-8cd3-81e660c97da8"
+//                , 150, "Grossfan", 0, 0, "Sholly", "coin", "", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Fgrossfan.glb?alt=media&token=32b887de-e60a-4f80-84ab-421690f9babf",
+//                        0, "foot", uid8, "no",buffer , x1,y1,z1,transformRatio1));
+//        firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").child(uid7)
+//                .setValue(new Clothes("shoes", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Funtitled%20(3).png?alt=media&token=5514bcf2-c168-4501-a3fa-d46b9c66ba13"
+//                        , 110, "Pinkey", 0, 0, "Sholly", "coin", "", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2FPinkey2.glb?alt=media&token=7e82e8bd-f989-483d-ab31-0b1a6bfcf022",
+//                        0, "foot", uid7, "no",buffer , x,y,z,transformRatio));
+//        firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").child(uid9)
+//                .setValue(new Clothes("shoes", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fhgf.png?alt=media&token=6b772427-3561-4fa3-8560-efb593ec196f"
+//                        , 110, "Rawler's", 0, 0, "Sholly", "coin", "", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2FRawler's2.glb?alt=media&token=e359d230-1291-4a6f-bd59-74a8e1bc5212",
+//                        0, "foot", uid9, "no",buffer , x,y,z,transformRatio));
 //        firebaseModel.getUsersReference().child("tyomaa6").child("myClothes").child(uid8)
 //                .setValue(new Clothes("shoes", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Funtitled%20(7).png?alt=media&token=3b195cab-df73-4186-925f-88d382270c5b"
 //                        , 270, "Plurixx", 0, 0, "tyomaa6", "coin", "", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Fplurixx.glb?alt=media&token=9f879dc8-3b92-41a6-bf28-2c1095ca5865",

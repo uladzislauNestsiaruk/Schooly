@@ -277,22 +277,22 @@ public class MainFragment extends Fragment{
 //                        ,120,"Christian Dior",0,123,"Schooly","coin"," ","",0,"foot",uid8,"no"));
 
 
-        firebaseModel.getUsersReference()
-                .get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if(task.isSuccessful()){
-                    DataSnapshot snapshot=task.getResult();
-                    for(DataSnapshot snapshot1:snapshot.getChildren()){
-                        UserInformation userInformation=new UserInformation();
-                        userInformation.setNick(snapshot1.child("nick").getValue(String.class));
-                        if(userInformation.getNick().contains("fake")) {
-                            firebaseModel.getUsersReference()
-                                    .child(userInformation.getNick()).removeValue();
-                        }
-                    }                }
-            }
-        });
+//        firebaseModel.getUsersReference()
+//                .get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<DataSnapshot> task) {
+//                if(task.isSuccessful()){
+//                    DataSnapshot snapshot=task.getResult();
+//                    for(DataSnapshot snapshot1:snapshot.getChildren()){
+//                        UserInformation userInformation=new UserInformation();
+//                        userInformation.setNick(snapshot1.child("nick").getValue(String.class));
+//                        if(userInformation.getNick().contains("fake")) {
+//                            firebaseModel.getUsersReference()
+//                                    .child(userInformation.getNick()).removeValue();
+//                        }
+//                    }                }
+//            }
+//        });
 
         relativeShop.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -309,7 +309,6 @@ public class MainFragment extends Fragment{
                         @Override
                         public void onClick(View v) {
                             RecentMethods.setCurrentFragment(MiningFragment.newInstance(userInformation,bundle), getActivity());
-
                         }
                     });
                 }

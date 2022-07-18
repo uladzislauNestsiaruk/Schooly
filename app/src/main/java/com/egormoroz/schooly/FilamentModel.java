@@ -60,7 +60,7 @@ public class FilamentModel {
     GestureDetector doubleTapDetector;
     AutomationEngine.ViewerContent viewerContent=new AutomationEngine.ViewerContent();
     Float3 float3=new Float3(0.0f, 10.0f, 0.0f);
-    Float3  float31=new Float3(-0.02f, 0.19f, -0.14f);
+    Float3  float31=new Float3(-0.01f, 0.27f, -0.11f);
     long loadStartTime;
     Fence loadStartFence;
     byte[] buffer;
