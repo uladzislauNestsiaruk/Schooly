@@ -53,6 +53,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -102,6 +103,7 @@ public class WardrobeFragment extends Fragment {
     static Buffer buffer1,bufferToFilament,b;
     static FilamentModel filamentModel;
     static ArrayList<Clothes> clothesList=new ArrayList<>();
+    static ArrayList<String> clothesUid=new ArrayList<>();
 
 
     @Override
@@ -112,6 +114,9 @@ public class WardrobeFragment extends Fragment {
         bnv.setVisibility(bnv.GONE);
         firebaseModel.initAll();
         filamentModel=new FilamentModel();
+        if(bundle.getSerializable("CLOTHESUID")!=null){
+            clothesUid= (ArrayList<String>) bundle.getSerializable("CLOTHESUID");
+        }
         return root;
     }
 
@@ -120,7 +125,7 @@ public class WardrobeFragment extends Fragment {
         super.onDestroyView();
         bundle.putString("EDIT_WARDROBE_TAG", searchText.getText().toString().trim());
         bundle.putInt("TAB_INT_WARDROBE", tabLayoutPosition);
-        bundle.putSerializable("CLOTHESLIST", lookClothesList);
+        bundle.putSerializable("CLOTHESUID", clothesUid);
         bundle.putSerializable("ALLLOADCLOTHESLIST", clothesList);
     }
 
@@ -132,7 +137,7 @@ public class WardrobeFragment extends Fragment {
         searchText = view.findViewById(R.id.searchClothesWardrobe);
         searchRecycler = view.findViewById(R.id.searchRecycler);
         lockableNestedScrollView=view.findViewById(R.id.lockableNestedScrollView);
-        if(bundle.getSerializable("CLOTHESLIST")!=null){
+        if(bundle.getSerializable("ALLLOADCLOTHESLIST")!=null){
             clothesList= (ArrayList<Clothes>) bundle.getSerializable("ALLLOADCLOTHESLIST");
         }
         itemClickListener=new WardrobeClothesAdapter.ItemClickListener() {
@@ -171,7 +176,6 @@ public class WardrobeFragment extends Fragment {
         notFound = view.findViewById(R.id.notFound);
         tabLayout = view.findViewById(R.id.tabLayoutWardrobe);
         viewPager = view.findViewById(R.id.frcontwardrobe);
-
 
         if (bundle != null) {
             tabLayoutPosition = bundle.getInt("TAB_INT_WARDROBE");
@@ -413,40 +417,38 @@ public class WardrobeFragment extends Fragment {
     }
 
     public void loadLookClothes(){
-        if(bundle.getSerializable("CLOTHESLIST")==null){
+        if(clothesUid.size()==0) {
             firebaseModel.getUsersReference().child(nick).child("lookClothes")
                     .get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DataSnapshot> task) {
-                    if(task.isSuccessful()){
-                        DataSnapshot snapshot= task.getResult();
-                        lookClothesList=new ArrayList<>();
-                        for(DataSnapshot snap:snapshot.getChildren()){
-                            Clothes clothes=snap.getValue(Clothes.class);
-                            MyAsyncTask myAsyncTask=new MyAsyncTask();
-                            myAsyncTask.execute(clothes.getModel());
-                            try {
-                                bufferToFilament=myAsyncTask.get();
-                                filamentModel.populateScene(bufferToFilament,clothes);
-                                clothes.setBuffer(bufferToFilament);
-                                lookClothesList.add(clothes);
-                                clothesList.add(clothes);
-                            } catch (ExecutionException e) {
-                                e.printStackTrace();
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
+                    if (task.isSuccessful()) {
+                        DataSnapshot snapshot = task.getResult();
+                        lookClothesList = new ArrayList<>();
+                        for (DataSnapshot snap : snapshot.getChildren()) {
+                            Clothes clothes = snap.getValue(Clothes.class);
+                            addModelInScene(clothes);
+                            clothesList.add(clothes);
+                            clothesUid.add(clothes.getUid());
+                            Log.d("#####", "d1");
                         }
                     }
                 }
             });
-        }else{
-            lookClothesList= (ArrayList<Clothes>) bundle.getSerializable("CLOTHESLIST");
-            for (int i=0;i<lookClothesList.size();i++){
-                Clothes clothes=lookClothesList.get(i);
-                filamentModel.populateScene(clothes.getBuffer(),clothes);
+        }  else{
+            Log.d("####", "q  "+clothesUid);
+            for(int i=0;i<clothesList.size();i++ ){
+                Clothes clothes=clothesList.get(i);
+                if(clothesUid.contains(clothes.getUid())&&clothes.getBuffer()!=null){
+                    filamentModel.populateScene(clothes.getBuffer(), clothes);
+                    Log.d("#####", "2");
+                } else if(clothesUid.contains(clothes.getUid())&&clothes.getBuffer()==null){
+                    addModelInScene(clothes);
+                    clothesList.add(clothes);
+                    clothesUid.add(clothes.getUid());
+                    Log.d("#####", "3");
+                }
             }
-            Log.d("####", "11");
         }
     }
 
@@ -456,48 +458,35 @@ public class WardrobeFragment extends Fragment {
             for(int i=0;i<clothesList.size();i++){
                 Clothes clothes1=clothesList.get(i);
                 if(clothes.getUid().equals(clothes1.getUid()) && a==0 && clothes.getBuffer()!=null){
-                        filamentModel.populateScene(clothes.getBuffer(),clothes);
+                    filamentModel.populateScene(clothes.getBuffer(),clothes);
+                    Log.d("####", "11");
                     a++;
                 }else if(a==0 && i==clothesList.size()-1){
-                    MyAsyncTask myAsyncTask=new MyAsyncTask();
-                    myAsyncTask.execute(clothes.getModel());
-                    try {
-                        bufferToFilament=myAsyncTask.get();
-                        filamentModel.populateScene(bufferToFilament,clothes);
-                        clothes.setBuffer(bufferToFilament);
-                        clothesList.add(clothes);
-                        a++;
-                    } catch (ExecutionException e) {
-                        e.printStackTrace();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+                    addModelInScene(clothes);
+                    clothesList.add(clothes);
+                    clothesUid.add(clothes.getUid());
+                    a++;
+                    Log.d("####", "22");
                 }
             }
         }else {
-            MyAsyncTask myAsyncTask=new MyAsyncTask();
-            myAsyncTask.execute(clothes.getModel());
-            try {
-                bufferToFilament=myAsyncTask.get();
-                filamentModel.populateScene(bufferToFilament,clothes);
-                clothes.setBuffer(bufferToFilament);
-                clothesList.add(clothes);
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
+            addModelInScene(clothes);
+            clothesList.add(clothes);
+            clothesUid.add(clothes.getUid());
+            a++;
+            Log.d("####", "33");
         }
+        Log.d("####", "eee  "+clothesUid);
     }
 
 
+
     public static void makeClothesInvisible(Clothes clothes){
+        Log.d("####", " "+clothesUid);
         String type=clothes.getClothesType();
         int a=0;
         b=clothes.getBuffer();
         if(userInformation.getLookClothes().size()==0){
-            lookClothesList.add(clothes);
             clothes.setBuffer(null);
             firebaseModel.getUsersReference().child(nick).child("lookClothes")
                     .child(clothes.getUid()).setValue(clothes);
@@ -513,15 +502,13 @@ public class WardrobeFragment extends Fragment {
                     if (clothes1.getClothesType().equals(type)) {
                         firebaseModel.getUsersReference().child(nick).child("lookClothes")
                                 .child(clothes1.getUid()).removeValue();
-                        int index=lookClothesList.indexOf(clothes1);
-                        //lookClothesList.remove(index);
-                        lookClothesList.add(clothes);
+                        clothesUid.remove(clothes1.getUid());
+                        Log.d("####", " "+clothesUid);
                         clothes.setBuffer(null);
                         firebaseModel.getUsersReference().child(nick).child("lookClothes")
                                 .child(clothes.getUid()).setValue(clothes);
                         filamentModel.setMask(clothes1);
                     } else {
-                        lookClothesList.add(clothes);
                         clothes.setBuffer(null);
                         firebaseModel.getUsersReference().child(nick).child("lookClothes")
                                 .child(clothes.getUid()).setValue(clothes);
@@ -535,7 +522,6 @@ public class WardrobeFragment extends Fragment {
                 }
             }
         }
-        Log.d("####", "27 "+lookClothesList.size());
     }
 
     @Override
@@ -602,4 +588,22 @@ public class WardrobeFragment extends Fragment {
         }
 
     }
-}
+
+    public static void addModelInScene(Clothes clothes){
+        MyAsyncTask myAsyncTask=new MyAsyncTask();
+        myAsyncTask.execute(clothes.getModel());
+        try {
+            bufferToFilament=myAsyncTask.get();
+            filamentModel.populateScene(bufferToFilament,clothes);
+            clothes.setBuffer(bufferToFilament);
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void saveFile(){
+        //FileOutputStream fileOutputStream=new
+
+    }}

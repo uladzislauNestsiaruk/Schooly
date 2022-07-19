@@ -253,10 +253,7 @@ public class FilamentModel {
             FilamentAsset filamentAsset=filamentAssets.get(i);
             int[] entities=filamentAsset.getEntitiesByName(clothes.getClothesTitle());
             if(entities.length!=0){
-                int rendarable=renderableManager.getInstance(entities[0]);
-                if(rendarable!=0){
-                    renderableManager.setLayerMask(rendarable,0xff,0x00);
-                }
+                modelViewer.getScene().removeEntity(entities[0]);
             }
         }
     }
