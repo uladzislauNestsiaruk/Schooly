@@ -429,25 +429,18 @@ public class WardrobeFragment extends Fragment {
                         for (DataSnapshot snap : snapshot.getChildren()) {
                             Clothes clothes = snap.getValue(Clothes.class);
                             addModelInScene(clothes);
-                            clothesList.add(clothes);
-                            clothesUid.add(clothes.getUid());
                             Log.d("#####", "d1");
                         }
                     }
                 }
             });
         }  else{
-            Log.d("####", "q  "+clothesUid);
             for(int i=0;i<clothesList.size();i++ ){
                 Clothes clothes=clothesList.get(i);
                 if(clothesUid.contains(clothes.getUid())&&clothes.getBuffer()!=null){
                     filamentModel.populateScene(clothes.getBuffer(), clothes);
-                    Log.d("#####", "2");
                 } else if(clothesUid.contains(clothes.getUid())&&clothes.getBuffer()==null){
                     addModelInScene(clothes);
-                    clothesList.add(clothes);
-                    clothesUid.add(clothes.getUid());
-                    Log.d("#####", "3");
                 }
             }
         }
@@ -458,35 +451,29 @@ public class WardrobeFragment extends Fragment {
         if(clothesList.size()!=0){
             for(int i=0;i<clothesList.size();i++){
                 Clothes clothes1=clothesList.get(i);
-                if(clothes.getUid().equals(clothes1.getUid()) && a==0 && clothes.getBuffer()!=null){
+                if(clothes.getUid().equals(clothes1.getUid()) && clothes.getBuffer()!=null){
                     filamentModel.populateScene(clothes.getBuffer(),clothes);
-                    Log.d("####", "11");
-                    a++;
+                    clothesUid.add(clothes.getUid());
+                    break;
                 }else if(a==0 && i==clothesList.size()-1){
                     addModelInScene(clothes);
-                    clothesList.add(clothes);
-                    clothesUid.add(clothes.getUid());
-                    a++;
-                    Log.d("####", "22");
+                    break;
                 }
             }
         }else {
             addModelInScene(clothes);
-            clothesList.add(clothes);
-            clothesUid.add(clothes.getUid());
             a++;
-            Log.d("####", "33");
         }
-        Log.d("####", "eee  "+clothesUid);
     }
 
 
 
     public static void makeClothesInvisible(Clothes clothes){
-        Log.d("####", " "+clothesUid);
         String type=clothes.getBodyType();
         int a=0;
+        int c=0;
         b=clothes.getBuffer();
+        Clothes clothesToChange=new Clothes();
         if(userInformation.getLookClothes().size()==0){
             clothes.setBuffer(null);
             firebaseModel.getUsersReference().child(nick).child("lookClothes")
@@ -499,23 +486,27 @@ public class WardrobeFragment extends Fragment {
         }  else{
             for(int i=0;i<userInformation.getLookClothes().size();i++){
                 Clothes clothes1=userInformation.getLookClothes().get(i);
-                if(!clothes1.getUid().equals(clothes.getUid())) {
-                    if (clothes1.getBodyType().equals(type)) {
+                if(clothes1.getUid().equals(clothes.getUid())){
+                    break;
+                }if(clothes1.getBodyType().equals(type)){
+                    clothesToChange=clothes1;
+                    c++;
+                }
+                if(i==userInformation.getLookClothes().size()-1){
+                    if(c==1){
                         firebaseModel.getUsersReference().child(nick).child("lookClothes")
-                                .child(clothes1.getUid()).removeValue();
-                        clothesUid.remove(clothes1.getUid());
-                        Log.d("####", " "+clothesUid);
+                                .child(clothesToChange.getUid()).removeValue();
+                        clothesUid.remove(clothesToChange.getUid());
                         clothes.setBuffer(null);
                         firebaseModel.getUsersReference().child(nick).child("lookClothes")
                                 .child(clothes.getUid()).setValue(clothes);
-                        filamentModel.setMask(clothes1);
-                    } else {
+                        filamentModel.setMask(clothesToChange);
+                    }     else{
                         clothes.setBuffer(null);
                         firebaseModel.getUsersReference().child(nick).child("lookClothes")
                                 .child(clothes.getUid()).setValue(clothes);
                     }
                     if(a==0){
-                        Log.d("####", "qw ");
                         clothes.setBuffer(b);
                         tryOnClothes(clothes);
                         a++;
@@ -597,6 +588,8 @@ public class WardrobeFragment extends Fragment {
             bufferToFilament=myAsyncTask.get();
             filamentModel.populateScene(bufferToFilament,clothes);
             clothes.setBuffer(bufferToFilament);
+            clothesList.add(clothes);
+            clothesUid.add(clothes.getUid());
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
