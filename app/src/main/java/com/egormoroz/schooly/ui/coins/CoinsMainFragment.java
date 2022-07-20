@@ -84,19 +84,19 @@ public class CoinsMainFragment extends Fragment {
         Float x=-0.01f;
         Float y=0.21f;
         Float z=-0.17f;
-        Float transformRatio=5.65f;
-        Float x1=-0.01f;
-        Float y1=0.21f;
-        Float z1=-0.12f;
-        Float transformRatio1=5.55f;
+        Float transformRatio=10.5f;
+        Float x1=0.0f;
+        Float y1=2.0f;
+        Float z1=-0.2f;
+        Float transformRatio1=10.5f;
 
         String uid8=firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").push().getKey();
         String uid7=firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").push().getKey();
         String uid9=firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").push().getKey();
 //        firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").child(uid8)
-//                .setValue(new Clothes("shoes", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fu%D0%90%D0%90tit%D0%90%D0%90led.png?alt=media&token=8a15061c-e753-4797-8cd3-81e660c97da8"
-//                , 150, "Grossfan", 0, 0, "Sholly", "coin", "", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Fgrossfan.glb?alt=media&token=32b887de-e60a-4f80-84ab-421690f9babf",
-//                        0, "foot", uid8, "no",buffer , x1,y1,z1,transformRatio1));
+//                .setValue(new Clothes("clothes", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fu%D0%90%D0%90tit%D0%90%D0%90led.png?alt=media&token=8a15061c-e753-4797-8cd3-81e660c97da8"
+//                , 150, "T-shirt", 0, 0, "Sholly", "coin", "", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Ftshirt.glb?alt=media&token=c995caa3-1fe0-4216-bf40-e67651763e34",
+//                        0, "body", uid8, "no",buffer , x1,y1,z1,transformRatio1));
 //        firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").child(uid7)
 //                .setValue(new Clothes("shoes", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Funtitled%20(3).png?alt=media&token=5514bcf2-c168-4501-a3fa-d46b9c66ba13"
 //                        , 110, "Pinkey", 0, 0, "Sholly", "coin", "", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2FPinkey2.glb?alt=media&token=7e82e8bd-f989-483d-ab31-0b1a6bfcf022",

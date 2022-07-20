@@ -64,6 +64,7 @@ import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 import java.util.function.Consumer;
 
 public class WardrobeFragment extends Fragment {
@@ -483,7 +484,7 @@ public class WardrobeFragment extends Fragment {
 
     public static void makeClothesInvisible(Clothes clothes){
         Log.d("####", " "+clothesUid);
-        String type=clothes.getClothesType();
+        String type=clothes.getBodyType();
         int a=0;
         b=clothes.getBuffer();
         if(userInformation.getLookClothes().size()==0){
@@ -499,7 +500,7 @@ public class WardrobeFragment extends Fragment {
             for(int i=0;i<userInformation.getLookClothes().size();i++){
                 Clothes clothes1=userInformation.getLookClothes().get(i);
                 if(!clothes1.getUid().equals(clothes.getUid())) {
-                    if (clothes1.getClothesType().equals(type)) {
+                    if (clothes1.getBodyType().equals(type)) {
                         firebaseModel.getUsersReference().child(nick).child("lookClothes")
                                 .child(clothes1.getUid()).removeValue();
                         clothesUid.remove(clothes1.getUid());
