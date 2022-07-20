@@ -1,7 +1,7 @@
 package com.egormoroz.schooly.ui.people;
 
 public class UserPeopleAdapter {
-
+    private int hashMod = 1000000007;
     private String Nick;
     private String Avatar ;
     private String bio;
@@ -37,5 +37,22 @@ public class UserPeopleAdapter {
         this.Avatar = Avatar;
         this.bio=bio;
     }
+    @Override
+    public int hashCode() {
+        return ((getNick().hashCode() * getAvatar().hashCode()) % hashMod) * getAvatar().hashCode();
+    }
 
+    @Override
+    public boolean equals(Object o) {
+
+        if (o == this) return true;
+        if (!(o instanceof UserPeopleAdapter)) {
+            return false;
+        }
+        UserPeopleAdapter newClass = (UserPeopleAdapter) o;
+
+        return newClass.getNick().equals(getNick()) &&
+                newClass.getAvatar().equals(getAvatar()) &&
+                newClass.getBio().equals(getBio());
+    }
 }

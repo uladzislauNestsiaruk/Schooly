@@ -156,29 +156,32 @@ public class PeopleFragment extends Fragment {
             checkAlreadySearchedFromBase();
         }
         else {
-            RecomendationThread getRecThread = new RecomendationThread(nick);
-            AlreadySearchAdapter alreadySearchAdapter=new AlreadySearchAdapter(getRecThread.ValidateRcomendations(),userInformation);
-            peopleRecyclerView.setAdapter(alreadySearchAdapter);
-            AlreadySearchAdapter.ItemClickListener itemClickListener=new AlreadySearchAdapter.ItemClickListener() {
+            RecomendationThread getRecThread = new RecomendationThread(nick, new Callbacks.getRecommendationsThread() {
                 @Override
-                public void onItemClick(View view, int position,String type) {
-                    UserPeopleAdapter user = alreadySearchAdapter.getItem(position);
-                    userNameToProfile = user.getNick();
-                    if(type.equals("profile")){
-                        if (userNameToProfile.equals(nick)) {
-                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback", nick, PeopleFragment.newInstance(userInformation,bundle),userInformation,bundle), getActivity());
+                public void getRecommendationsInterface(AlreadySearchAdapter alreadySearchAdapter) {
+                    peopleRecyclerView.setAdapter(alreadySearchAdapter);
+                    AlreadySearchAdapter.ItemClickListener itemClickListener=new AlreadySearchAdapter.ItemClickListener() {
+                        @Override
+                        public void onItemClick(View view, int position,String type) {
+                            UserPeopleAdapter user = alreadySearchAdapter.getItem(position);
+                            userNameToProfile = user.getNick();
+                            if(type.equals("profile")){
+                                if (userNameToProfile.equals(nick)) {
+                                    RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback", nick, PeopleFragment.newInstance(userInformation,bundle),userInformation,bundle), getActivity());
+                                }
+                                else {
+                                    RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile, PeopleFragment.newInstance(userInformation,bundle),userInformation,bundle),
+                                            getActivity());
+                                }
+                            }
+                            else {
+                                checkAlreadySearchedFromBase();
+                            }
                         }
-                        else {
-                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile, PeopleFragment.newInstance(userInformation,bundle),userInformation,bundle),
-                                    getActivity());
-                        }
-                    }
-                    else {
-                        checkAlreadySearchedFromBase();
-                    }
+                    };
+                    alreadySearchAdapter.setClickListener(itemClickListener);
                 }
-            };
-            alreadySearchAdapter.setClickListener(itemClickListener);
+            }, userInformation);
         }
     }
 

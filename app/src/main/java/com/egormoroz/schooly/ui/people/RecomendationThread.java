@@ -1,98 +1,102 @@
 package com.egormoroz.schooly.ui.people;
 
 import android.util.Log;
+import android.util.LogPrinter;
 
 import androidx.annotation.NonNull;
 
+import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.Subscriber;
+import com.egormoroz.schooly.ui.main.UserInformation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 public class RecomendationThread {
     String userNick;
     int subscription_limit = 1000;
-    RecomendationThread(String input){
-        this.userNick = input;
-    }
+    int users_in_process = 0;
+    UserInformation userInformation;
     FirebaseModel model = new FirebaseModel();
-    public ArrayList<Subscriber> get_Subs(String nick){
-        ArrayList<Subscriber> subscribers = new ArrayList<>();
+    public RecomendationThread(String input, Callbacks.getRecommendationsThread recommendationsInterface,
+                               UserInformation info){
         model.initAll();
+        this.userNick = input;
+        get_Subs(userNick, 1, recommendationsInterface);
+        this.userInformation = info;
+    }
+    HashMap<UserPeopleAdapter, Integer> user_accurancy = new HashMap<>();
+    public void get_Subs(String nick, int deep, Callbacks.getRecommendationsThread recommendationsInterface){
+        Log.d("##### ", "GET SUBS CALLED FOR USER: " + nick);
         model.getUsersReference().child(nick).child("subscription").get()
                 .addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DataSnapshot> task) {
                         if(task.isSuccessful()){
                             DataSnapshot snapshot = task.getResult();
-                            for(DataSnapshot snap : snapshot.getChildren())
-                                subscribers.add(ValidateSnap(snap));
+                            for(DataSnapshot snap : snapshot.getChildren()) {
+                                Subscriber current_user = ValidateSnap(snap);
+                                if(deep == 2)
+                                    validate_Subscriber(ValidateSnap(snap), recommendationsInterface);
+                                else if(deep == 1){
+                                    Log.d("###### " , "RECURSION STARTED");
+                                    get_Subs(current_user.getSub(), deep + 1, recommendationsInterface);
+                                }
+                            }
                         }
                         else{
                             Log.d("########", "Subs recommendation error");
                         }
                     }
                 });
-        return subscribers;
     }
-    public ArrayList<Subscriber> get_Recommendations(){
-        Map<String, Integer> accurancy = new HashMap<>();
-        ArrayList<Subscriber> my_subscribers = get_Subs(userNick);
-        for(Subscriber current_subscriber : my_subscribers){
-            ArrayList<Subscriber> temporary_subscribers = get_Subs(current_subscriber.getSub());
-            for(int i = 0; i < Integer.min(subscription_limit, temporary_subscribers.size()); i++){
-                String name = temporary_subscribers.get(i).getSub();
-                int accur = accurancy.get(name) + 1;
-                accurancy.remove(name);
-                accurancy.put(name, accur);
-            }
-        }
-        ArrayList<Subscriber> result_list = new ArrayList<>();
-        for(Map.Entry entry : accurancy.entrySet())
-            result_list.add(new Subscriber(String.valueOf(entry.getKey())));
-        result_list.sort((Subscriber a, Subscriber b) -> -(int)(accurancy.get(a.getSub())
-                - accurancy.get(b.getSub())));
+    public ArrayList<UserPeopleAdapter> get_Recommendations(){
+        ArrayList<UserPeopleAdapter> result_list = new ArrayList<>();
+        Set mapKeys = user_accurancy.keySet();
+        Iterator keysIterator = mapKeys.iterator();
+        while(keysIterator.hasNext())
+            result_list.add((UserPeopleAdapter)keysIterator.next());
+        result_list.sort((UserPeopleAdapter a, UserPeopleAdapter b) -> -(int)(user_accurancy.get(a)
+                - user_accurancy.get(b)));
+        Log.d("#####", "Recommendation list size: " + user_accurancy.size());
         return result_list;
     }
-    public ArrayList<UserPeopleAdapter> ValidateRcomendations(){
-        ArrayList<Subscriber> recommendations = get_Recommendations();
-        ArrayList<UserPeopleAdapter> validated_list = new ArrayList<>();
-        for(Subscriber sub : recommendations)
-            validated_list.add(validate_Subscriber(sub));
-        return validated_list;
-    }
-    public UserPeopleAdapter validate_Subscriber(Subscriber sub){
+    public void validate_Subscriber(Subscriber sub, Callbacks.getRecommendationsThread recommendationsInterface){
+        Log.d("#### ", "Validation started");
         UserPeopleAdapter userPeopleAdapter=new UserPeopleAdapter();
         userPeopleAdapter.setNick(sub.getSub());
-        model.getUsersReference().child(sub.getSub()).child("avatar").get()
+        model.getUsersReference().child(sub.getSub()).get()
                 .addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DataSnapshot> task) {
                         if(task.isSuccessful()) {
+                            Log.d("######", "user added to the list");
                             DataSnapshot snapshot = task.getResult();
-                            userPeopleAdapter.setAvatar(snapshot.getValue(String.class));
+                            userPeopleAdapter.setAvatar(snapshot.child("avatar").getValue(String.class));
+                            userPeopleAdapter.setBio(snapshot.child("bio").getValue(String.class));
+                            int acuur = 0;
+                            if(user_accurancy.containsKey(userPeopleAdapter))
+                                acuur = user_accurancy.get(userPeopleAdapter);
+                            user_accurancy.remove(userPeopleAdapter);
+                            user_accurancy.put(userPeopleAdapter, acuur + 1);
+                            ArrayList<UserPeopleAdapter> users = get_Recommendations();
+                            AlreadySearchAdapter alreadySearchAdapter=new AlreadySearchAdapter(users,userInformation);
+                            recommendationsInterface.getRecommendationsInterface(alreadySearchAdapter);
                         }
                         else
                             Log.d("########", "Avatar not found");
                     }
                 });
-        model.getUsersReference().child(sub.getSub()).child("bio").get()
-                .addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DataSnapshot> task) {
-                        if(task.isSuccessful()) {
-                            DataSnapshot snapshot = task.getResult();
-                            userPeopleAdapter.setBio(snapshot.getValue(String.class));
-                        }
-                        else
-                            Log.d("########", "Bio not found");
-                    }
-                });
-        return userPeopleAdapter;
     }
     public Subscriber ValidateSnap(DataSnapshot snap){
         Subscriber subscriber = new Subscriber();
