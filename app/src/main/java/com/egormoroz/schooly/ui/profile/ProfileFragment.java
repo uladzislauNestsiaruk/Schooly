@@ -243,7 +243,6 @@ public class ProfileFragment extends Fragment {
             }
         });
         Intent i = new Intent(getActivity(), ChatActivity.class);
-        //Getting information about user(friend)
         i.putExtra("othUser", info.getNick());
         i.putExtra("curUser", userInformation.getNick());
         i.putExtra("groupName", "one");

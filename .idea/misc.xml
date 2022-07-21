@@ -766,6 +766,9 @@
         <entry key="..\:/Users/User/Downloads/Schooly_NEW20.05/app/src/main/res/layout/bottom_sheet_dialog_lookoptions.xml" value="0.24048913043478262" />
         <entry key="..\:/Users/User/Downloads/Schooly_NEW20.05/app/src/main/res/layout/bottom_sheet_dialog_profile.xml" value="0.24048913043478262" />
         <entry key="..\:/Users/User/Downloads/Schooly_NEW20.05/app/src/main/res/layout/rvitem_comment.xml" value="0.47368421052631576" />
+        <entry key="..\:/Users/User/Downloads/Schooly_NEW21.07/app/src/main/res/layout/fragment_acceptnewlook.xml" value="0.16893115942028986" />
+        <entry key="..\:/Users/User/Downloads/Schooly_NEW21.07/app/src/main/res/layout/fragment_fitting.xml" value="0.12360688956433637" />
+        <entry key="..\:/Users/User/Downloads/Schooly_NEW21.07/app/src/main/res/layout/fragment_wardrobe.xml" value="0.12360688956433637" />
         <entry key="..\:/Users/User/Downloads/Schooly_NEW22.05/app/src/main/res/layout/dialog_layout.xml" value="0.12360688956433637" />
         <entry key="..\:/Users/User/Downloads/Schooly_NEW22.05/app/src/main/res/layout/dialog_layout_dollar_currency.xml" value="0.2418478260869565" />
         <entry key="..\:/Users/User/Downloads/Schooly_NEW22.05/app/src/main/res/layout/dialog_layout_sell_clothes.xml" value="0.2418478260869565" />
@@ -1128,7 +1131,7 @@
     <option name="priority" value="Medium" />
     <option name="excludeFilter" value="" />
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

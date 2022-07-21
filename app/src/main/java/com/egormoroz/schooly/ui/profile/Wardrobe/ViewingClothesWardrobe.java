@@ -36,7 +36,6 @@ import com.egormoroz.schooly.ui.main.Shop.FittingFragment;
 import com.egormoroz.schooly.ui.main.Shop.NewClothesAdapter;
 import com.egormoroz.schooly.ui.main.Shop.ViewingClothes;
 import com.egormoroz.schooly.ui.main.UserInformation;
-import com.egormoroz.schooly.ui.profile.BlackListFragment;
 import com.egormoroz.schooly.ui.profile.ProfileFragment;
 import com.egormoroz.schooly.ui.profile.SendLookAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -75,7 +74,7 @@ public class ViewingClothesWardrobe extends Fragment {
 
   }
 
-  WardrobeClothesAdapter.ItemClickListener itemClickListenerWardrobe;
+  WardrodeClothesAdapter.ItemClickListener itemClickListenerWardrobe;
   TextView clothesPriceCV,clothesTitleCV,schoolyCoinCV,buyClothesBottom
           ,purchaseNumber,creator,description,noDescription,fittingClothes
           ,emptyList;
@@ -163,9 +162,9 @@ public class ViewingClothesWardrobe extends Fragment {
       }
     });
 
-    WardrobeClothesAdapter.singeClothesInfo(new WardrobeClothesAdapter.ItemClickListener() {
+    WardrodeClothesAdapter.singeClothesInfo(new WardrodeClothesAdapter.ItemClickListener() {
       @Override
-      public void onItemClick(Clothes clothes,String type) {
+      public void onItemClick(Clothes clothes,String type,String fragmentString) {
         clothesViewing=clothes;
         clothesPriceCV.setText(String.valueOf(clothes.getClothesPrice()));
         clothesTitleCV.setText(clothes.getClothesTitle());

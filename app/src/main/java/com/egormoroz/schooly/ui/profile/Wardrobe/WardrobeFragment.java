@@ -1,9 +1,5 @@
 package com.egormoroz.schooly.ui.profile.Wardrobe;
 
-import android.content.Context;
-import android.net.Uri;
-import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -15,12 +11,10 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Lifecycle;
@@ -29,34 +23,24 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FilamentModel;
 import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.LockableNestedScrollView;
-import com.egormoroz.schooly.MainActivity;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
-import com.egormoroz.schooly.ui.main.Shop.PopularClothesAdapter;
-import com.egormoroz.schooly.ui.main.Shop.ShopFragment;
 import com.egormoroz.schooly.ui.main.UserInformation;
 import com.egormoroz.schooly.ui.profile.ProfileFragment;
-import com.google.android.filament.Engine;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -68,7 +52,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.function.Consumer;
 
 public class WardrobeFragment extends Fragment {
     String type;
@@ -99,7 +82,7 @@ public class WardrobeFragment extends Fragment {
     int tabLayoutPosition;
     TextView notFound;
     SurfaceView surfaceView;
-    WardrobeClothesAdapter.ItemClickListener itemClickListener;
+    WardrodeClothesAdapter.ItemClickListener itemClickListener;
     LockableNestedScrollView lockableNestedScrollView;
     static ArrayList<Clothes> lookClothesList;
     static byte[] buffer;
@@ -145,9 +128,9 @@ public class WardrobeFragment extends Fragment {
         if(bundle.getSerializable("ALLLOADCLOTHESLIST")!=null){
             clothesList= (ArrayList<Clothes>) bundle.getSerializable("ALLLOADCLOTHESLIST");
         }
-        itemClickListener=new WardrobeClothesAdapter.ItemClickListener() {
+        itemClickListener=new WardrodeClothesAdapter.ItemClickListener() {
             @Override
-            public void onItemClick(Clothes clothes,String type) {
+            public void onItemClick(Clothes clothes,String type,String fragmentString) {
                 if(type.equals("view")){
                     RecentMethods.setCurrentFragment(ViewingClothesWardrobe.newInstance(type,WardrobeFragment.newInstance(type, fragment, userInformation, bundle),userInformation,bundle), getActivity());
                 }else{
@@ -355,7 +338,7 @@ public class WardrobeFragment extends Fragment {
                         } else {
                             notFound.setVisibility(View.GONE);
                             searchRecycler.setVisibility(View.VISIBLE);
-                            WardrobeClothesAdapter wardrobeClothesAdapter = new WardrobeClothesAdapter(clothesFromBase, itemClickListener, userInformation);
+                            WardrodeClothesAdapter wardrobeClothesAdapter = new WardrodeClothesAdapter(clothesFromBase, itemClickListener, userInformation,"wardrobe");
                             searchRecycler.setLayoutManager(new GridLayoutManager(getActivity(), 2));
                             searchRecycler.setAdapter(wardrobeClothesAdapter);
                         }
@@ -383,7 +366,7 @@ public class WardrobeFragment extends Fragment {
                     } else {
                         notFound.setVisibility(View.GONE);
                         searchRecycler.setVisibility(View.VISIBLE);
-                        WardrobeClothesAdapter wardrobeClothesAdapter = new WardrobeClothesAdapter(clothesFromBase, itemClickListener, userInformation);
+                        WardrodeClothesAdapter wardrobeClothesAdapter = new WardrodeClothesAdapter(clothesFromBase, itemClickListener, userInformation,"wardrobe");
                         searchRecycler.setLayoutManager(new GridLayoutManager(getActivity(), 2));
                         searchRecycler.setAdapter(wardrobeClothesAdapter);
                     }
@@ -404,14 +387,14 @@ public class WardrobeFragment extends Fragment {
 
             switch (position) {
                 case 1:
-                    return new WardrobeClothes(type, WardrobeFragment.newInstance(type, fragment, userInformation, bundle), userInformation, bundle);
+                    return new WardrobeClothes(type, WardrobeFragment.newInstance(type, fragment, userInformation, bundle), userInformation, bundle,"wardrobe");
                 case 2:
-                    return new WardrobeHats(type, WardrobeFragment.newInstance(type, fragment, userInformation, bundle), userInformation, bundle);
+                    return new WardrobeHats(type, WardrobeFragment.newInstance(type, fragment, userInformation, bundle), userInformation, bundle,"wardrobe");
                 case 3:
-                    return new WardrobeAccessories(type, WardrobeFragment.newInstance(type, fragment, userInformation, bundle), userInformation, bundle);
+                    return new WardrobeAccessories(type, WardrobeFragment.newInstance(type, fragment, userInformation, bundle), userInformation, bundle,"wardrobe");
             }
 
-            return new WardrobeShoes(type, WardrobeFragment.newInstance(type, fragment, userInformation, bundle), userInformation, bundle);
+            return new WardrobeShoes(type, WardrobeFragment.newInstance(type, fragment, userInformation, bundle), userInformation, bundle,"wardrobe");
         }
 
         @Override

@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.egormoroz.schooly.Callbacks;
+import com.egormoroz.schooly.FilamentModel;
 import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
@@ -33,16 +34,30 @@ import com.egormoroz.schooly.ui.profile.Look;
 import com.egormoroz.schooly.ui.profile.LooksAdapter;
 import com.egormoroz.schooly.ui.profile.LooksFragmentProfileOther;
 import com.egormoroz.schooly.ui.profile.ProfileFragment;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
+import java.net.URL;
 import java.nio.Buffer;
+import java.nio.ByteBuffer;
 import java.sql.Time;
 import java.util.ArrayList;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 public class AcceptNewLook extends Fragment {
 
@@ -59,6 +74,13 @@ public class AcceptNewLook extends Fragment {
     UserInformation userInformation;
     Bundle bundle;
     String lookType;
+    static byte[] buffer;
+    static URI uri;
+    static Future<Buffer> future;
+    static Buffer buffer1,bufferToFilament,b;
+    static FilamentModel filamentModel;
+    static ArrayList<Clothes> clothesList=new ArrayList<>();
+    static ArrayList<String> clothesUid=new ArrayList<>();
 
     public AcceptNewLook(String model,String type,Fragment fragment,UserInformation userInformation,Bundle bundle,String lookType) {
         this.model = model;
@@ -81,8 +103,9 @@ public class AcceptNewLook extends Fragment {
         BottomNavigationView bnv = getActivity().findViewById(R.id.bottomNavigationView);
         bnv.setVisibility(bnv.GONE);
         firebaseModel.initAll();
-//        AppBarLayout abl = getActivity().findViewById(R.id.AppBarLayout);
-//        abl.setVisibility(abl.GONE);
+        if(bundle.getSerializable("CLOTHESUID")!=null){
+            clothesUid= (ArrayList<String>) bundle.getSerializable("CLOTHESUID");
+        }
         return root;
     }
 
@@ -92,6 +115,8 @@ public class AcceptNewLook extends Fragment {
         if(descriptionLook.getText().toString().length()>0){
             bundle.putString("EDIT_DESCRIPTION_LOOK",descriptionLook.getText().toString().trim());
         }
+        bundle.putSerializable("CLOTHESUID", clothesUid);
+        bundle.putSerializable("ALLLOADCLOTHESLIST", clothesList);
     }
 
 
@@ -107,6 +132,9 @@ public class AcceptNewLook extends Fragment {
         schoolyCoin=view.findViewById(R.id.schoolyCoin);
         constituentsText=view.findViewById(R.id.lookConstituentsText);
 
+        if(bundle.getSerializable("ALLLOADCLOTHESLIST")!=null){
+            clothesList= (ArrayList<Clothes>) bundle.getSerializable("ALLLOADCLOTHESLIST");
+        }
         itemClickListener=new ConstituentsAdapter.ItemClickListener() {
             @Override
             public void onItemClick(Clothes clothes) {
@@ -135,6 +163,7 @@ public class AcceptNewLook extends Fragment {
                 descriptionLook.setText(editDescriptionText);
             }
         }
+        loadLookClothes();
         getLookClothes();
     }
 
@@ -167,14 +196,63 @@ public class AcceptNewLook extends Fragment {
                 }
             });
         }else{
-         lookPrice.setText("0");
-         constituentsText.setVisibility(View.GONE);
-         publish.setOnClickListener(new View.OnClickListener() {
-             @Override
-             public void onClick(View v) {
-                 Toast.makeText(getContext(), getContext().getResources().getText(R.string.nolookcomponents), Toast.LENGTH_SHORT).show();
-             }
-         });
+            lookPrice.setText("0");
+            constituentsText.setVisibility(View.GONE);
+            publish.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(getContext(), getContext().getResources().getText(R.string.nolookcomponents), Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        filamentModel.postFrameCallback();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        filamentModel.removeFrameCallback();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        filamentModel.removeFrameCallback();
+    }
+
+    public void loadLookClothes(){
+        if(clothesUid.size()==0) {
+            firebaseModel.getUsersReference().child(nick).child("lookClothes")
+                    .get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DataSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        DataSnapshot snapshot = task.getResult();
+                        for (DataSnapshot snap : snapshot.getChildren()) {
+                            Clothes clothes = snap.getValue(Clothes.class);
+                            addModelInScene(clothes);
+                            Log.d("#####", "d1");
+                        }
+                    }
+                }
+            });
+        }  else{
+            for(int i=0;i<clothesList.size();i++ ){
+                Clothes clothes=clothesList.get(i);
+                if(clothesUid.contains(clothes.getUid())&&clothes.getBuffer()!=null){
+                    filamentModel.populateScene(clothes.getBuffer(), clothes);
+                } else if(clothesUid.contains(clothes.getUid())&&clothes.getBuffer()==null){
+                    addModelInScene(clothes);
+                }
+            }
         }
     }
 
@@ -231,5 +309,54 @@ public class AcceptNewLook extends Fragment {
         else if(count>10000000 && count<100000000){
             textView.setText(stringCount.substring(0, 2)+"KK");
         }
+    }
+
+    public static byte[] getBytes( URL url) throws IOException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        InputStream is = null;
+        try {
+            is = new BufferedInputStream(url.openStream());
+            byte[] byteChunk = new byte[4096];
+            int n;
+
+            while ( (n = is.read(byteChunk)) > 0 ) {
+                baos.write(byteChunk, 0, n);
+            }
+        }
+        catch (IOException e) {
+            Log.d("####", "Failed while reading bytes from %s: %s"+ url.toExternalForm()+ e.getMessage());
+            e.printStackTrace ();
+        }
+        finally {
+            if (is != null) { is.close(); }
+        }
+        return  baos.toByteArray();
+    }
+
+    public static void addModelInScene(Clothes clothes)  {
+        loadBuffer(clothes.getModel());
+        try {
+            bufferToFilament= future.get();
+            filamentModel.populateScene(bufferToFilament,clothes);
+            clothes.setBuffer(bufferToFilament);
+            clothesList.add(clothes);
+            clothesUid.add(clothes.getUid());
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void loadBuffer(String model){
+        ExecutorService executorService= Executors.newCachedThreadPool();
+        future = executorService.submit(new Callable(){
+            public Buffer call() throws Exception {
+                uri = new URI(model);
+                buffer = getBytes(uri.toURL());
+                buffer1= ByteBuffer.wrap(buffer);
+                return buffer1;
+            }
+        });
     }
 }

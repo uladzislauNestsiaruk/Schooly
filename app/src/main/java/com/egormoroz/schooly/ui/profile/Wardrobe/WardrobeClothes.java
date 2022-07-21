@@ -1,7 +1,6 @@
 package com.egormoroz.schooly.ui.profile.Wardrobe;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +17,7 @@ import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
+import com.egormoroz.schooly.ui.main.Shop.FittingFragment;
 import com.egormoroz.schooly.ui.main.Shop.ShopFragment;
 import com.egormoroz.schooly.ui.main.UserInformation;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -26,27 +26,27 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class WardrobeClothes extends Fragment {
-    String type,nick;
+    String type,nick,fragmentString;
     Fragment fragment;
     UserInformation userInformation;
     Bundle bundle;
 
-    public WardrobeClothes(String type,Fragment fragment,UserInformation userInformation,Bundle bundle) {
+    public WardrobeClothes(String type,Fragment fragment,UserInformation userInformation,Bundle bundle,String fragmentString) {
         this.type = type;
         this.fragment=fragment;
         this.userInformation=userInformation;
         this.bundle=bundle;
+        this.fragmentString=fragmentString;
     }
 
-    public static WardrobeClothes newInstance(String type,Fragment fragment,UserInformation userInformation,Bundle bundle) {
-        return new WardrobeClothes(type,fragment,userInformation,bundle);
-
+    public static WardrobeClothes newInstance(String type,Fragment fragment,UserInformation userInformation,Bundle bundle,String fragmentString) {
+        return new WardrobeClothes(type,fragment,userInformation,bundle,fragmentString);
     }
     FirebaseModel firebaseModel=new FirebaseModel();
     ArrayList<Clothes> clothesArrayListWardrobe=new ArrayList<Clothes>();
     ArrayList<Clothes> sortClothesArrayListWardrobe=new ArrayList<Clothes>();
     RecyclerView wardrobeRecyclerView;
-    WardrobeClothesAdapter.ItemClickListener itemClickListener;
+    WardrodeClothesAdapter.ItemClickListener itemClickListener;
     TextView buyToShop,noClothesText;
 
 
@@ -72,17 +72,18 @@ public class WardrobeClothes extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         nick=userInformation.getNick();
         wardrobeRecyclerView=view.findViewById(R.id.recyclerwardrobe);
-        itemClickListener=new WardrobeClothesAdapter.ItemClickListener() {
+        itemClickListener=new WardrodeClothesAdapter.ItemClickListener() {
             @Override
-            public void onItemClick(Clothes clothes,String type) {
-                if(type.equals("view ")){
-                    RecentMethods.setCurrentFragment(ViewingClothesWardrobe.newInstance(type,fragment
-                            ,userInformation,bundle), getActivity());
+            public void onItemClick(Clothes clothes,String type,String fragmentString) {
+                if(type.equals("view")){
+                    RecentMethods.setCurrentFragment(ViewingClothesWardrobe.newInstance(type,fragment,userInformation,bundle), getActivity());
                 }else{
-                    if (fragment==WardrobeFragment.newInstance(type, fragment, userInformation, bundle)){
+                    if (fragmentString.equals("wardrobe")){
                         WardrobeFragment.makeClothesInvisible(clothes);
-                    }else {
+                    }else if(fragmentString.equals("createClothes")){
                         CreateLookFragment.makeClothesInvisible1(clothes);
+                    }else if(fragmentString.equals("tryOn")){
+                        FittingFragment.makeClothesInvisible(clothes);
                     }
                 }
             }
@@ -118,7 +119,7 @@ public class WardrobeClothes extends Fragment {
                         });
                     }else {
                         Collections.reverse(sortClothesArrayListWardrobe);
-                        WardrobeClothesAdapter newClothesAdapter = new WardrobeClothesAdapter(sortClothesArrayListWardrobe, itemClickListener,userInformation);
+                        WardrodeClothesAdapter newClothesAdapter = new WardrodeClothesAdapter(sortClothesArrayListWardrobe, itemClickListener,userInformation,fragmentString);
                         wardrobeRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
                         wardrobeRecyclerView.setAdapter(newClothesAdapter);
                     }
@@ -144,7 +145,7 @@ public class WardrobeClothes extends Fragment {
                 });
             }else {
                 Collections.reverse(sortClothesArrayListWardrobe);
-                WardrobeClothesAdapter newClothesAdapter = new WardrobeClothesAdapter(sortClothesArrayListWardrobe, itemClickListener,userInformation);
+                WardrodeClothesAdapter newClothesAdapter = new WardrodeClothesAdapter(sortClothesArrayListWardrobe, itemClickListener,userInformation,fragmentString);
                 wardrobeRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
                 wardrobeRecyclerView.setAdapter(newClothesAdapter);
             }
