@@ -79,7 +79,11 @@ public class WardrobeAccessories extends Fragment {
                     RecentMethods.setCurrentFragment(ViewingClothesWardrobe.newInstance(type,fragment
                             ,userInformation,bundle), getActivity());
                 }else{
-                    WardrobeFragment.makeClothesInvisible(clothes);
+                    if (fragment==WardrobeFragment.newInstance(type, fragment, userInformation, bundle)){
+                        WardrobeFragment.makeClothesInvisible(clothes);
+                    }else {
+                        CreateLookFragment.makeClothesInvisible1(clothes);
+                    }
                 }
             }
         };

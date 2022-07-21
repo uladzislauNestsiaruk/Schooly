@@ -131,7 +131,11 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.function.Consumer;
 
 public class ProfileFragment extends Fragment {
@@ -168,10 +172,10 @@ public class ProfileFragment extends Fragment {
     UserInformation userInformation;
     Bundle bundle;
     FilamentModel filamentModel;
-    byte[] buffer;
-    URI uri;
-    Buffer buffer1,bufferToFilament;
-    ByteBuffer byteBuffer;
+    static byte[] buffer;
+    static URI uri;
+    static Buffer buffer1,bufferToFilament;
+    static Future<Buffer> future;
 
 
     @Override
@@ -298,9 +302,8 @@ public class ProfileFragment extends Fragment {
                 LockableNestedScrollView lockableNestedScrollView=view.findViewById(R.id.nestedScrollView);
                 try {
                     if(bundle.getSerializable("MAINLOOK")==null){
-                        MyAsyncTask myAsyncTask=new MyAsyncTask();
-                        myAsyncTask.execute(userInformation.getMainLook());
-                        bufferToFilament = myAsyncTask.get();
+                        loadBuffer(userInformation.getMainLook());
+                        bufferToFilament = future.get();
                         ArrayList<Buffer> buffers = new ArrayList<>();
                         buffers.add(bufferToFilament);
                         bundle.putSerializable("MAINLOOK",buffers);
@@ -480,9 +483,8 @@ public class ProfileFragment extends Fragment {
                         surfaceView=view.findViewById(R.id.mainlookview);
                         try {
                             if(bundle.getSerializable("MAINLOOK"+info.getNick())==null){
-                                MyAsyncTask myAsyncTask=new MyAsyncTask();
-                                myAsyncTask.execute(userInformation.getMainLook());
-                                bufferToFilament = myAsyncTask.get();
+                                loadBuffer(userInformation.getMainLook());
+                                bufferToFilament = future.get();
                                 ArrayList<Buffer> buffers=new ArrayList<>();
                                 buffers.add(bufferToFilament);
                                 bundle.putSerializable("MAINLOOK"+info.getNick(),buffers);
@@ -600,9 +602,8 @@ public class ProfileFragment extends Fragment {
                                         surfaceView=view.findViewById(R.id.mainlookview);
                                         try {
                                             if(bundle.getSerializable("MAINLOOK"+info.getNick())==null){
-                                                MyAsyncTask myAsyncTask=new MyAsyncTask();
-                                                myAsyncTask.execute(info.getMainLook());
-                                                bufferToFilament = myAsyncTask.get();
+                                                loadBuffer(userInformation.getMainLook());
+                                                bufferToFilament = future.get();
                                                 ArrayList<Buffer> buffers=new ArrayList<>();
                                                 buffers.add(bufferToFilament);
                                                 bundle.putSerializable("MAINLOOK"+info.getNick(),buffers);
@@ -707,9 +708,8 @@ public class ProfileFragment extends Fragment {
                 LockableNestedScrollView lockableNestedScrollViewBack=view.findViewById(R.id.nestedScrollView);
                 try {
                     if(bundle.getSerializable("MAINLOOK")==null){
-                        MyAsyncTask myAsyncTask=new MyAsyncTask();
-                        myAsyncTask.execute(userInformation.getMainLook());
-                        bufferToFilament = myAsyncTask.get();
+                        loadBuffer(userInformation.getMainLook());
+                        bufferToFilament = future.get();
                         ArrayList<Buffer> buffers=new ArrayList<>();
                         buffers.add(bufferToFilament);
                         bundle.putSerializable("MAINLOOK",buffers);
@@ -1904,7 +1904,7 @@ public class ProfileFragment extends Fragment {
         filamentModel.removeFrameCallback();
     }
 
-    public byte[] getBytes( URL url) throws IOException {
+    public static byte[] getBytes( URL url) throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         InputStream is = null;
         try {
@@ -1926,28 +1926,15 @@ public class ProfileFragment extends Fragment {
         return  baos.toByteArray();
     }
 
-    public class MyAsyncTask extends AsyncTask<String, Integer, Buffer> {
-        @Override
-        protected Buffer doInBackground(String... parameter) {
-            try {
-                uri = new URI(parameter[0]);
+    public static void loadBuffer(String model){
+        ExecutorService executorService= Executors.newCachedThreadPool();
+        future = executorService.submit(new Callable(){
+            public Buffer call() throws Exception {
+                uri = new URI(model);
                 buffer = getBytes(uri.toURL());
                 buffer1= ByteBuffer.wrap(buffer);
-                Log.d("####", "ok");
-            } catch (URISyntaxException | MalformedURLException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
+                return buffer1;
             }
-            return buffer1;
-        }
-
-        @Override
-        protected void onProgressUpdate(Integer... progress) {
-
-        }
-
+        });
     }
-
-
 }

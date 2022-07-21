@@ -63,7 +63,10 @@ import java.net.URL;
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.function.Consumer;
 
@@ -77,8 +80,8 @@ public class WardrobeFragment extends Fragment {
     public WardrobeFragment(String type, Fragment fragment, UserInformation userInformation, Bundle bundle) {
         this.type = type;
         this.fragment = fragment;
-        this.userInformation = userInformation;
-        this.bundle = bundle;
+        WardrobeFragment.userInformation = userInformation;
+        WardrobeFragment.bundle = bundle;
     }
 
     public static WardrobeFragment newInstance(String type, Fragment fragment, UserInformation userInformation, Bundle bundle) {
@@ -101,6 +104,7 @@ public class WardrobeFragment extends Fragment {
     static ArrayList<Clothes> lookClothesList;
     static byte[] buffer;
     static URI uri;
+    static Future<Buffer> future;
     static Buffer buffer1,bufferToFilament,b;
     static FilamentModel filamentModel;
     static ArrayList<Clothes> clothesList=new ArrayList<>();
@@ -153,9 +157,8 @@ public class WardrobeFragment extends Fragment {
         };
         try {
             if(bundle.getSerializable("CHARACTERMODEL")==null){
-                MyAsyncTask myAsyncTask=new MyAsyncTask();
-                myAsyncTask.execute(userInformation.getMainLook());
-                bufferToFilament = myAsyncTask.get();
+                loadBuffer(userInformation.getMainLook());
+                bufferToFilament=future.get();
                 ArrayList<Buffer> buffers=new ArrayList<>();
                 buffers.add(bufferToFilament);
                 bundle.putSerializable("CHARACTERMODEL",buffers);
@@ -425,7 +428,6 @@ public class WardrobeFragment extends Fragment {
                 public void onComplete(@NonNull Task<DataSnapshot> task) {
                     if (task.isSuccessful()) {
                         DataSnapshot snapshot = task.getResult();
-                        lookClothesList = new ArrayList<>();
                         for (DataSnapshot snap : snapshot.getChildren()) {
                             Clothes clothes = snap.getValue(Clothes.class);
                             addModelInScene(clothes);
@@ -559,33 +561,10 @@ public class WardrobeFragment extends Fragment {
         return  baos.toByteArray();
     }
 
-    public static class MyAsyncTask extends AsyncTask<String, Integer, Buffer> {
-        @Override
-        protected Buffer doInBackground(String... parameter) {
-            try {
-                uri = new URI(parameter[0]);
-                buffer = getBytes(uri.toURL());
-                buffer1= ByteBuffer.wrap(buffer);
-            } catch (URISyntaxException | MalformedURLException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return buffer1;
-        }
-
-        @Override
-        protected void onProgressUpdate(Integer... progress) {
-
-        }
-
-    }
-
-    public static void addModelInScene(Clothes clothes){
-        MyAsyncTask myAsyncTask=new MyAsyncTask();
-        myAsyncTask.execute(clothes.getModel());
+    public static void addModelInScene(Clothes clothes)  {
+        loadBuffer(clothes.getModel());
         try {
-            bufferToFilament=myAsyncTask.get();
+            bufferToFilament= future.get();
             filamentModel.populateScene(bufferToFilament,clothes);
             clothes.setBuffer(bufferToFilament);
             clothesList.add(clothes);
@@ -600,4 +579,17 @@ public class WardrobeFragment extends Fragment {
     public void saveFile(){
         //FileOutputStream fileOutputStream=new
 
-    }}
+    }
+
+    public static void loadBuffer(String model){
+        ExecutorService executorService= Executors.newCachedThreadPool();
+        future = executorService.submit(new Callable(){
+            public Buffer call() throws Exception {
+                uri = new URI(model);
+                buffer = getBytes(uri.toURL());
+                buffer1= ByteBuffer.wrap(buffer);
+                return buffer1;
+            }
+        });
+    }
+}

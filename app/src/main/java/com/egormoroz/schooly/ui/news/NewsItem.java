@@ -13,7 +13,6 @@ public class NewsItem {
             comments, ImageUrl;
     private long lookPrice, lookPriceDollar, viewCount;
     private ArrayList<Clothes> clothesArrayList;
-    private Buffer lookBuffer;
 
     public NewsItem() {
 
@@ -21,7 +20,7 @@ public class NewsItem {
 
     public NewsItem(String ImageUrl, String item_description, String likes_count, String newsId,
                     String comments, ArrayList<Clothes> clothesArrayList, long lookPrice, long viewCount
-            , String postTime, String nick, long lookPriceDollar,Buffer lookBuffer) {
+            , String postTime, String nick, long lookPriceDollar) {
         this.ImageUrl = ImageUrl;
         this.likes_count = likes_count;
         this.item_description = item_description;
@@ -33,7 +32,6 @@ public class NewsItem {
         this.postTime = postTime;
         this.nick = nick;
         this.lookPriceDollar = lookPriceDollar;
-        this.lookBuffer=lookBuffer;
     }
 
     public String getImageUrl() {
@@ -123,14 +121,6 @@ public class NewsItem {
 
     public void setLookPriceDollar(long lookPriceDollar) {
         this.lookPriceDollar = lookPriceDollar;
-    }
-
-    public Buffer getLookBuffer() {
-        return this.lookBuffer;
-    }
-
-    public void setLookBuffer(Buffer lookBuffer) {
-        this.lookBuffer = lookBuffer;
     }
 
 }
