@@ -172,6 +172,7 @@ public class FittingFragment extends Fragment {
         addModelInScene(clothes);
 
         if (bundle != null) {
+
             tabLayoutPosition = bundle.getInt("TAB_INT_WARDROBE");
             if (bundle.getString("EDIT_WARDROBE_TAG") != null) {
                 String bundleEditText = bundle.getString("EDIT_WARDROBE_TAG").trim();
