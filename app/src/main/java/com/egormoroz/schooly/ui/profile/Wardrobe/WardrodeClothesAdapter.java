@@ -87,8 +87,10 @@ public class WardrodeClothesAdapter extends RecyclerView.Adapter<WardrodeClothes
         holder.fittingClothes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onClothesClick.onItemClick(clothesArrayListWardrobe.get(holder.getAdapterPosition()),"tryOn",fragment);
-                trueClothes=clothesArrayListWardrobe.get(holder.getAdapterPosition());
+                if(!fragment.equals("tryOn")){
+                    onClothesClick.onItemClick(clothesArrayListWardrobe.get(holder.getAdapterPosition()),"tryOn",fragment);
+                    trueClothes=clothesArrayListWardrobe.get(holder.getAdapterPosition());
+                }
             }
         });
         holder.itemView.setOnClickListener(new View.OnClickListener() {

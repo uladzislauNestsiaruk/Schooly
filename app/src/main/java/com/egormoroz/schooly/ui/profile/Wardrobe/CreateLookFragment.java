@@ -246,7 +246,7 @@ public class CreateLookFragment extends Fragment {
                             if (lookClothesFromBase.size() != 0) {
                                 userInformation.setLookClothes(lookClothesFromBase);
                                 RecentMethods.setCurrentFragment(AcceptNewLook.newInstance("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Funtitled.glb?alt=media&token=657b45d7-a84b-4f2a-89f4-a699029401f7"
-                                        ,type,fragment,userInformation,bundle,lookType)
+                                        ,type,fragment,userInformation,bundle,lookType,clothesUid,clothesList)
                                         , getActivity());
                             } else {
                                 Toast.makeText(getContext(), getContext().getResources().getText(R.string.addlookcomponents), Toast.LENGTH_SHORT).show();

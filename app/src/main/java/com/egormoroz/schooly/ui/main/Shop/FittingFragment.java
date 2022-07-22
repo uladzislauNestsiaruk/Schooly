@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
@@ -63,17 +64,17 @@ public class FittingFragment extends Fragment {
     Fragment fragment;
     static UserInformation userInformation;
     static Bundle bundle;
-    Clothes clothes;
+    static Clothes clothesFitting;
 
-    public FittingFragment( Fragment fragment, UserInformation userInformation, Bundle bundle,Clothes clothes) {
+    public FittingFragment( Fragment fragment, UserInformation userInformation, Bundle bundle,Clothes clothesFitting) {
         this.fragment = fragment;
         FittingFragment.userInformation = userInformation;
         FittingFragment.bundle = bundle;
-        this.clothes=clothes;
+        FittingFragment.clothesFitting=clothesFitting;
     }
 
-    public static FittingFragment newInstance( Fragment fragment, UserInformation userInformation, Bundle bundle,Clothes clothes) {
-        return new FittingFragment( fragment, userInformation, bundle,clothes);
+    public static FittingFragment newInstance( Fragment fragment, UserInformation userInformation, Bundle bundle,Clothes clothesFitting) {
+        return new FittingFragment( fragment, userInformation, bundle,clothesFitting);
 
     }
 
@@ -169,7 +170,15 @@ public class FittingFragment extends Fragment {
         tabLayout = view.findViewById(R.id.tabLayoutWardrobe);
         viewPager = view.findViewById(R.id.frcontwardrobe);
 
-        addModelInScene(clothes);
+        if(clothesUid.contains(clothesFitting.getUid())){
+            if(clothesFitting.getBuffer()!=null){
+                filamentModel.populateScene(clothesFitting.getBuffer(), clothesFitting);
+            }    else{
+                addModelInScene(clothesFitting);
+            }
+        }else{
+            addModelInScene(clothesFitting);
+        }
 
         if (bundle != null) {
             tabLayoutPosition = bundle.getInt("TAB_INT_WARDROBE");
@@ -392,14 +401,14 @@ public class FittingFragment extends Fragment {
 
             switch (position) {
                 case 1:
-                    return new WardrobeClothes(type, FittingFragment.newInstance(fragment, userInformation, bundle,clothes), userInformation, bundle,"tryOn");
+                    return new WardrobeClothes(type, FittingFragment.newInstance(fragment, userInformation, bundle,clothesFitting), userInformation, bundle,"tryOn");
                 case 2:
-                    return new WardrobeHats(type, FittingFragment.newInstance(fragment, userInformation, bundle,clothes), userInformation, bundle,"tryOn");
+                    return new WardrobeHats(type, FittingFragment.newInstance(fragment, userInformation, bundle,clothesFitting), userInformation, bundle,"tryOn");
                 case 3:
-                    return new WardrobeAccessories(type, FittingFragment.newInstance( fragment, userInformation, bundle,clothes), userInformation, bundle,"tryOn");
+                    return new WardrobeAccessories(type, FittingFragment.newInstance( fragment, userInformation, bundle,clothesFitting), userInformation, bundle,"tryOn");
             }
 
-            return new WardrobeShoes(type, FittingFragment.newInstance(fragment, userInformation, bundle,clothes), userInformation, bundle,"tryOn");
+            return new WardrobeShoes(type, FittingFragment.newInstance(fragment, userInformation, bundle,clothesFitting), userInformation, bundle,"tryOn");
         }
 
         @Override
@@ -418,22 +427,31 @@ public class FittingFragment extends Fragment {
                         DataSnapshot snapshot = task.getResult();
                         for (DataSnapshot snap : snapshot.getChildren()) {
                             Clothes clothes1 = snap.getValue(Clothes.class);
-                            if(!clothes1.getBodyType().equals(clothes.getBodyType())){
+                            if(!clothes1.getBodyType().equals(clothesFitting.getBodyType())){
+                                Log.d("#####", "11");
                                 addModelInScene(clothes1);
-                                firebaseModel.getUsersReference().child(nick).child("lookClothes")
-                                        .child(clothes1.getUid()).removeValue();
+                            }else{
+                                filamentModel.setMask(clothes1);
                             }
                         }
                     }
                 }
             });
         }  else{
+            Log.d("#####", "22"+clothesUid.size()+clothesList.size());
             for(int i=0;i<clothesList.size();i++ ){
-                Clothes clothes=clothesList.get(i);
-                if(clothesUid.contains(clothes.getUid())&&clothes.getBuffer()!=null){
-                    filamentModel.populateScene(clothes.getBuffer(), clothes);
-                } else if(clothesUid.contains(clothes.getUid())&&clothes.getBuffer()==null){
-                    addModelInScene(clothes);
+                Clothes clothes1=clothesList.get(i);
+                if(clothesUid.contains(clothes1.getUid())){
+                    if(!clothes1.getBodyType().equals(clothesFitting.getBodyType())){
+                        if(clothes1.getBuffer()!=null){
+                            filamentModel.populateScene(clothes1.getBuffer(), clothes1);
+                        }    else{
+                            addModelInScene(clothes1);
+                        }
+                    }else{
+                        filamentModel.setMask(clothes1);
+                        Log.d("####", "vv  "+clothesUid.size());
+                    }
                 }
             }
         }
@@ -462,47 +480,49 @@ public class FittingFragment extends Fragment {
 
 
     public static void makeClothesInvisible(Clothes clothes){
-        String type=clothes.getBodyType();
-        int a=0;
-        int c=0;
-        b=clothes.getBuffer();
-        Clothes clothesToChange=new Clothes();
-        if(userInformation.getLookClothes().size()==0){
-            clothes.setBuffer(null);
-            firebaseModel.getUsersReference().child(nick).child("lookClothes")
-                    .child(clothes.getUid()).setValue(clothes);
-            if(a==0){
-                clothes.setBuffer(b);
-                tryOnClothes(clothes);
-                a++;
-            }
-        }  else{
-            for(int i=0;i<userInformation.getLookClothes().size();i++){
-                Clothes clothes1=userInformation.getLookClothes().get(i);
-                if(clothes1.getUid().equals(clothes.getUid())){
-                    break;
-                }if(clothes1.getBodyType().equals(type)){
-                    clothesToChange=clothes1;
-                    c++;
+        if(!clothes.getBodyType().equals(clothesFitting.getBodyType())){
+            String type=clothes.getBodyType();
+            int a=0;
+            int c=0;
+            b=clothes.getBuffer();
+            Clothes clothesToChange=new Clothes();
+            if(userInformation.getLookClothes().size()==0){
+                clothes.setBuffer(null);
+                firebaseModel.getUsersReference().child(nick).child("lookClothes")
+                        .child(clothes.getUid()).setValue(clothes);
+                if(a==0){
+                    clothes.setBuffer(b);
+                    tryOnClothes(clothes);
+                    a++;
                 }
-                if(i==userInformation.getLookClothes().size()-1){
-                    if(c==1){
-                        firebaseModel.getUsersReference().child(nick).child("lookClothes")
-                                .child(clothesToChange.getUid()).removeValue();
-                        clothesUid.remove(clothesToChange.getUid());
-                        clothes.setBuffer(null);
-                        firebaseModel.getUsersReference().child(nick).child("lookClothes")
-                                .child(clothes.getUid()).setValue(clothes);
-                        filamentModel.setMask(clothesToChange);
-                    }     else{
-                        clothes.setBuffer(null);
-                        firebaseModel.getUsersReference().child(nick).child("lookClothes")
-                                .child(clothes.getUid()).setValue(clothes);
+            }  else{
+                for(int i=0;i<userInformation.getLookClothes().size();i++){
+                    Clothes clothes1=userInformation.getLookClothes().get(i);
+                    if(clothes1.getUid().equals(clothes.getUid())){
+                        break;
+                    }if(clothes1.getBodyType().equals(type)){
+                        clothesToChange=clothes1;
+                        c++;
                     }
-                    if(a==0){
-                        clothes.setBuffer(b);
-                        tryOnClothes(clothes);
-                        a++;
+                    if(i==userInformation.getLookClothes().size()-1){
+                        if(c==1){
+                            firebaseModel.getUsersReference().child(nick).child("lookClothes")
+                                    .child(clothesToChange.getUid()).removeValue();
+                            clothesUid.remove(clothesToChange.getUid());
+                            clothes.setBuffer(null);
+                            firebaseModel.getUsersReference().child(nick).child("lookClothes")
+                                    .child(clothes.getUid()).setValue(clothes);
+                            filamentModel.setMask(clothesToChange);
+                        }     else{
+                            clothes.setBuffer(null);
+                            firebaseModel.getUsersReference().child(nick).child("lookClothes")
+                                    .child(clothes.getUid()).setValue(clothes);
+                        }
+                        if(a==0){
+                            clothes.setBuffer(b);
+                            tryOnClothes(clothes);
+                            a++;
+                        }
                     }
                 }
             }
@@ -559,6 +579,7 @@ public class FittingFragment extends Fragment {
             filamentModel.populateScene(bufferToFilament,clothes);
             clothes.setBuffer(bufferToFilament);
             clothesList.add(clothes);
+            if(!clothes.getUid().equals(clothesFitting.getUid()))
             clothesUid.add(clothes.getUid());
         } catch (ExecutionException e) {
             e.printStackTrace();

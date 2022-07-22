@@ -226,7 +226,7 @@ public class FilamentModel {
         int light10=EntityManager.get().create();
         new LightManager.Builder(LightManager.Type.POINT)
                 .color(float1[0], float1[1], float1[2])
-                .intensity(00_000_000.0f)
+                .intensity(50_000_000.0f)
                 .falloff(9)
                 .position(7.0f, 4.0f, 0.0f)
                 .build(engine, light10);

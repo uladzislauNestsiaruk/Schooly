@@ -420,6 +420,7 @@ public class WardrobeFragment extends Fragment {
                 }
             });
         }  else{
+            Log.d("####", "ccc  "+clothesUid.size());
             for(int i=0;i<clothesList.size();i++ ){
                 Clothes clothes=clothesList.get(i);
                 if(clothesUid.contains(clothes.getUid())&&clothes.getBuffer()!=null){

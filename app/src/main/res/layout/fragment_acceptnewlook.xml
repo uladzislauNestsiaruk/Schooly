@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.egormoroz.schooly.LockableNestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:overScrollMode="never">
+    android:overScrollMode="never"
+    android:id="@+id/lockableNestedScrollView">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -27,7 +28,7 @@
             android:textSize="22sp" />
 
         <SurfaceView
-            android:id="@+id/sceneView"
+            android:id="@+id/surfaceView"
             android:layout_width="match_parent"
             android:layout_height="400dp"
             android:layout_below="@+id/back_toprofile"
@@ -40,7 +41,7 @@
             android:id="@+id/lookPriceText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/sceneView"
+            android:layout_below="@+id/surfaceView"
             android:layout_marginStart="24dp"
             android:layout_marginTop="16dp"
             android:fontFamily="@font/montserrat_bold"
@@ -147,4 +148,4 @@
         </RelativeLayout>
 
     </RelativeLayout>
-</androidx.core.widget.NestedScrollView>
+</com.egormoroz.schooly.LockableNestedScrollView>

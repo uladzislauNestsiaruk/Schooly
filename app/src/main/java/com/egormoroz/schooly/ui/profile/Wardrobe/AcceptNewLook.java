@@ -4,6 +4,7 @@ import android.app.DownloadManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -23,6 +24,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FilamentModel;
 import com.egormoroz.schooly.FirebaseModel;
+import com.egormoroz.schooly.LockableNestedScrollView;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
@@ -48,6 +50,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
@@ -74,25 +77,31 @@ public class AcceptNewLook extends Fragment {
     UserInformation userInformation;
     Bundle bundle;
     String lookType;
+    SurfaceView surfaceView;
     static byte[] buffer;
     static URI uri;
     static Future<Buffer> future;
     static Buffer buffer1,bufferToFilament,b;
-    static FilamentModel filamentModel;
+    static FilamentModel filamentModel=new FilamentModel();
     static ArrayList<Clothes> clothesList=new ArrayList<>();
     static ArrayList<String> clothesUid=new ArrayList<>();
+    LockableNestedScrollView lockableNestedScrollView;
 
-    public AcceptNewLook(String model,String type,Fragment fragment,UserInformation userInformation,Bundle bundle,String lookType) {
+    public AcceptNewLook(String model,String type,Fragment fragment,UserInformation userInformation,Bundle bundle,String lookType,ArrayList<String> clothesUid,
+                         ArrayList<Clothes> clothesList) {
         this.model = model;
         this.type = type;
         this.fragment=fragment;
         this.userInformation=userInformation;
         this.bundle=bundle;
         this.lookType=lookType;
+        AcceptNewLook.clothesUid =clothesUid;
+        AcceptNewLook.clothesList=clothesList;
     }
 
-    public static AcceptNewLook newInstance(String model,String type,Fragment fragment,UserInformation userInformation,Bundle bundle,String lookType) {
-        return new AcceptNewLook(model,type,fragment,userInformation,bundle,lookType);
+    public static AcceptNewLook newInstance(String model,String type,Fragment fragment,UserInformation userInformation,Bundle bundle,String lookType
+            ,ArrayList<String> clothesUid, ArrayList<Clothes> clothesList) {
+        return new AcceptNewLook(model,type,fragment,userInformation,bundle,lookType,clothesUid,clothesList);
 
     }
 
@@ -103,9 +112,6 @@ public class AcceptNewLook extends Fragment {
         BottomNavigationView bnv = getActivity().findViewById(R.id.bottomNavigationView);
         bnv.setVisibility(bnv.GONE);
         firebaseModel.initAll();
-        if(bundle.getSerializable("CLOTHESUID")!=null){
-            clothesUid= (ArrayList<String>) bundle.getSerializable("CLOTHESUID");
-        }
         return root;
     }
 
@@ -128,17 +134,14 @@ public class AcceptNewLook extends Fragment {
         lookPrice=view.findViewById(R.id.lookPrice);
         lookPriceDollar=view.findViewById(R.id.lookPriceDollar);
         descriptionLook=view.findViewById(R.id.addDescriptionEdit);
+        surfaceView=view.findViewById(R.id.surfaceView);
         recyclerView=view.findViewById(R.id.constituentsRecycler);
         schoolyCoin=view.findViewById(R.id.schoolyCoin);
         constituentsText=view.findViewById(R.id.lookConstituentsText);
-
-        if(bundle.getSerializable("ALLLOADCLOTHESLIST")!=null){
-            clothesList= (ArrayList<Clothes>) bundle.getSerializable("ALLLOADCLOTHESLIST");
-        }
         itemClickListener=new ConstituentsAdapter.ItemClickListener() {
             @Override
             public void onItemClick(Clothes clothes) {
-                RecentMethods.setCurrentFragment(ViewingClothesNews.newInstance(AcceptNewLook.newInstance(model,type,fragment, userInformation,bundle,lookType),userInformation,bundle), getActivity());
+                RecentMethods.setCurrentFragment(ViewingClothesNews.newInstance(AcceptNewLook.newInstance(model,type,fragment, userInformation,bundle,lookType,clothesUid,clothesList),userInformation,bundle), getActivity());
             }
         };
 
@@ -156,6 +159,30 @@ public class AcceptNewLook extends Fragment {
             }
         };
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
+
+        lockableNestedScrollView=view.findViewById(R.id.lockableNestedScrollView);
+        try {
+            if(bundle.getSerializable("CHARACTERMODEL")==null){
+                loadBuffer(userInformation.getMainLook());
+                bufferToFilament=future.get();
+                ArrayList<Buffer> buffers=new ArrayList<>();
+                buffers.add(bufferToFilament);
+                bundle.putSerializable("CHARACTERMODEL",buffers);
+                filamentModel.initFilament(surfaceView,bufferToFilament,true,lockableNestedScrollView,"regularRender",true);
+            }else{
+                ArrayList<Buffer> buffers= (ArrayList<Buffer>) bundle.getSerializable("CHARACTERMODEL");
+                Buffer buffer3=buffers.get(0);
+                filamentModel.initFilament(surfaceView,buffer3,true,lockableNestedScrollView,"regularRender",true);
+            }
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
 
         if(bundle!=null){
             if(bundle.getString("EDIT_DESCRIPTION_LOOK")!=null){
@@ -229,7 +256,7 @@ public class AcceptNewLook extends Fragment {
     }
 
     public void loadLookClothes(){
-        if(clothesUid.size()==0) {
+        if(clothesList.size()==0) {
             firebaseModel.getUsersReference().child(nick).child("lookClothes")
                     .get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                 @Override
@@ -245,6 +272,7 @@ public class AcceptNewLook extends Fragment {
                 }
             });
         }  else{
+            Log.d("#####", "d2");
             for(int i=0;i<clothesList.size();i++ ){
                 Clothes clothes=clothesList.get(i);
                 if(clothesUid.contains(clothes.getUid())&&clothes.getBuffer()!=null){
