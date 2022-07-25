@@ -35,6 +35,7 @@ import com.egormoroz.schooly.ClothesRequest;
 import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.MainActivity;
 import com.egormoroz.schooly.Nontification;
+import com.egormoroz.schooly.Person;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.SchoolyApplication;

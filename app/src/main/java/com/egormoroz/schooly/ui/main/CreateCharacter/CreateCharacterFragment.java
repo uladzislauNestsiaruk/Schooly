@@ -27,6 +27,7 @@ import com.egormoroz.schooly.CONST;
 import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.MainActivity;
+import com.egormoroz.schooly.Person;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.ui.main.GenderFragment;
@@ -37,6 +38,7 @@ import com.egormoroz.schooly.ui.main.MyClothes.CreateClothesFragment;
 import com.egormoroz.schooly.ui.main.NicknameFragment;
 import com.egormoroz.schooly.ui.main.RegFragment;
 import com.egormoroz.schooly.ui.main.Shop.AccessoriesFragment;
+import com.egormoroz.schooly.ui.main.Shop.Clothes;
 import com.egormoroz.schooly.ui.main.Shop.ClothesFragment;
 import com.egormoroz.schooly.ui.main.Shop.HatsFragment;
 import com.egormoroz.schooly.ui.main.Shop.PopularFragment;
@@ -249,7 +251,7 @@ public class CreateCharacterFragment extends Fragment {
                                     "6", password, "Helicopter", 1000, new ArrayList<>(),new ArrayList<>(),1,100,0
                                     , new ArrayList<>(), new ArrayList<>(), ""," ","open","open","open","open"
                                     ,new ArrayList<>(),"regular", new ArrayList<>(),0,new ArrayList<>(),new ArrayList<>()
-                                    ,new ArrayList<>(),new ArrayList<>(),new ArrayList<>(),new ArrayList<>(),"https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Funtitled.glb?alt=media&token=657b45d7-a84b-4f2a-89f4-a699029401f7");
+                                    ,new ArrayList<>(),new ArrayList<>(),new ArrayList<>(),new ArrayList<>(),new ArrayList<Clothes>(),new Person("", "", "", "", "", "", "", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Fma.glb?alt=media&token=f7430695-13cb-4365-8910-c61b59a96acf", "", ""));
                             reference.child(nick).setValue(res);
                             FirebaseModel firebaseModel=new FirebaseModel();
                             firebaseModel.initAll();

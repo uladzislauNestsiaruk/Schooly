@@ -127,7 +127,7 @@ public class RecentMethods {
                 , new ArrayList<>(),new ArrayList<>(), 1,100,0, new ArrayList<>(),new ArrayList<>(),
                 "","","open","open","open",
                 "open",new ArrayList<>(),"regular", new ArrayList<>(),0,new ArrayList<>(),new ArrayList<>(),new ArrayList<>()
-                ,new ArrayList<>(),new ArrayList<>(),new ArrayList<>(),"https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Funtitled.glb?alt=media&token=657b45d7-a84b-4f2a-89f4-a699029401f7");
+                ,new ArrayList<>(),new ArrayList<>(),new ArrayList<>(),new ArrayList<Clothes>(),new Person("", "", "", "", "", "", "", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Fma.glb?alt=media&token=f7430695-13cb-4365-8910-c61b59a96acf", "", ""));
         ref.child(nick).setValue(res).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
@@ -194,6 +194,7 @@ public class RecentMethods {
                     userData.setQueue(snapshot.child("queue").getValue(String.class));
                     userData.setmoney(snapshot.child("money").getValue(Long.class));
                     userData.setTodayMining(snapshot.child("todayMining").getValue(Double.class));
+                    userData.setPerson(snapshot.child("person").getValue(Person.class));
                     data.add(userData);
                 }
                 callback.LoadData(data);
@@ -1461,7 +1462,7 @@ public class RecentMethods {
         userInformation.setAccountType(snapshot.child("accountType").getValue(String.class));
         userInformation.setmoney(snapshot.child("money").getValue(Long.class));
         userInformation.setTodayMining(snapshot.child("todayMining").getValue(Double.class));
-        userInformation.setMainLook(snapshot.child("mainLook").getValue(String.class));
+        userInformation.setPerson(snapshot.child("person").getValue(Person.class));
         return userInformation;
     }
     public static UserPeopleAdapter validateUserInformationToUserPeopleAdapter(UserInformation user){
@@ -1485,7 +1486,9 @@ public class RecentMethods {
                 , new ArrayList<>(), ""," ","open","open","open","open",
                 new ArrayList<>(),"regular", new ArrayList<>(),0,new ArrayList<>(),new ArrayList<>()
                 ,new ArrayList<>(),new ArrayList<>(),new ArrayList<>(),new ArrayList<>()
-                ,"https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Funtitled.glb?alt=media&token=657b45d7-a84b-4f2a-89f4-a699029401f7");
+                ,new ArrayList<Clothes>(),new Person("", "", "", "", "", "", "", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Fma.glb?alt=media&token=f7430695-13cb-4365-8910-c61b59a96acf",
+                "", "")
+        );
         user.setNick("fake");
         Random random = new Random();
         for(int i = 0; i < 10; i++)

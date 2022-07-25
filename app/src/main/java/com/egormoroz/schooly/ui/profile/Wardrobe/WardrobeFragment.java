@@ -84,7 +84,7 @@ public class WardrobeFragment extends Fragment {
     SurfaceView surfaceView;
     WardrodeClothesAdapter.ItemClickListener itemClickListener;
     LockableNestedScrollView lockableNestedScrollView;
-    static ArrayList<Clothes> lookClothesList;
+    ArrayList<Buffer> buffers;
     static byte[] buffer;
     static URI uri;
     static Future<Buffer> future;
@@ -138,28 +138,7 @@ public class WardrobeFragment extends Fragment {
                 }
             }
         };
-        try {
-            if(bundle.getSerializable("CHARACTERMODEL")==null){
-                loadBuffer(userInformation.getMainLook());
-                bufferToFilament=future.get();
-                ArrayList<Buffer> buffers=new ArrayList<>();
-                buffers.add(bufferToFilament);
-                bundle.putSerializable("CHARACTERMODEL",buffers);
-                filamentModel.initFilament(surfaceView,bufferToFilament,true,lockableNestedScrollView,"regularRender",true);
-            }else{
-                ArrayList<Buffer> buffers= (ArrayList<Buffer>) bundle.getSerializable("CHARACTERMODEL");
-                Buffer buffer3=buffers.get(0);
-                filamentModel.initFilament(surfaceView,buffer3,true,lockableNestedScrollView,"regularRender",true);
-            }
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
+        loadPerson(userInformation, lockableNestedScrollView);
         notFound = view.findViewById(R.id.notFound);
         tabLayout = view.findViewById(R.id.tabLayoutWardrobe);
         viewPager = view.findViewById(R.id.frcontwardrobe);
@@ -560,11 +539,6 @@ public class WardrobeFragment extends Fragment {
         }
     }
 
-    public void saveFile(){
-        //FileOutputStream fileOutputStream=new
-
-    }
-
     public static void loadBuffer(String model){
         ExecutorService executorService= Executors.newCachedThreadPool();
         future = executorService.submit(new Callable(){
@@ -575,5 +549,64 @@ public class WardrobeFragment extends Fragment {
                 return buffer1;
             }
         });
+    }
+
+    public void loadPerson(UserInformation userInformation,LockableNestedScrollView lockableNestedScrollView){
+        try {
+            if(bundle.getSerializable("PERSON"+userInformation.getNick())==null){
+                loadBuffer(userInformation.getPerson().getBody());
+                bufferToFilament = future.get();
+                buffers=new ArrayList<>();
+                buffers.add(bufferToFilament);
+                bundle.putSerializable("PERSON"+userInformation.getNick(),buffers);
+                filamentModel.initFilament(surfaceView,bufferToFilament,true,lockableNestedScrollView
+                        ,"regularRender",true);
+                loadBodyPart(userInformation.getPerson().getBrows());
+                loadBodyPart(userInformation.getPerson().getEars());
+                loadBodyPart(userInformation.getPerson().getEyes());
+                loadBodyPart(userInformation.getPerson().getHair());
+                loadBodyPart(userInformation.getPerson().getHead());
+                loadBodyPart(userInformation.getPerson().getLips());
+                loadBodyPart(userInformation.getPerson().getNose());
+                loadBodyPart(userInformation.getPerson().getPirsing());
+                loadBodyPart(userInformation.getPerson().getSkinColor());
+
+            }else{
+                ArrayList<Buffer> buffers= (ArrayList<Buffer>) bundle.getSerializable("PERSON"+userInformation.getNick());
+                for(int i=0;i<buffers.size();i++){
+                    Buffer buffer3=buffers.get(i);
+                    if(i==0){
+                        filamentModel.initFilament(surfaceView,buffer3 ,true,lockableNestedScrollView
+                                ,"regularRender",true);
+                    }else{
+                        filamentModel.populateSceneFacePart(buffer3);
+                    }
+
+                }
+            }
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void loadBodyPart(String string){
+        if(string!=null){
+            loadBuffer(string);
+            try {
+                Buffer bufferToFilament= future.get();
+                filamentModel.populateSceneFacePart(bufferToFilament);
+                buffers.add(bufferToFilament);
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

@@ -1,18 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<androidx.core.widget.NestedScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginStart="12dp"
+    android:layout_marginEnd="12dp"
     tools:context=".ui.people.PeopleFragment">
+
+  <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent">
+
 
   <EditText
       android:id="@+id/searchuser"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:layout_marginStart="24dp"
-      android:layout_marginTop="24dp"
+      android:layout_marginStart="12dp"
+      android:layout_marginTop="12dp"
       android:layout_marginEnd="24dp"
       android:background="@drawable/corners12_2dpstrokeappcolor"
       android:fontFamily="@font/montserrat_bold"
@@ -30,10 +37,11 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:textColor="@color/app_grey"
-      android:textSize="18sp"
+      android:textSize="17sp"
       android:fontFamily="@font/montserrat_bold"
-      android:layout_centerInParent="true"
       android:visibility="gone"
+      android:layout_centerHorizontal="true"
+      android:layout_marginTop="250dp"
       android:text="@string/userNotsearch"/>
 
   <androidx.recyclerview.widget.RecyclerView
@@ -43,6 +51,10 @@
       android:layout_below="@+id/searchuser"
       android:layout_marginTop="4dp"
       android:overScrollMode="never"
-      app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+      app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+      android:paddingBottom="130dp"/>
 
-</RelativeLayout>
+  </RelativeLayout>
+
+
+</androidx.core.widget.NestedScrollView>

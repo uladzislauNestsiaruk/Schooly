@@ -22,8 +22,10 @@ import androidx.fragment.app.Fragment;
 import com.egormoroz.schooly.CONST;
 import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.ErrorList;
+import com.egormoroz.schooly.Person;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
+import com.egormoroz.schooly.ui.main.Shop.Clothes;
 import com.egormoroz.schooly.ui.people.UserPeopleAdapter;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -345,7 +347,7 @@ public class RegFragment extends Fragment {
                                     , new ArrayList<>(), new ArrayList<>(), ""," ","open","open","open","open"
                                     ,new ArrayList<>(),"regular", new ArrayList<>(),0,new ArrayList<>(),new ArrayList<>()
                                     ,new ArrayList<>(),new ArrayList<>(),new ArrayList<>(),new ArrayList<>()
-                            ,"https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Funtitled.glb?alt=media&token=657b45d7-a84b-4f2a-89f4-a699029401f7");
+                                    ,new ArrayList<Clothes>(),new Person("", "", "", "", "", "", "", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Fma.glb?alt=media&token=f7430695-13cb-4365-8910-c61b59a96acf", "", ""));
                             reference.child(nick).setValue(res);
                             database.getReference("usersNicks")
                                     .child(nick).setValue(new UserPeopleAdapter(nick,"6"," "));

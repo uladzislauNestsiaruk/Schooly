@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.egormoroz.schooly.Nontification;
+import com.egormoroz.schooly.Person;
 import com.egormoroz.schooly.Subscriber;
 import com.egormoroz.schooly.ui.coins.Transfer;
 import com.egormoroz.schooly.ui.main.Mining.Miner;
@@ -49,7 +50,8 @@ public class UserInformation implements Serializable {
     private String accountType;
     private String version;
     private long miningPremium;
-    private String mainLook;
+    private ArrayList<Clothes> mainLook;
+    private Person person;
     public UserInformation() {
     }
 
@@ -294,11 +296,19 @@ public class UserInformation implements Serializable {
         this.notifications = notifications;
     }
 
-    public String getMainLook() {
+    public Person getPerson() {
+        return person;
+    }
+
+    public void setPerson(Person person) {
+        this.person = person;
+    }
+
+    public ArrayList<Clothes> getMainLook() {
         return mainLook;
     }
 
-    public void setMainLook(String mainLook) {
+    public void setMainLook(ArrayList<Clothes> mainLook) {
         this.mainLook = mainLook;
     }
 
@@ -308,7 +318,7 @@ public class UserInformation implements Serializable {
                            String accountType, String chatsNontsType,
                            String groupChatsNontsType, String profileNontsType, ArrayList<Clothes> myClothes, String version,
                            ArrayList<NewsItem> looks,long miningPremium,ArrayList<Clothes> lookClothes,ArrayList<Clothes> clothes,ArrayList<Nontification> notifications
-            ,ArrayList<Transfer> transfers, ArrayList<NewsItem> savedLooks,ArrayList<Subscriber> blackList,String mainLook) {
+            ,ArrayList<Transfer> transfers, ArrayList<NewsItem> savedLooks,ArrayList<Subscriber> blackList,ArrayList<Clothes> mainLook,Person person) {
         this.Nick = nick;
         this.uid = uid;
         this.phone = phone;
@@ -340,5 +350,6 @@ public class UserInformation implements Serializable {
         this.savedLooks=savedLooks;
         this.blackList=blackList;
         this.mainLook=mainLook;
+        this.person=person;
     }
 }

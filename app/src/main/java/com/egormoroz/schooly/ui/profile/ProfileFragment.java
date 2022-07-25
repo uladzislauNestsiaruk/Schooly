@@ -58,6 +58,7 @@ import com.egormoroz.schooly.LockableNestedScrollView;
 import com.egormoroz.schooly.MainActivity;
 
 import com.egormoroz.schooly.Nontification;
+import com.egormoroz.schooly.Person;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 
@@ -149,6 +150,7 @@ public class ProfileFragment extends Fragment {
             otherSubscribersCount,otherUserBiography,subscribeClose,subscribe
             ,subscribeFirst,closeAccount,noClothes,buyClothesProfile,blockedAccount,emptyList;
     DatabaseReference user;
+    ArrayList<Buffer> buffers;
     ArrayList<Subscriber> userFromBase;
     LinearLayout linearSubscribers,linearSubscriptions
             ,linearLooksProfile,linearSubscribersProfile,linearSubscriptionsProfile;
@@ -160,6 +162,7 @@ public class ProfileFragment extends Fragment {
             otherSubscribersCountString,type,userName;
     Fragment fragment;
     View root;
+    ArrayList<Clothes> clothesList=new ArrayList<>();
     ViewPager2 viewPager,viewPagerOther;
     FragmentAdapter fragmentAdapter;
     FragmentAdapterOther fragmentAdapterOther;
@@ -172,6 +175,7 @@ public class ProfileFragment extends Fragment {
     UserInformation userInformation;
     Bundle bundle;
     FilamentModel filamentModel;
+    ArrayList<Clothes> mainLookClothes=new ArrayList<>();
     static byte[] buffer;
     static URI uri;
     static Buffer buffer1,bufferToFilament;
@@ -212,6 +216,7 @@ public class ProfileFragment extends Fragment {
                 }
             });
         }
+        bundle.putSerializable("ALLLOADCLOTHESLIST", clothesList);
     }
 
     public ProfileFragment(String type, String sendNick,Fragment fragment,UserInformation userInformation,Bundle bundle) {
@@ -299,28 +304,7 @@ public class ProfileFragment extends Fragment {
                 //////////////////////////////////////////////////
                 surfaceView=view.findViewById(R.id.mainlookview);
                 LockableNestedScrollView lockableNestedScrollView=view.findViewById(R.id.nestedScrollView);
-                try {
-                    if(bundle.getSerializable("MAINLOOK")==null){
-                        loadBuffer(userInformation.getMainLook());
-                        bufferToFilament = future.get();
-                        ArrayList<Buffer> buffers = new ArrayList<>();
-                        buffers.add(bufferToFilament);
-                        bundle.putSerializable("MAINLOOK",buffers);
-                        filamentModel.initFilament(surfaceView,bufferToFilament,true,lockableNestedScrollView,"regularRender",true);
-                    }else{
-                        ArrayList<Buffer> buffers= (ArrayList<Buffer>) bundle.getSerializable("MAINLOOK");
-                        Buffer buffer3=buffers.get(0);
-                        filamentModel.initFilament(surfaceView,buffer3,true,lockableNestedScrollView,"regularRender",true);
-                    }
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (URISyntaxException e) {
-                    e.printStackTrace();
-                }
+                loadMainLookAndPerson(userInformation, lockableNestedScrollView);
                 ImageView imageView = view.findViewById(R.id.settingsIcon);
                 imageView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -480,28 +464,7 @@ public class ProfileFragment extends Fragment {
                         b=1;
                         user = firebaseModel.getUsersReference().child(info.getNick());
                         surfaceView=view.findViewById(R.id.mainlookview);
-                        try {
-                            if(bundle.getSerializable("MAINLOOK"+info.getNick())==null){
-                                loadBuffer(userInformation.getMainLook());
-                                bufferToFilament = future.get();
-                                ArrayList<Buffer> buffers=new ArrayList<>();
-                                buffers.add(bufferToFilament);
-                                bundle.putSerializable("MAINLOOK"+info.getNick(),buffers);
-                                filamentModel.initFilament(surfaceView,bufferToFilament,true,lockableNestedScrollViewOther,"regularRender",true);
-                            }else{
-                                ArrayList<Buffer> buffers= (ArrayList<Buffer>) bundle.getSerializable("MAINLOOK"+info.getNick());
-                                Buffer buffer3=buffers.get(0);
-                                filamentModel.initFilament(surfaceView,buffer3 ,true,lockableNestedScrollViewOther,"regularRender",true);
-                            }
-                        } catch (ExecutionException e) {
-                            e.printStackTrace();
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        } catch (URISyntaxException e) {
-                            e.printStackTrace();
-                        }
+                        loadMainLookAndPerson(info, lockableNestedScrollViewOther);
                         if(bundle.getString(sendNick+"PROFILE_OTHER_CHECK_VALUE")==null){
                             firebaseModel.getUsersReference().child(info.getNick())
                                     .child("blackList").child(userInformation.getNick())
@@ -550,7 +513,6 @@ public class ProfileFragment extends Fragment {
                             viewPagerOther=view.findViewById(R.id.viewPagerOther);
                             setCountsOther();
                             setFragmentOtherViewPager(Integer.valueOf(bundle.getString(sendNick+"PROFILE_OTHER_CHECK_VALUE")));
-                            Log.d("#####", "112 "+Integer.valueOf(bundle.getString(sendNick+"PROFILE_OTHER_CHECK_VALUE")));
                             if(bundle.getString(sendNick+"PROFILE_OTHER_CHECK_SUBSCRIBE_VALUE")!=null){
                                 checkProfileValue(Integer.valueOf(bundle.getString(sendNick+"PROFILE_OTHER_CHECK_VALUE")),
                                         view,Integer.valueOf(bundle.getString(sendNick+"PROFILE_OTHER_CHECK_SUBSCRIBE_VALUE")));
@@ -597,32 +559,9 @@ public class ProfileFragment extends Fragment {
                                         info.setQueue(snapshot.child("queue").getValue(String.class));
                                         info.setAccountType(snapshot.child("accountType").getValue(String.class));
                                         info.setBio(snapshot.child("bio").getValue(String.class));
-                                        info.setMainLook(snapshot.child("mainLook").getValue(String.class));
+                                        info.setPerson(snapshot.child("person").getValue(Person.class));
                                         surfaceView=view.findViewById(R.id.mainlookview);
-                                        try {
-                                            if(bundle.getSerializable("MAINLOOK"+info.getNick())==null){
-                                                loadBuffer(userInformation.getMainLook());
-                                                bufferToFilament = future.get();
-                                                ArrayList<Buffer> buffers=new ArrayList<>();
-                                                buffers.add(bufferToFilament);
-                                                bundle.putSerializable("MAINLOOK"+info.getNick(),buffers);
-                                                filamentModel.initFilament(surfaceView,bufferToFilament,true,lockableNestedScrollViewOther
-                                                        ,"regularRender",true);
-                                            }else{
-                                                ArrayList<Buffer> buffers= (ArrayList<Buffer>) bundle.getSerializable("MAINLOOK"+info.getNick());
-                                                Buffer buffer3=buffers.get(0);
-                                                filamentModel.initFilament(surfaceView,buffer3 ,true,lockableNestedScrollViewOther
-                                                        ,"regularRender",true);
-                                            }
-                                        } catch (ExecutionException e) {
-                                            e.printStackTrace();
-                                        } catch (InterruptedException e) {
-                                            e.printStackTrace();
-                                        } catch (IOException e) {
-                                            e.printStackTrace();
-                                        } catch (URISyntaxException e) {
-                                            e.printStackTrace();
-                                        }
+                                        loadMainLookAndPerson(info,lockableNestedScrollViewOther);
                                         bundle.putSerializable(sendNick+"PROFILE_OTHER_BUNDLE", (Serializable) info);
                                         firebaseModel.getUsersReference().child(info.getNick())
                                                 .child("blackList").child(userInformation.getNick())
@@ -705,28 +644,7 @@ public class ProfileFragment extends Fragment {
 
                 surfaceView=view.findViewById(R.id.mainlookview);
                 LockableNestedScrollView lockableNestedScrollViewBack=view.findViewById(R.id.nestedScrollView);
-                try {
-                    if(bundle.getSerializable("MAINLOOK")==null){
-                        loadBuffer(userInformation.getMainLook());
-                        bufferToFilament = future.get();
-                        ArrayList<Buffer> buffers=new ArrayList<>();
-                        buffers.add(bufferToFilament);
-                        bundle.putSerializable("MAINLOOK",buffers);
-                        filamentModel.initFilament(surfaceView,bufferToFilament,true,lockableNestedScrollViewBack,"regularRender",true);
-                    }else{
-                        ArrayList<Buffer> buffers= (ArrayList<Buffer>) bundle.getSerializable("MAINLOOK");
-                        Buffer buffer3=buffers.get(0);
-                        filamentModel.initFilament(surfaceView,buffer3 ,true,lockableNestedScrollViewBack,"regularRender",true);
-                    }
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (URISyntaxException e) {
-                    e.printStackTrace();
-                }
+                loadMainLookAndPerson(userInformation, lockableNestedScrollViewBack);
 
                 if (bundle!=null){
                     tabLayoutPosition=bundle.getInt("TAB_INT_PROFILE");
@@ -1686,6 +1604,103 @@ public class ProfileFragment extends Fragment {
                     tabLayoutOther.selectTab(tabLayoutOther.getTabAt(position));
                 }
             });
+        }
+    }
+
+    public void loadMainLookAndPerson(UserInformation userInformation,LockableNestedScrollView lockableNestedScrollView){
+        try {
+            if(bundle.getSerializable("PERSON"+userInformation.getNick())==null){
+                loadBuffer(userInformation.getPerson().getBody());
+                bufferToFilament = future.get();
+                buffers=new ArrayList<>();
+                buffers.add(bufferToFilament);
+                bundle.putSerializable("PERSON"+userInformation.getNick(),buffers);
+                filamentModel.initFilament(surfaceView,bufferToFilament,true,lockableNestedScrollView
+                        ,"regularRender",true);
+                loadBodyPart(userInformation.getPerson().getBrows());
+                loadBodyPart(userInformation.getPerson().getEars());
+                loadBodyPart(userInformation.getPerson().getEyes());
+                loadBodyPart(userInformation.getPerson().getHair());
+                loadBodyPart(userInformation.getPerson().getHead());
+                loadBodyPart(userInformation.getPerson().getLips());
+                loadBodyPart(userInformation.getPerson().getNose());
+                loadBodyPart(userInformation.getPerson().getPirsing());
+                loadBodyPart(userInformation.getPerson().getSkinColor());
+
+            }else{
+                ArrayList<Buffer> buffers= (ArrayList<Buffer>) bundle.getSerializable("PERSON"+userInformation.getNick());
+                for(int i=0;i<buffers.size();i++){
+                    Buffer buffer3=buffers.get(i);
+                    if(i==0){
+                        filamentModel.initFilament(surfaceView,buffer3 ,true,lockableNestedScrollView
+                                ,"regularRender",true);
+                    }else{
+                        filamentModel.populateSceneFacePart(buffer3);
+                    }
+
+                }
+            }
+            if(bundle.getSerializable("MAINLOOK"+userInformation.getNick())==null){
+                firebaseModel.getUsersReference().child(userInformation.getNick())
+                        .child("mainLook").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DataSnapshot> task) {
+                        if(task.isSuccessful()){
+                            DataSnapshot snapshot=task.getResult();
+                            for(DataSnapshot snap:snapshot.getChildren()){
+                                Clothes clothes=snap.getValue(Clothes.class);
+                                addModelInScene(clothes);
+                            }
+                            bundle.putSerializable("MAINLOOK"+userInformation.getNick(), mainLookClothes);
+                        }
+
+                    }
+                });
+            }else {
+                mainLookClothes= (ArrayList<Clothes>) bundle.getSerializable("MAINLOOK"+userInformation.getNick());
+                for(int i=0;i<mainLookClothes.size();i++){
+                    Clothes clothes=mainLookClothes.get(0);
+                    filamentModel.populateScene(clothes.getBuffer(), clothes);
+                }
+            }
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void loadBodyPart(String string){
+        if(string!=null){
+            loadBuffer(string);
+            try {
+                Buffer bufferToFilament= future.get();
+                filamentModel.populateSceneFacePart(bufferToFilament);
+                buffers.add(bufferToFilament);
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void addModelInScene(Clothes clothes)  {
+        loadBuffer(clothes.getModel());
+        try {
+            bufferToFilament= future.get();
+            filamentModel.populateScene(bufferToFilament,clothes);
+            clothes.setBuffer(bufferToFilament);
+            mainLookClothes.add(clothes);
+            clothesList.add(clothes);
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 

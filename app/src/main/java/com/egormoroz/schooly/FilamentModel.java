@@ -282,7 +282,16 @@ public class FilamentModel {
         Float3 float3=new Float3(clothes.getX(), clothes.getY(), clothes.getZ());
         modelViewer.transformToUnitCube(float3,filamentAsset,clothes.getTransformRatio());
         int[] e=filamentAsset.getEntities();
-        Log.d("###", "a "+filamentAssets.size());
+    }
+
+    public void populateSceneFacePart(Buffer buffer) {
+        FilamentAsset filamentAsset=assetLoader.createAssetFromBinary(buffer);
+        filamentAssets.add(filamentAsset);
+        resourceLoader.asyncBeginLoad(filamentAsset);
+        filamentAsset.releaseSourceData();
+        resourceLoader.asyncUpdateLoad();
+        modelViewer.populateScene(filamentAsset);
+        int[] e=filamentAsset.getEntities();
     }
 
     public void setMask(Clothes clothes){

@@ -146,7 +146,7 @@ public class FittingFragment extends Fragment {
         };
         try {
             if(bundle.getSerializable("CHARACTERMODEL")==null){
-                loadBuffer(userInformation.getMainLook());
+                loadBuffer(userInformation.getPerson().getBody());
                 bufferToFilament=future.get();
                 ArrayList<Buffer> buffers=new ArrayList<>();
                 buffers.add(bufferToFilament);

@@ -90,8 +90,7 @@ public class RecomendationThread {
                             user_accurancy.remove(userPeopleAdapter);
                             user_accurancy.put(userPeopleAdapter, acuur + 1);
                             ArrayList<UserPeopleAdapter> users = get_Recommendations();
-                            AlreadySearchAdapter alreadySearchAdapter=new AlreadySearchAdapter(users,userInformation);
-                            recommendationsInterface.getRecommendationsInterface(alreadySearchAdapter);
+                            recommendationsInterface.getRecommendationsInterface(users);
                         }
                         else
                             Log.d("########", "Avatar not found");

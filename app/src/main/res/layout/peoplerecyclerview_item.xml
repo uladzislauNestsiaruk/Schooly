@@ -10,7 +10,7 @@
         android:id="@+id/useravatar"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:layout_marginStart="24dp"
+        android:layout_marginStart="12dp"
         android:layout_centerVertical="true"
         android:background="@drawable/corners14appcolor"/>
 
