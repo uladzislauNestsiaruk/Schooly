@@ -22,6 +22,7 @@ import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.ui.main.UserInformation;
+import com.egormoroz.schooly.ui.news.NewsItem;
 import com.egormoroz.schooly.ui.people.PeopleFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.database.DataSnapshot;
@@ -87,9 +88,9 @@ public class ComplainFragmentToBase extends Fragment {
             @Override
             public void onClick(View v) {
                 descriptionText=addDescriptionEdit.getText().toString();
-                String uid=firebaseModel.getReference().child("complains").push().getKey();
-                firebaseModel.getReference().child("complains").child(uid)
-                        .setValue(new Complain(nick,otherUserNick, reasonTextString,descriptionText));
+                String uid=firebaseModel.getReference().child("AppData").child("complains").push().getKey();
+                firebaseModel.getReference().child("AppData").child("complains").child(uid)
+                        .setValue(new Complain(otherUserNick,nick, reasonTextString,descriptionText,uid,new NewsItem()));
                 Toast.makeText(getContext(), R.string.complaintsent, Toast.LENGTH_SHORT).show();
                 RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", otherUserNick, fragment,userInformation,bundle), getActivity());
             }

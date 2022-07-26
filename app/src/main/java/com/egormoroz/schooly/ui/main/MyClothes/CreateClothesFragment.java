@@ -60,7 +60,6 @@ public class CreateClothesFragment extends Fragment {
     RadioGroup radioGroup,radioGroupCurrency,radioGroupExclusive;
     private String checker = "", myUrl = "";
     private Uri fileUri;
-    //SceneView modelScene;
     private StorageTask uploadTask;
     RadioButton radioButton1,radioButton2,radioButton3,radioButton4
             ,radioButton5,radioButton6,radioButton7,radioButton8
@@ -92,8 +91,6 @@ public class CreateClothesFragment extends Fragment {
         BottomNavigationView bnv = getActivity().findViewById(R.id.bottomNavigationView);
         bnv.setVisibility(bnv.GONE);
         firebaseModel.initAll();
-//        AppBarLayout abl = getActivity().findViewById(R.id.AppBarLayout);
-//        abl.setVisibility(abl.GONE);
         return root;
     }
 
@@ -131,7 +128,6 @@ public class CreateClothesFragment extends Fragment {
         radioGroupExclusive=view.findViewById(R.id.radioGroupExclusive);
         radioButtonExclusiveYes=view.findViewById(R.id.radioButtonExclusiveYes);
         radioButtonExclusiveNo=view.findViewById(R.id.radioButtonExclusiveNo);
-        //modelScene=view.findViewById(R.id.modelFile);
         before=view.findViewById(R.id.before);
         criteria=view.findViewById(R.id.criteria);
         noPhoto=view.findViewById(R.id.noPhoto);
@@ -536,8 +532,8 @@ public class CreateClothesFragment extends Fragment {
                         exclusiveType="no";
                         break;
                 }
-                String uid=firebaseModel.getReference().child("clothesReqests").push().getKey();
-                firebaseModel.getReference().child("clothesReqests").child(uid)
+                String uid=firebaseModel.getReference().child("AppData").child("clothesReqests").push().getKey();
+                firebaseModel.getReference().child("AppData").child("clothesReqests").child(uid)
                         .setValue(new ClothesRequest(type, imageApplication, Long.valueOf(editClothesPrice.getText().toString()), editTextClothes.getText().toString()
                                 , 111, nick, currencyType,addDescriptionEdit.getText().toString() ,modelApplication , bodyType,uid,exclusiveType));
                 Toast.makeText(getContext(), getContext().getResources().getText(R.string.applicationsent), Toast.LENGTH_SHORT).show();

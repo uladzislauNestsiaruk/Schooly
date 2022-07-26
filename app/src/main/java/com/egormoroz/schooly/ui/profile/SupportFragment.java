@@ -20,6 +20,7 @@ import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.ui.main.UserInformation;
+import com.egormoroz.schooly.ui.news.NewsItem;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class SupportFragment extends Fragment {
@@ -85,10 +86,11 @@ public class SupportFragment extends Fragment {
                 if (aboutProblem.getText().toString().length()==0){
                     Toast.makeText(getContext(), getContext().getResources().getText(R.string.thereasonforthecomplaintisnotentered), Toast.LENGTH_SHORT).show();
                 }else{
-                    String uid=firebaseModel.getReference().child("support").push().getKey();
-                    firebaseModel.getReference().child("support").child(uid)
-                            .setValue(new Complain(nick,"",aboutProblem.getText().toString(),""));
+                    String uid=firebaseModel.getReference().child("AppData").child("support").push().getKey();
+                    firebaseModel.getReference().child("AppData").child("support").child(uid)
+                            .setValue(new Complain("",nick,aboutProblem.getText().toString(),"",uid,new NewsItem()));
                     Toast.makeText(getContext(), getContext().getResources().getText(R.string.complaintsent), Toast.LENGTH_SHORT).show();
+                    RecentMethods.setCurrentFragment(SettingsFragment.newInstance(type, fragment, userInformation, bundle), getActivity());
                 }
             }
         });

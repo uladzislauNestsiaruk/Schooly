@@ -139,7 +139,6 @@ public class ViewingLookFragment extends Fragment {
         LooksAdapter.lookInfo(new LooksAdapter.ItemClickListener() {
             @Override
             public void onItemClick(NewsItem newsItem) {
-                //loadModels(Uri.parse(newsItem.getImageUrl()), sceneView, ViewingLookFragment.this, 0.25f);
                 nickView.setText(newsItem.getNick());
                 nickView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -359,14 +358,15 @@ public class ViewingLookFragment extends Fragment {
                 bottomSheetDialog.dismiss();
             }
         };
-        RecentMethods.getComplainReasonList(firebaseModel, new Callbacks.getComplainReasonsList() {
-            @Override
-            public void getComplainReasonsList(ArrayList<Reason> reason) {
-                ComplainAdapter complainAdapter=new ComplainAdapter(reason,itemClickListenerComplain);
-                complainRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
-                complainRecycler.setAdapter(complainAdapter);
-            }
-        });
+        ArrayList<Reason> arrayListReason=new ArrayList<>();
+        arrayListReason.add(new Reason(getContext().getResources().getString(R.string.fraud)));
+        arrayListReason.add(new Reason(getContext().getResources().getString(R.string.violenceordangerousorganizations)));
+        arrayListReason.add(new Reason(getContext().getResources().getString(R.string.hostilesayingsorsymbols)));
+        arrayListReason.add(new Reason(getContext().getResources().getString(R.string.saleofillegalgoods)));
+        arrayListReason.add(new Reason(getContext().getResources().getString(R.string.violationofintellectualpropertyrights)));
+        ComplainAdapter complainAdapter=new ComplainAdapter(arrayListReason,itemClickListenerComplain);
+        complainRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
+        complainRecycler.setAdapter(complainAdapter);
 
         bottomSheetDialog.show();
     }
@@ -386,9 +386,9 @@ public class ViewingLookFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 descriptionText=addDescriptionEdit.getText().toString();
-                String uid=firebaseModel.getReference().child("complains").push().getKey();
-                firebaseModel.getReference().child("complains").child(uid)
-                        .setValue(new Complain(nick,newsItem.getNick(), reasonTextString,descriptionText));
+                String uid=firebaseModel.getReference().child("AppData").child("complains").push().getKey();
+                firebaseModel.getReference().child("AppData").child("complains").child(uid)
+                        .setValue(new Complain(newsItem.getNick(),nick, reasonTextString,descriptionText,uid,newsItem));
                 Toast.makeText(getContext(), getContext().getResources().getText(R.string.complaintsent), Toast.LENGTH_SHORT).show();
                 bottomSheetDialog.dismiss();
             }
@@ -460,19 +460,20 @@ public class ViewingLookFragment extends Fragment {
                                 .get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                             @Override
                             public void onComplete(@NonNull Task<DataSnapshot> task) {
-                                if(task.isSuccessful()){}
-                                DataSnapshot snapshot=task.getResult();
-                                if(snapshot.exists()){
-                                    save.setText(R.string.save);
-                                    firebaseModel.getUsersReference().child(nick).child("saved").child(newsItem.getNewsId())
-                                            .removeValue();
-                                    Toast.makeText(getContext(), v.getContext().getResources().getText(R.string.lookwasdeletedfromsaved), Toast.LENGTH_SHORT).show();
-                                }else {
-                                    save.setText(R.string.dontsave);
-                                    Log.d("####", "####11"+newsItem.getNewsId()+"  "+newsItem.getNewsId());
-                                    firebaseModel.getUsersReference().child(nick).child("saved").child(newsItem.getNewsId())
-                                            .setValue(newsItem);
-                                    Toast.makeText(getContext(), v.getContext().getResources().getText(R.string.looksaved), Toast.LENGTH_SHORT).show();
+                                if(task.isSuccessful()){
+                                    DataSnapshot snapshot=task.getResult();
+                                    if(snapshot.exists()){
+                                        save.setText(R.string.save);
+                                        firebaseModel.getUsersReference().child(nick).child("saved").child(newsItem.getNewsId())
+                                                .removeValue();
+                                        Toast.makeText(getContext(), v.getContext().getResources().getText(R.string.lookwasdeletedfromsaved), Toast.LENGTH_SHORT).show();
+                                    }else {
+                                        save.setText(R.string.dontsave);
+                                        Log.d("####", "####11"+newsItem.getNewsId()+"  "+newsItem.getNewsId());
+                                        firebaseModel.getUsersReference().child(nick).child("saved").child(newsItem.getNewsId())
+                                                .setValue(newsItem);
+                                        Toast.makeText(getContext(), v.getContext().getResources().getText(R.string.looksaved), Toast.LENGTH_SHORT).show();
+                                    }
                                 }
                             }
                         });
@@ -520,18 +521,19 @@ public class ViewingLookFragment extends Fragment {
                                 .get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                             @Override
                             public void onComplete(@NonNull Task<DataSnapshot> task) {
-                                if(task.isSuccessful()){}
-                                DataSnapshot snapshot=task.getResult();
-                                if(snapshot.exists()){
-                                    save.setText(R.string.save);
-                                    firebaseModel.getUsersReference().child(nick).child("saved").child(newsItem.getNewsId())
-                                            .removeValue();
-                                    Toast.makeText(getContext(), v.getContext().getResources().getText(R.string.lookwasdeletedfromsaved), Toast.LENGTH_SHORT).show();
-                                }else {
-                                    save.setText(R.string.dontsave);
-                                    firebaseModel.getUsersReference().child(nick).child("saved").child(newsItem.getNewsId())
-                                            .setValue(newsItem);
-                                    Toast.makeText(getContext(), v.getContext().getResources().getText(R.string.looksaved), Toast.LENGTH_SHORT).show();
+                                if(task.isSuccessful()){
+                                    DataSnapshot snapshot=task.getResult();
+                                    if(snapshot.exists()){
+                                        save.setText(R.string.save);
+                                        firebaseModel.getUsersReference().child(nick).child("saved").child(newsItem.getNewsId())
+                                                .removeValue();
+                                        Toast.makeText(getContext(), v.getContext().getResources().getText(R.string.lookwasdeletedfromsaved), Toast.LENGTH_SHORT).show();
+                                    }else {
+                                        save.setText(R.string.dontsave);
+                                        firebaseModel.getUsersReference().child(nick).child("saved").child(newsItem.getNewsId())
+                                                .setValue(newsItem);
+                                        Toast.makeText(getContext(), v.getContext().getResources().getText(R.string.looksaved), Toast.LENGTH_SHORT).show();
+                                    }
                                 }
                             }
                         });
