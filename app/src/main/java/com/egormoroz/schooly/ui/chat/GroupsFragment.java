@@ -1,4 +1,4 @@
-package com.egormoroz.schooly.ui.main;
+package com.egormoroz.schooly.ui.chat;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,10 +16,10 @@ import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
+import com.egormoroz.schooly.ui.main.UserInformation;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -36,10 +36,17 @@ public class GroupsFragment extends Fragment
     private ArrayList<String> list_of_groups = new ArrayList<>();
     private DatabaseReference GroupRef;
 
-    public GroupsFragment() {
+    UserInformation userInformation;
+    Bundle bundle;
+
+    public GroupsFragment(UserInformation userInformation,Bundle bundle) {
+        this.userInformation=userInformation;
+        this.bundle=bundle;
     }
-    public static GroupsFragment newInstance() {
-        return new GroupsFragment();
+
+    public static GroupsFragment newInstance(UserInformation userInformation,Bundle bundle) {
+        return new GroupsFragment(userInformation,bundle);
+
     }
 
     @Override

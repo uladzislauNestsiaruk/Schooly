@@ -512,6 +512,8 @@
     <string name="lookwasdeletedfromsaved">Образ удалён из сохранённых</string>
     <string name="thepublicationwasnotfound">Публикация не найдена. Вероятнее всего пользователь удалил образ</string>
     <string name="usernotfound">Пользователь не найден</string>
+    <string name="personal">Личные</string>
+    <string name="talks">Беседы</string>
 
 
 

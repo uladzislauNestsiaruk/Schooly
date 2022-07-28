@@ -512,6 +512,8 @@
     <string name="lookwasdeletedfromsaved">Look was deleted from saved</string>
     <string name="thepublicationwasnotfound">The publication was not found. Most likely the user deleted the look</string>
     <string name="usernotfound">User not found</string>
+    <string name="personal">Personal</string>
+    <string name="talks">Talks</string>
 
 
 

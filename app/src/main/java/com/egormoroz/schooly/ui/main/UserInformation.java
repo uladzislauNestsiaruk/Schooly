@@ -6,6 +6,7 @@ import android.os.Parcelable;
 import com.egormoroz.schooly.Nontification;
 import com.egormoroz.schooly.Person;
 import com.egormoroz.schooly.Subscriber;
+import com.egormoroz.schooly.ui.chat.Chat;
 import com.egormoroz.schooly.ui.coins.Transfer;
 import com.egormoroz.schooly.ui.main.Mining.Miner;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
@@ -52,6 +53,7 @@ public class UserInformation implements Serializable {
     private long miningPremium;
     private ArrayList<Clothes> mainLook;
     private Person person;
+    ArrayList<Chat> chatArrayList;
     public UserInformation() {
     }
 
@@ -312,13 +314,21 @@ public class UserInformation implements Serializable {
         this.mainLook = mainLook;
     }
 
+    public ArrayList<Chat> getChats() {
+        return chatArrayList;
+    }
+
+    public void setChats(ArrayList<Chat> chatArrayList) {
+        this.chatArrayList = chatArrayList;
+    }
+
     public UserInformation(String nick, String phone, String uid, String Avatar, String password,
                            String gender, long age, ArrayList<Miner> activeMinerArrayList,ArrayList<Miner> minerArrayList, long level, long money, double todayMining,
                            ArrayList<Subscriber> subscription, ArrayList<Subscriber> subscribers, String queue, String bio,
                            String accountType, String chatsNontsType,
                            String groupChatsNontsType, String profileNontsType, ArrayList<Clothes> myClothes, String version,
                            ArrayList<NewsItem> looks,long miningPremium,ArrayList<Clothes> lookClothes,ArrayList<Clothes> clothes,ArrayList<Nontification> notifications
-            ,ArrayList<Transfer> transfers, ArrayList<NewsItem> savedLooks,ArrayList<Subscriber> blackList,ArrayList<Clothes> mainLook,Person person) {
+            ,ArrayList<Transfer> transfers, ArrayList<NewsItem> savedLooks,ArrayList<Subscriber> blackList,ArrayList<Clothes> mainLook,Person person,ArrayList<Chat> chatArrayList) {
         this.Nick = nick;
         this.uid = uid;
         this.phone = phone;
@@ -351,5 +361,6 @@ public class UserInformation implements Serializable {
         this.blackList=blackList;
         this.mainLook=mainLook;
         this.person=person;
+        this.chatArrayList=chatArrayList;
     }
 }

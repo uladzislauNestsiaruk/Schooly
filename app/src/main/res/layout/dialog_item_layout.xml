@@ -9,7 +9,7 @@
         android:layout_width="56dp"
         android:layout_height="56dp"
         android:layout_marginStart="24dp"
-        android:background="@drawable/corners14appcolor"/>
+        android:background="@drawable/corners14appcolor" />
 
     <View
         android:id="@+id/online"
@@ -23,18 +23,18 @@
         android:id="@+id/otherUserNick"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
         android:layout_toRightOf="@+id/otheUserImage"
-        android:textSize="16sp"
-        android:layout_marginStart="4dp"
         android:fontFamily="@font/montserrat_bold"
-        android:textColor="@color/app_color"/>
+        android:textColor="@color/app_color"
+        android:textSize="16sp" />
 
     <TextView
         android:id="@+id/lastMessage"
         android:layout_width="260dp"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@+id/otheUserImage"
-        android:layout_marginStart="4dp"
+        android:layout_marginStart="8dp"
         android:fontFamily="@font/montserrat_bold"
         android:textColor="@color/app_grey"
         android:layout_below="@+id/otherUserNick"

@@ -23,11 +23,10 @@
         android:supportsRtl="true"
         android:name=".SchoolyApplication"
         android:theme="@style/Theme.Schooly">
-        <activity android:name=".ui.main.DialogsActivity" />
         <activity android:name=".ui.chat.holders.ImageViewerActivity" />
-        <activity android:name=".ui.main.ChatActivity" />
         <activity android:name=".ui.main.PhoneCodeActivity" />
-        <activity android:name=".ui.main.GroupChatActivity" />
+        <activity android:name=".ui.chat.ChatActivity" />
+        <activity android:name=".ui.chat.GroupChatActivity" />
         <!--        <activity android:name=".ModelActivity" />-->
         <activity
             android:name=".MainActivity"

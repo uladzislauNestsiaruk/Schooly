@@ -1,5 +1,6 @@
 package com.egormoroz.schooly;
 
+import com.egormoroz.schooly.ui.chat.Chat;
 import com.egormoroz.schooly.ui.coins.Transfer;
 import com.egormoroz.schooly.ui.main.Mining.Miner;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
@@ -108,5 +109,9 @@ public class Callbacks {
     }
     public interface getRecommendationsThread{
         void getRecommendationsInterface(ArrayList<UserPeopleAdapter> recommendationsArrayList);
+    }
+
+    public interface loadDialogs{
+        void LoadData(ArrayList<Chat> dialogs);
     }
 }

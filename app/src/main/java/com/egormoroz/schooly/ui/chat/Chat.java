@@ -5,12 +5,14 @@ public class Chat {
     private String LastTime = "";
     private String LastMessage = "";
     private String type = "";
+    private String unreadMessages;
 
-    public Chat (String name, String LastTime, String LastMessage, String type){
+    public Chat (String name, String LastTime, String LastMessage, String type,String unreadMessages){
         this.name = name;
         this.LastTime = LastTime;
         this.LastMessage = LastMessage;
         this.type = type;
+        this.unreadMessages=unreadMessages;
     }
 
     public Chat() {
@@ -36,5 +38,9 @@ public class Chat {
     public String getLastTime () {return  this.LastTime;}
 
     public void setLastTime (String time) {this.LastTime = time;}
+
+    public String getUnreadMessages () {return  this.unreadMessages;}
+
+    public void setUnreadMessages (String unreadMessages) {this.unreadMessages = unreadMessages;}
 
 }

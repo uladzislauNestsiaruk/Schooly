@@ -22,9 +22,6 @@ public class TransferMoneyAdapter extends RecyclerView.Adapter<TransferMoneyAdap
     ArrayList<Subscriber> listAdapter;
     private TransferMoneyAdapter.ItemClickListener clickListener;
     private FirebaseModel firebaseModel = new FirebaseModel();
-    long subscriptionsCount,subscribersCount;
-    boolean check=false;
-    int a=0;
 
     public  TransferMoneyAdapter(ArrayList<Subscriber> listAdapter) {
         this.listAdapter = listAdapter;

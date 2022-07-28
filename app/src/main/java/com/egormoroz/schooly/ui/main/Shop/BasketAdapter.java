@@ -33,7 +33,6 @@ import java.util.ArrayList;
 
 public class BasketAdapter extends RecyclerView.Adapter<BasketAdapter.ViewHolder>{
 
-  private NewClothesAdapter.ItemClickListener clickListener;
   ArrayList<Clothes> clothesArrayList;
   private FirebaseModel firebaseModel = new FirebaseModel();
   FirebaseStorage storage = FirebaseStorage.getInstance();

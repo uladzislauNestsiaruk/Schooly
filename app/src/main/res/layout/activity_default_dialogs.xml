@@ -76,22 +76,10 @@
             android:layout_height="52dp"
             android:layout_marginTop="24dp"
             android:layout_below="@+id/searchLayout"
-            app:tabTextAppearance="@style/AppTabTextAppearance">
+            app:tabTextAppearance="@style/AppTabTextAppearance"
+            app:tabRippleColor="@android:color/transparent"
+            />
 
-            <com.google.android.material.tabs.TabItem
-                android:id="@+id/chats"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/privatemessages" />
-
-            <com.google.android.material.tabs.TabItem
-                android:id="@+id/groups"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/groupmessages" />
-
-
-        </com.google.android.material.tabs.TabLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
@@ -112,7 +100,7 @@
         android:visibility="gone"/>
 
 
-    <androidx.viewpager.widget.ViewPager
+    <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/frcont"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

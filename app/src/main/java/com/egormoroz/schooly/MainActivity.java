@@ -17,6 +17,7 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.egormoroz.schooly.ui.chat.Chat;
 import com.egormoroz.schooly.ui.coins.CoinsMainFragment;
 import com.egormoroz.schooly.ui.coins.Transfer;
 import com.egormoroz.schooly.ui.main.MainFragment;
@@ -291,6 +292,12 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void getClothes(ArrayList<Clothes> allClothes) {
                         bundle.putSerializable("ALL_CLOTHES", allClothes);
+                    }
+                });
+                RecentMethods.getDialogs(nick, firebaseModel, new Callbacks.loadDialogs() {
+                    @Override
+                    public void LoadData(ArrayList<Chat> dialogs) {
+                        userInformation.setChats(dialogs);
                     }
                 });
 
