@@ -55,6 +55,7 @@ public class DialogAdapter extends RecyclerView.Adapter<DialogAdapter.ViewHolder
         Chat chat=chatArrayList.get(position);
         holder.userName.setText(chat.getName());
         holder.lastTime.setText(chat.getLastTime());
+        holder.newMessages.setText(String.valueOf(chat.getUnreadMessages()));
         if (chat.getLastMessage().length()<=16){
             holder.lastMessage.setText(chat.getLastMessage());
         }else {
@@ -64,7 +65,7 @@ public class DialogAdapter extends RecyclerView.Adapter<DialogAdapter.ViewHolder
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (itemClickListener != null) itemClickListener.onItemClick(chat.getName());
+                if (itemClickListener != null) itemClickListener.onItemClick(chat);
             }
         });
 
@@ -89,7 +90,7 @@ public class DialogAdapter extends RecyclerView.Adapter<DialogAdapter.ViewHolder
 
         @Override
         public void onClick(View view) {
-            if (itemClickListener != null) itemClickListener.onItemClick("");
+            if (itemClickListener != null) itemClickListener.onItemClick(new Chat());
         }
     }
 
@@ -99,6 +100,6 @@ public class DialogAdapter extends RecyclerView.Adapter<DialogAdapter.ViewHolder
 
 
     public interface ItemClickListener {
-        void onItemClick(String userName);
+        void onItemClick(Chat chat);
     }
 }

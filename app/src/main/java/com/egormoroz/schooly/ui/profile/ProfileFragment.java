@@ -48,7 +48,8 @@ import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 
 import com.egormoroz.schooly.Subscriber;
-import com.egormoroz.schooly.ui.chat.ChatActivity;
+import com.egormoroz.schooly.ui.chat.DialogsFragment;
+import com.egormoroz.schooly.ui.chat.MessageFragment;
 import com.egormoroz.schooly.ui.main.MainFragment;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
 import com.egormoroz.schooly.ui.main.Shop.ShopFragment;
@@ -201,14 +202,7 @@ public class ProfileFragment extends Fragment {
 
             }
         });
-        Intent i = new Intent(getActivity(), ChatActivity.class);
-        i.putExtra("othUser", info.getNick());
-        i.putExtra("curUser", userInformation.getNick());
-        i.putExtra("groupName", "one");
-        i.putExtra("visit_user_id", info.getUid());
-        i.putExtra("visit_image", ChatActivity.class);
-        startActivity(i);
-        ((Activity) getActivity()).overridePendingTransition(0, 0);
+        //RecentMethods.setCurrentFragment(MessageFragment.newInstance(userInformation, bundle, DialogsFragment.newInstance(userInformation, bundle,fragment),chat), getActivity());
     }
 
     @Override

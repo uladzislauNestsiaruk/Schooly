@@ -129,7 +129,7 @@ public class RecentMethods {
                 "","","open","open","open",
                 "open",new ArrayList<>(),"regular", new ArrayList<>(),0,new ArrayList<>(),new ArrayList<>(),new ArrayList<>()
                 ,new ArrayList<>(),new ArrayList<>(),new ArrayList<>(),new ArrayList<Clothes>(),new Person("", "", "", "", "", "", "", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Fma.glb?alt=media&token=f7430695-13cb-4365-8910-c61b59a96acf", "", "")
-        ,new ArrayList<>());
+        ,new ArrayList<>(),new ArrayList<>());
         ref.child(nick).setValue(res).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
@@ -1489,7 +1489,7 @@ public class RecentMethods {
                 new ArrayList<>(),"regular", new ArrayList<>(),0,new ArrayList<>(),new ArrayList<>()
                 ,new ArrayList<>(),new ArrayList<>(),new ArrayList<>(),new ArrayList<>()
                 ,new ArrayList<Clothes>(),new Person("", "", "", "", "", "", "", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Fma.glb?alt=media&token=f7430695-13cb-4365-8910-c61b59a96acf",
-                "", ""),new ArrayList<>()
+                "", ""),new ArrayList<>(),new ArrayList<>()
         );
         user.setNick("fake");
         Random random = new Random();
@@ -1551,22 +1551,31 @@ public class RecentMethods {
 
     public static void getDialogs(String nick,FirebaseModel firebaseModel,Callbacks.loadDialogs loadDialogs){
         firebaseModel.initAll();
-        firebaseModel.getUsersReference().child(nick).child("Chats").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+        firebaseModel.getUsersReference().child(nick).child("Chats").addValueEventListener(new ValueEventListener() {
             @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if(task.isSuccessful()){
-                    DataSnapshot snapshot=task.getResult();
-                    ArrayList<Chat> chatArrayList=new ArrayList<Chat>();
-                    for (DataSnapshot snap:snapshot.getChildren()){
-                        Chat chat=new Chat();
-                        chat.setName(snap.child("name").getValue(String.class));
-                        chat.setLastMessage(snap.child("LastMessage").getValue(String.class));
-                        chat.setLastTime(snap.child("LastTime").getValue(String.class));
-                        chat.setUnreadMessages(snap.child("Unread").getValue(String.class));
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Log.d("##", "ss");
+                ArrayList<Chat> chatArrayList=new ArrayList<>();
+                ArrayList<Chat> talksArrayList=new ArrayList<>();
+                for (DataSnapshot snap:dataSnapshot.getChildren()){
+                    Chat chat=new Chat();
+                    chat.setName(snap.child("name").getValue(String.class));
+                    chat.setLastMessage(snap.child("lastMessage").getValue(String.class));
+                    chat.setLastTime(snap.child("lastTime").getValue(String.class));
+                    chat.setUnreadMessages(snap.child("unreadMessages").getValue(Long.class));
+                    chat.setType(snap.child("type").getValue(String.class));
+                    if(chat.getType().equals("personal")){
                         chatArrayList.add(chat);
+                    }else{
+                        talksArrayList.add(chat);
                     }
-                    loadDialogs.LoadData(chatArrayList);
                 }
+                loadDialogs.LoadData(chatArrayList,talksArrayList);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
             }
         });
     }

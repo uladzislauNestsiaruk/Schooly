@@ -514,6 +514,8 @@
     <string name="usernotfound">User not found</string>
     <string name="personal">Personal</string>
     <string name="talks">Talks</string>
+    <string name="noChats">No chats:(</string>
+    <string name="noChatsFound">No chats found:(</string>
 
 
 

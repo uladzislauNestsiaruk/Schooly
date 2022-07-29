@@ -112,6 +112,6 @@ public class Callbacks {
     }
 
     public interface loadDialogs{
-        void LoadData(ArrayList<Chat> dialogs);
+        void LoadData(ArrayList<Chat> dialogs,ArrayList<Chat> talksArrayList);
     }
 }

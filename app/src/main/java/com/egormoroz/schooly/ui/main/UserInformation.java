@@ -54,6 +54,7 @@ public class UserInformation implements Serializable {
     private ArrayList<Clothes> mainLook;
     private Person person;
     ArrayList<Chat> chatArrayList;
+    ArrayList<Chat> talksArrayList;
     public UserInformation() {
     }
 
@@ -322,13 +323,22 @@ public class UserInformation implements Serializable {
         this.chatArrayList = chatArrayList;
     }
 
+    public ArrayList<Chat> getTalksArrayList() {
+        return talksArrayList;
+    }
+
+    public void setTalksArrayList(ArrayList<Chat> talksArrayList) {
+        this.talksArrayList = talksArrayList;
+    }
+
     public UserInformation(String nick, String phone, String uid, String Avatar, String password,
                            String gender, long age, ArrayList<Miner> activeMinerArrayList,ArrayList<Miner> minerArrayList, long level, long money, double todayMining,
                            ArrayList<Subscriber> subscription, ArrayList<Subscriber> subscribers, String queue, String bio,
                            String accountType, String chatsNontsType,
                            String groupChatsNontsType, String profileNontsType, ArrayList<Clothes> myClothes, String version,
                            ArrayList<NewsItem> looks,long miningPremium,ArrayList<Clothes> lookClothes,ArrayList<Clothes> clothes,ArrayList<Nontification> notifications
-            ,ArrayList<Transfer> transfers, ArrayList<NewsItem> savedLooks,ArrayList<Subscriber> blackList,ArrayList<Clothes> mainLook,Person person,ArrayList<Chat> chatArrayList) {
+            ,ArrayList<Transfer> transfers, ArrayList<NewsItem> savedLooks,ArrayList<Subscriber> blackList,ArrayList<Clothes> mainLook,Person person,ArrayList<Chat> chatArrayList
+    ,ArrayList<Chat> talksArrayList) {
         this.Nick = nick;
         this.uid = uid;
         this.phone = phone;
@@ -362,5 +372,6 @@ public class UserInformation implements Serializable {
         this.mainLook=mainLook;
         this.person=person;
         this.chatArrayList=chatArrayList;
+        this.talksArrayList=talksArrayList;
     }
 }

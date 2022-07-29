@@ -1,6 +1,7 @@
 package com.egormoroz.schooly.ui.chat;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -16,32 +17,24 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.lifecycle.Lifecycle;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.ui.main.MainFragment;
-import com.egormoroz.schooly.ui.main.Shop.AccessoriesFragment;
-import com.egormoroz.schooly.ui.main.Shop.ClothesFragment;
-import com.egormoroz.schooly.ui.main.Shop.ExclusiveFragment;
-import com.egormoroz.schooly.ui.main.Shop.HatsFragment;
-import com.egormoroz.schooly.ui.main.Shop.PopularFragment;
-import com.egormoroz.schooly.ui.main.Shop.ShoesFargment;
-import com.egormoroz.schooly.ui.main.Shop.ShopFragment;
 import com.egormoroz.schooly.ui.main.UserInformation;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
 
 public class DialogsFragment extends Fragment {
 
@@ -53,7 +46,8 @@ public class DialogsFragment extends Fragment {
     FirebaseModel firebaseModel=new FirebaseModel();
     TextView noChats;
     private ViewPager2 viewPager;
-
+    ArrayList<Chat> searchDialogsArrayList;
+    ArrayList<Chat> allChats=new ArrayList<>();
     UserInformation userInformation;
     FragmentAdapter fragmentAdapter;
     Bundle bundle;
@@ -91,8 +85,13 @@ public class DialogsFragment extends Fragment {
     public void onViewCreated(@Nullable View view,@NonNull Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
         firebaseModel.initAll();
-
+        viewPager=view.findViewById(R.id.frcont);
+        tabLayout = (TabLayout) view.findViewById(R.id.tabschat);
+        noChats=view.findViewById(R.id.noChats);
+        recyclerView=view.findViewById(R.id.recyclerView);
         editText=view.findViewById(R.id.editText);
+        allChats.addAll(userInformation.getChats());
+        allChats.addAll(userInformation.getTalksArrayList());
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
@@ -109,7 +108,7 @@ public class DialogsFragment extends Fragment {
                     editText.setText(bundleEditText);
                     viewPager.setVisibility(View.GONE);
                     tabLayout.setVisibility(View.GONE);
-                    //loadChat();
+                    searchChats(bundleEditText.toLowerCase());
                 }
             }
         }
@@ -125,23 +124,18 @@ public class DialogsFragment extends Fragment {
                 if (getEditText.length()>0){
                     viewPager.setVisibility(View.GONE);
                     tabLayout.setVisibility(View.GONE);
-                    recyclerView=view.findViewById(R.id.recyclerView);
-                    noChats=view.findViewById(R.id.noChats);
-                    noChats.setVisibility(View.VISIBLE);
-                    recyclerView.setVisibility(View.VISIBLE);
-                    loadChat(getEditText);
+                    searchChats(getEditText.toLowerCase());
 
                 }else if(getEditText.length()==0){
                     viewPager.setVisibility(View.VISIBLE);
                     tabLayout.setVisibility(View.VISIBLE);
+                    recyclerView.setVisibility(View.GONE);
+                    noChats.setVisibility(View.GONE);
                     FragmentManager fm = getChildFragmentManager();
                     fragmentAdapter = new FragmentAdapter(fm, getLifecycle());
                     viewPager.setAdapter(fragmentAdapter);
                     viewPager.setCurrentItem(tabLayoutPosition, false);
 
-                    tabLayout = (TabLayout) view.findViewById(R.id.tabschat);
-                    tabLayout.addTab(tabLayout.newTab().setText(R.string.personal));
-                    tabLayout.addTab(tabLayout.newTab().setText(R.string.talks));
                     tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener(){
                         @Override
                         public void onTabSelected(TabLayout.Tab tab) {
@@ -177,16 +171,13 @@ public class DialogsFragment extends Fragment {
         });
 
 
-        viewPager=view.findViewById(R.id.frcont);
-
         FragmentManager fm = getChildFragmentManager();
         fragmentAdapter = new FragmentAdapter(fm, getLifecycle());
         viewPager.setAdapter(fragmentAdapter);
         viewPager.setCurrentItem(tabLayoutPosition, false);
 
-        tabLayout = (TabLayout) view.findViewById(R.id.tabschat);
-        tabLayout.addTab(tabLayout.newTab().setText(R.string.personal));
         tabLayout.addTab(tabLayout.newTab().setText(R.string.talks));
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.personal));
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener(){
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -222,23 +213,92 @@ public class DialogsFragment extends Fragment {
         });
     }
 
-    public void loadChat(String editText){
-        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-            @Override
-            public void PassUserNick(String nick) {
-                Query query=firebaseModel.getUsersReference().child(nick).child("Chats");
-                query.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+    public void searchChats(String textEdit){
+        if(allChats==null){
+            firebaseModel.getUsersReference().child(userInformation.getNick()).child("Chats").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DataSnapshot> task) {
+                    if(task.isSuccessful()){
+                        searchDialogsArrayList=new ArrayList<>();
+                        DataSnapshot snapshot=task.getResult();
+                        for (DataSnapshot snap:snapshot.getChildren()){
+                            Chat chat=new Chat();
+                            chat.setName(snap.child("name").getValue(String.class));
+                            chat.setLastMessage(snap.child("lastMessage").getValue(String.class));
+                            chat.setLastTime(snap.child("lastTime").getValue(String.class));
+                            //chat.setUnreadMessages(snap.child("unreadMessages").getValue(Long.class));
+                            chat.setType(snap.child("type").getValue(String.class));
+                            String chatName=chat.getName();
+                            String title=chatName;
+                            int valueLetters=textEdit.length();
+                            title=title.toLowerCase();
+                            if(title.length()<valueLetters){
+                                if(title.equals(textEdit))
+                                    searchDialogsArrayList.add(chat);
+                            }else{
+                                title=title.substring(0, valueLetters);
+                                if(title.equals(textEdit))
+                                    searchDialogsArrayList.add(chat);
+                            }
+                        }
+                        if (searchDialogsArrayList.size()==0){
+                            recyclerView.setVisibility(View.GONE);
+                            noChats.setVisibility(View.VISIBLE);
+                        }else {
+                            recyclerView.setVisibility(View.VISIBLE);
+                            DialogAdapter dialogAdapter=new DialogAdapter(searchDialogsArrayList);
+                            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                            recyclerView.setAdapter(dialogAdapter);
+                            noChats.setVisibility(View.GONE);
+                            DialogAdapter.ItemClickListener itemClickListener=new DialogAdapter.ItemClickListener() {
+                                @Override
+                                public void onItemClick(Chat chat) {
+                                    Intent chatIntent = new Intent(getContext(), MessageFragment.class);
+                                    chatIntent.putExtra("curUser", userInformation.getNick());
+                                    chatIntent.putExtra("othUser", chat.getName());
+                                    startActivity(chatIntent);
+                                }
+                            };
+                            dialogAdapter.setClickListener(itemClickListener);
+                        }
                     }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
+                }
+            });
+        }else {
+            searchDialogsArrayList=new ArrayList<>();
+            for (int i=0;i<allChats.size();i++) {
+                Chat chat = allChats.get(i);
+                String chatName=chat.getName();
+                String title=chatName;
+                int valueLetters=textEdit.length();
+                title=title.toLowerCase();
+                if(title.length()<valueLetters){
+                    if(title.equals(textEdit))
+                        searchDialogsArrayList.add(chat);
+                }else{
+                    title=title.substring(0, valueLetters);
+                    if(title.equals(textEdit))
+                        searchDialogsArrayList.add(chat);
+                }
             }
-        });
+            if (searchDialogsArrayList.size()==0){
+                recyclerView.setVisibility(View.GONE);
+                noChats.setVisibility(View.VISIBLE);
+            }else {
+                recyclerView.setVisibility(View.VISIBLE);
+                DialogAdapter dialogAdapter=new DialogAdapter(searchDialogsArrayList);
+                recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                recyclerView.setAdapter(dialogAdapter);
+                noChats.setVisibility(View.GONE);
+                DialogAdapter.ItemClickListener itemClickListener=new DialogAdapter.ItemClickListener() {
+                    @Override
+                    public void onItemClick(Chat chat) {
+                        RecentMethods.setCurrentFragment(MessageFragment.newInstance(userInformation, bundle, DialogsFragment.newInstance(userInformation, bundle,fragment),chat), getActivity());
+                    }
+                };
+                dialogAdapter.setClickListener(itemClickListener);
+            }
+        }
     }
 
     public class FragmentAdapter extends FragmentStateAdapter {
@@ -251,10 +311,10 @@ public class DialogsFragment extends Fragment {
         @Override
         public Fragment createFragment ( int position){
             switch (position){
-                case 0:
-                    return new ChatsFragment(userInformation,bundle);
                 case 1:
-                    return new GroupsFragment(userInformation,bundle);
+                    return new ChatsFragment(userInformation,bundle,fragment);
+                case 0:
+                    return new GroupsFragment(userInformation,bundle,fragment);
             }
             return null;
         }

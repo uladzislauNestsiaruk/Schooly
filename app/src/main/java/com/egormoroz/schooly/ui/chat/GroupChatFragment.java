@@ -1,5 +1,7 @@
 package com.egormoroz.schooly.ui.chat;
 
+import static android.app.Activity.RESULT_OK;
+
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -14,18 +16,22 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -35,6 +41,12 @@ import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.ui.chat.Message;
 import com.egormoroz.schooly.ui.chat.MessageAdapter;
+import com.egormoroz.schooly.ui.main.MainFragment;
+import com.egormoroz.schooly.ui.main.UserInformation;
+import com.egormoroz.schooly.ui.people.PeopleAdapter;
+import com.egormoroz.schooly.ui.people.PeopleFragment;
+import com.egormoroz.schooly.ui.people.UserPeopleAdapter;
+import com.egormoroz.schooly.ui.profile.ProfileFragment;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -58,15 +70,31 @@ import java.util.List;
 import java.util.Map;
 
 
-public final class GroupChatActivity extends Activity {
+public final class GroupChatFragment extends Fragment {
+
+    UserInformation userInformation;
+    Bundle bundle;
+    Fragment fragment;
+    Chat chat;
+
+    public GroupChatFragment(UserInformation userInformation,Bundle bundle,Fragment fragment,Chat chat) {
+        this.userInformation=userInformation;
+        this.bundle=bundle;
+        this.fragment=fragment;
+        this.chat=chat;
+    }
+
+    public static GroupChatFragment newInstance(UserInformation userInformation, Bundle bundle, Fragment fragment,Chat chat) {
+        return new GroupChatFragment(userInformation,bundle,fragment,chat);
+
+    }
     private String messageReceiverName, messageReceiverImage, messageSenderName;
 
-    private static Activity instance;
     private TextView userName, userLastSeen;
     private ImageView userImage;
     FirebaseModel firebaseModel = new FirebaseModel();
 
-    ImageView back;
+    ImageView back,info;
     private DatabaseReference RootRef;
 
     private MediaRecorder recorder = null;
@@ -87,25 +115,34 @@ public final class GroupChatActivity extends Activity {
     private StorageTask uploadTask;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         firebaseModel.initAll();
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_chat);
-
         RootRef = firebaseModel.getUsersReference();
+        ActivityCompat.requestPermissions(getActivity(), permissions, REQUEST_RECORD_AUDIO_PERMISSION);
+        return inflater.inflate(R.layout.activity_chat_group, container, false);
+    }
 
-        instance = this;
-        ActivityCompat.requestPermissions(this, permissions, REQUEST_RECORD_AUDIO_PERMISSION);
-        Intent intentReceived = getIntent();
-        Bundle data = intentReceived.getExtras();
-        if (data != null) {
-            messageReceiverName = data.getString("groupName");
-            messageSenderName = data.getString("curUser");
-        }
+    @Override
+    public void onViewCreated(@Nullable View view,@NonNull Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
+        messageSenderName=userInformation.getNick();
+        messageReceiverName=chat.getName();
 
-        //     messageReceiverImage = getIntent().getExtras().get("visit_image").toString();
+        OnBackPressedCallback callback1 = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+
+                RecentMethods.setCurrentFragment(fragment, getActivity());
+            }
+        };
+
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback1);
+
+        IntializeVoice(view);
+        IntializeControllers(view);
+
         DatabaseReference ref = firebaseModel.getUsersReference().child(messageSenderName).child("Chats").child(messageReceiverName).child("Unread");
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override public void onDataChange(DataSnapshot dataSnapshot) {
@@ -119,11 +156,8 @@ public final class GroupChatActivity extends Activity {
 
             }
         });
-        IntializeVoice();
-        IntializeControllers();
 
         userMessagesList.scrollToPosition(userMessagesList.getAdapter().getItemCount());
-        userName.setText(messageReceiverName);
         Picasso.get().load(messageReceiverImage).placeholder(R.drawable.corners14).into(userImage);
 
         SendMessageButton.setOnClickListener(new View.OnClickListener() {
@@ -148,37 +182,54 @@ public final class GroupChatActivity extends Activity {
 
         });
     }
-    public static Context getContext() {
-        return instance.getApplicationContext();
-    }
 
-    private void IntializeControllers() {
+    private void IntializeControllers(View view) {
 
-        back = findViewById(R.id.backtoalldialogs);
+        back = view.findViewById(R.id.backtoalldialogs);
 
-        userName = findViewById(R.id.custom_profile_name);
-        userImage = findViewById(R.id.custom_profile_image);
-        userLastSeen = findViewById(R.id.custom_user_last_seen);
+        userName = view.findViewById(R.id.custom_profile_name);
+        userName.setText(messageReceiverName);
+        userName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                RecentMethods.setCurrentFragment(ChatInformationFrgment.newInstance(messageReceiverImage),getActivity());
+            }
+        });
+        userImage = view.findViewById(R.id.custom_profile_image);
+        userImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                RecentMethods.setCurrentFragment(ChatInformationFrgment.newInstance(messageReceiverImage),getActivity());
+            }
+        });
+        userLastSeen = view.findViewById(R.id.custom_user_last_seen);
 
-        SendMessageButton = findViewById(R.id.send_message_btn);
-        SendFilesButton = findViewById(R.id.send_files_btn);
-        MessageInputText = findViewById(R.id.input_message);
+        SendMessageButton = view.findViewById(R.id.send_message_btn);
+        SendFilesButton = view.findViewById(R.id.send_files_btn);
+        MessageInputText = view.findViewById(R.id.input_message);
 
         messageAdapter = new MessageAdapter(messagesList, messageSenderName);
-        userMessagesList = findViewById(R.id.private_messages_list_of_users);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        userMessagesList = view.findViewById(R.id.private_messages_list_of_users);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         userMessagesList.setLayoutManager(linearLayoutManager);
         userMessagesList.setAdapter(messageAdapter);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                RecentMethods.setCurrentFragment(fragment, getActivity());
+            }
+        });
+        info = view.findViewById(R.id.info);
+        info.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                RecentMethods.setCurrentFragment(ChatInformationFrgment.newInstance(messageReceiverImage),getActivity());
             }
         });
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 443 && resultCode == RESULT_OK && data != null && data.getData() != null) {
             fileUri = data.getData();
@@ -233,7 +284,7 @@ public final class GroupChatActivity extends Activity {
 
 
     @Override
-    protected void onStart() {
+    public void onStart() {
 
         super.onStart();
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
@@ -280,7 +331,7 @@ public final class GroupChatActivity extends Activity {
         String messageText = MessageInputText.getText().toString();
 
         if (TextUtils.isEmpty(messageText)) {
-            Toast.makeText(this, "first write your message...", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "first write your message...", Toast.LENGTH_SHORT).show();
         } else {
             final String messageSenderRef = "/Groups/" + messageReceiverName + "/Messages/";
 
@@ -315,7 +366,7 @@ public final class GroupChatActivity extends Activity {
         DatabaseReference userMessageKeyRef = firebaseModel.getUsersReference().child("Groups").child(messageReceiverName).child("Messages").push();
         final String messagePushID = userMessageKeyRef.getKey();
         final StorageReference filePath = storageReference.child(messagePushID + "." + "3gp");
-        myUrl = getExternalCacheDir().getAbsolutePath() + "/voice.3gp";
+        myUrl = getActivity().getExternalCacheDir().getAbsolutePath() + "/voice.3gp";
         Uri file = Uri.fromFile(new File(myUrl));
         uploadTask = filePath.putFile(file);
         uploadTask.continueWithTask(new Continuation() {
@@ -359,9 +410,9 @@ public final class GroupChatActivity extends Activity {
 
 
 
-    private void IntializeVoice()
+    private void IntializeVoice(View view)
     {
-        ImageView voice = findViewById(R.id.voiceinput);
+        ImageView voice =view.findViewById(R.id.voiceinput);
 
         voice.setOnTouchListener(new View.OnTouchListener() {
 
@@ -390,7 +441,7 @@ public final class GroupChatActivity extends Activity {
 
 
     private void startRecording() throws IOException {
-        myUrl = getExternalCacheDir().getAbsolutePath() + "/voice.3gp";
+        myUrl = getActivity().getExternalCacheDir().getAbsolutePath() + "/voice.3gp";
 
         recorder = new MediaRecorder();
         recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
@@ -438,7 +489,7 @@ public final class GroupChatActivity extends Activity {
                 permissionToRecordAccepted  = grantResults[0] == PackageManager.PERMISSION_GRANTED;
                 break;
         }
-        if (!permissionToRecordAccepted ) finish();
+        if (!permissionToRecordAccepted ) RecentMethods.setCurrentFragment(fragment, getActivity());
     }
 
 

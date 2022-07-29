@@ -296,8 +296,9 @@ public class MainActivity extends AppCompatActivity {
                 });
                 RecentMethods.getDialogs(nick, firebaseModel, new Callbacks.loadDialogs() {
                     @Override
-                    public void LoadData(ArrayList<Chat> dialogs) {
+                    public void LoadData(ArrayList<Chat> dialogs,ArrayList<Chat> talksArrayList) {
                         userInformation.setChats(dialogs);
+                        userInformation.setTalksArrayList(talksArrayList);
                     }
                 });
 

@@ -348,7 +348,7 @@ public class RegFragment extends Fragment {
                                     ,new ArrayList<>(),"regular", new ArrayList<>(),0,new ArrayList<>(),new ArrayList<>()
                                     ,new ArrayList<>(),new ArrayList<>(),new ArrayList<>(),new ArrayList<>()
                                     ,new ArrayList<Clothes>(),new Person("", "", "", "", "", "", "", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Fma.glb?alt=media&token=f7430695-13cb-4365-8910-c61b59a96acf", "", ""),
-                                    new ArrayList<>());
+                                    new ArrayList<>(),new ArrayList<>());
                             reference.child(nick).setValue(res);
                             database.getReference("usersNicks")
                                     .child(nick).setValue(new UserPeopleAdapter(nick,"6"," "));

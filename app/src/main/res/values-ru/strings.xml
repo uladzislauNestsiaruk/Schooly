@@ -514,11 +514,7 @@
     <string name="usernotfound">Пользователь не найден</string>
     <string name="personal">Личные</string>
     <string name="talks">Беседы</string>
-
-
-
-
-
-
+    <string name="noChats">Нет чатов:(</string>
+    <string name="noChatsFound">Чаты не найдены:(</string>
 
 </resources>

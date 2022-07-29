@@ -1,5 +1,8 @@
 package com.egormoroz.schooly.ui.chat;
 
+import static android.app.Activity.RESULT_OK;
+
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
@@ -26,8 +29,10 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -38,9 +43,13 @@ import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.ui.chat.Message;
 import com.egormoroz.schooly.ui.chat.MessageAdapter;
+import com.egormoroz.schooly.ui.main.GenderFragment;
+import com.egormoroz.schooly.ui.main.MainFragment;
 import com.egormoroz.schooly.ui.main.Nontifications.NontificationFragment;
 import com.egormoroz.schooly.ui.main.UserInformation;
+import com.egormoroz.schooly.ui.people.PeopleAdapter;
 import com.egormoroz.schooly.ui.people.PeopleFragment;
+import com.egormoroz.schooly.ui.people.UserPeopleAdapter;
 import com.egormoroz.schooly.ui.profile.ProfileFragment;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -68,16 +77,34 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public final class ChatActivity extends Activity {
+public final class MessageFragment extends Fragment {
+
+
+    UserInformation userInformation;
+    Bundle bundle;
+    Fragment fragment;
+    Chat chat;
+
+    public MessageFragment(UserInformation userInformation,Bundle bundle,Fragment fragment,Chat chat) {
+        this.userInformation=userInformation;
+        this.bundle=bundle;
+        this.fragment=fragment;
+        this.chat=chat;
+    }
+
+    public static MessageFragment newInstance(UserInformation userInformation, Bundle bundle, Fragment fragment,Chat chat) {
+        return new MessageFragment(userInformation,bundle,fragment,chat);
+
+    }
+
     private String messageReceiverName, messageReceiverImage, messageSenderName;
 
     private static Activity instance;
-    private TextView userName, userLastSeen;
+    TextView userName, userLastSeen;
     private ImageView userImage;
     FirebaseModel firebaseModel = new FirebaseModel();
 
     ImageView back, info;
-    UserInformation userInformation;
     private DatabaseReference RootRef;
 
     private MediaRecorder recorder = null;
@@ -97,29 +124,69 @@ public final class ChatActivity extends Activity {
     private Uri fileUri;
     private StorageTask uploadTask;
     int chatCheckValue;
-    Bundle bundle;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         firebaseModel.initAll();
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_chat);
-
         RootRef = firebaseModel.getUsersReference();
+        ActivityCompat.requestPermissions(getActivity(), permissions, REQUEST_RECORD_AUDIO_PERMISSION);
+        return inflater.inflate(R.layout.activity_chat, container, false);
+    }
 
-        instance = this;
-        ActivityCompat.requestPermissions(this, permissions, REQUEST_RECORD_AUDIO_PERMISSION);
-        Intent intentReceived = getIntent();
-        Bundle data = intentReceived.getExtras();
-        if (data != null) {
-            messageSenderName = data.getString("curUser");
-            messageReceiverName = data.getString("othUser");
+    @Override
+    public void onViewCreated(@Nullable View view,@NonNull Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        info = view.findViewById(R.id.info);
+        back = view.findViewById(R.id.backtoalldialogs);
 
-        }
+        userName = view.findViewById(R.id.custom_profile_name);
+        userName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", messageReceiverName, MessageFragment.newInstance(userInformation, bundle
+                , fragment, chat), userInformation, bundle), getActivity());
+            }
+        });
+
+        OnBackPressedCallback callback1 = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+
+                RecentMethods.setCurrentFragment(fragment, getActivity());
+            }
+        };
+
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback1);
+        messageSenderName=userInformation.getNick();
+        messageReceiverName=chat.getName();
+        userImage = view.findViewById(R.id.custom_profile_image);
+        userImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", messageReceiverName, MessageFragment.newInstance(userInformation, bundle
+                        , fragment, chat), userInformation, bundle), getActivity());
+            }
+        });
+        userLastSeen = view.findViewById(R.id.custom_user_last_seen);
 
 
-        //     messageReceiverImage = getIntent().getExtras().get("visit_image").toString();
+        SendMessageButton = view.findViewById(R.id.send_message_btn);
+        SendFilesButton = view.findViewById(R.id.send_files_btn);
+        MessageInputText = view.findViewById(R.id.input_message);
+
+        messageAdapter = new MessageAdapter(messagesList, messageSenderName, messageReceiverName);
+        userMessagesList = view.findViewById(R.id.private_messages_list_of_users);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+        userMessagesList.setLayoutManager(linearLayoutManager);
+        userMessagesList.setAdapter(messageAdapter);
+        userMessagesList.setItemViewCacheSize(20);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RecentMethods.setCurrentFragment(fragment, getActivity());
+            }
+        });
         DatabaseReference ref = firebaseModel.getUsersReference().child(messageSenderName).child("Chats").child(messageReceiverName).child("Unread");
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -174,8 +241,7 @@ public final class ChatActivity extends Activity {
             }
         });
 
-        IntializeVoice();
-        IntializeControllers();
+        IntializeVoice(view);
         if (chatCheckValue != 0) {
             if (chatCheckValue == -1) {
                 ///////все окей//////
@@ -190,20 +256,7 @@ public final class ChatActivity extends Activity {
         info.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent chatIntent = new Intent(getContext(), ChatInformationFrgment.class);
-                Query query = firebaseModel.getUsersReference().child(messageReceiverName)
-                        .child("nick");
-                query.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        RecentMethods.setCurrentFragment(ChatInformationFrgment.newInstance(snapshot.getValue(String.class)), ChatActivity.this);
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
+                RecentMethods.setCurrentFragment(ChatInformationFrgment.newInstance(messageReceiverImage),getActivity());
             }
         });
         Picasso.get().load(messageReceiverImage).placeholder(R.drawable.corners14).into(userImage);
@@ -232,60 +285,9 @@ public final class ChatActivity extends Activity {
         });
     }
 
-    public static Context getContext() {
-        return instance.getApplicationContext();
-    }
-
-    private void IntializeControllers() {
-        info = findViewById(R.id.info);
-        back = findViewById(R.id.backtoalldialogs);
-
-        userName = findViewById(R.id.custom_profile_name);
-        userName.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-                firebaseModel.getUsersReference().child(messageReceiverName).addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if(!snapshot.exists()){
-                            Toast.makeText(getContext(), R.string.usernotfound, Toast.LENGTH_SHORT).show();
-                        }else {
-                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", messageReceiverName, PeopleFragment.newInstance(userInformation, bundle), userInformation, bundle),
-                                    getParent());
-                        }                            }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-            }
-        });
-        userImage = findViewById(R.id.custom_profile_image);
-        userLastSeen = findViewById(R.id.custom_user_last_seen);
-        ;
-
-        SendMessageButton = findViewById(R.id.send_message_btn);
-        SendFilesButton = findViewById(R.id.send_files_btn);
-        MessageInputText = findViewById(R.id.input_message);
-
-        messageAdapter = new MessageAdapter(messagesList, messageSenderName, messageReceiverName);
-        userMessagesList = findViewById(R.id.private_messages_list_of_users);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        userMessagesList.setLayoutManager(linearLayoutManager);
-        userMessagesList.setAdapter(messageAdapter);
-        userMessagesList.setItemViewCacheSize(20);
-        back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-    }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 443 && resultCode == RESULT_OK && data != null && data.getData() != null) {
             fileUri = data.getData();
@@ -349,7 +351,7 @@ public final class ChatActivity extends Activity {
 
 
     @Override
-    protected void onStart() {
+    public void onStart() {
 
         super.onStart();
         RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
@@ -396,7 +398,7 @@ public final class ChatActivity extends Activity {
         String messageText = MessageInputText.getText().toString();
 
         if (TextUtils.isEmpty(messageText)) {
-            Toast.makeText(this, "first write your message...", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "first write your message...", Toast.LENGTH_SHORT).show();
         } else {
             Send(messageText, "text");
         }
@@ -409,7 +411,7 @@ public final class ChatActivity extends Activity {
         DatabaseReference userMessageKeyRef = firebaseModel.getUsersReference().child(messageSenderName).child("Chats").child(messageReceiverName).child("Messages").push();
         final String messagePushID = userMessageKeyRef.getKey();
         final StorageReference filePath = storageReference.child(messagePushID + "." + "3gp");
-        myUrl = getExternalCacheDir().getAbsolutePath() + "/voice.3gp";
+        myUrl = getActivity().getExternalCacheDir().getAbsolutePath() + "/voice.3gp";
         Uri file = Uri.fromFile(new File(myUrl));
         uploadTask = filePath.putFile(file);
         uploadTask.continueWithTask(new Continuation() {
@@ -432,8 +434,8 @@ public final class ChatActivity extends Activity {
 
 
     @SuppressLint("ClickableViewAccessibility")
-    private void IntializeVoice() {
-        ImageView voice = findViewById(R.id.voiceinput);
+    private void IntializeVoice(View v) {
+        ImageView voice = v.findViewById(R.id.voiceinput);
 
         voice.setOnTouchListener(new View.OnTouchListener() {
             @SuppressLint("ClickableViewAccessibility")
@@ -461,7 +463,7 @@ public final class ChatActivity extends Activity {
 
 
     private void startRecording() throws IOException {
-        myUrl = getExternalCacheDir().getAbsolutePath() + "/voice.3gp";
+        myUrl = getActivity().getExternalCacheDir().getAbsolutePath() + "/voice.3gp";
 
         recorder = new MediaRecorder();
         recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
@@ -509,7 +511,7 @@ public final class ChatActivity extends Activity {
                 permissionToRecordAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
                 break;
         }
-        if (!permissionToRecordAccepted) finish();
+        if (!permissionToRecordAccepted) RecentMethods.setCurrentFragment(fragment, getActivity());
     }
 
 
@@ -534,28 +536,30 @@ public final class ChatActivity extends Activity {
 
     private void addLastMessage(String type, String Message) {
 
+        Log.d("####",type);
         switch (type) {
             case "text":
-                addType("text");
-                firebaseModel.getUsersReference().child(messageSenderName).child("Chats").child(messageReceiverName).child("LastMessage").setValue(Message);
-                firebaseModel.getUsersReference().child(messageReceiverName).child("Chats").child(messageSenderName).child("LastMessage").setValue(Message);
+                //addType("text");
+                Log.d("###", "gg"+messageSenderName+"   "+messageReceiverName+"  "+Message);
+                firebaseModel.getUsersReference().child(messageSenderName).child("Chats").child(messageReceiverName).child("lastMessage").setValue(Message);
+                firebaseModel.getUsersReference().child(messageReceiverName).child("Chats").child(messageSenderName).child("lastMessage").setValue(Message);
                 break;
             case "voice":
-                addType("voice");
-                firebaseModel.getUsersReference().child(messageSenderName).child("Chats").child(messageReceiverName).child("LastMessage").setValue("Голосовое сообщение");
-                firebaseModel.getUsersReference().child(messageReceiverName).child("Chats").child(messageSenderName).child("LastMessage").setValue("Голосовое сообщение");
+                //addType("voice");
+                firebaseModel.getUsersReference().child(messageSenderName).child("Chats").child(messageReceiverName).child("lastMessage").setValue("Голосовое сообщение");
+                firebaseModel.getUsersReference().child(messageReceiverName).child("Chats").child(messageSenderName).child("lastMessage").setValue("Голосовое сообщение");
                 break;
             case "image":
-                firebaseModel.getUsersReference().child(messageSenderName).child("Chats").child(messageReceiverName).child("LastMessage").setValue("Фотография");
-                firebaseModel.getUsersReference().child(messageReceiverName).child("Chats").child(messageSenderName).child("LastMessage").setValue("Фотография");
+                firebaseModel.getUsersReference().child(messageSenderName).child("Chats").child(messageReceiverName).child("lastMessage").setValue("Фотография");
+                firebaseModel.getUsersReference().child(messageReceiverName).child("Chats").child(messageSenderName).child("lastMessage").setValue("Фотография");
                 addType("image");
                 break;
         }
         Calendar calendar = Calendar.getInstance();
-        firebaseModel.getUsersReference().child(messageSenderName).child("Chats").child(messageReceiverName).child("LastTime").setValue(RecentMethods.getCurrentTime());
-        firebaseModel.getUsersReference().child(messageReceiverName).child("Chats").child(messageSenderName).child("LastTime").setValue(RecentMethods.getCurrentTime());
-        firebaseModel.getUsersReference().child(messageSenderName).child("Chats").child(messageReceiverName).child("TimeMill").setValue(calendar.getTimeInMillis() * -1);
-        firebaseModel.getUsersReference().child(messageReceiverName).child("Chats").child(messageSenderName).child("TimeMill").setValue(calendar.getTimeInMillis() * -1);
+        firebaseModel.getUsersReference().child(messageSenderName).child("Chats").child(messageReceiverName).child("lastTime").setValue(RecentMethods.getCurrentTime());
+        firebaseModel.getUsersReference().child(messageReceiverName).child("Chats").child(messageSenderName).child("lastTime").setValue(RecentMethods.getCurrentTime());
+        firebaseModel.getUsersReference().child(messageSenderName).child("Chats").child(messageReceiverName).child("timeMill").setValue(calendar.getTimeInMillis() * -1);
+        firebaseModel.getUsersReference().child(messageReceiverName).child("Chats").child(messageSenderName).child("timeMill").setValue(calendar.getTimeInMillis() * -1);
     }
 
     public void addUnread() {
@@ -618,8 +622,14 @@ public final class ChatActivity extends Activity {
         messageTextBody.put("to", messageReceiverName);
         messageTextBody.put("time", RecentMethods.getCurrentTime());
         messageTextBody.put("messageID", messagePushID);
-        addLastMessage(type, myUrl);
+        addLastMessage(type, message);
 
+        if(messagesList.size()==0){
+            firebaseModel.getUsersReference().child(messageReceiverName).child("Chats").child(messageSenderName)
+                    .setValue(new Chat(messageSenderName,"" , "", "personal", 0,new ArrayList<>()));
+            firebaseModel.getUsersReference().child(messageSenderName).child("Chats").child(messageReceiverName)
+                    .setValue(new Chat(messageReceiverName,"" ,"" , "personal", 0,new ArrayList<>()));
+        }
         Map<String, Object> messageBodyDetails = new HashMap<>();
         messageBodyDetails.put(messageSenderRef + "/" + messagePushID, messageTextBody);
         messageBodyDetails.put(messageReceiverRef + "/" + messagePushID, messageTextBody);

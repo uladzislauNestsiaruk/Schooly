@@ -28,7 +28,7 @@ public class ChatInformationFrgment extends Fragment {
     ImageView avatar, back;
     RecyclerView rec;
     SwitchMaterial switchMaterial;
-    FirebaseModel firebaseModel;
+    FirebaseModel firebaseModel=new FirebaseModel();
     boolean checkType;
     String photoNumber, otherUserNick, messageNumber, voiceNumber;
     public ChatInformationFrgment() {
@@ -132,7 +132,7 @@ public class ChatInformationFrgment extends Fragment {
                         back.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                Intent chatIntent = new Intent(getContext(), ChatActivity.class);
+                                Intent chatIntent = new Intent(getContext(), MessageFragment.class);
                                 chatIntent.putExtra("curUser", nick);
                                 chatIntent.putExtra("othUser", otherUserNick);
                                 //   chatIntent.putExtra("visit_image", retImage[0]);

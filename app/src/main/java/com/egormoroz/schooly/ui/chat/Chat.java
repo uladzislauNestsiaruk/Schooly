@@ -1,18 +1,25 @@
 package com.egormoroz.schooly.ui.chat;
 
+import com.egormoroz.schooly.ui.people.UserPeopleAdapter;
+
+import java.util.ArrayList;
+
 public class Chat {
     private String name = "";
     private String LastTime = "";
     private String LastMessage = "";
     private String type = "";
-    private String unreadMessages;
+    private long unreadMessages;
+    ArrayList<UserPeopleAdapter> members;
 
-    public Chat (String name, String LastTime, String LastMessage, String type,String unreadMessages){
+    public Chat (String name, String LastTime, String LastMessage, String type,long unreadMessages,
+                 ArrayList<UserPeopleAdapter> members){
         this.name = name;
         this.LastTime = LastTime;
         this.LastMessage = LastMessage;
         this.type = type;
         this.unreadMessages=unreadMessages;
+        this.members=members;
     }
 
     public Chat() {
@@ -39,8 +46,12 @@ public class Chat {
 
     public void setLastTime (String time) {this.LastTime = time;}
 
-    public String getUnreadMessages () {return  this.unreadMessages;}
+    public long getUnreadMessages () {return  this.unreadMessages;}
 
-    public void setUnreadMessages (String unreadMessages) {this.unreadMessages = unreadMessages;}
+    public void setUnreadMessages (long unreadMessages) {this.unreadMessages = unreadMessages;}
+
+    public ArrayList<UserPeopleAdapter> getMembers () {return  this.members;}
+
+    public void setMembers (ArrayList<UserPeopleAdapter> members) {this.members = members;}
 
 }

@@ -1,8 +1,13 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:overScrollMode="never"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
         <RelativeLayout
             android:id="@+id/menu"
@@ -87,6 +92,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/searchLayout"
         android:layout_marginTop="4dp"
+        android:overScrollMode="never"
         android:visibility="gone"/>
 
     <TextView
@@ -97,15 +103,18 @@
         android:fontFamily="@font/montserrat_bold"
         android:textColor="@color/app_grey"
         android:textSize="16sp"
-        android:visibility="gone"/>
+        android:visibility="gone"
+        android:layout_marginTop="750dp"
+        android:text="@string/noChatsFound"/>
 
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/frcont"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:overScrollMode="never"
         android:layout_marginTop="210dp" />
 
+    </RelativeLayout>
 
-
-</RelativeLayout>
+</androidx.core.widget.NestedScrollView>
