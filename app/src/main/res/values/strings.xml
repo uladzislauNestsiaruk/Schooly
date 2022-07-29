@@ -516,6 +516,8 @@
     <string name="talks">Talks</string>
     <string name="noChats">No chats:(</string>
     <string name="noChatsFound">No chats found:(</string>
+    <string name="createNewTalk">Create a new talk +</string>
+    <string name="dialogMembers">Dialog members</string>
 
 
 

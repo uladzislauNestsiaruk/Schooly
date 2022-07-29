@@ -176,8 +176,8 @@ public class DialogsFragment extends Fragment {
         viewPager.setAdapter(fragmentAdapter);
         viewPager.setCurrentItem(tabLayoutPosition, false);
 
-        tabLayout.addTab(tabLayout.newTab().setText(R.string.talks));
         tabLayout.addTab(tabLayout.newTab().setText(R.string.personal));
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.talks));
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener(){
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -311,9 +311,9 @@ public class DialogsFragment extends Fragment {
         @Override
         public Fragment createFragment ( int position){
             switch (position){
-                case 1:
-                    return new ChatsFragment(userInformation,bundle,fragment);
                 case 0:
+                    return new ChatsFragment(userInformation,bundle,fragment);
+                case 1:
                     return new GroupsFragment(userInformation,bundle,fragment);
             }
             return null;

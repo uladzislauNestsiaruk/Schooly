@@ -69,11 +69,11 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.ViewHolder
         }
     }
 
-    UserPeopleAdapter getItem(int id) {
+    public UserPeopleAdapter getItem(int id) {
         return listAdapterPeople.get(id);
     }
 
-    void setClickListener(ItemClickListener itemClickListener) {
+    public void setClickListener(ItemClickListener itemClickListener) {
         this.clickListener = itemClickListener;
     }
 

@@ -54,6 +54,7 @@ import com.egormoroz.schooly.ui.profile.ProfileFragment;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -131,6 +132,8 @@ public final class MessageFragment extends Fragment {
         firebaseModel.initAll();
         RootRef = firebaseModel.getUsersReference();
         ActivityCompat.requestPermissions(getActivity(), permissions, REQUEST_RECORD_AUDIO_PERMISSION);
+        BottomNavigationView bnv = getActivity().findViewById(R.id.bottomNavigationView);
+        bnv.setVisibility(bnv.GONE);
         return inflater.inflate(R.layout.activity_chat, container, false);
     }
 
@@ -256,7 +259,7 @@ public final class MessageFragment extends Fragment {
         info.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                RecentMethods.setCurrentFragment(ChatInformationFrgment.newInstance(messageReceiverImage),getActivity());
+                RecentMethods.setCurrentFragment(ChatInformationFrgment.newInstance(userInformation,bundle,MessageFragment.newInstance(userInformation, bundle, fragment, chat),chat),getActivity());
             }
         });
         Picasso.get().load(messageReceiverImage).placeholder(R.drawable.corners14).into(userImage);
@@ -362,7 +365,6 @@ public final class MessageFragment extends Fragment {
                             @Override
                             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                                 Message messages = dataSnapshot.getValue(Message.class);
-                                sendDialog(nick, messageReceiverName);
                                 messagesList.add(messages);
                                 messageAdapter.notifyDataSetChanged();
                                 userMessagesList.smoothScrollToPosition(userMessagesList.getAdapter().getItemCount());
@@ -515,25 +517,6 @@ public final class MessageFragment extends Fragment {
     }
 
 
-    private void sendDialog(String currUser, String otherUser) {
-        firebaseModel.initAll();
-        firebaseModel.getUsersReference().child(currUser).child("Dialogs").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                if (!snapshot.child(otherUser).exists()) {
-                    firebaseModel.getUsersReference().child(currUser).child("Dialogs").child(otherUser).setValue(otherUser);
-                    firebaseModel.getUsersReference().child(otherUser).child("Dialogs").child(currUser).setValue(currUser);
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-    }
-
-
     private void addLastMessage(String type, String Message) {
 
         Log.d("####",type);
@@ -541,25 +524,25 @@ public final class MessageFragment extends Fragment {
             case "text":
                 //addType("text");
                 Log.d("###", "gg"+messageSenderName+"   "+messageReceiverName+"  "+Message);
-                firebaseModel.getUsersReference().child(messageSenderName).child("Chats").child(messageReceiverName).child("lastMessage").setValue(Message);
-                firebaseModel.getUsersReference().child(messageReceiverName).child("Chats").child(messageSenderName).child("lastMessage").setValue(Message);
+                firebaseModel.getUsersReference().child(messageSenderName).child("Dialogs").child(messageReceiverName).child("lastMessage").setValue(Message);
+                firebaseModel.getUsersReference().child(messageReceiverName).child("Dialogs").child(messageSenderName).child("lastMessage").setValue(Message);
                 break;
             case "voice":
                 //addType("voice");
-                firebaseModel.getUsersReference().child(messageSenderName).child("Chats").child(messageReceiverName).child("lastMessage").setValue("Голосовое сообщение");
-                firebaseModel.getUsersReference().child(messageReceiverName).child("Chats").child(messageSenderName).child("lastMessage").setValue("Голосовое сообщение");
+                firebaseModel.getUsersReference().child(messageSenderName).child("Dialogs").child(messageReceiverName).child("lastMessage").setValue("Голосовое сообщение");
+                firebaseModel.getUsersReference().child(messageReceiverName).child("Dialogs").child(messageSenderName).child("lastMessage").setValue("Голосовое сообщение");
                 break;
             case "image":
-                firebaseModel.getUsersReference().child(messageSenderName).child("Chats").child(messageReceiverName).child("lastMessage").setValue("Фотография");
-                firebaseModel.getUsersReference().child(messageReceiverName).child("Chats").child(messageSenderName).child("lastMessage").setValue("Фотография");
+                firebaseModel.getUsersReference().child(messageSenderName).child("Dialogs").child(messageReceiverName).child("lastMessage").setValue("Фотография");
+                firebaseModel.getUsersReference().child(messageReceiverName).child("Dialogs").child(messageSenderName).child("lastMessage").setValue("Фотография");
                 addType("image");
                 break;
         }
         Calendar calendar = Calendar.getInstance();
-        firebaseModel.getUsersReference().child(messageSenderName).child("Chats").child(messageReceiverName).child("lastTime").setValue(RecentMethods.getCurrentTime());
-        firebaseModel.getUsersReference().child(messageReceiverName).child("Chats").child(messageSenderName).child("lastTime").setValue(RecentMethods.getCurrentTime());
-        firebaseModel.getUsersReference().child(messageSenderName).child("Chats").child(messageReceiverName).child("timeMill").setValue(calendar.getTimeInMillis() * -1);
-        firebaseModel.getUsersReference().child(messageReceiverName).child("Chats").child(messageSenderName).child("timeMill").setValue(calendar.getTimeInMillis() * -1);
+        firebaseModel.getUsersReference().child(messageSenderName).child("Dialogs").child(messageReceiverName).child("lastTime").setValue(RecentMethods.getCurrentTime());
+        firebaseModel.getUsersReference().child(messageReceiverName).child("Dialogs").child(messageSenderName).child("lastTime").setValue(RecentMethods.getCurrentTime());
+        firebaseModel.getUsersReference().child(messageSenderName).child("Dialogs").child(messageReceiverName).child("timeMill").setValue(calendar.getTimeInMillis() * -1);
+        firebaseModel.getUsersReference().child(messageReceiverName).child("Dialogs").child(messageSenderName).child("timeMill").setValue(calendar.getTimeInMillis() * -1);
     }
 
     public void addUnread() {
@@ -625,10 +608,10 @@ public final class MessageFragment extends Fragment {
         addLastMessage(type, message);
 
         if(messagesList.size()==0){
-            firebaseModel.getUsersReference().child(messageReceiverName).child("Chats").child(messageSenderName)
-                    .setValue(new Chat(messageSenderName,"" , "", "personal", 0,new ArrayList<>()));
-            firebaseModel.getUsersReference().child(messageSenderName).child("Chats").child(messageReceiverName)
-                    .setValue(new Chat(messageReceiverName,"" ,"" , "personal", 0,new ArrayList<>()));
+            firebaseModel.getUsersReference().child(messageReceiverName).child("Dialogs").child(messageSenderName)
+                    .setValue(new Chat(messageSenderName,"" , "", "personal", 0,new ArrayList<>(),"false",new ArrayList<>()));
+            firebaseModel.getUsersReference().child(messageSenderName).child("Dialogs").child(messageReceiverName)
+                    .setValue(new Chat(messageReceiverName,"" ,"" , "personal", 0,new ArrayList<>(),"falce",new ArrayList<>()));
         }
         Map<String, Object> messageBodyDetails = new HashMap<>();
         messageBodyDetails.put(messageSenderRef + "/" + messagePushID, messageTextBody);

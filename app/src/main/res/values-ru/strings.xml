@@ -516,5 +516,7 @@
     <string name="talks">Беседы</string>
     <string name="noChats">Нет чатов:(</string>
     <string name="noChatsFound">Чаты не найдены:(</string>
+    <string name="createNewTalk">Создай новую беседу +</string>
+    <string name="dialogMembers">Участники диалога</string>
 
 </resources>

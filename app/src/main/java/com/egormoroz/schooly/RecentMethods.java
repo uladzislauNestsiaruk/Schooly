@@ -1551,7 +1551,7 @@ public class RecentMethods {
 
     public static void getDialogs(String nick,FirebaseModel firebaseModel,Callbacks.loadDialogs loadDialogs){
         firebaseModel.initAll();
-        firebaseModel.getUsersReference().child(nick).child("Chats").addValueEventListener(new ValueEventListener() {
+        firebaseModel.getUsersReference().child(nick).child("Dialogs").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Log.d("##", "ss");

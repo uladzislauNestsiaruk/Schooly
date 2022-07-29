@@ -62,6 +62,13 @@ public class GroupsFragment extends Fragment
         GroupRef = firebaseModel.getUsersReference().child("Groups");
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        getView().requestLayout();
+
+    }
+
     public  void loadChats(){
         if(userInformation.getTalksArrayList()==null){
             RecentMethods.getDialogs(userInformation.getNick(), firebaseModel, new Callbacks.loadDialogs() {

@@ -18,45 +18,26 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="14dp"
-            android:layout_marginTop="11dp"
+            android:layout_marginTop="12dp"
             android:layout_toRightOf="@+id/back_tochat"
             android:fontFamily="@font/montserrat_bold"
             android:text="@string/info"
             android:textColor="@color/app_color"
             android:textSize="20sp" />
 
-        <ImageView
-            android:id="@+id/userImage"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_below="@+id/back_tochat"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="32dp" />
-
-        <TextView
-            android:id="@+id/userNick"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/app_color"
-            android:textSize="22sp"
-            android:fontFamily="@font/montserrat_bold"
-            android:layout_below="@+id/userImage"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="16dp" />
-
         <RelativeLayout
             android:id="@+id/relativeDisconnect"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/userNick"
+            android:layout_below="@+id/back_tochat"
             android:layout_marginTop="24dp">
 
             <TextView
                 android:id="@+id/closeAccount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="24dp"
                 android:layout_centerVertical="true"
+                android:layout_marginStart="24dp"
                 android:fontFamily="@font/montserrat_bold"
                 android:text="@string/disconnectNonts"
                 android:textColor="@color/app_grey"
@@ -75,33 +56,33 @@
             android:id="@+id/deleteHistory"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/montserrat_bold"
-            android:text="@string/deleteHistory"
-            android:textColor="@color/app_grey"
             android:layout_below="@+id/relativeDisconnect"
             android:layout_marginStart="24dp"
-            android:layout_marginTop="24dp"
-            android:textSize="16sp"/>
+            android:layout_marginTop="16dp"
+            android:fontFamily="@font/montserrat_bold"
+            android:text="@string/deleteHistory"
+            android:textColor="@color/rednonts"
+            android:textSize="16sp" />
 
         <TextView
-            android:id="@+id/dialogMaterial"
+            android:id="@+id/dialogMembers"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/deleteHistory"
             android:layout_marginStart="24dp"
             android:layout_marginTop="32dp"
-            android:fontFamily="@font/montserrat_bold"
-            android:text="@string/material"
+            android:fontFamily="@font/montserrat_extrabold"
+            android:text="@string/dialogMembers"
             android:textColor="@color/app_grey"
-            android:textSize="16sp" />
+            android:textSize="18sp" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler"
+            android:id="@+id/recyclerMembers"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:overScrollMode="never"
-            android:layout_below="@id/dialogMaterial"
-            android:layout_marginTop="8dp" />
+            android:layout_below="@id/dialogMembers"
+            android:layout_marginTop="8dp"
+            android:overScrollMode="never" />
 
     </RelativeLayout>
 

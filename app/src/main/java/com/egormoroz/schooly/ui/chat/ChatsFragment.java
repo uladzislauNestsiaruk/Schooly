@@ -47,6 +47,13 @@ public class ChatsFragment extends Fragment
 
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        getView().requestLayout();
+
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

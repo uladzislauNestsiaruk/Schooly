@@ -17,7 +17,7 @@ import com.google.firebase.database.IgnoreExtraProperties;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-@IgnoreExtraProperties  
+@IgnoreExtraProperties
 public class UserInformation implements Serializable {
     private String Nick;
     private String chatsNontsType;
@@ -338,7 +338,7 @@ public class UserInformation implements Serializable {
                            String groupChatsNontsType, String profileNontsType, ArrayList<Clothes> myClothes, String version,
                            ArrayList<NewsItem> looks,long miningPremium,ArrayList<Clothes> lookClothes,ArrayList<Clothes> clothes,ArrayList<Nontification> notifications
             ,ArrayList<Transfer> transfers, ArrayList<NewsItem> savedLooks,ArrayList<Subscriber> blackList,ArrayList<Clothes> mainLook,Person person,ArrayList<Chat> chatArrayList
-    ,ArrayList<Chat> talksArrayList) {
+            ,ArrayList<Chat> talksArrayList) {
         this.Nick = nick;
         this.uid = uid;
         this.phone = phone;

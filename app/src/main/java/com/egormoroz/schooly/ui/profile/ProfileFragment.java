@@ -48,6 +48,7 @@ import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 
 import com.egormoroz.schooly.Subscriber;
+import com.egormoroz.schooly.ui.chat.Chat;
 import com.egormoroz.schooly.ui.chat.DialogsFragment;
 import com.egormoroz.schooly.ui.chat.MessageFragment;
 import com.egormoroz.schooly.ui.main.MainFragment;
@@ -202,7 +203,8 @@ public class ProfileFragment extends Fragment {
 
             }
         });
-        //RecentMethods.setCurrentFragment(MessageFragment.newInstance(userInformation, bundle, DialogsFragment.newInstance(userInformation, bundle,fragment),chat), getActivity());
+        RecentMethods.setCurrentFragment(MessageFragment.newInstance(userInformation, bundle, ProfileFragment.newInstance("other", info.getNick(), fragment, userInformation, bundle),
+                new Chat(info.getNick(), "", "", "personal", 0, new ArrayList<>(), "falce", new ArrayList<>())), getActivity());
     }
 
     @Override

@@ -50,264 +50,264 @@ import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
 
-    private FirebaseDatabase database;
-    private FirebaseAuth AuthenticationBase;
-    public static String currentUserID;
-    UserInformation userInformation;
-    RelativeLayout relativeLayout;
-    TextView s,loading;
-    CoordinatorLayout fragmentContainer;
-    String TAG="###";
-    Bundle bundle=new Bundle();
-    private static final String CHANNEL_ID = "channel";
-    FirebaseModel firebaseModel=new FirebaseModel();
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        fragmentContainer = findViewById(R.id.fragment_container);
-        relativeLayout=findViewById(R.id.rel);
-        s=findViewById(R.id.s);
-        loading=findViewById(R.id.load);
-        bundle.putString("START_BUNDLE", "Schooly");
-        initFirebase();
-        firebaseModel.initAll();
-        ///////////Authorization block
-        IsEntered();
-        FirebaseUser mFirebaseUser = AuthenticationBase.getCurrentUser();
-        if(mFirebaseUser != null) {
-            currentUserID = mFirebaseUser.getUid();
-        }
-    }
+	private FirebaseDatabase database;
+	private FirebaseAuth AuthenticationBase;
+	public static String currentUserID;
+	UserInformation userInformation;
+	RelativeLayout relativeLayout;
+	TextView s,loading;
+	CoordinatorLayout fragmentContainer;
+	String TAG="###";
+	Bundle bundle=new Bundle();
+	private static final String CHANNEL_ID = "channel";
+	FirebaseModel firebaseModel=new FirebaseModel();
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_main);
+		fragmentContainer = findViewById(R.id.fragment_container);
+		relativeLayout=findViewById(R.id.rel);
+		s=findViewById(R.id.s);
+		loading=findViewById(R.id.load);
+		bundle.putString("START_BUNDLE", "Schooly");
+		initFirebase();
+		firebaseModel.initAll();
+		///////////Authorization block
+		IsEntered();
+		FirebaseUser mFirebaseUser = AuthenticationBase.getCurrentUser();
+		if(mFirebaseUser != null) {
+			currentUserID = mFirebaseUser.getUid();
+		}
+	}
 
-    public void checkMining(){
-        ((SchoolyApplication)getApplication()).checkActiveMiners();
-        ((SchoolyApplication)getApplication()).startMining();
-    }
+	public void checkMining(){
+		((SchoolyApplication)getApplication()).checkActiveMiners();
+		((SchoolyApplication)getApplication()).startMining();
+	}
 
-    public void stopHandler(){
-        ((SchoolyApplication)getApplication()).stopHandler();
-    }
+	public void stopHandler(){
+		((SchoolyApplication)getApplication()).stopHandler();
+	}
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_top_nav, menu);
-        return true;
-    }
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.main_top_nav, menu);
+		return true;
+	}
 
-    public void setCurrentFragment(Fragment fragment) {
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.frame, fragment);
-        ft.commit();
-    }
-    void RegistrationOrEnter(){
-        s.setVisibility(View.GONE);
-        loading.setVisibility(View.GONE);
-        setCurrentFragment(RegisrtationstartFragment.newInstance(userInformation,bundle));
-    }
-    public void IsEntered(){
-        FirebaseUser user = AuthenticationBase.getCurrentUser();
-        RecentMethods.hasThisUser(AuthenticationBase, user,
-                new Callbacks.hasGoogleUser() {
-                    @Override
-                    public void hasGoogleUserCallback(boolean hasThisUser) {
-                        if(hasThisUser) {
-                            Log.d("AAA", "current user: " + user.getEmail());
-                            RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-                                @Override
-                                public void PassUserNick(String nick) {
-                                    firebaseModel.getUsersReference().child(nick).get()
-                                            .addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                                                @Override
-                                                public void onComplete(@NonNull Task<DataSnapshot> task) {
-                                                    if (task.isSuccessful()){
-                                                        DataSnapshot snapshot=task.getResult();
-                                                        userInformation = RecentMethods.ValidateSnapToUserInformation(snapshot);
-                                                        getMyClothes(nick);
-                                                        final DatabaseReference connectedRef = database.getReference(".info/connected");
-                                                        getLists();
-                                                    }
-                                                }
-                                            });
-                                }
-                            });
-                        }
-                        else
-                            RegistrationOrEnter();
-                    }
-                });
-    }
+	public void setCurrentFragment(Fragment fragment) {
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		ft.replace(R.id.frame, fragment);
+		ft.commit();
+	}
+	void RegistrationOrEnter(){
+		s.setVisibility(View.GONE);
+		loading.setVisibility(View.GONE);
+		setCurrentFragment(RegisrtationstartFragment.newInstance(userInformation,bundle));
+	}
+	public void IsEntered(){
+		FirebaseUser user = AuthenticationBase.getCurrentUser();
+		RecentMethods.hasThisUser(AuthenticationBase, user,
+				new Callbacks.hasGoogleUser() {
+					@Override
+					public void hasGoogleUserCallback(boolean hasThisUser) {
+						if(hasThisUser) {
+							Log.d("AAA", "current user: " + user.getEmail());
+							RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+								@Override
+								public void PassUserNick(String nick) {
+									firebaseModel.getUsersReference().child(nick).get()
+											.addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+												@Override
+												public void onComplete(@NonNull Task<DataSnapshot> task) {
+													if (task.isSuccessful()){
+														DataSnapshot snapshot=task.getResult();
+														userInformation = RecentMethods.ValidateSnapToUserInformation(snapshot);
+														getMyClothes(nick);
+														final DatabaseReference connectedRef = database.getReference(".info/connected");
+														getLists();
+													}
+												}
+											});
+								}
+							});
+						}
+						else
+							RegistrationOrEnter();
+					}
+				});
+	}
 
 
-    public void initFirebase(){
-        database = FirebaseDatabase.getInstance(CONST.RealtimeDatabaseUrl);
-        AuthenticationBase = FirebaseAuth.getInstance();
-    }
+	public void initFirebase(){
+		database = FirebaseDatabase.getInstance(CONST.RealtimeDatabaseUrl);
+		AuthenticationBase = FirebaseAuth.getInstance();
+	}
 
-    public void getMyClothes(String nick){
-        RecentMethods.getMyClothes(nick, firebaseModel, new Callbacks.GetClothes() {
-            @Override
-            public void getClothes(ArrayList<Clothes> allClothes) {
-                Collections.reverse(allClothes);
-                userInformation.setMyClothes(allClothes);
-                BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
-                s.setVisibility(View.GONE);
-                loading.setVisibility(View.GONE);
-                relativeLayout.setVisibility(View.GONE);
-                bottomNavigationView.setVisibility(View.VISIBLE);
-                bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-                    @SuppressLint("NonConstantResourceId")
-                    @Override
-                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                        switch (item.getItemId()) {
-                            case R.id.bottom_nav_home:
-                                setCurrentFragment(MainFragment.newInstance(userInformation,bundle));
-                                return true;
-                            case R.id.bottom_nav_news:
-                                setCurrentFragment(NewsFragment.newInstance(userInformation,bundle));
-                                return true;
-                            case R.id.bottom_nav_coins:
-                                setCurrentFragment(CoinsMainFragment.newInstance(userInformation,bundle));
-                                return true;
-                            case R.id.bottom_nav_people:
-                                setCurrentFragment(PeopleFragment.newInstance(userInformation,bundle));
-                                return true;
-                            case R.id.bottom_nav_profile:
-                                if(userInformation.getNick()==null){
-                                    RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-                                        @Override
-                                        public void PassUserNick(String nick) {
-                                            setCurrentFragment(ProfileFragment.newInstance("user", nick,MainFragment.newInstance(userInformation,bundle),userInformation,bundle));
-                                        }
-                                    });
-                                }else {
-                                    setCurrentFragment(ProfileFragment.newInstance("user", userInformation.getNick(),MainFragment.newInstance(userInformation,bundle),userInformation,bundle));
-                                }
-                                CoordinatorLayout.LayoutParams coordinatorLayoutParams = (CoordinatorLayout.LayoutParams) fragmentContainer.getLayoutParams();
-                                coordinatorLayoutParams.setBehavior(null);
-                                return true;
-                        }
-                        return false;
-                    }
-                });
-                setCurrentFragment(MainFragment.newInstance(userInformation,bundle));
-            }
-        });
-    }
+	public void getMyClothes(String nick){
+		RecentMethods.getMyClothes(nick, firebaseModel, new Callbacks.GetClothes() {
+			@Override
+			public void getClothes(ArrayList<Clothes> allClothes) {
+				Collections.reverse(allClothes);
+				userInformation.setMyClothes(allClothes);
+				BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
+				s.setVisibility(View.GONE);
+				loading.setVisibility(View.GONE);
+				relativeLayout.setVisibility(View.GONE);
+				bottomNavigationView.setVisibility(View.VISIBLE);
+				bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+					@SuppressLint("NonConstantResourceId")
+					@Override
+					public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+						switch (item.getItemId()) {
+							case R.id.bottom_nav_home:
+								setCurrentFragment(MainFragment.newInstance(userInformation,bundle));
+								return true;
+							case R.id.bottom_nav_news:
+								setCurrentFragment(NewsFragment.newInstance(userInformation,bundle));
+								return true;
+							case R.id.bottom_nav_coins:
+								setCurrentFragment(CoinsMainFragment.newInstance(userInformation,bundle));
+								return true;
+							case R.id.bottom_nav_people:
+								setCurrentFragment(PeopleFragment.newInstance(userInformation,bundle));
+								return true;
+							case R.id.bottom_nav_profile:
+								if(userInformation.getNick()==null){
+									RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+										@Override
+										public void PassUserNick(String nick) {
+											setCurrentFragment(ProfileFragment.newInstance("user", nick,MainFragment.newInstance(userInformation,bundle),userInformation,bundle));
+										}
+									});
+								}else {
+									setCurrentFragment(ProfileFragment.newInstance("user", userInformation.getNick(),MainFragment.newInstance(userInformation,bundle),userInformation,bundle));
+								}
+								CoordinatorLayout.LayoutParams coordinatorLayoutParams = (CoordinatorLayout.LayoutParams) fragmentContainer.getLayoutParams();
+								coordinatorLayoutParams.setBehavior(null);
+								return true;
+						}
+						return false;
+					}
+				});
+				setCurrentFragment(MainFragment.newInstance(userInformation,bundle));
+			}
+		});
+	}
 
-    public void getLists(){
-        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-            @Override
-            public void PassUserNick(String nick) {
-                RecentMethods.getClothesInBasket(nick, firebaseModel, new Callbacks.GetClothes() {
-                    @Override
-                    public void getClothes(ArrayList<Clothes> allClothes) {
-                        userInformation.setClothesBasket(allClothes);
-                    }
-                });
-                RecentMethods.getClothesInWardrobe(nick, firebaseModel, new Callbacks.GetClothes() {
-                    @Override
-                    public void getClothes(ArrayList<Clothes> allClothes) {
-                        userInformation.setClothes(allClothes);
-                    }
-                });
-                RecentMethods.getSubscribersList(nick, firebaseModel, new Callbacks.getSubscribersList() {
-                    @Override
-                    public void getSubscribersList(ArrayList<Subscriber> subscribers) {
-                        userInformation.setSubscribers(subscribers);
-                    }
-                });
-                RecentMethods.getSubscriptionList(nick, firebaseModel, new Callbacks.getFriendsList() {
-                    @Override
-                    public void getFriendsList(ArrayList<Subscriber> friends) {
-                        userInformation.setSubscription(friends);
-                    }
-                });
-                RecentMethods.getNontificationsList(nick, firebaseModel, new Callbacks.getNontificationsList() {
-                    @Override
-                    public void getNontificationsList(ArrayList<Nontification> nontifications) {
-                        Collections.reverse(nontifications);
-                        userInformation.setNotifications(nontifications);
-                    }
-                });
-                RecentMethods.getMyLookClothes(nick, firebaseModel, new Callbacks.getLookClothes() {
-                    @Override
-                    public void getLookClothes(ArrayList<Clothes> clothesArrayList) {
-                        userInformation.setLookClothes(clothesArrayList);
-                    }
-                });
-                RecentMethods.getLooksList(nick, firebaseModel, new Callbacks.getLooksList() {
-                    @Override
-                    public void getLooksList(ArrayList<NewsItem> look) {
-                        Collections.reverse(look);
-                        userInformation.setLooks(look);
-                    }
-                });
+	public void getLists(){
+		RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+			@Override
+			public void PassUserNick(String nick) {
+				RecentMethods.getClothesInBasket(nick, firebaseModel, new Callbacks.GetClothes() {
+					@Override
+					public void getClothes(ArrayList<Clothes> allClothes) {
+						userInformation.setClothesBasket(allClothes);
+					}
+				});
+				RecentMethods.getClothesInWardrobe(nick, firebaseModel, new Callbacks.GetClothes() {
+					@Override
+					public void getClothes(ArrayList<Clothes> allClothes) {
+						userInformation.setClothes(allClothes);
+					}
+				});
+				RecentMethods.getSubscribersList(nick, firebaseModel, new Callbacks.getSubscribersList() {
+					@Override
+					public void getSubscribersList(ArrayList<Subscriber> subscribers) {
+						userInformation.setSubscribers(subscribers);
+					}
+				});
+				RecentMethods.getSubscriptionList(nick, firebaseModel, new Callbacks.getFriendsList() {
+					@Override
+					public void getFriendsList(ArrayList<Subscriber> friends) {
+						userInformation.setSubscription(friends);
+					}
+				});
+				RecentMethods.getNontificationsList(nick, firebaseModel, new Callbacks.getNontificationsList() {
+					@Override
+					public void getNontificationsList(ArrayList<Nontification> nontifications) {
+						Collections.reverse(nontifications);
+						userInformation.setNotifications(nontifications);
+					}
+				});
+				RecentMethods.getMyLookClothes(nick, firebaseModel, new Callbacks.getLookClothes() {
+					@Override
+					public void getLookClothes(ArrayList<Clothes> clothesArrayList) {
+						userInformation.setLookClothes(clothesArrayList);
+					}
+				});
+				RecentMethods.getLooksList(nick, firebaseModel, new Callbacks.getLooksList() {
+					@Override
+					public void getLooksList(ArrayList<NewsItem> look) {
+						Collections.reverse(look);
+						userInformation.setLooks(look);
+					}
+				});
 
-                RecentMethods.getTransferHistory(nick, firebaseModel, new Callbacks.getTransferHistory() {
-                    @Override
-                    public void getTransferHistory(ArrayList<Transfer> transfers) {
-                        Collections.reverse(transfers);
-                        userInformation.setTransfers(transfers);
-                    }
-                });
-                RecentMethods.getSavedLooks(nick, firebaseModel, new Callbacks.getSavedLook() {
-                    @Override
-                    public void getSavedLook(ArrayList<NewsItem> newsItems) {
-                        Collections.reverse(newsItems);
-                        userInformation.setSavedLooks(newsItems);
-                    }
-                });
-                RecentMethods.getBlackList(nick, firebaseModel, new Callbacks.getSubscribersList() {
-                    @Override
-                    public void getSubscribersList(ArrayList<Subscriber> subscribers) {
-                        userInformation.setBlackList(subscribers);
-                    }
-                });
-                RecentMethods.getAlreadySearched(nick, firebaseModel, new Callbacks.GetAlreadySearched() {
-                    @Override
-                    public void getAlreadySearched(ArrayList<UserPeopleAdapter> searchedUserFromBase) {
-                        userInformation.setAlreadySearched(searchedUserFromBase);
-                    }
-                });
-                RecentMethods.GetMoneyFromBase(nick, firebaseModel, new Callbacks.MoneyFromBase() {
-                    @Override
-                    public void GetMoneyFromBase(long money) {
-                        userInformation.setmoney(money);
-                    }
-                });
-                RecentMethods.GetActiveMiner(nick, firebaseModel, new Callbacks.GetActiveMiners() {
-                    @Override
-                    public void GetActiveMiners(ArrayList<Miner> activeMinersFromBase) {
-                        userInformation.setMiners(activeMinersFromBase);
-                    }
-                });
-                RecentMethods.MyMinersFromBase(nick, firebaseModel, new Callbacks.GetMyMinerFromBase() {
-                    @Override
-                    public void GetMyMinerFromBase(ArrayList<Miner> myMinersFromBase) {
-                        userInformation.setMyMiners(myMinersFromBase);
-                    }
-                });
-                RecentMethods.getClothes(firebaseModel, new Callbacks.GetClothes() {
-                    @Override
-                    public void getClothes(ArrayList<Clothes> allClothes) {
-                        bundle.putSerializable("ALL_CLOTHES", allClothes);
-                    }
-                });
-                RecentMethods.getDialogs(nick, firebaseModel, new Callbacks.loadDialogs() {
-                    @Override
-                    public void LoadData(ArrayList<Chat> dialogs,ArrayList<Chat> talksArrayList) {
-                        userInformation.setChats(dialogs);
-                        userInformation.setTalksArrayList(talksArrayList);
-                    }
-                });
+				RecentMethods.getTransferHistory(nick, firebaseModel, new Callbacks.getTransferHistory() {
+					@Override
+					public void getTransferHistory(ArrayList<Transfer> transfers) {
+						Collections.reverse(transfers);
+						userInformation.setTransfers(transfers);
+					}
+				});
+				RecentMethods.getSavedLooks(nick, firebaseModel, new Callbacks.getSavedLook() {
+					@Override
+					public void getSavedLook(ArrayList<NewsItem> newsItems) {
+						Collections.reverse(newsItems);
+						userInformation.setSavedLooks(newsItems);
+					}
+				});
+				RecentMethods.getBlackList(nick, firebaseModel, new Callbacks.getSubscribersList() {
+					@Override
+					public void getSubscribersList(ArrayList<Subscriber> subscribers) {
+						userInformation.setBlackList(subscribers);
+					}
+				});
+				RecentMethods.getAlreadySearched(nick, firebaseModel, new Callbacks.GetAlreadySearched() {
+					@Override
+					public void getAlreadySearched(ArrayList<UserPeopleAdapter> searchedUserFromBase) {
+						userInformation.setAlreadySearched(searchedUserFromBase);
+					}
+				});
+				RecentMethods.GetMoneyFromBase(nick, firebaseModel, new Callbacks.MoneyFromBase() {
+					@Override
+					public void GetMoneyFromBase(long money) {
+						userInformation.setmoney(money);
+					}
+				});
+				RecentMethods.GetActiveMiner(nick, firebaseModel, new Callbacks.GetActiveMiners() {
+					@Override
+					public void GetActiveMiners(ArrayList<Miner> activeMinersFromBase) {
+						userInformation.setMiners(activeMinersFromBase);
+					}
+				});
+				RecentMethods.MyMinersFromBase(nick, firebaseModel, new Callbacks.GetMyMinerFromBase() {
+					@Override
+					public void GetMyMinerFromBase(ArrayList<Miner> myMinersFromBase) {
+						userInformation.setMyMiners(myMinersFromBase);
+					}
+				});
+				RecentMethods.getClothes(firebaseModel, new Callbacks.GetClothes() {
+					@Override
+					public void getClothes(ArrayList<Clothes> allClothes) {
+						bundle.putSerializable("ALL_CLOTHES", allClothes);
+					}
+				});
+				RecentMethods.getDialogs(nick, firebaseModel, new Callbacks.loadDialogs() {
+					@Override
+					public void LoadData(ArrayList<Chat> dialogs,ArrayList<Chat> talksArrayList) {
+						userInformation.setChats(dialogs);
+						userInformation.setTalksArrayList(talksArrayList);
+					}
+				});
 
-            }
-        });
-    }
-    @Override
-    protected void onStop(){
-        super.onStop();
-        Log.d(TAG, "onStop");
-    }
+			}
+		});
+	}
+	@Override
+	protected void onStop(){
+		super.onStop();
+		Log.d(TAG, "onStop");
+	}
 }

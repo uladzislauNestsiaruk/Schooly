@@ -41,6 +41,7 @@ import com.egormoroz.schooly.ui.main.Shop.Clothes;
 import com.egormoroz.schooly.ui.main.Shop.NewClothesAdapter;
 import com.egormoroz.schooly.ui.main.Shop.ShopFragment;
 import com.egormoroz.schooly.ui.main.Shop.ViewingClothes;
+import com.egormoroz.schooly.ui.people.UserPeopleAdapter;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.progressindicator.CircularProgressIndicator;
 import com.google.firebase.database.DataSnapshot;
@@ -102,6 +103,14 @@ public class MainFragment extends Fragment{
         createClothes=view.findViewById(R.id.createClothes);
         coinsLinear=view.findViewById(R.id.linearCoins);
         getMore=view.findViewById(R.id.getMore);
+//        UserPeopleAdapter userPeopleAdapter=new UserPeopleAdapter();
+//        userPeopleAdapter.setNick("Loppi");
+//        userPeopleAdapter.setBio("gg");
+//        userPeopleAdapter.setAvatar("dd");
+//        ArrayList<UserPeopleAdapter> u=new ArrayList<>();
+//        u.add(userPeopleAdapter);
+//        firebaseModel.getUsersReference().child("tyomaa6").child("Dialogs")
+//                .child("Loppi").child("members").child("Loppi").setValue(userPeopleAdapter);
 //        firebaseModel.getReference().child("usersNicks").child("Vladcpp")
 //                .setValue(new UserPeopleAdapter("Vladcpp", "a", "я украинец"));
 //        firebaseModel.getReference().child("usersNicks").child("tyomaa6")
