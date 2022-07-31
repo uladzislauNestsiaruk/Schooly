@@ -46,6 +46,9 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
@@ -209,6 +212,14 @@ public class MainActivity extends AppCompatActivity {
 					@Override
 					public void getClothes(ArrayList<Clothes> allClothes) {
 						userInformation.setClothes(allClothes);
+						ExecutorService executorService= Executors.newCachedThreadPool();
+						executorService.execute(new Runnable() {
+							@Override
+							public void run() {
+								Log.d("#####","startEx");
+								BufferLoader.loadBuffers(allClothes,bundle);
+							}
+						});
 					}
 				});
 				RecentMethods.getSubscribersList(nick, firebaseModel, new Callbacks.getSubscribersList() {

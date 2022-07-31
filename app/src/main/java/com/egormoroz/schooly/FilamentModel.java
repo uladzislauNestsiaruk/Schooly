@@ -379,12 +379,4 @@ public class FilamentModel {
 
     }
 
-    public Engine getEngine() {
-        return engine;
-    }
-
-    public void setEngine(Engine engine) {
-        this.engine = engine;
-    }
-
 }

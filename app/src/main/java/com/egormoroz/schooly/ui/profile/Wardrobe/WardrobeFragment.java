@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.egormoroz.schooly.BufferLoader;
 import com.egormoroz.schooly.FilamentModel;
 import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.LockableNestedScrollView;
@@ -123,6 +124,8 @@ public class WardrobeFragment extends Fragment {
         nick = userInformation.getNick();
         surfaceView=view.findViewById(R.id.surfaceViewWardrobe);
         searchText = view.findViewById(R.id.searchClothesWardrobe);
+        ArrayList<Clothes> c= BufferLoader.getLoadBuffersList();
+        Log.d("####", "vv  "+c);
         searchRecycler = view.findViewById(R.id.searchRecycler);
         lockableNestedScrollView=view.findViewById(R.id.lockableNestedScrollView);
         if(bundle.getSerializable("ALLLOADCLOTHESLIST")!=null){
