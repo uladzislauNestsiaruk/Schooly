@@ -65,25 +65,61 @@
             android:textSize="16sp" />
 
         <TextView
-            android:id="@+id/dialogMembers"
+            android:id="@+id/leaveTalk"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/deleteHistory"
             android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
+            android:visibility="gone"
+            android:fontFamily="@font/montserrat_bold"
+            android:text="@string/leaveTalk"
+            android:textColor="@color/rednonts"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/dialogueMembers"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/leaveTalk"
+            android:layout_marginStart="24dp"
             android:layout_marginTop="32dp"
             android:fontFamily="@font/montserrat_extrabold"
-            android:text="@string/dialogMembers"
+            android:text="@string/dialogueMembers"
             android:textColor="@color/app_grey"
             android:textSize="18sp" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerMembers"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/dialogMembers"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/dialogueMembers"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="12dp"
+            android:overScrollMode="never" />
+
+        <TextView
+            android:id="@+id/dialogueMaterials"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/recyclerMembers"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
+            android:fontFamily="@font/montserrat_extrabold"
+            android:text="@string/material"
+            android:textColor="@color/app_grey"
+            android:textSize="18sp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerMaterials"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/dialogueMaterials"
             android:layout_marginTop="8dp"
             android:overScrollMode="never" />
 
     </RelativeLayout>
+
 
 </androidx.core.widget.NestedScrollView>

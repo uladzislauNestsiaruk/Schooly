@@ -183,7 +183,8 @@ public class PeopleFragment extends Fragment {
                         }
                     }
                     else {
-                        setAlreadySearchedInAdapter();
+                        firebaseModel.getUsersReference().child(nick).child("alreadySearched")
+                                .child(userNameToProfile).removeValue();
                     }
                 }
             };
@@ -214,7 +215,8 @@ public class PeopleFragment extends Fragment {
                             }
                         }
                         else {
-                            setAlreadySearchedInAdapter();
+                            firebaseModel.getUsersReference().child(nick).child("alreadySearched")
+                                    .child(userNameToProfile).removeValue();
                         }
                     }
                 };

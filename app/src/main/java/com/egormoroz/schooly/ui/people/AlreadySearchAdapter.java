@@ -62,8 +62,6 @@ public class AlreadySearchAdapter extends RecyclerView.Adapter<AlreadySearchAdap
             @Override
             public void onClick(View v) {
                 if (clickListener != null) clickListener.onItemClick(v, position,"delete");
-                firebaseModel.getUsersReference().child(nick).child("alreadySearched")
-                        .child(userInfo.getNick()).removeValue();
             }
         });
     }
@@ -84,11 +82,11 @@ public class AlreadySearchAdapter extends RecyclerView.Adapter<AlreadySearchAdap
         }
     }
 
-    UserPeopleAdapter getItem(int id) {
+    public UserPeopleAdapter getItem(int id) {
         return listAdapterPeople.get(id);
     }
 
-    void setClickListener(AlreadySearchAdapter.ItemClickListener itemClickListener) {
+    public void setClickListener(AlreadySearchAdapter.ItemClickListener itemClickListener) {
         this.clickListener = itemClickListener;
     }
 

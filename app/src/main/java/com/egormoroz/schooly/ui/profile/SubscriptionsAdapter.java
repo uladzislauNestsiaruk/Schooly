@@ -308,11 +308,11 @@ public class SubscriptionsAdapter extends RecyclerView.Adapter<SubscriptionsAdap
         }
     }
 
-    Subscriber getItem(int id) {
+    public Subscriber getItem(int id) {
         return listAdapter.get(id);
     }
 
-    void setClickListener(SubscriptionsAdapter.ItemClickListener itemClickListener) {
+    public void setClickListener(SubscriptionsAdapter.ItemClickListener itemClickListener) {
         this.clickListener = itemClickListener;
     }
 

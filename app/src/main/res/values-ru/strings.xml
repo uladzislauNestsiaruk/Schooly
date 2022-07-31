@@ -446,7 +446,7 @@
     <string name="fiveminersarealreadyactive">Пять майнеров уже активны</string>
     <string name="incorrectlyenteredclothingprice">Неправильно введена цена одежды</string>
     <string name="applicationsent">Заявка отправлена</string>
-    <string name="givetext"> </string>
+    <string name="givetext"></string>
     <string name="givealreadytext">У</string>
     <string name="alreadнhasthisgift"> уже есть этот предмет одежды</string>
     <string name="giftsent">Подарок отправлен</string>
@@ -517,6 +517,19 @@
     <string name="noChats">Нет чатов:(</string>
     <string name="noChatsFound">Чаты не найдены:(</string>
     <string name="createNewTalk">Создай новую беседу +</string>
-    <string name="dialogMembers">Участники диалога</string>
+    <string name="dialogueMembers">Участники диалога</string>
+    <string name="deleteChat">Удалить чат</string>
+    <string name="chatDeleted">Чат удален</string>
+    <string name="creatingTalk">Создание беседы</string>
+    <string name="addedInChat">Добавленные:</string>
+    <string name="suggested">Предлагаемые:</string>
+    <string name="addMembers">Добавь участников</string>
+    <string name="talkTitle">Название беседы</string>
+    <string name="addMoreUsers">Добавь больше участников</string>
+    <string name="enterTalkTitle">Введи название беседы</string>
+    <string name="leaveTalk">Покинуть буседу</string>
+    <string name="leaveTalkQuestion">Покинуть буседу?</string>
+    <string name="talkIsCreated">Беседа создана</string>
+
 
 </resources>

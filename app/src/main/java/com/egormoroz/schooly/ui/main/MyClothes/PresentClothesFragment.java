@@ -263,7 +263,7 @@ public class PresentClothesFragment extends Fragment {
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
         TextView text=dialog.findViewById(R.id.acceptText);
-        text.setText(getContext().getResources().getText(R.string.present)+" "+clothes.getClothesTitle()+getContext().getResources().getString(R.string.givetext)+userNameToProfile);
+        text.setText(getContext().getResources().getText(R.string.present)+" "+clothes.getClothesTitle()+" "+getContext().getResources().getString(R.string.givetext)+" "+userNameToProfile);
 
         RelativeLayout no=dialog.findViewById(R.id.no);
         RelativeLayout yes=dialog.findViewById(R.id.yes);

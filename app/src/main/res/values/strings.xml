@@ -175,7 +175,7 @@
     <string name="deleteFriend">Delete</string>
 
     <string name="subscriptions">Subscriptions</string>
-    <string name="subscride">Subscride</string>
+    <string name="subscride">Subscribe</string>
     <string name="unsubscride">Unsubscribe</string>
 
     <string name="changepassword">Password change</string>
@@ -359,7 +359,7 @@
     <string name="noSum">Enter the price of the clothes</string>
 
     <string name="presentClothes">Give</string>
-    <string name="presentClothesText">Вonate clothes</string>
+    <string name="presentClothesText">Donate clothes</string>
 
     <string name="requestAnswerMain">Application response</string>
     <string name="title">Name:</string>
@@ -446,7 +446,7 @@
     <string name="fiveminersarealreadyactive">Five miners are already active</string>
     <string name="incorrectlyenteredclothingprice">Incorrectly entered clothing price</string>
     <string name="applicationsent">Application sent</string>
-    <string name="givetext">to</string>
+    <string name="givetext"> to </string>
     <string name="givealreadytext"></string>
     <string name="alreadнhasthisgift"> already has this gift</string>
     <string name="giftsent">Gift sent </string>
@@ -477,7 +477,7 @@
     <string name="didnotdesign"> didn\'t create their clothes :(</string>
     <string name="complaintsent">Complaint sent</string>
     <string name="changessaved">Changes saved</string>
-    <string name="changenotavailable">Сhange not available</string>
+    <string name="changenotavailable">Change not available</string>
     <string name="createyourfirstlook">Create your first look!</string>
     <string name="nolooks1"></string>
     <string name="nolooks2"> has no looks :(</string>
@@ -517,7 +517,20 @@
     <string name="noChats">No chats:(</string>
     <string name="noChatsFound">No chats found:(</string>
     <string name="createNewTalk">Create a new talk +</string>
-    <string name="dialogMembers">Dialog members</string>
+    <string name="dialogueMembers">Dialog members</string>
+    <string name="deleteChat">Delete chat</string>
+    <string name="chatDeleted">Chat is deleted</string>
+    <string name="creatingTalk">Creating a talk</string>
+    <string name="addedInChat">Added:</string>
+    <string name="suggested">Suggested:</string>
+    <string name="addMembers">Add members</string>
+    <string name="talkTitle">Talk title</string>
+    <string name="addMoreUsers">Add more members</string>
+    <string name="enterTalkTitle">Enter the title of the conversation</string>
+    <string name="leaveTalk">Leave talk</string>
+    <string name="leaveTalkQuestion">Leave talk?</string>
+    <string name="talkIsCreated">The talk is created</string>
+
 
 
 

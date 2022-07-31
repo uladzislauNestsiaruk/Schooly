@@ -368,7 +368,6 @@ public final class MessageFragment extends Fragment {
                                 messagesList.add(messages);
                                 messageAdapter.notifyDataSetChanged();
                                 userMessagesList.smoothScrollToPosition(userMessagesList.getAdapter().getItemCount());
-                                addUnread();
                             }
 
                             @Override
@@ -547,7 +546,7 @@ public final class MessageFragment extends Fragment {
 
     public void addUnread() {
         final long[] value = new long[1];
-        DatabaseReference ref = firebaseModel.getUsersReference().child(messageReceiverName).child("Chats").child(messageSenderName).child("Unread");
+        DatabaseReference ref = firebaseModel.getUsersReference().child(messageReceiverName).child("Dialogs").child(messageSenderName).child("unreadMessages");
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -596,6 +595,13 @@ public final class MessageFragment extends Fragment {
         String messageReceiverRef = messageSenderName + "/Chats/" + messageReceiverName + "/Messages";
 
 
+        if(messagesList.size()==0){
+            firebaseModel.getUsersReference().child(messageReceiverName).child("Dialogs").child(messageSenderName)
+                    .setValue(new Chat(messageSenderName,"" , "", "personal", 0,new ArrayList<>(),"false",new ArrayList<>()));
+            firebaseModel.getUsersReference().child(messageSenderName).child("Dialogs").child(messageReceiverName)
+                    .setValue(new Chat(messageReceiverName,"" ,"" , "personal", 0,new ArrayList<>(),"falce",new ArrayList<>()));
+        }
+
         DatabaseReference userMessageKeyRef = firebaseModel.getUsersReference().child(messageSenderName).child("Chats").child(messageReceiverName).child("Messages").push();
         String messagePushID = userMessageKeyRef.getKey();
         Map<String, String> messageTextBody = new HashMap<String, String>();
@@ -606,13 +612,7 @@ public final class MessageFragment extends Fragment {
         messageTextBody.put("time", RecentMethods.getCurrentTime());
         messageTextBody.put("messageID", messagePushID);
         addLastMessage(type, message);
-
-        if(messagesList.size()==0){
-            firebaseModel.getUsersReference().child(messageReceiverName).child("Dialogs").child(messageSenderName)
-                    .setValue(new Chat(messageSenderName,"" , "", "personal", 0,new ArrayList<>(),"false",new ArrayList<>()));
-            firebaseModel.getUsersReference().child(messageSenderName).child("Dialogs").child(messageReceiverName)
-                    .setValue(new Chat(messageReceiverName,"" ,"" , "personal", 0,new ArrayList<>(),"falce",new ArrayList<>()));
-        }
+        addUnread();
         Map<String, Object> messageBodyDetails = new HashMap<>();
         messageBodyDetails.put(messageSenderRef + "/" + messagePushID, messageTextBody);
         messageBodyDetails.put(messageReceiverRef + "/" + messagePushID, messageTextBody);

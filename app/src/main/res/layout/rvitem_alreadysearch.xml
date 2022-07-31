@@ -10,9 +10,9 @@
         android:id="@+id/useravatar"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:layout_marginStart="12dp"
         android:layout_centerVertical="true"
-        android:background="@drawable/corners14appcolor"/>
+        android:layout_marginStart="12dp"
+        android:background="@drawable/corners14appcolor" />
 
     <TextView
         android:id="@+id/usernickname"

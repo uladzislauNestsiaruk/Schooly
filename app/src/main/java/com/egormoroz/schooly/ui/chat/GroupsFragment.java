@@ -30,7 +30,7 @@ public class GroupsFragment extends Fragment
     DatabaseReference GroupRef;
     FirebaseModel firebaseModel = new FirebaseModel();
     RecyclerView chatsList;
-    TextView noChats;
+    TextView noChats,createGroup;
     UserInformation userInformation;
     Bundle bundle;
     Fragment fragment;
@@ -58,6 +58,13 @@ public class GroupsFragment extends Fragment
         super.onViewCreated(view, savedInstanceState);
         noChats=view.findViewById(R.id.noChatsGroup);
         chatsList = (RecyclerView) view.findViewById(R.id.chats_listGroup);
+        createGroup=view.findViewById(R.id.addChat);
+        createGroup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                RecentMethods.setCurrentFragment(CreateGroupFragment.newInstance(userInformation, bundle, DialogsFragment.newInstance(userInformation, bundle, fragment)), getActivity());
+            }
+        });
         loadChats();
         GroupRef = firebaseModel.getUsersReference().child("Groups");
     }

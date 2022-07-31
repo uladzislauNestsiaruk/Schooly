@@ -12,10 +12,10 @@ public class Chat {
     private long unreadMessages;
     ArrayList<UserPeopleAdapter> members;
     private String notificationType;
-    ArrayList<String> dialogMaterials;
+    ArrayList<String> dialogueMaterials;
 
     public Chat (String name, String LastTime, String LastMessage, String type,long unreadMessages,
-                 ArrayList<UserPeopleAdapter> members,String notificationType,ArrayList<String> dialogMaterials){
+                 ArrayList<UserPeopleAdapter> members,String notificationType,ArrayList<String> dialogueMaterials){
         this.name = name;
         this.LastTime = LastTime;
         this.LastMessage = LastMessage;
@@ -23,7 +23,7 @@ public class Chat {
         this.unreadMessages=unreadMessages;
         this.members=members;
         this.notificationType=notificationType;
-        this.dialogMaterials=dialogMaterials;
+        this.dialogueMaterials=dialogueMaterials;
     }
 
     public Chat() {
@@ -62,8 +62,8 @@ public class Chat {
 
     public void setNotificationType (String notificationType) {this.notificationType = notificationType;}
 
-    public ArrayList<String> getDialogMaterials () {return  this.dialogMaterials;}
+    public ArrayList<String> getDialogueMaterials () {return  this.dialogueMaterials;}
 
-    public void setDialogMaterials (ArrayList<String> dialogMaterials) {this.dialogMaterials = dialogMaterials;}
+    public void setDialogueMaterials (ArrayList<String> dialogueMaterials) {this.dialogueMaterials = dialogueMaterials;}
 
 }
