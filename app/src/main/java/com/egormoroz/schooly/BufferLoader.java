@@ -30,13 +30,20 @@ public class BufferLoader {
     static ArrayList<String> clothesLoadBuffersUid=new ArrayList<>();
     static int a=0;
     static Bundle bundle;
+    static SendLoadClothes sendLoadClothes;
 
     public static void loadBuffers(ArrayList<Clothes> clothesArrayList,Bundle bundle){
-        if(bun)
+//        if(bundle.getSerializable("CLOTHESUIDS")!=null){
+//            clothesLoadBuffersUid= (ArrayList<String>) bundle.getSerializable("CLOTHESUIDS");
+//
+//        }
+//        if(bundle.getSerializable("ALLCLOTHESWITHBUFFERS")!=null){
+//            clothesArrayListWithBuffers= (ArrayList<Clothes>) bundle.getSerializable("ALLCLOTHESWITHBUFFERS");
+//
+//        }
         Log.d("##", "x "+clothesArrayList.size());
         for(int i=0;i<clothesArrayList.size();i++){
             Clothes clothes=clothesArrayList.get(i);
-            if(!clothesLoadBuffersUid.contains(clothes.getUid()))
             addBufferToClothes(clothes);
         }
     }
@@ -87,10 +94,18 @@ public class BufferLoader {
             bufferToFilament= future.get();
             clothes.setBuffer(bufferToFilament);
             clothesArrayListWithBuffers.add(clothes);
+            if(sendLoadClothes!=null)sendLoadClothes.getLoadClothes(clothes);
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    public interface SendLoadClothes{
+        void getLoadClothes(Clothes clothes);
+    }
+    public static void onBufferLoad(SendLoadClothes sendLoadClothes){
+        BufferLoader.sendLoadClothes =sendLoadClothes;
     }
 }

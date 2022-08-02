@@ -1,6 +1,9 @@
 package com.egormoroz.schooly.ui.profile.Wardrobe;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -18,6 +21,9 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Lifecycle;
+import androidx.loader.app.LoaderManager;
+import androidx.loader.content.AsyncTaskLoader;
+import androidx.loader.content.Loader;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
@@ -42,6 +48,7 @@ import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -49,10 +56,16 @@ import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.concurrent.Callable;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionStage;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 public class WardrobeFragment extends Fragment {
     String type;
@@ -93,6 +106,8 @@ public class WardrobeFragment extends Fragment {
     static FilamentModel filamentModel;
     static ArrayList<Clothes> clothesList=new ArrayList<>();
     static ArrayList<String> clothesUid=new ArrayList<>();
+    static ArrayList<Clothes> lookClothes=new ArrayList<>();
+    LoadModel loadModel;
 
 
     @Override
@@ -386,6 +401,7 @@ public class WardrobeFragment extends Fragment {
     }
 
     public void loadLookClothes(){
+        ExecutorService executorService=Executors.newCachedThreadPool();
         if(clothesUid.size()==0) {
             firebaseModel.getUsersReference().child(nick).child("lookClothes")
                     .get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
@@ -393,10 +409,17 @@ public class WardrobeFragment extends Fragment {
                 public void onComplete(@NonNull Task<DataSnapshot> task) {
                     if (task.isSuccessful()) {
                         DataSnapshot snapshot = task.getResult();
+                        int a=0;
                         for (DataSnapshot snap : snapshot.getChildren()) {
+                            Log.d("###", "a  "+a);
+                            a++;
                             Clothes clothes = snap.getValue(Clothes.class);
-                            addModelInScene(clothes);
-                            Log.d("#####", "d1");
+                            TaskRunner taskRunner=new TaskRunner();
+                            taskRunner.executeAsync(new LongRunningTask(clothes), (data) -> {
+                                filamentModel.populateScene(data.getBuffer(), data);
+                            });
+
+                            lookClothes.add(clothes);
                         }
                     }
                 }
@@ -527,19 +550,22 @@ public class WardrobeFragment extends Fragment {
         return  baos.toByteArray();
     }
 
-    public static void addModelInScene(Clothes clothes)  {
-        loadBuffer(clothes.getModel());
+    public static Clothes addModelInScene(Clothes clothes)  {
         try {
-            bufferToFilament= future.get();
-            filamentModel.populateScene(bufferToFilament,clothes);
+            uri = new URI(clothes.getModel());
+            buffer = getBytes(uri.toURL());
+            bufferToFilament= ByteBuffer.wrap(buffer);
             clothes.setBuffer(bufferToFilament);
             clothesList.add(clothes);
             clothesUid.add(clothes.getUid());
-        } catch (ExecutionException e) {
+            Log.d("#####", "gg");
+        } catch (IOException e) {
             e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (URISyntaxException e) {
             e.printStackTrace();
         }
+        Log.d("#####", "gg1");
+        return clothes;
     }
 
     public static void loadBuffer(String model){
@@ -610,6 +636,48 @@ public class WardrobeFragment extends Fragment {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    public interface LoadModel{
+        public void load(Clothes clothes);
+    }
+
+
+    static class LongRunningTask implements Callable<Clothes> {
+        private  Clothes clothes;
+
+        public LongRunningTask(Clothes clothes) {
+            this.clothes = clothes;
+        }
+
+        @Override
+        public Clothes call() {
+            return addModelInScene(clothes);
+        }
+    }
+
+    public static class TaskRunner {
+        private final Executor executor = Executors.newSingleThreadExecutor(); // change according to your requirements
+        private final Handler handler = new Handler(Looper.getMainLooper());
+
+        public interface Callback<Clothes> {
+            void onComplete(Clothes result);
+        }
+
+        public <Clothes> void executeAsync(Callable<Clothes> callable, Callback<Clothes> callback) {
+            executor.execute(() -> {
+                Clothes result = null;
+                try {
+                    result = callable.call();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                Clothes finalResult = result;
+                handler.post(() -> {
+                    callback.onComplete(finalResult);
+                });
+            });
         }
     }
 }

@@ -76,6 +76,7 @@ public class ChatsFragment extends Fragment
             RecentMethods.getDialogs(userInformation.getNick(), firebaseModel, new Callbacks.loadDialogs() {
                 @Override
                 public void LoadData(ArrayList<Chat> dialogs,ArrayList<Chat> talksArrayList) {
+                    userInformation.setChats(dialogs);
                     if(dialogs.size()==0){
                         noChats.setVisibility(View.VISIBLE);
                         chatsList.setVisibility(View.GONE);

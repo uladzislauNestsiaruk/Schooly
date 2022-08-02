@@ -62,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
 	CoordinatorLayout fragmentContainer;
 	String TAG="###";
 	Bundle bundle=new Bundle();
+	int a=0;
 	private static final String CHANNEL_ID = "channel";
 	FirebaseModel firebaseModel=new FirebaseModel();
 	@Override
@@ -212,14 +213,19 @@ public class MainActivity extends AppCompatActivity {
 					@Override
 					public void getClothes(ArrayList<Clothes> allClothes) {
 						userInformation.setClothes(allClothes);
-						ExecutorService executorService= Executors.newCachedThreadPool();
-						executorService.execute(new Runnable() {
-							@Override
-							public void run() {
-								Log.d("#####","startEx");
-								BufferLoader.loadBuffers(allClothes,bundle);
-							}
-						});
+//						ExecutorService executorService= Executors.newCachedThreadPool();
+//						executorService.execute(new Runnable() {
+//							@Override
+//							public void run() {
+//								if(a==0){
+//									Log.d("#####","startEx");
+//									BufferLoader.loadBuffers(allClothes,bundle);
+//									a++;
+//								}	else{
+//
+//								}
+//							}
+//						});
 					}
 				});
 				RecentMethods.getSubscribersList(nick, firebaseModel, new Callbacks.getSubscribersList() {

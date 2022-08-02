@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
@@ -90,8 +91,7 @@ public class DialogsFragment extends Fragment {
         noChats=view.findViewById(R.id.noChats);
         recyclerView=view.findViewById(R.id.recyclerView);
         editText=view.findViewById(R.id.editText);
-        allChats.addAll(userInformation.getChats());
-        allChats.addAll(userInformation.getTalksArrayList());
+        loadChats();
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
@@ -325,6 +325,23 @@ public class DialogsFragment extends Fragment {
             return 2;
         }
 
+    }
+
+    public  void loadChats(){
+        if(userInformation.getChats()==null || userInformation.getTalksArrayList()==null){
+            RecentMethods.getDialogs(userInformation.getNick(), firebaseModel, new Callbacks.loadDialogs() {
+                @Override
+                public void LoadData(ArrayList<Chat> dialogs,ArrayList<Chat> talksArrayList) {
+                    userInformation.setChats(dialogs);
+                    userInformation.setTalksArrayList(talksArrayList);
+                    allChats.addAll(dialogs);
+                    allChats.addAll(talksArrayList);
+                }
+            });
+        }else{
+            allChats.addAll(userInformation.getChats());
+            allChats.addAll(userInformation.getTalksArrayList());
+        }
     }
 }
 
