@@ -1,6 +1,8 @@
 package com.egormoroz.schooly.ui.profile.Wardrobe;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -29,6 +31,7 @@ import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.LockableNestedScrollView;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
+import com.egormoroz.schooly.TaskRunner;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
 import com.egormoroz.schooly.ui.main.UserInformation;
 import com.egormoroz.schooly.ui.profile.ProfileFragment;
@@ -50,6 +53,7 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -74,7 +78,6 @@ public class CreateLookFragment extends Fragment {
     String lookType;
     static byte[] buffer;
     static URI uri;
-    static Future<Buffer> future;
     static Buffer buffer1,bufferToFilament,b;
     static FilamentModel filamentModel=new FilamentModel();
     static ArrayList<Clothes> clothesList=new ArrayList<>();
@@ -150,7 +153,9 @@ public class CreateLookFragment extends Fragment {
         }
         lockableNestedScrollView=view.findViewById(R.id.lockableNestedScrollView);
         loadPerson(userInformation, lockableNestedScrollView);
-
+        if(bundle.getSerializable("ALLLOADCLOTHESLIST")!=null){
+            clothesList= (ArrayList<Clothes>) bundle.getSerializable("ALLLOADCLOTHESLIST");
+        }
         loadLookClothes();
         searchText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -404,7 +409,6 @@ public class CreateLookFragment extends Fragment {
 
 
     public void loadLookClothes(){
-        Log.d("####", "look");
         if(clothesUid.size()==0) {
             firebaseModel.getUsersReference().child(nick).child("lookClothes")
                     .get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
@@ -414,24 +418,30 @@ public class CreateLookFragment extends Fragment {
                         DataSnapshot snapshot = task.getResult();
                         for (DataSnapshot snap : snapshot.getChildren()) {
                             Clothes clothes = snap.getValue(Clothes.class);
-                            addModelInScene(clothes);
-                            Log.d("#####", "d1");
+                            TaskRunner taskRunner=new TaskRunner();
+                            taskRunner.executeAsync(new WardrobeFragment.LongRunningTask(clothes), (data) -> {
+                                filamentModel.populateScene(data.getBuffer(), data);
+                            });
+
                         }
                     }
                 }
             });
         }  else{
-            Log.d("####", "ccc  "+clothesUid.size());
             for(int i=0;i<clothesList.size();i++ ){
                 Clothes clothes=clothesList.get(i);
                 if(clothesUid.contains(clothes.getUid())&&clothes.getBuffer()!=null){
                     filamentModel.populateScene(clothes.getBuffer(), clothes);
                 } else if(clothesUid.contains(clothes.getUid())&&clothes.getBuffer()==null){
-                    addModelInScene(clothes);
+                    WardrobeFragment.TaskRunner taskRunner=new WardrobeFragment.TaskRunner();
+                    taskRunner.executeAsync(new WardrobeFragment.LongRunningTask(clothes), (data) -> {
+                        filamentModel.populateScene(data.getBuffer(), data);
+                    });
                 }
             }
         }
     }
+
     public static void tryOnClothes(Clothes clothes){
         int a=0;
         if(clothesList.size()!=0){
@@ -442,12 +452,18 @@ public class CreateLookFragment extends Fragment {
                     clothesUid.add(clothes.getUid());
                     break;
                 }else if(a==0 && i==clothesList.size()-1){
-                    addModelInScene(clothes);
+                    WardrobeFragment.TaskRunner taskRunner=new WardrobeFragment.TaskRunner();
+                    taskRunner.executeAsync(new WardrobeFragment.LongRunningTask(clothes), (data) -> {
+                        filamentModel.populateScene(data.getBuffer(), data);
+                    });
                     break;
                 }
             }
         }else {
-            addModelInScene(clothes);
+            WardrobeFragment.TaskRunner taskRunner=new WardrobeFragment.TaskRunner();
+            taskRunner.executeAsync(new WardrobeFragment.LongRunningTask(clothes), (data) -> {
+                filamentModel.populateScene(data.getBuffer(), data);
+            });
             a++;
         }
     }
@@ -545,44 +561,28 @@ public class CreateLookFragment extends Fragment {
         return  baos.toByteArray();
     }
 
-    public static void addModelInScene(Clothes clothes)  {
-        loadBuffer(clothes.getModel());
+    public static Clothes addModelInScene(Clothes clothes)  {
         try {
-            bufferToFilament= future.get();
-            filamentModel.populateScene(bufferToFilament,clothes);
+            uri = new URI(clothes.getModel());
+            buffer = getBytes(uri.toURL());
+            bufferToFilament= ByteBuffer.wrap(buffer);
             clothes.setBuffer(bufferToFilament);
             clothesList.add(clothes);
             clothesUid.add(clothes.getUid());
-        } catch (ExecutionException e) {
+        } catch (IOException e) {
             e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (URISyntaxException e) {
             e.printStackTrace();
         }
-    }
-
-    public void saveFile(){
-        //FileOutputStream fileOutputStream=new
-
-    }
-
-    public static void loadBuffer(String model){
-        ExecutorService executorService= Executors.newCachedThreadPool();
-        future = executorService.submit(new Callable(){
-            public Buffer call() throws Exception {
-                uri = new URI(model);
-                buffer = getBytes(uri.toURL());
-                buffer1= ByteBuffer.wrap(buffer);
-                return buffer1;
-            }
-        });
+        return clothes;
     }
 
     public void loadPerson(UserInformation userInformation,LockableNestedScrollView lockableNestedScrollView){
-        Log.d("####", "person");
         try {
             if(bundle.getSerializable("PERSON"+userInformation.getNick())==null){
-                loadBuffer(userInformation.getPerson().getBody());
-                bufferToFilament = future.get();
+                uri = new URI(userInformation.getPerson().getBody());
+                buffer = getBytes(uri.toURL());
+                bufferToFilament= ByteBuffer.wrap(buffer);
                 buffers=new ArrayList<>();
                 buffers.add(bufferToFilament);
                 bundle.putSerializable("PERSON"+userInformation.getNick(),buffers);
@@ -611,10 +611,6 @@ public class CreateLookFragment extends Fragment {
 
                 }
             }
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         } catch (URISyntaxException e) {
@@ -622,18 +618,33 @@ public class CreateLookFragment extends Fragment {
         }
     }
 
-    public void loadBodyPart(String string){
+    public void loadBodyPart(String string)  {
         if(string!=null){
-            loadBuffer(string);
             try {
-                Buffer bufferToFilament= future.get();
+                uri = new URI(string);
+                buffer = getBytes(uri.toURL());
+                bufferToFilament= ByteBuffer.wrap(buffer);
                 filamentModel.populateSceneFacePart(bufferToFilament);
                 buffers.add(bufferToFilament);
-            } catch (ExecutionException e) {
+            } catch (IOException e) {
                 e.printStackTrace();
-            } catch (InterruptedException e) {
+            } catch (URISyntaxException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+
+    static class LongRunningTask implements Callable<Clothes> {
+        private  Clothes clothes;
+
+        public LongRunningTask(Clothes clothes) {
+            this.clothes = clothes;
+        }
+
+        @Override
+        public Clothes call() {
+            return addModelInScene(clothes);
         }
     }
 }

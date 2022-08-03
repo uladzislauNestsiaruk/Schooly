@@ -25,12 +25,14 @@ import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.Subscriber;
+import com.egormoroz.schooly.TaskRunner;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
 import com.egormoroz.schooly.ui.main.UserInformation;
 import com.egormoroz.schooly.ui.profile.ComplainAdapter;
 import com.egormoroz.schooly.ui.profile.SendLookAdapter;
 import com.egormoroz.schooly.ui.profile.ViewingLookFragment;
 import com.egormoroz.schooly.ui.profile.Wardrobe.ConstituentsAdapter;
+import com.egormoroz.schooly.ui.profile.Wardrobe.WardrobeFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
@@ -119,21 +121,21 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
                 ArrayList<Buffer> buffers=new ArrayList<>();
                 buffers.add(bufferToFilament);
                 bundle.putSerializable("CHARACTERMODEL",buffers);
-                filamentModel.initFilament(holder.surfaceView,bufferToFilament,true,null,"regularRender",true);
+                //filamentModel.initFilament(holder.surfaceView,bufferToFilament,true,null,"regularRender",true);
             }else{
                 ArrayList<Buffer> buffers= (ArrayList<Buffer>) bundle.getSerializable("CHARACTERMODEL");
                 Buffer buffer3=buffers.get(0);
-                filamentModel.initFilament(holder.surfaceView,buffer3,true,null,"regularRender",true);
+                //filamentModel.initFilament(holder.surfaceView,buffer3,true,null,"regularRender",true);
             }
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
             e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        } catch (URISyntaxException e) {
+//            e.printStackTrace();
+       }
         holder.setIsRecyclable(false);
         holder.like_count.setText(newsItem.getLikes_count());
         holder.description.setText(newsItem.getItem_description());
@@ -202,12 +204,12 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
 
         ImageView newsImage, like, comment;
         TextView description, like_count;
-        SurfaceView surfaceView;
+        //SurfaceView surfaceView;
 
         public ImageViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            surfaceView=itemView.findViewById(R.id.surfaceView);
+            //surfaceView=itemView.findViewById(R.id.surfaceView);
             like = itemView.findViewById(R.id.like);
             description = itemView.findViewById(R.id.description);
             like_count = itemView.findViewById(R.id.likesCount);
@@ -291,7 +293,10 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
                     lookClothesArrayList=clothesArrayList;
                     for(int i=0;i<clothesArrayList.size();i++){
                         Clothes clothes=clothesArrayList.get(i);
-                        addModelInScene(clothes);
+//                        TaskRunner taskRunner=new TaskRunner();
+//                        taskRunner.executeAsync(new LongRunningTask(clothes), (data) -> {
+//                            filamentModel.populateScene(data.getBuffer(), data);
+//                        });
                     }
                 }
             });
@@ -300,9 +305,12 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
             for(int i=0;i<clothesList.size();i++ ){
                 Clothes clothes=clothesList.get(i);
                 if(clothesUid.contains(clothes.getUid())&&clothes.getBuffer()!=null){
-                    filamentModel.populateScene(clothes.getBuffer(), clothes);
+                    //filamentModel.populateScene(clothes.getBuffer(), clothes);
                 } else if(clothesUid.contains(clothes.getUid())&&clothes.getBuffer()==null){
-                    addModelInScene(clothes);
+//                    TaskRunner taskRunner=new TaskRunner();
+//                    taskRunner.executeAsync(new LongRunningTask(clothes), (data) -> {
+//                        filamentModel.populateScene(data.getBuffer(), data);
+//                    });
                 }
             }
         }
@@ -330,19 +338,20 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
         return  baos.toByteArray();
     }
 
-    public static void addModelInScene(Clothes clothes)  {
-        loadBuffer(clothes.getModel());
+    public static Clothes addModelInScene(Clothes clothes)  {
         try {
-            bufferToFilament= future.get();
-            filamentModel.populateScene(bufferToFilament,clothes);
+            uri = new URI(clothes.getModel());
+            buffer = getBytes(uri.toURL());
+            bufferToFilament= ByteBuffer.wrap(buffer);
             clothes.setBuffer(bufferToFilament);
             clothesList.add(clothes);
             clothesUid.add(clothes.getUid());
-        } catch (ExecutionException e) {
+        } catch (IOException e) {
             e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (URISyntaxException e) {
             e.printStackTrace();
         }
+        return clothes;
     }
 
     public static void loadBuffer(String model){
@@ -385,6 +394,19 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
         };
 
         bottomSheetDialog.show();
+    }
+
+    static class LongRunningTask implements Callable<Clothes> {
+        private Clothes clothes;
+
+        public LongRunningTask(Clothes clothes) {
+            this.clothes = clothes;
+        }
+
+        @Override
+        public Clothes call() {
+            return addModelInScene(clothes);
+        }
     }
 
 }

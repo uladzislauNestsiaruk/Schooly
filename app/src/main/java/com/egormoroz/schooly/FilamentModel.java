@@ -291,7 +291,6 @@ public class FilamentModel {
         filamentAsset.releaseSourceData();
         resourceLoader.asyncUpdateLoad();
         modelViewer.populateScene(filamentAsset);
-        int[] e=filamentAsset.getEntities();
     }
 
     public void setMask(Clothes clothes){
