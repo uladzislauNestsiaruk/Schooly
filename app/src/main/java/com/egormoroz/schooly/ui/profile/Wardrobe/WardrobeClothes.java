@@ -76,7 +76,13 @@ public class WardrobeClothes extends Fragment {
             @Override
             public void onItemClick(Clothes clothes,String type,String fragmentString) {
                 if(type.equals("view")){
-                    WardrobeFragment.sentToViewingFrag(type,fragment,userInformation,bundle, getActivity());
+                    if (fragmentString.equals("wardrobe")){
+                        WardrobeFragment.sentToViewingFrag(type,fragment,userInformation,bundle, getActivity());
+                    }else if(fragmentString.equals("createClothes")){
+                        CreateLookFragment.sentToViewingFrag(type,fragment,userInformation,bundle, getActivity());
+                    }else if(fragmentString.equals("tryOn")){
+                        FittingFragment.sentToViewingFrag(type,fragment,userInformation,bundle, getActivity());
+                    }
                 }else{
                     if (fragmentString.equals("wardrobe")){
                         WardrobeFragment.checkOnTryOn(clothes);

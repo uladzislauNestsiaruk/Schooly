@@ -437,26 +437,21 @@ public class CreateLookFragment extends Fragment {
                 }
             });
         } else{
-            Log.d("####", "ccc  "+clothesUid.size());
             for(int i=0;i<clothesList.size();i++ ){
                 Clothes clothes=clothesList.get(i);
                 if(clothesUid.contains(clothes.getUid())&&clothes.getBuffer()!=null){
                     filamentModel.populateScene(clothes.getBuffer(), clothes);
-                    Log.d("####", "s7 "+a+"   "+clothesUid.size());
                     if(a ==clothesUid.size()-1){
                         loadValue=0;
-                        Log.d("####", "ss14 "+loadValue);
                     }
                     a++;
                 } else if(clothesUid.contains(clothes.getUid())&&clothes.getBuffer()==null){
-                    Log.d("####", "s78988  "+i+"   "+clothesList.size());
                     TaskRunner taskRunner=new TaskRunner();
                     int finalA = a;
                     taskRunner.executeAsync(new LongRunningTask(clothes), (data) -> {
                         filamentModel.populateScene(data.getBuffer(), data);
                         if(finalA ==clothesUid.size()-1){
                             loadValue=0;
-                            Log.d("####", "ss1 "+loadValue);
                         }
                     });
                     a++;
