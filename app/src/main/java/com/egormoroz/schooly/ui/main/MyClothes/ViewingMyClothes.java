@@ -1,9 +1,13 @@
 package com.egormoroz.schooly.ui.main.MyClothes;
 
 import android.app.Dialog;
+import android.content.ClipData;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -47,6 +51,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -84,7 +89,7 @@ public class ViewingMyClothes extends Fragment {
             ,userName,otherUserNickString,nick;
     Clothes clothesViewing;
     private FirebaseModel firebaseModel = new FirebaseModel();
-    NewClothesAdapter.ViewHolder viewHolder;
+    String savedImageURL;
     double perCent;
 
     @Override
@@ -360,7 +365,26 @@ public class ViewingMyClothes extends Fragment {
         linearInstagram.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                try {
+                    savedImageURL = MediaStore.Images.Media.insertImage(
+                            getActivity().getContentResolver(),
+                            clothesViewing.getClothesImage(),
+                            "My image",
+                            "My super image description"
+                    );
 
+                    Uri savedImageURI = Uri.parse(savedImageURL);
+
+                    ClipData clipData = ClipData.newRawUri("Image", savedImageURI);
+                    Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
+                    shareIntent.setType("image/*");
+                    shareIntent.putExtra(Intent.EXTRA_TITLE, "YOUR TEXT HERE");
+                    shareIntent.setPackage("com.instagram.android");
+                    shareIntent.setClipData(clipData);
+                    startActivity(shareIntent);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
             }
         });
         itemClickListener=new SendLookAdapter.ItemClickListener() {

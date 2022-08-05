@@ -98,7 +98,6 @@ public class FittingFragment extends Fragment {
     LockableNestedScrollView lockableNestedScrollView;
     static byte[] buffer;
     static URI uri;
-    static Future<Buffer> future;
     static Buffer bufferToFilament,b;
     static FilamentModel filamentModel;
     static ArrayList<Clothes> clothesList=new ArrayList<>();
@@ -117,6 +116,11 @@ public class FittingFragment extends Fragment {
         filamentModel=new FilamentModel();
         if(bundle.getSerializable("CLOTHESUID")!=null){
             clothesUid= (ArrayList<String>) bundle.getSerializable("CLOTHESUID");
+            Log.d("####", "w   "+clothesUid.size());
+        }
+        if(bundle.getSerializable("ALLLOADCLOTHESLIST")!=null){
+            clothesList= (ArrayList<Clothes>) bundle.getSerializable("ALLLOADCLOTHESLIST");
+            Log.d("####", "y   "+clothesList.size());
         }
         return root;
     }
@@ -127,6 +131,7 @@ public class FittingFragment extends Fragment {
         bundle.putString("EDIT_WARDROBE_TAG", searchText.getText().toString().trim());
         bundle.putInt("TAB_INT_WARDROBE", tabLayoutPosition);
         bundle.putSerializable("CLOTHESUID", clothesUid);
+        clothesList.add(clothesFitting);
         bundle.putSerializable("ALLLOADCLOTHESLIST", clothesList);
     }
 
@@ -152,9 +157,6 @@ public class FittingFragment extends Fragment {
         viewPager = view.findViewById(R.id.frcontwardrobe);
         lockableNestedScrollView=view.findViewById(R.id.lockableNestedScrollView);
         loadPerson(userInformation, lockableNestedScrollView);
-        if(bundle.getSerializable("ALLLOADCLOTHESLIST")!=null){
-            clothesList= (ArrayList<Clothes>) bundle.getSerializable("ALLLOADCLOTHESLIST");
-        }
 
         if (bundle != null) {
             tabLayoutPosition = bundle.getInt("TAB_INT_WARDROBE");
@@ -174,11 +176,13 @@ public class FittingFragment extends Fragment {
             if(clothesFitting.getBuffer()!=null){
                 filamentModel.populateScene(clothesFitting.getBuffer(), clothesFitting);
                 loadValue=0;
+                loadLookClothes();
             }    else{
                 TaskRunner taskRunner=new TaskRunner();
                 taskRunner.executeAsync(new LongRunningTask(clothesFitting), (data) -> {
                     filamentModel.populateScene(data.getBuffer(), data);
                     loadValue=0;
+                    loadLookClothes();
                 });
             }
         }else{
@@ -187,10 +191,10 @@ public class FittingFragment extends Fragment {
             taskRunner.executeAsync(new LongRunningTask(clothesFitting), (data) -> {
                 filamentModel.populateScene(data.getBuffer(), data);
                 loadValue=0;
+                loadLookClothes();
             });
         }
 
-        loadLookClothes();
         searchText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -416,53 +420,75 @@ public class FittingFragment extends Fragment {
 
     public void loadLookClothes(){
         loadValue=1;
-        if(clothesUid.size()==0) {
+        Log.d("######", "k");
+        if(clothesUid.size()==0 || clothesList.size()==0) {
             RecentMethods.getMyLookClothesOnce(nick, firebaseModel, new Callbacks.getLookClothes() {
                 @Override
                 public void getLookClothes(ArrayList<Clothes> clothesArrayList) {
                     for(int i=0;i<clothesArrayList.size();i++){
                         Clothes clothes=clothesArrayList.get(i);
-                        if(!clothes.getBodyType().equals(clothesFitting.getBodyType())){
-                            Log.d("#####", "11");
-                            TaskRunner taskRunner=new TaskRunner();
-                            int finalI = i;
-                            taskRunner.executeAsync(new LongRunningTask(clothes), (data) -> {
-                                filamentModel.populateScene(data.getBuffer(), data);
-                                if(finalI ==clothesArrayList.size()-1){
-                                    loadValue=0;
-                                }
-                            });
-                        }else{
-                            filamentModel.setMask(clothes);
+                        if(!clothes.getUid().equals(clothesFitting.getUid())){
+                            if(!clothes.getBodyType().equals(clothesFitting.getBodyType())){
+                                Log.d("#####", "11");
+                                TaskRunner taskRunner=new TaskRunner();
+                                int finalI = i;
+                                taskRunner.executeAsync(new LongRunningTask(clothes), (data) -> {
+                                    filamentModel.populateScene(data.getBuffer(), data);
+                                    if(finalI ==clothesArrayList.size()-1){
+                                        loadValue=0;
+                                    }
+                                });
+                            }else{
+                                filamentModel.setMask(clothes);
+                            }
+                        }else if(i==clothesArrayList.size()-1){
+                            loadValue=0;
                         }
                     }
                 }
             });
         } else{
+            Log.d("####", "o"+clothesList.size());
             for(int i=0;i<clothesList.size();i++ ){
                 Clothes clothes=clothesList.get(i);
-                if(clothesUid.contains(clothes.getUid())){
-                    if(!clothes.getBodyType().equals(clothesFitting.getBodyType())){
-                        if(clothes.getBuffer()!=null){
-                            filamentModel.populateScene(clothes.getBuffer(), clothes);
-                            if(a ==clothesUid.size()-1){
-                                loadValue=0;
-                            }
-                            a++;
-                        }    else{
-                            TaskRunner taskRunner=new TaskRunner();
-                            int finalA = a;
-                            taskRunner.executeAsync(new LongRunningTask(clothes), (data) -> {
-                                filamentModel.populateScene(data.getBuffer(), data);
-                                if(finalA ==clothesUid.size()-1){
+                Log.d("####", "z"+clothes.getClothesTitle());
+                if(!clothes.getUid().equals(clothesFitting.getUid())){
+                    Log.d("####", "t");
+                    if(clothesUid.contains(clothes.getUid())){
+                        if(!clothes.getBodyType().equals(clothesFitting.getBodyType())){
+                            Log.d("####", "p");
+                            if(clothes.getBuffer()!=null){
+                                filamentModel.populateScene(clothes.getBuffer(), clothes);
+                                if(a ==clothesUid.size()-1){
                                     loadValue=0;
                                 }
-                            });
-                            a++;
+                                a++;
+                            }    else{
+                                TaskRunner taskRunner=new TaskRunner();
+                                int finalA = a;
+                                Log.d("####", "l");
+                                taskRunner.executeAsync(new LongRunningTask(clothes), (data) -> {
+                                    filamentModel.populateScene(data.getBuffer(), data);
+                                    if(finalA ==clothesUid.size()-1){
+                                        loadValue=0;
+                                    }
+                                });
+                                a++;
+                            }
+                        }else{
+                            filamentModel.setMask(clothes);
+                            if(i==clothesUid.size()-1) {
+                                loadValue = 0;
+                            }
+                            Log.d("####", "vv  "+clothesUid.size());
                         }
-                    }else{
-                        filamentModel.setMask(clothes);
-                        Log.d("####", "vv  "+clothesUid.size());
+                    }
+                }else{
+                    if(i==clothesUid.size()-1) {
+                        loadValue = 0;
+                    }
+                    if (clothesUid.contains(clothes.getUid())){
+                        a++;
                     }
                 }
             }
@@ -516,14 +542,15 @@ public class FittingFragment extends Fragment {
         }
     }
 
-    public static void sentToViewingFrag(String type, Fragment fragment, UserInformation userInformation, Bundle bundle, Activity activity){
+    public static void sentToViewingFrag(String type, Fragment fragment, UserInformation userInformation, Bundle bundle, Activity activity,Clothes clothes){
         if(loadValue==0){
-            RecentMethods.setCurrentFragment(ViewingClothesWardrobe.newInstance(type,fragment,userInformation,bundle), activity);
+            RecentMethods.setCurrentFragment(ViewingClothesWardrobe.newInstance(type,FittingFragment.newInstance(fragment, userInformation, bundle,clothes) ,userInformation,bundle), activity);
         }
     }
 
     public static void makeClothesInvisible(Clothes clothes){
         if(!clothes.getBodyType().equals(clothesFitting.getBodyType())){
+            Log.d("####", "dd   2");
             String type=clothes.getBodyType();
             int a=0;
             int c=0;
@@ -568,6 +595,8 @@ public class FittingFragment extends Fragment {
                     }
                 }
             }
+        }else{
+            loadValue=0;
         }
     }
 
@@ -621,9 +650,10 @@ public class FittingFragment extends Fragment {
             buffer = getBytes(uri.toURL());
             bufferToFilament= ByteBuffer.wrap(buffer);
             clothes.setBuffer(bufferToFilament);
-            clothesList.add(clothes);
-            if(!clothes.getUid().equals(clothesFitting.getUid()))
+            if(!clothes.getUid().equals(clothesFitting.getUid())){
                 clothesUid.add(clothes.getUid());
+                clothesList.add(clothes);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         } catch (URISyntaxException e) {

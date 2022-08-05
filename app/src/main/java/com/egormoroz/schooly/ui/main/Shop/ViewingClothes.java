@@ -95,6 +95,10 @@ public class ViewingClothes extends Fragment {
         BottomNavigationView bnv = getActivity().findViewById(R.id.bottomNavigationView);
         bnv.setVisibility(bnv.GONE);
         firebaseModel.initAll();
+        if(bundle.getSerializable("ALLLOADCLOTHESLIST")!=null){
+            ArrayList<Clothes> clothesList= (ArrayList<Clothes>) bundle.getSerializable("ALLLOADCLOTHESLIST");
+            Log.d("####", "y   "+clothesList.size());
+        }
         return root;
 
     }

@@ -81,7 +81,7 @@ public class WardrobeHats extends Fragment {
                     }else if(fragmentString.equals("createClothes")){
                         CreateLookFragment.sentToViewingFrag(type,fragment,userInformation,bundle, getActivity());
                     }else if(fragmentString.equals("tryOn")){
-                        FittingFragment.sentToViewingFrag(type,fragment,userInformation,bundle, getActivity());
+                        FittingFragment.sentToViewingFrag(type,fragment,userInformation,bundle, getActivity(),clothes);
                     }
                 }else{
                     if (fragmentString.equals("wardrobe")){

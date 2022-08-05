@@ -77,7 +77,7 @@ public class CreateLookFragment extends Fragment {
     static UserInformation userInformation;
     Bundle bundle;
     SurfaceView surfaceView;
-    String lookType;
+    static String lookType;
     static byte[] buffer;
     static URI uri;
     static Buffer buffer1,bufferToFilament,b;
@@ -89,11 +89,11 @@ public class CreateLookFragment extends Fragment {
     int a=0;
 
     public CreateLookFragment(String type, Fragment fragment, UserInformation userInformation, Bundle bundle, String lookType) {
-        this.type = type;
+        CreateLookFragment.type = type;
         this.fragment = fragment;
         CreateLookFragment.userInformation = userInformation;
         this.bundle = bundle;
-        this.lookType = lookType;
+        CreateLookFragment.lookType = lookType;
     }
 
     public static CreateLookFragment newInstance(String type, Fragment fragment, UserInformation userInformation, Bundle bundle, String lookType) {
@@ -512,7 +512,7 @@ public class CreateLookFragment extends Fragment {
 
     public static void sentToViewingFrag(String type, Fragment fragment, UserInformation userInformation, Bundle bundle, Activity activity){
         if(loadValue==0){
-            RecentMethods.setCurrentFragment(ViewingClothesWardrobe.newInstance(type,fragment,userInformation,bundle), activity);
+            RecentMethods.setCurrentFragment(ViewingClothesWardrobe.newInstance(type,CreateLookFragment.newInstance(type, fragment, userInformation, bundle,lookType),userInformation,bundle), activity);
         }
     }
 

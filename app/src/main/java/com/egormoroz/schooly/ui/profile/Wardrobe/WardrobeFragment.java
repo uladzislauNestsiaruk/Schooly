@@ -104,7 +104,7 @@ public class WardrobeFragment extends Fragment {
     static ArrayList<Buffer> buffers;
     static byte[] buffer;
     static URI uri;
-    static Buffer buffer1,bufferToFilament,b;
+    static Buffer bufferToFilament,b;
     static FilamentModel filamentModel;
     static ArrayList<Clothes> clothesList=new ArrayList<>();
     static ArrayList<String> clothesUid=new ArrayList<>();
@@ -131,6 +131,7 @@ public class WardrobeFragment extends Fragment {
         bundle.putString("EDIT_WARDROBE_TAG", searchText.getText().toString().trim());
         bundle.putInt("TAB_INT_WARDROBE", tabLayoutPosition);
         bundle.putSerializable("CLOTHESUID", clothesUid);
+        Log.d("####", "q  "+clothesList.size());
         bundle.putSerializable("ALLLOADCLOTHESLIST", clothesList);
     }
 
@@ -144,6 +145,7 @@ public class WardrobeFragment extends Fragment {
         lockableNestedScrollView=view.findViewById(R.id.lockableNestedScrollView);
         if(bundle.getSerializable("ALLLOADCLOTHESLIST")!=null){
             clothesList= (ArrayList<Clothes>) bundle.getSerializable("ALLLOADCLOTHESLIST");
+            Log.d("####", "u "+clothesList.size());
         }
         itemClickListener=new WardrodeClothesAdapter.ItemClickListener() {
             @Override
@@ -422,6 +424,7 @@ public class WardrobeFragment extends Fragment {
         } else{
             for(int i=0;i<clothesList.size();i++ ){
                 Clothes clothes=clothesList.get(i);
+                Log.d("###",clothes.getClothesTitle());
                 if(clothesUid.contains(clothes.getUid())&&clothes.getBuffer()!=null){
                     filamentModel.populateScene(clothes.getBuffer(), clothes);
                     if(a ==clothesUid.size()-1){

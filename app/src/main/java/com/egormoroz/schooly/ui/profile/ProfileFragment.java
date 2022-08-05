@@ -172,7 +172,6 @@ public class ProfileFragment extends Fragment {
                 }
             });
         }
-        bundle.putSerializable("ALLLOADCLOTHESLIST", clothesList);
     }
 
     public ProfileFragment(String type, String sendNick,Fragment fragment,UserInformation userInformation,Bundle bundle) {

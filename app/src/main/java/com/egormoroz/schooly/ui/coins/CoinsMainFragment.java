@@ -95,8 +95,8 @@ public class CoinsMainFragment extends Fragment {
         String uid9=firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").push().getKey();
         String uid10=firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").push().getKey();
 //        firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").child(uid8)
-//                .setValue(new Clothes("clothes", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fdull%20purple%20shorts.png?alt=media&token=1906658c-26ae-4720-873d-89accf00dd7f"
-//                , 50, "dill purple shorts", 0, 0, "Sholly", "coin", "", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Fdill%20purple%20shorts.glb?alt=media&token=c5c2189a-f80f-46df-bcb4-40b331389ccd",
+//                .setValue(new Clothes("clothes", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fgrount%20short.png?alt=media&token=200478d6-56a7-462c-a296-f880f2af84c4"
+//                , 60, "ground shorts", 0, 0, "Sholly", "coin", "", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Fground%20shorts.glb?alt=media&token=e2ed65b6-5c3a-4da5-8858-d36740c5ba87",
 //                        0, "leg", uid8, "no",buffer , x1,y1,z1,transformRatio1));
 //        firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").child(uid9)
 //                .setValue(new Clothes("clothes", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fdill%20green%20shorts.png?alt=media&token=c0653015-fe13-43a3-a3d9-fa93dbdecc83"

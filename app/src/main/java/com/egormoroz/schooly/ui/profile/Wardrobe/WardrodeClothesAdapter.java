@@ -1,6 +1,7 @@
 package com.egormoroz.schooly.ui.profile.Wardrobe;
 
 import android.graphics.Rect;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -63,34 +64,11 @@ public class WardrodeClothesAdapter extends RecyclerView.Adapter<WardrodeClothes
         holder.clothesImage.setVisibility(View.VISIBLE);
         holder.creator.setText(clothes.getCreator());
         Picasso.get().load(clothes.getClothesImage()).into(holder.clothesImage);
-//        firebaseModel.getUsersReference().child(nick).child("lookClothes").addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                for(DataSnapshot snap:dataSnapshot.getChildren()){
-//                    Clothes clothes1=new Clothes();
-//                    clothes=snap.getValue(Clothes.class);
-//                    if(clothes.getUid().equals(clothes1.getUid())){
-//                        holder.activeFittingClothes.setVisibility(View.VISIBLE);
-//                        holder.fittingClothes.setVisibility(View.GONE);
-//                    }else {
-//                        holder.fittingClothes.setVisibility(View.VISIBLE);
-//                        holder.activeFittingClothes.setVisibility(View.GONE);
-//                    }
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//            }
-//        });
         holder.fittingClothes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!fragment.equals("tryOn")){
-                    onClothesClick.onItemClick(clothesArrayListWardrobe.get(holder.getAdapterPosition()),"tryOn",fragment);
-                    trueClothes=clothesArrayListWardrobe.get(holder.getAdapterPosition());
-                }
+                onClothesClick.onItemClick(clothesArrayListWardrobe.get(holder.getAdapterPosition()),"tryOn",fragment);
+                trueClothes=clothesArrayListWardrobe.get(holder.getAdapterPosition());
             }
         });
         holder.itemView.setOnClickListener(new View.OnClickListener() {
