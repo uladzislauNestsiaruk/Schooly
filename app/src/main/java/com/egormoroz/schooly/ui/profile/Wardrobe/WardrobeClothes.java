@@ -76,14 +76,14 @@ public class WardrobeClothes extends Fragment {
             @Override
             public void onItemClick(Clothes clothes,String type,String fragmentString) {
                 if(type.equals("view")){
-                    RecentMethods.setCurrentFragment(ViewingClothesWardrobe.newInstance(type,fragment,userInformation,bundle), getActivity());
+                    WardrobeFragment.sentToViewingFrag(type,fragment,userInformation,bundle, getActivity());
                 }else{
                     if (fragmentString.equals("wardrobe")){
-                        WardrobeFragment.makeClothesInvisible(clothes);
+                        WardrobeFragment.checkOnTryOn(clothes);
                     }else if(fragmentString.equals("createClothes")){
-                        CreateLookFragment.makeClothesInvisible1(clothes);
+                        CreateLookFragment.checkOnTryOn(clothes);
                     }else if(fragmentString.equals("tryOn")){
-                        FittingFragment.makeClothesInvisible(clothes);
+                        FittingFragment.checkOnTryOn(clothes);
                     }
                 }
             }
@@ -120,7 +120,6 @@ public class WardrobeClothes extends Fragment {
                     }else {
                         Collections.reverse(sortClothesArrayListWardrobe);
                         WardrodeClothesAdapter newClothesAdapter = new WardrodeClothesAdapter(sortClothesArrayListWardrobe, itemClickListener,userInformation,fragmentString);
-                        wardrobeRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
                         wardrobeRecyclerView.setAdapter(newClothesAdapter);
                     }
                 }
@@ -146,7 +145,6 @@ public class WardrobeClothes extends Fragment {
             }else {
                 Collections.reverse(sortClothesArrayListWardrobe);
                 WardrodeClothesAdapter newClothesAdapter = new WardrodeClothesAdapter(sortClothesArrayListWardrobe, itemClickListener,userInformation,fragmentString);
-                wardrobeRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
                 wardrobeRecyclerView.setAdapter(newClothesAdapter);
             }
         }

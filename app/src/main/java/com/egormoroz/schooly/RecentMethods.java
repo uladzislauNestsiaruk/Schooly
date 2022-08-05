@@ -1579,4 +1579,24 @@ public class RecentMethods {
             }
         });
     }
+
+    public static void getMyLookClothesOnce(String nick, FirebaseModel firebaseModel, Callbacks.getLookClothes callback){
+        firebaseModel.initAll();
+        firebaseModel.getUsersReference().child(nick).child("lookClothes")
+                .get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DataSnapshot> task) {
+                        if(task.isSuccessful()){
+                            DataSnapshot dataSnapshot=task.getResult();
+                            ArrayList<Clothes> clothesArrayList=new ArrayList<>();
+                            for(DataSnapshot snap:dataSnapshot.getChildren()){
+                                Clothes clothes=new Clothes();
+                                clothes=snap.getValue(Clothes.class);
+                                clothesArrayList.add(clothes);
+                            }
+                            callback.getLookClothes(clothesArrayList);
+                        }
+                    }
+                });
+    }
 }
