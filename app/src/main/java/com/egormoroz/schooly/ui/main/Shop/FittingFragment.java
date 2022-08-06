@@ -439,10 +439,16 @@ public class FittingFragment extends Fragment {
                                     }
                                 });
                             }else{
+                                clothesUid.add(clothes.getUid());
                                 filamentModel.setMask(clothes);
+                                clothesList.add(clothes);
                             }
-                        }else if(i==clothesArrayList.size()-1){
-                            loadValue=0;
+                        }else{
+                            if(i==clothesArrayList.size()-1) {
+                            loadValue = 0;
+                        }
+                            clothesUid.add(clothes.getUid());
+                            clothesList.add(clothes);
                         }
                     }
                 }
@@ -480,8 +486,16 @@ public class FittingFragment extends Fragment {
                             if(i==clothesUid.size()-1) {
                                 loadValue = 0;
                             }
+                            if (clothesUid.contains(clothes.getUid())){
+                                a++;
+                            }
                             Log.d("####", "vv  "+clothesUid.size());
                         }
+                    }else{
+                        if(i==clothesUid.size()-1) {
+                            loadValue = 0;
+                        }
+                        Log.d("####", "vv1  "+clothesUid.size());
                     }
                 }else{
                     if(i==clothesUid.size()-1) {
@@ -497,6 +511,7 @@ public class FittingFragment extends Fragment {
 
     public static void tryOnClothes(Clothes clothes,Clothes maskClothes){
         int a=0;
+        loadValue++;
         if(clothesList.size()!=0){
             for(int i=0;i<clothesList.size();i++){
                 Clothes clothes1=clothesList.get(i);
@@ -536,7 +551,6 @@ public class FittingFragment extends Fragment {
     public static void checkOnTryOn(Clothes clothes){
         Log.d("####", "a   "+loadValue);
         if(loadValue==0){
-            loadValue++;
             Log.d("####", "b   "+loadValue);
             makeClothesInvisible(clothes);
         }
