@@ -69,7 +69,7 @@ public class NewsFragment extends Fragment {
 
         viewPager2 = root.findViewById(R.id.picturenewspager);
         ref = FirebaseDatabase.getInstance().getReference("news");
-        viewPager2.setAdapter(new NewsAdapter(userInformation.getLooks(), userInformation, bundle,NewsFragment.newInstance(userInformation, bundle)));
+        viewPager2.setAdapter(new NewsAdapter(userInformation.getLooks(), userInformation, bundle,NewsFragment.newInstance(userInformation, bundle),getActivity()));
 
 //        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
 //            @Override

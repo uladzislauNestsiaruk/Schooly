@@ -1,13 +1,20 @@
 package com.egormoroz.schooly.ui.profile;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.PixelCopy;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -58,6 +65,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 import java.util.function.Consumer;
+
+import javax.security.auth.callback.Callback;
 
 public class ViewingLookFragment extends Fragment {
 
@@ -592,7 +601,21 @@ public class ViewingLookFragment extends Fragment {
         linearInstagram.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //getBitmapFormView();
+                Uri backgroundAssetUri = Uri.parse("your-image-asset-uri-goes-here");
+                String sourceApplication = "com.egormoroz.schooly";
 
+
+                Intent intent = new Intent("com.instagram.share.ADD_TO_STORY");
+
+                intent.setDataAndType(backgroundAssetUri, "image/*");
+                intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+
+                Activity activity = getActivity();
+                if (activity.getPackageManager().resolveActivity(intent, 0) != null) {
+                    activity.startActivityForResult(intent, 0);
+                }
             }
         });
         itemClickListener=new SendLookAdapter.ItemClickListener() {
@@ -651,6 +674,26 @@ public class ViewingLookFragment extends Fragment {
         initUserEnter();
 
         bottomSheetDialog.show();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public static void getBitmapFormView(View view, Activity activity, Callback callback) {
+        Bitmap bitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
+
+        int[] locations = new int[2];
+        view.getLocationInWindow(locations);
+        Rect rect = new Rect(locations[0], locations[1], locations[0] + view.getWidth(), locations[1] + view.getHeight());
+
+
+        PixelCopy.request(activity.getWindow(), rect, bitmap, copyResult -> {
+            if (copyResult == PixelCopy.SUCCESS) {
+                callback.onResult(bitmap);
+            }
+        }, new Handler(Looper.getMainLooper()));
+    }
+
+    public interface Callback<Bitmap> {
+        void onResult(Bitmap bitmap);
     }
 
     public void initUserEnter() {

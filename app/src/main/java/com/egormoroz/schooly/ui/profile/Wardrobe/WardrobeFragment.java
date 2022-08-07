@@ -2,6 +2,7 @@ package com.egormoroz.schooly.ui.profile.Wardrobe;
 
 import android.app.Activity;
 import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -48,6 +49,7 @@ import com.google.firebase.database.DataSnapshot;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -372,6 +374,7 @@ public class WardrobeFragment extends Fragment {
             }
         });
     }
+
 
 
     public class FragmentAdapter extends FragmentStateAdapter {

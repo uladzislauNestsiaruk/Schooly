@@ -1,20 +1,33 @@
 package com.egormoroz.schooly.ui.news;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Rect;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
+import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.PixelCopy;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -46,6 +59,10 @@ import com.squareup.picasso.Picasso;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileDescriptor;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -53,8 +70,13 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -79,6 +101,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
             ,userName,otherUserNickString,editGetText,nick;
     SendLookAdapter.ItemClickListener itemClickListener;
     ConstituentsAdapter.ItemClickListener itemClickListenerClothes;
+    LinearLayout linearElse,linearTelegram,linearInstagram;
     ComplainAdapter.ItemClickListener itemClickListenerComplain;
     RelativeLayout sendReason;
     ArrayList<Clothes> lookClothesArrayList;
@@ -90,13 +113,15 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
     static ArrayList<Clothes> clothesList=new ArrayList<>();
     static ArrayList<String> clothesUid=new ArrayList<>();
     Fragment fragment;
+    Activity activity;
 
 
-    public NewsAdapter(List<NewsItem> newsList,UserInformation userInformation,Bundle bundle,Fragment fragment) {
+    public NewsAdapter(List<NewsItem> newsList,UserInformation userInformation,Bundle bundle,Fragment fragment,Activity activity) {
         this.newsList = newsList;
         this.userInformation=userInformation;
         this.bundle=bundle;
         this.fragment=fragment;
+        this.activity=activity;
     }
 
     @NonNull
@@ -121,11 +146,11 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
                 ArrayList<Buffer> buffers=new ArrayList<>();
                 buffers.add(bufferToFilament);
                 bundle.putSerializable("CHARACTERMODEL",buffers);
-                //filamentModel.initFilament(holder.surfaceView,bufferToFilament,true,null,"regularRender",true);
+                filamentModel.initFilament(holder.surfaceView,bufferToFilament,true,null,"regularRender",true);
             }else{
                 ArrayList<Buffer> buffers= (ArrayList<Buffer>) bundle.getSerializable("CHARACTERMODEL");
                 Buffer buffer3=buffers.get(0);
-                //filamentModel.initFilament(holder.surfaceView,buffer3,true,null,"regularRender",true);
+                filamentModel.initFilament(holder.surfaceView,buffer3,true,null,"regularRender",true);
             }
         } catch (ExecutionException e) {
             e.printStackTrace();
@@ -135,7 +160,11 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
 //            e.printStackTrace();
 //        } catch (URISyntaxException e) {
 //            e.printStackTrace();
-       }
+       } catch (IOException e) {
+            e.printStackTrace();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
         holder.setIsRecyclable(false);
         holder.like_count.setText(newsItem.getLikes_count());
         holder.description.setText(newsItem.getItem_description());
@@ -187,6 +216,12 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
         });
 
 
+        holder.send.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showBottomSheetDialog(holder.itemView,holder.surfaceView);
+            }
+        });
         holder.comment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -202,14 +237,15 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
 
     class ImageViewHolder extends RecyclerView.ViewHolder {
 
-        ImageView newsImage, like, comment;
+        ImageView newsImage, like, comment,send;
         TextView description, like_count;
-        //SurfaceView surfaceView;
+        SurfaceView surfaceView;
 
         public ImageViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            //surfaceView=itemView.findViewById(R.id.surfaceView);
+            surfaceView=itemView.findViewById(R.id.surfaceView);
+            send=itemView.findViewById(R.id.send);
             like = itemView.findViewById(R.id.like);
             description = itemView.findViewById(R.id.description);
             like_count = itemView.findViewById(R.id.likesCount);
@@ -293,10 +329,10 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
                     lookClothesArrayList=clothesArrayList;
                     for(int i=0;i<clothesArrayList.size();i++){
                         Clothes clothes=clothesArrayList.get(i);
-//                        TaskRunner taskRunner=new TaskRunner();
-//                        taskRunner.executeAsync(new LongRunningTask(clothes), (data) -> {
-//                            filamentModel.populateScene(data.getBuffer(), data);
-//                        });
+                        TaskRunner taskRunner=new TaskRunner();
+                        taskRunner.executeAsync(new LongRunningTask(clothes), (data) -> {
+                            filamentModel.populateScene(data.getBuffer(), data);
+                        });
                     }
                 }
             });
@@ -394,6 +430,272 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
         };
 
         bottomSheetDialog.show();
+    }
+
+    private void showBottomSheetDialog(View view,SurfaceView surfaceView) {
+
+        final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(view.getContext());
+        bottomSheetDialog.setContentView(R.layout.bottom_sheet_dialog_layout);
+
+        editText=bottomSheetDialog.findViewById(R.id.searchuser);
+        recyclerView=bottomSheetDialog.findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
+        emptyList=bottomSheetDialog.findViewById(R.id.emptySubscribersList);
+        linearElse=bottomSheetDialog.findViewById(R.id.linearElse);
+        linearTelegram=bottomSheetDialog.findViewById(R.id.linearTelegram);
+        linearInstagram=bottomSheetDialog.findViewById(R.id.linearInstagram);
+        messageEdit=bottomSheetDialog.findViewById(R.id.message);
+
+        linearElse.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        linearTelegram.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+        linearInstagram.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onClick(View v) {
+                getBitmapFormView(surfaceView, activity, new Callback<Bitmap>() {
+                            @Override
+                            public void onResult1(Bitmap bitmap) {
+                                Uri backgroundAssetUri = getImageUri(activity, bitmap);
+                                String sourceApplication = "com.egormoroz.schooly";
+
+
+                                Intent intent = new Intent("com.instagram.share.ADD_TO_STORY");
+
+                                intent.setDataAndType(backgroundAssetUri, "image/*");
+                                intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+                                if (activity.getPackageManager().resolveActivity(intent, 0) != null) {
+                                    activity.startActivityForResult(intent, 0);
+                                }
+                            }
+                        });
+            }
+        });
+        itemClickListener=new SendLookAdapter.ItemClickListener() {
+            @Override
+            public void onItemClick(String otherUserNick, String type) {
+                if(type.equals("send")){
+                    String messageText = messageEdit.getText().toString();
+
+                    String messageSenderRef = otherUserNick + "/Chats/" + userInformation.getNick() + "/Messages";
+                    String messageReceiverRef = userInformation.getNick()  + "/Chats/" + otherUserNick+ "/Messages";
+                    otherUserNickString=otherUserNick;
+
+                    DatabaseReference userMessageKeyRef = firebaseModel.getUsersReference().child(userInformation.getNick() ).child("Chats").child(otherUserNick).child("Messages").push();
+                    String messagePushID = userMessageKeyRef.getKey();
+
+                    Map<String, String> messageTextBody = new HashMap<>();
+                    messageTextBody.put("message", messageText);
+                    messageTextBody.put("type", "text");
+                    messageTextBody.put("from", userInformation.getNick() );
+                    messageTextBody.put("to", otherUserNick);
+                    messageTextBody.put("time", RecentMethods.getCurrentTime());
+                    messageTextBody.put("messageID", messagePushID);
+                    addLastMessage("text", messageText);
+
+                    Map<String, Object> messageBodyDetails = new HashMap<String, Object>();
+                    messageBodyDetails.put(messageSenderRef + "/" + messagePushID, messageTextBody);
+                    messageBodyDetails.put(messageReceiverRef + "/" + messagePushID, messageTextBody);
+                }else {
+                    Log.d("####", type);
+                }
+            }
+        };
+        if(userInformation.getSubscription()==null){
+            RecentMethods.getSubscriptionList(userInformation.getNick(), firebaseModel, new Callbacks.getFriendsList() {
+                @Override
+                public void getFriendsList(ArrayList<Subscriber> friends) {
+                    if (friends.size()==0){
+                        emptyList.setVisibility(View.VISIBLE);
+                        recyclerView.setVisibility(View.GONE);
+                    }else {
+                        SendLookAdapter sendLookAdapter = new SendLookAdapter(friends,itemClickListener);
+                        recyclerView.setAdapter(sendLookAdapter);
+                    }
+                }
+            });
+        }else {
+            if (userInformation.getSubscription().size()==0){
+                emptyList.setVisibility(View.VISIBLE);
+                recyclerView.setVisibility(View.GONE);
+            }else {
+                SendLookAdapter sendLookAdapter = new SendLookAdapter(userInformation.getSubscription(),itemClickListener);
+                recyclerView.setAdapter(sendLookAdapter);
+            }
+        }
+
+        initUserEnter();
+
+        bottomSheetDialog.show();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public static void getBitmapFormView(View view, Activity activity, Callback<Bitmap> callback) {
+        Bitmap bitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
+
+        int[] locations = new int[2];
+        view.getLocationInWindow(locations);
+        Rect rect = new Rect(locations[0], locations[1], locations[0] + view.getWidth(), locations[1] + view.getHeight());
+
+
+        PixelCopy.request(activity.getWindow(), rect, bitmap, copyResult -> {
+            if (copyResult == PixelCopy.SUCCESS) {
+                callback.onResult1(bitmap);
+            }
+        }, new Handler(Looper.getMainLooper()));
+    }
+
+    public Uri getImageUri(Context inContext, Bitmap inImage) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
+        return Uri.parse(path);
+    }
+
+
+    public interface Callback<Bitmap> {
+        void onResult1(Bitmap bitmap);
+    }
+
+    public void initUserEnter() {
+        editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                userName = String.valueOf(editText.getText()).trim();
+                userName = userName.toLowerCase();
+                if(userInformation.getSubscription()==null){
+                    Query query = firebaseModel.getUsersReference().child(userInformation.getNick()).child("subscription");
+                    query.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            userFromBase = new ArrayList<>();
+                            for (DataSnapshot snap : snapshot.getChildren()) {
+                                Subscriber subscriber = new Subscriber();
+                                subscriber.setSub(snap.getValue(String.class));
+                                String nick = subscriber.getSub();
+                                int valueLetters = userName.length();
+                                nick = nick.toLowerCase();
+                                if (nick.length() < valueLetters) {
+                                    if (nick.equals(userName))
+                                        userFromBase.add(subscriber);
+                                } else {
+                                    nick = nick.substring(0, valueLetters);
+                                    if (nick.equals(userName))
+                                        userFromBase.add(subscriber);
+                                }
+
+                            }
+                            if(userFromBase.size()==0){
+                                emptyList.setVisibility(View.VISIBLE);
+                                recyclerView.setVisibility(View.GONE);
+                            }else {
+                                emptyList.setVisibility(View.GONE);
+                                recyclerView.setVisibility(View.VISIBLE);
+                                SendLookAdapter sendLookAdapter = new SendLookAdapter(userFromBase,itemClickListener);
+                                recyclerView.setAdapter(sendLookAdapter);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+                }else {
+                    userFromBase=new ArrayList<>();
+                    for (int s=0;s<userInformation.getSubscription().size();s++) {
+                        Subscriber subscriber = userInformation.getSubscription().get(s);
+                        String nick = subscriber.getSub();
+                        int valueLetters = userName.length();
+                        nick = nick.toLowerCase();
+                        if (nick.length() < valueLetters) {
+                            if (nick.equals(userName))
+                                userFromBase.add(subscriber);
+                        } else {
+                            nick = nick.substring(0, valueLetters);
+                            if (nick.equals(userName))
+                                userFromBase.add(subscriber);
+                        }
+
+                    }
+                    if(userFromBase.size()==0){
+                        emptyList.setVisibility(View.VISIBLE);
+                        recyclerView.setVisibility(View.GONE);
+                    }else {
+                        emptyList.setVisibility(View.GONE);
+                        recyclerView.setVisibility(View.VISIBLE);
+                        SendLookAdapter sendLookAdapter = new SendLookAdapter(userFromBase,itemClickListener);
+                        recyclerView.setAdapter(sendLookAdapter);
+                    }
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+            }
+        });
+    }
+
+    private void addLastMessage(String type, String Message){
+        switch (type) {
+            case "text":
+                addType("text");
+                firebaseModel.getUsersReference().child(nick).child("Chats").child(otherUserNickString).child("LastMessage").setValue(Message);
+                firebaseModel.getUsersReference().child(otherUserNickString).child("Chats").child(nick).child("LastMessage").setValue(Message);
+                break;
+            case "voice":
+                addType("voice");
+                firebaseModel.getUsersReference().child(nick).child("Chats").child(otherUserNickString).child("LastMessage").setValue("Голосовое сообщение");
+                firebaseModel.getUsersReference().child(otherUserNickString).child("Chats").child(nick).child("LastMessage").setValue("Голосовое сообщение");
+                break;
+            case "image":
+                firebaseModel.getUsersReference().child(nick).child("Chats").child(otherUserNickString).child("LastMessage").setValue("Фотография");
+                firebaseModel.getUsersReference().child(otherUserNickString).child("Chats").child(nick).child("LastMessage").setValue("Фотография");
+                addType("image");
+                break;
+        }
+        Calendar calendar = Calendar.getInstance();
+        firebaseModel.getUsersReference().child(nick).child("Chats").child(otherUserNickString).child("LastTime").setValue(RecentMethods.getCurrentTime());
+        firebaseModel.getUsersReference().child(otherUserNickString).child("Chats").child(nick).child("LastTime").setValue(RecentMethods.getCurrentTime());
+        firebaseModel.getUsersReference().child(nick).child("Chats").child(otherUserNickString).child("TimeMill").setValue(calendar.getTimeInMillis() * -1);
+        firebaseModel.getUsersReference().child(otherUserNickString).child("Chats").child(nick).child("TimeMill").setValue(calendar.getTimeInMillis() * -1);
+    }
+
+    public void addType(String type) {
+        final long[] value = new long[1];
+        DatabaseReference ref = firebaseModel.getUsersReference().child(otherUserNickString).child("Chats").child(nick).child(type);
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()){
+                    value[0] = (long) dataSnapshot.getValue();
+                    value[0] = value[0] + 1;
+                    dataSnapshot.getRef().setValue(value[0]);}
+                else dataSnapshot.getRef().setValue(1);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+
+
+        });
     }
 
     static class LongRunningTask implements Callable<Clothes> {

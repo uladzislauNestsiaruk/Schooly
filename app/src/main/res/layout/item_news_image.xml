@@ -65,16 +65,16 @@
 
     </RelativeLayout>
 
-<!--    <SurfaceView-->
-<!--        android:id="@+id/surfaceView"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent"-->
-<!--        android:layout_above="@+id/comment"-->
-<!--        android:layout_below="@+id/nick"-->
-<!--        android:layout_marginStart="24dp"-->
-<!--        android:layout_marginTop="16dp"-->
-<!--        android:layout_marginEnd="24dp"-->
-<!--        android:layout_marginBottom="-100dp" />-->
+        <SurfaceView
+            android:id="@+id/surfaceView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/comment"
+            android:layout_below="@+id/nick"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="-100dp" />
 
     <RelativeLayout
         android:id="@+id/relativeLike"

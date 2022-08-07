@@ -1,17 +1,25 @@
 package com.egormoroz.schooly.ui.main.MyClothes;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.ClipData;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.PixelCopy;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -23,6 +31,7 @@ import android.widget.TextView;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -38,6 +47,7 @@ import com.egormoroz.schooly.ui.main.Shop.Clothes;
 import com.egormoroz.schooly.ui.main.Shop.NewClothesAdapter;
 import com.egormoroz.schooly.ui.main.Shop.ViewingClothes;
 import com.egormoroz.schooly.ui.main.UserInformation;
+import com.egormoroz.schooly.ui.news.NewsAdapter;
 import com.egormoroz.schooly.ui.profile.ProfileFragment;
 import com.egormoroz.schooly.ui.profile.SendLookAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -51,6 +61,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -363,28 +374,27 @@ public class ViewingMyClothes extends Fragment {
             }
         });
         linearInstagram.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
-                try {
-                    savedImageURL = MediaStore.Images.Media.insertImage(
-                            getActivity().getContentResolver(),
-                            clothesViewing.getClothesImage(),
-                            "My image",
-                            "My super image description"
-                    );
+                getBitmapFormView(clothesImageCV, getActivity(), new NewsAdapter.Callback<Bitmap>() {
+                    @Override
+                    public void onResult1(Bitmap bitmap) {
+                        Uri backgroundAssetUri = getImageUri(getActivity(), bitmap);
+                        String sourceApplication = "com.egormoroz.schooly";
 
-                    Uri savedImageURI = Uri.parse(savedImageURL);
 
-                    ClipData clipData = ClipData.newRawUri("Image", savedImageURI);
-                    Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
-                    shareIntent.setType("image/*");
-                    shareIntent.putExtra(Intent.EXTRA_TITLE, "YOUR TEXT HERE");
-                    shareIntent.setPackage("com.instagram.android");
-                    shareIntent.setClipData(clipData);
-                    startActivity(shareIntent);
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
+                        Intent intent = new Intent("com.instagram.share.ADD_TO_STORY");
+                        intent.putExtra("source_application", sourceApplication);
+
+                        intent.setDataAndType(backgroundAssetUri, "image/*");
+                        intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+                        if (getActivity().getPackageManager().resolveActivity(intent, 0) != null) {
+                            getActivity().startActivityForResult(intent, 0);
+                        }
+                    }
+                });
             }
         });
         itemClickListener=new SendLookAdapter.ItemClickListener() {
@@ -443,6 +453,29 @@ public class ViewingMyClothes extends Fragment {
         initUserEnter();
 
         bottomSheetDialog.show();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public static void getBitmapFormView(View view, Activity activity, NewsAdapter.Callback<Bitmap> callback) {
+        Bitmap bitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
+
+        int[] locations = new int[2];
+        view.getLocationInWindow(locations);
+        Rect rect = new Rect(locations[0], locations[1], locations[0] + view.getWidth(), locations[1] + view.getHeight());
+
+
+        PixelCopy.request(activity.getWindow(), rect, bitmap, copyResult -> {
+            if (copyResult == PixelCopy.SUCCESS) {
+                callback.onResult1(bitmap);
+            }
+        }, new Handler(Looper.getMainLooper()));
+    }
+
+    public Uri getImageUri(Context inContext, Bitmap inImage) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
+        return Uri.parse(path);
     }
 
     public void initUserEnter() {
