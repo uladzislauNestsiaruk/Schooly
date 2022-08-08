@@ -38,6 +38,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FirebaseModel;
+import com.egormoroz.schooly.InstagramShareFragment;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.Subscriber;
@@ -377,24 +378,9 @@ public class ViewingMyClothes extends Fragment {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
-                getBitmapFormView(clothesImageCV, getActivity(), new NewsAdapter.Callback<Bitmap>() {
-                    @Override
-                    public void onResult1(Bitmap bitmap) {
-                        Uri backgroundAssetUri = getImageUri(getActivity(), bitmap);
-                        String sourceApplication = "com.egormoroz.schooly";
+                RecentMethods.setCurrentFragment(InstagramShareFragment.newInstance(ViewingMyClothes.newInstance(fragment, userInformation, bundle), userInformation, bundle, clothesViewing), getActivity());
+                bottomSheetDialog.dismiss();
 
-
-                        Intent intent = new Intent("com.instagram.share.ADD_TO_STORY");
-                        intent.putExtra("source_application", sourceApplication);
-
-                        intent.setDataAndType(backgroundAssetUri, "image/*");
-                        intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-
-                        if (getActivity().getPackageManager().resolveActivity(intent, 0) != null) {
-                            getActivity().startActivityForResult(intent, 0);
-                        }
-                    }
-                });
             }
         });
         itemClickListener=new SendLookAdapter.ItemClickListener() {
@@ -453,29 +439,6 @@ public class ViewingMyClothes extends Fragment {
         initUserEnter();
 
         bottomSheetDialog.show();
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    public static void getBitmapFormView(View view, Activity activity, NewsAdapter.Callback<Bitmap> callback) {
-        Bitmap bitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
-
-        int[] locations = new int[2];
-        view.getLocationInWindow(locations);
-        Rect rect = new Rect(locations[0], locations[1], locations[0] + view.getWidth(), locations[1] + view.getHeight());
-
-
-        PixelCopy.request(activity.getWindow(), rect, bitmap, copyResult -> {
-            if (copyResult == PixelCopy.SUCCESS) {
-                callback.onResult1(bitmap);
-            }
-        }, new Handler(Looper.getMainLooper()));
-    }
-
-    public Uri getImageUri(Context inContext, Bitmap inImage) {
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
-        return Uri.parse(path);
     }
 
     public void initUserEnter() {

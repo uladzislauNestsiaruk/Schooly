@@ -149,7 +149,7 @@ public class ViewingClothesPopular extends Fragment {
             @Override
             public void handleOnBackPressed() {
 
-                RecentMethods.setCurrentFragment(ShopFragment.newInstance(userInformation,bundle,fragment), getActivity());
+                RecentMethods.setCurrentFragment(fragment, getActivity());
             }
         };
 
@@ -157,7 +157,7 @@ public class ViewingClothesPopular extends Fragment {
         backToShop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(ShopFragment.newInstance(userInformation,bundle,fragment), getActivity());
+                RecentMethods.setCurrentFragment(fragment, getActivity());
             }
         });
         PopularClothesAdapter.singeClothesInfo(new PopularClothesAdapter.ItemClickListener() {
