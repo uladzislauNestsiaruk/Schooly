@@ -425,31 +425,35 @@ public class FittingFragment extends Fragment {
             RecentMethods.getMyLookClothesOnce(nick, firebaseModel, new Callbacks.getLookClothes() {
                 @Override
                 public void getLookClothes(ArrayList<Clothes> clothesArrayList) {
-                    for(int i=0;i<clothesArrayList.size();i++){
-                        Clothes clothes=clothesArrayList.get(i);
-                        if(!clothes.getUid().equals(clothesFitting.getUid())){
-                            if(!clothes.getBodyType().equals(clothesFitting.getBodyType())){
-                                Log.d("#####", "11");
-                                TaskRunner taskRunner=new TaskRunner();
-                                int finalI = i;
-                                taskRunner.executeAsync(new LongRunningTask(clothes), (data) -> {
-                                    filamentModel.populateScene(data.getBuffer(), data);
-                                    if(finalI ==clothesArrayList.size()-1){
-                                        loadValue=0;
-                                    }
-                                });
+                    if(clothesArrayList.size()>0){
+                        for(int i=0;i<clothesArrayList.size();i++){
+                            Clothes clothes=clothesArrayList.get(i);
+                            if(!clothes.getUid().equals(clothesFitting.getUid())){
+                                if(!clothes.getBodyType().equals(clothesFitting.getBodyType())){
+                                    Log.d("#####", "11");
+                                    TaskRunner taskRunner=new TaskRunner();
+                                    int finalI = i;
+                                    taskRunner.executeAsync(new LongRunningTask(clothes), (data) -> {
+                                        filamentModel.populateScene(data.getBuffer(), data);
+                                        if(finalI ==clothesArrayList.size()-1){
+                                            loadValue=0;
+                                        }
+                                    });
+                                }else{
+                                    clothesUid.add(clothes.getUid());
+                                    filamentModel.setMask(clothes);
+                                    clothesList.add(clothes);
+                                }
                             }else{
+                                if(i==clothesArrayList.size()-1) {
+                                    loadValue = 0;
+                                }
                                 clothesUid.add(clothes.getUid());
-                                filamentModel.setMask(clothes);
                                 clothesList.add(clothes);
                             }
-                        }else{
-                            if(i==clothesArrayList.size()-1) {
-                            loadValue = 0;
                         }
-                            clothesUid.add(clothes.getUid());
-                            clothesList.add(clothes);
-                        }
+                    }else{
+                        loadValue=0;
                     }
                 }
             });

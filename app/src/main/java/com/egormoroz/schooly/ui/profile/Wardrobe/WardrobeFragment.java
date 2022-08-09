@@ -410,17 +410,21 @@ public class WardrobeFragment extends Fragment {
             RecentMethods.getMyLookClothesOnce(nick, firebaseModel, new Callbacks.getLookClothes() {
                 @Override
                 public void getLookClothes(ArrayList<Clothes> clothesArrayList) {
-                    for(int i=0;i<clothesArrayList.size();i++){
-                        Clothes clothes=clothesArrayList.get(i);
-                        TaskRunner taskRunner=new TaskRunner();
-                        int finalI = i;
-                        taskRunner.executeAsync(new LongRunningTask(clothes), (data) -> {
-                            filamentModel.populateScene(data.getBuffer(), data);
-                            if(finalI ==clothesArrayList.size()-1){
-                                loadValue=0;
-                                Log.d("####", "ss77 "+loadValue);
-                            }
-                        });
+                    if(clothesArrayList.size()>0){
+                        for(int i=0;i<clothesArrayList.size();i++){
+                            Clothes clothes=clothesArrayList.get(i);
+                            TaskRunner taskRunner=new TaskRunner();
+                            int finalI = i;
+                            taskRunner.executeAsync(new LongRunningTask(clothes), (data) -> {
+                                filamentModel.populateScene(data.getBuffer(), data);
+                                if(finalI ==clothesArrayList.size()-1){
+                                    loadValue=0;
+                                    Log.d("####", "ss77 "+loadValue);
+                                }
+                            });
+                        }
+                    }else{
+                        loadValue=0;
                     }
                 }
             });
