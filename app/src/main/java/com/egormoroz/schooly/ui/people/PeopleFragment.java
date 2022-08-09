@@ -88,7 +88,6 @@ public class PeopleFragment extends Fragment {
                 RecentMethods.setCurrentFragment(MainFragment.newInstance(userInformation, bundle), getActivity());
             }
         };
-
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback1);
         searchUser=view.findViewById(R.id.searchuser);
         userNotSearch=view.findViewById(R.id.notSearch);
@@ -310,30 +309,30 @@ public class PeopleFragment extends Fragment {
 
     public void loadRecommendations(){
         if(bundle.getSerializable("RECOMMENDATIONPEOPLELIST")==null){
-            RecomendationThread getRecThread = new RecomendationThread(nick, new Callbacks.getRecommendationsThread() {
-                @Override
-                public void getRecommendationsInterface(ArrayList<UserPeopleAdapter> recommendationsList) {
-                    RecomendationAdapter recomendationAdapter=new RecomendationAdapter(recommendationsList,userInformation);
-                    peopleRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
-                    peopleRecyclerView.setAdapter(recomendationAdapter);
-                    recommendationList=recommendationsList;
-                    RecomendationAdapter.ItemClickListener itemClickListener=new RecomendationAdapter.ItemClickListener() {
-                        @Override
-                        public void onItemClick(View view, int position, String avatar, String bio) {
-                            UserPeopleAdapter user = recomendationAdapter.getItem(position);
-                            userNameToProfile = user.getNick();
-                            if (userNameToProfile.equals(nick)) {
-                                RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback", nick, PeopleFragment.newInstance(userInformation,bundle),userInformation,bundle), getActivity());
+            RecomendationThread getRecThread = new RecomendationThread(nick, userInformation, new Callbacks.getRecommendationsThread() {
+                            @Override
+                            public void getRecommendationsInterface(ArrayList<UserPeopleAdapter> recommendationsList) {
+                                RecomendationAdapter recomendationAdapter=new RecomendationAdapter(recommendationsList,userInformation);
+                                peopleRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+                                peopleRecyclerView.setAdapter(recomendationAdapter);
+                                recommendationList=recommendationsList;
+                                RecomendationAdapter.ItemClickListener itemClickListener=new RecomendationAdapter.ItemClickListener() {
+                                    @Override
+                                    public void onItemClick(View view, int position, String avatar, String bio) {
+                                        UserPeopleAdapter user = recomendationAdapter.getItem(position);
+                                        userNameToProfile = user.getNick();
+                                        if (userNameToProfile.equals(nick)) {
+                                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback", nick, PeopleFragment.newInstance(userInformation,bundle),userInformation,bundle), getActivity());
+                                        }
+                                        else {
+                                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile, PeopleFragment.newInstance(userInformation,bundle),userInformation,bundle),
+                                                    getActivity());
+                                        }
+                                    }
+                                };
+                                recomendationAdapter.setClickListener(itemClickListener);
                             }
-                            else {
-                                RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile, PeopleFragment.newInstance(userInformation,bundle),userInformation,bundle),
-                                        getActivity());
-                            }
-                        }
-                    };
-                    recomendationAdapter.setClickListener(itemClickListener);
-                }
-            }, userInformation);
+                        });
         }else {
             recommendationList= (ArrayList<UserPeopleAdapter>) bundle.getSerializable("RECOMMENDATIONPEOPLELIST");
             RecomendationAdapter recomendationAdapter=new RecomendationAdapter(recommendationList,userInformation);

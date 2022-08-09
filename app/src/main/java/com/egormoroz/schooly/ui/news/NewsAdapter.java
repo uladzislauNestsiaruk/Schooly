@@ -86,20 +86,21 @@ import java.util.concurrent.Future;
 public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolder> {
 
     private List<NewsItem> newsList;
-    FirebaseModel firebaseModel = new FirebaseModel();
+    static FirebaseModel firebaseNewsModel = new FirebaseModel();
+    FirebaseModel DefaultDatabase = new FirebaseModel();
     long value;
-    UserInformation userInformation;
+    static UserInformation userInformation;
     Bundle bundle;
-    EditText editText,messageEdit,addDescriptionEdit;
+    static EditText editText,messageEdit,addDescriptionEdit;
     RecyclerView clothesCreatorsRecycler,complainRecycler;
-    RecyclerView recyclerView;
-    ArrayList<Subscriber> userFromBase;
-    TextView nickView,description,likesCount,lookPrice,lookPriceDollar,clothesCreator
+    static RecyclerView recyclerView;
+    static ArrayList<Subscriber> userFromBase;
+    static TextView nickView,description,likesCount,lookPrice,lookPriceDollar,clothesCreator
             ,emptyList,comments,sendComment,noComment,save,complain,complainOtherUserText
             ,reasonText;
-    String likesCountString,lookPriceString,lookPriceDollarString,reasonTextString,descriptionText
+    static String likesCountString,lookPriceString,lookPriceDollarString,reasonTextString,descriptionText
             ,userName,otherUserNickString,editGetText,nick;
-    SendLookAdapter.ItemClickListener itemClickListener;
+    static SendLookAdapter.ItemClickListener itemClickListener;
     ConstituentsAdapter.ItemClickListener itemClickListenerClothes;
     LinearLayout linearElse,linearTelegram,linearInstagram;
     ComplainAdapter.ItemClickListener itemClickListenerComplain;
@@ -122,12 +123,13 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
         this.bundle=bundle;
         this.fragment=fragment;
         this.activity=activity;
+        firebaseNewsModel.initNewsDatabase();
+        DefaultDatabase.initAll();
     }
 
     @NonNull
     @Override
     public ImageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        firebaseModel.initAll();
         return new ImageViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_news_image,
                 parent,
                 false));
@@ -168,7 +170,9 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
         holder.setIsRecyclable(false);
         holder.like_count.setText(newsItem.getLikes_count());
         holder.description.setText(newsItem.getItem_description());
-        Query likeref = firebaseModel.getUsersReference().child(nick).child("likedNews").child(newsItem.getNewsId());
+        firebaseNewsModel.initNewsDatabase();
+        Log.d("#####", "Database url" + firebaseNewsModel.getReference());
+        Query likeref = DefaultDatabase.getUsersReference().child(nick).child("likedNews").child(newsItem.getNewsId());
         likeref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -190,21 +194,24 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
             @Override
             public void onClick(View view) {
                 value = Long.parseLong(holder.like_count.getText().toString());
-                Query likeref = firebaseModel.getUsersReference().child(nick).child("likedNews").child(newsItem.getNewsId());
+                Log.d("#####", "Firebase : " + firebaseNewsModel.getReference() + "   Likes before " + value);
+                Query likeref = DefaultDatabase.getUsersReference().child(nick).child("likedNews").child(newsItem.getNewsId());
                 likeref.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         if (snapshot.exists()) {
                             value -= 1;
                             holder.like.setImageResource(R.drawable.ic_heart40dp);
-                            firebaseModel.getReference("users").child(nick).child("likedNews").child(newsItem.getNewsId()).removeValue();
+                            DefaultDatabase.getUsersReference().child(nick).child("likedNews").child(newsItem.getNewsId()).removeValue();
                         }
-                        else {
+                        else{
                             value += 1;
                             holder.like.setImageResource(R.drawable.ic_pressedheart40dp);
-                            firebaseModel.getReference("users").child(nick).child("likedNews").child(newsItem.getNewsId()).setValue("liked");
+                            DefaultDatabase.getUsersReference().child(nick).child("likedNews").child(newsItem.getNewsId()).setValue("liked");
                         }
-                        firebaseModel.getReference("news").child(newsItem.getNewsId()).child("likesCount").setValue(String.valueOf(value));
+                        Log.d("#####", "Firebase : " + firebaseNewsModel.getReference() + "   Likes " + value);
+                        holder.like_count.setText(String.valueOf(value));
+                        firebaseNewsModel.getReference().child(nick).child(newsItem.getNewsId()).child("likes_count").setValue(String.valueOf(value));
                     }
 
                     @Override
@@ -257,7 +264,8 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
 
         final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(v.getContext());
         bottomSheetDialog.setContentView(R.layout.bottom_sheet_dialog_comment);
-
+        FirebaseModel newsModel = new FirebaseModel();
+        newsModel.initNewsDatabase();
         editText=bottomSheetDialog.findViewById(R.id.commentEdit);
         recyclerView=bottomSheetDialog.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(v.getContext()));
@@ -284,11 +292,11 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
                     sendComment.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            String commentId=firebaseModel.getUsersReference().child(newsItem.getNick()).child("looks")
+                            String commentId=newsModel.getReference().child(newsItem.getNick())
                                     .child(newsItem.getNewsId()).child("comments").push().getKey();
-                            firebaseModel.getUsersReference().child(newsItem.getNick()).child("looks")
+                            newsModel.getReference().child(newsItem.getNick())
                                     .child(newsItem.getNewsId()).child("comments").child(commentId)
-                                    .setValue(new Comment(editText.getText().toString(), "0", commentId,RecentMethods.getCurrentTime(),nick,"image","comment"));
+                                    .setValue(new Comment(editText.getText().toString(), 0, commentId,RecentMethods.getCurrentTime(),nick,"image","comment"));
                             editText.getText().clear();
                             loadComments(newsItem,v);
                         }
@@ -306,7 +314,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
     }
 
     public void loadComments(NewsItem newsItem,View v){
-        RecentMethods.getCommentsList(newsItem.getNick(), newsItem.getNewsId(), firebaseModel, new Callbacks.getCommentsList() {
+        RecentMethods.getCommentsList(newsItem.getNick(), newsItem.getNewsId(), firebaseNewsModel, new Callbacks.getCommentsList() {
             @Override
             public void getCommentsList(ArrayList<Comment> comment) {
                 if(comment.size()==0){
@@ -323,7 +331,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
 
     public void loadLookClothes(NewsItem newsItem){
         if(clothesUid.size()==0) {
-            RecentMethods.getLookClothes(newsItem.getNick(), newsItem.getNewsId(), firebaseModel, new Callbacks.getLookClothes() {
+            RecentMethods.getLookClothes(newsItem.getNick(), newsItem.getNewsId(), firebaseNewsModel, new Callbacks.getLookClothes() {
                 @Override
                 public void getLookClothes(ArrayList<Clothes> clothesArrayList) {
                     lookClothesArrayList=clothesArrayList;
@@ -408,7 +416,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
         bottomSheetDialog.setContentView(R.layout.bottom_sheet_dialog_clothescreators);
         clothesCreatorsRecycler=bottomSheetDialog.findViewById(R.id.recyclerView);
         if(lookClothesArrayList.size()==0){
-            RecentMethods.getLookClothes(newsItem.getNick(), newsItem.getNewsId(), firebaseModel, new Callbacks.getLookClothes() {
+            RecentMethods.getLookClothes(newsItem.getNick(), newsItem.getNewsId(), firebaseNewsModel, new Callbacks.getLookClothes() {
                 @Override
                 public void getLookClothes(ArrayList<Clothes> clothesArrayList) {
                     ConstituentsAdapter constituentsAdapter=new ConstituentsAdapter(clothesArrayList,itemClickListenerClothes);
@@ -492,7 +500,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
                     String messageReceiverRef = userInformation.getNick()  + "/Chats/" + otherUserNick+ "/Messages";
                     otherUserNickString=otherUserNick;
 
-                    DatabaseReference userMessageKeyRef = firebaseModel.getUsersReference().child(userInformation.getNick() ).child("Chats").child(otherUserNick).child("Messages").push();
+                    DatabaseReference userMessageKeyRef = firebaseNewsModel.getUsersReference().child(userInformation.getNick() ).child("Chats").child(otherUserNick).child("Messages").push();
                     String messagePushID = userMessageKeyRef.getKey();
 
                     Map<String, String> messageTextBody = new HashMap<>();
@@ -513,7 +521,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
             }
         };
         if(userInformation.getSubscription()==null){
-            RecentMethods.getSubscriptionList(userInformation.getNick(), firebaseModel, new Callbacks.getFriendsList() {
+            RecentMethods.getSubscriptionList(userInformation.getNick(), firebaseNewsModel, new Callbacks.getFriendsList() {
                 @Override
                 public void getFriendsList(ArrayList<Subscriber> friends) {
                     if (friends.size()==0){
@@ -579,7 +587,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
                 userName = String.valueOf(editText.getText()).trim();
                 userName = userName.toLowerCase();
                 if(userInformation.getSubscription()==null){
-                    Query query = firebaseModel.getUsersReference().child(userInformation.getNick()).child("subscription");
+                    Query query = firebaseNewsModel.getUsersReference().child(userInformation.getNick()).child("subscription");
                     query.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -655,30 +663,30 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
         switch (type) {
             case "text":
                 addType("text");
-                firebaseModel.getUsersReference().child(nick).child("Chats").child(otherUserNickString).child("LastMessage").setValue(Message);
-                firebaseModel.getUsersReference().child(otherUserNickString).child("Chats").child(nick).child("LastMessage").setValue(Message);
+                firebaseNewsModel.getUsersReference().child(nick).child("Chats").child(otherUserNickString).child("LastMessage").setValue(Message);
+                firebaseNewsModel.getUsersReference().child(otherUserNickString).child("Chats").child(nick).child("LastMessage").setValue(Message);
                 break;
             case "voice":
                 addType("voice");
-                firebaseModel.getUsersReference().child(nick).child("Chats").child(otherUserNickString).child("LastMessage").setValue("Голосовое сообщение");
-                firebaseModel.getUsersReference().child(otherUserNickString).child("Chats").child(nick).child("LastMessage").setValue("Голосовое сообщение");
+                firebaseNewsModel.getUsersReference().child(nick).child("Chats").child(otherUserNickString).child("LastMessage").setValue("Голосовое сообщение");
+                firebaseNewsModel.getUsersReference().child(otherUserNickString).child("Chats").child(nick).child("LastMessage").setValue("Голосовое сообщение");
                 break;
             case "image":
-                firebaseModel.getUsersReference().child(nick).child("Chats").child(otherUserNickString).child("LastMessage").setValue("Фотография");
-                firebaseModel.getUsersReference().child(otherUserNickString).child("Chats").child(nick).child("LastMessage").setValue("Фотография");
+                firebaseNewsModel.getUsersReference().child(nick).child("Chats").child(otherUserNickString).child("LastMessage").setValue("Фотография");
+                firebaseNewsModel.getUsersReference().child(otherUserNickString).child("Chats").child(nick).child("LastMessage").setValue("Фотография");
                 addType("image");
                 break;
         }
         Calendar calendar = Calendar.getInstance();
-        firebaseModel.getUsersReference().child(nick).child("Chats").child(otherUserNickString).child("LastTime").setValue(RecentMethods.getCurrentTime());
-        firebaseModel.getUsersReference().child(otherUserNickString).child("Chats").child(nick).child("LastTime").setValue(RecentMethods.getCurrentTime());
-        firebaseModel.getUsersReference().child(nick).child("Chats").child(otherUserNickString).child("TimeMill").setValue(calendar.getTimeInMillis() * -1);
-        firebaseModel.getUsersReference().child(otherUserNickString).child("Chats").child(nick).child("TimeMill").setValue(calendar.getTimeInMillis() * -1);
+        firebaseNewsModel.getUsersReference().child(nick).child("Chats").child(otherUserNickString).child("LastTime").setValue(RecentMethods.getCurrentTime());
+        firebaseNewsModel.getUsersReference().child(otherUserNickString).child("Chats").child(nick).child("LastTime").setValue(RecentMethods.getCurrentTime());
+        firebaseNewsModel.getUsersReference().child(nick).child("Chats").child(otherUserNickString).child("TimeMill").setValue(calendar.getTimeInMillis() * -1);
+        firebaseNewsModel.getUsersReference().child(otherUserNickString).child("Chats").child(nick).child("TimeMill").setValue(calendar.getTimeInMillis() * -1);
     }
 
     public void addType(String type) {
         final long[] value = new long[1];
-        DatabaseReference ref = firebaseModel.getUsersReference().child(otherUserNickString).child("Chats").child(nick).child(type);
+        DatabaseReference ref = firebaseNewsModel.getUsersReference().child(otherUserNickString).child("Chats").child(nick).child(type);
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -709,6 +717,107 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
         public Clothes call() {
             return addModelInScene(clothes);
         }
+    }
+    public static void CommentReply(String commentId, String name){
+        editText.setHint("You replying to " + name + "\n");
+        editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                userName = String.valueOf(editText.getText()).trim();
+                userName = userName.toLowerCase();
+                if(userInformation.getSubscription()==null){
+                    Query query = firebaseNewsModel.getUsersReference().child(userInformation.getNick()).child("subscription");
+                    query.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            userFromBase = new ArrayList<>();
+                            for (DataSnapshot snap : snapshot.getChildren()) {
+                                Subscriber subscriber = new Subscriber();
+                                subscriber.setSub(snap.getValue(String.class));
+                                String nick = subscriber.getSub();
+                                int valueLetters = userName.length();
+                                nick = nick.toLowerCase();
+                                if (nick.length() < valueLetters) {
+                                    if (nick.equals(userName))
+                                        userFromBase.add(subscriber);
+                                } else {
+                                    nick = nick.substring(0, valueLetters);
+                                    if (nick.equals(userName))
+                                        userFromBase.add(subscriber);
+                                }
+
+                            }
+                            if(userFromBase.size()==0){
+                                emptyList.setVisibility(View.VISIBLE);
+                                recyclerView.setVisibility(View.GONE);
+                            }else {
+                                emptyList.setVisibility(View.GONE);
+                                recyclerView.setVisibility(View.VISIBLE);
+                                SendLookAdapter sendLookAdapter = new SendLookAdapter(userFromBase,itemClickListener);
+                                recyclerView.setAdapter(sendLookAdapter);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+                }else {
+                    userFromBase=new ArrayList<>();
+                    for (int s=0;s<userInformation.getSubscription().size();s++) {
+                        Subscriber subscriber = userInformation.getSubscription().get(s);
+                        String nick = subscriber.getSub();
+                        int valueLetters = userName.length();
+                        nick = nick.toLowerCase();
+                        if (nick.length() < valueLetters) {
+                            if (nick.equals(userName))
+                                userFromBase.add(subscriber);
+                        } else {
+                            nick = nick.substring(0, valueLetters);
+                            if (nick.equals(userName))
+                                userFromBase.add(subscriber);
+                        }
+
+                    }
+                    if(userFromBase.size()==0){
+                        emptyList.setVisibility(View.VISIBLE);
+                        recyclerView.setVisibility(View.GONE);
+                    }else {
+                        emptyList.setVisibility(View.GONE);
+                        recyclerView.setVisibility(View.VISIBLE);
+                        SendLookAdapter sendLookAdapter = new SendLookAdapter(userFromBase,itemClickListener);
+                        recyclerView.setAdapter(sendLookAdapter);
+                    }
+                }
+               /* editGetText=editText.getText().toString();
+                if (editGetText.length()==0){
+                    sendComment.setVisibility(View.GONE);
+                }else {
+                    sendComment.setVisibility(View.VISIBLE);
+                    sendComment.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            String commentId=firebaseNewsModel.getReference().child(newsItem.getNick())
+                                    .child(newsItem.getNewsId()).child("comments").push().getKey();
+                            firebaseNewsModel.getReference().child(newsItem.getNick())
+                                    .child(newsItem.getNewsId()).child("comments").child(commentId)
+                                    .setValue(new Comment(editText.getText().toString(), 0, commentId,RecentMethods.getCurrentTime(),nick,"image","comment"));
+                            editText.getText().clear();
+                            loadComments(newsItem,v);
+                        }
+                    });
+                }*/
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+            }
+        });
     }
 
 }

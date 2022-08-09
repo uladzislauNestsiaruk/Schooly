@@ -9,10 +9,6 @@ public class Comment {
 
     }
 
-    public Comment(String text, String s, String commentId, String postTime, String nick, String image, String comment){
-
-    }
-
     public Comment( String text, long likes_count, String commentId,
                     String postTime,String nick,String image,String type){
         this.image = image;

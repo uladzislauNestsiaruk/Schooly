@@ -1195,8 +1195,8 @@ public class RecentMethods {
         });
     }
     public static void getLooksList(String nickName, FirebaseModel model, Callbacks.getLooksList callback){
-        model.initAll();
-        model.getUsersReference().child(nickName).child("looks").orderByKey()
+        Log.d("#####", "Firebase model: " + model.getReference());
+        model.getReference().child(nickName).orderByKey()
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -1302,8 +1302,8 @@ public class RecentMethods {
     }
 
     public static void getCommentsList(String nickName,String newsId, FirebaseModel model, Callbacks.getCommentsList callback){
-        model.initAll();
-        Query query=model.getUsersReference().child(nickName).child("looks")
+        model.initNewsDatabase();
+        Query query=model.getReference().child(nickName)
                 .child(newsId).child("comments");
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override

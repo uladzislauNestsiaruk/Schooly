@@ -1,5 +1,7 @@
 package com.egormoroz.schooly.ui.people;
 
+import android.util.Log;
+
 public class UserPeopleAdapter {
     private int hashMod = 1000000007;
     private String Nick;
@@ -39,7 +41,7 @@ public class UserPeopleAdapter {
     }
     @Override
     public int hashCode() {
-        return ((getNick().hashCode() * getAvatar().hashCode()) % hashMod) * getAvatar().hashCode();
+        return (((getNick().hashCode() * getAvatar().hashCode()) % hashMod) * getAvatar().hashCode()) % hashMod;
     }
 
     @Override

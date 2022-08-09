@@ -186,14 +186,16 @@ public class AcceptNewLook extends Fragment {
             if(lookPriceDollarLong>0 || lookPriceLong>0){
                 setTextInLookPrice();
             }
+            FirebaseModel newsModel = new FirebaseModel();
+            newsModel.initNewsDatabase();
             ConstituentsAdapter constituentsAdapter=new ConstituentsAdapter(userInformation.getLookClothes(), itemClickListener);
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
             recyclerView.setAdapter(constituentsAdapter);
             publish.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String lookId=firebaseModel.getUsersReference().child(nick).child("looks").push().getKey();
-                    firebaseModel.getUsersReference().child(nick).child("looks").child(lookId)
+                    String lookId=newsModel.getReference().child(nick).push().getKey();
+                    newsModel.getReference().child(nick).child(lookId)
                             .setValue(new NewsItem(model, descriptionLook.getText().toString(), "0", lookId,
                                     "", userInformation.getLookClothes(), 1200, 0,"",nick,0));
                     descriptionLook.getText().clear();

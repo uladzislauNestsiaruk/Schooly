@@ -85,7 +85,7 @@ public class RecomendationAdapter extends RecyclerView.Adapter<RecomendationAdap
         ViewHolder(View itemView) {
             super(itemView);
             usernickname=itemView.findViewById(R.id.nick);
-            surfaceView=itemView.findViewById(R.id.surfaceView);
+            //surfaceView=itemView.findViewById(R.id.surfaceView);
         }
     }
 

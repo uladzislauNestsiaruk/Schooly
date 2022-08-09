@@ -333,7 +333,7 @@ public class ViewingLookFragment extends Fragment {
                                     .child(newsItem.getNewsId()).child("comments").push().getKey();
                             firebaseModel.getUsersReference().child(newsItem.getNick()).child("looks")
                                     .child(newsItem.getNewsId()).child("comments").child(commentId)
-                                    .setValue(new Comment(editText.getText().toString(), "0", commentId,RecentMethods.getCurrentTime(),nick,"image","comment"));
+                                    .setValue(new Comment(editText.getText().toString(), 0, commentId,RecentMethods.getCurrentTime(),nick,"image","comment"));
                             editText.getText().clear();
                             loadComments(newsItem);
                         }

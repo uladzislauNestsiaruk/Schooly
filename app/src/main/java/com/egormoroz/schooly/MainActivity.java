@@ -66,10 +66,12 @@ public class MainActivity extends AppCompatActivity {
 	int a=0;
 	private static final String CHANNEL_ID = "channel";
 	FirebaseModel firebaseModel=new FirebaseModel();
+	FirebaseModel firebaseNewsModel = new FirebaseModel();
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		firebaseNewsModel.initNewsDatabase();
 		fragmentContainer = findViewById(R.id.fragment_container);
 		relativeLayout=findViewById(R.id.rel);
 		s=findViewById(R.id.s);
@@ -254,7 +256,7 @@ public class MainActivity extends AppCompatActivity {
 						userInformation.setLookClothes(clothesArrayList);
 					}
 				});
-				RecentMethods.getLooksList(nick, firebaseModel, new Callbacks.getLooksList() {
+				RecentMethods.getLooksList(nick, firebaseNewsModel, new Callbacks.getLooksList() {
 					@Override
 					public void getLooksList(ArrayList<NewsItem> look) {
 						Collections.reverse(look);
