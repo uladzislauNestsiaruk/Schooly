@@ -158,10 +158,6 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
             e.printStackTrace();
         } catch (InterruptedException e) {
             e.printStackTrace();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        } catch (URISyntaxException e) {
-//            e.printStackTrace();
        } catch (IOException e) {
             e.printStackTrace();
         } catch (URISyntaxException e) {
@@ -475,13 +471,16 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
                             @Override
                             public void onResult1(Bitmap bitmap) {
                                 Uri backgroundAssetUri = getImageUri(activity, bitmap);
+                                Uri stickerAssetUri = getImageUri(activity, bitmap);
                                 String sourceApplication = "com.egormoroz.schooly";
 
-
                                 Intent intent = new Intent("com.instagram.share.ADD_TO_STORY");
+                                intent.putExtra("source_application", sourceApplication);
 
-                                intent.setDataAndType(backgroundAssetUri, "image/*");
                                 intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                intent.setDataAndType(backgroundAssetUri, "image/*");
+                                intent.putExtra("interactive_asset_uri", stickerAssetUri);
+
 
                                 if (activity.getPackageManager().resolveActivity(intent, 0) != null) {
                                     activity.startActivityForResult(intent, 0);
@@ -552,12 +551,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
     public static void getBitmapFormView(View view, Activity activity, Callback<Bitmap> callback) {
         Bitmap bitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
 
-        int[] locations = new int[2];
-        view.getLocationInWindow(locations);
-        Rect rect = new Rect(locations[0], locations[1], locations[0] + view.getWidth(), locations[1] + view.getHeight());
-
-
-        PixelCopy.request(activity.getWindow(), rect, bitmap, copyResult -> {
+        PixelCopy.request((SurfaceView) view, bitmap, copyResult -> {
             if (copyResult == PixelCopy.SUCCESS) {
                 callback.onResult1(bitmap);
             }

@@ -117,8 +117,6 @@ public class InstagramShareFragment extends Fragment {
 
 
                         Activity activity = getActivity();
-//                        activity.grantUriPermission(
-//                                "com.instagram.android", stickerAssetUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
                         if (activity.getPackageManager().resolveActivity(intent, 0) != null) {
                             activity.startActivityForResult(intent, 0);
                         }
