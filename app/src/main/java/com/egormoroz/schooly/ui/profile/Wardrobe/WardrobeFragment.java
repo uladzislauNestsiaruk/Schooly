@@ -521,6 +521,7 @@ public class WardrobeFragment extends Fragment {
                     .child(clothes.getUid()).setValue(clothes);
             if(a==0){
                 clothes.setBuffer(b);
+                Log.d("#####", "dd");
                 tryOnClothes(clothes,null);
                 a++;
             }
@@ -528,6 +529,7 @@ public class WardrobeFragment extends Fragment {
             for(int i=0;i<userInformation.getLookClothes().size();i++){
                 Clothes clothes1=userInformation.getLookClothes().get(i);
                 if(clothes1.getUid().equals(clothes.getUid())){
+                    loadValue=0;
                     break;
                 }if(clothes1.getBodyType().equals(type)){
                     clothesToChange=clothes1;
@@ -549,7 +551,13 @@ public class WardrobeFragment extends Fragment {
                     }
                     if(a==0){
                         clothes.setBuffer(b);
-                        tryOnClothes(clothes,clothesToChange);
+                        if(clothesToChange.getClothesTitle()!=null){
+                            Log.d("#####", "dd111   "+clothesToChange.getClothesTitle());
+                            tryOnClothes(clothes,clothesToChange);
+                        }else{
+                            tryOnClothes(clothes,null);
+
+                        }
                         a++;
                     }
                 }

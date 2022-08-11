@@ -346,7 +346,7 @@ public class ViewingMyClothesMain extends Fragment {
         linearTelegram.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                intentMessageTelegram();
             }
         });
         linearInstagram.setOnClickListener(new View.OnClickListener() {
@@ -562,7 +562,7 @@ public class ViewingMyClothesMain extends Fragment {
         dialog.show();
     }
 
-    void intentMessageTelegram(String msg) {
+    void intentMessageTelegram() {
         TelegramName = "org.telegram.messenger";
         Intent shareIntent = new Intent();
         shareIntent.setAction(Intent.ACTION_SEND);

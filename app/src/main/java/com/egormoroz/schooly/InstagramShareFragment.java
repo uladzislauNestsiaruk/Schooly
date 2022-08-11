@@ -44,16 +44,18 @@ public class InstagramShareFragment extends Fragment {
     ImageView clothesImage,back;
     TextView clothesTitle,clothesCreator,share;
     FirebaseModel firebaseModel=new FirebaseModel();
+    String type;
 
-    public InstagramShareFragment(Fragment fragment,UserInformation userInformation,Bundle bundle,Clothes clothes) {
+    public InstagramShareFragment(Fragment fragment,UserInformation userInformation,Bundle bundle,Clothes clothes,String type) {
         this.fragment = fragment;
         this.userInformation=userInformation;
         this.bundle=bundle;
         this.clothes=clothes;
+        this.type=type;
     }
 
-    public static InstagramShareFragment newInstance(Fragment fragment, UserInformation userInformation, Bundle bundle,Clothes clothes) {
-        return new InstagramShareFragment(fragment,userInformation,bundle,clothes);
+    public static InstagramShareFragment newInstance(Fragment fragment, UserInformation userInformation, Bundle bundle,Clothes clothes,String type) {
+        return new InstagramShareFragment(fragment,userInformation,bundle,clothes,type);
 
     }
 

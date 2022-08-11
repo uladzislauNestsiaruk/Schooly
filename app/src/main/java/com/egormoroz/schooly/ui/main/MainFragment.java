@@ -309,17 +309,6 @@ public class MainFragment extends Fragment{
 
         TextView schoolycoins=view.findViewById(R.id.schoolycoins);
         schoolycoins.setText(String.valueOf(userInformation.getmoney()));
-//        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-//            @Override
-//            public void PassUserNick(String nick) {
-//                RecentMethods.GetMoneyFromBase(nick, firebaseModel, new Callbacks.MoneyFromBase() {
-//                    @Override
-//                    public void GetMoneyFromBase(long money) {
-//                        schoolycoins.setText(String.valueOf(money));
-//                    }
-//                });
-//            }
-//        });
         clothesRecyclerMain=view.findViewById(R.id.newchlothesinshop);
         itemClickListener=new NewClothesAdapter.ItemClickListener() {
             @Override
@@ -544,20 +533,4 @@ public class MainFragment extends Fragment{
         }
     }
 
-    private void shareToInstagram() {
-        Intent intent = getContext().getPackageManager().getLaunchIntentForPackage("com.instagram.android");
-        if (intent != null) {
-            Intent shareIntent = new Intent();
-            shareIntent.setAction(Intent.ACTION_SEND);
-            shareIntent.setPackage("com.instagram.android");
-            shareIntent.putExtra(Intent.EXTRA_STREAM, "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/miners%2Ffims.png?alt=media&token=adafb44e-3ac1-43a3-bde6-6f7c4315ee0c");
-            shareIntent.setType("image/jpeg");
-            startActivity(shareIntent);
-        } else {
-            intent = new Intent(Intent.ACTION_VIEW);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.setData(Uri.parse("market://details?id=" + "com.instagram.android"));
-            startActivity(intent);
-        }
-    }
 }

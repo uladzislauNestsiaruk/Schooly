@@ -27,22 +27,21 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class ShoesFargment extends Fragment {
+public class ShoesFragment extends Fragment {
     UserInformation userInformation;
     Bundle bundle;
     Fragment fragment;
 
-    public ShoesFargment(UserInformation userInformation,Bundle bundle,Fragment fragment) {
+    public ShoesFragment(UserInformation userInformation,Bundle bundle,Fragment fragment) {
         this.userInformation=userInformation;
         this.bundle=bundle;
         this.fragment=fragment;
     }
 
-    public static ShoesFargment newInstance(UserInformation userInformation,Bundle bundle,Fragment fragment) {
-        return new ShoesFargment(userInformation,bundle,fragment);
+    public static ShoesFragment newInstance(UserInformation userInformation,Bundle bundle,Fragment fragment) {
+        return new ShoesFragment(userInformation,bundle,fragment);
     }
     FirebaseModel firebaseModel=new FirebaseModel();
-    ArrayList<Clothes> clothesArrayList=new ArrayList<Clothes>();
     ArrayList<Clothes> shoesArrayList=new ArrayList<Clothes>();
     ArrayList<Clothes> popularClothesArrayList=new ArrayList<Clothes>();
     ArrayList<Clothes> popularSortShoesArrayList=new ArrayList<Clothes>();

@@ -1,6 +1,9 @@
 package com.egormoroz.schooly.ui.main.Shop;
 
 import android.app.Dialog;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -359,14 +362,14 @@ public class ViewingClothes extends Fragment {
         linearElse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                intentMessage();
             }
         });
 
         linearTelegram.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                intentMessageTelegram();
             }
         });
         linearInstagram.setOnClickListener(new View.OnClickListener() {
@@ -705,6 +708,27 @@ public class ViewingClothes extends Fragment {
         });
 
         dialog.show();
+    }
+
+    public void intentMessageTelegram() {
+        String TelegramName = "org.telegram.messenger";
+        Intent shareIntent = new Intent();
+        shareIntent.setAction(Intent.ACTION_SEND);
+        shareIntent.putExtra(Intent.EXTRA_TEXT, "https://developer.android.com/training/sharing/");
+        shareIntent.setType("text/plain");
+        shareIntent.setPackage(TelegramName);
+        Log.d("####", "a");
+        startActivity(Intent.createChooser(shareIntent, null));
+    }
+
+    void intentMessage() {
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, "https://developer.android.com/training/sharing/");
+        sendIntent.setType("text/plain");
+
+        Intent shareIntent = Intent.createChooser(sendIntent, null);
+        startActivity(shareIntent);
     }
 
 }

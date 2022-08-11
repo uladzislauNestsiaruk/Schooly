@@ -89,10 +89,12 @@ public class ClothesFragment extends Fragment {
     public void loadClothesFromBase(){
         if(bundle.getSerializable("WEAR_NEW")!=null){
             ArrayList<Clothes> newClothesArrayList= (ArrayList<Clothes>) bundle.getSerializable("WEAR_NEW");
+            Log.d("####", "n  "+newClothesArrayList);
             NewClothesAdapter newClothesAdapter=new NewClothesAdapter(newClothesArrayList,itemClickListener,userInformation);
             clothes.setAdapter(newClothesAdapter);
         }else{
             ArrayList<Clothes> allClothes= (ArrayList<Clothes>) bundle.getSerializable("ALL_CLOTHES");
+            Log.d("####", "n1 "+allClothes);
             for(int i=0;i<allClothes.size();i++){
                 Clothes cl=allClothes.get(i);
                 if (cl.getClothesType().equals("clothes")){
@@ -100,7 +102,6 @@ public class ClothesFragment extends Fragment {
                 }
 
             }
-            bundle.putSerializable("WEAR_NEW",newClothesArrayList);
             NewClothesAdapter newClothesAdapter=new NewClothesAdapter(newClothesArrayList,itemClickListener,userInformation);
             clothes.setAdapter(newClothesAdapter);
         }

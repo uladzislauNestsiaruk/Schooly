@@ -348,7 +348,7 @@ public class ShopFragment extends Fragment {
                 case 1:
                     return new ExclusiveFragment(version,userInformation,bundle,fragment);
                 case 2:
-                    return new ShoesFargment(userInformation,bundle,fragment);
+                    return new ShoesFragment(userInformation,bundle,fragment);
                 case 3:
                     return new ClothesFragment(userInformation,bundle,fragment);
                 case 4:
