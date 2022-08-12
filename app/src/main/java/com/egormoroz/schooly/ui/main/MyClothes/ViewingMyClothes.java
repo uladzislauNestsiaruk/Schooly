@@ -364,23 +364,23 @@ public class ViewingMyClothes extends Fragment {
         linearElse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                RecentMethods.setCurrentFragment(InstagramShareFragment.newInstance(ViewingMyClothes.newInstance(fragment, userInformation, bundle), userInformation, bundle, clothesViewing,"clothes",null,null,"all"), getActivity());
+                bottomSheetDialog.dismiss();
             }
         });
 
         linearTelegram.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                RecentMethods.setCurrentFragment(InstagramShareFragment.newInstance(ViewingMyClothes.newInstance(fragment, userInformation, bundle), userInformation, bundle, clothesViewing,"clothes",null,null,"telegram"), getActivity());
+                bottomSheetDialog.dismiss();
             }
         });
         linearInstagram.setOnClickListener(new View.OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(InstagramShareFragment.newInstance(ViewingMyClothes.newInstance(fragment, userInformation, bundle), userInformation, bundle, clothesViewing), getActivity());
+                RecentMethods.setCurrentFragment(InstagramShareFragment.newInstance(ViewingMyClothes.newInstance(fragment, userInformation, bundle), userInformation, bundle, clothesViewing,"clothes",null,null,"instagram"), getActivity());
                 bottomSheetDialog.dismiss();
-
             }
         });
         itemClickListener=new SendLookAdapter.ItemClickListener() {

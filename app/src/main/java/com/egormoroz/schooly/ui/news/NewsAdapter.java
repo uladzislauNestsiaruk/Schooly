@@ -26,6 +26,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.AnyRes;
 import androidx.annotation.NonNull;
@@ -37,13 +38,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FilamentModel;
 import com.egormoroz.schooly.FirebaseModel;
+import com.egormoroz.schooly.InstagramShareFragment;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.Subscriber;
 import com.egormoroz.schooly.TaskRunner;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
 import com.egormoroz.schooly.ui.main.UserInformation;
+import com.egormoroz.schooly.ui.profile.Complain;
 import com.egormoroz.schooly.ui.profile.ComplainAdapter;
+import com.egormoroz.schooly.ui.profile.Reason;
 import com.egormoroz.schooly.ui.profile.SendLookAdapter;
 import com.egormoroz.schooly.ui.profile.ViewingLookFragment;
 import com.egormoroz.schooly.ui.profile.Wardrobe.ConstituentsAdapter;
@@ -224,13 +228,25 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
         holder.send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showBottomSheetDialog(holder.itemView,holder.surfaceView);
+                showBottomSheetDialog(holder.itemView,holder.surfaceView,newsItem);
             }
         });
         holder.comment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 showBottomSheetDialogComments(newsItem, holder.comment);
+            }
+        });
+        holder.clothesComponents.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showBottomSheetDialogClothesCreators(newsItem, holder.itemView);
+            }
+        });
+        holder.options.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showBottomSheetDialogLookOptions(newsItem,holder.itemView);
             }
         });
     }
@@ -242,8 +258,8 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
 
     class ImageViewHolder extends RecyclerView.ViewHolder {
 
-        ImageView newsImage, like, comment,send;
-        TextView description, like_count;
+        ImageView  like, comment,send,options;
+        TextView description, like_count,clothesComponents;
         SurfaceView surfaceView;
 
         public ImageViewHolder(@NonNull View itemView) {
@@ -255,7 +271,191 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
             description = itemView.findViewById(R.id.description);
             like_count = itemView.findViewById(R.id.likesCount);
             comment = itemView.findViewById(R.id.comment);
+            clothesComponents=itemView.findViewById(R.id.clothesCreator);
+            options=itemView.findViewById(R.id.options);
         }
+    }
+
+
+    private void showBottomSheetDialogComplain(NewsItem newsItem,View view) {
+
+        final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(view.getContext());
+        bottomSheetDialog.setContentView(R.layout.bottom_sheet_dialog_complain);
+
+        complainOtherUserText=bottomSheetDialog.findViewById(R.id.complainOtherUserText);
+        complainRecycler=bottomSheetDialog.findViewById(R.id.reasonsRecycler);
+
+        complainOtherUserText.setText(newsItem.getNick());
+
+        itemClickListenerComplain=new ComplainAdapter.ItemClickListener() {
+            @Override
+            public void onItemClick(Reason reason) {
+                showBottomSheetDialogComplainToBase(newsItem,reason,view);
+                bottomSheetDialog.dismiss();
+            }
+        };
+        ArrayList<Reason> arrayListReason=new ArrayList<>();
+        arrayListReason.add(new Reason(view.getContext().getResources().getString(R.string.fraud)));
+        arrayListReason.add(new Reason(view.getContext().getResources().getString(R.string.violenceordangerousorganizations)));
+        arrayListReason.add(new Reason(view.getContext().getResources().getString(R.string.hostilesayingsorsymbols)));
+        arrayListReason.add(new Reason(view.getContext().getResources().getString(R.string.saleofillegalgoods)));
+        arrayListReason.add(new Reason(view.getContext().getResources().getString(R.string.violationofintellectualpropertyrights)));
+        ComplainAdapter complainAdapter=new ComplainAdapter(arrayListReason,itemClickListenerComplain);
+        complainRecycler.setLayoutManager(new LinearLayoutManager(view.getContext()));
+        complainRecycler.setAdapter(complainAdapter);
+
+        bottomSheetDialog.show();
+    }
+
+    private void showBottomSheetDialogLookOptions(NewsItem newsItem,View view) {
+        if(!newsItem.getNick().equals(nick)){
+            final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(view.getContext());
+            bottomSheetDialog.setContentView(R.layout.bottom_sheet_dialog_lookoptions);
+
+            save=bottomSheetDialog.findViewById(R.id.save);
+            complain=bottomSheetDialog.findViewById(R.id.complain);
+
+            if(userInformation.getSavedLooks().size()>0){
+                for(int i=0;i<userInformation.getSavedLooks().size();i++){
+                    NewsItem newsItem1=userInformation.getSavedLooks().get(i);
+                    if(newsItem1.getNewsId().equals(newsItem.getNewsId())) {
+                        save.setText(R.string.dontsave);
+                    }
+                }
+                save.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        DefaultDatabase.getUsersReference().child(nick).child("saved").child(newsItem.getNewsId())
+                                .get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                                if(task.isSuccessful()){
+                                    DataSnapshot snapshot=task.getResult();
+                                    if(snapshot.exists()){
+                                        save.setText(R.string.save);
+                                        DefaultDatabase.getUsersReference().child(nick).child("saved").child(newsItem.getNewsId())
+                                                .removeValue();
+                                        Toast.makeText(view.getContext(), v.getContext().getResources().getText(R.string.lookwasdeletedfromsaved), Toast.LENGTH_SHORT).show();
+                                    }else {
+                                        save.setText(R.string.dontsave);
+                                        Log.d("####", "####11"+newsItem.getNewsId()+"  "+newsItem.getNewsId());
+                                        DefaultDatabase.getUsersReference().child(nick).child("saved").child(newsItem.getNewsId())
+                                                .setValue(newsItem);
+                                        Toast.makeText(view.getContext(), v.getContext().getResources().getText(R.string.looksaved), Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            }
+                        });
+                    }
+                });
+            }else {
+                save.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        DefaultDatabase.getUsersReference().child(nick).child("saved").child(newsItem.getNewsId())
+                                .setValue(newsItem);
+                        Toast.makeText(view.getContext(), v.getContext().getResources().getText(R.string.looksaved), Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+
+            complain.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showBottomSheetDialogComplain(newsItem,view);
+                    bottomSheetDialog.dismiss();
+                }
+            });
+
+            bottomSheetDialog.show();
+        }else{
+            final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(view.getContext());
+            bottomSheetDialog.setContentView(R.layout.bottom_sheet_dialog_lookoptions);
+
+            save=bottomSheetDialog.findViewById(R.id.save);
+            complain=bottomSheetDialog.findViewById(R.id.complain);
+            complain.setText(R.string.deletelook);
+
+            if(userInformation.getSavedLooks().size()>0){
+                for(int i=0;i<userInformation.getSavedLooks().size();i++){
+                    NewsItem newsItem1=userInformation.getSavedLooks().get(i);
+                    if(newsItem1.getNewsId().equals(newsItem.getNewsId())) {
+                        save.setText(R.string.dontsave);
+                    }
+                }
+                save.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        DefaultDatabase.getUsersReference().child(nick).child("saved").child(newsItem.getNewsId())
+                                .get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                                if(task.isSuccessful()){
+                                    DataSnapshot snapshot=task.getResult();
+                                    if(snapshot.exists()){
+                                        save.setText(R.string.save);
+                                        DefaultDatabase.getUsersReference().child(nick).child("saved").child(newsItem.getNewsId())
+                                                .removeValue();
+                                        Toast.makeText(view.getContext(), v.getContext().getResources().getText(R.string.lookwasdeletedfromsaved), Toast.LENGTH_SHORT).show();
+                                    }else {
+                                        save.setText(R.string.dontsave);
+                                        DefaultDatabase.getUsersReference().child(nick).child("saved").child(newsItem.getNewsId())
+                                                .setValue(newsItem);
+                                        Toast.makeText(view.getContext(), v.getContext().getResources().getText(R.string.looksaved), Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            }
+                        });
+                    }
+                });
+            }else {
+                save.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        DefaultDatabase.getUsersReference().child(nick).child("saved").child(newsItem.getNewsId())
+                                .setValue(newsItem);
+                        Toast.makeText(view.getContext(), v.getContext().getResources().getText(R.string.looksaved), Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+
+            complain.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    DefaultDatabase.getUsersReference().child(nick).child("looks")
+                            .child(newsItem.getNewsId()).removeValue();
+                    Toast.makeText(view.getContext(), R.string.lookwasdeleted, Toast.LENGTH_SHORT).show();
+                }
+            });
+            bottomSheetDialog.show();
+        }
+    }
+
+    private void showBottomSheetDialogComplainToBase(NewsItem newsItem,Reason reason,View view) {
+
+        final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(view.getContext());
+        bottomSheetDialog.setContentView(R.layout.bottom_sheet_dialog_complaintobase);
+
+        reasonText=bottomSheetDialog.findViewById(R.id.reasonText);
+        sendReason=bottomSheetDialog.findViewById(R.id.sendReasons);
+        addDescriptionEdit=bottomSheetDialog.findViewById(R.id.addDescriptionEdit);
+
+        reasonTextString=reason.getReason();
+        reasonText.setText(reasonTextString);
+        sendReason.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                descriptionText=addDescriptionEdit.getText().toString();
+                String uid=DefaultDatabase.getReference().child("AppData").child("complains").push().getKey();
+                DefaultDatabase.getReference().child("AppData").child("complains").child(uid)
+                        .setValue(new Complain(newsItem.getNick(),nick, reasonTextString,descriptionText,uid,newsItem));
+                Toast.makeText(view.getContext(), R.string.complaintsent, Toast.LENGTH_SHORT).show();
+                bottomSheetDialog.dismiss();
+            }
+        });
+
+
+        bottomSheetDialog.show();
     }
 
     private void showBottomSheetDialogComments(NewsItem newsItem,View v) {
@@ -438,7 +638,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
         bottomSheetDialog.show();
     }
 
-    private void showBottomSheetDialog(View view,SurfaceView surfaceView) {
+    private void showBottomSheetDialog(View view,SurfaceView surfaceView,NewsItem newsItem) {
 
         final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(view.getContext());
         bottomSheetDialog.setContentView(R.layout.bottom_sheet_dialog_layout);
@@ -455,40 +655,23 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
         linearElse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                RecentMethods.setCurrentFragment(InstagramShareFragment.newInstance(NewsFragment.newInstance(userInformation, bundle), userInformation, bundle, null, "look", newsItem,null,"all"),activity);
+                bottomSheetDialog.dismiss();
             }
         });
 
         linearTelegram.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                RecentMethods.setCurrentFragment(InstagramShareFragment.newInstance(NewsFragment.newInstance(userInformation, bundle), userInformation, bundle, null, "look", newsItem,null,"telegram"),activity);
+                bottomSheetDialog.dismiss();
             }
         });
         linearInstagram.setOnClickListener(new View.OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
-                getBitmapFormView(surfaceView, activity, new Callback<Bitmap>() {
-                            @Override
-                            public void onResult1(Bitmap bitmap) {
-                                Uri backgroundAssetUri = getImageUri(activity, bitmap);
-                                Uri stickerAssetUri = getImageUri(activity, bitmap);
-                                String sourceApplication = "com.egormoroz.schooly";
-
-                                Intent intent = new Intent("com.instagram.share.ADD_TO_STORY");
-                                intent.putExtra("source_application", sourceApplication);
-
-                                intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                                intent.setDataAndType(backgroundAssetUri, "image/*");
-                                intent.putExtra("interactive_asset_uri", stickerAssetUri);
-
-
-                                if (activity.getPackageManager().resolveActivity(intent, 0) != null) {
-                                    activity.startActivityForResult(intent, 0);
-                                }
-                            }
-                        });
+                RecentMethods.setCurrentFragment(InstagramShareFragment.newInstance(NewsFragment.newInstance(userInformation, bundle), userInformation, bundle, null, "look", newsItem,null,"instagram"),activity);
+                bottomSheetDialog.dismiss();
             }
         });
         itemClickListener=new SendLookAdapter.ItemClickListener() {

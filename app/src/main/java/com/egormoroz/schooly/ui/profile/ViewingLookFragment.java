@@ -34,12 +34,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FirebaseModel;
+import com.egormoroz.schooly.InstagramShareFragment;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.Subscriber;
 import com.egormoroz.schooly.ui.main.MyClothes.CreateClothesFragment;
 import com.egormoroz.schooly.ui.main.MyClothes.CriteriaFragment;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
+import com.egormoroz.schooly.ui.main.Shop.ViewingClothes;
 import com.egormoroz.schooly.ui.main.UserInformation;
 import com.egormoroz.schooly.ui.news.Comment;
 import com.egormoroz.schooly.ui.news.CommentAdapter;
@@ -185,7 +187,7 @@ public class ViewingLookFragment extends Fragment {
                 send.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        showBottomSheetDialog();
+                        showBottomSheetDialog(newsItem);
                     }
                 });
                 options.setOnClickListener(new View.OnClickListener() {
@@ -571,7 +573,7 @@ public class ViewingLookFragment extends Fragment {
         }
     }
 
-    private void showBottomSheetDialog() {
+    private void showBottomSheetDialog(NewsItem newsItem) {
 
         final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(getContext());
         bottomSheetDialog.setContentView(R.layout.bottom_sheet_dialog_layout);
@@ -588,34 +590,23 @@ public class ViewingLookFragment extends Fragment {
         linearElse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                RecentMethods.setCurrentFragment(InstagramShareFragment.newInstance(ViewingLookFragment.newInstance(fragment, userInformation, bundle), userInformation, bundle, null,"look",newsItem,null,"all"), getActivity());
+                bottomSheetDialog.dismiss();
             }
         });
 
         linearTelegram.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                RecentMethods.setCurrentFragment(InstagramShareFragment.newInstance(ViewingLookFragment.newInstance(fragment, userInformation, bundle), userInformation, bundle, null,"look",newsItem,null,"telegram"), getActivity());
+                bottomSheetDialog.dismiss();
             }
         });
         linearInstagram.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //getBitmapFormView();
-                Uri backgroundAssetUri = Uri.parse("your-image-asset-uri-goes-here");
-                String sourceApplication = "com.egormoroz.schooly";
-
-
-                Intent intent = new Intent("com.instagram.share.ADD_TO_STORY");
-
-                intent.setDataAndType(backgroundAssetUri, "image/*");
-                intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-
-
-                Activity activity = getActivity();
-                if (activity.getPackageManager().resolveActivity(intent, 0) != null) {
-                    activity.startActivityForResult(intent, 0);
-                }
+                RecentMethods.setCurrentFragment(InstagramShareFragment.newInstance(ViewingLookFragment.newInstance(fragment, userInformation, bundle), userInformation, bundle, null,"look",newsItem,null,"instagram"), getActivity());
+                bottomSheetDialog.dismiss();
             }
         });
         itemClickListener=new SendLookAdapter.ItemClickListener() {

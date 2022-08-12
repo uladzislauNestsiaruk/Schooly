@@ -133,23 +133,22 @@
         android:src="@drawable/ic_options" />
 
 
-
     <TextView
         android:id="@+id/clothesCreator"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/description"
         android:layout_marginStart="24dp"
-        android:fontFamily="@font/montserrat_bold"
-        android:text="@string/clothesCreators"
+        android:layout_marginBottom="8dp"
         android:background="@drawable/corners10dpappcolor"
-        android:textColor="@color/white"
-        android:textSize="15dp"
-        android:paddingBottom="8dp"
+        android:fontFamily="@font/montserrat_bold"
+        android:paddingStart="12dp"
         android:paddingTop="8dp"
         android:paddingEnd="12dp"
-        android:paddingStart="12dp"
-        android:layout_marginBottom="8dp" />
+        android:paddingBottom="8dp"
+        android:text="@string/clothesCreators"
+        android:textColor="@color/white"
+        android:textSize="15dp" />
 
     <TextView
         android:id="@+id/description"

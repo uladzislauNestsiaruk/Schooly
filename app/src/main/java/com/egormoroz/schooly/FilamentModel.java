@@ -90,6 +90,7 @@ public class FilamentModel {
                 .orbitHomePosition(0.0f, 10.0f, 28.0f)
                 .viewport(surfaceView.getWidth(), surfaceView.getHeight())
                 .zoomSpeed(0.07f)
+                .mapMinDistance(5.0f)
                 .build(Manipulator.Mode.ORBIT);
         doubleTapDetector=new GestureDetector(surfaceView, cameraManipulator);
         uiHelper=new UiHelper(UiHelper.ContextErrorPolicy.DONT_CHECK);
@@ -129,7 +130,8 @@ public class FilamentModel {
         });
         loadGlb(buffer);
         Skybox skybox=new Skybox.Builder()
-                .color(0.255f, 0.124f, 0.232f, 1.0f)
+                //.color(0.255f, 0.124f, 0.232f, 1.0f)
+                .color(0f, 0f, 0f, 1.0f)
                 .build(modelViewer.getEngine());
         if(type.equals("regularRender")){
             loadPointLights();

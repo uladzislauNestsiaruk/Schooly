@@ -26,6 +26,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FirebaseModel;
+import com.egormoroz.schooly.InstagramShareFragment;
 import com.egormoroz.schooly.Nontification;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
@@ -357,20 +358,23 @@ public class ViewingClothesPopular extends Fragment {
         linearElse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                RecentMethods.setCurrentFragment(InstagramShareFragment.newInstance(ViewingClothesPopular.newInstance(userInformation, bundle,fragment), userInformation, bundle, clothesViewing,"clothes",null,null,"all"), getActivity());
+                bottomSheetDialog.dismiss();
             }
         });
 
         linearTelegram.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                RecentMethods.setCurrentFragment(InstagramShareFragment.newInstance(ViewingClothesPopular.newInstance( userInformation, bundle,fragment), userInformation, bundle, clothesViewing,"clothes",null,null,"telegram"), getActivity());
+                bottomSheetDialog.dismiss();
             }
         });
         linearInstagram.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                RecentMethods.setCurrentFragment(InstagramShareFragment.newInstance(ViewingClothesPopular.newInstance(userInformation, bundle,fragment), userInformation, bundle, clothesViewing,"clothes",null,null,"instagram"), getActivity());
+                bottomSheetDialog.dismiss();
             }
         });
         itemClickListenerSendClothes=new SendLookAdapter.ItemClickListener() {

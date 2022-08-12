@@ -29,11 +29,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FirebaseModel;
+import com.egormoroz.schooly.InstagramShareFragment;
 import com.egormoroz.schooly.Nontification;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.Subscriber;
 import com.egormoroz.schooly.ui.coins.CoinsFragmentSecond;
+import com.egormoroz.schooly.ui.main.MyClothes.ViewingMyClothes;
 import com.egormoroz.schooly.ui.main.UserInformation;
 import com.egormoroz.schooly.ui.profile.ProfileFragment;
 import com.egormoroz.schooly.ui.profile.SendLookAdapter;
@@ -362,20 +364,23 @@ public class ViewingClothes extends Fragment {
         linearElse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                intentMessage();
+                RecentMethods.setCurrentFragment(InstagramShareFragment.newInstance(ViewingClothes.newInstance(fragment, userInformation, bundle), userInformation, bundle, clothesViewing,"clothes",null,null,"all"), getActivity());
+                bottomSheetDialog.dismiss();
             }
         });
 
         linearTelegram.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                intentMessageTelegram();
+                RecentMethods.setCurrentFragment(InstagramShareFragment.newInstance(ViewingClothes.newInstance(fragment, userInformation, bundle), userInformation, bundle, clothesViewing,"clothes",null,null,"telegram"), getActivity());
+                bottomSheetDialog.dismiss();
             }
         });
         linearInstagram.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                RecentMethods.setCurrentFragment(InstagramShareFragment.newInstance(ViewingClothes.newInstance(fragment, userInformation, bundle), userInformation, bundle, clothesViewing,"clothes",null,null,"instagram"), getActivity());
+                bottomSheetDialog.dismiss();
             }
         });
         itemClickListener=new SendLookAdapter.ItemClickListener() {
@@ -708,27 +713,6 @@ public class ViewingClothes extends Fragment {
         });
 
         dialog.show();
-    }
-
-    public void intentMessageTelegram() {
-        String TelegramName = "org.telegram.messenger";
-        Intent shareIntent = new Intent();
-        shareIntent.setAction(Intent.ACTION_SEND);
-        shareIntent.putExtra(Intent.EXTRA_TEXT, "https://developer.android.com/training/sharing/");
-        shareIntent.setType("text/plain");
-        shareIntent.setPackage(TelegramName);
-        Log.d("####", "a");
-        startActivity(Intent.createChooser(shareIntent, null));
-    }
-
-    void intentMessage() {
-        Intent sendIntent = new Intent();
-        sendIntent.setAction(Intent.ACTION_SEND);
-        sendIntent.putExtra(Intent.EXTRA_TEXT, "https://developer.android.com/training/sharing/");
-        sendIntent.setType("text/plain");
-
-        Intent shareIntent = Intent.createChooser(sendIntent, null);
-        startActivity(shareIntent);
     }
 
 }

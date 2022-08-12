@@ -11,8 +11,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.PixelCopy;
+import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -29,10 +31,25 @@ import com.egormoroz.schooly.ui.main.MyClothes.ViewingMyClothes;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
 import com.egormoroz.schooly.ui.main.UserInformation;
 import com.egormoroz.schooly.ui.news.NewsAdapter;
+import com.egormoroz.schooly.ui.news.NewsItem;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.squareup.picasso.Picasso;
 
+import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.Buffer;
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 public class InstagramShareFragment extends Fragment {
 
@@ -40,22 +57,36 @@ public class InstagramShareFragment extends Fragment {
     Clothes clothes;
     UserInformation userInformation;
     Bundle bundle;
-    RelativeLayout relativeLayout;
-    ImageView clothesImage,back;
+    RelativeLayout relativeLayout,relativeBackground;
+    ImageView clothesImage,back,imageBackground;
     TextView clothesTitle,clothesCreator,share;
     FirebaseModel firebaseModel=new FirebaseModel();
     String type;
+    SurfaceView surfaceView;
+    NewsItem newsItem;
+    static FilamentModel filamentModel=new FilamentModel();
+    Person person;
+    static URI uri;
+    static Future<Buffer> future;
+    static Buffer buffer1,bufferToFilament,b;
+    static byte[] buffer;
+    String socialMediaType;
 
-    public InstagramShareFragment(Fragment fragment,UserInformation userInformation,Bundle bundle,Clothes clothes,String type) {
+    public InstagramShareFragment(Fragment fragment, UserInformation userInformation, Bundle bundle, Clothes clothes, String type
+            , NewsItem newsItem,Person person,String socialMediaType) {
         this.fragment = fragment;
         this.userInformation=userInformation;
         this.bundle=bundle;
         this.clothes=clothes;
         this.type=type;
+        this.newsItem=newsItem;
+        this.person=person;
+        this.socialMediaType=socialMediaType;
     }
 
-    public static InstagramShareFragment newInstance(Fragment fragment, UserInformation userInformation, Bundle bundle,Clothes clothes,String type) {
-        return new InstagramShareFragment(fragment,userInformation,bundle,clothes,type);
+    public static InstagramShareFragment newInstance(Fragment fragment, UserInformation userInformation, Bundle bundle,Clothes clothes,String type,NewsItem newsItem,Person person
+    ,String socialMediaType) {
+        return new InstagramShareFragment(fragment,userInformation,bundle,clothes,type,newsItem,person,socialMediaType);
 
     }
 
@@ -80,6 +111,9 @@ public class InstagramShareFragment extends Fragment {
         clothesImage=view.findViewById(R.id.clothesImage);
         clothesTitle=view.findViewById(R.id.clothesTitle);
         share=view.findViewById(R.id.share);
+        relativeBackground=view.findViewById(R.id.relativeBackground);
+        surfaceView=view.findViewById(R.id.surfaceView);
+        imageBackground=view.findViewById(R.id.imageBackground);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -95,37 +129,152 @@ public class InstagramShareFragment extends Fragment {
         };
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
 
-        Picasso.get().load(clothes.getClothesImage()).into(clothesImage);
-        clothesTitle.setText(clothes.getClothesTitle());
-        clothesCreator.setText(clothes.getCreator());
-
-        share.setOnClickListener(new View.OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.O)
-            @Override
-            public void onClick(View v) {
-                getBitmapFormView(relativeLayout, getActivity(), new NewsAdapter.Callback<Bitmap>() {
-                    @Override
-                    public void onResult1(Bitmap bitmap) {
-                        Uri backgroundAssetUri = getImageUri(getActivity(), bitmap);
-                        Uri stickerAssetUri = getImageUri(getActivity(), bitmap);
-                        String sourceApplication = "com.egormoroz.schooly";
-
-                        Intent intent = new Intent("com.instagram.share.ADD_TO_STORY");
-                        intent.putExtra("source_application", sourceApplication);
-
-                        intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                        intent.setDataAndType(backgroundAssetUri, "image/*");
-                        intent.putExtra("interactive_asset_uri", stickerAssetUri);
-
-
-                        Activity activity = getActivity();
-                        if (activity.getPackageManager().resolveActivity(intent, 0) != null) {
-                            activity.startActivityForResult(intent, 0);
-                        }
-                    }
-                });
+        if(type.equals("look")){
+            relativeLayout.setVisibility(View.GONE);
+            imageBackground.setVisibility(View.GONE);
+            try {
+                if(bundle.getSerializable("CHARACTERMODEL")==null){
+                    loadBuffer(userInformation.getPerson().getBody());
+                    bufferToFilament=future.get();
+                    ArrayList<Buffer> buffers=new ArrayList<>();
+                    buffers.add(bufferToFilament);
+                    bundle.putSerializable("CHARACTERMODEL",buffers);
+                    filamentModel.initFilament(surfaceView,bufferToFilament,true,null,"regularRender",true);
+                }else{
+                    ArrayList<Buffer> buffers= (ArrayList<Buffer>) bundle.getSerializable("CHARACTERMODEL");
+                    Buffer buffer3=buffers.get(0);
+                    filamentModel.initFilament(surfaceView,buffer3,true,null,"regularRender",true);
+                }
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
             }
-        });
+            if(newsItem.getClothesCreators()!=null){
+                for(int i=0;i<newsItem.getClothesCreators().size();i++){
+                    Clothes clothes=newsItem.getClothesCreators().get(i);
+                    filamentModel.populateScene(clothes.getBuffer(), clothes);
+                }
+            }
+            share.setOnClickListener(new View.OnClickListener() {
+                @RequiresApi(api = Build.VERSION_CODES.O)
+                @Override
+                public void onClick(View v) {
+                    if(socialMediaType.equals("instagram")){
+                        getBitmapFormSurfaceView(relativeBackground, surfaceView, getActivity(), new NewsAdapter.Callback<Bitmap>() {
+                            @Override
+                            public void onResult1(Bitmap bitmap) {
+                                Uri backgroundAssetUri = getImageUri(getActivity(), bitmap);
+                                String sourceApplication = "com.egormoroz.schooly";
+
+                                Intent intent = new Intent("com.instagram.share.ADD_TO_STORY");
+                                intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+                                intent.setDataAndType(backgroundAssetUri, "image/*");
+
+
+                                Activity activity = getActivity();
+                                if (activity.getPackageManager().resolveActivity(intent, 0) != null) {
+                                    activity.startActivityForResult(intent, 0);
+                                }
+                            }
+                        });
+                    }else if(socialMediaType.equals("telegram")){
+                        getBitmapFormView(relativeBackground, getActivity(), new NewsAdapter.Callback<Bitmap>() {
+                            @Override
+                            public void onResult1(Bitmap bitmap) {
+                                String TelegramName = "org.telegram.messenger";
+                                Intent shareIntent = new Intent();
+                                shareIntent.setAction(Intent.ACTION_SEND);
+                                shareIntent.putExtra(Intent.EXTRA_STREAM, getImageUri(getActivity(),bitmap));
+                                shareIntent.setType("image/png");
+                                shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                shareIntent.setPackage(TelegramName);
+                                startActivity(Intent.createChooser(shareIntent, null));
+                            }
+                        });
+                    }else if(socialMediaType.equals("all")){
+                        getBitmapFormView(relativeBackground, getActivity(), new NewsAdapter.Callback<Bitmap>() {
+                            @Override
+                            public void onResult1(Bitmap bitmap) {
+                                Intent sendIntent = new Intent();
+                                sendIntent.setAction(Intent.ACTION_SEND);
+                                sendIntent.putExtra(Intent.EXTRA_STREAM, getImageUri(getActivity(),bitmap));
+                                sendIntent.setType("image/png");
+                                sendIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                Intent shareIntent = Intent.createChooser(sendIntent, null);
+                                startActivity(shareIntent);
+                            }
+                        });
+                    }
+                }
+            });
+        }else{
+            surfaceView.setVisibility(View.GONE);
+            Picasso.get().load(clothes.getClothesImage()).into(clothesImage);
+            clothesTitle.setText(clothes.getClothesTitle());
+            clothesCreator.setText(clothes.getCreator());
+
+            share.setOnClickListener(new View.OnClickListener() {
+                @RequiresApi(api = Build.VERSION_CODES.O)
+                @Override
+                public void onClick(View v) {
+                    if(socialMediaType.equals("instagram")){
+                        getBitmapFormView(relativeBackground, getActivity(), new NewsAdapter.Callback<Bitmap>() {
+                            @Override
+                            public void onResult1(Bitmap bitmap) {
+                                Uri backgroundAssetUri = getImageUri(getActivity(), bitmap);
+                                String sourceApplication = "com.egormoroz.schooly";
+
+
+                                Intent intent = new Intent("com.instagram.share.ADD_TO_STORY");
+
+                                intent.setDataAndType(backgroundAssetUri, "image/*");
+                                intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+
+                                Activity activity = getActivity();
+                                if (activity.getPackageManager().resolveActivity(intent, 0) != null) {
+                                    activity.startActivityForResult(intent, 0);
+                                }
+                            }
+                        });
+                    }else if(socialMediaType.equals("telegram")){
+                        getBitmapFormView(relativeBackground, getActivity(), new NewsAdapter.Callback<Bitmap>() {
+                            @Override
+                            public void onResult1(Bitmap bitmap) {
+                                String TelegramName = "org.telegram.messenger";
+                                Intent shareIntent = new Intent();
+                                shareIntent.setAction(Intent.ACTION_SEND);
+                                shareIntent.putExtra(Intent.EXTRA_STREAM, getImageUri(getActivity(),bitmap));
+                                shareIntent.setType("image/png");
+                                shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                shareIntent.setPackage(TelegramName);
+                                Log.d("####", "a");
+                                startActivity(Intent.createChooser(shareIntent, null));
+                            }
+                        });
+                    }else if(socialMediaType.equals("all")){
+                        getBitmapFormView(relativeBackground, getActivity(), new NewsAdapter.Callback<Bitmap>() {
+                            @Override
+                            public void onResult1(Bitmap bitmap) {
+                                Intent sendIntent = new Intent();
+                                sendIntent.setAction(Intent.ACTION_SEND);
+                                sendIntent.putExtra(Intent.EXTRA_STREAM, getImageUri(getActivity(),bitmap));
+                                sendIntent.setType("image/png");
+                                sendIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                Intent shareIntent = Intent.createChooser(sendIntent, null);
+                                startActivity(shareIntent);
+                            }
+                        });
+                    }
+                }
+            });
+        }
 
 
     }
@@ -146,10 +295,75 @@ public class InstagramShareFragment extends Fragment {
         }, new Handler(Looper.getMainLooper()));
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public static void getBitmapFormSurfaceView(View view1,View view, Activity activity, NewsAdapter.Callback<Bitmap> callback) {
+        Bitmap bitmap = Bitmap.createBitmap(view1.getWidth(), view1.getHeight(), Bitmap.Config.ARGB_8888);
+        PixelCopy.request((SurfaceView) view, bitmap, copyResult -> {
+            if (copyResult == PixelCopy.SUCCESS) {
+                callback.onResult1(bitmap);
+            }
+        }, new Handler(Looper.getMainLooper()));
+    }
+
+    public static void loadBuffer(String model){
+        ExecutorService executorService= Executors.newCachedThreadPool();
+        future = executorService.submit(new Callable(){
+            public Buffer call() throws Exception {
+                uri = new URI(model);
+                buffer = getBytes(uri.toURL());
+                buffer1= ByteBuffer.wrap(buffer);
+                return buffer1;
+            }
+        });
+    }
+
+    public static byte[] getBytes( URL url) throws IOException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        InputStream is = null;
+        try {
+            is = new BufferedInputStream(url.openStream());
+            byte[] byteChunk = new byte[4096];
+            int n;
+
+            while ( (n = is.read(byteChunk)) > 0 ) {
+                baos.write(byteChunk, 0, n);
+            }
+        }
+        catch (IOException e) {
+            Log.d("####", "Failed while reading bytes from %s: %s"+ url.toExternalForm()+ e.getMessage());
+            e.printStackTrace ();
+        }
+        finally {
+            if (is != null) { is.close(); }
+        }
+        return  baos.toByteArray();
+    }
+
     public Uri getImageUri(Context inContext, Bitmap inImage) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         inImage.compress(Bitmap.CompressFormat.PNG, 100, bytes);
-        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
+        String s=firebaseModel.getUsersReference().push().getKey();
+        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, s, null);
         return Uri.parse(path);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        filamentModel.postFrameCallback();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        filamentModel.removeFrameCallback();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        filamentModel.removeFrameCallback();
     }
 }
