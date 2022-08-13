@@ -29,6 +29,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.AnyRes;
+import androidx.annotation.LongDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
@@ -169,6 +170,11 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
+        for(int i=0;i<newsItem.getClothesCreators().size();i++){
+            Clothes clothes=newsItem.getClothesCreators().get(i);
+            Log.d("#####", "aaa   "+clothes.getClothesTitle()+clothes.getBuffer());
+            filamentModel.populateScene(clothes.getBuffer(),clothes);
+        }
         holder.setIsRecyclable(false);
         holder.like_count.setText(newsItem.getLikes_count());
         holder.description.setText(newsItem.getItem_description());
@@ -224,6 +230,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
             }
         });
 
+        holder.lookPrice.setText(String.valueOf(newsItem.getLookPrice()));
 
         holder.send.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -259,7 +266,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
     class ImageViewHolder extends RecyclerView.ViewHolder {
 
         ImageView  like, comment,send,options;
-        TextView description, like_count,clothesComponents;
+        TextView description, like_count,clothesComponents,lookPrice;
         SurfaceView surfaceView;
 
         public ImageViewHolder(@NonNull View itemView) {
@@ -273,6 +280,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
             comment = itemView.findViewById(R.id.comment);
             clothesComponents=itemView.findViewById(R.id.clothesCreator);
             options=itemView.findViewById(R.id.options);
+            lookPrice=itemView.findViewById(R.id.lookPrice);
         }
     }
 
@@ -659,7 +667,6 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
                 bottomSheetDialog.dismiss();
             }
         });
-
         linearTelegram.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

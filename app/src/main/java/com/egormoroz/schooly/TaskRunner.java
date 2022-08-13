@@ -19,7 +19,7 @@ public class TaskRunner {
         void onComplete(Clothes result);
     }
 
-    public <Clothes> void executeAsync(Callable<Clothes> callable, WardrobeFragment.TaskRunner.Callback<Clothes> callback) {
+    public <Clothes> void executeAsync(Callable<Clothes> callable, TaskRunner.Callback<Clothes> callback) {
         executor.execute(() -> {
             Clothes result = null;
             try {

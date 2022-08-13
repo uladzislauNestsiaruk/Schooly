@@ -114,4 +114,8 @@ public class Callbacks {
     public interface loadDialogs{
         void LoadData(ArrayList<Chat> dialogs,ArrayList<Chat> talksArrayList);
     }
+
+    public interface loadNewsTread{
+        void LoadNews(ArrayList<NewsItem> newsItemArrayList);
+    }
 }

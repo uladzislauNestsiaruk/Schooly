@@ -4,7 +4,7 @@
     android:layout_height="100dp"
     android:background="@drawable/corners20nocolor">
 
-    <com.google.ar.sceneform.SceneView
+    <SurfaceView
         android:id="@+id/sceneView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

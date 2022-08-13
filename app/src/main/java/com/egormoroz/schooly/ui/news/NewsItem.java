@@ -2,6 +2,7 @@ package com.egormoroz.schooly.ui.news;
 
 import android.widget.ImageView;
 
+import com.egormoroz.schooly.Person;
 import com.egormoroz.schooly.ui.coins.Transfer;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
 
@@ -12,6 +13,7 @@ public class NewsItem {
     private String item_description, likes_count, newsId, postTime, nick,
             comments, ImageUrl;
     private long lookPrice, lookPriceDollar, viewCount;
+    Person person;
     private ArrayList<Clothes> clothesArrayList;
 
     public NewsItem() {
@@ -20,7 +22,7 @@ public class NewsItem {
 
     public NewsItem(String ImageUrl, String item_description, String likes_count, String newsId,
                     String comments, ArrayList<Clothes> clothesArrayList, long lookPrice, long viewCount
-            , String postTime, String nick, long lookPriceDollar) {
+            , String postTime, String nick, long lookPriceDollar,Person person) {
         this.ImageUrl = ImageUrl;
         this.likes_count = likes_count;
         this.item_description = item_description;
@@ -32,6 +34,7 @@ public class NewsItem {
         this.postTime = postTime;
         this.nick = nick;
         this.lookPriceDollar = lookPriceDollar;
+        this.person=person;
     }
 
     public String getImageUrl() {
@@ -121,6 +124,14 @@ public class NewsItem {
 
     public void setLookPriceDollar(long lookPriceDollar) {
         this.lookPriceDollar = lookPriceDollar;
+    }
+
+    public Person getPerson() {
+        return this.person;
+    }
+
+    public void setPerson(Person person) {
+        this.person = person;
     }
 
 }

@@ -216,19 +216,6 @@ public class MainActivity extends AppCompatActivity {
 					@Override
 					public void getClothes(ArrayList<Clothes> allClothes) {
 						userInformation.setClothes(allClothes);
-//						ExecutorService executorService= Executors.newCachedThreadPool();
-//						executorService.execute(new Runnable() {
-//							@Override
-//							public void run() {
-//								if(a==0){
-//									Log.d("#####","startEx");
-//									BufferLoader.loadBuffers(allClothes,bundle);
-//									a++;
-//								}	else{
-//
-//								}
-//							}
-//						});
 					}
 				});
 				RecentMethods.getSubscribersList(nick, firebaseModel, new Callbacks.getSubscribersList() {

@@ -69,37 +69,14 @@ public class NewsFragment extends Fragment {
 
         viewPager2 = root.findViewById(R.id.picturenewspager);
         ref = FirebaseDatabase.getInstance().getReference("news");
-        viewPager2.setAdapter(new NewsAdapter(userInformation.getLooks(), userInformation, bundle,NewsFragment.newInstance(userInformation, bundle),getActivity()));
+        LoadNewsTread loadNewsTread=new LoadNewsTread(userInformation, new Callbacks.loadNewsTread() {
+            @Override
+            public void LoadNews(ArrayList<NewsItem> newsItemArrayList) {
+                viewPager2.setAdapter(new NewsAdapter(newsItemArrayList, userInformation, bundle,NewsFragment.newInstance(userInformation, bundle),getActivity()));
+            }
+        });
 
-//        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
-//            @Override
-//            public void PassUserNick(String nick) {
-//                remoteImages.clear();
-//                Query query=firebaseModel.getReference("news").orderByChild("TimeMill");
-//                query.addValueEventListener(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                        if (snapshot.hasChildren()) {
-//                            remoteImages.clear();
-//                            for (DataSnapshot data : snapshot.getChildren()) {
-//                                Log.d("news", data.toString());
-//                                DataSnapshot dataSnapshot = data;
-//                                String from = data.child("from").getValue().toString();
-//                                isSubscribed(from, dataSnapshot);
-//                            }
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(@NonNull DatabaseError error) {
-//
-//                    }
-//                });
-//
-//            }
-//        });
-
-        return root;
+       return root;
     }
 
 
