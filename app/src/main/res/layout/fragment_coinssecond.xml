@@ -25,12 +25,35 @@
             android:textColor="@color/app_color"
             android:textSize="22sp" />
 
+        <RelativeLayout
+            android:id="@+id/adRelative"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/back"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="24dp"
+            android:background="@drawable/corners14appcolor">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:fontFamily="@font/montserrat_bold"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:text="@string/watchcommercial"
+                android:textColor="@color/white"
+                android:textSize="17dp" />
+
+        </RelativeLayout>
+
         <LinearLayout
             android:id="@+id/bigLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="18dp"
-            android:layout_below="@+id/back"
+            android:layout_marginTop="24dp"
+            android:layout_below="@+id/adRelative"
             android:layout_marginStart="18dp"
             android:layout_marginEnd="18dp"
             android:orientation="horizontal">

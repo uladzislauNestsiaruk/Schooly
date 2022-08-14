@@ -517,7 +517,7 @@
     <string name="noChats">No chats:(</string>
     <string name="noChatsFound">No chats found:(</string>
     <string name="createNewTalk">Create a new talk +</string>
-    <string name="dialogueMembers">Dialog members</string>
+    <string name="dialogueMembers">Dialogue members</string>
     <string name="deleteChat">Delete chat</string>
     <string name="chatDeleted">Chat is deleted</string>
     <string name="creatingTalk">Creating a talk</string>
@@ -530,6 +530,9 @@
     <string name="leaveTalk">Leave talk</string>
     <string name="leaveTalkQuestion">Leave talk?</string>
     <string name="talkIsCreated">The talk is created</string>
+    <string name="watchcommercial">Watch the ad and get 25 coins</string>
+    <string name="watch5ad">You can only watch 5 ads per day for a fee</string>
+    <string name="coinsreceived">Received 25 coins!</string>
 
 
 

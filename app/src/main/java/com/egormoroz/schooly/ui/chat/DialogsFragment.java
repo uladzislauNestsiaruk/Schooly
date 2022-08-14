@@ -37,7 +37,9 @@ import com.google.firebase.database.DataSnapshot;
 
 import java.util.ArrayList;
 
-public class DialogsFragment extends Fragment {
+public class
+
+DialogsFragment extends Fragment {
 
     ImageView backToMainFromChat;
     String getEditText;

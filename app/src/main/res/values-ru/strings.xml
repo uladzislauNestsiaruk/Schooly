@@ -530,6 +530,9 @@
     <string name="leaveTalk">Покинуть буседу</string>
     <string name="leaveTalkQuestion">Покинуть буседу?</string>
     <string name="talkIsCreated">Беседа создана</string>
+    <string name="watchcommercial">Посмотри рекламу и получи 25 коинов</string>
+    <string name="watch5ad">В день вы можете смотреть только 5 реклам за вознаграждение</string>
+    <string name="coinsreceived">Получено 25 коинов!</string>
 
 
 </resources>

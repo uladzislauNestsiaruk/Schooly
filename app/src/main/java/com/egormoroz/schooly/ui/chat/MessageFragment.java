@@ -596,10 +596,44 @@ public final class MessageFragment extends Fragment {
 
 
         if(messagesList.size()==0){
-            firebaseModel.getUsersReference().child(messageReceiverName).child("Dialogs").child(messageSenderName)
-                    .setValue(new Chat(messageSenderName,"" , "", "personal", 0,new ArrayList<>(),"false",new ArrayList<>()));
-            firebaseModel.getUsersReference().child(messageSenderName).child("Dialogs").child(messageReceiverName)
-                    .setValue(new Chat(messageReceiverName,"" ,"" , "personal", 0,new ArrayList<>(),"falce",new ArrayList<>()));
+            ArrayList<UserPeopleAdapter> senderMembers=new ArrayList<>();
+            UserPeopleAdapter userPeopleAdapter=new UserPeopleAdapter();
+            userPeopleAdapter.setNick(userInformation.getNick());
+            userPeopleAdapter.setBio(userPeopleAdapter.getBio());
+            userPeopleAdapter.setAvatar(userPeopleAdapter.getAvatar());
+            senderMembers.add(userPeopleAdapter);
+            ArrayList<UserPeopleAdapter> receiverMembers=new ArrayList<>();
+            UserPeopleAdapter userPeopleAdapter1=new UserPeopleAdapter();
+            userPeopleAdapter1.setNick(messageSenderName);
+            firebaseModel.getUsersReference().child(messageReceiverName).child("bio").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DataSnapshot> task) {
+                    if(task.isSuccessful()){
+                        DataSnapshot snapshot=task.getResult();
+                        String bio="";
+                        if(snapshot.exists()){
+                            bio=snapshot.getValue(String.class);
+                        }
+                        userPeopleAdapter1.setBio(bio);
+                        firebaseModel.getUsersReference().child(messageSenderName).child("avatar")
+                                .get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                                if(task.isSuccessful()){
+                                    DataSnapshot snapshot1=task.getResult();
+                                    userPeopleAdapter1.setAvatar(snapshot1.getValue(String.class));
+                                    receiverMembers.add(userPeopleAdapter1);
+                                    Log.d("#####", messageSenderName+"fdgbreb");
+                                    firebaseModel.getUsersReference().child(messageReceiverName).child("Dialogs").child(messageSenderName)
+                                            .setValue(new Chat(messageSenderName,"" , "", "personal", 0,senderMembers,"false",new ArrayList<>()));
+                                    firebaseModel.getUsersReference().child(messageSenderName).child("Dialogs").child(messageReceiverName)
+                                            .setValue(new Chat(messageReceiverName,"" ,"" , "personal", 0,receiverMembers,"false",new ArrayList<>()));
+                                }
+                            }
+                        });
+                    }
+                }
+            });
         }
 
         DatabaseReference userMessageKeyRef = firebaseModel.getUsersReference().child(messageSenderName).child("Chats").child(messageReceiverName).child("Messages").push();

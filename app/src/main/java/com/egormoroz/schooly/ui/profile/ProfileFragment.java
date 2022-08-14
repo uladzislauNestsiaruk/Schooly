@@ -413,7 +413,7 @@ public class ProfileFragment extends Fragment {
                         b=1;
                         user = firebaseModel.getUsersReference().child(info.getNick());
                         surfaceView=view.findViewById(R.id.mainlookview);
-                        loadMainLookAndPerson(info, lockableNestedScrollViewOther);
+                        //loadMainLookAndPerson(info, lockableNestedScrollViewOther);
                         if(bundle.getString(sendNick+"PROFILE_OTHER_CHECK_VALUE")==null){
                             firebaseModel.getUsersReference().child(info.getNick())
                                     .child("blackList").child(userInformation.getNick())
@@ -510,7 +510,7 @@ public class ProfileFragment extends Fragment {
                                         info.setBio(snapshot.child("bio").getValue(String.class));
                                         info.setPerson(snapshot.child("person").getValue(Person.class));
                                         surfaceView=view.findViewById(R.id.mainlookview);
-                                        loadMainLookAndPerson(info,lockableNestedScrollViewOther);
+                                        //loadMainLookAndPerson(info,lockableNestedScrollViewOther);
                                         bundle.putSerializable(sendNick+"PROFILE_OTHER_BUNDLE", (Serializable) info);
                                         firebaseModel.getUsersReference().child(info.getNick())
                                                 .child("blackList").child(userInformation.getNick())

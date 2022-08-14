@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
@@ -20,7 +21,10 @@ import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.ui.main.Shop.ViewingClothes;
 import com.egormoroz.schooly.ui.main.UserInformation;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.database.DataSnapshot;
 
 public class CoinsFragmentSecond extends Fragment {
 
@@ -35,9 +39,11 @@ public class CoinsFragmentSecond extends Fragment {
     ImageView oneImage,twoImage,fiveImage
             ,sevenImage,tenImage,twentyImage,back;
 
+    long adCount=0;
     Fragment fragment;
     UserInformation userInformation;
     Bundle bundle;
+    RelativeLayout adRelative;
 
     public CoinsFragmentSecond(Fragment fragment,UserInformation userInformation,Bundle bundle) {
         this.fragment = fragment;
@@ -57,8 +63,6 @@ public class CoinsFragmentSecond extends Fragment {
         BottomNavigationView bnv = getActivity().findViewById(R.id.bottomNavigationView);
         bnv.setVisibility(bnv.GONE);
         firebaseModel.initAll();
-//        AppBarLayout abl = getActivity().findViewById(R.id.AppBarLayout);
-//        abl.setVisibility(abl.GONE);
         return root;
     }
 
@@ -72,8 +76,31 @@ public class CoinsFragmentSecond extends Fragment {
                 RecentMethods.setCurrentFragment(fragment, getActivity());
             }
         };
-
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
+
+        adRelative=view.findViewById(R.id.adRelative);
+        adRelative.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                firebaseModel.getUsersReference().child(userInformation.getNick()).child("adCount")
+                        .get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DataSnapshot> task) {
+                        if(task.isSuccessful()){
+                            DataSnapshot snapshot=task.getResult();
+                            if(snapshot.exists()){
+                                adCount=snapshot.getValue(Long.class);
+                            }
+                            if(adCount<5){
+                                RecentMethods.setCurrentFragment(AdsFragment.newInstance(CoinsMainFragment.newInstance(userInformation, bundle), userInformation, bundle), getActivity());
+                            }else{
+                                Toast.makeText(getContext(),R.string.watch5ad , Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+                });
+            }
+        });
         back=view.findViewById(R.id.back);
         back.setOnClickListener(new View.OnClickListener() {
             @Override

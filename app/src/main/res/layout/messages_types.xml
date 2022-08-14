@@ -13,32 +13,30 @@
         android:layout_marginTop="4dp"
         android:background="@drawable/cornerstextmessagesfromother">
 
-
         <TextView
             android:id="@+id/receiver_message_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_marginLeft="3dp"
             android:layout_marginTop="4dp"
-            android:layout_marginBottom="4dp"
-            android:padding="10dp"
-            android:textColor="@android:color/white"
-            android:textSize="14sp"
+            android:layout_marginBottom="2dp"
+            android:autoLink="all"
             android:fontFamily="@font/montserrat_bold"
-            android:autoLink="all"/>
+            android:paddingStart="16dp"
+            android:paddingTop="10dp"
+            android:paddingEnd="16dp"
+            android:textColor="@color/white"
+            android:textSize="14sp"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="10sp"
             android:fontFamily="@font/montserrat_bold"
-            android:id="@+id/reciver_time"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginBottom="4dp"
+            android:id="@+id/receiver_time"
+            android:layout_alignEnd="@+id/receiver_message_text"
+            android:layout_below="@id/receiver_message_text"
             android:layout_marginEnd="4dp"
-            android:paddingBottom="8dp"
+            android:paddingBottom="4dp"
             android:textColor="@color/white"
             />
     </RelativeLayout>
@@ -47,10 +45,10 @@
         android:id="@+id/textMessageOutcoming"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="110dp"
         android:layout_alignParentEnd="true"
-        android:layout_marginBottom="4dp"
+        android:layout_marginStart="110dp"
         android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
         android:background="@drawable/cornerstextmessagesfromme">
 
         <TextView
@@ -58,10 +56,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignEnd="@+id/sender_message_text"
-            android:layout_alignParentBottom="true"
+            android:layout_below="@id/sender_message_text"
             android:layout_marginEnd="4dp"
-            android:paddingBottom="4dp"
             android:fontFamily="@font/montserrat_bold"
+            android:paddingBottom="4dp"
             android:textColor="@color/white"
             android:textSize="10sp" />
 
@@ -70,15 +68,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:layout_marginBottom="4dp"
+            android:layout_marginBottom="2dp"
+            android:autoLink="all"
             android:fontFamily="@font/montserrat_bold"
-            android:paddingEnd="10dp"
+            android:paddingStart="20dp"
             android:paddingTop="10dp"
-            android:paddingStart="10dp"
-            android:paddingBottom="16dp"
+            android:paddingEnd="10dp"
             android:textColor="@color/white"
-            android:textSize="14sp"
-            android:autoLink="all"/>
+            android:textSize="14sp" />
 
     </RelativeLayout>
 
@@ -177,15 +174,15 @@
     </RelativeLayout>
 
 
-        <ImageView
-            android:id="@+id/message_receiver_image_view"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:background="@drawable/cornerstextmessagesfromother"
-            android:layout_alignParentStart="true"
-            android:layout_marginStart="50dp"
-            android:layout_marginTop="13dp"
-            android:scaleType="centerCrop" />
+    <ImageView
+        android:id="@+id/message_receiver_image_view"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="13dp"
+        android:background="@drawable/cornerstextmessagesfromother"
+        android:scaleType="centerCrop" />
 
     <ImageView
         android:id="@+id/message_sender_image_view"

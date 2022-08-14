@@ -77,11 +77,11 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             outMessage = itemView.findViewById(R.id.textMessageOutcoming);
             inMessage = itemView.findViewById(R.id.textMessageIncoming);
             inVoice = itemView.findViewById(R.id.incomingVoice);
-            //receiverMessageTime = itemView.findViewById(R.id.receiver_time);
+            receiverMessageTime = itemView.findViewById(R.id.receiver_time);
             senderMessageTime = itemView.findViewById(R.id.sender_time);
             senderMessageText = (TextView) itemView.findViewById(R.id.sender_message_text);
             receiverMessageText = (TextView) itemView.findViewById(R.id.receiver_message_text);
-         //   receiverProfileImage = (CircleImageView) itemView.findViewById(R.id.message_profile_image);
+            //receiverProfileImage = (CircleImageView) itemView.findViewById(R.id.message_profile_image);
             messageReceiverPicture = itemView.findViewById(R.id.message_receiver_image_view);
             messageSenderPicture = itemView.findViewById(R.id.message_sender_image_view);
             senderPlay = itemView.findViewById(R.id.imgPlay);
