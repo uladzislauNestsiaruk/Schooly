@@ -627,7 +627,7 @@ public class WardrobeFragment extends Fragment {
     public void loadPerson(UserInformation userInformation,LockableNestedScrollView lockableNestedScrollView){
         try {
             if(bundle.getSerializable("PERSON"+userInformation.getNick())==null){
-                uri = new URI(userInformation.getPerson().getBody());
+                uri = new URI(userInformation.getPerson().getBody().getModel());
                 buffer = getBytes(uri.toURL());
                 bufferToFilament= ByteBuffer.wrap(buffer);
                 buffers=new ArrayList<>();
@@ -635,15 +635,15 @@ public class WardrobeFragment extends Fragment {
                 bundle.putSerializable("PERSON"+userInformation.getNick(),buffers);
                 filamentModel.initFilament(surfaceView,bufferToFilament,true,lockableNestedScrollView
                         ,"regularRender",true);
-                loadBodyPart(userInformation.getPerson().getBrows());
-                loadBodyPart(userInformation.getPerson().getEars());
-                loadBodyPart(userInformation.getPerson().getEyes());
-                loadBodyPart(userInformation.getPerson().getHair());
-                loadBodyPart(userInformation.getPerson().getHead());
-                loadBodyPart(userInformation.getPerson().getLips());
-                loadBodyPart(userInformation.getPerson().getNose());
-                loadBodyPart(userInformation.getPerson().getPirsing());
-                loadBodyPart(userInformation.getPerson().getSkinColor());
+                loadBodyPart(userInformation.getPerson().getBrows().getModel());
+                loadBodyPart(userInformation.getPerson().getEars().getModel());
+                loadBodyPart(userInformation.getPerson().getEyes().getModel());
+                loadBodyPart(userInformation.getPerson().getHair().getModel());
+                loadBodyPart(userInformation.getPerson().getHead().getModel());
+                loadBodyPart(userInformation.getPerson().getLips().getModel());
+                loadBodyPart(userInformation.getPerson().getNose().getModel());
+                loadBodyPart(userInformation.getPerson().getPirsing().getModel());
+                loadBodyPart(userInformation.getPerson().getSkinColor().getModel());
 
             }else{
                 ArrayList<Buffer> buffers= (ArrayList<Buffer>) bundle.getSerializable("PERSON"+userInformation.getNick());

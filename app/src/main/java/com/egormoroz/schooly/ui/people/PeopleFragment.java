@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.egormoroz.schooly.Callbacks;
+import com.egormoroz.schooly.FacePart;
 import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.Person;
 import com.egormoroz.schooly.R;
@@ -37,6 +38,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.nio.Buffer;
 import java.util.ArrayList;
 
 public class PeopleFragment extends Fragment {
@@ -60,6 +62,7 @@ public class PeopleFragment extends Fragment {
 
     }
     FirebaseModel firebaseModel=new FirebaseModel();
+    static Buffer b;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -229,7 +232,8 @@ public class PeopleFragment extends Fragment {
                 , new ArrayList<>(), ""," ","open","open","open","open",
                 new ArrayList<>(),"regular", new ArrayList<>(),0,new ArrayList<>(),new ArrayList<>()
                 ,new ArrayList<>(),new ArrayList<>(),new ArrayList<>(),new ArrayList<>()
-                ,new ArrayList<Clothes>(),new Person("", "", "", "", "", "", "", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Fma.glb?alt=media&token=f7430695-13cb-4365-8910-c61b59a96acf", "", ""),
+                ,new ArrayList<Clothes>(),new Person(new FacePart(), new FacePart(), new FacePart(), new FacePart(), new FacePart(), new FacePart(), new FacePart(), new FacePart("", "", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Fma.glb?alt=media&token=f7430695-13cb-4365-8910-c61b59a96acf", "",b ),
+                new FacePart(), new FacePart()),
                 new ArrayList<>(),new ArrayList<>()));
     }
     public void initUserEnter(){

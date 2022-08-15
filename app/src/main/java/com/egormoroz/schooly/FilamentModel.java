@@ -262,6 +262,7 @@ public class FilamentModel {
 
     public void loadGlb(Buffer buffer){
         materialProvider=new UbershaderLoader(engine);
+        Log.d("#####", "gg1");
         assetLoader=new AssetLoader(engine,materialProvider,EntityManager.get());
         filamentAsset=assetLoader.createAssetFromBinary(buffer);
         resourceLoader=new ResourceLoader(engine, normalizeSkinningWeights, recomputeBoundingBoxes, ignoreBindTransform);
@@ -287,6 +288,7 @@ public class FilamentModel {
     }
 
     public void populateSceneFacePart(Buffer buffer) {
+        Log.d("#####", "gg");
         FilamentAsset filamentAsset=assetLoader.createAssetFromBinary(buffer);
         filamentAssets.add(filamentAsset);
         resourceLoader.asyncBeginLoad(filamentAsset);
@@ -380,4 +382,27 @@ public class FilamentModel {
 
     }
 
+    public void initFilamentForPersonCustom(SurfaceView surfaceView,Buffer buffer){
+        Filament.init();
+        Gltfio.init();
+        Utils.INSTANCE.init();
+        cameraManipulator=new Manipulator.Builder()
+                .targetPosition(0.0f, 10.0f, 0.0f)
+                .orbitHomePosition(0.0f, 0.5f, 5.0f)
+                .viewport(surfaceView.getWidth(), surfaceView.getHeight())
+                .zoomSpeed(0.07f)
+                .mapMinDistance(5.0f)
+                .build(Manipulator.Mode.ORBIT);
+        uiHelper=new UiHelper(UiHelper.ContextErrorPolicy.DONT_CHECK);
+        engine=Engine.create();
+        modelViewer=new ModelViewer(surfaceView, engine, uiHelper, cameraManipulator);
+        setupFilament();
+        loadGlb(buffer);
+        Skybox skybox=new Skybox.Builder()
+                //.color(0.255f, 0.124f, 0.232f, 1.0f)
+                .color(0f, 0f, 0f, 1.0f)
+                .build(modelViewer.getEngine());
+        loadDefaultLight();
+        modelViewer.getScene().setSkybox(skybox);
+    }
 }

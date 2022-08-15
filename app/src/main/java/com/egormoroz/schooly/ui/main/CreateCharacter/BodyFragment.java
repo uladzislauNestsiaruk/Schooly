@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.egormoroz.schooly.FacePart;
 import com.egormoroz.schooly.MainActivity;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.ui.main.GenderFragment;
@@ -24,7 +25,8 @@ public class BodyFragment extends Fragment {
 
     RecyclerView recyclerView;
     CharacterAdapter.ItemClickListener itemClickListener;
-    ArrayList<String> bodyPartsArrayList=new ArrayList<>();
+    ArrayList<FacePart> bodyPartsArrayList=new ArrayList<>();
+    ArrayList<FacePart> activeFaceParts=new ArrayList<>();
     public static BodyFragment newInstance() {
         return new BodyFragment();
     }
@@ -45,7 +47,7 @@ public class BodyFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         recyclerView=view.findViewById(R.id.recyclerSkinColour);
-        CharacterAdapter characterAdapter=new CharacterAdapter(bodyPartsArrayList,itemClickListener);
+        CharacterAdapter characterAdapter=new CharacterAdapter(bodyPartsArrayList,itemClickListener,activeFaceParts,"body");
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
         recyclerView.setAdapter(characterAdapter);
     }

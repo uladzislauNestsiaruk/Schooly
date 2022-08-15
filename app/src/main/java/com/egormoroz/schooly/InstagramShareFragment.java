@@ -134,7 +134,7 @@ public class InstagramShareFragment extends Fragment {
             imageBackground.setVisibility(View.GONE);
             try {
                 if(bundle.getSerializable("CHARACTERMODEL")==null){
-                    loadBuffer(userInformation.getPerson().getBody());
+                    loadBuffer(userInformation.getPerson().getBody().getModel());
                     bufferToFilament=future.get();
                     ArrayList<Buffer> buffers=new ArrayList<>();
                     buffers.add(bufferToFilament);

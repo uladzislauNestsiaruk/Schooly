@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.egormoroz.schooly.FacePart;
 import com.egormoroz.schooly.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -20,7 +21,8 @@ public class NoseFragment extends Fragment {
 
     RecyclerView recyclerView;
     CharacterAdapter.ItemClickListener itemClickListener;
-    ArrayList<String> bodyPartsArrayList=new ArrayList<>();
+    ArrayList<FacePart> bodyPartsArrayList=new ArrayList<>();
+    ArrayList<FacePart> activeFaceParts=new ArrayList<>();
 
     public static NoseFragment newInstance() {
         return new NoseFragment();
@@ -43,7 +45,7 @@ public class NoseFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         recyclerView=view.findViewById(R.id.recyclerSkinColour);
-        CharacterAdapter characterAdapter=new CharacterAdapter(bodyPartsArrayList,itemClickListener);
+        CharacterAdapter characterAdapter=new CharacterAdapter(bodyPartsArrayList,itemClickListener,activeFaceParts,"nose");
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
         recyclerView.setAdapter(characterAdapter);
     }

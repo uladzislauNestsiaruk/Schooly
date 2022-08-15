@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.egormoroz.schooly.FacePart;
 import com.egormoroz.schooly.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -20,7 +21,8 @@ public class HairstyleFragment extends Fragment {
 
     RecyclerView recyclerView;
     CharacterAdapter.ItemClickListener itemClickListener;
-    ArrayList<String> bodyPartsArrayList=new ArrayList<>();
+    ArrayList<FacePart> bodyPartsArrayList=new ArrayList<>();
+    ArrayList<FacePart> activeFaceParts=new ArrayList<>();
     public static HairstyleFragment newInstance() {
         return new HairstyleFragment();
     }
@@ -41,8 +43,15 @@ public class HairstyleFragment extends Fragment {
     public void onViewCreated(@Nullable View view,@NonNull Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
 
+
+        itemClickListener=new CharacterAdapter.ItemClickListener() {
+            @Override
+            public void onItemClick(FacePart facePart) {
+
+            }
+        };
         recyclerView=view.findViewById(R.id.recyclerSkinColour);
-        CharacterAdapter characterAdapter=new CharacterAdapter(bodyPartsArrayList,itemClickListener);
+        CharacterAdapter characterAdapter=new CharacterAdapter(bodyPartsArrayList,itemClickListener,activeFaceParts,"hair");
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
         recyclerView.setAdapter(characterAdapter);
 

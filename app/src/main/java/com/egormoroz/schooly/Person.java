@@ -1,19 +1,19 @@
 package com.egormoroz.schooly;
 
 public class Person {
-    private String hair;
-    private String brows;
-    private String eyes;
-    private String nose;
-    private String lips;
-    private String skinColor;
-    private String pirsing;
-    private String body;
-    private String ears;
-    private String head;
+    private FacePart hair;
+    private FacePart brows;
+    private FacePart eyes;
+    private FacePart nose;
+    private FacePart lips;
+    private FacePart skinColor;
+    private FacePart pirsing;
+    private FacePart body;
+    private FacePart ears;
+    private FacePart head;
 
-    public Person(String hair,String brows,String eyes,String nose,String lips,
-                  String skinColor,String pirsing,String body,String ears,String head){
+    public Person(FacePart hair,FacePart brows,FacePart eyes,FacePart nose,FacePart lips,
+                  FacePart skinColor,FacePart pirsing,FacePart body,FacePart ears,FacePart head){
         this.hair=hair;
         this.brows=brows;
         this.eyes=eyes;
@@ -30,83 +30,83 @@ public class Person {
 
     }
 
-    public String  getHair(){
+    public FacePart  getHair(){
         return this.hair;
     }
 
-    public void setHair(String  hair){
+    public void setHair(FacePart  hair){
         this.hair=hair;
     }
 
-    public String getBrows(){
+    public FacePart getBrows(){
         return this.brows;
     }
 
-    public void setBrows(String brows){
+    public void setBrows(FacePart brows){
         this.brows=brows;
     }
 
-    public String  getEyes(){
+    public FacePart  getEyes(){
         return this.eyes;
     }
 
-    public void setEyes(String  eyes){
+    public void setEyes(FacePart  eyes){
         this.eyes=eyes;
     }
 
-    public String getNose(){
+    public FacePart getNose(){
         return this.nose;
     }
 
-    public void setNose(String nose){
+    public void setNose(FacePart nose){
         this.nose=nose;
     }
 
-    public String  getLips(){
+    public FacePart  getLips(){
         return this.lips;
     }
 
-    public void setLips(String  lips){
+    public void setLips(FacePart  lips){
         this.lips=lips;
     }
 
-    public String getSkinColor(){
+    public FacePart getSkinColor(){
         return this.skinColor;
     }
 
-    public void setSkinColor(String skinColor){
+    public void setSkinColor(FacePart skinColor){
         this.skinColor=skinColor;
     }
 
-    public String  getPirsing(){
+    public FacePart  getPirsing(){
         return this.pirsing;
     }
 
-    public void setPirsing(String  pirsing){
+    public void setPirsing(FacePart  pirsing){
         this.pirsing=pirsing;
     }
 
-    public String getBody(){
+    public FacePart getBody(){
         return this.body;
     }
 
-    public void setBody(String body){
+    public void setBody(FacePart body){
         this.body=body;
     }
 
-    public String  getEars(){
+    public FacePart  getEars(){
         return this.ears;
     }
 
-    public void setEars(String  ears){
+    public void setEars(FacePart  ears){
         this.ears=ears;
     }
 
-    public String getHead(){
+    public FacePart getHead(){
         return this.head;
     }
 
-    public void setHead(String head){
+    public void setHead(FacePart head){
         this.head=head;
     }
 }

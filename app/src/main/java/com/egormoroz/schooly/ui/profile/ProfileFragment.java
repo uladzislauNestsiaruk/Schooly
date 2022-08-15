@@ -203,7 +203,7 @@ public class ProfileFragment extends Fragment {
             }
         });
         RecentMethods.setCurrentFragment(MessageFragment.newInstance(userInformation, bundle, ProfileFragment.newInstance("other", info.getNick(), fragment, userInformation, bundle),
-                new Chat(info.getNick(), "", "", "personal", 0, new ArrayList<>(), "falce", new ArrayList<>())), getActivity());
+                new Chat(info.getNick(), "", "", "personal", 0, new ArrayList<>(), "falce", new ArrayList<>(),0)), getActivity());
     }
 
     @Override
@@ -1558,64 +1558,61 @@ public class ProfileFragment extends Fragment {
 
     public void loadMainLookAndPerson(UserInformation userInformation,LockableNestedScrollView lockableNestedScrollView){
         try {
-            if(bundle.getSerializable("PERSON"+userInformation.getNick())==null){
-                loadBuffer(userInformation.getPerson().getBody());
-                bufferToFilament = future.get();
-                buffers=new ArrayList<>();
+            if (bundle.getSerializable("PERSON" + userInformation.getNick()) == null) {
+                uri = new URI(userInformation.getPerson().getBody().getModel());
+                buffer = getBytes(uri.toURL());
+                bufferToFilament = ByteBuffer.wrap(buffer);
+                buffers = new ArrayList<>();
                 buffers.add(bufferToFilament);
-                bundle.putSerializable("PERSON"+userInformation.getNick(),buffers);
-                filamentModel.initFilament(surfaceView,bufferToFilament,true,lockableNestedScrollView
-                        ,"regularRender",true);
-                loadBodyPart(userInformation.getPerson().getBrows());
-                loadBodyPart(userInformation.getPerson().getEars());
-                loadBodyPart(userInformation.getPerson().getEyes());
-                loadBodyPart(userInformation.getPerson().getHair());
-                loadBodyPart(userInformation.getPerson().getHead());
-                loadBodyPart(userInformation.getPerson().getLips());
-                loadBodyPart(userInformation.getPerson().getNose());
-                loadBodyPart(userInformation.getPerson().getPirsing());
-                loadBodyPart(userInformation.getPerson().getSkinColor());
+                bundle.putSerializable("PERSON" + userInformation.getNick(), buffers);
+                filamentModel.initFilament(surfaceView, bufferToFilament, true, lockableNestedScrollView
+                        , "regularRender", true);
+                loadBodyPart(userInformation.getPerson().getBrows().getModel());
+                loadBodyPart(userInformation.getPerson().getEars().getModel());
+                loadBodyPart(userInformation.getPerson().getEyes().getModel());
+                loadBodyPart(userInformation.getPerson().getHair().getModel());
+                loadBodyPart(userInformation.getPerson().getHead().getModel());
+                loadBodyPart(userInformation.getPerson().getLips().getModel());
+                loadBodyPart(userInformation.getPerson().getNose().getModel());
+                loadBodyPart(userInformation.getPerson().getPirsing().getModel());
+                loadBodyPart(userInformation.getPerson().getSkinColor().getModel());
 
-            }else{
-                ArrayList<Buffer> buffers= (ArrayList<Buffer>) bundle.getSerializable("PERSON"+userInformation.getNick());
-                for(int i=0;i<buffers.size();i++){
-                    Buffer buffer3=buffers.get(i);
-                    if(i==0){
-                        filamentModel.initFilament(surfaceView,buffer3 ,true,lockableNestedScrollView
-                                ,"regularRender",true);
-                    }else{
+            } else {
+                ArrayList<Buffer> buffers = (ArrayList<Buffer>) bundle.getSerializable("PERSON" + userInformation.getNick());
+                for (int i = 0; i < buffers.size(); i++) {
+                    Buffer buffer3 = buffers.get(i);
+                    if (i == 0) {
+                        filamentModel.initFilament(surfaceView, buffer3, true, lockableNestedScrollView
+                                , "regularRender", true);
+                    } else {
                         filamentModel.populateSceneFacePart(buffer3);
                     }
 
                 }
             }
-            if(bundle.getSerializable("MAINLOOK"+userInformation.getNick())==null){
+            if (bundle.getSerializable("MAINLOOK" + userInformation.getNick()) == null) {
                 firebaseModel.getUsersReference().child(userInformation.getNick())
                         .child("mainLook").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DataSnapshot> task) {
-                        if(task.isSuccessful()){
-                            DataSnapshot snapshot=task.getResult();
-                            for(DataSnapshot snap:snapshot.getChildren()){
-                                Clothes clothes=snap.getValue(Clothes.class);
+                        if (task.isSuccessful()) {
+                            DataSnapshot snapshot = task.getResult();
+                            for (DataSnapshot snap : snapshot.getChildren()) {
+                                Clothes clothes = snap.getValue(Clothes.class);
                                 addModelInScene(clothes);
                             }
-                            bundle.putSerializable("MAINLOOK"+userInformation.getNick(), mainLookClothes);
+                            bundle.putSerializable("MAINLOOK" + userInformation.getNick(), mainLookClothes);
                         }
 
                     }
                 });
-            }else {
-                mainLookClothes= (ArrayList<Clothes>) bundle.getSerializable("MAINLOOK"+userInformation.getNick());
-                for(int i=0;i<mainLookClothes.size();i++){
-                    Clothes clothes=mainLookClothes.get(0);
+            } else {
+                mainLookClothes = (ArrayList<Clothes>) bundle.getSerializable("MAINLOOK" + userInformation.getNick());
+                for (int i = 0; i < mainLookClothes.size(); i++) {
+                    Clothes clothes = mainLookClothes.get(0);
                     filamentModel.populateScene(clothes.getBuffer(), clothes);
                 }
             }
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         } catch (URISyntaxException e) {

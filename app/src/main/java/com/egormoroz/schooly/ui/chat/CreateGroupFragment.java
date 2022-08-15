@@ -100,7 +100,7 @@ public class CreateGroupFragment extends Fragment {
                         String chatName=editText.getText().toString().trim();
                         firebaseModel.getUsersReference().child(userInformation.getNick()).child("Dialogs")
                                 .child(chatName).setValue(new Chat(chatName, "", "", "talk",
-                                0, dialogMembers, "open", new ArrayList<>()));
+                                0, dialogMembers, "open", new ArrayList<>(),0));
                         Toast.makeText(getContext(), R.string.talkIsCreated, Toast.LENGTH_SHORT).show();
                     }    else{
                         Toast.makeText(getContext(), R.string.enterTalkTitle, Toast.LENGTH_SHORT).show();

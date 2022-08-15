@@ -33,6 +33,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.SignInMethodQueryResult;
 import com.google.firebase.database.*;
 
+import java.nio.Buffer;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -41,6 +42,7 @@ import java.util.Queue;
 import java.util.Random;
 
 public class RecentMethods {
+    static Buffer b;
     public static void isNickCorrect(String nickname, DatabaseReference reference, TextView errorTextnickname) {
         Log.d("########", "Method: isNickCorrect");
         Log.d("########", "Reference: " + String.valueOf(reference));
@@ -128,7 +130,8 @@ public class RecentMethods {
                 , new ArrayList<>(),new ArrayList<>(), 1,100,0, new ArrayList<>(),new ArrayList<>(),
                 "","","open","open","open",
                 "open",new ArrayList<>(),"regular", new ArrayList<>(),0,new ArrayList<>(),new ArrayList<>(),new ArrayList<>()
-                ,new ArrayList<>(),new ArrayList<>(),new ArrayList<>(),new ArrayList<Clothes>(),new Person("", "", "", "", "", "", "", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Fma.glb?alt=media&token=f7430695-13cb-4365-8910-c61b59a96acf", "", "")
+                ,new ArrayList<>(),new ArrayList<>(),new ArrayList<>(),new ArrayList<Clothes>(),new Person(new FacePart(), new FacePart(), new FacePart(), new FacePart(), new FacePart(), new FacePart(), new FacePart(), new FacePart("", "", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Fma.glb?alt=media&token=f7430695-13cb-4365-8910-c61b59a96acf", "",b ),
+                new FacePart(), new FacePart())
         ,new ArrayList<>(),new ArrayList<>());
         ref.child(nick).setValue(res).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
@@ -1464,7 +1467,7 @@ public class RecentMethods {
         userInformation.setAccountType(snapshot.child("accountType").getValue(String.class));
         userInformation.setmoney(snapshot.child("money").getValue(Long.class));
         userInformation.setTodayMining(snapshot.child("todayMining").getValue(Double.class));
-        userInformation.setPerson(snapshot.child("person").getValue(Person.class));
+        //userInformation.setPerson(snapshot.child("person").getValue(Person.class));
         return userInformation;
     }
     public static UserPeopleAdapter validateUserInformationToUserPeopleAdapter(UserInformation user){
@@ -1488,8 +1491,8 @@ public class RecentMethods {
                 , new ArrayList<>(), ""," ","open","open","open","open",
                 new ArrayList<>(),"regular", new ArrayList<>(),0,new ArrayList<>(),new ArrayList<>()
                 ,new ArrayList<>(),new ArrayList<>(),new ArrayList<>(),new ArrayList<>()
-                ,new ArrayList<Clothes>(),new Person("", "", "", "", "", "", "", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Fma.glb?alt=media&token=f7430695-13cb-4365-8910-c61b59a96acf",
-                "", ""),new ArrayList<>(),new ArrayList<>()
+                ,new ArrayList<Clothes>(),new Person(new FacePart(), new FacePart(), new FacePart(), new FacePart(), new FacePart(), new FacePart(), new FacePart(), new FacePart("", "", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Fma.glb?alt=media&token=f7430695-13cb-4365-8910-c61b59a96acf", "",b ),
+                new FacePart(), new FacePart()),new ArrayList<>(),new ArrayList<>()
         );
         user.setNick("fake");
         Random random = new Random();
@@ -1564,6 +1567,7 @@ public class RecentMethods {
                     chat.setLastTime(snap.child("lastTime").getValue(String.class));
                     chat.setUnreadMessages(snap.child("unreadMessages").getValue(Long.class));
                     chat.setType(snap.child("type").getValue(String.class));
+                    chat.setTimeMill(snap.child("timeMill").getValue(Long.class));
                     if(chat.getType().equals("personal")){
                         chatArrayList.add(chat);
                     }else{

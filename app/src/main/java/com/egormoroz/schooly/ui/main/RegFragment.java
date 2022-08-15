@@ -22,6 +22,7 @@ import androidx.fragment.app.Fragment;
 import com.egormoroz.schooly.CONST;
 import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.ErrorList;
+import com.egormoroz.schooly.FacePart;
 import com.egormoroz.schooly.Person;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
@@ -43,6 +44,7 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.nio.Buffer;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -50,6 +52,7 @@ import java.util.regex.Pattern;
 public class RegFragment extends Fragment {
     UserInformation userInformation;
     Bundle bundle;
+    static Buffer b;
 
     public RegFragment(UserInformation userInformation,Bundle bundle) {
         this.userInformation=userInformation;
@@ -347,7 +350,8 @@ public class RegFragment extends Fragment {
                                     , new ArrayList<>(), new ArrayList<>(), ""," ","open","open","open","open"
                                     ,new ArrayList<>(),"regular", new ArrayList<>(),0,new ArrayList<>(),new ArrayList<>()
                                     ,new ArrayList<>(),new ArrayList<>(),new ArrayList<>(),new ArrayList<>()
-                                    ,new ArrayList<Clothes>(),new Person("", "", "", "", "", "", "", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Fma.glb?alt=media&token=f7430695-13cb-4365-8910-c61b59a96acf", "", ""),
+                                    ,new ArrayList<Clothes>(),new Person(new FacePart(), new FacePart(), new FacePart(), new FacePart(), new FacePart(), new FacePart(), new FacePart(), new FacePart("", "", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Fma.glb?alt=media&token=f7430695-13cb-4365-8910-c61b59a96acf", "",b ),
+                                    new FacePart(), new FacePart()),
                                     new ArrayList<>(),new ArrayList<>());
                             reference.child(nick).setValue(res);
                             database.getReference("usersNicks")
