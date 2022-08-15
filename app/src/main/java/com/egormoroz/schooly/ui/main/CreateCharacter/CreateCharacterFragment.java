@@ -100,18 +100,20 @@ public class CreateCharacterFragment extends Fragment {
     static byte[] buffer;
     static URI uri;
     static Buffer bufferToFilament,b;
-    FilamentModel filamentModel=new FilamentModel();
+    static FilamentModel filamentModel=new FilamentModel();
     ArrayList<FacePart> facePartArrayList=new ArrayList<>();
     static ArrayList<FacePart> activeFaceParts=new ArrayList<>();
-
-    public CreateCharacterFragment(UserInformation userInformation,Bundle bundle,Fragment fragment) {
+    static ArrayList<String> activeFacePartsString=new ArrayList<>();
+    String from;
+    public CreateCharacterFragment(UserInformation userInformation,Bundle bundle,Fragment fragment,String from) {
         this.userInformation=userInformation;
         this.bundle=bundle;
         this.fragment=fragment;
+        this.from=from;
     }
 
-    public static CreateCharacterFragment newInstance(UserInformation userInformation,Bundle bundle,Fragment fragment) {
-        return new CreateCharacterFragment(userInformation,bundle,fragment);
+    public static CreateCharacterFragment newInstance(UserInformation userInformation,Bundle bundle,Fragment fragment,String from) {
+        return new CreateCharacterFragment(userInformation,bundle,fragment,from);
     }
 
     @Override
@@ -121,8 +123,6 @@ public class CreateCharacterFragment extends Fragment {
         BottomNavigationView bnv = getActivity().findViewById(R.id.bottomNavigationView);
         bnv.setVisibility(bnv.GONE);
         firebaseModel.initAll();
-//        AppBarLayout abl = getActivity().findViewById(R.id.AppBarLayout);
-//        abl.setVisibility(abl.GONE);
         return root;
     }
 
@@ -141,19 +141,26 @@ public class CreateCharacterFragment extends Fragment {
         ready=view.findViewById(R.id.ready);
         surfaceView=view.findViewById(R.id.surfaceViewCreateCharacter);
         viewPager=view.findViewById(R.id.viewPagerCharacter);
-
-        FacePart body=new FacePart();
-        body.setPartType("body");
-        body.setModel("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2F%D0%BD%D0%BE%D1%81%20%D1%87%D0%B5%D0%BB%D0%BE%D0%B2%D0%B5%D0%BA.glb?alt=media&token=d13b9b1e-514f-4070-9d2f-a0693daf51a8b");
-        FacePart nose=new FacePart();
-        nose.setModel("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Fnose123.glb?alt=media&token=e5ef0809-dd60-4b85-8882-7187abcbde8b");
-        nose.setPartType("nose");
-        facePartArrayList.add(nose);
-        TaskRunnerCustom taskRunnerCustom=new TaskRunnerCustom();
-        taskRunnerCustom.executeAsync(new LongRunningTask(body), (data) -> {
+        if(from.equals("reg")){
+            FacePart body=new FacePart();
+            body.setPartType("body");
+            body.setUid("fsdbjhbc");
+            body.setModel("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2F%D0%BD%D0%BE%D1%81%20%D1%87%D0%B5%D0%BB%D0%BE%D0%B2%D0%B5%D0%BA.glb?alt=media&token=d13b9b1e-514f-4070-9d2f-a0693daf51a8b");
+            FacePart nose=new FacePart();
+            nose.setModel("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Fnose123.glb?alt=media&token=e5ef0809-dd60-4b85-8882-7187abcbde8b");
+            nose.setPartType("nose");
+            nose.setUid("dswvbdf");
+//            FacePart hair=new FacePart();
+//            hair.setModel("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2F%D0%BF%D1%80%D0%B8%D1%87%D0%B03.glb?alt=media&token=1fe8e688-7f84-48af-aafd-6a3fefa684fc");
+//            hair.setPartType("hair");
+//            facePartArrayList.add(hair);
+            facePartArrayList.add(nose);
+            TaskRunnerCustom taskRunnerCustom=new TaskRunnerCustom();
+            taskRunnerCustom.executeAsync(new LongRunningTask(body), (data) -> {
                 filamentModel.initFilamentForPersonCustom(surfaceView,data.getBuffer() );
                 loadDefaultParts(facePartArrayList);
-        });
+            });
+        }
         ready.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -222,7 +229,7 @@ public class CreateCharacterFragment extends Fragment {
         int checkOnMakeInvisible=0;
         FacePart facePartInvisible=new FacePart();
         for(int i=0;i<activeFaceParts.size();i++){
-            FacePart facePart1=new FacePart();
+            FacePart facePart1=activeFaceParts.get(i);
             if(facePart1.getUid().equals(facePart.getUid())){
                 break;
             }
@@ -232,10 +239,26 @@ public class CreateCharacterFragment extends Fragment {
             }
             if(i==activeFaceParts.size()-1){
                 if(checkOnMakeInvisible==1){
-
+                    activeFacePartsString.remove(facePartInvisible.getUid());
+                    changeFacePart(facePart, facePartInvisible);
+                }else{
+                    changeFacePart(facePart, null);
                 }
             }
         }
+    }
+
+    public static ArrayList<FacePart> sentFaceParts(){
+        return activeFaceParts;
+    }
+
+    public static void changeFacePart(FacePart newFacePart,FacePart facePartToChange){
+        if(facePartToChange!=null){
+            filamentModel.setMaskOnFacePart(facePartToChange);
+        }
+        activeFaceParts.add(newFacePart);
+        activeFacePartsString.add(newFacePart.getUid());
+        filamentModel.populateSceneFacePart(newFacePart.getBuffer());
     }
 
     @Override
@@ -298,13 +321,13 @@ public class CreateCharacterFragment extends Fragment {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d("###", "createUserWithEmail:success");
+                            Person person=setAllPerson(activeFaceParts);
                             FirebaseUser user = AuthenticationBase.getCurrentUser();
                             UserInformation res = new UserInformation(nick, RecentMethods.getPhone(email), user.getUid(),
                                     "6", password, "Helicopter", 1000, new ArrayList<>(),new ArrayList<>(),1,100,0
                                     , new ArrayList<>(), new ArrayList<>(), ""," ","open","open","open","open"
                                     ,new ArrayList<>(),"regular", new ArrayList<>(),0,new ArrayList<>(),new ArrayList<>()
-                                    ,new ArrayList<>(),new ArrayList<>(),new ArrayList<>(),new ArrayList<>(),new ArrayList<Clothes>(),new Person(new FacePart(), new FacePart(), new FacePart(), new FacePart(), new FacePart(), new FacePart(), new FacePart(), new FacePart("", "", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Fma.glb?alt=media&token=f7430695-13cb-4365-8910-c61b59a96acf", "",b ),
-                                    new FacePart(), new FacePart()),
+                                    ,new ArrayList<>(),new ArrayList<>(),new ArrayList<>(),new ArrayList<>(),new ArrayList<Clothes>(),person,
                                     new ArrayList<>(),new ArrayList<>());
                             reference.child(nick).setValue(res);
                             FirebaseModel firebaseModel=new FirebaseModel();
@@ -386,40 +409,48 @@ public class CreateCharacterFragment extends Fragment {
         }
     }
 
-    public static byte[] getBytes( URL url) throws IOException {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        InputStream is = null;
-        try {
-            is = new BufferedInputStream(url.openStream());
-            byte[] byteChunk = new byte[4096];
-            int n;
-
-            while ( (n = is.read(byteChunk)) > 0 ) {
-                baos.write(byteChunk, 0, n);
-            }
-        }
-        catch (IOException e) {
-            Log.d("####", "Failed while reading bytes from %s: %s"+ url.toExternalForm()+ e.getMessage());
-            e.printStackTrace ();
-        }
-        finally {
-            if (is != null) { is.close(); }
-        }
-        return  baos.toByteArray();
-    }
-
     public static FacePart loadFacePart(FacePart facePart){
         try {
             uri = new URI(facePart.getModel());
-            buffer = getBytes(uri.toURL());
+            buffer = RecentMethods.getBytes(uri.toURL());
             bufferToFilament= ByteBuffer.wrap(buffer);
             facePart.setBuffer(bufferToFilament);
+            activeFaceParts.add(facePart);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
         return facePart;
+    }
+
+    public Person setAllPerson(ArrayList<FacePart> activeFaceParts){
+        Person person=new Person();
+        for(int i=0;i<activeFaceParts.size();i++){
+            FacePart facePart=activeFaceParts.get(i);
+            facePart.setBuffer(null);
+            switch (facePart.getPartType()){
+                case "body":
+                    person.setBody(facePart);
+                    break;
+                case "hair":
+                    person.setHair(facePart);
+                    break;
+                case "lips":
+                    person.setLips(facePart);
+                    break;
+                case "nose":
+                    person.setNose(facePart);
+                    break;
+                case "brows":
+                    person.setBrows(facePart);
+                    break;
+                case "eyes":
+                    person.setEyes(facePart);
+                    break;
+            }
+        }
+        return person;
     }
 
     public void loadDefaultParts(ArrayList<FacePart> facePartArrayList){

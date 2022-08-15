@@ -17,7 +17,7 @@ public class Chat {
 
     public Chat (String name, String LastTime, String LastMessage, String type,long unreadMessages,
                  ArrayList<UserPeopleAdapter> members,String notificationType,ArrayList<String> dialogueMaterials
-    ,long timeMill){
+            ,long timeMill){
         this.name = name;
         this.LastTime = LastTime;
         this.LastMessage = LastMessage;

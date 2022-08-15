@@ -33,11 +33,7 @@ import java.util.List;
 public class NewsFragment extends Fragment {
 
     FirebaseModel firebaseModel = new FirebaseModel();
-    NewsAdapter newsAdapter;
-    final List<NewsItem> remoteImages = new ArrayList<>();
     ViewPager2 viewPager2;
-    TextView newsText;
-    ImageView addNews;
     DatabaseReference ref;
     UserInformation userInformation;
     Bundle bundle;

@@ -1,5 +1,6 @@
 package com.egormoroz.schooly.ui.main.CreateCharacter;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.SurfaceView;
 import android.view.View;
@@ -48,16 +49,20 @@ public class CharacterAdapter extends RecyclerView.Adapter<CharacterAdapter.View
     @Override
     public void onBindViewHolder(@NonNull CharacterAdapter.ViewHolder holder, int position) {
         FacePart facePart=bodyPartArrayList.get(position);
+        filamentModel.postFrameCallback();
         for(int i=0;i<activeFaceParts.size();i++){
             FacePart facePartActive=activeFaceParts.get(i);
             if(!facePartActive.getPartType().equals(type)){
                 if(i==0){
+                    Log.d("#####", "aafefvecc     "+facePart.getPartType());
                     filamentModel.initFilamentForPersonCustom(holder.surfaceView, facePartActive.getBuffer());
                 }else{
-                    filamentModel.populateSceneFacePart(facePart.getBuffer());
+                    Log.d("#####", "bbdgtr   "+facePartActive.getPartType());
+                    filamentModel.populateSceneFacePart(facePartActive.getBuffer());
                 }
             }
             if(i==activeFaceParts.size()-1){
+                Log.d("#####", "vvvvdvd");
                 filamentModel.populateSceneFacePart(facePart.getBuffer());
             }
         }

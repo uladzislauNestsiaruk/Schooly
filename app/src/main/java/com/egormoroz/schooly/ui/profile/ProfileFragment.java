@@ -37,6 +37,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.egormoroz.schooly.Callbacks;
+import com.egormoroz.schooly.FacePart;
 import com.egormoroz.schooly.FilamentModel;
 import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.LockableNestedScrollView;
@@ -1559,23 +1560,30 @@ public class ProfileFragment extends Fragment {
     public void loadMainLookAndPerson(UserInformation userInformation,LockableNestedScrollView lockableNestedScrollView){
         try {
             if (bundle.getSerializable("PERSON" + userInformation.getNick()) == null) {
-                uri = new URI(userInformation.getPerson().getBody().getModel());
-                buffer = getBytes(uri.toURL());
-                bufferToFilament = ByteBuffer.wrap(buffer);
-                buffers = new ArrayList<>();
-                buffers.add(bufferToFilament);
-                bundle.putSerializable("PERSON" + userInformation.getNick(), buffers);
-                filamentModel.initFilament(surfaceView, bufferToFilament, true, lockableNestedScrollView
-                        , "regularRender", true);
-                loadBodyPart(userInformation.getPerson().getBrows().getModel());
-                loadBodyPart(userInformation.getPerson().getEars().getModel());
-                loadBodyPart(userInformation.getPerson().getEyes().getModel());
-                loadBodyPart(userInformation.getPerson().getHair().getModel());
-                loadBodyPart(userInformation.getPerson().getHead().getModel());
-                loadBodyPart(userInformation.getPerson().getLips().getModel());
-                loadBodyPart(userInformation.getPerson().getNose().getModel());
-                loadBodyPart(userInformation.getPerson().getPirsing().getModel());
-                loadBodyPart(userInformation.getPerson().getSkinColor().getModel());
+                userInformation.setPerson(new Person());
+                userInformation.getPerson().setBody(new FacePart());
+                loadBuffer("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2F%D1%87%D0%B5%D0%BB%D0%BE%D0%B2%D0%B5%D0%BA.glb?alt=media&token=ae1e5e35-9a7e-4624-b97b-5ef279473f87");
+                try {
+                    bufferToFilament= future.get();
+                    buffers=new ArrayList<>();
+                    buffers.add(bufferToFilament);
+                    bundle.putSerializable("PERSON" + userInformation.getNick(), buffers);
+                    filamentModel.initFilament(surfaceView, bufferToFilament, true, lockableNestedScrollView
+                            , "regularRender", true);
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+//                loadBodyPart(userInformation.getPerson().getBrows().getModel());
+//                loadBodyPart(userInformation.getPerson().getEars().getModel());
+//                loadBodyPart(userInformation.getPerson().getEyes().getModel());
+//                loadBodyPart(userInformation.getPerson().getHair().getModel());
+//                loadBodyPart(userInformation.getPerson().getHead().getModel());
+//                loadBodyPart(userInformation.getPerson().getLips().getModel());
+//                loadBodyPart(userInformation.getPerson().getNose().getModel());
+//                loadBodyPart(userInformation.getPerson().getPirsing().getModel());
+//                loadBodyPart(userInformation.getPerson().getSkinColor().getModel());
 
             } else {
                 ArrayList<Buffer> buffers = (ArrayList<Buffer>) bundle.getSerializable("PERSON" + userInformation.getNick());

@@ -151,7 +151,7 @@ public final class MessageFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", messageReceiverName, MessageFragment.newInstance(userInformation, bundle
-                , fragment, chat), userInformation, bundle), getActivity());
+                        , fragment, chat), userInformation, bundle), getActivity());
             }
         });
 

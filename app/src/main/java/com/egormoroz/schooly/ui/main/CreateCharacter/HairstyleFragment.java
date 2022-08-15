@@ -1,6 +1,8 @@
 package com.egormoroz.schooly.ui.main.CreateCharacter;
 
 import android.os.Bundle;
+import android.transition.CircularPropagation;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,11 +13,26 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FacePart;
+import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
+import com.egormoroz.schooly.RecentMethods;
+import com.egormoroz.schooly.TaskRunnerCustom;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.progressindicator.CircularProgressIndicator;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.Buffer;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.concurrent.Callable;
 
 public class HairstyleFragment extends Fragment {
 
@@ -23,6 +40,13 @@ public class HairstyleFragment extends Fragment {
     CharacterAdapter.ItemClickListener itemClickListener;
     ArrayList<FacePart> bodyPartsArrayList=new ArrayList<>();
     ArrayList<FacePart> activeFaceParts=new ArrayList<>();
+    ArrayList<FacePart> facePartsWithBuffers=new ArrayList<>();
+    FirebaseModel firebaseModel=new FirebaseModel();
+    static ArrayList<Buffer> buffers;
+    static byte[] buffer;
+    static URI uri;
+    static Buffer bufferToFilament,b;
+    CircularProgressIndicator circularProgressIndicator;
     public static HairstyleFragment newInstance() {
         return new HairstyleFragment();
     }
@@ -34,8 +58,7 @@ public class HairstyleFragment extends Fragment {
         View root = inflater.inflate(R.layout.viewpagerskincolour, container, false);
         BottomNavigationView bnv = getActivity().findViewById(R.id.bottomNavigationView);
         bnv.setVisibility(bnv.GONE);
-//        AppBarLayout abl = getActivity().findViewById(R.id.AppBarLayout);
-//        abl.setVisibility(abl.GONE);
+        firebaseModel.initAppDataDatabase();
         return root;
     }
 
@@ -47,13 +70,93 @@ public class HairstyleFragment extends Fragment {
         itemClickListener=new CharacterAdapter.ItemClickListener() {
             @Override
             public void onItemClick(FacePart facePart) {
-
+                CreateCharacterFragment.loadNewFacePart(facePart);
             }
         };
+        RecentMethods.getCurrentFaceParts("hair", firebaseModel, new Callbacks.loadFaceParts() {
+            @Override
+            public void LoadNews(ArrayList<FacePart> facePartsArrayList) {
+                Log.d("######", "a  "+facePartsArrayList);
+                loadBuffers(facePartsArrayList);
+            }
+        });
+
+        circularProgressIndicator=view.findViewById(R.id.progressIndicator);
         recyclerView=view.findViewById(R.id.recyclerSkinColour);
-        CharacterAdapter characterAdapter=new CharacterAdapter(bodyPartsArrayList,itemClickListener,activeFaceParts,"hair");
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
-        recyclerView.setAdapter(characterAdapter);
 
     }
+
+    public void loadBuffers(ArrayList<FacePart>  facePartArrayList){
+        for(int i=0;i<facePartArrayList.size();i++){
+            FacePart facePart=facePartArrayList.get(0);
+            Log.d("######", "b  "+facePart);
+            TaskRunnerCustom taskRunnerCustom=new TaskRunnerCustom();
+            int finalI = i;
+            taskRunnerCustom.executeAsync(new LongRunningTask(facePart), (data) -> {
+                facePartsWithBuffers.add(data);
+                Log.d("######", "f  "+facePart);
+                if(finalI ==facePartArrayList.size()-1){
+                    activeFaceParts=CreateCharacterFragment.sentFaceParts();
+                    circularProgressIndicator.setVisibility(View.GONE);
+                    Log.d("######", "f  "+facePart);
+                    CharacterAdapter characterAdapter=new CharacterAdapter(facePartsWithBuffers,itemClickListener,activeFaceParts,"hair");
+                    recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
+                    recyclerView.setAdapter(characterAdapter);
+                }
+            });
+        }
+    }
+
+    static class LongRunningTask implements Callable<FacePart> {
+        private FacePart facePart;
+
+        public LongRunningTask(FacePart facePart) {
+            this.facePart = facePart;
+        }
+
+        @Override
+        public FacePart call() {
+            return loadFacePart(facePart);
+        }
+    }
+
+    public static FacePart loadFacePart(FacePart facePart){
+        try {
+            Log.d("####", "s");
+            uri = new URI(facePart.getModel());
+            buffer = getBytes(uri.toURL());
+            bufferToFilament= ByteBuffer.wrap(buffer);
+            facePart.setBuffer(bufferToFilament);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+        return facePart;
+    }
+
+    public static byte[] getBytes( URL url) throws IOException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        InputStream is = null;
+        try {
+            is = new BufferedInputStream(url.openStream());
+            byte[] byteChunk = new byte[4096];
+            int n;
+
+            while ( (n = is.read(byteChunk)) > 0 ) {
+                baos.write(byteChunk, 0, n);
+            }
+        }
+        catch (IOException e) {
+            Log.d("####", "Failed while reading bytes from %s: %s"+ url.toExternalForm()+ e.getMessage());
+            e.printStackTrace ();
+        }
+        finally {
+            if (is != null) { is.close(); }
+        }
+        return  baos.toByteArray();
+    }
+
+
 }

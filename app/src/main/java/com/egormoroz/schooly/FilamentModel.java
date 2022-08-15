@@ -387,8 +387,8 @@ public class FilamentModel {
         Gltfio.init();
         Utils.INSTANCE.init();
         cameraManipulator=new Manipulator.Builder()
-                .targetPosition(0.0f, 10.0f, 0.0f)
-                .orbitHomePosition(0.0f, 0.5f, 5.0f)
+                .targetPosition(0.0f, 18.2f, 0.0f)
+                .orbitHomePosition(0.0f, 18.2f, 5.0f)
                 .viewport(surfaceView.getWidth(), surfaceView.getHeight())
                 .zoomSpeed(0.07f)
                 .mapMinDistance(5.0f)
@@ -404,5 +404,16 @@ public class FilamentModel {
                 .build(modelViewer.getEngine());
         loadDefaultLight();
         modelViewer.getScene().setSkybox(skybox);
+    }
+
+    public void setMaskOnFacePart(FacePart facePart){
+        RenderableManager renderableManager=engine.getRenderableManager();
+        for(int i=0;i<filamentAssets.size();i++){
+            FilamentAsset filamentAsset=filamentAssets.get(i);
+            int[] entities=filamentAsset.getEntitiesByName(facePart.getPartTitle());
+            if(entities.length!=0){
+                modelViewer.getScene().removeEntity(entities[0]);
+            }
+        }
     }
 }

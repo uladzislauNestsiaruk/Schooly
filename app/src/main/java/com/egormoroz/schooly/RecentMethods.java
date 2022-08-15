@@ -1,5 +1,6 @@
 package com.egormoroz.schooly;
 import android.app.Activity;
+import android.media.FaceDetector;
 import android.os.Bundle;
 import android.renderscript.Matrix4f;
 import android.telecom.Call;
@@ -33,6 +34,11 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.SignInMethodQueryResult;
 import com.google.firebase.database.*;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.nio.Buffer;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -1602,5 +1608,93 @@ public class RecentMethods {
                         }
                     }
                 });
+    }
+
+    ////////////////////FACEPART///////////////
+    public static void getCurrentFaceParts(String path,FirebaseModel firebaseModel,Callbacks.loadFaceParts callback){
+        firebaseModel.initAppDataDatabase();
+        firebaseModel.getReference().child("parts").child(path).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DataSnapshot snapshot = task.getResult();
+                    ArrayList<FacePart> facePartArrayList = new ArrayList<>();
+                    for (DataSnapshot snap : snapshot.getChildren()) {
+                        FacePart facePart = snap.getValue(FacePart.class);
+                        facePartArrayList.add(facePart);
+                    }
+                    callback.LoadNews(facePartArrayList);
+                }
+            }
+        });
+    }
+
+    public static byte[] getBytes( URL url) throws IOException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        InputStream is = null;
+        try {
+            is = new BufferedInputStream(url.openStream());
+            byte[] byteChunk = new byte[4096];
+            int n;
+
+            while ( (n = is.read(byteChunk)) > 0 ) {
+                baos.write(byteChunk, 0, n);
+            }
+        }
+        catch (IOException e) {
+            Log.d("####", "Failed while reading bytes from %s: %s"+ url.toExternalForm()+ e.getMessage());
+            e.printStackTrace ();
+        }
+        finally {
+            if (is != null) { is.close(); }
+        }
+        return  baos.toByteArray();
+    }
+
+    public static void startLoadPerson(String nick,FirebaseModel firebaseModel,Callbacks.loadPerson callback){
+        firebaseModel.initAll();
+        firebaseModel.getUsersReference().child(nick).child("person").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if(task.isSuccessful()){
+                    DataSnapshot snapshot=task.getResult();
+                    ArrayList<FacePart> facePartArrayList=new ArrayList<>();
+                    for(DataSnapshot snap:snapshot.getChildren()){
+                        FacePart facePart=snap.getValue(FacePart.class);
+                        facePartArrayList.add(facePart);
+                    }
+                    callback.LoadPerson(setAllPerson(facePartArrayList));
+                }
+            }
+        });
+    }
+
+    public static Person setAllPerson(ArrayList<FacePart> personParts){
+        Person person=new Person();
+        for(int i=0;i<personParts.size();i++){
+            FacePart facePart=personParts.get(i);
+            facePart.setBuffer(null);
+            switch (facePart.getPartType()){
+                case "body":
+                    person.setBody(facePart);
+                    break;
+                case "hair":
+                    person.setHair(facePart);
+                    break;
+                case "lips":
+                    person.setLips(facePart);
+                    break;
+                case "nose":
+                    person.setNose(facePart);
+                    break;
+                case "brows":
+                    person.setBrows(facePart);
+                    break;
+                case "eyes":
+                    person.setEyes(facePart);
+                    break;
+            }
+        }
+        return person;
     }
 }

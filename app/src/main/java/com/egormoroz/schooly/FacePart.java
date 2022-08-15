@@ -11,7 +11,7 @@ public class FacePart {
 
 
     public FacePart(String type, String  partTitle,
-                   String model,String uid,Buffer buffer
+                    String model,String uid,Buffer buffer
     ){
         this.type=type;
         this.partTitle=partTitle;

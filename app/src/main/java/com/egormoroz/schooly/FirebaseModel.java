@@ -22,6 +22,11 @@ public class FirebaseModel {
         Database = FirebaseDatabase.getInstance(CONST.RealtimeDatabaseNewsUrl);
         reference = Database.getReference();
     }
+
+    public void initAppDataDatabase(){
+        Database=FirebaseDatabase.getInstance(CONST.RealtimeDatabaseAppData);
+        reference=Database.getReference();
+    }
     public DatabaseReference getReference(String path){
         String pathArr[] = path.split("/");
         reference = Database.getReference();

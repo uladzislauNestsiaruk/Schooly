@@ -118,4 +118,12 @@ public class Callbacks {
     public interface loadNewsTread{
         void LoadNews(ArrayList<NewsItem> newsItemArrayList);
     }
+
+    public interface loadFaceParts{
+        void LoadNews(ArrayList<FacePart> facePartsArrayList);
+    }
+
+    public interface loadPerson{
+        void LoadPerson(Person person);
+    }
 }
