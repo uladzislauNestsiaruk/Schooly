@@ -125,7 +125,7 @@ public class HairstyleFragment extends Fragment {
         try {
             Log.d("####", "s");
             uri = new URI(facePart.getModel());
-            buffer = getBytes(uri.toURL());
+            buffer = RecentMethods.getBytes(uri.toURL());
             bufferToFilament= ByteBuffer.wrap(buffer);
             facePart.setBuffer(bufferToFilament);
         } catch (IOException e) {
@@ -134,28 +134,6 @@ public class HairstyleFragment extends Fragment {
             e.printStackTrace();
         }
         return facePart;
-    }
-
-    public static byte[] getBytes( URL url) throws IOException {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        InputStream is = null;
-        try {
-            is = new BufferedInputStream(url.openStream());
-            byte[] byteChunk = new byte[4096];
-            int n;
-
-            while ( (n = is.read(byteChunk)) > 0 ) {
-                baos.write(byteChunk, 0, n);
-            }
-        }
-        catch (IOException e) {
-            Log.d("####", "Failed while reading bytes from %s: %s"+ url.toExternalForm()+ e.getMessage());
-            e.printStackTrace ();
-        }
-        finally {
-            if (is != null) { is.close(); }
-        }
-        return  baos.toByteArray();
     }
 
 

@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.media.FaceDetector;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
@@ -49,9 +50,11 @@ import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 
 import com.egormoroz.schooly.Subscriber;
+import com.egormoroz.schooly.TaskRunnerCustom;
 import com.egormoroz.schooly.ui.chat.Chat;
 import com.egormoroz.schooly.ui.chat.DialogsFragment;
 import com.egormoroz.schooly.ui.chat.MessageFragment;
+import com.egormoroz.schooly.ui.main.CreateCharacter.CreateCharacterFragment;
 import com.egormoroz.schooly.ui.main.MainFragment;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
 import com.egormoroz.schooly.ui.main.Shop.ShopFragment;
@@ -83,6 +86,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -107,7 +111,7 @@ public class ProfileFragment extends Fragment {
             otherSubscribersCount,otherUserBiography,subscribeClose,subscribe
             ,subscribeFirst,closeAccount,noClothes,buyClothesProfile,blockedAccount,emptyList;
     DatabaseReference user;
-    ArrayList<Buffer> buffers;
+    static ArrayList<Buffer> buffers;
     ArrayList<Subscriber> userFromBase;
     LinearLayout linearSubscribers,linearSubscriptions
             ,linearLooksProfile,linearSubscribersProfile,linearSubscriptionsProfile;
@@ -131,12 +135,13 @@ public class ProfileFragment extends Fragment {
     int a,profileCheckValue,checkOnSubscribeValue, b=0,v;
     UserInformation userInformation;
     Bundle bundle;
-    FilamentModel filamentModel;
+    static FilamentModel filamentModel;
     ArrayList<Clothes> mainLookClothes=new ArrayList<>();
     static byte[] buffer;
     static URI uri;
     static Buffer buffer1,bufferToFilament;
     static Future<Buffer> future;
+    static  ArrayList<FacePart> facePartsWithBuffer=new ArrayList<>();
 
 
     @Override
@@ -254,7 +259,7 @@ public class ProfileFragment extends Fragment {
                 //////////////////////////////////////////////////
                 surfaceView=view.findViewById(R.id.mainlookview);
                 LockableNestedScrollView lockableNestedScrollView=view.findViewById(R.id.nestedScrollView);
-                loadMainLookAndPerson(userInformation, lockableNestedScrollView);
+                loadMainLookAndPerson(userInformation, lockableNestedScrollView,surfaceView);
                 ImageView imageView = view.findViewById(R.id.settingsIcon);
                 imageView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -594,7 +599,7 @@ public class ProfileFragment extends Fragment {
 
                 surfaceView=view.findViewById(R.id.mainlookview);
                 LockableNestedScrollView lockableNestedScrollViewBack=view.findViewById(R.id.nestedScrollView);
-                loadMainLookAndPerson(userInformation, lockableNestedScrollViewBack);
+                loadMainLookAndPerson(userInformation, lockableNestedScrollViewBack,surfaceView);
 
                 if (bundle!=null){
                     tabLayoutPosition=bundle.getInt("TAB_INT_PROFILE");
@@ -1557,33 +1562,30 @@ public class ProfileFragment extends Fragment {
         }
     }
 
-    public void loadMainLookAndPerson(UserInformation userInformation,LockableNestedScrollView lockableNestedScrollView){
+    public void loadMainLookAndPerson(UserInformation userInformation,LockableNestedScrollView lockableNestedScrollView,SurfaceView surfaceView){
         try {
             if (bundle.getSerializable("PERSON" + userInformation.getNick()) == null) {
-                userInformation.setPerson(new Person());
-                userInformation.getPerson().setBody(new FacePart());
-                loadBuffer("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2F%D1%87%D0%B5%D0%BB%D0%BE%D0%B2%D0%B5%D0%BA.glb?alt=media&token=ae1e5e35-9a7e-4624-b97b-5ef279473f87");
-                try {
-                    bufferToFilament= future.get();
-                    buffers=new ArrayList<>();
-                    buffers.add(bufferToFilament);
-                    bundle.putSerializable("PERSON" + userInformation.getNick(), buffers);
-                    filamentModel.initFilament(surfaceView, bufferToFilament, true, lockableNestedScrollView
-                            , "regularRender", true);
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                if(userInformation.getPerson()==null){
+                    RecentMethods.startLoadPerson(userInformation.getNick(), firebaseModel, new Callbacks.loadPerson() {
+                        @Override
+                        public void LoadPerson(Person person,ArrayList<FacePart> facePartArrayList) {
+                            loadPersonBuffers(surfaceView,person, facePartArrayList,lockableNestedScrollView);
+                        }
+                    });
+
+                }else{
+                    ArrayList<FacePart> facePartArrayList=new ArrayList<>();
+                    facePartArrayList.add(userInformation.getPerson().getBrows());
+                    facePartArrayList.add(userInformation.getPerson().getEars());
+                    facePartArrayList.add(userInformation.getPerson().getEyes());
+                    facePartArrayList.add(userInformation.getPerson().getHair());
+                    facePartArrayList.add(userInformation.getPerson().getHead());
+                    facePartArrayList.add(userInformation.getPerson().getLips());
+                    facePartArrayList.add(userInformation.getPerson().getNose());
+                    facePartArrayList.add(userInformation.getPerson().getPirsing());
+                    facePartArrayList.add(userInformation.getPerson().getSkinColor());
+                    loadPersonBuffers(surfaceView,userInformation.getPerson(), facePartArrayList,lockableNestedScrollView);
                 }
-//                loadBodyPart(userInformation.getPerson().getBrows().getModel());
-//                loadBodyPart(userInformation.getPerson().getEars().getModel());
-//                loadBodyPart(userInformation.getPerson().getEyes().getModel());
-//                loadBodyPart(userInformation.getPerson().getHair().getModel());
-//                loadBodyPart(userInformation.getPerson().getHead().getModel());
-//                loadBodyPart(userInformation.getPerson().getLips().getModel());
-//                loadBodyPart(userInformation.getPerson().getNose().getModel());
-//                loadBodyPart(userInformation.getPerson().getPirsing().getModel());
-//                loadBodyPart(userInformation.getPerson().getSkinColor().getModel());
 
             } else {
                 ArrayList<Buffer> buffers = (ArrayList<Buffer>) bundle.getSerializable("PERSON" + userInformation.getNick());
@@ -1628,32 +1630,52 @@ public class ProfileFragment extends Fragment {
         }
     }
 
-    public void loadBodyPart(String string){
-        if(string!=null){
-            loadBuffer(string);
+    public void loadPersonBuffers(SurfaceView surfaceView,Person person,ArrayList<FacePart> facePartArrayList
+    ,LockableNestedScrollView lockableNestedScrollView){
+        FacePart facePart=person.getBody();
+        TaskRunnerCustom taskRunnerCustom=new TaskRunnerCustom();
+        taskRunnerCustom.executeAsync(new LongRunningTask(facePart), (data) -> {
+            filamentModel.initFilament(surfaceView,data.getBuffer(),true,lockableNestedScrollView
+                    ,"regularRender",true);
+            for(int i=0;i<facePartArrayList.size();i++){
+                FacePart facePart1=facePartArrayList.get(i);
+                if(!facePart1.getPartType().equals("body")){
+                    TaskRunnerCustom taskRunnerCustom1=new TaskRunnerCustom();
+                    taskRunnerCustom1.executeAsync(new LongRunningTask(facePart), (data1) -> {
+                        filamentModel.populateSceneFacePart(data1.getBuffer());
+                    });
+                }
+            }
+        });
+    }
+
+    public static FacePart loadBodyPart(FacePart facePart){
+        if(facePart!=null){
             try {
-                Buffer bufferToFilament= future.get();
-                filamentModel.populateSceneFacePart(bufferToFilament);
-                buffers.add(bufferToFilament);
-            } catch (ExecutionException e) {
+                uri = new URI(facePart.getModel());
+                buffer = RecentMethods.getBytes(uri.toURL());
+                buffer1= ByteBuffer.wrap(buffer);
+                facePart.setBuffer(buffer1);
+            } catch (IOException e) {
                 e.printStackTrace();
-            } catch (InterruptedException e) {
+            } catch (URISyntaxException e) {
                 e.printStackTrace();
             }
         }
+        return facePart;
     }
 
     public void addModelInScene(Clothes clothes)  {
-        loadBuffer(clothes.getModel());
         try {
-            bufferToFilament= future.get();
-            filamentModel.populateScene(bufferToFilament,clothes);
+            uri = new URI(clothes.getModel());
+            buffer = RecentMethods.getBytes(uri.toURL());
+            buffer1= ByteBuffer.wrap(buffer);
             clothes.setBuffer(bufferToFilament);
             mainLookClothes.add(clothes);
             clothesList.add(clothes);
-        } catch (ExecutionException e) {
+        } catch (IOException e) {
             e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (URISyntaxException e) {
             e.printStackTrace();
         }
     }
@@ -1872,37 +1894,16 @@ public class ProfileFragment extends Fragment {
         filamentModel.removeFrameCallback();
     }
 
-    public static byte[] getBytes( URL url) throws IOException {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        InputStream is = null;
-        try {
-            is = new BufferedInputStream(url.openStream());
-            byte[] byteChunk = new byte[4096];
-            int n;
+    static class LongRunningTask implements Callable<FacePart> {
+        private FacePart facePart;
 
-            while ( (n = is.read(byteChunk)) > 0 ) {
-                baos.write(byteChunk, 0, n);
-            }
+        public LongRunningTask(FacePart facePart) {
+            this.facePart = facePart;
         }
-        catch (IOException e) {
-            Log.d("####", "Failed while reading bytes from %s: %s"+ url.toExternalForm()+ e.getMessage());
-            e.printStackTrace ();
-        }
-        finally {
-            if (is != null) { is.close(); }
-        }
-        return  baos.toByteArray();
-    }
 
-    public static void loadBuffer(String model){
-        ExecutorService executorService= Executors.newCachedThreadPool();
-        future = executorService.submit(new Callable(){
-            public Buffer call() throws Exception {
-                uri = new URI(model);
-                buffer = getBytes(uri.toURL());
-                buffer1= ByteBuffer.wrap(buffer);
-                return buffer1;
-            }
-        });
+        @Override
+        public FacePart call() {
+            return loadBodyPart(facePart);
+        }
     }
 }

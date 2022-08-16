@@ -1663,7 +1663,7 @@ public class RecentMethods {
                         FacePart facePart=snap.getValue(FacePart.class);
                         facePartArrayList.add(facePart);
                     }
-                    callback.LoadPerson(setAllPerson(facePartArrayList));
+                    callback.LoadPerson(setAllPerson(facePartArrayList),facePartArrayList);
                 }
             }
         });

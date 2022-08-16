@@ -586,32 +586,10 @@ public class WardrobeFragment extends Fragment {
         filamentModel.removeFrameCallback();
     }
 
-    public static byte[] getBytes( URL url) throws IOException {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        InputStream is = null;
-        try {
-            is = new BufferedInputStream(url.openStream());
-            byte[] byteChunk = new byte[4096];
-            int n;
-
-            while ( (n = is.read(byteChunk)) > 0 ) {
-                baos.write(byteChunk, 0, n);
-            }
-        }
-        catch (IOException e) {
-            Log.d("####", "Failed while reading bytes from %s: %s"+ url.toExternalForm()+ e.getMessage());
-            e.printStackTrace ();
-        }
-        finally {
-            if (is != null) { is.close(); }
-        }
-        return  baos.toByteArray();
-    }
-
     public static Clothes addModelInScene(Clothes clothes)  {
         try {
             uri = new URI(clothes.getModel());
-            buffer = getBytes(uri.toURL());
+            buffer = RecentMethods.getBytes(uri.toURL());
             bufferToFilament= ByteBuffer.wrap(buffer);
             clothes.setBuffer(bufferToFilament);
             clothesList.add(clothes);
@@ -628,7 +606,7 @@ public class WardrobeFragment extends Fragment {
         try {
             if(bundle.getSerializable("PERSON"+userInformation.getNick())==null){
                 uri = new URI(userInformation.getPerson().getBody().getModel());
-                buffer = getBytes(uri.toURL());
+                buffer = RecentMethods.getBytes(uri.toURL());
                 bufferToFilament= ByteBuffer.wrap(buffer);
                 buffers=new ArrayList<>();
                 buffers.add(bufferToFilament);
@@ -669,7 +647,7 @@ public class WardrobeFragment extends Fragment {
         if(string!=null){
             try {
                 uri = new URI(string);
-                buffer = getBytes(uri.toURL());
+                buffer = RecentMethods.getBytes(uri.toURL());
                 bufferToFilament= ByteBuffer.wrap(buffer);
                 filamentModel.populateSceneFacePart(bufferToFilament);
                 buffers.add(bufferToFilament);

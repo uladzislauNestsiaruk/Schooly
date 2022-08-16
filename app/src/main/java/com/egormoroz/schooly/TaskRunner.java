@@ -16,7 +16,7 @@ public class TaskRunner {
     private final Handler handler = new Handler(Looper.getMainLooper());
 
     public interface Callback<Clothes> {
-        void onComplete(Clothes result);
+        void onComplete(Clothes result) throws IOException, URISyntaxException;
     }
 
     public <Clothes> void executeAsync(Callable<Clothes> callable, TaskRunner.Callback<Clothes> callback) {

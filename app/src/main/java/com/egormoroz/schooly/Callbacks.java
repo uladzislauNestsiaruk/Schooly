@@ -124,6 +124,6 @@ public class Callbacks {
     }
 
     public interface loadPerson{
-        void LoadPerson(Person person);
+        void LoadPerson(Person person,ArrayList<FacePart> facePartArrayList);
     }
 }

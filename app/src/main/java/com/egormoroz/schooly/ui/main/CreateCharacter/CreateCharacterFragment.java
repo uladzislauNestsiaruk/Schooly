@@ -321,7 +321,7 @@ public class CreateCharacterFragment extends Fragment {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d("###", "createUserWithEmail:success");
-                            Person person=setAllPerson(activeFaceParts);
+                            Person person=RecentMethods.setAllPerson(activeFaceParts);
                             FirebaseUser user = AuthenticationBase.getCurrentUser();
                             UserInformation res = new UserInformation(nick, RecentMethods.getPhone(email), user.getUid(),
                                     "6", password, "Helicopter", 1000, new ArrayList<>(),new ArrayList<>(),1,100,0
@@ -422,35 +422,6 @@ public class CreateCharacterFragment extends Fragment {
             e.printStackTrace();
         }
         return facePart;
-    }
-
-    public Person setAllPerson(ArrayList<FacePart> activeFaceParts){
-        Person person=new Person();
-        for(int i=0;i<activeFaceParts.size();i++){
-            FacePart facePart=activeFaceParts.get(i);
-            facePart.setBuffer(null);
-            switch (facePart.getPartType()){
-                case "body":
-                    person.setBody(facePart);
-                    break;
-                case "hair":
-                    person.setHair(facePart);
-                    break;
-                case "lips":
-                    person.setLips(facePart);
-                    break;
-                case "nose":
-                    person.setNose(facePart);
-                    break;
-                case "brows":
-                    person.setBrows(facePart);
-                    break;
-                case "eyes":
-                    person.setEyes(facePart);
-                    break;
-            }
-        }
-        return person;
     }
 
     public void loadDefaultParts(ArrayList<FacePart> facePartArrayList){

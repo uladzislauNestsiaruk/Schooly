@@ -308,6 +308,12 @@ public class MainActivity extends AppCompatActivity {
 						userInformation.setTalksArrayList(talksArrayList);
 					}
 				});
+				RecentMethods.startLoadPerson(nick, firebaseModel, new Callbacks.loadPerson() {
+					@Override
+					public void LoadPerson(Person person) {
+						userInformation.setPerson(person);
+					}
+				});
 
 			}
 		});
