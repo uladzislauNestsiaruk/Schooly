@@ -28,15 +28,17 @@ public class GenderFragment extends Fragment {
     UserInformation userInformation;
     Bundle bundle;
     Fragment fragment;
+    String type;
 
-    public GenderFragment(UserInformation userInformation,Bundle bundle,Fragment fragment) {
+    public GenderFragment(UserInformation userInformation,Bundle bundle,Fragment fragment,String type) {
         this.userInformation=userInformation;
         this.bundle=bundle;
         this.fragment=fragment;
+        this.type=type;
     }
 
-    public static GenderFragment newInstance(UserInformation userInformation,Bundle bundle,Fragment fragment) {
-        return new GenderFragment(userInformation,bundle,fragment);
+    public static GenderFragment newInstance(UserInformation userInformation,Bundle bundle,Fragment fragment,String type) {
+        return new GenderFragment(userInformation,bundle,fragment,type);
 
     }
 
@@ -102,7 +104,7 @@ public class GenderFragment extends Fragment {
                             bundle.putString("GENDER", "woman");
                             break;
                     }
-                    RecentMethods.setCurrentFragment(CreateCharacterFragment.newInstance(userInformation,bundle,fragment,"reg"), getActivity());
+                    RecentMethods.setCurrentFragment(CreateCharacterFragment.newInstance(userInformation,bundle,fragment,type), getActivity());
                 }else {
                     Toast.makeText(getContext(), getContext().getResources().getText(R.string.mustselectagender), Toast.LENGTH_SHORT).show();
                 }

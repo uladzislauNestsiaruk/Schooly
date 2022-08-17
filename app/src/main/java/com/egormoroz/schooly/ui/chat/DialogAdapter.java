@@ -55,10 +55,13 @@ public class DialogAdapter extends RecyclerView.Adapter<DialogAdapter.ViewHolder
         Chat chat=chatArrayList.get(position);
         holder.userName.setText(chat.getName());
         holder.lastTime.setText(chat.getLastTime());
-        if(chat.getUnreadMessages()>99) {
-            holder.newMessages.setText("99+");
-        }else {
-            holder.newMessages.setText(String.valueOf(chat.getUnreadMessages()));
+        if (chat.getUnreadMessages() > 0) {
+            holder.newMessages.setVisibility(View.VISIBLE);
+            if (chat.getUnreadMessages() > 99) {
+                holder.newMessages.setText("99+");
+            } else {
+                holder.newMessages.setText(String.valueOf(chat.getUnreadMessages()));
+            }
         }
         if (chat.getLastMessage().length()<=16){
             holder.lastMessage.setText(chat.getLastMessage());

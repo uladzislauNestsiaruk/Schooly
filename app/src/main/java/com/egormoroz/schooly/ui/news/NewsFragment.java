@@ -20,6 +20,8 @@ import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.ui.main.MainFragment;
 import com.egormoroz.schooly.ui.main.UserInformation;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.progressindicator.CircularProgressIndicator;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -37,6 +39,9 @@ public class NewsFragment extends Fragment {
     DatabaseReference ref;
     UserInformation userInformation;
     Bundle bundle;
+    NewsAdapter newsAdapter;
+    ArrayList<NewsItem> newsArrayList=new ArrayList<>();
+    CircularProgressIndicator circularProgressIndicator;
 
     public NewsFragment(UserInformation userInformation,Bundle bundle) {
         this.userInformation=userInformation;
@@ -51,6 +56,8 @@ public class NewsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_news, container, false);
+        BottomNavigationView bnv = getActivity().findViewById(R.id.bottomNavigationView);
+        bnv.setVisibility(View.VISIBLE);
         firebaseModel.initAll();
 
         OnBackPressedCallback callback1 = new OnBackPressedCallback(true) {
@@ -62,13 +69,25 @@ public class NewsFragment extends Fragment {
         };
 
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback1);
-
+        circularProgressIndicator=root.findViewById(R.id.progressIndicator);
         viewPager2 = root.findViewById(R.id.picturenewspager);
         ref = FirebaseDatabase.getInstance().getReference("news");
         LoadNewsTread loadNewsTread=new LoadNewsTread(userInformation, new Callbacks.loadNewsTread() {
             @Override
             public void LoadNews(ArrayList<NewsItem> newsItemArrayList) {
-                viewPager2.setAdapter(new NewsAdapter(newsItemArrayList, userInformation, bundle,NewsFragment.newInstance(userInformation, bundle),getActivity()));
+                Log.d("####", "dd   "+newsItemArrayList.size());
+                circularProgressIndicator.setVisibility(View.GONE);
+                if(newsAdapter==null){
+                    newsArrayList=newsItemArrayList;
+                    newsAdapter=new NewsAdapter(newsArrayList, userInformation, bundle,NewsFragment.newInstance(userInformation, bundle),getActivity());
+                    Log.d("####", "dd 3   "+newsArrayList.size());
+                    viewPager2.setAdapter(newsAdapter);
+                }else{
+                    newsArrayList.add(newsItemArrayList.get(newsItemArrayList.size()-1));
+                    Log.d("####", "dd 1  "+newsArrayList.size());
+                    newsAdapter.notifyItemRangeInserted(newsArrayList.size()-1, viewPager2.getAdapter().getItemCount());
+                }
+
             }
         });
 

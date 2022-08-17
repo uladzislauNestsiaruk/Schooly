@@ -145,16 +145,16 @@ public class CreateCharacterFragment extends Fragment {
             FacePart body=new FacePart();
             body.setPartType("body");
             body.setUid("fsdbjhbc");
-            body.setModel("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2F%D0%BD%D0%BE%D1%81%20%D1%87%D0%B5%D0%BB%D0%BE%D0%B2%D0%B5%D0%BA.glb?alt=media&token=d13b9b1e-514f-4070-9d2f-a0693daf51a8b");
-            FacePart nose=new FacePart();
-            nose.setModel("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Fnose123.glb?alt=media&token=e5ef0809-dd60-4b85-8882-7187abcbde8b");
-            nose.setPartType("nose");
-            nose.setUid("dswvbdf");
+            body.setModel("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2F%D0%BB%D0%B0%D1%81%D1%82%20%D1%87%D0%B5%D0%BB.glb?alt=media&token=ce3a5b3b-6876-443f-91e6-26ffeaf61594");
+//            FacePart nose=new FacePart();
+//            nose.setModel("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Fnose123.glb?alt=media&token=e5ef0809-dd60-4b85-8882-7187abcbde8b");
+//            nose.setPartType("nose");
+//            nose.setUid("dswvbdf");
 //            FacePart hair=new FacePart();
 //            hair.setModel("https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2F%D0%BF%D1%80%D0%B8%D1%87%D0%B03.glb?alt=media&token=1fe8e688-7f84-48af-aafd-6a3fefa684fc");
 //            hair.setPartType("hair");
 //            facePartArrayList.add(hair);
-            facePartArrayList.add(nose);
+            //facePartArrayList.add(nose);
             TaskRunnerCustom taskRunnerCustom=new TaskRunnerCustom();
             taskRunnerCustom.executeAsync(new LongRunningTask(body), (data) -> {
                 filamentModel.initFilamentForPersonCustom(surfaceView,data.getBuffer() );
@@ -172,7 +172,7 @@ public class CreateCharacterFragment extends Fragment {
         leftarrowtoreg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((MainActivity)getActivity()).setCurrentFragment(GenderFragment.newInstance(userInformation, bundle, fragment));
+                ((MainActivity)getActivity()).setCurrentFragment(GenderFragment.newInstance(userInformation, bundle, fragment,from));
             }
         });
 
@@ -180,7 +180,7 @@ public class CreateCharacterFragment extends Fragment {
             @Override
             public void handleOnBackPressed() {
 
-                ((MainActivity)getActivity()).setCurrentFragment(GenderFragment.newInstance(userInformation, bundle, fragment));
+                ((MainActivity)getActivity()).setCurrentFragment(GenderFragment.newInstance(userInformation, bundle, fragment,from));
             }
         };
 

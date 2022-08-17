@@ -866,6 +866,8 @@ public class ProfileFragment extends Fragment {
             checkCounts(subscribersCountString,subscribersCount);
         }
         if(userInformation.getLooks()==null){
+            FirebaseModel firebaseModel=new FirebaseModel();
+            firebaseModel.initNewsDatabase();
             RecentMethods.getLooksList(userInformation.getNick(), firebaseModel, new Callbacks.getLooksList() {
                 @Override
                 public void getLooksList(ArrayList<NewsItem> look) {
@@ -1568,15 +1570,19 @@ public class ProfileFragment extends Fragment {
             if (bundle.getSerializable("PERSON" + userInformation.getNick()) == null) {
                 Log.d("####", "aaaassshgyuo");
                 if(userInformation.getPerson()==null){
+                    Log.d("####", "aaaasssh  "+userInformation.getNick());
                     RecentMethods.startLoadPerson(userInformation.getNick(), firebaseModel, new Callbacks.loadPerson() {
                         @Override
                         public void LoadPerson(Person person,ArrayList<FacePart> facePartArrayList) {
+                            Log.d("####","ss  "+person.getBody());
                             loadPersonBuffers(surfaceView,person, facePartArrayList,lockableNestedScrollView,userInformation.getNick());
                         }
                     });
 
                 }else{
+                    Log.d("####", "aa    "+userInformation.getPerson());
                     ArrayList<FacePart> facePartArrayList=new ArrayList<>();
+                    facePartArrayList.add(userInformation.getPerson().getBody());
                     facePartArrayList.add(userInformation.getPerson().getBrows());
                     facePartArrayList.add(userInformation.getPerson().getEars());
                     facePartArrayList.add(userInformation.getPerson().getEyes());
@@ -1650,8 +1656,10 @@ public class ProfileFragment extends Fragment {
     public void loadPersonBuffers(SurfaceView surfaceView,Person person,ArrayList<FacePart> facePartArrayList
     ,LockableNestedScrollView lockableNestedScrollView,String nick){
         FacePart facePart=person.getBody();
+        Log.d("####","ss111  "+person.getBody());
         TaskRunnerCustom taskRunnerCustom=new TaskRunnerCustom();
         taskRunnerCustom.executeAsync(new LongRunningTaskBody(facePart), (data) -> {
+            Log.d("####","ss111777  "+data.getBuffer());
             filamentModel.initFilament(surfaceView,data.getBuffer(),true,lockableNestedScrollView
                     ,"regularRender",true);
             for(int i=0;i<facePartArrayList.size();i++){

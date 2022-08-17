@@ -1205,6 +1205,7 @@ public class RecentMethods {
     }
     public static void getLooksList(String nickName, FirebaseModel model, Callbacks.getLooksList callback){
         Log.d("#####", "Firebase model: " + model.getReference());
+        model.initNewsDatabase();
         model.getReference().child(nickName).orderByKey()
                 .addValueEventListener(new ValueEventListener() {
                     @Override

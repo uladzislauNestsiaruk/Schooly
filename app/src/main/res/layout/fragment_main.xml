@@ -138,6 +138,18 @@
 
     </RelativeLayout>
 
+    <com.google.android.material.progressindicator.CircularProgressIndicator
+        android:id="@+id/progressIndicator"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        app:trackCornerRadius="20dp"
+        android:indeterminate="true"
+        app:trackThickness="4dp"
+        android:layout_marginTop="140dp"
+        android:layout_below="@+id/relativeshop"
+        android:layout_centerHorizontal="true"
+        app:indicatorSize="40dp"/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/newchlothesinshop"
         android:layout_width="match_parent"
@@ -410,6 +422,7 @@
 
 
     <RelativeLayout
+        android:id="@+id/relativeTodayMining"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/relativeMining"

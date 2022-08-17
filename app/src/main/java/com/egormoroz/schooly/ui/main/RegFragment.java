@@ -119,7 +119,7 @@ public class RegFragment extends Fragment {
                     bundle.putString("PASSWORD", password);
                     bundle.putString("FRAGMENT", "reg");
                     UserInformation userInformation = new UserInformation();
-                    RecentMethods.setCurrentFragment(GenderFragment.newInstance(userInformation, bundle, RegFragment.newInstance(userInformation, bundle)), getActivity());
+                    RecentMethods.setCurrentFragment(GenderFragment.newInstance(userInformation, bundle, RegFragment.newInstance(userInformation, bundle),"reg"), getActivity());
                 }
                 break;
         }
@@ -275,7 +275,7 @@ public class RegFragment extends Fragment {
                             String nick = String.valueOf(nickNameEditText.getText()).trim();
                             UserInformation userInformation=new UserInformation();
                             //if(nick.isEmpty())
-                            RecentMethods.setCurrentFragment(NicknameFragment.newInstance(userInformation,bundle), getActivity());
+                            RecentMethods.setCurrentFragment(NicknameFragment.newInstance(userInformation,bundle,"nick"), getActivity());
                             //else
                             // RecentMethods.setCurrentFragment(MainFragment.newInstance(), getActivity());
                         } else {
@@ -304,7 +304,7 @@ public class RegFragment extends Fragment {
                                     RecentMethods.setCurrentFragment(new EnterFragment(userInformation,bundle), getActivity());
                                 }
                                 else
-                                    RecentMethods.setCurrentFragment(NicknameFragment.newInstance(userInformation,bundle), getActivity());
+                                    RecentMethods.setCurrentFragment(NicknameFragment.newInstance(userInformation,bundle,"nick"), getActivity());
                             }
                         });
             }

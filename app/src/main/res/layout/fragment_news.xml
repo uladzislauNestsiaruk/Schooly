@@ -7,6 +7,16 @@
     android:layout_height="match_parent"
     tools:context=".ui.news.NewsFragment">
 
+    <com.google.android.material.progressindicator.CircularProgressIndicator
+        android:id="@+id/progressIndicator"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        app:trackCornerRadius="20dp"
+        android:indeterminate="true"
+        android:layout_centerInParent="true"
+        app:trackThickness="8dp"
+        app:indicatorSize="80dp"/>
+
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/picturenewspager"

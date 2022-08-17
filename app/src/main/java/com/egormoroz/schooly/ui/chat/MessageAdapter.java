@@ -55,7 +55,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
     public static class MessageViewHolder extends RecyclerView.ViewHolder {
         public TextView senderMessageText, receiverMessageText, senderMessageTime, receiverMessageTime, senderTimeVoice;
-        public CircleImageView receiverProfileImage;
+        //public ImageView receiverProfileImage;
         public RelativeLayout outMessage, inMessage, outVoice, inVoice;
         public ImageView messageSenderPicture, senderPlay, senderPause;
         public ImageView messageReceiverPicture;
@@ -138,7 +138,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                 if (dataSnapshot.hasChild("image")) {
                     String receiverImage = dataSnapshot.child("image").getValue().toString();
 
-                    Picasso.get().load(receiverImage).placeholder(R.drawable.ic_image).into(messageViewHolder.receiverProfileImage);
+                    //Picasso.get().load(receiverImage).placeholder(R.drawable.ic_image).into(messageViewHolder.receiverProfileImage);
                 }
             }
 
@@ -163,7 +163,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                     messageViewHolder.senderMessageText.setText(messages.getMessage());
                     messageViewHolder.senderMessageTime.setText(messages.getTime());
                 } else {
-//                messageViewHolder.receiverProfileImage.setVisibility(View.VISIBLE);
+                //messageViewHolder.receiverProfileImage.setVisibility(View.VISIBLE);
                     messageViewHolder.inMessage.setVisibility(View.VISIBLE);
                     messageViewHolder.receiverMessageText.setText(messages.getMessage());
                     messageViewHolder.receiverMessageTime.setText(messages.getTime());
@@ -184,7 +184,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                     });
 
                 } else {
-                    messageViewHolder.receiverProfileImage.setVisibility(View.VISIBLE);
+                    //messageViewHolder.receiverProfileImage.setVisibility(View.VISIBLE);
                     messageViewHolder.messageReceiverPicture.setVisibility(View.VISIBLE);
                     Picasso.get().load(messages.getMessage()).into(messageViewHolder.messageReceiverPicture);
                     messageViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -212,7 +212,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                         }
                     });
                 } else {
-                    messageViewHolder.receiverProfileImage.setVisibility(View.VISIBLE);
+                    //messageViewHolder.receiverProfileImage.setVisibility(View.VISIBLE);
                     messageViewHolder.messageReceiverPicture.setVisibility(View.VISIBLE);
                 }
                 break;

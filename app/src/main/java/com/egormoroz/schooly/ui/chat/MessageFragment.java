@@ -157,6 +157,7 @@ public final class MessageFragment extends Fragment {
                     @Override
                     public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                         Message messages = dataSnapshot.getValue(Message.class);
+                        Log.d("####", messages.getMessage());
                         messagesList.add(messages);
                         messageAdapter.notifyDataSetChanged();
                         userMessagesList.smoothScrollToPosition(userMessagesList.getAdapter().getItemCount());
@@ -209,6 +210,8 @@ public final class MessageFragment extends Fragment {
                 RecentMethods.setCurrentFragment(fragment, getActivity());
             }
         });
+        firebaseModel.getUsersReference().child(messageSenderName).child("Dialogs")
+                .child(messageReceiverName).child("unreadMessages").setValue(0);
         DatabaseReference ref = firebaseModel.getUsersReference().child(messageSenderName).child("Chats").child(messageReceiverName).child("Unread");
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -627,17 +630,6 @@ public final class MessageFragment extends Fragment {
         }else{
             addLastMessage(type, message);
             addUnread();
-            firebaseModel.getUsersReference().child(messageSenderName).child("Dialogs")
-                    .child(messageReceiverName).child("timeMill").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<DataSnapshot> task) {
-                    if(task.isSuccessful()){
-                        DataSnapshot snapshot2=task.getResult();
-                        Toast.makeText(getContext(), String.valueOf(snapshot2.getValue(Long.class)), Toast.LENGTH_SHORT).show();
-                    }
-
-                }
-            });
             if(type.equals("image")){
                 String uid=firebaseModel.getUsersReference().child(messageSenderName).child("Dialogs")
                         .child(messageReceiverName).child("dialogueMaterials").push().getKey();

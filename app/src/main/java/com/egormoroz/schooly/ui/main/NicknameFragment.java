@@ -30,14 +30,16 @@ import com.google.firebase.database.FirebaseDatabase;
 public class NicknameFragment extends Fragment {
     UserInformation userInformation;
     Bundle bundle;
+    String type;
 
-    public NicknameFragment(UserInformation userInformation,Bundle bundle) {
+    public NicknameFragment(UserInformation userInformation,Bundle bundle,String type) {
         this.userInformation=userInformation;
         this.bundle=bundle;
+        this.type=type;
     }
 
-    public static NicknameFragment newInstance(UserInformation userInformation,Bundle bundle) {
-        return new NicknameFragment(userInformation,bundle);
+    public static NicknameFragment newInstance(UserInformation userInformation,Bundle bundle,String type) {
+        return new NicknameFragment(userInformation,bundle,type);
     }
     FirebaseAuth authenticationDatabase;
     FirebaseDatabase database;
@@ -123,7 +125,7 @@ public class NicknameFragment extends Fragment {
                     if(error.isEmpty()) {
                         bundle.putString("NICKNAMEFRAGMENT",nickname);
                         bundle.putString("FRAGMENT", "nick");
-                        RecentMethods.setCurrentFragment(GenderFragment.newInstance(userInformation,bundle,NicknameFragment.newInstance(userInformation, bundle)), getActivity());
+                        RecentMethods.setCurrentFragment(GenderFragment.newInstance(userInformation,bundle,NicknameFragment.newInstance(userInformation, bundle,type),type), getActivity());
                     }
                 }
             }

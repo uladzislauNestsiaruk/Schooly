@@ -37,6 +37,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class ChatInformationFragment extends Fragment {
     TextView clearStory, nick,leaveChat;
@@ -249,6 +250,7 @@ public class ChatInformationFragment extends Fragment {
                             String image=snap.getValue(String.class);
                             dialogueMaterials.add(image);
                         }
+                        Collections.reverse(dialogueMaterials);
                         DialogueMaterialsAdapter dialogueMaterialsAdapter=new DialogueMaterialsAdapter(dialogueMaterials, userInformation);
                         recyclerMaterials.setLayoutManager(new GridLayoutManager(getContext(), 3));
                         recyclerMaterials.setAdapter(dialogueMaterialsAdapter);

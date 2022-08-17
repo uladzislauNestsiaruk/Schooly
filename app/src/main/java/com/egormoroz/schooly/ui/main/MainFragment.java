@@ -28,6 +28,7 @@ import com.egormoroz.schooly.Nontification;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 
+import com.egormoroz.schooly.ui.chat.Chat;
 import com.egormoroz.schooly.ui.coins.CoinsFragmentSecond;
 import com.egormoroz.schooly.ui.chat.DialogsFragment;
 import com.egormoroz.schooly.ui.main.Mining.Miner;
@@ -62,17 +63,18 @@ public class MainFragment extends Fragment{
     private FirebaseModel firebaseModel = new FirebaseModel();
     ArrayList<Clothes> clothesArrayList=new ArrayList<Clothes>();
     ArrayList<Nontification > noViewedNonts=new ArrayList<>();
+    ArrayList<Chat> noViewedChatNots=new ArrayList<>();
     ArrayList<Clothes> popularClothesArrayList=new ArrayList<Clothes>();
     RecyclerView clothesRecyclerMain,myClothesRecycler;
     String todayMiningFormatted,nick;
     NewClothesAdapter.ItemClickListener itemClickListener;
     private static final int NOTIFY_ID = 101;
-    RelativeLayout relativeShop,relativeMining,relativeMyClothes,relativeFirstLayout,createClothes;
-    CircularProgressIndicator circularProgressIndicator;
+    RelativeLayout relativeShop,relativeMining,relativeMyClothes,relativeFirstLayout,createClothes,relativeTodayMining;
     MyClothesAdapterMain.ItemClickListener itemClickListenerMyClothes;
     LinearLayout coinsLinear;
     long totalProfitLong,totalPurchaseLong,totalProfitDollarLong;
     private static final String CHANNEL_ID = "Tyomaa channel";
+    CircularProgressIndicator circularProgressIndicator;
 
 
     UserInformation userInformation;
@@ -106,6 +108,14 @@ public class MainFragment extends Fragment{
         createClothes=view.findViewById(R.id.createClothes);
         coinsLinear=view.findViewById(R.id.linearCoins);
         getMore=view.findViewById(R.id.getMore);
+        circularProgressIndicator=view.findViewById(R.id.progressIndicator);
+        relativeTodayMining=view.findViewById(R.id.relativeTodayMining);
+        relativeTodayMining.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RecentMethods.setCurrentFragment(MiningFragment.newInstance(userInformation, bundle), getActivity());
+            }
+        });
 //        UserPeopleAdapter userPeopleAdapter=new UserPeopleAdapter();
 //        userPeopleAdapter.setNick("Loppi");
 //        userPeopleAdapter.setBio("gg");
@@ -324,7 +334,7 @@ public class MainFragment extends Fragment{
         appName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(GenderFragment.newInstance(userInformation,bundle,MainFragment.newInstance(userInformation, bundle)), getActivity());
+                RecentMethods.setCurrentFragment(GenderFragment.newInstance(userInformation,bundle,MainFragment.newInstance(userInformation, bundle),"dd"), getActivity());
             }
         });
         todayMiningMain=view.findViewById(R.id.todayminingmain);
@@ -338,6 +348,7 @@ public class MainFragment extends Fragment{
             }
         });
         loadClothesFromBase();
+        checkChatNots();
         checkNots();
         getMyClothes();
     }
@@ -392,6 +403,7 @@ public class MainFragment extends Fragment{
                 @Override
                 public void getClothes(ArrayList<Clothes> allClothes) {
                     clothesArrayList.addAll(allClothes);
+                    circularProgressIndicator.setVisibility(View.GONE);
                     for(int i=0;i<clothesArrayList.size();i++){
                         Clothes cl=clothesArrayList.get(i);
                         popularClothesArrayList.add(cl);
@@ -403,6 +415,50 @@ public class MainFragment extends Fragment{
             });
         }
 
+    }
+
+    public void checkChatNots(){
+        if(userInformation.getChats()!=null){
+            for (int i=0;i<userInformation.getChats().size();i++){
+                Chat chat=userInformation.getChats().get(i);
+                if(chat.getUnreadMessages()>0){
+                    noViewedChatNots.add(chat);
+                }
+            }
+            if(noViewedChatNots.size()>0){
+                circleChat.setVisibility(View.VISIBLE);
+                if(noViewedChatNots.size()>9){
+                    circleChat.setText("9+");
+                }else {
+                    circleChat.setText(String.valueOf(noViewedChatNots.size()));
+                }
+            }
+        }else {
+            RecentMethods.getDialogs(nick, firebaseModel, new Callbacks.loadDialogs() {
+                @Override
+                public void LoadData(ArrayList<Chat> dialogs, ArrayList<Chat> talksArrayList) {
+                    ArrayList<Chat> allChats=new ArrayList<>();
+                    allChats.addAll(dialogs);
+                    allChats.addAll(talksArrayList);
+                    userInformation.setTalksArrayList(talksArrayList);
+                    userInformation.setChats(dialogs);
+                    for (int i=0;i<allChats.size();i++){
+                        Chat chat=allChats.get(i);
+                        if(chat.getUnreadMessages()>0){
+                            noViewedChatNots.add(chat);
+                        }
+                    }
+                    if(noViewedChatNots.size()>0){
+                        circleChat.setVisibility(View.VISIBLE);
+                        if(noViewedChatNots.size()>9){
+                            circleChat.setText("9+");
+                        }else {
+                            circleChat.setText(String.valueOf(noViewedChatNots.size()));
+                        }
+                    }
+                }
+            });
+        }
     }
 
     public void getMyClothes(){

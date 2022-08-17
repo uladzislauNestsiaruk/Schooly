@@ -155,11 +155,11 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
                 ArrayList<Buffer> buffers=new ArrayList<>();
                 buffers.add(bufferToFilament);
                 bundle.putSerializable("CHARACTERMODEL",buffers);
-                filamentModel.initFilament(holder.surfaceView,bufferToFilament,true,null,"regularRender",true);
+                filamentModel.initNewsFilament(holder.surfaceView,bufferToFilament,true,null,"regularRender",true);
             }else{
                 ArrayList<Buffer> buffers= (ArrayList<Buffer>) bundle.getSerializable("CHARACTERMODEL");
                 Buffer buffer3=buffers.get(0);
-                filamentModel.initFilament(holder.surfaceView,buffer3,true,null,"regularRender",true);
+                filamentModel.initNewsFilament(holder.surfaceView,buffer3,true,null,"regularRender",true);
             }
         } catch (ExecutionException e) {
             e.printStackTrace();
@@ -175,6 +175,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
             Log.d("#####", "aaa   "+clothes.getClothesTitle()+clothes.getBuffer());
             filamentModel.populateScene(clothes.getBuffer(),clothes);
         }
+        holder.nick.setText(newsItem.getNick());
         holder.setIsRecyclable(false);
         holder.like_count.setText(newsItem.getLikes_count());
         holder.description.setText(newsItem.getItem_description());
@@ -266,7 +267,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
     class ImageViewHolder extends RecyclerView.ViewHolder {
 
         ImageView  like, comment,send,options;
-        TextView description, like_count,clothesComponents,lookPrice;
+        TextView description, like_count,clothesComponents,lookPrice,nick;
         SurfaceView surfaceView;
 
         public ImageViewHolder(@NonNull View itemView) {
@@ -281,6 +282,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
             clothesComponents=itemView.findViewById(R.id.clothesCreator);
             options=itemView.findViewById(R.id.options);
             lookPrice=itemView.findViewById(R.id.lookPrice);
+            nick=itemView.findViewById(R.id.nick);
         }
     }
 

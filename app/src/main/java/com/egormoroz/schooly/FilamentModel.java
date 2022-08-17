@@ -131,8 +131,8 @@ public class FilamentModel {
         });
         loadGlb(buffer);
         Skybox skybox=new Skybox.Builder()
-                .color(0.255f, 0.124f, 0.232f, 1.0f)
-                //.color(0f, 0f, 0f, 1.0f)
+                //.color(0.255f, 0.124f, 0.232f, 1.0f)
+                .color(0f, 0f, 0f, 1.0f)
                 .build(modelViewer.getEngine());
         if(type.equals("regularRender")){
             loadPointLights();
@@ -388,8 +388,8 @@ public class FilamentModel {
         Gltfio.init();
         Utils.INSTANCE.init();
         cameraManipulator=new Manipulator.Builder()
-                .targetPosition(0.0f, 18.2f, 0.0f)
-                .orbitHomePosition(0.0f, 18.2f, 5.0f)
+                .targetPosition(0.0f, 19.5f, 0.0f)
+                .orbitHomePosition(0.0f, 19.5f, 5.0f)
                 .viewport(surfaceView.getWidth(), surfaceView.getHeight())
                 .zoomSpeed(0.07f)
                 .mapMinDistance(5.0f)
@@ -416,5 +416,36 @@ public class FilamentModel {
                 modelViewer.getScene().removeEntity(entities[0]);
             }
         }
+    }
+
+    public void initNewsFilament(SurfaceView surfaceView,Buffer buffer,boolean onTouch
+            ,LockableNestedScrollView lockableNestedScrollView,String type
+            ,boolean transform) throws IOException, URISyntaxException {
+        Filament.init();
+        Gltfio.init();
+        Utils.INSTANCE.init();
+        cameraManipulator=new Manipulator.Builder()
+                .targetPosition(0.0f, 8f, -1.0f)
+                .orbitHomePosition(0.0f, 16.0f, 40.0f)
+                .viewport(surfaceView.getWidth(), surfaceView.getHeight())
+                .zoomSpeed(0.05f)
+                .orbitSpeed(0.007f, 0.007f)
+                .mapMinDistance(-150.0f)
+                .build(Manipulator.Mode.ORBIT);
+        uiHelper=new UiHelper(UiHelper.ContextErrorPolicy.DONT_CHECK);
+        engine=Engine.create();
+        modelViewer=new ModelViewer(surfaceView, engine, uiHelper, cameraManipulator);
+        setupFilament();
+        loadGlb(buffer);
+        Skybox skybox=new Skybox.Builder()
+                //.color(0.255f, 0.124f, 0.232f, 1.0f)
+                .color(0f, 0f, 0f, 1.0f)
+                .build(modelViewer.getEngine());
+        if(type.equals("regularRender")){
+            loadPointLights();
+        }else if(type.equals("looksRecycler")){
+            loadDefaultLight();
+        }
+        modelViewer.getScene().setSkybox(skybox);
     }
 }
