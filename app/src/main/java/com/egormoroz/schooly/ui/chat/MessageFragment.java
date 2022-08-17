@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.MediaMetadataRetriever;
@@ -22,7 +21,6 @@ import android.media.MediaRecorder;
 import android.net.Uri;
 
 import com.egormoroz.schooly.Callbacks;
-import com.egormoroz.schooly.MainActivity;
 import com.egormoroz.schooly.RecentMethods;
 
 import android.os.Build;
@@ -41,21 +39,13 @@ import android.widget.Toast;
 
 import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
-import com.egormoroz.schooly.ui.chat.Message;
-import com.egormoroz.schooly.ui.chat.MessageAdapter;
-import com.egormoroz.schooly.ui.main.GenderFragment;
-import com.egormoroz.schooly.ui.main.MainFragment;
-import com.egormoroz.schooly.ui.main.Nontifications.NontificationFragment;
 import com.egormoroz.schooly.ui.main.UserInformation;
-import com.egormoroz.schooly.ui.people.PeopleAdapter;
-import com.egormoroz.schooly.ui.people.PeopleFragment;
 import com.egormoroz.schooly.ui.people.UserPeopleAdapter;
 import com.egormoroz.schooly.ui.profile.ProfileFragment;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -71,12 +61,8 @@ import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Type;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -292,7 +278,7 @@ public final class MessageFragment extends Fragment {
         info.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                RecentMethods.setCurrentFragment(ChatInformationFrgment.newInstance(userInformation,bundle,MessageFragment.newInstance(userInformation, bundle, fragment, chat),chat),getActivity());
+                RecentMethods.setCurrentFragment(ChatInformationFragment.newInstance(userInformation,bundle,MessageFragment.newInstance(userInformation, bundle, fragment, chat),chat),getActivity());
             }
         });
         Picasso.get().load(messageReceiverImage).placeholder(R.drawable.corners14).into(userImage);
@@ -624,6 +610,14 @@ public final class MessageFragment extends Fragment {
                                             .setValue(new Chat(messageReceiverName,"" ,"" , "personal", 0,receiverMembers,"false",new ArrayList<>(),0));
                                     addLastMessage(type, message);
                                     addUnread();
+                                    if(type.equals("image")){
+                                        String uid=firebaseModel.getUsersReference().child(messageSenderName).child("Dialogs")
+                                                .child(messageReceiverName).child("dialogueMaterials").push().getKey();
+                                        firebaseModel.getUsersReference().child(messageSenderName).child("Dialogs")
+                                                .child(messageReceiverName).child("dialogueMaterials").child(uid).setValue(message);
+                                        firebaseModel.getUsersReference().child(messageReceiverName).child("Dialogs")
+                                                .child(messageSenderName).child("dialogueMaterials").child(uid).setValue(message);
+                                    }
                                 }
                             }
                         });
@@ -644,6 +638,14 @@ public final class MessageFragment extends Fragment {
 
                 }
             });
+            if(type.equals("image")){
+                String uid=firebaseModel.getUsersReference().child(messageSenderName).child("Dialogs")
+                        .child(messageReceiverName).child("dialogueMaterials").push().getKey();
+                firebaseModel.getUsersReference().child(messageSenderName).child("Dialogs")
+                        .child(messageReceiverName).child("dialogueMaterials").child(uid).setValue(message);
+                firebaseModel.getUsersReference().child(messageReceiverName).child("Dialogs")
+                        .child(messageSenderName).child("dialogueMaterials").child(uid).setValue(message);
+            }
         }
 
         DatabaseReference userMessageKeyRef = firebaseModel.getUsersReference().child(messageSenderName).child("Chats").child(messageReceiverName).child("Messages").push();

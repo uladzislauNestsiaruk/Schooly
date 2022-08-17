@@ -3,6 +3,8 @@ package com.egormoroz.schooly;
 import android.os.Handler;
 import android.os.Looper;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -25,7 +27,13 @@ public class TaskRunnerCustom {
             }
             FacePart finalResult = result;
             handler.post(() -> {
-                callback.onComplete(finalResult);
+                try {
+                    callback.onComplete(finalResult);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (URISyntaxException e) {
+                    e.printStackTrace();
+                }
             });
         });
     }

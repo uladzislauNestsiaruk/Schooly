@@ -310,7 +310,7 @@ public class MainActivity extends AppCompatActivity {
 				});
 				RecentMethods.startLoadPerson(nick, firebaseModel, new Callbacks.loadPerson() {
 					@Override
-					public void LoadPerson(Person person) {
+					public void LoadPerson(Person person,ArrayList<FacePart> facePartArrayList) {
 						userInformation.setPerson(person);
 					}
 				});

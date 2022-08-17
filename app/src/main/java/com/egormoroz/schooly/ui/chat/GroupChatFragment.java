@@ -4,14 +4,11 @@ import static android.app.Activity.RESULT_OK;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaRecorder;
 import android.net.Uri;
-import android.opengl.GLSurfaceView;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -39,14 +36,7 @@ import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
-import com.egormoroz.schooly.ui.chat.Message;
-import com.egormoroz.schooly.ui.chat.MessageAdapter;
-import com.egormoroz.schooly.ui.main.MainFragment;
 import com.egormoroz.schooly.ui.main.UserInformation;
-import com.egormoroz.schooly.ui.people.PeopleAdapter;
-import com.egormoroz.schooly.ui.people.PeopleFragment;
-import com.egormoroz.schooly.ui.people.UserPeopleAdapter;
-import com.egormoroz.schooly.ui.profile.ProfileFragment;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -195,14 +185,14 @@ public final class GroupChatFragment extends Fragment {
         userName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                RecentMethods.setCurrentFragment(ChatInformationFrgment.newInstance(userInformation,bundle,GroupChatFragment.newInstance(userInformation, bundle, fragment, chat),chat),getActivity());
+                RecentMethods.setCurrentFragment(ChatInformationFragment.newInstance(userInformation,bundle,GroupChatFragment.newInstance(userInformation, bundle, fragment, chat),chat),getActivity());
             }
         });
         userImage = view.findViewById(R.id.custom_profile_image);
         userImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                RecentMethods.setCurrentFragment(ChatInformationFrgment.newInstance(userInformation,bundle,GroupChatFragment.newInstance(userInformation, bundle, fragment, chat),chat),getActivity());
+                RecentMethods.setCurrentFragment(ChatInformationFragment.newInstance(userInformation,bundle,GroupChatFragment.newInstance(userInformation, bundle, fragment, chat),chat),getActivity());
             }
         });
         userLastSeen = view.findViewById(R.id.custom_user_last_seen);
@@ -226,7 +216,7 @@ public final class GroupChatFragment extends Fragment {
         info.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                RecentMethods.setCurrentFragment(ChatInformationFrgment.newInstance(userInformation,bundle,GroupChatFragment.newInstance(userInformation, bundle, fragment, chat),chat),getActivity());
+                RecentMethods.setCurrentFragment(ChatInformationFragment.newInstance(userInformation,bundle,GroupChatFragment.newInstance(userInformation, bundle, fragment, chat),chat),getActivity());
             }
         });
     }

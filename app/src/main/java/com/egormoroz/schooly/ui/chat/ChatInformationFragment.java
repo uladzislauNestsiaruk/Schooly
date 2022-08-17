@@ -17,19 +17,15 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FirebaseModel;
-import com.egormoroz.schooly.Nontification;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
-import com.egormoroz.schooly.ui.coins.CoinsFragmentSecond;
-import com.egormoroz.schooly.ui.main.Shop.ViewingClothes;
 import com.egormoroz.schooly.ui.main.UserInformation;
 import com.egormoroz.schooly.ui.people.PeopleAdapter;
-import com.egormoroz.schooly.ui.people.PeopleFragment;
 import com.egormoroz.schooly.ui.people.UserPeopleAdapter;
 import com.egormoroz.schooly.ui.profile.ProfileFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -40,14 +36,12 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
-public class ChatInformationFrgment extends Fragment {
+public class ChatInformationFragment extends Fragment {
     TextView clearStory, nick,leaveChat;
     ImageView avatar, back;
-    RecyclerView recyclerMembers;
+    RecyclerView recyclerMembers,recyclerMaterials;
     SwitchMaterial switchMaterial;
     FirebaseModel firebaseModel=new FirebaseModel();
     boolean checkType;
@@ -59,15 +53,15 @@ public class ChatInformationFrgment extends Fragment {
     Fragment fragment;
     Chat chat;
 
-    public ChatInformationFrgment(UserInformation userInformation,Bundle bundle,Fragment fragment,Chat chat) {
+    public ChatInformationFragment(UserInformation userInformation, Bundle bundle, Fragment fragment, Chat chat) {
         this.userInformation=userInformation;
         this.bundle=bundle;
         this.fragment=fragment;
         this.chat=chat;
     }
 
-    public static ChatInformationFrgment newInstance(UserInformation userInformation,Bundle bundle,Fragment fragment,Chat chat) {
-        return new ChatInformationFrgment(userInformation,bundle,fragment,chat);
+    public static ChatInformationFragment newInstance(UserInformation userInformation, Bundle bundle, Fragment fragment, Chat chat) {
+        return new ChatInformationFragment(userInformation,bundle,fragment,chat);
 
     }
 
@@ -81,6 +75,7 @@ public class ChatInformationFrgment extends Fragment {
         clearStory = root.findViewById(R.id.deleteHistory);
         recyclerMembers = root.findViewById(R.id.recyclerMembers);
         leaveChat=root.findViewById(R.id.leaveTalk);
+        recyclerMaterials=root.findViewById(R.id.recyclerMaterials);
         back = root.findViewById(R.id.back_tochat);
         return root;
     }
@@ -111,6 +106,7 @@ public class ChatInformationFrgment extends Fragment {
         }
 
         loadChatMembers();
+        loadChatMaterial();
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
@@ -202,9 +198,9 @@ public class ChatInformationFrgment extends Fragment {
                                         UserPeopleAdapter user = peopleAdapter.getItem(position);
                                         String userNameToProfile = user.getNick();
                                         if (userNameToProfile.equals(nick)) {
-                                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback", userInformation.getNick(), ChatInformationFrgment.newInstance(userInformation,bundle,fragment,chat),userInformation,bundle), getActivity());
+                                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback", userInformation.getNick(), ChatInformationFragment.newInstance(userInformation,bundle,fragment,chat),userInformation,bundle), getActivity());
                                         } else {
-                                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile, ChatInformationFrgment.newInstance(userInformation,bundle,fragment,chat),userInformation,bundle),
+                                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile, ChatInformationFragment.newInstance(userInformation,bundle,fragment,chat),userInformation,bundle),
                                                     getActivity());
                                             firebaseModel.getReference("users").child(userInformation.getNick()).child("alreadySearched").child(userNameToProfile)
                                                     .setValue(new UserPeopleAdapter(userNameToProfile, avatar, bio));
@@ -227,9 +223,9 @@ public class ChatInformationFrgment extends Fragment {
                             UserPeopleAdapter user = peopleAdapter.getItem(position);
                             String userNameToProfile = user.getNick();
                             if (userNameToProfile.equals(nick)) {
-                                RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback", userInformation.getNick(), ChatInformationFrgment.newInstance(userInformation,bundle,fragment,chat),userInformation,bundle), getActivity());
+                                RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback", userInformation.getNick(), ChatInformationFragment.newInstance(userInformation,bundle,fragment,chat),userInformation,bundle), getActivity());
                             } else {
-                                RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile,ChatInformationFrgment.newInstance(userInformation,bundle,fragment,chat),userInformation,bundle),
+                                RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile, ChatInformationFragment.newInstance(userInformation,bundle,fragment,chat),userInformation,bundle),
                                         getActivity());
                                 firebaseModel.getReference("users").child(userInformation.getNick()).child("alreadySearched").child(userNameToProfile)
                                         .setValue(new UserPeopleAdapter(userNameToProfile, avatar, bio));
@@ -237,6 +233,33 @@ public class ChatInformationFrgment extends Fragment {
                         }
                     };
             peopleAdapter.setClickListener(clickListener);
+        }
+    }
+
+    public void loadChatMaterial(){
+        if(bundle.getSerializable(chat.getName()+"MATERIALS")==null){
+            firebaseModel.getUsersReference().child(userInformation.getNick()).child("Dialogs")
+        .child(chat.getName()).child("dialogueMaterials").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DataSnapshot> task) {
+                    if(task.isSuccessful()){
+                        DataSnapshot snapshot=task.getResult();
+                        ArrayList<String> dialogueMaterials=new ArrayList<>();
+                        for(DataSnapshot snap:snapshot.getChildren()){
+                            String image=snap.getValue(String.class);
+                            dialogueMaterials.add(image);
+                        }
+                        DialogueMaterialsAdapter dialogueMaterialsAdapter=new DialogueMaterialsAdapter(dialogueMaterials, userInformation);
+                        recyclerMaterials.setLayoutManager(new GridLayoutManager(getContext(), 3));
+                        recyclerMaterials.setAdapter(dialogueMaterialsAdapter);
+                    }
+                }
+            });
+        }else {
+            materials= (ArrayList<String>) bundle.getSerializable(chat.getName()+"MATERIALS");
+            DialogueMaterialsAdapter dialogueMaterialsAdapter=new DialogueMaterialsAdapter(materials, userInformation);
+            recyclerMaterials.setLayoutManager(new GridLayoutManager(getContext(), 3));
+            recyclerMaterials.setAdapter(dialogueMaterialsAdapter);
         }
     }
 
@@ -300,25 +323,5 @@ public class ChatInformationFrgment extends Fragment {
         });
 
         dialog.show();
-    }
-
-    public void loadMaterials(){
-        if(bundle.getSerializable(chat.getName()+"MATERIALS")==null){
-            firebaseModel.getUsersReference().child(userInformation.getNick()).child("Dialogs")
-                    .child(chat.getName()).child("dialogueMaterials").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<DataSnapshot> task) {
-                    if(task.isSuccessful()){
-                        DataSnapshot snapshot=task.getResult();
-                        for(DataSnapshot snap:snapshot.getChildren()){
-                            String material=snap.getValue(String.class);
-                            materials.add(material);
-                        }
-                    }
-                }
-            });
-        }else{
-            materials= (ArrayList<String>) bundle.getSerializable(chat.getName()+"MATERIALS");
-        }
     }
 }

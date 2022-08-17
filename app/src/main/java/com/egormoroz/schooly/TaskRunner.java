@@ -29,7 +29,13 @@ public class TaskRunner {
             }
             Clothes finalResult = result;
             handler.post(() -> {
+                try {
                     callback.onComplete(finalResult);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (URISyntaxException e) {
+                    e.printStackTrace();
+                }
             });
         });
     }
