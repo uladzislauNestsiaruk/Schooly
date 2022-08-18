@@ -56,14 +56,18 @@ public class CharacterAdapter extends RecyclerView.Adapter<CharacterAdapter.View
                 if(i==0){
                     Log.d("#####", "aafefvecc     "+facePart.getPartType());
                     filamentModel.initFilamentForPersonCustom(holder.surfaceView, facePartActive.getBuffer());
+                    if(i==activeFaceParts.size()-1){
+                        Log.d("#####", "vvvvdvd");
+                        filamentModel.populateSceneFacePart(facePart.getBuffer());
+                    }
                 }else{
                     Log.d("#####", "bbdgtr   "+facePartActive.getPartType());
                     filamentModel.populateSceneFacePart(facePartActive.getBuffer());
+                    if(i==activeFaceParts.size()-1){
+                        Log.d("#####", "vvvvdvd");
+                        filamentModel.populateSceneFacePart(facePart.getBuffer());
+                    }
                 }
-            }
-            if(i==activeFaceParts.size()-1){
-                Log.d("#####", "vvvvdvd");
-                filamentModel.populateSceneFacePart(facePart.getBuffer());
             }
         }
         holder.surfaceView.setOnClickListener(new View.OnClickListener() {

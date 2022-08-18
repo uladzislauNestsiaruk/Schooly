@@ -47,6 +47,7 @@ public class HairstyleFragment extends Fragment {
     static URI uri;
     static Buffer bufferToFilament,b;
     CircularProgressIndicator circularProgressIndicator;
+    int loadValue;
     public static HairstyleFragment newInstance() {
         return new HairstyleFragment();
     }
@@ -88,6 +89,7 @@ public class HairstyleFragment extends Fragment {
     }
 
     public void loadBuffers(ArrayList<FacePart>  facePartArrayList){
+        loadValue=facePartArrayList.size()-1;
         for(int i=0;i<facePartArrayList.size();i++){
             FacePart facePart=facePartArrayList.get(0);
             Log.d("######", "b  "+facePart);
@@ -95,11 +97,12 @@ public class HairstyleFragment extends Fragment {
             int finalI = i;
             taskRunnerCustom.executeAsync(new LongRunningTask(facePart), (data) -> {
                 facePartsWithBuffers.add(data);
-                Log.d("######", "f  "+facePart);
-                if(finalI ==facePartArrayList.size()-1){
+                Log.d("######", "f1  "+facePart.getBuffer());
+                loadValue--;
+                if(loadValue==0){
                     activeFaceParts=CreateCharacterFragment.sentFaceParts();
                     circularProgressIndicator.setVisibility(View.GONE);
-                    Log.d("######", "f  "+facePart);
+                    Log.d("######", "f  "+facePartsWithBuffers);
                     CharacterAdapter characterAdapter=new CharacterAdapter(facePartsWithBuffers,itemClickListener,activeFaceParts,"hair");
                     recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
                     recyclerView.setAdapter(characterAdapter);

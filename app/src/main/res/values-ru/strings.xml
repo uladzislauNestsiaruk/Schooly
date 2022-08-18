@@ -430,12 +430,14 @@
     <string name="receipt">Поступление</string>
     <string name="translation">Перевод</string>
     <string name="nose">Нос</string>
-    <string name="lips">Губы</string>
+    <string name="lips">Рот</string>
     <string name="eyes">Глаза</string>
     <string name="brows">Брови</string>
     <string name="skincolour">Цвет кожи</string>
     <string name="faceshape">Форма лица</string>
     <string name="body">Тело</string>
+    <string name="browsColor">Brows color</string>
+    <string name="hairstyleColor">Hairstyle color</string>
     <string name="hairstyle">Прическа</string>
     <string name="notactive">Не активен</string>
     <string name="purchased">Куплено</string>

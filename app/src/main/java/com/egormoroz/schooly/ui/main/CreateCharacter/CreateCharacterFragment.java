@@ -4,7 +4,6 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.hardware.Camera;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,7 +25,6 @@ import androidx.viewpager2.widget.ViewPager2;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import com.egormoroz.schooly.CONST;
-import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FacePart;
 import com.egormoroz.schooly.FilamentModel;
 import com.egormoroz.schooly.FirebaseModel;
@@ -37,17 +35,9 @@ import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.TaskRunnerCustom;
 import com.egormoroz.schooly.ui.main.GenderFragment;
 import com.egormoroz.schooly.ui.main.MainFragment;
-import com.egormoroz.schooly.ui.main.Mining.Miner;
-import com.egormoroz.schooly.ui.main.Mining.MiningFragment;
-import com.egormoroz.schooly.ui.main.MyClothes.CreateClothesFragment;
-import com.egormoroz.schooly.ui.main.NicknameFragment;
-import com.egormoroz.schooly.ui.main.RegFragment;
-import com.egormoroz.schooly.ui.main.Shop.AccessoriesFragment;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
 import com.egormoroz.schooly.ui.main.UserInformation;
 import com.egormoroz.schooly.ui.people.UserPeopleAdapter;
-import com.egormoroz.schooly.ui.profile.Wardrobe.WardrobeFragment;
-import com.google.android.filament.gltfio.FilamentAsset;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -65,13 +55,9 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.io.BufferedInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -141,7 +127,7 @@ public class CreateCharacterFragment extends Fragment {
         ready=view.findViewById(R.id.ready);
         surfaceView=view.findViewById(R.id.surfaceViewCreateCharacter);
         viewPager=view.findViewById(R.id.viewPagerCharacter);
-        if(from.equals("reg")){
+        if(from.equals("dd")){
             FacePart body=new FacePart();
             body.setPartType("body");
             body.setUid("fsdbjhbc");
@@ -192,9 +178,9 @@ public class CreateCharacterFragment extends Fragment {
 
         tabLayout.addTab(tabLayout.newTab().setText(getContext().getResources().getText(R.string.skincolour)));
         tabLayout.addTab(tabLayout.newTab().setText(getContext().getResources().getText(R.string.hairstyle)));
+        tabLayout.addTab(tabLayout.newTab().setText(getContext().getResources().getText(R.string.hairstyleColor)));
         tabLayout.addTab(tabLayout.newTab().setText(getContext().getResources().getText(R.string.brows)));
-        tabLayout.addTab(tabLayout.newTab().setText(getContext().getResources().getText(R.string.eyes)));
-        tabLayout.addTab(tabLayout.newTab().setText(getContext().getResources().getText(R.string.nose)));
+        tabLayout.addTab(tabLayout.newTab().setText(getContext().getResources().getText(R.string.browsColor)));
         tabLayout.addTab(tabLayout.newTab().setText(getContext().getResources().getText(R.string.lips)));
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -381,11 +367,11 @@ public class CreateCharacterFragment extends Fragment {
                 case 1:
                     return new HairstyleFragment();
                 case 2:
-                    return new EyebrowsFragment();
+                    return new HairstyleColorFragment();
                 case 3:
-                    return new EyesFragment();
+                    return new EyebrowsFragment();
                 case 4:
-                    return new NoseFragment();
+                    return new EyebrowsColorFragment();
                 case 5:
                     return new LipsFragment();
             }

@@ -211,7 +211,7 @@ public class ProfileFragment extends Fragment {
             }
         });
         RecentMethods.setCurrentFragment(MessageFragment.newInstance(userInformation, bundle, ProfileFragment.newInstance("other", info.getNick(), fragment, userInformation, bundle),
-                new Chat(info.getNick(), "", "", "personal", 0, new ArrayList<>(), "falce", new ArrayList<>(),0)), getActivity());
+                new Chat(info.getNick(), "", "", "personal", 0, new ArrayList<>(), "falce", new ArrayList<>(),0,0)), getActivity());
     }
 
     @Override

@@ -17,14 +17,14 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
 
-public class EyesFragment extends Fragment {
+public class HairstyleColorFragment extends Fragment {
 
     RecyclerView recyclerView;
     CharacterAdapter.ItemClickListener itemClickListener;
     ArrayList<FacePart> bodyPartsArrayList=new ArrayList<>();
     ArrayList<FacePart> activeFaceParts=new ArrayList<>();
-    public static EyesFragment newInstance() {
-        return new EyesFragment();
+    public static HairstyleColorFragment newInstance() {
+        return new HairstyleColorFragment();
     }
 
 

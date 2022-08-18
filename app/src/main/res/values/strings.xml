@@ -430,13 +430,15 @@
     <string name="receipt">Receipt</string>
     <string name="translation">Translation</string>
     <string name="nose">Nose</string>
-    <string name="lips">Lips</string>
+    <string name="lips">Mouth</string>
     <string name="eyes">Eyes</string>
     <string name="brows">Brows</string>
     <string name="skincolour">Skin colour</string>
     <string name="faceshape">Face shape</string>
     <string name="body">Body</string>
     <string name="hairstyle">Hairstyle</string>
+    <string name="browsColor">Brows color</string>
+    <string name="hairstyleColor">Hairstyle color</string>
     <string name="notactive">Not active</string>
     <string name="purchased">Purchased</string>
     <string name="minerpurchased">Miner purchased</string>

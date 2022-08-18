@@ -17,15 +17,15 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
 
-public class NoseFragment extends Fragment {
+public class EyebrowsColorFragment extends Fragment {
 
     RecyclerView recyclerView;
     CharacterAdapter.ItemClickListener itemClickListener;
     ArrayList<FacePart> bodyPartsArrayList=new ArrayList<>();
     ArrayList<FacePart> activeFaceParts=new ArrayList<>();
 
-    public static NoseFragment newInstance() {
-        return new NoseFragment();
+    public static EyebrowsColorFragment newInstance() {
+        return new EyebrowsColorFragment();
     }
 
 

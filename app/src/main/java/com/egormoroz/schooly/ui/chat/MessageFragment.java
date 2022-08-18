@@ -98,7 +98,7 @@ public final class MessageFragment extends Fragment {
     private DatabaseReference RootRef;
 
     private MediaRecorder recorder = null;
-    private int duration;
+    private long duration;
     private boolean permissionToRecordAccepted = false;
     private final String[] permissions = {Manifest.permission.RECORD_AUDIO};
     private static final int REQUEST_RECORD_AUDIO_PERMISSION = 200;
@@ -226,43 +226,38 @@ public final class MessageFragment extends Fragment {
 
             }
         });
-        RecentMethods.UserNickByUid(firebaseModel.getUser().getUid(), firebaseModel, new Callbacks.GetUserNickByUid() {
+        Query query = firebaseModel.getUsersReference().child(messageReceiverName).child("blackList")
+                .child(userInformation.getNick());
+        query.addValueEventListener(new ValueEventListener() {
             @Override
-            public void PassUserNick(String nick) {
-                Query query = firebaseModel.getUsersReference().child(messageReceiverName).child("blackList")
-                        .child(nick);
-                query.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if (snapshot.exists()) {
-                            chatCheckValue = 1;
-                        } else {
-                            chatCheckValue = -1;
-                        }
-                    }
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    chatCheckValue = 1;
+                } else {
+                    chatCheckValue = -1;
+                }
+            }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
 
-                    }
-                });
-                Query query2 = firebaseModel.getUsersReference().child(nick).child("blackList")
-                        .child(messageReceiverName);
-                query2.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if (snapshot.exists()) {
-                            chatCheckValue = 2;
-                        } else {
-                            chatCheckValue = -1;
-                        }
-                    }
+            }
+        });
+        Query query2 = firebaseModel.getUsersReference().child(userInformation.getNick()).child("blackList")
+                .child(messageReceiverName);
+        query2.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    chatCheckValue = 2;
+                } else {
+                    chatCheckValue = -1;
+                }
+            }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
 
-                    }
-                });
             }
         });
 
@@ -340,7 +335,7 @@ public final class MessageFragment extends Fragment {
                     public void onComplete(@NonNull Task<Uri> task) {
                         Uri downloadUrl = task.getResult();
                         myUrl = downloadUrl.toString();
-                        Send(myUrl, "image");
+                        Send(myUrl, "image",0);
 
                     }
                 });
@@ -381,13 +376,13 @@ public final class MessageFragment extends Fragment {
         if (TextUtils.isEmpty(messageText)) {
             Toast.makeText(getContext(), "first write your message...", Toast.LENGTH_SHORT).show();
         } else {
-            Send(messageText, "text");
+            Send(messageText, "text",0);
         }
 
     }
 
 
-    private void SendVoice() {
+    private void SendVoice(long duration) {
         StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("Voice");
         DatabaseReference userMessageKeyRef = firebaseModel.getUsersReference().child(messageSenderName).child("Chats").child(messageReceiverName).child("Messages").push();
         final String messagePushID = userMessageKeyRef.getKey();
@@ -406,9 +401,11 @@ public final class MessageFragment extends Fragment {
         }).addOnCompleteListener(new OnCompleteListener<Uri>() {
             @Override
             public void onComplete(@NonNull Task<Uri> task) {
-                Uri downloadUrl = task.getResult();
-                myUrl = downloadUrl.toString();
-                Send(myUrl, "voice");
+                if(task.isSuccessful()){
+                    Uri downloadUrl = task.getResult();
+                    myUrl = downloadUrl.toString();
+                    Send(myUrl, "voice",duration);
+                }
             }
         });
     }
@@ -470,7 +467,7 @@ public final class MessageFragment extends Fragment {
             if (duration <= 9) Log.d("Voice", "Voice too small");
             else {
                 duration = duration / 10;
-                SendVoice();
+                SendVoice(duration);
             }
         }
     }
@@ -573,7 +570,7 @@ public final class MessageFragment extends Fragment {
     }
 
 
-    public void Send(String message, String type) {
+    public void Send(String message, String type,long duration) {
         String messageSenderRef = messageReceiverName + "/Chats/" + messageSenderName + "/Messages";
         String messageReceiverRef = messageSenderName + "/Chats/" + messageReceiverName + "/Messages";
 
@@ -608,9 +605,9 @@ public final class MessageFragment extends Fragment {
                                     receiverMembers.add(userPeopleAdapter1);
                                     Log.d("#####", messageSenderName+"fdgbreb");
                                     firebaseModel.getUsersReference().child(messageReceiverName).child("Dialogs").child(messageSenderName)
-                                            .setValue(new Chat(messageSenderName,"" , "", "personal", 0,senderMembers,"false",new ArrayList<>(),0));
+                                            .setValue(new Chat(messageSenderName,"" , "", "personal", 0,senderMembers,"false",new ArrayList<>(),0,duration));
                                     firebaseModel.getUsersReference().child(messageSenderName).child("Dialogs").child(messageReceiverName)
-                                            .setValue(new Chat(messageReceiverName,"" ,"" , "personal", 0,receiverMembers,"false",new ArrayList<>(),0));
+                                            .setValue(new Chat(messageReceiverName,"" ,"" , "personal", 0,receiverMembers,"false",new ArrayList<>(),0,duration));
                                     addLastMessage(type, message);
                                     addUnread();
                                     if(type.equals("image")){

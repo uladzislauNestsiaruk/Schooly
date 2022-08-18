@@ -113,11 +113,11 @@ public class CoinsMainFragment extends Fragment {
 
         FirebaseModel firebaseModel=new FirebaseModel();
 
-        firebaseModel.initAppDataDatabase();
-        String uid=firebaseModel.getReference().child("parts").child("hair").push().getKey();
-        firebaseModel.getReference().child("parts").child("hair").child(uid)
-                .setValue(new FacePart("hair","hairOne","https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2F%D0%BF%D1%80%D0%B8%D1%87%D0%B03.glb?alt=media&token=1fe8e688-7f84-48af-aafd-6a3fefa684fc"
-                ,uid,null));
+//        firebaseModel.initAppDataDatabase();
+//        String uid=firebaseModel.getReference().child("parts").child("hair").push().getKey();
+//        firebaseModel.getReference().child("parts").child("hair").child(uid)
+//                .setValue(new FacePart("hair","hairOne","https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2F%D0%BF%D1%80%D0%B8%D1%87%D0%B03.glb?alt=media&token=1fe8e688-7f84-48af-aafd-6a3fefa684fc"
+//                ,uid,null));
         Float x=-0.01f;
         Float y=0.21f;
         Float z=-0.17f;
