@@ -111,8 +111,6 @@ public class CoinsMainFragment extends Fragment {
             }
         });
 
-        FirebaseModel firebaseModel=new FirebaseModel();
-
 //        firebaseModel.initAppDataDatabase();
 //        String uid=firebaseModel.getReference().child("parts").child("hair").push().getKey();
 //        firebaseModel.getReference().child("parts").child("hair").child(uid)
@@ -126,10 +124,10 @@ public class CoinsMainFragment extends Fragment {
         Float y1=3.7f;
         Float z1=-0.4499f;
         Float transformRatio1=4.5f;
-        String uid8=firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").push().getKey();
-        String uid7=firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").push().getKey();
-        String uid9=firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").push().getKey();
-        String uid10=firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").push().getKey();
+//        String uid8=firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").push().getKey();
+//        String uid7=firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").push().getKey();
+//        String uid9=firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").push().getKey();
+//        String uid10=firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").push().getKey();
 //        firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").child(uid8)
 //                .setValue(new Clothes("clothes", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fgray%20skirt.png?alt=media&token=cfad7fc3-05ec-41d7-a9a8-c6563aded022"
 //                        , 40, "gray skirt", 0, 0, "Sholly", "coin", "", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Fgray%20skirt.glb?alt=media&token=95d40256-1327-4c7d-8273-f1741dd7b75e",

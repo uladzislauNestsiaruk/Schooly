@@ -114,6 +114,7 @@ public final class MessageFragment extends Fragment {
     private Uri fileUri;
     private StorageTask uploadTask;
     int chatCheckValue;
+    int a=0;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -148,7 +149,6 @@ public final class MessageFragment extends Fragment {
                 RecentMethods.setCurrentFragment(fragment, getActivity());
             }
         };
-
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback1);
         messageSenderName=userInformation.getNick();
         messageReceiverName=chat.getName();
@@ -159,6 +159,12 @@ public final class MessageFragment extends Fragment {
                         Message messages = dataSnapshot.getValue(Message.class);
                         Log.d("####", messages.getMessage());
                         messagesList.add(messages);
+                        if(messagesList.size()>0 && a==0){
+                            Log.d("#####", messageReceiverName);
+                            firebaseModel.getUsersReference().child(messageSenderName).child("Dialogs")
+                                    .child(messageReceiverName).child("unreadMessages").setValue(0);
+                            a++;
+                        }
                         messageAdapter.notifyDataSetChanged();
                         userMessagesList.smoothScrollToPosition(userMessagesList.getAdapter().getItemCount());
                     }
@@ -210,8 +216,6 @@ public final class MessageFragment extends Fragment {
                 RecentMethods.setCurrentFragment(fragment, getActivity());
             }
         });
-        firebaseModel.getUsersReference().child(messageSenderName).child("Dialogs")
-                .child(messageReceiverName).child("unreadMessages").setValue(0);
         DatabaseReference ref = firebaseModel.getUsersReference().child(messageSenderName).child("Chats").child(messageReceiverName).child("Unread");
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -533,7 +537,8 @@ public final class MessageFragment extends Fragment {
                     value[0] = (long) dataSnapshot.getValue();
                     value[0] = value[0] + 1;
                     dataSnapshot.getRef().setValue(value[0]);
-                    Log.d("####", "unread");
+                    firebaseModel.getUsersReference().child(messageSenderName).child("Dialogs")
+                            .child(messageReceiverName).child("unreadMessages").setValue(0);
                 } else dataSnapshot.getRef().setValue(0);
             }
 

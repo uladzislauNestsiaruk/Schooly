@@ -22,9 +22,11 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.egormoroz.schooly.Callbacks;
+import com.egormoroz.schooly.FacePart;
 import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.MainActivity;
 import com.egormoroz.schooly.Nontification;
+import com.egormoroz.schooly.Person;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 
@@ -53,6 +55,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.nio.Buffer;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -75,6 +78,7 @@ public class MainFragment extends Fragment{
     long totalProfitLong,totalPurchaseLong,totalProfitDollarLong;
     private static final String CHANNEL_ID = "Tyomaa channel";
     CircularProgressIndicator circularProgressIndicator;
+    Buffer b;
 
 
     UserInformation userInformation;
@@ -128,7 +132,17 @@ public class MainFragment extends Fragment{
 //                .setValue(new UserPeopleAdapter("Vladcpp", "a", "я украинец"));
 //        firebaseModel.getReference().child("usersNicks").child("tyomaa6")
 //                .setValue(new UserPeopleAdapter("tyomaa6", "a", "ceo"));
-
+//        firebaseModel.getReference("usersNicks")
+//                .child("mashina").setValue(new UserPeopleAdapter("mashina","6"," "));
+//        String uid=firebaseModel.getUsersReference().child("mashina").push().getKey();
+//        firebaseModel.getUsersReference().child("mashina").setValue(new UserInformation("mashina", "+375445632156", uid,
+//                "6", "12345678lol", "Helicopter", 1000, new ArrayList<>(),new ArrayList<>(),1,100,0, new ArrayList<>()
+//                , new ArrayList<>(), ""," ","open","open","open","open",
+//                new ArrayList<>(),"regular", new ArrayList<>(),0,new ArrayList<>(),new ArrayList<>()
+//                ,new ArrayList<>(),new ArrayList<>(),new ArrayList<>(),new ArrayList<>()
+//                ,new ArrayList<Clothes>(),new Person(new FacePart(), new FacePart(), new FacePart(), new FacePart(), new FacePart(), new FacePart(), new FacePart(), new FacePart("", "", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Fma.glb?alt=media&token=f7430695-13cb-4365-8910-c61b59a96acf", "",b ),
+//                new FacePart(), new FacePart()),
+//                new ArrayList<>(),new ArrayList<>()));
         getMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -187,7 +201,7 @@ public class MainFragment extends Fragment{
 //        firebaseModel.getReference().child("AppData").child("complains").setValue(reasonsArrayList);
         circleChat=view.findViewById(R.id.circleChat);
         circleNontifications=view.findViewById(R.id.circleNontifications);
-        circularProgressIndicator=view.findViewById(R.id.miningIndicator);
+        //circularProgressIndicator=view.findViewById(R.id.miningIndicator);
 
 //        TextView getMore=view.findViewById(R.id.getMore);
 //        getMore.setOnClickListener(new View.OnClickListener() {
@@ -395,6 +409,7 @@ public class MainFragment extends Fragment{
 
     public void loadClothesFromBase(){
         if(bundle.getSerializable("MAIN_REC_CLOTHES")!=null){
+            circularProgressIndicator.setVisibility(View.GONE);
             popularClothesArrayList = (ArrayList<Clothes>) bundle.getSerializable("MAIN_REC_CLOTHES");
             NewClothesAdapter newClothesAdapter=new NewClothesAdapter(popularClothesArrayList,itemClickListener,userInformation);
             clothesRecyclerMain.setAdapter(newClothesAdapter);

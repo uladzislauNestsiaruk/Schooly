@@ -180,6 +180,7 @@ public class EnterFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 PasswordPhoneAuthorization();
+                Log.d("#####", "dd");
             }
         });
     }

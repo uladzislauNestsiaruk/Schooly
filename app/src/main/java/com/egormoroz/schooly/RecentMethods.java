@@ -476,27 +476,29 @@ public class RecentMethods {
 
     public static void GetActiveMiner(String nick,FirebaseModel model, Callbacks.GetActiveMiners callback) {
         model.initAll();
-        if(model.getUsersReference().child(nick).child("activeMiners")!=null){
-            model.getUsersReference().child(nick).child("activeMiners")
-                    .addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            ArrayList<Miner> activeMinersFromBase=new ArrayList<>();
-                            for (DataSnapshot snap : snapshot.getChildren()) {
-                                Miner miner = new Miner();
-                                miner.setInHour(snap.child("inHour").getValue(Long.class));
-                                miner.setMinerPrice(snap.child("minerPrice").getValue(Long.class));
-                                miner.setMinerImage(snap.child("minerImage").getValue(String.class));
-                                activeMinersFromBase.add(miner);
+        if(nick!=null){
+            if(model.getUsersReference().child(nick).child("activeMiners")!=null){
+                model.getUsersReference().child(nick).child("activeMiners")
+                        .addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                ArrayList<Miner> activeMinersFromBase=new ArrayList<>();
+                                for (DataSnapshot snap : snapshot.getChildren()) {
+                                    Miner miner = new Miner();
+                                    miner.setInHour(snap.child("inHour").getValue(Long.class));
+                                    miner.setMinerPrice(snap.child("minerPrice").getValue(Long.class));
+                                    miner.setMinerImage(snap.child("minerImage").getValue(String.class));
+                                    activeMinersFromBase.add(miner);
+                                }
+                                callback.GetActiveMiners(activeMinersFromBase);
                             }
-                            callback.GetActiveMiners(activeMinersFromBase);
-                        }
 
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
 
-                        }
-                    });
+                            }
+                        });
+            }
         }
     }
 

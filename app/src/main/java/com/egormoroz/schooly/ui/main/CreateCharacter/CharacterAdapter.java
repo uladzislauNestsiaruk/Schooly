@@ -54,7 +54,7 @@ public class CharacterAdapter extends RecyclerView.Adapter<CharacterAdapter.View
             FacePart facePartActive=activeFaceParts.get(i);
             if(!facePartActive.getPartType().equals(type)){
                 if(i==0){
-                    Log.d("#####", "aafefvecc     "+facePart.getPartType());
+                    Log.d("#####", "aafefvecc     "+facePartActive.getPartType());
                     filamentModel.initFilamentForPersonCustom(holder.surfaceView, facePartActive.getBuffer());
                     if(i==activeFaceParts.size()-1){
                         Log.d("#####", "vvvvdvd");

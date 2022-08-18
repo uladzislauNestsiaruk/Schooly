@@ -230,7 +230,7 @@ public class SettingsFragment extends Fragment {
         if(userInformation.getPhone().equals("unknown")) {
             userNumber.setText(getContext().getResources().getText(R.string.loginwithGoogle));
         }else {
-            userNumber.setText(userInformation.getPassword());
+            userNumber.setText(userInformation.getPhone());
         }
         if(userInformation.getPassword().equals("unknown")) {
             userPassword.setText(getContext().getResources().getText(R.string.loginwithGoogle));

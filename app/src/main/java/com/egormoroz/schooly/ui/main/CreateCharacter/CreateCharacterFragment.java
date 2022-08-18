@@ -257,6 +257,7 @@ public class CreateCharacterFragment extends Fragment {
             firebaseAuthWithGoogle(account.getIdToken());
             Log.d("#####", "ggds");
         } catch (ApiException e) {
+
             // Google Sign In failed, update UI appropriately
         }
     }

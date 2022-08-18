@@ -95,10 +95,6 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 public class ProfileFragment extends Fragment {
     FirebaseModel firebaseModel = new FirebaseModel();
@@ -1659,7 +1655,7 @@ public class ProfileFragment extends Fragment {
         Log.d("####","ss111  "+person.getBody());
         TaskRunnerCustom taskRunnerCustom=new TaskRunnerCustom();
         taskRunnerCustom.executeAsync(new LongRunningTaskBody(facePart), (data) -> {
-            Log.d("####","ss111777  "+data.getBuffer());
+            //Log.d("####","ss111777  "+data.getBuffer());
             filamentModel.initFilament(surfaceView,data.getBuffer(),true,lockableNestedScrollView
                     ,"regularRender",true);
             for(int i=0;i<facePartArrayList.size();i++){
