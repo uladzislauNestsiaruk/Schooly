@@ -178,18 +178,18 @@
 
     <ImageView
         android:id="@+id/message_receiver_image_view"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
         android:layout_alignParentStart="true"
         android:layout_marginStart="5dp"
-        android:layout_marginTop="13dp"
+        android:layout_marginTop="5dp"
         android:background="@drawable/cornerstextmessagesfromother"
         android:scaleType="centerCrop" />
 
     <ImageView
         android:id="@+id/message_sender_image_view"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
         android:layout_alignParentEnd="true"
         android:layout_marginStart="5dp"
         android:layout_marginTop="5dp"
@@ -198,8 +198,245 @@
         android:background="@drawable/cornerstextmessagesfromme"
         android:scaleType="centerCrop" />
 
+    <RelativeLayout
+        android:id="@+id/clothesFrom"
+        android:layout_width="280dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
+        android:background="@drawable/cornerstextmessagesfromme">
 
+        <TextView
+            android:id="@+id/clothesTitleAndCreator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:fontFamily="@font/montserrat_bold"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
 
+        <ImageView
+            android:id="@+id/clothesImage"
+            android:layout_width="280dp"
+            android:layout_height="280dp"
+            android:layout_below="@+id/clothesTitleAndCreator"
+            android:layout_marginTop="8dp" />
 
+        <TextView
+            android:id="@+id/sender_time_clothes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/sender_message_text_clothes"
+            android:layout_alignEnd="@+id/sender_message_text_clothes"
+            android:layout_marginEnd="4dp"
+            android:fontFamily="@font/montserrat_bold"
+            android:paddingBottom="4dp"
+            android:textColor="@color/white"
+            android:textSize="10sp" />
+
+        <TextView
+            android:id="@+id/sender_message_text_clothes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/clothesImage"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="2dp"
+            android:autoLink="all"
+            android:fontFamily="@font/montserrat_bold"
+            android:paddingStart="20dp"
+            android:paddingTop="10dp"
+            android:paddingEnd="10dp"
+            android:textColor="@color/white"
+            android:textColorLink="@color/white"
+            android:textSize="14sp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/clothesFromOther"
+        android:layout_width="280dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="4dp"
+        android:background="@drawable/cornerstextmessagesfromother">
+
+        <TextView
+            android:id="@+id/clothesTitleAndCreatorOther"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="8dp"
+            android:textColor="@color/white"
+            android:fontFamily="@font/montserrat_bold"
+            android:textSize="16sp"/>
+
+        <ImageView
+            android:id="@+id/clothesImageOther"
+            android:layout_width="280dp"
+            android:layout_height="280dp"
+            android:layout_below="@+id/clothesTitleAndCreatorOther"
+            android:layout_marginTop="8dp"/>
+
+        <TextView
+            android:id="@+id/receiver_message_text_clothes_other"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="2dp"
+            android:autoLink="all"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@+id/clothesImageOther"
+            android:textColorLink="@color/white"
+            android:fontFamily="@font/montserrat_bold"
+            android:paddingStart="16dp"
+            android:paddingTop="10dp"
+            android:paddingEnd="16dp"
+            android:textColor="@color/white"
+            android:textSize="14sp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="10sp"
+            android:fontFamily="@font/montserrat_bold"
+            android:id="@+id/receiver_time_clothes"
+            android:layout_alignEnd="@+id/receiver_message_text_clothes_other"
+            android:layout_below="@id/receiver_message_text_clothes_other"
+            android:layout_marginEnd="6dp"
+            android:paddingBottom="4dp"
+            android:textColor="@color/white"
+            />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/relativeLook"
+        android:layout_width="160dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
+        android:background="@drawable/cornerstextmessagesfromme">
+
+        <TextView
+            android:id="@+id/lookFrom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_alignStart="@id/watchLook"
+            android:textColor="@color/white"
+            android:fontFamily="@font/montserrat_bold"
+            android:textSize="16sp"
+            />
+
+        <TextView
+            android:id="@+id/watchLook"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/lookFrom"
+            android:layout_marginTop="8dp"
+            android:fontFamily="@font/montserratblack"
+            android:padding="24dp"
+            android:layout_alignParentEnd="true"
+            android:text="@string/goToView"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/sender_time_look"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/sender_message_text_look"
+            android:layout_below="@id/sender_message_text_look"
+            android:layout_marginEnd="4dp"
+            android:fontFamily="@font/montserrat_bold"
+            android:paddingBottom="4dp"
+            android:textColor="@color/white"
+            android:textSize="10sp" />
+
+        <TextView
+            android:id="@+id/sender_message_text_look"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textColorLink="@color/white"
+            android:layout_marginBottom="2dp"
+            android:autoLink="all"
+            android:layout_below="@+id/watchLook"
+            android:layout_alignParentEnd="true"
+            android:fontFamily="@font/montserrat_bold"
+            android:paddingStart="20dp"
+            android:paddingTop="10dp"
+            android:paddingEnd="10dp"
+            android:textColor="@color/white"
+            android:textSize="14sp" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/relativeLookOther"
+        android:layout_width="160dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
+        android:background="@drawable/cornerstextmessagesfromother">
+
+        <TextView
+            android:id="@+id/lookFromOther"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_alignStart="@id/watchLookOther"
+            android:textColor="@color/white"
+            android:fontFamily="@font/montserrat_bold"
+            android:textSize="16sp"
+            />
+
+        <TextView
+            android:id="@+id/watchLookOther"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/lookFromOther"
+            android:layout_marginTop="8dp"
+            android:fontFamily="@font/montserratblack"
+            android:padding="24dp"
+            android:layout_alignParentEnd="true"
+            android:text="@string/goToView"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/receiver_message_text_look_other"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="2dp"
+            android:autoLink="all"
+            android:layout_below="@+id/watchLookOther"
+            android:textColorLink="@color/white"
+            android:fontFamily="@font/montserrat_bold"
+            android:paddingStart="16dp"
+            android:paddingTop="10dp"
+            android:paddingEnd="16dp"
+            android:textColor="@color/white"
+            android:textSize="14sp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="10sp"
+            android:fontFamily="@font/montserrat_bold"
+            android:id="@+id/receiver_time_look_other"
+            android:layout_alignEnd="@+id/receiver_message_text_look_other"
+            android:layout_below="@id/receiver_message_text_look_other"
+            android:layout_marginEnd="6dp"
+            android:paddingBottom="4dp"
+            android:textColor="@color/white"
+            />
+
+    </RelativeLayout>
 
     </RelativeLayout>

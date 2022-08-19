@@ -43,19 +43,20 @@
         android:fontFamily="@font/montserrat_bold"
         android:text="@string/deleteSubscriber"
         android:textColor="@color/app_grey"
+        android:paddingBottom="24dp"
         android:textSize="15sp" />
 
-    <TextView
-        android:id="@+id/shareProfile"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_below="@+id/deleteSubscriber"
-        android:layout_marginStart="24dp"
-        android:fontFamily="@font/montserrat_bold"
-        android:text="@string/shareProfile"
-        android:textColor="@color/app_grey"
-        android:textSize="15sp"
-        android:paddingBottom="24dp"/>
+<!--    <TextView-->
+<!--        android:id="@+id/shareProfile"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_below="@+id/deleteSubscriber"-->
+<!--        android:layout_marginStart="24dp"-->
+<!--        android:layout_marginTop="20dp"-->
+<!--        android:fontFamily="@font/montserrat_bold"-->
+<!--        android:paddingBottom="24dp"-->
+<!--        android:text="@string/shareProfile"-->
+<!--        android:textColor="@color/app_grey"-->
+<!--        android:textSize="15sp" />-->
 
 </RelativeLayout>

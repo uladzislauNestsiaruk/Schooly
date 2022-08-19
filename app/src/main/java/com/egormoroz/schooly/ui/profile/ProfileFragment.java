@@ -1744,7 +1744,7 @@ public class ProfileFragment extends Fragment {
         block=bottomSheetDialog.findViewById(R.id.block);
         complain=bottomSheetDialog.findViewById(R.id.complain);
         deleteSubscriber=bottomSheetDialog.findViewById(R.id.deleteSubscriber);
-        shareProfile=bottomSheetDialog.findViewById(R.id.shareProfile);
+        //shareProfile=bottomSheetDialog.findViewById(R.id.shareProfile);
 
         block.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -1786,12 +1786,12 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-        shareProfile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showBottomSheetDialogSend();
-            }
-        });
+//        shareProfile.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                showBottomSheetDialogSend();
+//            }
+//        });
 
         bottomSheetDialog.show();
     }
@@ -1807,14 +1807,6 @@ public class ProfileFragment extends Fragment {
         emptyList=bottomSheetDialog.findViewById(R.id.emptySubscribersList);
         messageEdit=bottomSheetDialog.findViewById(R.id.message);
 
-        itemClickListenerSendLookAdapter=new SendLookAdapter.ItemClickListener() {
-            @Override
-            public void onItemClick(String otherUserNick, String type) {
-                if(type.equals("send")){
-                }else {
-                }
-            }
-        };
 
         if(userInformation.getSubscription()==null){
             RecentMethods.getSubscriptionList(userInformation.getNick(), firebaseModel, new Callbacks.getFriendsList() {
@@ -1824,8 +1816,8 @@ public class ProfileFragment extends Fragment {
                         emptyList.setVisibility(View.VISIBLE);
                         recyclerView.setVisibility(View.GONE);
                     }else {
-                        SendLookAdapter sendLookAdapter = new SendLookAdapter(friends,itemClickListenerSendLookAdapter);
-                        recyclerView.setAdapter(sendLookAdapter);
+//                        SendLookAdapter sendLookAdapter = new SendLookAdapter(friends,itemClickListenerSendLookAdapter);
+//                        recyclerView.setAdapter(sendLookAdapter);
                     }
                 }
             });
@@ -1834,8 +1826,8 @@ public class ProfileFragment extends Fragment {
                 emptyList.setVisibility(View.VISIBLE);
                 recyclerView.setVisibility(View.GONE);
             }else {
-                SendLookAdapter sendLookAdapter = new SendLookAdapter(userInformation.getSubscription(),itemClickListenerSendLookAdapter);
-                recyclerView.setAdapter(sendLookAdapter);
+//                SendLookAdapter sendLookAdapter = new SendLookAdapter(userInformation.getSubscription(),itemClickListenerSendLookAdapter);
+//                recyclerView.setAdapter(sendLookAdapter);
             }
         }
 
@@ -1883,8 +1875,8 @@ public class ProfileFragment extends Fragment {
                             }else {
                                 emptyList.setVisibility(View.GONE);
                                 recyclerView.setVisibility(View.VISIBLE);
-                                SendLookAdapter sendLookAdapter = new SendLookAdapter(userFromBase,itemClickListenerSendLookAdapter);
-                                recyclerView.setAdapter(sendLookAdapter);
+//                                SendLookAdapter sendLookAdapter = new SendLookAdapter(userFromBase,itemClickListenerSendLookAdapter);
+//                                recyclerView.setAdapter(sendLookAdapter);
                             }
                         }
 
@@ -1916,8 +1908,8 @@ public class ProfileFragment extends Fragment {
                     }else {
                         emptyList.setVisibility(View.GONE);
                         recyclerView.setVisibility(View.VISIBLE);
-                        SendLookAdapter sendLookAdapter = new SendLookAdapter(userFromBase,itemClickListenerSendLookAdapter);
-                        recyclerView.setAdapter(sendLookAdapter);
+//                        SendLookAdapter sendLookAdapter = new SendLookAdapter(userFromBase,itemClickListenerSendLookAdapter);
+//                        recyclerView.setAdapter(sendLookAdapter);
                     }
                 }
             }

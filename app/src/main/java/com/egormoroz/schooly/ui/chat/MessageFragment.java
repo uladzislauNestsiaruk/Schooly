@@ -39,7 +39,9 @@ import android.widget.Toast;
 
 import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
+import com.egormoroz.schooly.ui.main.Shop.Clothes;
 import com.egormoroz.schooly.ui.main.UserInformation;
+import com.egormoroz.schooly.ui.news.NewsItem;
 import com.egormoroz.schooly.ui.people.UserPeopleAdapter;
 import com.egormoroz.schooly.ui.profile.ProfileFragment;
 import com.google.android.gms.tasks.Continuation;
@@ -156,10 +158,21 @@ public final class MessageFragment extends Fragment {
                 .addChildEventListener(new ChildEventListener() {
                     @Override
                     public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                        Message messages = dataSnapshot.getValue(Message.class);
+                        Message messages = new Message();
+                        messages.setMessage(dataSnapshot.child("message").getValue(String.class));
+                        messages.setMessageID(dataSnapshot.child("messageID").getValue(String.class));
+                        messages.setTime(dataSnapshot.child("time").getValue(String.class));
+                        messages.setType(dataSnapshot.child("type").getValue(String.class));
+                        messages.setFrom(dataSnapshot.child("from").getValue(String.class));
+                        messages.setTo(dataSnapshot.child("to").getValue(String.class));
+                        if(messages.getType().equals("clothes")){
+                            messages.setClothes(dataSnapshot.child("clothes").getValue(Clothes.class));
+                        }else if(messages.getType().equals("look")){
+                            messages.setNewsItem(dataSnapshot.child("newsItem").getValue(NewsItem.class));
+                        }
                         Log.d("####", messages.getMessage());
                         messagesList.add(messages);
-                        if(messagesList.size()>0 && a==0){
+                        if(messagesList.size()>0 && a==0&& !messages.getFrom().equals(userInformation.getNick())){
                             Log.d("#####", messageReceiverName);
                             firebaseModel.getUsersReference().child(messageSenderName).child("Dialogs")
                                     .child(messageReceiverName).child("unreadMessages").setValue(0);

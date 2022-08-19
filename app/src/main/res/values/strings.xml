@@ -535,6 +535,10 @@
     <string name="watchcommercial">Watch the ad and get 25 coins</string>
     <string name="watch5ad">You can only watch 5 ads per day for a fee</string>
     <string name="coinsreceived">Received 25 coins!</string>
+    <string name="noMaterials">No materials</string>
+    <string name="goToView">Go to view</string>
+    <string name="by">by</string>
+    <string name="lookby">Look by</string>
 
 
 

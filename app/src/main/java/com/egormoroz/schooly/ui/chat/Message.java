@@ -1,12 +1,18 @@
 package com.egormoroz.schooly.ui.chat;
 
+import com.egormoroz.schooly.ui.main.Shop.Clothes;
+import com.egormoroz.schooly.ui.news.NewsItem;
+
 import java.util.Date;
 
 public class Message {
     private String from, message, type, to, messageID, time, date, name;
+    Clothes clothes;
+    NewsItem newsItem;
 
 
-    public Message(String from, String message, String type, String to, String messageID, String time, String date, String name) {
+    public Message(String from, String message, String type, String to, String messageID, String time,
+                   String date, String name,Clothes clothes,NewsItem newsItem) {
         this.from = from;
         this.message = message;
         this.type = type;
@@ -15,6 +21,8 @@ public class Message {
         this.time = time;
         this.date = date;
         this.name = name;
+        this.clothes=clothes;
+        this.newsItem=newsItem;
     }
 
     public  Message()
@@ -137,5 +145,13 @@ public class Message {
     public void setName(String name) {
         this.name = name;
     }
+
+    public Clothes getClothes () {return  this.clothes;}
+
+    public void setClothes (Clothes clothes) {this.clothes = clothes;}
+
+    public NewsItem getNewsItem () {return  this.newsItem;}
+
+    public void setNewsItem (NewsItem newsItem) {this.newsItem = newsItem;}
 }
 

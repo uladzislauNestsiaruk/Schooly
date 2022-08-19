@@ -111,6 +111,20 @@
             android:textColor="@color/app_grey"
             android:textSize="18sp" />
 
+        <TextView
+            android:id="@+id/noMaterials"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/dialogueMaterials"
+            android:layout_marginTop="100dp"
+            android:layout_marginBottom="100dp"
+            android:visibility="gone"
+            android:text="@string/noMaterials"
+            android:fontFamily="@font/montserrat_extrabold"
+            android:textColor="@color/app_grey"
+            android:textSize="18sp" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerMaterials"
             android:layout_width="match_parent"

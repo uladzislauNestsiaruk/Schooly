@@ -83,7 +83,7 @@ public class ChatsFragment extends Fragment
                         noChats.setVisibility(View.VISIBLE);
                         chatsList.setVisibility(View.GONE);
                     }   else {
-                        ArrayList<Chat> sortDialogs=sort_chats_by_time(dialogs);
+                        ArrayList<Chat> sortDialogs=RecentMethods.sort_chats_by_time(dialogs);
                         Collections.reverse(sortDialogs);
                         DialogAdapter dialogAdapter=new DialogAdapter(sortDialogs);
                         chatsList.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -103,7 +103,7 @@ public class ChatsFragment extends Fragment
                 noChats.setVisibility(View.VISIBLE);
                 chatsList.setVisibility(View.GONE);
             }else {
-                ArrayList<Chat> sortDialogs=sort_chats_by_time(userInformation.getChats());
+                ArrayList<Chat> sortDialogs=RecentMethods.sort_chats_by_time(userInformation.getChats());
                 Collections.reverse(sortDialogs);
                 DialogAdapter dialogAdapter=new DialogAdapter(sortDialogs);
                 chatsList.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -117,10 +117,5 @@ public class ChatsFragment extends Fragment
                 dialogAdapter.setClickListener(itemClickListener);
             }
         }
-    }
-
-    public ArrayList<Chat> sort_chats_by_time(ArrayList<Chat> cur){
-        cur.sort((Chat a, Chat b) -> (int)(a.getTimeMill() - b.getTimeMill()));
-        return cur;
     }
 }

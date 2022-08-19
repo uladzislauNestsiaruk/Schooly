@@ -369,36 +369,6 @@ public class ClothesViewingProfile extends Fragment {
                 bottomSheetDialog.dismiss();
             }
         });
-        itemClickListener=new SendLookAdapter.ItemClickListener() {
-            @Override
-            public void onItemClick(String otherUserNick, String type) {
-                if(type.equals("send")){
-                    String messageText = messageEdit.getText().toString();
-
-                    String messageSenderRef = otherUserNick + "/Chats/" + userInformation.getNick() + "/Messages";
-                    String messageReceiverRef = userInformation.getNick()  + "/Chats/" + otherUserNick+ "/Messages";
-                    otherUserNickString=otherUserNick;
-
-                    DatabaseReference userMessageKeyRef = firebaseModel.getUsersReference().child(userInformation.getNick() ).child("Chats").child(otherUserNick).child("Messages").push();
-                    String messagePushID = userMessageKeyRef.getKey();
-
-                    Map<String, String> messageTextBody = new HashMap<>();
-                    messageTextBody.put("message", messageText);
-                    messageTextBody.put("type", "text");
-                    messageTextBody.put("from", userInformation.getNick() );
-                    messageTextBody.put("to", otherUserNick);
-                    messageTextBody.put("time", RecentMethods.getCurrentTime());
-                    messageTextBody.put("messageID", messagePushID);
-                    addLastMessage("text", messageText);
-
-                    Map<String, Object> messageBodyDetails = new HashMap<String, Object>();
-                    messageBodyDetails.put(messageSenderRef + "/" + messagePushID, messageTextBody);
-                    messageBodyDetails.put(messageReceiverRef + "/" + messagePushID, messageTextBody);
-                }else {
-                    Log.d("####", type);
-                }
-            }
-        };
         if(userInformation.getSubscription()==null){
             RecentMethods.getSubscriptionList(userInformation.getNick(), firebaseModel, new Callbacks.getFriendsList() {
                 @Override
@@ -407,8 +377,8 @@ public class ClothesViewingProfile extends Fragment {
                         emptyList.setVisibility(View.VISIBLE);
                         recyclerView.setVisibility(View.GONE);
                     }else {
-                        SendLookAdapter sendLookAdapter = new SendLookAdapter(friends,itemClickListener);
-                        recyclerView.setAdapter(sendLookAdapter);
+//                        SendLookAdapter sendLookAdapter = new SendLookAdapter(friends,itemClickListener);
+//                        recyclerView.setAdapter(sendLookAdapter);
                     }
                 }
             });
@@ -417,8 +387,8 @@ public class ClothesViewingProfile extends Fragment {
                 emptyList.setVisibility(View.VISIBLE);
                 recyclerView.setVisibility(View.GONE);
             }else {
-                SendLookAdapter sendLookAdapter = new SendLookAdapter(userInformation.getSubscription(),itemClickListener);
-                recyclerView.setAdapter(sendLookAdapter);
+//                SendLookAdapter sendLookAdapter = new SendLookAdapter(userInformation.getSubscription(),itemClickListener);
+//                recyclerView.setAdapter(sendLookAdapter);
             }
         }
 
@@ -465,8 +435,8 @@ public class ClothesViewingProfile extends Fragment {
                             }else {
                                 emptyList.setVisibility(View.GONE);
                                 recyclerView.setVisibility(View.VISIBLE);
-                                SendLookAdapter sendLookAdapter = new SendLookAdapter(userFromBase,itemClickListener);
-                                recyclerView.setAdapter(sendLookAdapter);
+//                                SendLookAdapter sendLookAdapter = new SendLookAdapter(userFromBase,itemClickListener);
+//                                recyclerView.setAdapter(sendLookAdapter);
                             }
                         }
 
@@ -498,8 +468,8 @@ public class ClothesViewingProfile extends Fragment {
                     }else {
                         emptyList.setVisibility(View.GONE);
                         recyclerView.setVisibility(View.VISIBLE);
-                        SendLookAdapter sendLookAdapter = new SendLookAdapter(userFromBase,itemClickListener);
-                        recyclerView.setAdapter(sendLookAdapter);
+//                        SendLookAdapter sendLookAdapter = new SendLookAdapter(userFromBase,itemClickListener);
+//                        recyclerView.setAdapter(sendLookAdapter);
                     }
                 }
             }

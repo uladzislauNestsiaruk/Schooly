@@ -1700,4 +1700,9 @@ public class RecentMethods {
         }
         return person;
     }
+
+    public static ArrayList<Chat> sort_chats_by_time(ArrayList<Chat> cur){
+        cur.sort((Chat a, Chat b) -> (int)(a.getTimeMill() - b.getTimeMill()));
+        return cur;
+    }
 }

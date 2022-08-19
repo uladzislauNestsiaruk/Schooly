@@ -54,10 +54,14 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
 
     public static class MessageViewHolder extends RecyclerView.ViewHolder {
-        public TextView senderMessageText, receiverMessageText, senderMessageTime, receiverMessageTime, senderTimeVoice;
+        public TextView senderMessageText, receiverMessageText, senderMessageTime, receiverMessageTime, senderTimeVoice
+                ,clothesTitleAndCreator,senderTimeClothes,senderMessageTextClothes
+        ,clothesTitleAndCreatorOther,receiverTimeClothesOther,receiverMessageTextClothesOther
+                ,lookFrom,watchLook,senderTimeLook,senderMessageTextLook
+                ,lookFromOther,watchLookOther,receiverTimeLook,receiverMessageTextLook;
         //public ImageView receiverProfileImage;
-        public RelativeLayout outMessage, inMessage, outVoice, inVoice;
-        public ImageView messageSenderPicture, senderPlay, senderPause;
+        public RelativeLayout outMessage, inMessage, outVoice, inVoice,inClothes,outClothes,inLook,outLook;
+        public ImageView messageSenderPicture, senderPlay, senderPause,clothesImage,clothesImageOther;
         public ImageView messageReceiverPicture;
         public SeekBar  senderSeekBar;
 
@@ -89,6 +93,26 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             senderSeekBar = itemView.findViewById(R.id.seekBar);
             senderTimeVoice = itemView.findViewById(R.id.txtTime);
             outVoice = itemView.findViewById(R.id.outcomingVoice);
+            inClothes=itemView.findViewById(R.id.clothesFrom);
+            clothesTitleAndCreator=itemView.findViewById(R.id.clothesTitleAndCreator);
+            clothesImage=itemView.findViewById(R.id.clothesImage);
+            senderTimeClothes=itemView.findViewById(R.id.sender_time_clothes);
+            senderMessageTextClothes=itemView.findViewById(R.id.sender_message_text_clothes);
+            outClothes=itemView.findViewById(R.id.clothesFromOther);
+            clothesTitleAndCreatorOther=itemView.findViewById(R.id.clothesTitleAndCreatorOther);
+            clothesImageOther=itemView.findViewById(R.id.clothesImageOther);
+            receiverTimeClothesOther=itemView.findViewById(R.id.receiver_time_clothes);
+            receiverMessageTextClothesOther=itemView.findViewById(R.id.receiver_message_text_clothes_other);
+            inLook=itemView.findViewById(R.id.relativeLook);
+            lookFrom=itemView.findViewById(R.id.lookFrom);
+            watchLook=itemView.findViewById(R.id.watchLook);
+            senderTimeLook=itemView.findViewById(R.id.sender_time_look);
+            senderMessageTextLook=itemView.findViewById(R.id.sender_message_text_look);
+            outLook=itemView.findViewById(R.id.relativeLookOther);
+            lookFromOther=itemView.findViewById(R.id.lookFromOther);
+            watchLookOther=itemView.findViewById(R.id.watchLookOther);
+            receiverTimeLook=itemView.findViewById(R.id.receiver_time_look_other);
+            receiverMessageTextLook=itemView.findViewById(R.id.receiver_message_text_look_other);
         }
     }
 
@@ -154,6 +178,10 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         messageViewHolder.inVoice.setVisibility(View.GONE);
         messageViewHolder.messageSenderPicture.setVisibility(View.GONE);
         messageViewHolder.messageReceiverPicture.setVisibility(View.GONE);
+        messageViewHolder.inLook.setVisibility(View.GONE);
+        messageViewHolder.outLook.setVisibility(View.GONE);
+        messageViewHolder.inClothes.setVisibility(View.GONE);
+        messageViewHolder.outClothes.setVisibility(View.GONE);
 
 
         switch (fromMessageType) {
@@ -214,6 +242,14 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                 } else {
                     //messageViewHolder.receiverProfileImage.setVisibility(View.VISIBLE);
                     messageViewHolder.messageReceiverPicture.setVisibility(View.VISIBLE);
+                    messageViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(userMessagesList.get(position).getMessage()));
+                            messageViewHolder.itemView.getContext().startActivity(intent);
+                            notifyDataSetChanged();
+                        }
+                    });
                 }
                 break;
             case "voice":
@@ -250,6 +286,49 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 //                            }
 //                        }
 //                    });
+                }
+                break;
+            case "clothes":
+                if (fromUserID.equals(messageSenderNick)) {
+                    messageViewHolder.inClothes.setVisibility(View.VISIBLE);
+                    messageViewHolder.clothesTitleAndCreator.setText(messages.getClothes().getClothesTitle()+" "+
+                            messageViewHolder.clothesTitleAndCreator.getContext().getResources().getString(R.string.by)+" "
+                    +messages.getClothes().getCreator());
+
+                    Picasso.get().load(messages.getClothes().getClothesImage()).into(messageViewHolder.clothesImage);
+                    messageViewHolder.senderMessageTextClothes.setText(messages.getText());
+                    messageViewHolder.senderTimeClothes.setText(messages.getTime());
+
+                } else {
+                    messageViewHolder.outClothes.setVisibility(View.VISIBLE);
+                    messageViewHolder.clothesTitleAndCreatorOther.setText(messages.getClothes().getClothesTitle()+" "+
+                            messageViewHolder.clothesTitleAndCreator.getContext().getResources().getString(R.string.by)+" "
+                            +messages.getClothes().getCreator());
+
+                    Picasso.get().load(messages.getClothes().getClothesImage()).into(messageViewHolder.clothesImageOther);
+                    messageViewHolder.receiverMessageTextClothesOther.setText(messages.getText());
+                    messageViewHolder.receiverTimeClothesOther.setText(messages.getTime());
+                }
+                break;
+            case "look":
+                if (fromUserID.equals(messageSenderNick)) {
+                    messageViewHolder.inLook.setVisibility(View.VISIBLE);
+                    messageViewHolder.lookFrom.setText(
+                            messageViewHolder.lookFrom.getContext().getResources().getString(R.string.lookby)+" "
+                            +messages.getNewsItem().getNick());
+
+                    messageViewHolder.senderMessageTextLook.setText(messages.getText());
+                    messageViewHolder.senderTimeLook.setText(messages.getTime());
+
+                } else {
+                    messageViewHolder.outClothes.setVisibility(View.VISIBLE);
+                    messageViewHolder.clothesTitleAndCreatorOther.setText(
+                            messageViewHolder.clothesTitleAndCreator.getContext().getResources().getString(R.string.lookby)+" "
+                            +messages.getNewsItem().getNick());
+
+                    
+                    messageViewHolder.receiverMessageTextLook.setText(messages.getText());
+                    messageViewHolder.receiverTimeLook.setText(messages.getTime());
                 }
                 break;
 

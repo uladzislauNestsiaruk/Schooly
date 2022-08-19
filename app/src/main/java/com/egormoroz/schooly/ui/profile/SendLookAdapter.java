@@ -15,20 +15,18 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.Subscriber;
+import com.egormoroz.schooly.ui.chat.Chat;
 import com.egormoroz.schooly.ui.coins.TransferMoneyAdapter;
 import com.egormoroz.schooly.ui.main.Shop.NewClothesAdapter;
 
 import java.util.ArrayList;
 
 public class SendLookAdapter extends RecyclerView.Adapter<SendLookAdapter.ViewHolder> {
-    ArrayList<Subscriber> listAdapter;
+    ArrayList<Chat> listAdapter;
     private FirebaseModel firebaseModel = new FirebaseModel();
     SendLookAdapter.ItemClickListener itemClickListener;
-    long subscriptionsCount,subscribersCount;
-    boolean check=false;
-    int a=0;
 
-    public  SendLookAdapter(ArrayList<Subscriber> listAdapter,ItemClickListener itemClickListener) {
+    public  SendLookAdapter(ArrayList<Chat> listAdapter, ItemClickListener itemClickListener) {
         this.listAdapter = listAdapter;
         this.itemClickListener=itemClickListener;
     }
@@ -45,8 +43,8 @@ public class SendLookAdapter extends RecyclerView.Adapter<SendLookAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull SendLookAdapter.ViewHolder holder, int position) {
-        Subscriber subscriber=listAdapter.get(position);
-        holder.otherUserNick.setText(subscriber.getSub());
+        Chat chat=listAdapter.get(position);
+        holder.otherUserNick.setText(chat.getName());
         holder.send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -54,9 +52,9 @@ public class SendLookAdapter extends RecyclerView.Adapter<SendLookAdapter.ViewHo
                     holder.send.setText(holder.send.getContext().getResources().getText(R.string.openchat));
                     holder.send.setTextColor(Color.parseColor("#F3A2E5"));
                     holder.send.setBackgroundResource(R.drawable.corners10appcolor2dpstroke);
-                    itemClickListener.onItemClick(subscriber.getSub(),"send");
+                    itemClickListener.onItemClick(chat, "send");
                 }else {
-                   itemClickListener.onItemClick(subscriber.getSub(),"chat");
+                   itemClickListener.onItemClick(chat,"chat");
                 }
             }
         });
@@ -78,7 +76,7 @@ public class SendLookAdapter extends RecyclerView.Adapter<SendLookAdapter.ViewHo
         }
     }
 
-    Subscriber getItem(int id) {
+    Chat getItem(int id) {
         return listAdapter.get(id);
     }
 
@@ -87,6 +85,6 @@ public class SendLookAdapter extends RecyclerView.Adapter<SendLookAdapter.ViewHo
     }
 
     public interface ItemClickListener {
-        void onItemClick(String otherUserNick,String type);
+        void onItemClick(Chat chat,String type);
     }
 }

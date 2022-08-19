@@ -1,5 +1,6 @@
 package com.egormoroz.schooly.ui.chat;
 
+import com.egormoroz.schooly.ui.main.Shop.Clothes;
 import com.egormoroz.schooly.ui.people.UserPeopleAdapter;
 
 import java.util.ArrayList;
@@ -78,5 +79,7 @@ public class Chat {
   public long getVoiceDuration () {return  this.voiceDuration;}
 
   public void setVoiceDuration (long voiceDuration) {this.voiceDuration = voiceDuration;}
+
+
 
 }
