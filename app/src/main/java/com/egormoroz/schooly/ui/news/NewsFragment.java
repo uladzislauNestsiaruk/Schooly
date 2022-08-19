@@ -39,6 +39,7 @@ public class NewsFragment extends Fragment {
     DatabaseReference ref;
     UserInformation userInformation;
     Bundle bundle;
+    NewsAdapter.itemChanged onItemChangedListener;
     NewsAdapter newsAdapter;
     ArrayList<NewsItem> newsArrayList=new ArrayList<>();
     CircularProgressIndicator circularProgressIndicator;
@@ -67,7 +68,14 @@ public class NewsFragment extends Fragment {
                 RecentMethods.setCurrentFragment(MainFragment.newInstance(userInformation, bundle), getActivity());
             }
         };
-
+        onItemChangedListener = new NewsAdapter.itemChanged() {
+            @Override
+            public void onItemChanged(int position, String type) {
+                if(type.equals("like")){
+                    //newsAdapter.notifyItemChanged(position);
+                }
+            }
+        };
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback1);
         circularProgressIndicator=root.findViewById(R.id.progressIndicator);
         viewPager2 = root.findViewById(R.id.picturenewspager);
@@ -79,7 +87,7 @@ public class NewsFragment extends Fragment {
                 circularProgressIndicator.setVisibility(View.GONE);
                 if(newsAdapter==null){
                     newsArrayList=newsItemArrayList;
-                    newsAdapter=new NewsAdapter(newsArrayList, userInformation, bundle,NewsFragment.newInstance(userInformation, bundle),getActivity());
+                    newsAdapter=new NewsAdapter(newsArrayList, userInformation, bundle,NewsFragment.newInstance(userInformation, bundle),getActivity(), onItemChangedListener);
                     Log.d("####", "dd 3   "+newsArrayList.size());
                     viewPager2.setAdapter(newsAdapter);
                 }else{

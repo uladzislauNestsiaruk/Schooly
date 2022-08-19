@@ -31,6 +31,7 @@ import android.widget.Toast;
 import androidx.annotation.AnyRes;
 import androidx.annotation.LongDef;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -57,6 +58,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -77,6 +79,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
+import java.sql.Array;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -91,13 +94,16 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolder> {
-
+    public interface itemChanged{
+        public void onItemChanged(int position, String type);
+    }
     private List<NewsItem> newsList;
     static FirebaseModel firebaseNewsModel = new FirebaseModel();
     FirebaseModel DefaultDatabase = new FirebaseModel();
     long value;
     static UserInformation userInformation;
     Bundle bundle;
+    CommentAdapter commentAdapter;
     static EditText editText,messageEdit,addDescriptionEdit;
     RecyclerView clothesCreatorsRecycler,complainRecycler;
     static RecyclerView recyclerView;
@@ -120,16 +126,19 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
     static FilamentModel filamentModel=new FilamentModel();
     static ArrayList<Clothes> clothesList=new ArrayList<>();
     static ArrayList<String> clothesUid=new ArrayList<>();
+    itemChanged itemChangeListener;
     Fragment fragment;
     Activity activity;
 
 
-    public NewsAdapter(List<NewsItem> newsList,UserInformation userInformation,Bundle bundle,Fragment fragment,Activity activity) {
+    public NewsAdapter(List<NewsItem> newsList,UserInformation userInformation,Bundle bundle,Fragment fragment,Activity activity,
+                       itemChanged itemChangeListener) {
         this.newsList = newsList;
         this.userInformation=userInformation;
         this.bundle=bundle;
         this.fragment=fragment;
         this.activity=activity;
+        this.itemChangeListener = itemChangeListener;
         firebaseNewsModel.initNewsDatabase();
         DefaultDatabase.initAll();
     }
@@ -144,6 +153,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
 
     @Override
     public void onBindViewHolder(@NonNull ImageViewHolder holder, int position) {
+        Log.d("ON BIND", "BIND POSITION: " + position);
         NewsItem newsItem = newsList.get(position);
         loadLookClothes(newsItem);
         nick=userInformation.getNick();
@@ -181,53 +191,61 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
         holder.description.setText(newsItem.getItem_description());
         firebaseNewsModel.initNewsDatabase();
         Log.d("#####", "Database url" + firebaseNewsModel.getReference());
-        Query likeref = DefaultDatabase.getUsersReference().child(nick).child("likedNews").child(newsItem.getNewsId());
-        likeref.addValueEventListener(new ValueEventListener() {
+        firebaseNewsModel.getReference().child(newsItem.getNick()).child(newsItem.getNewsId()).child("likes_count").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()) {
-                    holder.like.setImageResource(R.drawable.ic_pressedheart40dp);
-                }
-                else {
-                    holder.like.setImageResource(R.drawable.ic_heart40dp);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-
-        holder.like.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                value = Long.parseLong(holder.like_count.getText().toString());
-                Log.d("#####", "Firebase : " + firebaseNewsModel.getReference() + "   Likes before " + value);
-                Query likeref = DefaultDatabase.getUsersReference().child(nick).child("likedNews").child(newsItem.getNewsId());
-                likeref.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if (snapshot.exists()) {
-                            value -= 1;
-                            holder.like.setImageResource(R.drawable.ic_heart40dp);
-                            DefaultDatabase.getUsersReference().child(nick).child("likedNews").child(newsItem.getNewsId()).removeValue();
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if(task.isSuccessful()){
+                    value = Integer.valueOf(task.getResult().getValue(String.class));
+                    holder.like_count.setText(String.valueOf(value));
+                    Query likeref = DefaultDatabase.getUsersReference().child(nick).child("likedNews").child(newsItem.getNewsId());
+                    likeref.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            if (snapshot.exists()) {
+                                holder.like.setImageResource(R.drawable.ic_pressedheart40dp);
+                            }
+                            else {
+                                holder.like.setImageResource(R.drawable.ic_heart40dp);
+                            }
                         }
-                        else{
-                            value += 1;
-                            holder.like.setImageResource(R.drawable.ic_pressedheart40dp);
-                            DefaultDatabase.getUsersReference().child(nick).child("likedNews").child(newsItem.getNewsId()).setValue("liked");
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
                         }
-                        Log.d("#####", "Firebase : " + firebaseNewsModel.getReference() + "   Likes " + value);
-                        holder.like_count.setText(String.valueOf(value));
-                        firebaseNewsModel.getReference().child(nick).child(newsItem.getNewsId()).child("likes_count").setValue(String.valueOf(value));
-                    }
+                    });
+                    holder.like.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Log.d("#####", "Firebase : " + firebaseNewsModel.getReference() + "   Likes before " + value);
+                            Query likeref = DefaultDatabase.getUsersReference().child(nick).child("likedNews").child(newsItem.getNewsId());
+                            likeref.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    if (snapshot.exists()) {
+                                        value -= 1;
+                                        holder.like.setImageResource(R.drawable.ic_heart40dp);
+                                        DefaultDatabase.getUsersReference().child(nick).child("likedNews").child(newsItem.getNewsId()).removeValue();
+                                    }
+                                    else{
+                                        value += 1;
+                                        holder.like.setImageResource(R.drawable.ic_pressedheart40dp);
+                                        DefaultDatabase.getUsersReference().child(nick).child("likedNews").child(newsItem.getNewsId()).setValue("liked");
+                                    }
+                                    Log.d("#####", "Firebase : " + firebaseNewsModel.getReference() + "   Likes " + value);
+                                    holder.like_count.setText(String.valueOf(value));
+                                    firebaseNewsModel.getReference().child(newsItem.getNick()).child(newsItem.getNewsId()).child("likes_count").setValue(String.valueOf(value));
+                                    itemChangeListener.onItemChanged(position, "like");
+                                }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
 
-                    }
-                });
+                                }
+                            });
+                        }
+                    });
+                }
             }
         });
 
@@ -506,7 +524,6 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
                                     .child(newsItem.getNewsId()).child("comments").child(commentId)
                                     .setValue(new Comment(editText.getText().toString(), 0, commentId,RecentMethods.getCurrentTime(),nick,"image","comment"));
                             editText.getText().clear();
-                            loadComments(newsItem,v);
                         }
                     });
                 }
@@ -522,19 +539,39 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
     }
 
     public void loadComments(NewsItem newsItem,View v){
-        RecentMethods.getCommentsList(newsItem.getNick(), newsItem.getNewsId(), firebaseNewsModel, new Callbacks.getCommentsList() {
+        ArrayList<Comment> comment = new ArrayList<>();
+        commentAdapter = new CommentAdapter(comment, newsItem.getNick(), bundle, newsItem.getNewsId(), userInformation, newsItem);
+        firebaseNewsModel.getReference().child(newsItem.getNick()).child(newsItem.getNewsId()).child("comments").addChildEventListener(new ChildEventListener() {
             @Override
-            public void getCommentsList(ArrayList<Comment> comment) {
-                if(comment.size()==0){
-                    noComment.setVisibility(View.VISIBLE);
-                }else {
-                    noComment.setVisibility(View.GONE);
-                    recyclerView.setLayoutManager(new LinearLayoutManager(v.getContext()));
-                    CommentAdapter commentAdapter = new CommentAdapter(comment, newsItem.getNick(), bundle, newsItem.getNewsId(), userInformation);
-                    recyclerView.setAdapter(commentAdapter);
-                }
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                Log.d("****", "Child added");
+                comment.add(snapshot.getValue(Comment.class));
+                commentAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
             }
         });
+        noComment.setVisibility(View.GONE);
+        recyclerView.setLayoutManager(new LinearLayoutManager(v.getContext()));
+        recyclerView.setAdapter(commentAdapter);
     }
 
     public void loadLookClothes(NewsItem newsItem){

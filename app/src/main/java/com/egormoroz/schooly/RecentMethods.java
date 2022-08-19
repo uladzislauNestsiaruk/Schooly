@@ -1320,6 +1320,7 @@ public class RecentMethods {
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Log.d("#####", "WHATAFACKA");
                 ArrayList<Comment> commentsList = new ArrayList<>();
                 for (DataSnapshot snap:snapshot.getChildren()){
                     Comment comment=snap.getValue(Comment.class);
@@ -1333,10 +1334,13 @@ public class RecentMethods {
 
             }
         });
-
-
     }
-
+    public static void addCommentToTheList(String postOwnerNick, String newsId, FirebaseModel model, Comment comment, String commentId){
+        model.initNewsDatabase();
+        model.getReference().child(postOwnerNick)
+                .child(newsId).child("comments").child(commentId)
+                .setValue(comment);
+    }
     public static void getMyLookClothes(String nick, FirebaseModel firebaseModel, Callbacks.getLookClothes callback){
         firebaseModel.initAll();
         Query query=firebaseModel.getUsersReference().child(nick).child("lookClothes");
@@ -1663,7 +1667,7 @@ public class RecentMethods {
                     DataSnapshot snapshot=task.getResult();
                     ArrayList<FacePart> facePartArrayList=new ArrayList<>();
                     for(DataSnapshot snap:snapshot.getChildren()){
-                        FacePart facePart=snap.getValue(FacePart.class);
+                        FacePart facePart=snap. getValue(FacePart.class);
                         facePartArrayList.add(facePart);
                     }
                     callback.LoadPerson(setAllPerson(facePartArrayList),facePartArrayList);

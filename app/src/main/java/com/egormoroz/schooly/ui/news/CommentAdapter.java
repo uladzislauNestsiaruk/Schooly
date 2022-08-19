@@ -31,13 +31,15 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
     Bundle bundle;
     String newsId, nick, likeWord;
     UserInformation userInformation;
+    NewsItem newsItem;
     long value;
-    public CommentAdapter(List<Comment> commentAdapterList, String nick, Bundle bundle, String newsId, UserInformation userInformation) {
+    public CommentAdapter(List<Comment> commentAdapterList, String nick, Bundle bundle, String newsId, UserInformation userInformation, NewsItem newsItem) {
         this.commentAdapterList = commentAdapterList;
         this.nick=nick;
         this.bundle=bundle;
         this.userInformation = userInformation;
         this.newsId = newsId;
+        this.newsItem = newsItem;
     }
     private List<Comment> commentAdapterList;
     FirebaseModel firebaseModel = new FirebaseModel();
@@ -81,7 +83,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
         holder.answer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+               // NewsAdapter.sendComment(newsItem, firebaseNewsModel, "reply", comment.getNick());
             }
         });
         holder.like.setOnClickListener(new View.OnClickListener() {

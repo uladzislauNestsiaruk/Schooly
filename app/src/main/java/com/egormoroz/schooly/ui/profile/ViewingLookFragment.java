@@ -418,7 +418,7 @@ public class ViewingLookFragment extends Fragment {
                 }else {
                     noComment.setVisibility(View.GONE);
                     recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-                    CommentAdapter commentAdapter = new CommentAdapter(comment, newsItem.getNick(), bundle, newsItem.getNewsId(), userInformation);
+                    CommentAdapter commentAdapter = new CommentAdapter(comment, newsItem.getNick(), bundle, newsItem.getNewsId(), userInformation, newsItem);
                     recyclerView.setAdapter(commentAdapter);
                 }
             }
