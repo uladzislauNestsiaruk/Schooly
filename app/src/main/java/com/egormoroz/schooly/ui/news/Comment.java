@@ -2,15 +2,16 @@ package com.egormoroz.schooly.ui.news;
 
 public class Comment {
     private String text,  commentId,postTime,nick,
-            comments,type,image;
+            comments,type,image, parentId;
     private   long likes_count;
+
 
     public Comment(){
 
     }
 
     public Comment( String text, long likes_count, String commentId,
-                    String postTime,String nick,String image,String type){
+                    String postTime,String nick,String image,String type, String parentId){
         this.image = image;
         this.likes_count = likes_count;
         this.text = text;
@@ -18,6 +19,7 @@ public class Comment {
         this.postTime=postTime;
         this.nick=nick;
         this.type=type;
+        this.parentId = parentId;
     }
 
     public String getImage (){
@@ -76,4 +78,6 @@ public class Comment {
         this.type = type;
     }
 
+    public void setParentId(String parentId){this.parentId = parentId;}
+    public String getParentId(){return parentId;}
 }
