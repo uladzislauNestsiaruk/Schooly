@@ -160,14 +160,14 @@
 
         <ImageView
             android:id="@+id/receive_imgPause"
-            android:layout_width="43dp"
-            android:layout_height="43dp"
+            android:layout_width="40dp"
+            android:layout_height="38dp"
             android:layout_alignParentRight="false"
-            android:layout_marginRight="0dp"
             android:clickable="true"
             android:focusable="auto"
             android:src="@drawable/ic_pause_white_24dp"
-            android:visibility="gone" />
+            android:visibility="gone"
+            tools:layout_marginLeft="10dp" />
 
         <ImageView
             android:id="@+id/receive_imgPlay"
