@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -8,9 +9,9 @@
         android:id="@+id/textMessageIncoming"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
         android:layout_marginEnd="110dp"
         android:layout_marginBottom="4dp"
-        android:layout_marginTop="4dp"
         android:background="@drawable/cornerstextmessagesfromother">
 
         <TextView
@@ -20,26 +21,25 @@
             android:layout_marginTop="4dp"
             android:layout_marginBottom="2dp"
             android:autoLink="all"
-            android:textColorLink="@color/white"
             android:fontFamily="@font/montserrat_bold"
             android:paddingStart="16dp"
             android:paddingTop="10dp"
             android:paddingEnd="16dp"
             android:textColor="@color/white"
-            android:textSize="14sp"/>
+            android:textColorLink="@color/white"
+            android:textSize="14sp" />
 
         <TextView
+            android:id="@+id/receiver_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="10sp"
-            android:fontFamily="@font/montserrat_bold"
-            android:id="@+id/receiver_time"
-            android:layout_alignEnd="@+id/receiver_message_text"
             android:layout_below="@id/receiver_message_text"
+            android:layout_alignEnd="@+id/receiver_message_text"
             android:layout_marginEnd="6dp"
+            android:fontFamily="@font/montserrat_bold"
             android:paddingBottom="4dp"
             android:textColor="@color/white"
-            />
+            android:textSize="10sp" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -56,8 +56,8 @@
             android:id="@+id/sender_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignEnd="@+id/sender_message_text"
             android:layout_below="@id/sender_message_text"
+            android:layout_alignEnd="@+id/sender_message_text"
             android:layout_marginEnd="4dp"
             android:fontFamily="@font/montserrat_bold"
             android:paddingBottom="4dp"
@@ -69,7 +69,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:textColorLink="@color/white"
             android:layout_marginBottom="2dp"
             android:autoLink="all"
             android:fontFamily="@font/montserrat_bold"
@@ -77,6 +76,7 @@
             android:paddingTop="10dp"
             android:paddingEnd="10dp"
             android:textColor="@color/white"
+            android:textColorLink="@color/white"
             android:textSize="14sp" />
 
     </RelativeLayout>
@@ -85,10 +85,10 @@
         android:id="@+id/outcomingVoice"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="105dp"
         android:layout_alignParentEnd="true"
-        android:layout_marginBottom="4dp"
+        android:layout_marginStart="105dp"
         android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
         android:background="@drawable/cornerstextmessagesfromme">
 
         <ImageView
@@ -114,65 +114,84 @@
 
         <TextView
             android:id="@+id/txtTime"
-            android:layout_alignParentRight="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
             android:layout_gravity="end"
             android:layout_marginTop="30dp"
             android:layout_marginEnd="16dp"
+            android:fontFamily="@font/montserrat_bold"
             android:text="00:00:00 / 00:00:00"
-            android:textSize="10sp" />
+            android:textColor="@color/white"
+            android:textSize="12sp" />
 
         <SeekBar
             android:id="@+id/seekBar"
             android:layout_width="225dp"
-            android:layout_alignParentRight="true"
             android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
             android:layout_marginStart="0dp"
-            android:layout_marginTop="15dp"
             android:layout_marginLeft="0dp"
+            android:layout_marginTop="15dp"
             android:layout_marginEnd="4dp"
             android:layout_marginRight="4dp" />
     </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/incomingVoice"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_width="227dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
+        android:background="@drawable/cornerstextmessagesfromother"
+        tools:visibility="gone">
+
         <ImageView
-            android:clickable="true"
-            android:id="@+id/receive_imgPlay"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:background="@drawable/play_pause_bg"
-            android:src="@drawable/ic_play_arrow_white_24dp"
-            android:focusable="true" />
-        <ImageView
-            android:clickable="true"
             android:id="@+id/receive_imgPause"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:background="@drawable/play_pause_bg"
+            android:layout_width="43dp"
+            android:layout_height="43dp"
+            android:layout_alignParentRight="false"
+            android:layout_marginRight="0dp"
+            android:clickable="true"
+            android:focusable="auto"
             android:src="@drawable/ic_pause_white_24dp"
-            android:visibility="gone"
-            android:focusable="true" />
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/receive_imgPlay"
+            android:layout_width="50dp"
+            android:layout_height="45dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="177dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:src="@drawable/ic_play_arrow_white_24dp" />
+
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:id="@+id/receive_txtTime"
-            android:layout_gravity="end"
-            android:layout_marginEnd="16dp"
-            android:textSize="10sp"
+            android:layout_width="139dp"
+            android:layout_height="wrap_content"
+            android:layout_alignWithParentIfMissing="false"
+            android:layout_alignBottom="@+id/receive_seekBar"
+            android:layout_alignParentLeft="false"
+            android:layout_alignParentRight="false"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="4dp"
+            android:nestedScrollingEnabled="false"
+            android:rotation="0"
+            android:rotationX="0"
+            android:rotationY="0"
             android:text="00:00:00 / 00:00:00"
-            android:layout_marginRight="16dp" />
+            android:textAlignment="textEnd"
+            android:textSize="10sp" />
+
         <SeekBar
             android:id="@+id/receive_seekBar"
-            android:layout_width="225dp"
-            android:layout_marginStart="0dp"
-            android:layout_marginEnd="4dp"
-            android:layout_height="wrap_content"
+            android:layout_width="190dp"
+            android:layout_height="45dp"
+            android:layout_marginLeft="30dp"
             android:layout_marginRight="4dp"
-            android:layout_marginLeft="0dp" />
+            android:thumb="@drawable/corners10grey" />
     </RelativeLayout>
 
 
@@ -184,7 +203,8 @@
         android:layout_marginStart="5dp"
         android:layout_marginTop="5dp"
         android:background="@drawable/cornerstextmessagesfromother"
-        android:scaleType="centerCrop" />
+        android:scaleType="centerCrop"
+        tools:visibility="gone" />
 
     <ImageView
         android:id="@+id/message_sender_image_view"
@@ -196,7 +216,8 @@
         android:layout_marginEnd="5dp"
         android:layout_marginBottom="5dp"
         android:background="@drawable/cornerstextmessagesfromme"
-        android:scaleType="centerCrop" />
+        android:scaleType="centerCrop"
+        tools:visibility="gone" />
 
     <RelativeLayout
         android:id="@+id/clothesFrom"
@@ -205,7 +226,8 @@
         android:layout_alignParentEnd="true"
         android:layout_marginTop="4dp"
         android:layout_marginBottom="4dp"
-        android:background="@drawable/cornerstextmessagesfromme">
+        android:background="@drawable/cornerstextmessagesfromme"
+        tools:visibility="gone">
 
         <TextView
             android:id="@+id/clothesTitleAndCreator"
@@ -223,14 +245,13 @@
             android:layout_height="1dp"
             android:layout_below="@+id/clothesTitleAndCreator"
             android:layout_marginTop="8dp"
-            android:background="@color/white"
-            />
+            android:background="@color/white" />
 
         <ImageView
             android:id="@+id/clothesImage"
             android:layout_width="280dp"
             android:layout_height="280dp"
-            android:layout_below="@+id/viewTop"/>
+            android:layout_below="@+id/viewTop" />
 
         <View
             android:id="@+id/viewBottom"
@@ -275,17 +296,18 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
         android:layout_marginTop="4dp"
-        android:background="@drawable/cornerstextmessagesfromother">
+        android:background="@drawable/cornerstextmessagesfromother"
+        tools:visibility="gone">
 
         <TextView
             android:id="@+id/clothesTitleAndCreatorOther"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
             android:layout_marginStart="8dp"
-            android:textColor="@color/white"
+            android:layout_marginTop="8dp"
             android:fontFamily="@font/montserrat_bold"
-            android:textSize="18sp"/>
+            android:textColor="@color/white"
+            android:textSize="18sp" />
 
         <View
             android:id="@+id/viewTopOther"
@@ -293,8 +315,7 @@
             android:layout_height="1dp"
             android:layout_below="@+id/clothesTitleAndCreatorOther"
             android:layout_marginTop="8dp"
-            android:background="@color/white"
-            />
+            android:background="@color/white" />
 
         <ImageView
             android:id="@+id/clothesImageOther"
@@ -307,38 +328,36 @@
             android:layout_width="280dp"
             android:layout_height="1dp"
             android:layout_below="@+id/clothesImageOther"
-            android:background="@color/white"
-            />
+            android:background="@color/white" />
 
         <TextView
             android:id="@+id/receiver_message_text_clothes_other"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/viewBottomOther"
+            android:layout_alignParentEnd="true"
             android:layout_marginTop="4dp"
             android:layout_marginBottom="2dp"
             android:autoLink="all"
-            android:layout_alignParentEnd="true"
-            android:layout_below="@+id/viewBottomOther"
-            android:textColorLink="@color/white"
             android:fontFamily="@font/montserrat_bold"
             android:paddingStart="16dp"
             android:paddingTop="10dp"
             android:paddingEnd="16dp"
             android:textColor="@color/white"
-            android:textSize="14sp"/>
+            android:textColorLink="@color/white"
+            android:textSize="14sp" />
 
         <TextView
+            android:id="@+id/receiver_time_clothes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="10sp"
-            android:fontFamily="@font/montserrat_bold"
-            android:id="@+id/receiver_time_clothes"
-            android:layout_alignEnd="@+id/receiver_message_text_clothes_other"
             android:layout_below="@id/receiver_message_text_clothes_other"
+            android:layout_alignEnd="@+id/receiver_message_text_clothes_other"
             android:layout_marginEnd="6dp"
+            android:fontFamily="@font/montserrat_bold"
             android:paddingBottom="4dp"
             android:textColor="@color/white"
-            />
+            android:textSize="10sp" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -348,29 +367,29 @@
         android:layout_alignParentEnd="true"
         android:layout_marginTop="4dp"
         android:layout_marginBottom="4dp"
-        android:background="@drawable/cornerstextmessagesfromme">
+        android:background="@drawable/cornerstextmessagesfromme"
+        tools:visibility="gone">
 
         <TextView
             android:id="@+id/lookFrom"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignStart="@id/watchLook"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:layout_alignStart="@id/watchLook"
-            android:textColor="@color/white"
             android:fontFamily="@font/montserrat_bold"
-            android:textSize="16sp"
-            />
+            android:textColor="@color/white"
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/watchLook"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/lookFrom"
+            android:layout_alignParentEnd="true"
             android:layout_marginTop="8dp"
             android:fontFamily="@font/montserratblack"
             android:padding="24dp"
-            android:layout_alignParentEnd="true"
             android:text="@string/goToView"
             android:textColor="@color/white"
             android:textSize="18sp" />
@@ -379,8 +398,8 @@
             android:id="@+id/sender_time_look"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignEnd="@+id/sender_message_text_look"
             android:layout_below="@id/sender_message_text_look"
+            android:layout_alignEnd="@+id/sender_message_text_look"
             android:layout_marginEnd="4dp"
             android:fontFamily="@font/montserrat_bold"
             android:paddingBottom="4dp"
@@ -391,17 +410,17 @@
             android:id="@+id/sender_message_text_look"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:textColorLink="@color/white"
-            android:layout_marginBottom="2dp"
-            android:autoLink="all"
             android:layout_below="@+id/watchLook"
             android:layout_alignParentEnd="true"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="2dp"
+            android:autoLink="all"
             android:fontFamily="@font/montserrat_bold"
             android:paddingStart="20dp"
             android:paddingTop="10dp"
             android:paddingEnd="10dp"
             android:textColor="@color/white"
+            android:textColorLink="@color/white"
             android:textSize="14sp" />
 
     </RelativeLayout>
@@ -412,29 +431,29 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:layout_marginBottom="4dp"
-        android:background="@drawable/cornerstextmessagesfromother">
+        android:background="@drawable/cornerstextmessagesfromother"
+        tools:visibility="gone">
 
         <TextView
             android:id="@+id/lookFromOther"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignStart="@id/watchLookOther"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:layout_alignStart="@id/watchLookOther"
-            android:textColor="@color/white"
             android:fontFamily="@font/montserrat_bold"
-            android:textSize="16sp"
-            />
+            android:textColor="@color/white"
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/watchLookOther"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/lookFromOther"
+            android:layout_alignParentEnd="true"
             android:layout_marginTop="8dp"
             android:fontFamily="@font/montserratblack"
             android:padding="24dp"
-            android:layout_alignParentEnd="true"
             android:text="@string/goToView"
             android:textColor="@color/white"
             android:textSize="18sp" />
@@ -443,31 +462,30 @@
             android:id="@+id/receiver_message_text_look_other"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/watchLookOther"
             android:layout_marginTop="4dp"
             android:layout_marginBottom="2dp"
             android:autoLink="all"
-            android:layout_below="@+id/watchLookOther"
-            android:textColorLink="@color/white"
             android:fontFamily="@font/montserrat_bold"
             android:paddingStart="16dp"
             android:paddingTop="10dp"
             android:paddingEnd="16dp"
             android:textColor="@color/white"
-            android:textSize="14sp"/>
+            android:textColorLink="@color/white"
+            android:textSize="14sp" />
 
         <TextView
+            android:id="@+id/receiver_time_look_other"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="10sp"
-            android:fontFamily="@font/montserrat_bold"
-            android:id="@+id/receiver_time_look_other"
-            android:layout_alignEnd="@+id/receiver_message_text_look_other"
             android:layout_below="@id/receiver_message_text_look_other"
+            android:layout_alignEnd="@+id/receiver_message_text_look_other"
             android:layout_marginEnd="6dp"
+            android:fontFamily="@font/montserrat_bold"
             android:paddingBottom="4dp"
             android:textColor="@color/white"
-            />
+            android:textSize="10sp" />
 
     </RelativeLayout>
 
-    </RelativeLayout>
+</RelativeLayout>
