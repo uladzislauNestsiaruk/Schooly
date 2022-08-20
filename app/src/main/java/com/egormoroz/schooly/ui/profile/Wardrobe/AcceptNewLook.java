@@ -1,9 +1,19 @@
 package com.egormoroz.schooly.ui.profile.Wardrobe;
 
+import android.app.Activity;
 import android.app.DownloadManager;
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Rect;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.PixelCopy;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,33 +26,47 @@ import android.widget.Toast;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.egormoroz.schooly.Callbacks;
+import com.egormoroz.schooly.FacePart;
 import com.egormoroz.schooly.FilamentModel;
 import com.egormoroz.schooly.FirebaseModel;
+import com.egormoroz.schooly.LoadBodyParts;
+import com.egormoroz.schooly.LoadClothesArrayListBuffers;
 import com.egormoroz.schooly.LockableNestedScrollView;
+import com.egormoroz.schooly.Person;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
+import com.egormoroz.schooly.TaskRunner;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
 import com.egormoroz.schooly.ui.main.Shop.ViewingClothes;
 import com.egormoroz.schooly.ui.main.UserInformation;
+import com.egormoroz.schooly.ui.news.NewsAdapter;
 import com.egormoroz.schooly.ui.news.NewsItem;
 import com.egormoroz.schooly.ui.news.ViewingClothesNews;
 import com.egormoroz.schooly.ui.profile.Look;
 import com.egormoroz.schooly.ui.profile.LooksAdapter;
 import com.egormoroz.schooly.ui.profile.LooksFragmentProfileOther;
 import com.egormoroz.schooly.ui.profile.ProfileFragment;
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
@@ -71,7 +95,7 @@ public class AcceptNewLook extends Fragment {
     ImageView schoolyCoin;
     RecyclerView recyclerView;
     long lookPriceLong,lookPriceDollarLong;
-    String lookPriceString,lookPriceDollarString,nick,model,type;
+    String lookPriceString,lookPriceDollarString,nick,type;
     ConstituentsAdapter.ItemClickListener itemClickListener;
     Fragment fragment;
     UserInformation userInformation;
@@ -80,17 +104,17 @@ public class AcceptNewLook extends Fragment {
     SurfaceView surfaceView;
     static byte[] buffer;
     static URI uri;
-    static Future<Buffer> future;
-    ArrayList<Buffer> buffers;
-    static Buffer buffer1,bufferToFilament,b;
+    static Buffer bufferToFilament;
     static FilamentModel filamentModel=new FilamentModel();
     static ArrayList<Clothes> clothesList=new ArrayList<>();
     static ArrayList<String> clothesUid=new ArrayList<>();
     LockableNestedScrollView lockableNestedScrollView;
+    static int loadValue;
+    int a=0;
+    static ArrayList<String > allLoadClothesUid=new ArrayList<>();
 
-    public AcceptNewLook(String model,String type,Fragment fragment,UserInformation userInformation,Bundle bundle,String lookType,ArrayList<String> clothesUid,
+    public AcceptNewLook( String type, Fragment fragment, UserInformation userInformation, Bundle bundle, String lookType, ArrayList<String> clothesUid,
                          ArrayList<Clothes> clothesList) {
-        this.model = model;
         this.type = type;
         this.fragment=fragment;
         this.userInformation=userInformation;
@@ -100,9 +124,9 @@ public class AcceptNewLook extends Fragment {
         AcceptNewLook.clothesList=clothesList;
     }
 
-    public static AcceptNewLook newInstance(String model,String type,Fragment fragment,UserInformation userInformation,Bundle bundle,String lookType
+    public static AcceptNewLook newInstance(String type,Fragment fragment,UserInformation userInformation,Bundle bundle,String lookType
             ,ArrayList<String> clothesUid, ArrayList<Clothes> clothesList) {
-        return new AcceptNewLook(model,type,fragment,userInformation,bundle,lookType,clothesUid,clothesList);
+        return new AcceptNewLook(type,fragment,userInformation,bundle,lookType,clothesUid,clothesList);
 
     }
 
@@ -124,6 +148,7 @@ public class AcceptNewLook extends Fragment {
         }
         bundle.putSerializable("CLOTHESUID", clothesUid);
         bundle.putSerializable("ALLLOADCLOTHESLIST", clothesList);
+        bundle.putSerializable("ALLLOADCLOTHESUID", allLoadClothesUid);
     }
 
 
@@ -142,7 +167,7 @@ public class AcceptNewLook extends Fragment {
         itemClickListener=new ConstituentsAdapter.ItemClickListener() {
             @Override
             public void onItemClick(Clothes clothes) {
-                RecentMethods.setCurrentFragment(ViewingClothesNews.newInstance(AcceptNewLook.newInstance(model,type,fragment, userInformation,bundle,lookType,clothesUid,clothesList),userInformation,bundle), getActivity());
+                RecentMethods.setCurrentFragment(ViewingClothesNews.newInstance(AcceptNewLook.newInstance(type,fragment, userInformation,bundle,lookType,clothesUid,clothesList),userInformation,bundle), getActivity());
             }
         };
 
@@ -162,14 +187,16 @@ public class AcceptNewLook extends Fragment {
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
 
         lockableNestedScrollView=view.findViewById(R.id.lockableNestedScrollView);
-        loadPerson(userInformation, lockableNestedScrollView);
+        loadPerson(userInformation, lockableNestedScrollView,surfaceView);
         if(bundle!=null){
             if(bundle.getString("EDIT_DESCRIPTION_LOOK")!=null){
                 String editDescriptionText=bundle.getString("EDIT_DESCRIPTION_LOOK");
                 descriptionLook.setText(editDescriptionText);
             }
         }
-        loadLookClothes();
+        if(bundle.getSerializable("ALLLOADCLOTHESUID")!=null){
+            allLoadClothesUid= (ArrayList<String>) bundle.getSerializable("ALLLOADCLOTHESUID");
+        }
         getLookClothes();
     }
 
@@ -192,15 +219,52 @@ public class AcceptNewLook extends Fragment {
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
             recyclerView.setAdapter(constituentsAdapter);
             publish.setOnClickListener(new View.OnClickListener() {
+                @RequiresApi(api = Build.VERSION_CODES.O)
                 @Override
                 public void onClick(View v) {
                     String lookId=newsModel.getReference().child(nick).push().getKey();
-//                    newsModel.getReference().child(nick).child(lookId)
-//                            .setValue(new NewsItem(model, descriptionLook.getText().toString(), "0", lookId,
-//                                    "", userInformation.getLookClothes(), 1200, 0,"",nick,0,userInformation.getPerson(),));
                     descriptionLook.getText().clear();
-                    Toast.makeText(getContext(), getContext().getResources().getText(R.string.lookpublishedsuccessfully), Toast.LENGTH_SHORT).show();
-                    RecentMethods.setCurrentFragment(ProfileFragment.newInstance(type, nick, fragment,userInformation,bundle), getActivity());
+                    getBitmapFormSurfaceView(surfaceView, getActivity(), new Callback<Bitmap>() {
+                        @Override
+                        public void onResult1(Bitmap bitmap) {
+                            StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("Images")
+                                    .child(lookId + ".png");
+                            UploadTask uploadTask = storageReference.putBytes(getImageUri(getContext(), bitmap));
+                            uploadTask.continueWithTask(new Continuation() {
+                                @Override
+                                public Object then(@NonNull Task task) throws Exception {
+                                    if (!task.isSuccessful()) {
+                                        throw task.getException();
+                                    }
+                                    return storageReference.getDownloadUrl();
+                                }
+                            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Uri> task) {
+                                    Uri downloadUrl = task.getResult();
+                                    ArrayList<FacePart> facePartArrayList=new ArrayList<>();
+                                    facePartArrayList.add(userInformation.getPerson().getBody());
+                                    facePartArrayList.add(userInformation.getPerson().getBrows());
+                                    facePartArrayList.add(userInformation.getPerson().getEars());
+                                    facePartArrayList.add(userInformation.getPerson().getEyes());
+                                    facePartArrayList.add(userInformation.getPerson().getHair());
+                                    facePartArrayList.add(userInformation.getPerson().getHead());
+                                    facePartArrayList.add(userInformation.getPerson().getLips());
+                                    facePartArrayList.add(userInformation.getPerson().getNose());
+                                    facePartArrayList.add(userInformation.getPerson().getPirsing());
+                                    facePartArrayList.add(userInformation.getPerson().getSkinColor());
+                                    newsModel.getReference().child(nick).child(lookId)
+                                            .setValue(new NewsItem(downloadUrl.toString(), descriptionLook.getText().toString(), "0", lookId,
+                                                    "", userInformation.getLookClothes(), 1200, 0,
+                                                    "", nick, 0, RecentMethods.setAllPerson(facePartArrayList,"base"), 0));
+                                    newsModel.getReference().child(nick).child(lookId).child("timestamp").setValue(ServerValue.TIMESTAMP);
+                                    Toast.makeText(getContext(), getContext().getResources().getText(R.string.lookpublishedsuccessfully), Toast.LENGTH_SHORT).show();
+                                    RecentMethods.setCurrentFragment(ProfileFragment.newInstance(type, nick, fragment,userInformation,bundle), getActivity());
+
+                                }
+                            });
+                        }
+                    });
                 }
             });
         }else{
@@ -236,30 +300,84 @@ public class AcceptNewLook extends Fragment {
         filamentModel.removeFrameCallback();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public static void getBitmapFormSurfaceView(View view, Activity activity, Callback<Bitmap> callback) {
+        Bitmap bitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
+        PixelCopy.request((SurfaceView) view, bitmap, copyResult -> {
+            if (copyResult == PixelCopy.SUCCESS) {
+                callback.onResult1(bitmap);
+            }
+        }, new Handler(Looper.getMainLooper()));
+    }
+
+    public byte[] getImageUri(Context inContext, Bitmap inImage) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        inImage.compress(Bitmap.CompressFormat.PNG, 100, bytes);
+        byte[] bytesArray=bytes.toByteArray();
+        return bytesArray;
+    }
+
+    public interface Callback<Bitmap> {
+        void onResult1(Bitmap bitmap);
+    }
+
     public void loadLookClothes(){
-        if(clothesList.size()==0) {
-            firebaseModel.getUsersReference().child(nick).child("lookClothes")
-                    .get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+        loadValue=1;
+        Log.d("AAAA", "LOAD SIZE  1   "+clothesList.size()+"   "+clothesUid.size());
+        if(clothesUid.size()==0) {
+            RecentMethods.getMyLookClothesOnce(nick, firebaseModel, new Callbacks.getLookClothes() {
                 @Override
-                public void onComplete(@NonNull Task<DataSnapshot> task) {
-                    if (task.isSuccessful()) {
-                        DataSnapshot snapshot = task.getResult();
-                        for (DataSnapshot snap : snapshot.getChildren()) {
-                            Clothes clothes = snap.getValue(Clothes.class);
-                            addModelInScene(clothes);
-                            Log.d("#####", "d1");
-                        }
+                public void getLookClothes(ArrayList<Clothes> clothesArrayList) {
+                    if(clothesArrayList.size()>0){
+                        LoadClothesArrayListBuffers.loadClothesBuffer(clothesArrayList, new Callbacks.loadClothesArrayList() {
+                            @Override
+                            public void LoadClothes(ArrayList<Clothes> clothesArrayList) {
+                                for(int i=0;i<clothesArrayList.size();i++){
+                                    Clothes clothes=clothesArrayList.get(i);
+                                    filamentModel.populateScene(clothes.getBuffer(), clothes);
+                                    if(!allLoadClothesUid.contains(clothes.getUid())) {
+                                        clothesList.add(clothes);
+                                        allLoadClothesUid.add(clothes.getUid());
+                                        Log.d("AAAA", "q   "+loadValue+"   "+clothes.getClothesTitle());
+                                    }
+                                    Log.d("AAAA", "q   "+loadValue+"   "+clothes.getClothesTitle());
+                                    clothesUid.add(clothes.getUid());
+                                }
+                                loadValue=0;
+                            }
+                        });
+                    }else{
+                        loadValue=0;
                     }
                 }
             });
-        }  else{
-            Log.d("#####", "d2");
+        } else{
+            Log.d("AAAA", "LOAD SIZE   "+clothesList.size());
+            loadValue=clothesUid.size();
             for(int i=0;i<clothesList.size();i++ ){
                 Clothes clothes=clothesList.get(i);
+                Log.d("AAAAA",clothes.getClothesTitle());
                 if(clothesUid.contains(clothes.getUid())&&clothes.getBuffer()!=null){
                     filamentModel.populateScene(clothes.getBuffer(), clothes);
+                    loadValue--;
+                    Log.d("AAAA", "LOAD 1    "+loadValue);
+                    if(loadValue==0){
+                        Log.d("AAAA", "ALREADY LOAD1   "+loadValue);
+                        loadValue=0;
+                    }
+                    a++;
                 } else if(clothesUid.contains(clothes.getUid())&&clothes.getBuffer()==null){
-                    addModelInScene(clothes);
+                    TaskRunner taskRunner=new TaskRunner();
+                    taskRunner.executeAsync(new LongRunningTask(clothes), (data) -> {
+                        filamentModel.populateScene(data.getBuffer(), data);
+                        loadValue--;
+                        Log.d("AAAAA", "LOAD  "+loadValue);
+                        if(loadValue==0){
+                            loadValue=0;
+                            Log.d("AAAAA", "ALREADY LOAD    "+loadValue);
+                        }
+                    });
+                    a++;
                 }
             }
         }
@@ -320,108 +438,105 @@ public class AcceptNewLook extends Fragment {
         }
     }
 
-    public static byte[] getBytes( URL url) throws IOException {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        InputStream is = null;
+    public static Clothes addModelInScene(Clothes clothes)  {
         try {
-            is = new BufferedInputStream(url.openStream());
-            byte[] byteChunk = new byte[4096];
-            int n;
-
-            while ( (n = is.read(byteChunk)) > 0 ) {
-                baos.write(byteChunk, 0, n);
-            }
-        }
-        catch (IOException e) {
-            Log.d("####", "Failed while reading bytes from %s: %s"+ url.toExternalForm()+ e.getMessage());
-            e.printStackTrace ();
-        }
-        finally {
-            if (is != null) { is.close(); }
-        }
-        return  baos.toByteArray();
-    }
-
-    public static void addModelInScene(Clothes clothes)  {
-        loadBuffer(clothes.getModel());
-        try {
-            bufferToFilament= future.get();
-            filamentModel.populateScene(bufferToFilament,clothes);
+            uri = new URI(clothes.getModel());
+            buffer = RecentMethods.getBytes(uri.toURL());
+            bufferToFilament= ByteBuffer.wrap(buffer);
             clothes.setBuffer(bufferToFilament);
-            clothesList.add(clothes);
+            if(!allLoadClothesUid.contains(clothes.getUid())) {
+                clothesList.add(clothes);
+                allLoadClothesUid.add(clothes.getUid());
+                Log.d("AAAA", "q   "+loadValue+"   "+clothes.getClothesTitle());
+            }
             clothesUid.add(clothes.getUid());
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void loadBuffer(String model){
-        ExecutorService executorService= Executors.newCachedThreadPool();
-        future = executorService.submit(new Callable(){
-            public Buffer call() throws Exception {
-                uri = new URI(model);
-                buffer = getBytes(uri.toURL());
-                buffer1= ByteBuffer.wrap(buffer);
-                return buffer1;
-            }
-        });
-    }
-
-    public void loadPerson(UserInformation userInformation,LockableNestedScrollView lockableNestedScrollView){
-        try {
-            if(bundle.getSerializable("PERSON"+userInformation.getNick())==null){
-                uri = new URI(userInformation.getPerson().getBody().getModel());
-                buffer = getBytes(uri.toURL());
-                bufferToFilament= ByteBuffer.wrap(buffer);
-                buffers=new ArrayList<>();
-                buffers.add(bufferToFilament);
-                bundle.putSerializable("PERSON"+userInformation.getNick(),buffers);
-                filamentModel.initFilament(surfaceView,bufferToFilament,true,lockableNestedScrollView
-                        ,"regularRender",true);
-                loadBodyPart(userInformation.getPerson().getBrows().getModel());
-                loadBodyPart(userInformation.getPerson().getEars().getModel());
-                loadBodyPart(userInformation.getPerson().getEyes().getModel());
-                loadBodyPart(userInformation.getPerson().getHair().getModel());
-                loadBodyPart(userInformation.getPerson().getHead().getModel());
-                loadBodyPart(userInformation.getPerson().getLips().getModel());
-                loadBodyPart(userInformation.getPerson().getNose().getModel());
-                loadBodyPart(userInformation.getPerson().getPirsing().getModel());
-                loadBodyPart(userInformation.getPerson().getSkinColor().getModel());
-
-            }else{
-                ArrayList<Buffer> buffers= (ArrayList<Buffer>) bundle.getSerializable("PERSON"+userInformation.getNick());
-                for(int i=0;i<buffers.size();i++){
-                    Buffer buffer3=buffers.get(i);
-                    if(i==0){
-                        filamentModel.initFilament(surfaceView,buffer3 ,true,lockableNestedScrollView
-                                ,"regularRender",true);
-                    }else{
-                        filamentModel.populateSceneFacePart(buffer3);
-                    }
-
-                }
-            }
         } catch (IOException e) {
             e.printStackTrace();
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
+        return clothes;
     }
 
-    public void loadBodyPart(String string){
-        if(string!=null){
-            loadBuffer(string);
-            try {
-                Buffer bufferToFilament= future.get();
-                filamentModel.populateSceneFacePart(bufferToFilament);
-                buffers.add(bufferToFilament);
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+    public void loadPerson(UserInformation userInformation,LockableNestedScrollView lockableNestedScrollView,SurfaceView surfaceView){
+        loadValue=1;
+        if(userInformation.getPerson()==null){
+            Log.d("AAAAA", "aaaasssh  "+userInformation.getNick());
+            RecentMethods.startLoadPerson(userInformation.getNick(), firebaseModel, new Callbacks.loadPerson() {
+                @Override
+                public void LoadPerson(Person person, ArrayList<FacePart> facePartArrayList) {
+                    Log.d("AAA","ss  "+person.getBody());
+                    LoadBodyParts.loadPersonBuffers(facePartArrayList, new Callbacks.loadFaceParts() {
+                        @Override
+                        public void LoadFaceParts(ArrayList<FacePart> facePartsArrayList) {
+                            Log.d("AAAAA","ss11  "+facePartsArrayList.get(0).getBuffer()+"   "+facePartsArrayList.get(0).getUid());
+                            for(int i=0;i<facePartsArrayList.size();i++){
+                                FacePart facePart=facePartsArrayList.get(i);
+                                Log.d("AAAAA","ss22  "+facePartsArrayList.get(i).getBuffer()+"   "+facePart.getUid()+"   "+i);
+                                if(i==0){
+                                    try {
+                                        filamentModel.initFilament(surfaceView, facePart.getBuffer(), true, lockableNestedScrollView
+                                                , "regularRender", true);
+                                        loadLookClothes();
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    } catch (URISyntaxException e) {
+                                        e.printStackTrace();
+                                    }
+                                }else{
+                                    filamentModel.populateSceneFacePart(facePartsArrayList.get(i).getBuffer());
+                                }
+                            }
+                            userInformation.setPerson(RecentMethods.setAllPerson(facePartsArrayList,"not"));
+                        }
+                    });
+                }
+            });
+
+        }else{
+            Log.d("####", "aa    "+userInformation.getPerson());
+            ArrayList<FacePart> facePartArrayList=new ArrayList<>();
+            facePartArrayList.add(userInformation.getPerson().getBody());
+            facePartArrayList.add(userInformation.getPerson().getBrows());
+            facePartArrayList.add(userInformation.getPerson().getEars());
+            facePartArrayList.add(userInformation.getPerson().getEyes());
+            facePartArrayList.add(userInformation.getPerson().getHair());
+            facePartArrayList.add(userInformation.getPerson().getHead());
+            facePartArrayList.add(userInformation.getPerson().getLips());
+            facePartArrayList.add(userInformation.getPerson().getNose());
+            facePartArrayList.add(userInformation.getPerson().getPirsing());
+            facePartArrayList.add(userInformation.getPerson().getSkinColor());
+            for(int i=0;i<facePartArrayList.size();i++){
+                FacePart facePart=facePartArrayList.get(i);
+                if(facePart!=null){
+                    if(i==0){
+                        try {
+                            filamentModel.initFilament(surfaceView, facePart.getBuffer(), true, lockableNestedScrollView
+                                    , "regularRender", true);
+                            loadLookClothes();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } catch (URISyntaxException e) {
+                            e.printStackTrace();
+                        }
+                    }else{
+                        filamentModel.populateSceneFacePart(facePart.getBuffer());
+                    }
+                }
             }
+        }
+    }
+
+    static class LongRunningTask implements Callable<Clothes> {
+        private Clothes clothes;
+
+        public LongRunningTask(Clothes clothes) {
+            this.clothes = clothes;
+        }
+
+        @Override
+        public Clothes call() {
+            return addModelInScene(clothes);
         }
     }
 }

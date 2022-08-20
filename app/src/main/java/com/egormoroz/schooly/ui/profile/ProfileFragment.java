@@ -176,8 +176,6 @@ public class ProfileFragment extends Fragment {
                 }
             });
         }
-        Log.d("###", "  z "+facePartsBuffers);
-        bundle.putSerializable("PERSON"+sendNick, (Serializable) facePartsBuffers);
     }
 
     public ProfileFragment(String type, String sendNick,Fragment fragment,UserInformation userInformation,Bundle bundle) {

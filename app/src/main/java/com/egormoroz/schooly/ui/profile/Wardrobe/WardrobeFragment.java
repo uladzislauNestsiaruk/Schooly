@@ -37,6 +37,7 @@ import com.egormoroz.schooly.FacePart;
 import com.egormoroz.schooly.FilamentModel;
 import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.LoadBodyParts;
+import com.egormoroz.schooly.LoadClothesArrayListBuffers;
 import com.egormoroz.schooly.LockableNestedScrollView;
 import com.egormoroz.schooly.Person;
 import com.egormoroz.schooly.R;
@@ -108,11 +109,10 @@ public class WardrobeFragment extends Fragment {
     SurfaceView surfaceView;
     WardrodeClothesAdapter.ItemClickListener itemClickListener;
     LockableNestedScrollView lockableNestedScrollView;
-    static ArrayList<Buffer> buffers;
-    static Buffer buffer1,bufferToFilament,b;
-    static  ArrayList<Buffer> facePartsBuffers=new ArrayList<>();
+    static Buffer bufferToFilament,b;
     static byte[] buffer;
     static URI uri;
+    static ArrayList<String > allLoadClothesUid=new ArrayList<>();
     static FilamentModel filamentModel;
     static ArrayList<Clothes> clothesList=new ArrayList<>();
     static ArrayList<String> clothesUid=new ArrayList<>();
@@ -140,6 +140,7 @@ public class WardrobeFragment extends Fragment {
         bundle.putInt("TAB_INT_WARDROBE", tabLayoutPosition);
         bundle.putSerializable("CLOTHESUID", clothesUid);
         bundle.putSerializable("ALLLOADCLOTHESLIST", clothesList);
+        bundle.putSerializable("ALLLOADCLOTHESUID", allLoadClothesUid);
     }
 
     @Override
@@ -152,6 +153,9 @@ public class WardrobeFragment extends Fragment {
         lockableNestedScrollView=view.findViewById(R.id.lockableNestedScrollView);
         if(bundle.getSerializable("ALLLOADCLOTHESLIST")!=null){
             clothesList= (ArrayList<Clothes>) bundle.getSerializable("ALLLOADCLOTHESLIST");
+        }
+        if(bundle.getSerializable("ALLLOADCLOTHESUID")!=null){
+            allLoadClothesUid= (ArrayList<String>) bundle.getSerializable("ALLLOADCLOTHESUID");
         }
         itemClickListener=new WardrodeClothesAdapter.ItemClickListener() {
             @Override
@@ -409,48 +413,57 @@ public class WardrobeFragment extends Fragment {
 
     public void loadLookClothes(){
         loadValue=1;
+        Log.d("AAAA", "LOAD SIZE  1   "+clothesList.size()+"   "+clothesUid.size());
         if(clothesUid.size()==0) {
             RecentMethods.getMyLookClothesOnce(nick, firebaseModel, new Callbacks.getLookClothes() {
                 @Override
                 public void getLookClothes(ArrayList<Clothes> clothesArrayList) {
                     if(clothesArrayList.size()>0){
-                        loadValue=clothesArrayList.size();
-                        for(int i=0;i<clothesArrayList.size();i++){
-                            Clothes clothes=clothesArrayList.get(i);
-                            TaskRunner taskRunner=new TaskRunner();
-                            taskRunner.executeAsync(new LongRunningTaskClothes(clothes), (data) -> {
-                                filamentModel.populateScene(data.getBuffer(), data);
-                                loadValue--;
-                                Log.d("####", "q   "+loadValue+"   "+data.getClothesTitle());
-                                if(loadValue ==0){
-                                    loadValue=0;
-                                    Log.d("####", "ss77 "+loadValue+"  "+data.getClothesTitle());
+                        LoadClothesArrayListBuffers.loadClothesBuffer(clothesArrayList, new Callbacks.loadClothesArrayList() {
+                            @Override
+                            public void LoadClothes(ArrayList<Clothes> clothesArrayList) {
+                                for(int i=0;i<clothesArrayList.size();i++){
+                                    Clothes clothes=clothesArrayList.get(i);
+                                    filamentModel.populateScene(clothes.getBuffer(), clothes);
+                                    clothesUid.add(clothes.getUid());
+                                    if(!allLoadClothesUid.contains(clothes.getUid())) {
+                                        clothesList.add(clothes);
+                                        allLoadClothesUid.add(clothes.getUid());
+                                        Log.d("AAAA", "q   "+loadValue+"   "+clothes.getClothesTitle());
+                                    }
                                 }
-                            });
-                        }
+                                loadValue=0;
+                            }
+                        });
                     }else{
                         loadValue=0;
                     }
                 }
             });
         } else{
+            Log.d("AAAA", "LOAD SIZE   "+clothesList.size());
+            loadValue=clothesUid.size();
             for(int i=0;i<clothesList.size();i++ ){
-                loadValue=clothesList.size();
                 Clothes clothes=clothesList.get(i);
-                Log.d("###",clothes.getClothesTitle());
+                Log.d("AAAAA",clothes.getClothesTitle());
                 if(clothesUid.contains(clothes.getUid())&&clothes.getBuffer()!=null){
                     filamentModel.populateScene(clothes.getBuffer(), clothes);
-                    if(a ==clothesUid.size()-1){
+                    loadValue--;
+                    Log.d("AAAA", "LOAD 1    "+loadValue);
+                    if(loadValue==0){
+                        Log.d("AAAA", "ALREADY LOAD1   "+loadValue);
                         loadValue=0;
                     }
                     a++;
                 } else if(clothesUid.contains(clothes.getUid())&&clothes.getBuffer()==null){
                     TaskRunner taskRunner=new TaskRunner();
-                    taskRunner.executeAsync(new LongRunningTaskClothes(clothes), (data) -> {
+                    taskRunner.executeAsync(new WardrobeFragment.LongRunningTaskClothes(clothes), (data) -> {
                         filamentModel.populateScene(data.getBuffer(), data);
                         loadValue--;
+                        Log.d("AAAAA", "LOAD  "+loadValue);
                         if(loadValue==0){
                             loadValue=0;
+                            Log.d("AAAAA", "ALREADY LOAD    "+loadValue);
                         }
                     });
                     a++;
@@ -598,7 +611,11 @@ public class WardrobeFragment extends Fragment {
             buffer = RecentMethods.getBytes(uri.toURL());
             bufferToFilament= ByteBuffer.wrap(buffer);
             clothes.setBuffer(bufferToFilament);
-            clothesList.add(clothes);
+            if(!allLoadClothesUid.contains(clothes.getUid())) {
+                clothesList.add(clothes);
+                allLoadClothesUid.add(clothes.getUid());
+                Log.d("AAAA", "q   "+loadValue+"   "+clothes.getClothesTitle());
+            }
             clothesUid.add(clothes.getUid());
         } catch (IOException e) {
             e.printStackTrace();

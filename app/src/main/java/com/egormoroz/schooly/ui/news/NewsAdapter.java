@@ -100,7 +100,6 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
     private List<NewsItem> newsList;
     static FirebaseModel firebaseNewsModel = new FirebaseModel();
     FirebaseModel DefaultDatabase = new FirebaseModel();
-    long value;
     static UserInformation userInformation;
     Bundle bundle;
     CommentAdapter commentAdapter;
@@ -155,39 +154,20 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
     public void onBindViewHolder(@NonNull ImageViewHolder holder, int position) {
         Log.d("ON BIND", "BIND POSITION: " + position);
         NewsItem newsItem = newsList.get(position);
-        loadLookClothes(newsItem);
         nick=userInformation.getNick();
         filamentModel.postFrameCallback();
-        try {
-            filamentModel.initNewsFilament(holder.surfaceView,newsItem.getPerson().getBody().getBuffer(),true,null,"regularRender",true);
-            if(newsItem.getPerson().getBrows()!=null){
-                filamentModel.populateSceneFacePart(newsItem.getPerson().getBrows().getBuffer());
-            }
-            if(newsItem.getPerson().getHair()!=null){
-                filamentModel.populateSceneFacePart(newsItem.getPerson().getHair().getBuffer());
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
-        for(int i=0;i<newsItem.getClothesCreators().size();i++){
-            Clothes clothes=newsItem.getClothesCreators().get(i);
-            Log.d("#####", "aaa   "+clothes.getClothesTitle()+clothes.getBuffer());
-            filamentModel.populateScene(clothes.getBuffer(),clothes);
-        }
         holder.nick.setText(newsItem.getNick());
         holder.like_count.setText(newsItem.getLikes_count());
         holder.description.setText(newsItem.getItem_description());
         firebaseNewsModel.initNewsDatabase();
+        Picasso.get().load(newsItem.getImageUrl()).into(holder.surfaceView);
         Log.d("#####", "Database url" + firebaseNewsModel.getReference());
         firebaseNewsModel.getReference().child(newsItem.getNick()).child(newsItem.getNewsId()).child("likes_count").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
                 if(task.isSuccessful()){
-                    value = Integer.valueOf(task.getResult().getValue(String.class));
-                    holder.like_count.setText(String.valueOf(value));
+                    final long[] value = {Integer.valueOf(task.getResult().getValue(String.class))};
+                    holder.like_count.setText(String.valueOf(value[0]));
                     Query likeref = DefaultDatabase.getUsersReference().child(nick).child("likedNews").child(newsItem.getNewsId());
                     likeref.addValueEventListener(new ValueEventListener() {
                         @Override
@@ -208,24 +188,24 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
                     holder.like.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            Log.d("#####", "Firebase : " + firebaseNewsModel.getReference() + "   Likes before " + value);
+                            Log.d("#####", "Firebase : " + firebaseNewsModel.getReference() + "   Likes before " + value[0]);
                             Query likeref = DefaultDatabase.getUsersReference().child(nick).child("likedNews").child(newsItem.getNewsId());
                             likeref.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                                     if (snapshot.exists()) {
-                                        value -= 1;
+                                        value[0] -= 1;
                                         holder.like.setImageResource(R.drawable.ic_heart40dp);
                                         DefaultDatabase.getUsersReference().child(nick).child("likedNews").child(newsItem.getNewsId()).removeValue();
                                     }
                                     else{
-                                        value += 1;
+                                        value[0] += 1;
                                         holder.like.setImageResource(R.drawable.ic_pressedheart40dp);
                                         DefaultDatabase.getUsersReference().child(nick).child("likedNews").child(newsItem.getNewsId()).setValue("liked");
                                     }
-                                    Log.d("#####", "Firebase : " + firebaseNewsModel.getReference() + "   Likes " + value);
-                                    holder.like_count.setText(String.valueOf(value));
-                                    firebaseNewsModel.getReference().child(newsItem.getNick()).child(newsItem.getNewsId()).child("likes_count").setValue(String.valueOf(value));
+                                    Log.d("#####", "Firebase : " + firebaseNewsModel.getReference() + "   Likes " + value[0]);
+                                    holder.like_count.setText(String.valueOf(value[0]));
+                                    firebaseNewsModel.getReference().child(newsItem.getNick()).child(newsItem.getNewsId()).child("likes_count").setValue(String.valueOf(value[0]));
                                     itemChangeListener.onItemChanged(position, "like");
                                 }
 
@@ -242,12 +222,12 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
 
         holder.lookPrice.setText(String.valueOf(newsItem.getLookPrice()));
 
-        holder.send.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showBottomSheetDialog(holder.itemView,holder.surfaceView,newsItem);
-            }
-        });
+//        holder.send.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                showBottomSheetDialog(holder.itemView,holder.surfaceView,newsItem);
+//            }
+//        });
         holder.comment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -277,7 +257,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
 
         ImageView  like, comment,send,options;
         TextView description, like_count,clothesComponents,lookPrice,nick;
-        SurfaceView surfaceView;
+        ImageView surfaceView;
 
         public ImageViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -513,7 +493,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
                                     .child(newsItem.getNewsId()).child("comments").push().getKey();
                             newsModel.getReference().child(newsItem.getNick())
                                     .child(newsItem.getNewsId()).child("comments").child(commentId)
-                                    .setValue(new Comment(editText.getText().toString(), 0, commentId,RecentMethods.getCurrentTime(),nick,"image","comment"));
+                                    .setValue(new Comment(editText.getText().toString(), 0, commentId,RecentMethods.getCurrentTime(),nick,"image","comment", ""));
                             editText.getText().clear();
                         }
                     });
@@ -535,14 +515,47 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
         firebaseNewsModel.getReference().child(newsItem.getNick()).child(newsItem.getNewsId()).child("comments").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                Log.d("****", "Child added");
                 comment.add(snapshot.getValue(Comment.class));
-                commentAdapter.notifyDataSetChanged();
+                commentAdapter.notifyItemInserted(comment.size() - 1);
+               //if(snapshot.getValue(Comment.class).getType().equals("comment"))
+               //    firebaseNewsModel.getReference().child(newsItem.getNick()).child(newsItem.getNewsId())
+               //            .child("comments").child(snapshot.getValue(Comment.class).getCommentId()).child("reply").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+               //        @Override
+               //        public void onComplete(@NonNull Task<DataSnapshot> task) {
+               //            if(task.isSuccessful())
+               //                for(DataSnapshot snap : task.getResult().getChildren()) {
+               //                    comment.add(snap.getValue(Comment.class));
+               //                    commentAdapter.notifyItemInserted(comment.size() - 1);
+               //                }
+               //        }
+               //    });
             }
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
+                Comment comment1 = snapshot.getValue(Comment.class);
+                firebaseNewsModel.getReference().child(newsItem.getNick()).child(newsItem.getNewsId()).child("comments")
+                        .child(comment1.getCommentId()).child("reply").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DataSnapshot> task) {
+                        if(task.isSuccessful()) {
+                            DataSnapshot request = task.getResult();
+                            int it = 0;
+                            for(DataSnapshot snap : request.getChildren()) {
+                                if (it == request.getChildrenCount() - 1) {
+                                    Log.d("****", "HERE");
+                                    int insert_id = 0;
+                                    for(int j = 0; j < comment.size(); j++)
+                                        if(comment.get(j).getCommentId() == snap.getValue(Comment.class).getParentId())
+                                            insert_id = j;
+                                    comment.add(insert_id + 1, snap.getValue(Comment.class));
+                                    commentAdapter.notifyItemInserted(insert_id + 1);
+                                }
+                                ++it;
+                            }
+                        }
+                    }
+                });
             }
 
             @Override
@@ -566,84 +579,11 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
     }
 
     public void loadLookClothes(NewsItem newsItem){
-        if(clothesUid.size()==0) {
-            RecentMethods.getLookClothes(newsItem.getNick(), newsItem.getNewsId(), firebaseNewsModel, new Callbacks.getLookClothes() {
-                @Override
-                public void getLookClothes(ArrayList<Clothes> clothesArrayList) {
-                    lookClothesArrayList=clothesArrayList;
-                    for(int i=0;i<clothesArrayList.size();i++){
-                        Clothes clothes=clothesArrayList.get(i);
-                        TaskRunner taskRunner=new TaskRunner();
-                        taskRunner.executeAsync(new LongRunningTask(clothes), (data) -> {
-                            filamentModel.populateScene(data.getBuffer(), data);
-                        });
-                    }
-                }
-            });
-        }  else{
-            Log.d("####", "ccc  "+clothesUid.size());
-            for(int i=0;i<clothesList.size();i++ ){
-                Clothes clothes=clothesList.get(i);
-                if(clothesUid.contains(clothes.getUid())&&clothes.getBuffer()!=null){
-                    //filamentModel.populateScene(clothes.getBuffer(), clothes);
-                } else if(clothesUid.contains(clothes.getUid())&&clothes.getBuffer()==null){
-//                    TaskRunner taskRunner=new TaskRunner();
-//                    taskRunner.executeAsync(new LongRunningTask(clothes), (data) -> {
-//                        filamentModel.populateScene(data.getBuffer(), data);
-//                    });
-                }
-            }
+        ArrayList<Clothes> clothesArrayListWithBuffers=newsItem.getClothesCreators();
+        for(int i=0;i<clothesArrayListWithBuffers.size();i++){
+            Clothes clothes=clothesArrayListWithBuffers.get(i);
+            filamentModel.populateScene(clothes.getBuffer(), clothes);
         }
-    }
-
-    public static byte[] getBytes( URL url) throws IOException {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        InputStream is = null;
-        try {
-            is = new BufferedInputStream(url.openStream());
-            byte[] byteChunk = new byte[4096];
-            int n;
-
-            while ( (n = is.read(byteChunk)) > 0 ) {
-                baos.write(byteChunk, 0, n);
-            }
-        }
-        catch (IOException e) {
-            Log.d("####", "Failed while reading bytes from %s: %s"+ url.toExternalForm()+ e.getMessage());
-            e.printStackTrace ();
-        }
-        finally {
-            if (is != null) { is.close(); }
-        }
-        return  baos.toByteArray();
-    }
-
-    public static Clothes addModelInScene(Clothes clothes)  {
-        try {
-            uri = new URI(clothes.getModel());
-            buffer = getBytes(uri.toURL());
-            bufferToFilament= ByteBuffer.wrap(buffer);
-            clothes.setBuffer(bufferToFilament);
-            clothesList.add(clothes);
-            clothesUid.add(clothes.getUid());
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
-        return clothes;
-    }
-
-    public static void loadBuffer(String model){
-        ExecutorService executorService= Executors.newCachedThreadPool();
-        future = executorService.submit(new Callable(){
-            public Buffer call() throws Exception {
-                uri = new URI(model);
-                buffer = getBytes(uri.toURL());
-                buffer1= ByteBuffer.wrap(buffer);
-                return buffer1;
-            }
-        });
     }
 
     private void showBottomSheetDialogClothesCreators(NewsItem newsItem,View v) {
@@ -738,25 +678,6 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
 
         bottomSheetDialog.show();
     }
-
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    public static void getBitmapFormView(View view, Activity activity, Callback<Bitmap> callback) {
-        Bitmap bitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
-
-        PixelCopy.request((SurfaceView) view, bitmap, copyResult -> {
-            if (copyResult == PixelCopy.SUCCESS) {
-                callback.onResult1(bitmap);
-            }
-        }, new Handler(Looper.getMainLooper()));
-    }
-
-    public Uri getImageUri(Context inContext, Bitmap inImage) {
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
-        return Uri.parse(path);
-    }
-
 
     public interface Callback<Bitmap> {
         void onResult1(Bitmap bitmap);
@@ -891,99 +812,18 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
 
         });
     }
-
-    static class LongRunningTask implements Callable<Clothes> {
-        private Clothes clothes;
-
-        public LongRunningTask(Clothes clothes) {
-            this.clothes = clothes;
-        }
-
-        @Override
-        public Clothes call() {
-            return addModelInScene(clothes);
-        }
-    }
-    public static void CommentReply(String commentId, String name){
+    public static void CommentReply(String mainCommentId, String name, NewsItem newsItem){
         editText.setHint("You replying to " + name + "\n");
         editText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
             }
-
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                userName = String.valueOf(editText.getText()).trim();
-                userName = userName.toLowerCase();
-                if(userInformation.getSubscription()==null){
-                    Query query = firebaseNewsModel.getUsersReference().child(userInformation.getNick()).child("subscription");
-                    query.addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            userFromBase = new ArrayList<>();
-                            for (DataSnapshot snap : snapshot.getChildren()) {
-                                Subscriber subscriber = new Subscriber();
-                                subscriber.setSub(snap.getValue(String.class));
-                                String nick = subscriber.getSub();
-                                int valueLetters = userName.length();
-                                nick = nick.toLowerCase();
-                                if (nick.length() < valueLetters) {
-                                    if (nick.equals(userName))
-                                        userFromBase.add(subscriber);
-                                } else {
-                                    nick = nick.substring(0, valueLetters);
-                                    if (nick.equals(userName))
-                                        userFromBase.add(subscriber);
-                                }
-
-                            }
-                            if(userFromBase.size()==0){
-                                emptyList.setVisibility(View.VISIBLE);
-                                recyclerView.setVisibility(View.GONE);
-                            }else {
-                                emptyList.setVisibility(View.GONE);
-                                recyclerView.setVisibility(View.VISIBLE);
-//                                SendLookAdapter sendLookAdapter = new SendLookAdapter(userFromBase,itemClickListener);
-//                                recyclerView.setAdapter(sendLookAdapter);
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-
-                        }
-                    });
-                }else {
-                    userFromBase=new ArrayList<>();
-                    for (int s=0;s<userInformation.getSubscription().size();s++) {
-                        Subscriber subscriber = userInformation.getSubscription().get(s);
-                        String nick = subscriber.getSub();
-                        int valueLetters = userName.length();
-                        nick = nick.toLowerCase();
-                        if (nick.length() < valueLetters) {
-                            if (nick.equals(userName))
-                                userFromBase.add(subscriber);
-                        } else {
-                            nick = nick.substring(0, valueLetters);
-                            if (nick.equals(userName))
-                                userFromBase.add(subscriber);
-                        }
-
-                    }
-                    if(userFromBase.size()==0){
-                        emptyList.setVisibility(View.VISIBLE);
-                        recyclerView.setVisibility(View.GONE);
-                    }else {
-                        emptyList.setVisibility(View.GONE);
-                        recyclerView.setVisibility(View.VISIBLE);
-//                        SendLookAdapter sendLookAdapter = new SendLookAdapter(userFromBase,itemClickListener);
-//                        recyclerView.setAdapter(sendLookAdapter);
-                    }
-                }
-               /* editGetText=editText.getText().toString();
-                if (editGetText.length()==0){
+                editGetText=editText.getText().toString();
+                if (editGetText.length()==0)
                     sendComment.setVisibility(View.GONE);
-                }else {
+                else {
                     sendComment.setVisibility(View.VISIBLE);
                     sendComment.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -991,13 +831,12 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
                             String commentId=firebaseNewsModel.getReference().child(newsItem.getNick())
                                     .child(newsItem.getNewsId()).child("comments").push().getKey();
                             firebaseNewsModel.getReference().child(newsItem.getNick())
-                                    .child(newsItem.getNewsId()).child("comments").child(commentId)
-                                    .setValue(new Comment(editText.getText().toString(), 0, commentId,RecentMethods.getCurrentTime(),nick,"image","comment"));
+                                    .child(newsItem.getNewsId()).child("comments").child(mainCommentId).child("reply").child(commentId)
+                                    .setValue(new Comment(editText.getText().toString(), 0, commentId,RecentMethods.getCurrentTime(),nick,"image","reply", mainCommentId));
                             editText.getText().clear();
-                            loadComments(newsItem,v);
                         }
                     });
-                }*/
+                }
             }
 
             @Override
