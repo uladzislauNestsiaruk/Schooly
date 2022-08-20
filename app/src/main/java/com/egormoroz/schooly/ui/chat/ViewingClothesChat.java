@@ -1,4 +1,4 @@
-package com.egormoroz.schooly.ui.main.Shop;
+package com.egormoroz.schooly.ui.chat;
 
 import android.app.Dialog;
 import android.graphics.Color;
@@ -30,14 +30,11 @@ import com.egormoroz.schooly.InstagramShareFragment;
 import com.egormoroz.schooly.Nontification;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
-import com.egormoroz.schooly.Subscriber;
-import com.egormoroz.schooly.ui.chat.Chat;
-import com.egormoroz.schooly.ui.chat.MessageFragment;
-import com.egormoroz.schooly.ui.chat.ViewingClothesChat;
 import com.egormoroz.schooly.ui.coins.CoinsFragmentSecond;
-import com.egormoroz.schooly.ui.coins.CoinsMainFragment;
-import com.egormoroz.schooly.ui.main.MainFragment;
-import com.egormoroz.schooly.ui.main.Mining.MiningFragment;
+import com.egormoroz.schooly.ui.main.Shop.Clothes;
+import com.egormoroz.schooly.ui.main.Shop.FittingFragment;
+import com.egormoroz.schooly.ui.main.Shop.NewClothesAdapter;
+import com.egormoroz.schooly.ui.main.Shop.ViewingClothes;
 import com.egormoroz.schooly.ui.main.UserInformation;
 import com.egormoroz.schooly.ui.profile.ProfileFragment;
 import com.egormoroz.schooly.ui.profile.SendLookAdapter;
@@ -48,7 +45,6 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
@@ -59,42 +55,42 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 
-public class ViewingClothesPopular extends Fragment {
-
+public class ViewingClothesChat extends Fragment {
+    Fragment fragment;
     UserInformation userInformation;
     Bundle bundle;
-    Fragment fragment;
 
-    public ViewingClothesPopular(UserInformation userInformation,Bundle bundle,Fragment fragment) {
+    public ViewingClothesChat(Fragment fragment,UserInformation userInformation,Bundle bundle) {
+        this.fragment = fragment;
         this.userInformation=userInformation;
         this.bundle=bundle;
-        this.fragment=fragment;
     }
 
-    public static ViewingClothesPopular newInstance(UserInformation userInformation,Bundle bundle,Fragment fragment) {
-        return new ViewingClothesPopular(userInformation,bundle,fragment);
+    public static ViewingClothesChat newInstance(Fragment fragment, UserInformation userInformation, Bundle bundle) {
+        return new ViewingClothesChat(fragment,userInformation,bundle);
 
     }
 
-    TextView clothesPriceCV,clothesTitleCV,schoolyCoinCV,buyClothesBottom,purchaseNumber
-            ,creator,description,noDescription,fittingClothes,noChats;
+
+    TextView clothesPriceCV,clothesTitleCV,schoolyCoinCV,buyClothesBottom
+            ,purchaseNumber,creator,description,noDescription,fittingClothes
+            ,emptyList,noChats;
     ImageView clothesImageCV,backToShop,coinsImage,dollarImage,inBasket,notInBasket,send;
     long schoolyCoins,clothesPrise;
     RelativeLayout checkBasket;
-    Clothes clothesViewing;
     int a=0;
+    RecyclerView recyclerView;
+    SendLookAdapter.ItemClickListener itemClickListener;
+    EditText editText,messageEdit;
+    String getEditText;
+    LinearLayout linearElse,linearTelegram,linearInstagram;
+    Clothes clothesViewing;
     private FirebaseModel firebaseModel = new FirebaseModel();
     LinearLayout coinsLinear;
-    RecyclerView recyclerView;
-    TextView emptyList;
-    LinearLayout linearElse,linearTelegram,linearInstagram;
-    EditText editText,messageEdit;
-    String otherUserNickString,clothesPriceString,nick,getEditText;
+    String clothesPriceString,otherUserNickString;
     ArrayList<Chat> allChats=new ArrayList<>();
     ArrayList<Chat> searchDialogsArrayList;
-    SendLookAdapter.ItemClickListener itemClickListener;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -103,6 +99,10 @@ public class ViewingClothesPopular extends Fragment {
         BottomNavigationView bnv = getActivity().findViewById(R.id.bottomNavigationView);
         bnv.setVisibility(bnv.GONE);
         firebaseModel.initAll();
+        if(bundle.getSerializable("ALLLOADCLOTHESLIST")!=null){
+            ArrayList<Clothes> clothesList= (ArrayList<Clothes>) bundle.getSerializable("ALLLOADCLOTHESLIST");
+            Log.d("####", "y   "+clothesList.size());
+        }
         return root;
 
     }
@@ -110,7 +110,6 @@ public class ViewingClothesPopular extends Fragment {
     @Override
     public void onViewCreated(@Nullable View view,@NonNull Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
-        nick=userInformation.getNick();
         schoolyCoinCV=view.findViewById(R.id.schoolycoincvfrag);
         clothesImageCV=view.findViewById(R.id.clothesImagecv);
         inBasket=view.findViewById(R.id.inBasketClothes);
@@ -129,24 +128,17 @@ public class ViewingClothesPopular extends Fragment {
         purchaseNumber=view.findViewById(R.id.purchaseNumberViewing);
         coinsLinear=view.findViewById(R.id.linearCoins);
         fittingClothes=view.findViewById(R.id.fittingClothes);
-        schoolyCoins=userInformation.getmoney();
-        schoolyCoinCV.setText(String.valueOf(schoolyCoins));
+        schoolyCoinCV.setText(String.valueOf(userInformation.getmoney()));
         fittingClothes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(FittingFragment.newInstance(ViewingClothesPopular.newInstance(userInformation,bundle,fragment),userInformation,bundle,clothesViewing), getActivity());
-            }
-        });
-        send.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showBottomSheetDialog();
+                RecentMethods.setCurrentFragment(FittingFragment.newInstance(ViewingClothesChat.newInstance(fragment,userInformation,bundle),userInformation,bundle,clothesViewing), getActivity());
             }
         });
         coinsLinear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(CoinsFragmentSecond.newInstance(ViewingClothesPopular.newInstance(userInformation,bundle,fragment),userInformation,bundle), getActivity());
+                RecentMethods.setCurrentFragment(CoinsFragmentSecond.newInstance(ViewingClothesChat.newInstance(fragment,userInformation,bundle),userInformation,bundle), getActivity());
             }
         });
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
@@ -164,7 +156,17 @@ public class ViewingClothesPopular extends Fragment {
                 RecentMethods.setCurrentFragment(fragment, getActivity());
             }
         });
-        PopularClothesAdapter.singeClothesInfo(new PopularClothesAdapter.ItemClickListener() {
+
+        send.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showBottomSheetDialog();
+            }
+        });
+
+
+
+        MessageAdapter.singeClothesInfo(new NewClothesAdapter.ItemClickListener() {
             @Override
             public void onItemClick(Clothes clothes) {
                 clothesViewing=clothes;
@@ -172,6 +174,7 @@ public class ViewingClothesPopular extends Fragment {
                 clothesTitleCV.setText(clothes.getClothesTitle());
                 clothesPrise=clothes.getClothesPrice();
                 creator.setText(clothesViewing.getCreator());
+                schoolyCoins=userInformation.getmoney();
                 creator.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -182,9 +185,9 @@ public class ViewingClothesPopular extends Fragment {
                                     Toast.makeText(getContext(), R.string.usernotfound, Toast.LENGTH_SHORT).show();
                                 }else {
                                     if (clothesViewing.getCreator().equals(userInformation.getNick())) {
-                                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback", userInformation.getNick(), ViewingClothesPopular.newInstance(userInformation,bundle,fragment),userInformation,bundle), getActivity());
+                                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback", userInformation.getNick(), ViewingClothesChat.newInstance(fragment,userInformation,bundle),userInformation,bundle), getActivity());
                                     }else {
-                                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", clothesViewing.getCreator(), ViewingClothesPopular.newInstance(userInformation,bundle,fragment),userInformation,bundle), getActivity());
+                                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", clothesViewing.getCreator(), ViewingClothesChat.newInstance(fragment,userInformation,bundle),userInformation,bundle), getActivity());
                                     }
                                 }                            }
 
@@ -195,7 +198,7 @@ public class ViewingClothesPopular extends Fragment {
                         });
                     }
                 });
-                if (clothesViewing.getDescription().length()==0){
+                if (clothesViewing.getDescription().trim().length()==0){
                     noDescription.setVisibility(View.VISIBLE);
                     description.setVisibility(View.GONE);
                 }else {
@@ -233,14 +236,30 @@ public class ViewingClothesPopular extends Fragment {
         if (a==2 || a==0){
             checkIfBuy();
         }
+        buyClothes();
+        putInBasket();
         if (a!=3 && a!=0){
             checkClothes();
         }
         checkClothesOnBuy();
-        buyClothes();
-        putInBasket();
     }
 
+    public void checkIfBuy(){
+        firebaseModel.getUsersReference().child(userInformation.getNick()).child("clothes")
+                .child(clothesViewing.getUid()).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if(snapshot.exists()){
+                            a=3;
+                        }else {}
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+    }
 
     public void buyClothes(){
         buyClothesBottom.setOnClickListener(new View.OnClickListener() {
@@ -259,28 +278,28 @@ public class ViewingClothesPopular extends Fragment {
         checkBasket.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                firebaseModel.getUsersReference().child(nick).child("clothes")
+                firebaseModel.getUsersReference().child(userInformation.getNick()).child("clothes")
                         .child(clothesViewing.getUid()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DataSnapshot> task) {
-                        if(task.isSuccessful()){
-                            DataSnapshot snapshot= task.getResult();
-                            if(snapshot.exists()){
-                                a=3;
-                                showDialogBasket(getContext().getResources().getText(R.string.itemalreadypurchased).toString());
-                            }else {}
-                            if(a!=0 && a!=3){
-                                if(a==1){
-                                    firebaseModel.getUsersReference().child(userInformation.getNick()).child("basket")
-                                            .child(clothesViewing.getUid()).removeValue();
-                                }else if (a==2){
-                                    firebaseModel.getUsersReference().child(userInformation.getNick()).child("basket")
-                                            .child(clothesViewing.getUid()).setValue(clothesViewing);
+                            @Override
+                            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                                if(task.isSuccessful()){
+                                    DataSnapshot snapshot= task.getResult();
+                                    if(snapshot.exists()){
+                                        a=3;
+                                        showDialogBasket(getContext().getResources().getText(R.string.itemalreadypurchased).toString());
+                                    }else {}
+                                    if(a!=0 && a!=3){
+                                        if(a==1){
+                                            firebaseModel.getUsersReference().child(userInformation.getNick()).child("basket")
+                                                    .child(clothesViewing.getUid()).removeValue();
+                                        }else if (a==2){
+                                            firebaseModel.getUsersReference().child(userInformation.getNick()).child("basket")
+                                                    .child(clothesViewing.getUid()).setValue(clothesViewing);
+                                        }
+                                    }
                                 }
                             }
-                        }
-                    }
-                });
+                        });
             }
         });
     }
@@ -288,60 +307,43 @@ public class ViewingClothesPopular extends Fragment {
     public void checkClothes(){
         firebaseModel.getUsersReference().child(userInformation.getNick()).child("basket").
                 child(String.valueOf(clothesViewing.getUid())).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.exists()){
-                    a=1;
-                    inBasket.setVisibility(View.VISIBLE);
-                    notInBasket.setVisibility(View.GONE);
-                }else {
-                    a=2;
-                    inBasket.setVisibility(View.GONE);
-                    notInBasket.setVisibility(View.VISIBLE);
-                }
-            }
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if(snapshot.exists()){
+                            a=1;
+                            inBasket.setVisibility(View.VISIBLE);
+                            notInBasket.setVisibility(View.GONE);
+                        }else {
+                            a=2;
+                            inBasket.setVisibility(View.GONE);
+                            notInBasket.setVisibility(View.VISIBLE);
+                        }
+                    }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
 
-            }
-        });
-    }
-
-    public void checkIfBuy(){
-        firebaseModel.getUsersReference().child(userInformation.getNick()).child("clothes")
-                .child(clothesViewing.getUid()).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.exists()){
-                    a=3;
-                }else {}
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
+                    }
+                });
     }
 
     public void checkClothesOnBuy(){
         firebaseModel.getUsersReference().child(userInformation.getNick()).child("clothes")
                 .child(String.valueOf(clothesViewing.getUid())).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.exists()){
-                    buyClothesBottom.setText(R.string.purchased);
-                }else {
-                    buyClothesBottom.setText(R.string.buy);
-                }
-            }
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if(snapshot.exists()){
+                            buyClothesBottom.setText(R.string.purchased);
+                        }else {
+                            buyClothesBottom.setText(getContext().getResources().getText(R.string.buy));
+                        }
+                    }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
 
-            }
-        });
+                    }
+                });
     }
 
     private void showBottomSheetDialog() {
@@ -361,7 +363,7 @@ public class ViewingClothesPopular extends Fragment {
         linearElse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(InstagramShareFragment.newInstance(ViewingClothesPopular.newInstance(userInformation,bundle,fragment), userInformation, bundle, clothesViewing,"clothes",null,null,"all"), getActivity());
+                RecentMethods.setCurrentFragment(InstagramShareFragment.newInstance(ViewingClothesChat.newInstance(fragment, userInformation, bundle), userInformation, bundle, clothesViewing,"clothes",null,null,"all"), getActivity());
                 bottomSheetDialog.dismiss();
             }
         });
@@ -369,14 +371,14 @@ public class ViewingClothesPopular extends Fragment {
         linearTelegram.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(InstagramShareFragment.newInstance(ViewingClothesPopular.newInstance(userInformation,bundle,fragment), userInformation, bundle, clothesViewing,"clothes",null,null,"telegram"), getActivity());
+                RecentMethods.setCurrentFragment(InstagramShareFragment.newInstance(ViewingClothesChat.newInstance(fragment, userInformation, bundle), userInformation, bundle, clothesViewing,"clothes",null,null,"telegram"), getActivity());
                 bottomSheetDialog.dismiss();
             }
         });
         linearInstagram.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(InstagramShareFragment.newInstance(ViewingClothesPopular.newInstance(userInformation,bundle,fragment), userInformation, bundle, clothesViewing,"clothes",null,null,"instagram"), getActivity());
+                RecentMethods.setCurrentFragment(InstagramShareFragment.newInstance(ViewingClothesChat.newInstance(fragment, userInformation, bundle), userInformation, bundle, clothesViewing,"clothes",null,null,"instagram"), getActivity());
                 bottomSheetDialog.dismiss();
             }
         });
@@ -415,7 +417,7 @@ public class ViewingClothesPopular extends Fragment {
                         }
                     });
                 }else {
-                    RecentMethods.setCurrentFragment(MessageFragment.newInstance(userInformation, bundle, ViewingClothesPopular.newInstance(userInformation,bundle,fragment), chat),getActivity());
+                    RecentMethods.setCurrentFragment(MessageFragment.newInstance(userInformation, bundle, ViewingClothesChat.newInstance(fragment, userInformation, bundle), chat),getActivity());
                     bottomSheetDialog.dismiss();
                 }
             }
@@ -586,6 +588,27 @@ public class ViewingClothesPopular extends Fragment {
         });
     }
 
+    public void showDialogBasket(String textInDialog){
+
+        final Dialog dialog = new Dialog(getActivity());
+        dialog.setContentView(R.layout.dialog_layout);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        TextView text=dialog.findViewById(R.id.Text);
+        text.setText(textInDialog);
+        RelativeLayout relative=dialog.findViewById(R.id.Relative);
+
+
+        relative.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+    }
+
     public void addType(String type) {
         final long[] value = new long[1];
         DatabaseReference ref = firebaseModel.getUsersReference().child(otherUserNickString).child("Chats").child(userInformation.getNick()).child(type);
@@ -634,73 +657,73 @@ public class ViewingClothesPopular extends Fragment {
 
                 }else {
                     if(schoolyCoins>=clothesPrise){
-                        firebaseModel.getUsersReference().child(nick).child("clothes")
+                        firebaseModel.getUsersReference().child(userInformation.getNick()).child("clothes")
                                 .child(String.valueOf(clothesViewing.getUid())).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                                if(task.isSuccessful()){
-                                    DataSnapshot snapshot= task.getResult();
-                                    if(snapshot.exists()){
-                                        Toast.makeText(getContext(), getContext().getResources().getText(R.string.itempurchased), Toast.LENGTH_SHORT).show();
-                                    }else {
-                                        firebaseModel.getUsersReference().child(nick).child("clothes")
-                                                .child(clothesViewing.getUid()).setValue(clothesViewing);
-                                        firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes")
-                                                .child(clothesViewing.getUid()).child("purchaseNumber")
-                                                .setValue(clothesViewing.getPurchaseNumber()+1);
-                                        firebaseModel.getUsersReference().child(clothesViewing.getCreator()).child("myClothes").
-                                                child(clothesViewing.getUid()).child("purchaseNumber")
-                                                .setValue(clothesViewing.getPurchaseNumber()+1);
-                                        firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes")
-                                                .child(clothesViewing.getUid()).child("purchaseToday")
-                                                .setValue(clothesViewing.getPurchaseToday()+1);
-                                        firebaseModel.getUsersReference().child(clothesViewing.getCreator()).child("myClothes").
-                                                child(clothesViewing.getUid()).child("purchaseToday")
-                                                .setValue(clothesViewing.getPurchaseToday()+1);
-                                        if(clothesViewing.getCreator().equals("Schooly")){
+                                    @Override
+                                    public void onComplete(@NonNull Task<DataSnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            DataSnapshot snapshot = task.getResult();
+                                            if (snapshot.exists()) {
+                                                Toast.makeText(getContext(), getContext().getResources().getText(R.string.itempurchased), Toast.LENGTH_SHORT).show();
+                                            } else {
+                                                firebaseModel.getUsersReference().child(userInformation.getNick()).child("clothes")
+                                                        .child(clothesViewing.getUid()).setValue(clothesViewing);
+                                                firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes")
+                                                        .child(clothesViewing.getUid()).child("purchaseNumber")
+                                                        .setValue(clothesViewing.getPurchaseNumber() + 1);
+                                                firebaseModel.getUsersReference().child(clothesViewing.getCreator()).child("myClothes").
+                                                        child(clothesViewing.getUid()).child("purchaseNumber")
+                                                        .setValue(clothesViewing.getPurchaseNumber() + 1);
+                                                firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes")
+                                                        .child(clothesViewing.getUid()).child("purchaseToday")
+                                                        .setValue(clothesViewing.getPurchaseToday() + 1);
+                                                firebaseModel.getUsersReference().child(clothesViewing.getCreator()).child("myClothes").
+                                                        child(clothesViewing.getUid()).child("purchaseToday")
+                                                        .setValue(clothesViewing.getPurchaseToday() + 1);
+                                                if (clothesViewing.getCreator().equals("Schooly")) {
 
-                                        }else {
-                                            String numToBase=firebaseModel.getReference().child("users")
-                                                    .child(clothesViewing.getCreator()).child("nontifications").push().getKey();
-                                            Date date = new Date();
-                                            SimpleDateFormat formatter = new SimpleDateFormat("EEE, MMM dd hh:mm a");
-                                            String dateAndTime = formatter.format(date);
-                                            firebaseModel.getReference().child("users")
-                                                    .child(clothesViewing.getCreator()).child("nontifications")
-                                                    .child(numToBase).setValue(new Nontification(nick,"не отправлено","одежда"
-                                                    ,"",clothesViewing.getClothesTitle(),clothesViewing.getClothesImage(),"не просмотрено",numToBase,0));
-                                        }
-                                        firebaseModel.getUsersReference().child(nick).child("basket").
-                                                child(clothesViewing.getUid()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                                                if(task.isSuccessful()){
-                                                    DataSnapshot snapshot= task.getResult();
-                                                    if(snapshot.exists()){
-                                                        firebaseModel.getUsersReference().child(nick).child("basket")
-                                                                .child(clothesViewing.getUid()).removeValue();
-                                                    }else{
-                                                    }
+                                                } else {
+                                                    String numToBase = firebaseModel.getReference().child("users")
+                                                            .child(clothesViewing.getCreator()).child("nontifications").push().getKey();
+                                                    Date date = new Date();
+                                                    SimpleDateFormat formatter = new SimpleDateFormat("EEE, MMM dd hh:mm a");
+                                                    String dateAndTime = formatter.format(date);
+                                                    firebaseModel.getReference().child("users")
+                                                            .child(clothesViewing.getCreator()).child("nontifications")
+                                                            .child(numToBase).setValue(new Nontification(userInformation.getNick(), "не отправлено", "одежда"
+                                                                    , "", clothesViewing.getClothesTitle(), clothesViewing.getClothesImage(), "не просмотрено", numToBase, 0));
                                                 }
+                                                firebaseModel.getUsersReference().child(userInformation.getNick()).child("basket").
+                                                        child(clothesViewing.getUid()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                                                            @Override
+                                                            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                                                                if (task.isSuccessful()) {
+                                                                    DataSnapshot snapshot = task.getResult();
+                                                                    if (snapshot.exists()) {
+                                                                        firebaseModel.getUsersReference().child(userInformation.getNick()).child("basket")
+                                                                                .child(clothesViewing.getUid()).removeValue();
+                                                                    } else {
+                                                                    }
+                                                                }
+                                                            }
+                                                        });
+                                                schoolyCoins = schoolyCoins - clothesPrise;
+                                                firebaseModel.getUsersReference().child(userInformation.getNick()).child("money").setValue(schoolyCoins);
+                                                RecentMethods.GetMoneyFromBase(userInformation.getNick(), firebaseModel, new Callbacks.MoneyFromBase() {
+                                                    @Override
+                                                    public void GetMoneyFromBase(long money) {
+                                                        schoolyCoins = money;
+                                                        schoolyCoinCV.setText(String.valueOf(money));
+                                                        userInformation.setmoney(money);
+                                                    }
+                                                });
                                             }
-                                        });
-                                        schoolyCoins=schoolyCoins-clothesPrise;
-                                        firebaseModel.getUsersReference().child(nick).child("money").setValue(schoolyCoins);
-                                        RecentMethods.GetMoneyFromBase(nick, firebaseModel, new Callbacks.MoneyFromBase() {
-                                            @Override
-                                            public void GetMoneyFromBase(long money) {
-                                                schoolyCoins=money;
-                                                schoolyCoinCV.setText(String.valueOf(money));
-                                                userInformation.setmoney(money);
-                                            }
-                                        });
+                                        }
                                     }
-                                }
-                            }
-                        });
+                                });
                     }else{
                         Toast.makeText(getContext(), getContext().getResources().getText(R.string.notenoughcoins), Toast.LENGTH_SHORT).show();
-                        RecentMethods.setCurrentFragment(CoinsFragmentSecond.newInstance(ViewingClothesPopular.newInstance(userInformation,bundle,fragment),userInformation,bundle), getActivity());
+                        RecentMethods.setCurrentFragment(CoinsFragmentSecond.newInstance(ViewingClothesChat.newInstance(fragment,userInformation,bundle),userInformation,bundle), getActivity());
                     }
                 }
                 dialog.dismiss();
@@ -709,27 +732,6 @@ public class ViewingClothesPopular extends Fragment {
 
         dialog.show();
     }
-    public void showDialogBasket(String textInDialog){
-
-        final Dialog dialog = new Dialog(getActivity());
-        dialog.setContentView(R.layout.dialog_layout);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
-        TextView text=dialog.findViewById(R.id.Text);
-        text.setText(textInDialog);
-        RelativeLayout relative=dialog.findViewById(R.id.Relative);
-
-
-        relative.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-
-        dialog.show();
-    }
-
 
     public void showDialogAlreadyBuy(String textInDialog){
 
@@ -751,4 +753,5 @@ public class ViewingClothesPopular extends Fragment {
 
         dialog.show();
     }
+
 }

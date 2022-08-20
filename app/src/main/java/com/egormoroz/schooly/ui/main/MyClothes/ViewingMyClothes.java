@@ -42,6 +42,9 @@ import com.egormoroz.schooly.InstagramShareFragment;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.Subscriber;
+import com.egormoroz.schooly.ui.chat.Chat;
+import com.egormoroz.schooly.ui.chat.MessageFragment;
+import com.egormoroz.schooly.ui.chat.ViewingClothesChat;
 import com.egormoroz.schooly.ui.main.MainFragment;
 import com.egormoroz.schooly.ui.main.Mining.Miner;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
@@ -59,6 +62,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
@@ -92,7 +96,6 @@ public class ViewingMyClothes extends Fragment {
     ImageView clothesImageCV, backToShop, coinsImage,coinsImageAll,coinsImagePurple,send;
     RelativeLayout presentClothes,resaleClothes;
     RecyclerView recyclerView;
-    SendLookAdapter.ItemClickListener itemClickListener;
     TextView emptyList;
     ArrayList<Subscriber> userFromBase;
     LinearLayout linearElse,linearTelegram,linearInstagram;
@@ -101,8 +104,13 @@ public class ViewingMyClothes extends Fragment {
             ,userName,otherUserNickString,nick;
     Clothes clothesViewing;
     private FirebaseModel firebaseModel = new FirebaseModel();
-    String savedImageURL;
     double perCent;
+    ArrayList<Chat> allChats=new ArrayList<>();
+    ArrayList<Chat> searchDialogsArrayList;
+    SendLookAdapter.ItemClickListener itemClickListener;
+    String getEditText;
+    TextView noChats;
+
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -355,7 +363,7 @@ public class ViewingMyClothes extends Fragment {
         editText=bottomSheetDialog.findViewById(R.id.searchuser);
         recyclerView=bottomSheetDialog.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        emptyList=bottomSheetDialog.findViewById(R.id.emptySubscribersList);
+        noChats=bottomSheetDialog.findViewById(R.id.noChats);
         linearElse=bottomSheetDialog.findViewById(R.id.linearElse);
         linearTelegram=bottomSheetDialog.findViewById(R.id.linearTelegram);
         linearInstagram=bottomSheetDialog.findViewById(R.id.linearInstagram);
@@ -383,26 +391,72 @@ public class ViewingMyClothes extends Fragment {
                 bottomSheetDialog.dismiss();
             }
         });
-        if(userInformation.getSubscription()==null){
-            RecentMethods.getSubscriptionList(userInformation.getNick(), firebaseModel, new Callbacks.getFriendsList() {
+        itemClickListener=new SendLookAdapter.ItemClickListener() {
+            @Override
+            public void onItemClick(Chat chat, String type) {
+                if(type.equals("send")){
+                    String messageText = messageEdit.getText().toString();
+
+                    String messageSenderRef = chat.getName() + "/Chats/" + userInformation.getNick() + "/Messages";
+                    String messageReceiverRef = userInformation.getNick()  + "/Chats/" + chat.getName()+ "/Messages";
+                    otherUserNickString=chat.getName();
+
+                    DatabaseReference userMessageKeyRef = firebaseModel.getUsersReference().child(userInformation.getNick() ).child("Chats").child(chat.getName()).child("Messages").push();
+                    String messagePushID = userMessageKeyRef.getKey();
+
+                    addLastMessage("clothes", messageText);
+                    addUnread();
+
+                    Map<String, Object> messageTextBody = new HashMap<>();
+                    messageTextBody.put("message", messageText);
+                    messageTextBody.put("type", "clothes");
+                    messageTextBody.put("from", userInformation.getNick() );
+                    messageTextBody.put("to", chat.getName());
+                    messageTextBody.put("time", RecentMethods.getCurrentTime());
+                    messageTextBody.put("messageID", messagePushID);
+                    messageTextBody.put("clothes", clothesViewing);
+
+                    Map<String, Object> messageBodyDetails = new HashMap<String, Object>();
+                    messageBodyDetails.put(messageSenderRef + "/" + messagePushID, messageTextBody);
+                    messageBodyDetails.put(messageReceiverRef + "/" + messagePushID, messageTextBody);
+                    firebaseModel.getUsersReference().updateChildren(messageBodyDetails).addOnCompleteListener(new OnCompleteListener() {
+                        @Override
+                        public void onComplete(@NonNull Task task) {
+                            messageEdit.setText("");
+                        }
+                    });
+                }else {
+                    RecentMethods.setCurrentFragment(MessageFragment.newInstance(userInformation, bundle, ViewingMyClothes.newInstance(fragment, userInformation, bundle), chat),getActivity());
+                    bottomSheetDialog.dismiss();
+                }
+            }
+        };
+        if(userInformation.getChats()==null || userInformation.getTalksArrayList()==null){
+            RecentMethods.getDialogs(userInformation.getNick(), firebaseModel, new Callbacks.loadDialogs() {
                 @Override
-                public void getFriendsList(ArrayList<Subscriber> friends) {
-                    if (friends.size()==0){
+                public void LoadData(ArrayList<Chat> dialogs, ArrayList<Chat> talksArrayList) {
+                    allChats.addAll(dialogs);
+                    allChats.addAll(talksArrayList);
+                    allChats=RecentMethods.sort_chats_by_time(allChats);
+                    if (allChats.size()==0){
                         emptyList.setVisibility(View.VISIBLE);
                         recyclerView.setVisibility(View.GONE);
                     }else {
-//                        SendLookAdapter sendLookAdapter = new SendLookAdapter(friends,itemClickListener);
-//                        recyclerView.setAdapter(sendLookAdapter);
+                        SendLookAdapter sendLookAdapter = new SendLookAdapter(allChats,itemClickListener);
+                        recyclerView.setAdapter(sendLookAdapter);
                     }
                 }
             });
         }else {
-            if (userInformation.getSubscription().size()==0){
+            allChats.addAll(userInformation.getChats());
+            allChats.addAll(userInformation.getTalksArrayList());
+            allChats=RecentMethods.sort_chats_by_time(allChats);
+            if (allChats.size()==0){
                 emptyList.setVisibility(View.VISIBLE);
                 recyclerView.setVisibility(View.GONE);
             }else {
-//                SendLookAdapter sendLookAdapter = new SendLookAdapter(userInformation.getSubscription(),itemClickListener);
-//                recyclerView.setAdapter(sendLookAdapter);
+                SendLookAdapter sendLookAdapter = new SendLookAdapter(allChats,itemClickListener);
+                recyclerView.setAdapter(sendLookAdapter);
             }
         }
 
@@ -419,72 +473,15 @@ public class ViewingMyClothes extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                userName = String.valueOf(editText.getText()).trim();
-                userName = userName.toLowerCase();
-                if(userInformation.getSubscription()==null){
-                    Query query = firebaseModel.getUsersReference().child(userInformation.getNick()).child("subscription");
-                    query.addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            userFromBase = new ArrayList<>();
-                            for (DataSnapshot snap : snapshot.getChildren()) {
-                                Subscriber subscriber = new Subscriber();
-                                subscriber.setSub(snap.getValue(String.class));
-                                String nick = subscriber.getSub();
-                                int valueLetters = userName.length();
-                                nick = nick.toLowerCase();
-                                if (nick.length() < valueLetters) {
-                                    if (nick.equals(userName))
-                                        userFromBase.add(subscriber);
-                                } else {
-                                    nick = nick.substring(0, valueLetters);
-                                    if (nick.equals(userName))
-                                        userFromBase.add(subscriber);
-                                }
+                getEditText=editText.getText().toString().toLowerCase();
+                if (getEditText.length()>0){
+                    recyclerView.setVisibility(View.GONE);
+                    searchChats(getEditText.toLowerCase());
 
-                            }
-                            if(userFromBase.size()==0){
-                                emptyList.setVisibility(View.VISIBLE);
-                                recyclerView.setVisibility(View.GONE);
-                            }else {
-                                emptyList.setVisibility(View.GONE);
-                                recyclerView.setVisibility(View.VISIBLE);
-//                                SendLookAdapter sendLookAdapter = new SendLookAdapter(userFromBase,itemClickListener);
-//                                recyclerView.setAdapter(sendLookAdapter);
-                            }
-                        }
+                }else if(getEditText.length()==0){
 
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-
-                        }
-                    });
-                }else {
-                    userFromBase=new ArrayList<>();
-                    for (int s=0;s<userInformation.getSubscription().size();s++) {
-                        Subscriber subscriber = userInformation.getSubscription().get(s);
-                        String nick = subscriber.getSub();
-                        int valueLetters = userName.length();
-                        nick = nick.toLowerCase();
-                        if (nick.length() < valueLetters) {
-                            if (nick.equals(userName))
-                                userFromBase.add(subscriber);
-                        } else {
-                            nick = nick.substring(0, valueLetters);
-                            if (nick.equals(userName))
-                                userFromBase.add(subscriber);
-                        }
-
-                    }
-                    if(userFromBase.size()==0){
-                        emptyList.setVisibility(View.VISIBLE);
-                        recyclerView.setVisibility(View.GONE);
-                    }else {
-                        emptyList.setVisibility(View.GONE);
-                        recyclerView.setVisibility(View.VISIBLE);
-//                        SendLookAdapter sendLookAdapter = new SendLookAdapter(userFromBase,itemClickListener);
-//                        recyclerView.setAdapter(sendLookAdapter);
-                    }
+                    recyclerView.setVisibility(View.VISIBLE);
+                    noChats.setVisibility(View.GONE);
                 }
             }
 
@@ -494,34 +491,115 @@ public class ViewingMyClothes extends Fragment {
         });
     }
 
-    private void addLastMessage(String type, String Message){
-        switch (type) {
-            case "text":
-                addType("text");
-                firebaseModel.getUsersReference().child(nick).child("Chats").child(otherUserNickString).child("LastMessage").setValue(Message);
-                firebaseModel.getUsersReference().child(otherUserNickString).child("Chats").child(nick).child("LastMessage").setValue(Message);
-                break;
-            case "voice":
-                addType("voice");
-                firebaseModel.getUsersReference().child(nick).child("Chats").child(otherUserNickString).child("LastMessage").setValue("Голосовое сообщение");
-                firebaseModel.getUsersReference().child(otherUserNickString).child("Chats").child(nick).child("LastMessage").setValue("Голосовое сообщение");
-                break;
-            case "image":
-                firebaseModel.getUsersReference().child(nick).child("Chats").child(otherUserNickString).child("LastMessage").setValue("Фотография");
-                firebaseModel.getUsersReference().child(otherUserNickString).child("Chats").child(nick).child("LastMessage").setValue("Фотография");
-                addType("image");
-                break;
+    public void searchChats(String textEdit){
+        if(allChats==null){
+            firebaseModel.getUsersReference().child(userInformation.getNick()).child("Chats").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DataSnapshot> task) {
+                    if(task.isSuccessful()){
+                        searchDialogsArrayList=new ArrayList<>();
+                        DataSnapshot snapshot=task.getResult();
+                        for (DataSnapshot snap:snapshot.getChildren()){
+                            Chat chat=new Chat();
+                            chat.setName(snap.child("name").getValue(String.class));
+                            chat.setLastMessage(snap.child("lastMessage").getValue(String.class));
+                            chat.setLastTime(snap.child("lastTime").getValue(String.class));
+                            chat.setUnreadMessages(snap.child("unreadMessages").getValue(Long.class));
+                            chat.setType(snap.child("type").getValue(String.class));
+                            String chatName=chat.getName();
+                            String title=chatName;
+                            int valueLetters=textEdit.length();
+                            title=title.toLowerCase();
+                            if(title.length()<valueLetters){
+                                if(title.equals(textEdit))
+                                    searchDialogsArrayList.add(chat);
+                            }else{
+                                title=title.substring(0, valueLetters);
+                                if(title.equals(textEdit))
+                                    searchDialogsArrayList.add(chat);
+                            }
+                        }
+                        if (searchDialogsArrayList.size()==0){
+                            recyclerView.setVisibility(View.GONE);
+                            noChats.setVisibility(View.VISIBLE);
+                        }else {
+                            recyclerView.setVisibility(View.VISIBLE);
+                            SendLookAdapter sendLookAdapter = new SendLookAdapter(searchDialogsArrayList,itemClickListener);
+                            recyclerView.setAdapter(sendLookAdapter);
+                            noChats.setVisibility(View.GONE);
+                        }
+                    }
+                }
+            });
+        }else {
+            searchDialogsArrayList=new ArrayList<>();
+            for (int i=0;i<allChats.size();i++) {
+                Chat chat = allChats.get(i);
+                String chatName=chat.getName();
+                String title=chatName;
+                int valueLetters=textEdit.length();
+                title=title.toLowerCase();
+                if(title.length()<valueLetters){
+                    if(title.equals(textEdit))
+                        searchDialogsArrayList.add(chat);
+                }else{
+                    title=title.substring(0, valueLetters);
+                    if(title.equals(textEdit))
+                        searchDialogsArrayList.add(chat);
+                }
+            }
+            if (searchDialogsArrayList.size()==0){
+                recyclerView.setVisibility(View.GONE);
+                noChats.setVisibility(View.VISIBLE);
+            }else {
+                recyclerView.setVisibility(View.VISIBLE);
+                SendLookAdapter sendLookAdapter = new SendLookAdapter(searchDialogsArrayList,itemClickListener);
+                recyclerView.setAdapter(sendLookAdapter);
+                noChats.setVisibility(View.GONE);
+            }
         }
+    }
+
+    private void addLastMessage(String type, String Message){
+        addType(type);
+        firebaseModel.getUsersReference().child(userInformation.getNick()).child("Dialogs").child(otherUserNickString).child("lastMessage").setValue("Одежда");
+        firebaseModel.getUsersReference().child(otherUserNickString).child("Dialogs").child(userInformation.getNick()).child("lastMessage").setValue("Одежда");
         Calendar calendar = Calendar.getInstance();
-        firebaseModel.getUsersReference().child(nick).child("Chats").child(otherUserNickString).child("LastTime").setValue(RecentMethods.getCurrentTime());
-        firebaseModel.getUsersReference().child(otherUserNickString).child("Chats").child(nick).child("LastTime").setValue(RecentMethods.getCurrentTime());
-        firebaseModel.getUsersReference().child(nick).child("Chats").child(otherUserNickString).child("TimeMill").setValue(calendar.getTimeInMillis() * -1);
-        firebaseModel.getUsersReference().child(otherUserNickString).child("Chats").child(nick).child("TimeMill").setValue(calendar.getTimeInMillis() * -1);
+        firebaseModel.getUsersReference().child(userInformation.getNick()).child("Dialogs").child(otherUserNickString).child("lastTime").setValue(RecentMethods.getCurrentTime());
+        firebaseModel.getUsersReference().child(otherUserNickString).child("Dialogs").child(userInformation.getNick()).child("lastTime").setValue(RecentMethods.getCurrentTime());
+        Map<String,String> map=new HashMap<>();
+        map= ServerValue.TIMESTAMP;
+        firebaseModel.getUsersReference().child(userInformation.getNick()).child("Dialogs").child(otherUserNickString).child("timeMill").setValue(map);
+        firebaseModel.getUsersReference().child(otherUserNickString).child("Dialogs").child(userInformation.getNick()).child("timeMill").setValue(map);
+    }
+
+    public void addUnread() {
+        final long[] value = new long[1];
+        DatabaseReference ref = firebaseModel.getUsersReference().child(otherUserNickString).child("Dialogs").child(userInformation.getNick()).child("unreadMessages");
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    value[0] = (long) dataSnapshot.getValue();
+                    value[0] = value[0] + 1;
+                    dataSnapshot.getRef().setValue(value[0]);
+                    firebaseModel.getUsersReference().child(userInformation.getNick()).child("Dialogs")
+                            .child(otherUserNickString).child("unreadMessages").setValue(0);
+                } else dataSnapshot.getRef().setValue(0);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+
+
+        });
     }
 
     public void addType(String type) {
         final long[] value = new long[1];
-        DatabaseReference ref = firebaseModel.getUsersReference().child(otherUserNickString).child("Chats").child(nick).child(type);
+        DatabaseReference ref = firebaseModel.getUsersReference().child(otherUserNickString).child("Chats").child(userInformation.getNick()).child(type);
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

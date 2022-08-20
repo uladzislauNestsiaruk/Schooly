@@ -36,6 +36,7 @@ import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FacePart;
 import com.egormoroz.schooly.FilamentModel;
 import com.egormoroz.schooly.FirebaseModel;
+import com.egormoroz.schooly.LoadBodyParts;
 import com.egormoroz.schooly.LockableNestedScrollView;
 import com.egormoroz.schooly.Person;
 import com.egormoroz.schooly.R;
@@ -180,7 +181,6 @@ public class WardrobeFragment extends Fragment {
             }
         }
 
-        loadLookClothes();
         searchText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -414,14 +414,15 @@ public class WardrobeFragment extends Fragment {
                 @Override
                 public void getLookClothes(ArrayList<Clothes> clothesArrayList) {
                     if(clothesArrayList.size()>0){
+                        loadValue=clothesArrayList.size();
                         for(int i=0;i<clothesArrayList.size();i++){
                             Clothes clothes=clothesArrayList.get(i);
                             TaskRunner taskRunner=new TaskRunner();
-                            int finalI = i;
                             taskRunner.executeAsync(new LongRunningTaskClothes(clothes), (data) -> {
                                 filamentModel.populateScene(data.getBuffer(), data);
-                                Log.d("####", "q   "+finalI+"   "+data.getClothesTitle());
-                                if(finalI ==clothesArrayList.size()-1){
+                                loadValue--;
+                                Log.d("####", "q   "+loadValue+"   "+data.getClothesTitle());
+                                if(loadValue ==0){
                                     loadValue=0;
                                     Log.d("####", "ss77 "+loadValue+"  "+data.getClothesTitle());
                                 }
@@ -434,6 +435,7 @@ public class WardrobeFragment extends Fragment {
             });
         } else{
             for(int i=0;i<clothesList.size();i++ ){
+                loadValue=clothesList.size();
                 Clothes clothes=clothesList.get(i);
                 Log.d("###",clothes.getClothesTitle());
                 if(clothesUid.contains(clothes.getUid())&&clothes.getBuffer()!=null){
@@ -444,10 +446,10 @@ public class WardrobeFragment extends Fragment {
                     a++;
                 } else if(clothesUid.contains(clothes.getUid())&&clothes.getBuffer()==null){
                     TaskRunner taskRunner=new TaskRunner();
-                    int finalA = a;
                     taskRunner.executeAsync(new LongRunningTaskClothes(clothes), (data) -> {
                         filamentModel.populateScene(data.getBuffer(), data);
-                        if(finalA ==clothesUid.size()-1){
+                        loadValue--;
+                        if(loadValue==0){
                             loadValue=0;
                         }
                     });
@@ -606,119 +608,74 @@ public class WardrobeFragment extends Fragment {
         return clothes;
     }
 
+
     public void loadPerson(UserInformation userInformation,LockableNestedScrollView lockableNestedScrollView,SurfaceView surfaceView){
-        try {
-            if (bundle.getSerializable("PERSON" + userInformation.getNick()) == null) {
-                Log.d("####", "aaaassshgyuo");
-                if(userInformation.getPerson()==null){
-                    RecentMethods.startLoadPerson(userInformation.getNick(), firebaseModel, new Callbacks.loadPerson() {
+        if(userInformation.getPerson()==null){
+            Log.d("AAAAA", "aaaasssh  "+userInformation.getNick());
+            RecentMethods.startLoadPerson(userInformation.getNick(), firebaseModel, new Callbacks.loadPerson() {
+                @Override
+                public void LoadPerson(Person person,ArrayList<FacePart> facePartArrayList) {
+                    Log.d("AAA","ss  "+person.getBody());
+                    LoadBodyParts.loadPersonBuffers(facePartArrayList, new Callbacks.loadFaceParts() {
                         @Override
-                        public void LoadPerson(Person person, ArrayList<FacePart> facePartArrayList) {
-                            loadPersonBuffers(surfaceView,person, facePartArrayList,lockableNestedScrollView,userInformation.getNick());
+                        public void LoadFaceParts(ArrayList<FacePart> facePartsArrayList) {
+                            Log.d("AAAAA","ss11  "+facePartsArrayList.get(0).getBuffer()+"   "+facePartsArrayList.get(0).getUid());
+                            for(int i=0;i<facePartsArrayList.size();i++){
+                                FacePart facePart=facePartsArrayList.get(i);
+                                Log.d("AAAAA","ss22  "+facePartsArrayList.get(i).getBuffer()+"   "+facePart.getUid()+"   "+i);
+                                if(i==0){
+                                    try {
+                                        filamentModel.initFilament(surfaceView, facePart.getBuffer(), true, lockableNestedScrollView
+                                                , "regularRender", true);
+                                        loadLookClothes();
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    } catch (URISyntaxException e) {
+                                        e.printStackTrace();
+                                    }
+                                }else{
+                                    filamentModel.populateSceneFacePart(facePartsArrayList.get(i).getBuffer());
+                                }
+                            }
+                            userInformation.setPerson(RecentMethods.setAllPerson(facePartsArrayList,"not"));
                         }
                     });
-
-                }else{
-                    ArrayList<FacePart> facePartArrayList=new ArrayList<>();
-                    facePartArrayList.add(userInformation.getPerson().getBrows());
-                    facePartArrayList.add(userInformation.getPerson().getEars());
-                    facePartArrayList.add(userInformation.getPerson().getEyes());
-                    facePartArrayList.add(userInformation.getPerson().getHair());
-                    facePartArrayList.add(userInformation.getPerson().getHead());
-                    facePartArrayList.add(userInformation.getPerson().getLips());
-                    facePartArrayList.add(userInformation.getPerson().getNose());
-                    facePartArrayList.add(userInformation.getPerson().getPirsing());
-                    facePartArrayList.add(userInformation.getPerson().getSkinColor());
-                    loadPersonBuffers(surfaceView,userInformation.getPerson(), facePartArrayList,lockableNestedScrollView,userInformation.getNick());
                 }
+            });
 
-            } else {
-                ArrayList<Buffer> buffersArrayList= (ArrayList<Buffer>) bundle.getSerializable("PERSON"+userInformation.getNick());
-                for(int i=0;i<buffersArrayList.size();i++){
-                    Buffer buffer=buffersArrayList.get(i);
-                    if(i==0){
-                        filamentModel.initFilament(surfaceView, buffer, true, lockableNestedScrollView
-                                , "regularRender", true);
-                    }else{
-                        filamentModel.populateSceneFacePart(buffer);
-                    }
-
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void loadPersonBuffers(SurfaceView surfaceView,Person person,ArrayList<FacePart> facePartArrayList
-            ,LockableNestedScrollView lockableNestedScrollView,String nick){
-        FacePart facePart=person.getBody();
-        TaskRunnerCustom taskRunnerCustom=new TaskRunnerCustom();
-        taskRunnerCustom.executeAsync(new LongRunningTaskBody(facePart), (data) -> {
-            filamentModel.initFilament(surfaceView,data.getBuffer(),true,lockableNestedScrollView
-                    ,"regularRender",true);
+        }else{
+            Log.d("####", "aa    "+userInformation.getPerson());
+            ArrayList<FacePart> facePartArrayList=new ArrayList<>();
+            facePartArrayList.add(userInformation.getPerson().getBody());
+            facePartArrayList.add(userInformation.getPerson().getBrows());
+            facePartArrayList.add(userInformation.getPerson().getEars());
+            facePartArrayList.add(userInformation.getPerson().getEyes());
+            facePartArrayList.add(userInformation.getPerson().getHair());
+            facePartArrayList.add(userInformation.getPerson().getHead());
+            facePartArrayList.add(userInformation.getPerson().getLips());
+            facePartArrayList.add(userInformation.getPerson().getNose());
+            facePartArrayList.add(userInformation.getPerson().getPirsing());
+            facePartArrayList.add(userInformation.getPerson().getSkinColor());
             for(int i=0;i<facePartArrayList.size();i++){
-                Log.d("#####", "q  "+facePartArrayList.size());
-                FacePart facePart1=facePartArrayList.get(i);
-                TaskRunnerCustom taskRunnerCustom1=new TaskRunnerCustom();
-                int finalI = i;
-                taskRunnerCustom1.executeAsync(new LongRunningTask(facePart1), (data1) -> {
-                    if(data1!=null){
-                        Log.d("#####", "l  "+data1.getPartTitle()+"  "+ finalI +"  "+facePartArrayList.size());
-                        filamentModel.populateSceneFacePart(data1.getBuffer());
+                FacePart facePart=facePartArrayList.get(i);
+                if(facePart!=null){
+                    if(i==0){
+                        try {
+                            filamentModel.initFilament(surfaceView, facePart.getBuffer(), true, lockableNestedScrollView
+                                    , "regularRender", true);
+                            loadLookClothes();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } catch (URISyntaxException e) {
+                            e.printStackTrace();
+                        }
+                    }else{
+                        filamentModel.populateSceneFacePart(facePart.getBuffer());
                     }
-                    if(finalI ==facePartArrayList.size()-1){
-                        Log.d("####", "ddd");
-                    }
-                });
-            }
-        });
-    }
-
-    public static FacePart loadBodyPart(FacePart facePart){
-        if(facePart!=null){
-            try {
-                if(!facePart.getPartType().equals("body")){
-                    uri = new URI(facePart.getModel());
-                    buffer = RecentMethods.getBytes(uri.toURL());
-                    buffer1= ByteBuffer.wrap(buffer);
-                    facePart.setBuffer(buffer1);
-                    facePartsBuffers.add(buffer1);
-                }else{
-                    facePart=null;
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (URISyntaxException e) {
-                e.printStackTrace();
             }
-        }else {
-            facePart=null;
         }
-        return facePart;
     }
-
-    public static FacePart loadBody(FacePart facePart){
-        if(facePart!=null){
-            try {
-                uri = new URI(facePart.getModel());
-                buffer = RecentMethods.getBytes(uri.toURL());
-                buffer1= ByteBuffer.wrap(buffer);
-                facePart.setBuffer(buffer1);
-                facePartsBuffers.add(buffer1);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (URISyntaxException e) {
-                e.printStackTrace();
-            }
-        }else {
-            facePart=null;
-        }
-        return facePart;
-    }
-
 
     static class LongRunningTaskClothes implements Callable<Clothes> {
         private Clothes clothes;
@@ -733,29 +690,4 @@ public class WardrobeFragment extends Fragment {
         }
     }
 
-    static class LongRunningTask implements Callable<FacePart> {
-        private FacePart facePart;
-
-        public LongRunningTask(FacePart facePart) {
-            this.facePart = facePart;
-        }
-
-        @Override
-        public FacePart call() {
-            return loadBodyPart(facePart);
-        }
-    }
-
-    static class LongRunningTaskBody implements Callable<FacePart> {
-        private FacePart facePart;
-
-        public LongRunningTaskBody(FacePart facePart) {
-            this.facePart = facePart;
-        }
-
-        @Override
-        public FacePart call() {
-            return loadBody(facePart);
-        }
-    }
 }

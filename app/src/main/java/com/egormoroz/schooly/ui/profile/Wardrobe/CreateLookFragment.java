@@ -28,9 +28,12 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.egormoroz.schooly.Callbacks;
+import com.egormoroz.schooly.FacePart;
 import com.egormoroz.schooly.FilamentModel;
 import com.egormoroz.schooly.FirebaseModel;
+import com.egormoroz.schooly.LoadBodyParts;
 import com.egormoroz.schooly.LockableNestedScrollView;
+import com.egormoroz.schooly.Person;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.TaskRunner;
@@ -156,11 +159,10 @@ public class CreateLookFragment extends Fragment {
             }
         }
         lockableNestedScrollView=view.findViewById(R.id.lockableNestedScrollView);
-        loadPerson(userInformation, lockableNestedScrollView);
+        loadPerson(userInformation,lockableNestedScrollView,surfaceView);
         if(bundle.getSerializable("ALLLOADCLOTHESLIST")!=null){
             clothesList= (ArrayList<Clothes>) bundle.getSerializable("ALLLOADCLOTHESLIST");
         }
-        loadLookClothes();
         searchText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -423,15 +425,17 @@ public class CreateLookFragment extends Fragment {
                 @Override
                 public void getLookClothes(ArrayList<Clothes> clothesArrayList) {
                     if(clothesArrayList.size()>0){
+                        loadValue=clothesArrayList.size();
                         for(int i=0;i<clothesArrayList.size();i++){
                             Clothes clothes=clothesArrayList.get(i);
                             TaskRunner taskRunner=new TaskRunner();
-                            int finalI = i;
-                            taskRunner.executeAsync(new LongRunningTask(clothes), (data) -> {
+                            taskRunner.executeAsync(new WardrobeFragment.LongRunningTaskClothes(clothes), (data) -> {
                                 filamentModel.populateScene(data.getBuffer(), data);
-                                if(finalI ==clothesArrayList.size()-1){
+                                loadValue--;
+                                Log.d("####", "q   "+loadValue+"   "+data.getClothesTitle());
+                                if(loadValue ==0){
                                     loadValue=0;
-                                    Log.d("####", "ss77 "+loadValue);
+                                    Log.d("####", "ss77 "+loadValue+"  "+data.getClothesTitle());
                                 }
                             });
                         }
@@ -442,7 +446,9 @@ public class CreateLookFragment extends Fragment {
             });
         } else{
             for(int i=0;i<clothesList.size();i++ ){
+                loadValue=clothesList.size();
                 Clothes clothes=clothesList.get(i);
+                Log.d("###",clothes.getClothesTitle());
                 if(clothesUid.contains(clothes.getUid())&&clothes.getBuffer()!=null){
                     filamentModel.populateScene(clothes.getBuffer(), clothes);
                     if(a ==clothesUid.size()-1){
@@ -451,10 +457,10 @@ public class CreateLookFragment extends Fragment {
                     a++;
                 } else if(clothesUid.contains(clothes.getUid())&&clothes.getBuffer()==null){
                     TaskRunner taskRunner=new TaskRunner();
-                    int finalA = a;
-                    taskRunner.executeAsync(new LongRunningTask(clothes), (data) -> {
+                    taskRunner.executeAsync(new WardrobeFragment.LongRunningTaskClothes(clothes), (data) -> {
                         filamentModel.populateScene(data.getBuffer(), data);
-                        if(finalA ==clothesUid.size()-1){
+                        loadValue--;
+                        if(loadValue==0){
                             loadValue=0;
                         }
                     });
@@ -627,44 +633,71 @@ public class CreateLookFragment extends Fragment {
         return clothes;
     }
 
-    public void loadPerson(UserInformation userInformation,LockableNestedScrollView lockableNestedScrollView){
-        try {
-            if(bundle.getSerializable("PERSON"+userInformation.getNick())==null){
-                uri = new URI(userInformation.getPerson().getBody().getModel());
-                buffer = getBytes(uri.toURL());
-                bufferToFilament= ByteBuffer.wrap(buffer);
-                buffers=new ArrayList<>();
-                buffers.add(bufferToFilament);
-                bundle.putSerializable("PERSON"+userInformation.getNick(),buffers);
-                filamentModel.initFilament(surfaceView,bufferToFilament,true,lockableNestedScrollView
-                        ,"regularRender",true);
-                loadBodyPart(userInformation.getPerson().getBrows().getModel());
-                loadBodyPart(userInformation.getPerson().getEars().getModel());
-                loadBodyPart(userInformation.getPerson().getEyes().getModel());
-                loadBodyPart(userInformation.getPerson().getHair().getModel());
-                loadBodyPart(userInformation.getPerson().getHead().getModel());
-                loadBodyPart(userInformation.getPerson().getLips().getModel());
-                loadBodyPart(userInformation.getPerson().getNose().getModel());
-                loadBodyPart(userInformation.getPerson().getPirsing().getModel());
-                loadBodyPart(userInformation.getPerson().getSkinColor().getModel());
+    public void loadPerson(UserInformation userInformation,LockableNestedScrollView lockableNestedScrollView,SurfaceView surfaceView){
+        if(userInformation.getPerson()==null){
+            Log.d("AAAAA", "aaaasssh  "+userInformation.getNick());
+            RecentMethods.startLoadPerson(userInformation.getNick(), firebaseModel, new Callbacks.loadPerson() {
+                @Override
+                public void LoadPerson(Person person, ArrayList<FacePart> facePartArrayList) {
+                    Log.d("AAA","ss  "+person.getBody());
+                    LoadBodyParts.loadPersonBuffers(facePartArrayList, new Callbacks.loadFaceParts() {
+                        @Override
+                        public void LoadFaceParts(ArrayList<FacePart> facePartsArrayList) {
+                            Log.d("AAAAA","ss11  "+facePartsArrayList.get(0).getBuffer()+"   "+facePartsArrayList.get(0).getUid());
+                            for(int i=0;i<facePartsArrayList.size();i++){
+                                FacePart facePart=facePartsArrayList.get(i);
+                                Log.d("AAAAA","ss22  "+facePartsArrayList.get(i).getBuffer()+"   "+facePart.getUid()+"   "+i);
+                                if(i==0){
+                                    try {
+                                        filamentModel.initFilament(surfaceView, facePart.getBuffer(), true, lockableNestedScrollView
+                                                , "regularRender", true);
+                                        loadLookClothes();
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    } catch (URISyntaxException e) {
+                                        e.printStackTrace();
+                                    }
+                                }else{
+                                    filamentModel.populateSceneFacePart(facePartsArrayList.get(i).getBuffer());
+                                }
+                            }
+                            userInformation.setPerson(RecentMethods.setAllPerson(facePartsArrayList,"not"));
+                        }
+                    });
+                }
+            });
 
-            }else{
-                ArrayList<Buffer> buffers= (ArrayList<Buffer>) bundle.getSerializable("PERSON"+userInformation.getNick());
-                for(int i=0;i<buffers.size();i++){
-                    Buffer buffer3=buffers.get(i);
+        }else{
+            Log.d("####", "aa    "+userInformation.getPerson());
+            ArrayList<FacePart> facePartArrayList=new ArrayList<>();
+            facePartArrayList.add(userInformation.getPerson().getBody());
+            facePartArrayList.add(userInformation.getPerson().getBrows());
+            facePartArrayList.add(userInformation.getPerson().getEars());
+            facePartArrayList.add(userInformation.getPerson().getEyes());
+            facePartArrayList.add(userInformation.getPerson().getHair());
+            facePartArrayList.add(userInformation.getPerson().getHead());
+            facePartArrayList.add(userInformation.getPerson().getLips());
+            facePartArrayList.add(userInformation.getPerson().getNose());
+            facePartArrayList.add(userInformation.getPerson().getPirsing());
+            facePartArrayList.add(userInformation.getPerson().getSkinColor());
+            for(int i=0;i<facePartArrayList.size();i++){
+                FacePart facePart=facePartArrayList.get(i);
+                if(facePart!=null){
                     if(i==0){
-                        filamentModel.initFilament(surfaceView,buffer3 ,true,lockableNestedScrollView
-                                ,"regularRender",true);
+                        try {
+                            filamentModel.initFilament(surfaceView, facePart.getBuffer(), true, lockableNestedScrollView
+                                    , "regularRender", true);
+                            loadLookClothes();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } catch (URISyntaxException e) {
+                            e.printStackTrace();
+                        }
                     }else{
-                        filamentModel.populateSceneFacePart(buffer3);
+                        filamentModel.populateSceneFacePart(facePart.getBuffer());
                     }
-
                 }
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
         }
     }
 

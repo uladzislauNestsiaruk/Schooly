@@ -195,9 +195,9 @@ public class AcceptNewLook extends Fragment {
                 @Override
                 public void onClick(View v) {
                     String lookId=newsModel.getReference().child(nick).push().getKey();
-                    newsModel.getReference().child(nick).child(lookId)
-                            .setValue(new NewsItem(model, descriptionLook.getText().toString(), "0", lookId,
-                                    "", userInformation.getLookClothes(), 1200, 0,"",nick,0,userInformation.getPerson()));
+//                    newsModel.getReference().child(nick).child(lookId)
+//                            .setValue(new NewsItem(model, descriptionLook.getText().toString(), "0", lookId,
+//                                    "", userInformation.getLookClothes(), 1200, 0,"",nick,0,userInformation.getPerson(),));
                     descriptionLook.getText().clear();
                     Toast.makeText(getContext(), getContext().getResources().getText(R.string.lookpublishedsuccessfully), Toast.LENGTH_SHORT).show();
                     RecentMethods.setCurrentFragment(ProfileFragment.newInstance(type, nick, fragment,userInformation,bundle), getActivity());

@@ -111,10 +111,10 @@ public class CoinsMainFragment extends Fragment {
             }
         });
 
-//        firebaseModel.initAppDataDatabase();
+        firebaseModel.initAll();
 //        String uid=firebaseModel.getReference().child("parts").child("hair").push().getKey();
-//        firebaseModel.getReference().child("parts").child("hair").child(uid)
-//                .setValue(new FacePart("hair","hairOne","https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2F%D0%BF%D1%80%D0%B8%D1%87%D0%B03.glb?alt=media&token=1fe8e688-7f84-48af-aafd-6a3fefa684fc"
+//        firebaseModel.getUsersReference().child("kloun").child("person").child("body")
+//                .setValue(new FacePart("body","dody","https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2F%D0%BD%D1%83%20%D1%82%D0%BE%D1%87%D0%BD%D0%BE%20%D0%BB%D0%B0%D1%81%D1%82%D0%BE%D0%B2%D1%8B%D0%B9.glb?alt=media&token=70c0adb9-e73e-43ea-ab8c-f29ba62de911"
 //                ,uid,null));
         Float x=-0.01f;
         Float y=0.21f;

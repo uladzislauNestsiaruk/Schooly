@@ -74,7 +74,7 @@ public class HairstyleFragment extends Fragment {
                 CreateCharacterFragment.loadNewFacePart(facePart);
             }
         };
-        RecentMethods.getCurrentFaceParts("hair", firebaseModel, new Callbacks.loadFaceParts() {
+        RecentMethods.getCurrentFaceParts("hair", firebaseModel, new Callbacks.loadFacePartsCustom() {
             @Override
             public void LoadNews(ArrayList<FacePart> facePartsArrayList) {
                 Log.d("######", "a  "+facePartsArrayList);

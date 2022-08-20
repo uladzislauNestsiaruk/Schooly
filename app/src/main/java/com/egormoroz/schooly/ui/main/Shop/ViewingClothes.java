@@ -562,8 +562,8 @@ public class ViewingClothes extends Fragment {
 
   private void addLastMessage(String type, String Message){
     addType(type);
-    firebaseModel.getUsersReference().child(userInformation.getNick()).child("Dialogs").child(otherUserNickString).child("LastMessage").setValue("Одежда");
-    firebaseModel.getUsersReference().child(otherUserNickString).child("Dialogs").child(userInformation.getNick()).child("LastMessage").setValue("Одежда");
+    firebaseModel.getUsersReference().child(userInformation.getNick()).child("Dialogs").child(otherUserNickString).child("lastMessage").setValue("Одежда");
+    firebaseModel.getUsersReference().child(otherUserNickString).child("Dialogs").child(userInformation.getNick()).child("lastMessage").setValue("Одежда");
     Calendar calendar = Calendar.getInstance();
     firebaseModel.getUsersReference().child(userInformation.getNick()).child("Dialogs").child(otherUserNickString).child("lastTime").setValue(RecentMethods.getCurrentTime());
     firebaseModel.getUsersReference().child(otherUserNickString).child("Dialogs").child(userInformation.getNick()).child("lastTime").setValue(RecentMethods.getCurrentTime());
@@ -597,27 +597,6 @@ public class ViewingClothes extends Fragment {
     });
   }
 
-  public void showDialogBasket(String textInDialog){
-
-    final Dialog dialog = new Dialog(getActivity());
-    dialog.setContentView(R.layout.dialog_layout);
-    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
-    TextView text=dialog.findViewById(R.id.Text);
-    text.setText(textInDialog);
-    RelativeLayout relative=dialog.findViewById(R.id.Relative);
-
-
-    relative.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        dialog.dismiss();
-      }
-    });
-
-    dialog.show();
-  }
-
   public void addType(String type) {
     final long[] value = new long[1];
     DatabaseReference ref = firebaseModel.getUsersReference().child(otherUserNickString).child("Chats").child(userInformation.getNick()).child(type);
@@ -638,6 +617,27 @@ public class ViewingClothes extends Fragment {
 
 
     });
+  }
+
+  public void showDialogBasket(String textInDialog){
+
+    final Dialog dialog = new Dialog(getActivity());
+    dialog.setContentView(R.layout.dialog_layout);
+    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+    TextView text=dialog.findViewById(R.id.Text);
+    text.setText(textInDialog);
+    RelativeLayout relative=dialog.findViewById(R.id.Relative);
+
+
+    relative.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        dialog.dismiss();
+      }
+    });
+
+    dialog.show();
   }
 
   public void showDialog(){

@@ -12,7 +12,7 @@ import java.util.ArrayList;
 public class NewsItem {
     private String item_description, likes_count, newsId, postTime, nick,
             comments, ImageUrl;
-    private long lookPrice, lookPriceDollar, viewCount;
+    private long lookPrice, lookPriceDollar, viewCount,timestamp;
     Person person;
     private ArrayList<Clothes> clothesArrayList;
 
@@ -22,7 +22,7 @@ public class NewsItem {
 
     public NewsItem(String ImageUrl, String item_description, String likes_count, String newsId,
                     String comments, ArrayList<Clothes> clothesArrayList, long lookPrice, long viewCount
-            , String postTime, String nick, long lookPriceDollar,Person person) {
+            , String postTime, String nick, long lookPriceDollar,Person person,long timestamp) {
         this.ImageUrl = ImageUrl;
         this.likes_count = likes_count;
         this.item_description = item_description;
@@ -35,6 +35,7 @@ public class NewsItem {
         this.nick = nick;
         this.lookPriceDollar = lookPriceDollar;
         this.person=person;
+        this.timestamp=timestamp;
     }
 
     public String getImageUrl() {
@@ -132,6 +133,14 @@ public class NewsItem {
 
     public void setPerson(Person person) {
         this.person = person;
+    }
+
+    public long getTimestamp() {
+        return this.timestamp;
+    }
+
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
     }
 
 }

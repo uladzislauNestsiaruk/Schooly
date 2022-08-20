@@ -67,6 +67,7 @@ public final class GroupChatFragment extends Fragment {
     Bundle bundle;
     Fragment fragment;
     Chat chat;
+    MessageAdapter.ItemClickListener itemClickListener;
 
     public GroupChatFragment(UserInformation userInformation,Bundle bundle,Fragment fragment,Chat chat) {
         this.userInformation=userInformation;
@@ -201,7 +202,7 @@ public final class GroupChatFragment extends Fragment {
         SendFilesButton = view.findViewById(R.id.send_files_btn);
         MessageInputText = view.findViewById(R.id.input_message);
 
-        messageAdapter = new MessageAdapter(messagesList, messageSenderName);
+        messageAdapter = new MessageAdapter(messagesList, messageSenderName,chat.getName(),itemClickListener);
         userMessagesList = view.findViewById(R.id.private_messages_list_of_users);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         userMessagesList.setLayoutManager(linearLayoutManager);

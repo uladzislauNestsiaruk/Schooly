@@ -82,18 +82,18 @@ public class NewsFragment extends Fragment {
         ref = FirebaseDatabase.getInstance().getReference("news");
         LoadNewsTread loadNewsTread=new LoadNewsTread(userInformation, new Callbacks.loadNewsTread() {
             @Override
-            public void LoadNews(ArrayList<NewsItem> newsItemArrayList) {
-                Log.d("####", "dd   "+newsItemArrayList.size());
+            public void LoadNews(NewsItem newsItem) {
+                Log.d("####", "dd   "+newsItem);
                 circularProgressIndicator.setVisibility(View.GONE);
                 if(newsAdapter==null){
-                    newsArrayList=newsItemArrayList;
+                    newsArrayList.add(newsItem);
                     newsAdapter=new NewsAdapter(newsArrayList, userInformation, bundle,NewsFragment.newInstance(userInformation, bundle),getActivity(), onItemChangedListener);
                     Log.d("####", "dd 3   "+newsArrayList.size());
                     viewPager2.setAdapter(newsAdapter);
                 }else{
-                    newsArrayList.add(newsItemArrayList.get(newsItemArrayList.size()-1));
+                    newsArrayList.add(newsItem);
                     Log.d("####", "dd 1  "+newsArrayList.size());
-                    newsAdapter.notifyItemRangeInserted(newsArrayList.size()-1, viewPager2.getAdapter().getItemCount());
+                    newsAdapter.notifyItemChanged(newsArrayList.size()-1);
                 }
 
             }

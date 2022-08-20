@@ -311,7 +311,7 @@ public class CreateCharacterFragment extends Fragment {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d("###", "createUserWithEmail:success");
-                            Person person=RecentMethods.setAllPerson(activeFaceParts);
+                            Person person=RecentMethods.setAllPerson(activeFaceParts,"base");
                             FirebaseUser user = AuthenticationBase.getCurrentUser();
                             UserInformation res = new UserInformation(nick, RecentMethods.getPhone(email), user.getUid(),
                                     "6", password, "Helicopter", 1000, new ArrayList<>(),new ArrayList<>(),1,100,0

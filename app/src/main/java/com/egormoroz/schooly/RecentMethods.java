@@ -23,6 +23,7 @@ import com.egormoroz.schooly.ui.main.Mining.Miner;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
 import com.egormoroz.schooly.ui.main.UserInformation;
 import com.egormoroz.schooly.ui.news.Comment;
+import com.egormoroz.schooly.ui.news.LoadNewsTread;
 import com.egormoroz.schooly.ui.news.NewsItem;
 import com.egormoroz.schooly.ui.people.UserPeopleAdapter;
 import com.egormoroz.schooly.ui.profile.Look;
@@ -1618,7 +1619,7 @@ public class RecentMethods {
     }
 
     ////////////////////FACEPART///////////////
-    public static void getCurrentFaceParts(String path,FirebaseModel firebaseModel,Callbacks.loadFaceParts callback){
+    public static void getCurrentFaceParts(String path,FirebaseModel firebaseModel,Callbacks.loadFacePartsCustom callback){
         firebaseModel.initAppDataDatabase();
         firebaseModel.getReference().child("parts").child(path).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
@@ -1670,17 +1671,19 @@ public class RecentMethods {
                         FacePart facePart=snap. getValue(FacePart.class);
                         facePartArrayList.add(facePart);
                     }
-                    callback.LoadPerson(setAllPerson(facePartArrayList),facePartArrayList);
+                    callback.LoadPerson(setAllPerson(facePartArrayList,"not"),facePartArrayList);
                 }
             }
         });
     }
 
-    public static Person setAllPerson(ArrayList<FacePart> personParts){
+    public static Person setAllPerson(ArrayList<FacePart> personParts,String type){
         Person person=new Person();
         for(int i=0;i<personParts.size();i++){
             FacePart facePart=personParts.get(i);
-            facePart.setBuffer(null);
+            if(type.equals("base")){
+                facePart.setBuffer(null);
+            }
             switch (facePart.getPartType()){
                 case "body":
                     person.setBody(facePart);
@@ -1709,4 +1712,6 @@ public class RecentMethods {
         cur.sort((Chat a, Chat b) -> (int)(a.getTimeMill() - b.getTimeMill()));
         return cur;
     }
+
+
 }

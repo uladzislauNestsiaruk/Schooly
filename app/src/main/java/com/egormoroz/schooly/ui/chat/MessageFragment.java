@@ -91,7 +91,7 @@ public final class MessageFragment extends Fragment {
 
     private String messageReceiverName, messageReceiverImage, messageSenderName;
 
-    private static Activity instance;
+    MessageAdapter.ItemClickListener itemClickListener;
     TextView userName, userLastSeen;
     private ImageView userImage;
     FirebaseModel firebaseModel = new FirebaseModel();
@@ -152,6 +152,13 @@ public final class MessageFragment extends Fragment {
             }
         };
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback1);
+
+        itemClickListener=new MessageAdapter.ItemClickListener() {
+            @Override
+            public void onItemClick(Clothes clothes) {
+                RecentMethods.setCurrentFragment(ViewingClothesChat.newInstance(MessageFragment.newInstance(userInformation, bundle, fragment, chat), userInformation, bundle), getActivity());
+            }
+        };
         messageSenderName=userInformation.getNick();
         messageReceiverName=chat.getName();
         firebaseModel.getUsersReference().child(messageSenderName).child("Chats").child(messageReceiverName).child("Messages")
@@ -170,7 +177,6 @@ public final class MessageFragment extends Fragment {
                         }else if(messages.getType().equals("look")){
                             messages.setNewsItem(dataSnapshot.child("newsItem").getValue(NewsItem.class));
                         }
-                        Log.d("####", messages.getMessage());
                         messagesList.add(messages);
                         if(messagesList.size()>0 && a==0&& !messages.getFrom().equals(userInformation.getNick())){
                             Log.d("#####", messageReceiverName);
@@ -217,7 +223,7 @@ public final class MessageFragment extends Fragment {
         SendFilesButton = view.findViewById(R.id.send_files_btn);
         MessageInputText = view.findViewById(R.id.input_message);
 
-        messageAdapter = new MessageAdapter(messagesList, messageSenderName, messageReceiverName);
+        messageAdapter = new MessageAdapter(messagesList, messageSenderName, messageReceiverName,itemClickListener);
         userMessagesList = view.findViewById(R.id.private_messages_list_of_users);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         userMessagesList.setLayoutManager(linearLayoutManager);

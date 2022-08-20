@@ -159,23 +159,15 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
         nick=userInformation.getNick();
         filamentModel.postFrameCallback();
         try {
-            if(bundle.getSerializable("CHARACTERMODEL")==null){
-                loadBuffer(userInformation.getPerson().getBody().getModel());
-                bufferToFilament=future.get();
-                ArrayList<Buffer> buffers=new ArrayList<>();
-                buffers.add(bufferToFilament);
-                bundle.putSerializable("CHARACTERMODEL",buffers);
-                filamentModel.initNewsFilament(holder.surfaceView,bufferToFilament,true,null,"regularRender",true);
-            }else{
-                ArrayList<Buffer> buffers= (ArrayList<Buffer>) bundle.getSerializable("CHARACTERMODEL");
-                Buffer buffer3=buffers.get(0);
-                filamentModel.initNewsFilament(holder.surfaceView,buffer3,true,null,"regularRender",true);
+            filamentModel.initNewsFilament(holder.surfaceView,newsItem.getPerson().getBody().getBuffer(),true,null,"regularRender",true);
+            if(newsItem.getPerson().getBrows()!=null){
+                filamentModel.populateSceneFacePart(newsItem.getPerson().getBrows().getBuffer());
             }
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-       } catch (IOException e) {
+            if(newsItem.getPerson().getHair()!=null){
+                filamentModel.populateSceneFacePart(newsItem.getPerson().getHair().getBuffer());
+            }
+
+        } catch (IOException e) {
             e.printStackTrace();
         } catch (URISyntaxException e) {
             e.printStackTrace();
@@ -186,7 +178,6 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
             filamentModel.populateScene(clothes.getBuffer(),clothes);
         }
         holder.nick.setText(newsItem.getNick());
-        holder.setIsRecyclable(false);
         holder.like_count.setText(newsItem.getLikes_count());
         holder.description.setText(newsItem.getItem_description());
         firebaseNewsModel.initNewsDatabase();
