@@ -1681,28 +1681,30 @@ public class RecentMethods {
         Person person=new Person();
         for(int i=0;i<personParts.size();i++){
             FacePart facePart=personParts.get(i);
-            if(type.equals("base")){
-                facePart.setBuffer(null);
-            }
-            switch (facePart.getPartType()){
-                case "body":
-                    person.setBody(facePart);
-                    break;
-                case "hair":
-                    person.setHair(facePart);
-                    break;
-                case "lips":
-                    person.setLips(facePart);
-                    break;
-                case "nose":
-                    person.setNose(facePart);
-                    break;
-                case "brows":
-                    person.setBrows(facePart);
-                    break;
-                case "eyes":
-                    person.setEyes(facePart);
-                    break;
+            if(facePart!=null){
+                if(type.equals("base")){
+                    facePart.setBuffer(null);
+                }
+                switch (facePart.getPartType()){
+                    case "body":
+                        person.setBody(facePart);
+                        break;
+                    case "hair":
+                        person.setHair(facePart);
+                        break;
+                    case "lips":
+                        person.setLips(facePart);
+                        break;
+                    case "nose":
+                        person.setNose(facePart);
+                        break;
+                    case "brows":
+                        person.setBrows(facePart);
+                        break;
+                    case "eyes":
+                        person.setEyes(facePart);
+                        break;
+                }
             }
         }
         return person;

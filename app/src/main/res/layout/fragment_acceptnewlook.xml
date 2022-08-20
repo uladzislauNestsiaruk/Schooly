@@ -2,6 +2,7 @@
 <com.egormoroz.schooly.LockableNestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:overScrollMode="never"
     android:id="@+id/lockableNestedScrollView">
 
@@ -135,6 +136,7 @@
             android:background="@drawable/corners14appcolor">
 
             <TextView
+                android:id="@+id/publishText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
@@ -144,6 +146,16 @@
                 android:text="@string/publish"
                 android:textColor="@color/white"
                 android:textSize="18sp" />
+
+            <com.google.android.material.progressindicator.CircularProgressIndicator
+                android:id="@+id/progressIndicator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:trackCornerRadius="20dp"
+                android:indeterminate="true"
+                android:layout_centerInParent="true"
+                app:trackThickness="2dp"
+                app:indicatorSize="14dp"/>
 
         </RelativeLayout>
 

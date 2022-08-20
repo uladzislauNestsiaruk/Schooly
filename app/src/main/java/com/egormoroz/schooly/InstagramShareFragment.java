@@ -165,7 +165,7 @@ public class InstagramShareFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     if(socialMediaType.equals("instagram")){
-                        getBitmapFormSurfaceView(relativeBackground, surfaceView, getActivity(), new NewsAdapter.Callback<Bitmap>() {
+                        getBitmapFormSurfaceView(surfaceView, getActivity(), new NewsAdapter.Callback<Bitmap>() {
                             @Override
                             public void onResult1(Bitmap bitmap) {
                                 Uri backgroundAssetUri = getImageUri(getActivity(), bitmap);
@@ -184,7 +184,7 @@ public class InstagramShareFragment extends Fragment {
                             }
                         });
                     }else if(socialMediaType.equals("telegram")){
-                        getBitmapFormView(relativeBackground, getActivity(), new NewsAdapter.Callback<Bitmap>() {
+                        getBitmapFormSurfaceView(surfaceView, getActivity(), new NewsAdapter.Callback<Bitmap>() {
                             @Override
                             public void onResult1(Bitmap bitmap) {
                                 String TelegramName = "org.telegram.messenger";
@@ -198,7 +198,7 @@ public class InstagramShareFragment extends Fragment {
                             }
                         });
                     }else if(socialMediaType.equals("all")){
-                        getBitmapFormView(relativeBackground, getActivity(), new NewsAdapter.Callback<Bitmap>() {
+                        getBitmapFormSurfaceView(surfaceView, getActivity(), new NewsAdapter.Callback<Bitmap>() {
                             @Override
                             public void onResult1(Bitmap bitmap) {
                                 Intent sendIntent = new Intent();
@@ -296,8 +296,8 @@ public class InstagramShareFragment extends Fragment {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public static void getBitmapFormSurfaceView(View view1,View view, Activity activity, NewsAdapter.Callback<Bitmap> callback) {
-        Bitmap bitmap = Bitmap.createBitmap(view1.getWidth(), view1.getHeight(), Bitmap.Config.ARGB_8888);
+    public static void getBitmapFormSurfaceView(View view, Activity activity, NewsAdapter.Callback<Bitmap> callback) {
+        Bitmap bitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
         PixelCopy.request((SurfaceView) view, bitmap, copyResult -> {
             if (copyResult == PixelCopy.SUCCESS) {
                 callback.onResult1(bitmap);

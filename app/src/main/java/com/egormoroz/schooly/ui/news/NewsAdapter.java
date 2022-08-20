@@ -155,32 +155,28 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
     public void onBindViewHolder(@NonNull ImageViewHolder holder, int position) {
         Log.d("ON BIND", "BIND POSITION: " + position);
         NewsItem newsItem = newsList.get(position);
-        loadLookClothes(newsItem);
         nick=userInformation.getNick();
         filamentModel.postFrameCallback();
-        try {
-            filamentModel.initNewsFilament(holder.surfaceView,newsItem.getPerson().getBody().getBuffer(),true,null,"regularRender",true);
-            if(newsItem.getPerson().getBrows()!=null){
-                filamentModel.populateSceneFacePart(newsItem.getPerson().getBrows().getBuffer());
-            }
-            if(newsItem.getPerson().getHair()!=null){
-                filamentModel.populateSceneFacePart(newsItem.getPerson().getHair().getBuffer());
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
-        for(int i=0;i<newsItem.getClothesCreators().size();i++){
-            Clothes clothes=newsItem.getClothesCreators().get(i);
-            Log.d("#####", "aaa   "+clothes.getClothesTitle()+clothes.getBuffer());
-            filamentModel.populateScene(clothes.getBuffer(),clothes);
-        }
+//        try {
+//            filamentModel.initNewsFilament(holder.surfaceView,newsItem.getPerson().getBody().getBuffer(),true,null,"regularRender",true);
+//            loadLookClothes(newsItem);
+//            if(newsItem.getPerson().getBrows()!=null){
+//                filamentModel.populateSceneFacePart(newsItem.getPerson().getBrows().getBuffer());
+//            }
+//            if(newsItem.getPerson().getHair()!=null){
+//                filamentModel.populateSceneFacePart(newsItem.getPerson().getHair().getBuffer());
+//            }
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        } catch (URISyntaxException e) {
+//            e.printStackTrace();
+//        }
         holder.nick.setText(newsItem.getNick());
         holder.like_count.setText(newsItem.getLikes_count());
         holder.description.setText(newsItem.getItem_description());
         firebaseNewsModel.initNewsDatabase();
+        Picasso.get().load(newsItem.getImageUrl()).into(holder.surfaceView);
         Log.d("#####", "Database url" + firebaseNewsModel.getReference());
         firebaseNewsModel.getReference().child(newsItem.getNick()).child(newsItem.getNewsId()).child("likes_count").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
@@ -242,12 +238,12 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
 
         holder.lookPrice.setText(String.valueOf(newsItem.getLookPrice()));
 
-        holder.send.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showBottomSheetDialog(holder.itemView,holder.surfaceView,newsItem);
-            }
-        });
+//        holder.send.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                showBottomSheetDialog(holder.itemView,holder.surfaceView,newsItem);
+//            }
+//        });
         holder.comment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -277,7 +273,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
 
         ImageView  like, comment,send,options;
         TextView description, like_count,clothesComponents,lookPrice,nick;
-        SurfaceView surfaceView;
+        ImageView surfaceView;
 
         public ImageViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -566,84 +562,11 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
     }
 
     public void loadLookClothes(NewsItem newsItem){
-        if(clothesUid.size()==0) {
-            RecentMethods.getLookClothes(newsItem.getNick(), newsItem.getNewsId(), firebaseNewsModel, new Callbacks.getLookClothes() {
-                @Override
-                public void getLookClothes(ArrayList<Clothes> clothesArrayList) {
-                    lookClothesArrayList=clothesArrayList;
-                    for(int i=0;i<clothesArrayList.size();i++){
-                        Clothes clothes=clothesArrayList.get(i);
-                        TaskRunner taskRunner=new TaskRunner();
-                        taskRunner.executeAsync(new LongRunningTask(clothes), (data) -> {
-                            filamentModel.populateScene(data.getBuffer(), data);
-                        });
-                    }
-                }
-            });
-        }  else{
-            Log.d("####", "ccc  "+clothesUid.size());
-            for(int i=0;i<clothesList.size();i++ ){
-                Clothes clothes=clothesList.get(i);
-                if(clothesUid.contains(clothes.getUid())&&clothes.getBuffer()!=null){
-                    //filamentModel.populateScene(clothes.getBuffer(), clothes);
-                } else if(clothesUid.contains(clothes.getUid())&&clothes.getBuffer()==null){
-//                    TaskRunner taskRunner=new TaskRunner();
-//                    taskRunner.executeAsync(new LongRunningTask(clothes), (data) -> {
-//                        filamentModel.populateScene(data.getBuffer(), data);
-//                    });
-                }
-            }
+        ArrayList<Clothes> clothesArrayListWithBuffers=newsItem.getClothesCreators();
+        for(int i=0;i<clothesArrayListWithBuffers.size();i++){
+            Clothes clothes=clothesArrayListWithBuffers.get(i);
+            filamentModel.populateScene(clothes.getBuffer(), clothes);
         }
-    }
-
-    public static byte[] getBytes( URL url) throws IOException {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        InputStream is = null;
-        try {
-            is = new BufferedInputStream(url.openStream());
-            byte[] byteChunk = new byte[4096];
-            int n;
-
-            while ( (n = is.read(byteChunk)) > 0 ) {
-                baos.write(byteChunk, 0, n);
-            }
-        }
-        catch (IOException e) {
-            Log.d("####", "Failed while reading bytes from %s: %s"+ url.toExternalForm()+ e.getMessage());
-            e.printStackTrace ();
-        }
-        finally {
-            if (is != null) { is.close(); }
-        }
-        return  baos.toByteArray();
-    }
-
-    public static Clothes addModelInScene(Clothes clothes)  {
-        try {
-            uri = new URI(clothes.getModel());
-            buffer = getBytes(uri.toURL());
-            bufferToFilament= ByteBuffer.wrap(buffer);
-            clothes.setBuffer(bufferToFilament);
-            clothesList.add(clothes);
-            clothesUid.add(clothes.getUid());
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
-        return clothes;
-    }
-
-    public static void loadBuffer(String model){
-        ExecutorService executorService= Executors.newCachedThreadPool();
-        future = executorService.submit(new Callable(){
-            public Buffer call() throws Exception {
-                uri = new URI(model);
-                buffer = getBytes(uri.toURL());
-                buffer1= ByteBuffer.wrap(buffer);
-                return buffer1;
-            }
-        });
     }
 
     private void showBottomSheetDialogClothesCreators(NewsItem newsItem,View v) {
@@ -738,25 +661,6 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
 
         bottomSheetDialog.show();
     }
-
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    public static void getBitmapFormView(View view, Activity activity, Callback<Bitmap> callback) {
-        Bitmap bitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
-
-        PixelCopy.request((SurfaceView) view, bitmap, copyResult -> {
-            if (copyResult == PixelCopy.SUCCESS) {
-                callback.onResult1(bitmap);
-            }
-        }, new Handler(Looper.getMainLooper()));
-    }
-
-    public Uri getImageUri(Context inContext, Bitmap inImage) {
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
-        return Uri.parse(path);
-    }
-
 
     public interface Callback<Bitmap> {
         void onResult1(Bitmap bitmap);
@@ -890,19 +794,6 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
 
 
         });
-    }
-
-    static class LongRunningTask implements Callable<Clothes> {
-        private Clothes clothes;
-
-        public LongRunningTask(Clothes clothes) {
-            this.clothes = clothes;
-        }
-
-        @Override
-        public Clothes call() {
-            return addModelInScene(clothes);
-        }
     }
     public static void CommentReply(String commentId, String name){
         editText.setHint("You replying to " + name + "\n");
