@@ -437,7 +437,7 @@ public final class MessageFragment extends Fragment {
     @SuppressLint("ClickableViewAccessibility")
     private void IntializeVoice(View v) {
         ImageView voice = v.findViewById(R.id.voiceinput);
-
+        ImageView circleVoice = v.findViewById(R.id.voiceActivityCircle);
         voice.setOnTouchListener(new View.OnTouchListener() {
             @SuppressLint("ClickableViewAccessibility")
             @RequiresApi(api = Build.VERSION_CODES.O)
@@ -446,7 +446,10 @@ public final class MessageFragment extends Fragment {
 
                     case MotionEvent.ACTION_DOWN:
                         try {
+                            circleVoice.setVisibility(View.VISIBLE);
+                            voice.setVisibility(View.GONE);
                             startRecording();
+
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -454,6 +457,8 @@ public final class MessageFragment extends Fragment {
                         break;
 
                     case MotionEvent.ACTION_UP:
+                        circleVoice.setVisibility(View.GONE);
+                        voice.setVisibility(View.VISIBLE);
                         stopRecording();
                         break;
                 }
