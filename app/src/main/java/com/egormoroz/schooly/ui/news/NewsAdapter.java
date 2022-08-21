@@ -591,17 +591,17 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
         final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(v.getContext());
         bottomSheetDialog.setContentView(R.layout.bottom_sheet_dialog_clothescreators);
         clothesCreatorsRecycler=bottomSheetDialog.findViewById(R.id.recyclerView);
-        if(lookClothesArrayList.size()==0){
+        if(newsItem.getClothesCreators().size()==0){
             RecentMethods.getLookClothes(newsItem.getNick(), newsItem.getNewsId(), firebaseNewsModel, new Callbacks.getLookClothes() {
                 @Override
                 public void getLookClothes(ArrayList<Clothes> clothesArrayList) {
-                    ConstituentsAdapter constituentsAdapter=new ConstituentsAdapter(clothesArrayList,itemClickListenerClothes);
+                    ConstituentsAdapter constituentsAdapter=new ConstituentsAdapter(newsItem.getClothesCreators(),itemClickListenerClothes);
                     clothesCreatorsRecycler.setLayoutManager(new LinearLayoutManager(v.getContext()));
                     clothesCreatorsRecycler.setAdapter(constituentsAdapter);
                 }
             });
         }else{
-            ConstituentsAdapter constituentsAdapter=new ConstituentsAdapter(lookClothesArrayList,itemClickListenerClothes);
+            ConstituentsAdapter constituentsAdapter=new ConstituentsAdapter(newsItem.getClothesCreators(),itemClickListenerClothes);
             clothesCreatorsRecycler.setLayoutManager(new LinearLayoutManager(v.getContext()));
             clothesCreatorsRecycler.setAdapter(constituentsAdapter);
         }

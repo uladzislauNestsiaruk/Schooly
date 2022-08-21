@@ -139,7 +139,7 @@ public class RecentMethods {
                 "open",new ArrayList<>(),"regular", new ArrayList<>(),0,new ArrayList<>(),new ArrayList<>(),new ArrayList<>()
                 ,new ArrayList<>(),new ArrayList<>(),new ArrayList<>(),new ArrayList<Clothes>(),new Person(new FacePart(), new FacePart(), new FacePart(), new FacePart(), new FacePart(), new FacePart(), new FacePart(), new FacePart("", "", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Fma.glb?alt=media&token=f7430695-13cb-4365-8910-c61b59a96acf", "",b ),
                 new FacePart(), new FacePart())
-        ,new ArrayList<>(),new ArrayList<>());
+        ,new ArrayList<>(),new ArrayList<>(),"","");
         ref.child(nick).setValue(res).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
@@ -1365,8 +1365,8 @@ public class RecentMethods {
     }
 
     public static void getLookClothes(String nick,String uid,FirebaseModel firebaseModel,Callbacks.getLookClothes callback){
-        firebaseModel.initAll();
-        Query query=firebaseModel.getUsersReference().child(nick).child("looks").child(uid)
+        firebaseModel.initNewsDatabase();
+        Query query=firebaseModel.getReference().child(nick).child(uid)
                 .child("clothesCreators");
         query.addValueEventListener(new ValueEventListener() {
             @Override
@@ -1506,7 +1506,7 @@ public class RecentMethods {
                 new ArrayList<>(),"regular", new ArrayList<>(),0,new ArrayList<>(),new ArrayList<>()
                 ,new ArrayList<>(),new ArrayList<>(),new ArrayList<>(),new ArrayList<>()
                 ,new ArrayList<Clothes>(),new Person(new FacePart(), new FacePart(), new FacePart(), new FacePart(), new FacePart(), new FacePart(), new FacePart(), new FacePart("", "", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Fma.glb?alt=media&token=f7430695-13cb-4365-8910-c61b59a96acf", "",b ),
-                new FacePart(), new FacePart()),new ArrayList<>(),new ArrayList<>()
+                new FacePart(), new FacePart()),new ArrayList<>(),new ArrayList<>(),"",""
         );
         user.setNick("fake");
         Random random = new Random();
@@ -1679,10 +1679,13 @@ public class RecentMethods {
 
     public static Person setAllPerson(ArrayList<FacePart> personParts,String type){
         Person person=new Person();
-        for(int i=0;i<personParts.size();i++){
-            FacePart facePart=personParts.get(i);
+        ArrayList<FacePart> parts=new ArrayList<>();
+        parts.addAll(personParts);
+        for(int i=0;i<parts.size();i++){
+            FacePart facePart=parts.get(i);
             if(facePart!=null){
                 if(type.equals("base")){
+                    Log.d("AAAA", "GG");
                     facePart.setBuffer(null);
                 }
                 switch (facePart.getPartType()){
@@ -1707,6 +1710,7 @@ public class RecentMethods {
                 }
             }
         }
+        Log.d("AAAAA", "PERSON");
         return person;
     }
 

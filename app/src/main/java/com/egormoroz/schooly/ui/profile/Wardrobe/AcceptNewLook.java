@@ -59,6 +59,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.progressindicator.CircularProgressIndicator;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.Query;
@@ -90,7 +91,8 @@ public class AcceptNewLook extends Fragment {
 
     FirebaseModel firebaseModel=new FirebaseModel();
     RelativeLayout publish;
-    TextView lookPrice,lookPriceDollar,constituentsText;
+    TextView lookPrice,lookPriceDollar,constituentsText,publishText;
+    CircularProgressIndicator circularProgressIndicator;
     EditText descriptionLook;
     ImageView schoolyCoin;
     RecyclerView recyclerView;
@@ -112,6 +114,7 @@ public class AcceptNewLook extends Fragment {
     static int loadValue;
     int a=0;
     static ArrayList<String > allLoadClothesUid=new ArrayList<>();
+    Person personMain=new Person();
 
     public AcceptNewLook( String type, Fragment fragment, UserInformation userInformation, Bundle bundle, String lookType, ArrayList<String> clothesUid,
                          ArrayList<Clothes> clothesList) {
@@ -164,6 +167,9 @@ public class AcceptNewLook extends Fragment {
         recyclerView=view.findViewById(R.id.constituentsRecycler);
         schoolyCoin=view.findViewById(R.id.schoolyCoin);
         constituentsText=view.findViewById(R.id.lookConstituentsText);
+        circularProgressIndicator=view.findViewById(R.id.progressIndicator);
+        publishText=view.findViewById(R.id.publishText);
+        personMain=userInformation.getPerson();
         itemClickListener=new ConstituentsAdapter.ItemClickListener() {
             @Override
             public void onItemClick(Clothes clothes) {
@@ -185,7 +191,6 @@ public class AcceptNewLook extends Fragment {
             }
         };
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
-
         lockableNestedScrollView=view.findViewById(R.id.lockableNestedScrollView);
         loadPerson(userInformation, lockableNestedScrollView,surfaceView);
         if(bundle!=null){
@@ -222,6 +227,8 @@ public class AcceptNewLook extends Fragment {
                 @RequiresApi(api = Build.VERSION_CODES.O)
                 @Override
                 public void onClick(View v) {
+                    publishText.setVisibility(View.GONE);
+                    circularProgressIndicator.setVisibility(View.VISIBLE);
                     String lookId=newsModel.getReference().child(nick).push().getKey();
                     descriptionLook.getText().clear();
                     getBitmapFormSurfaceView(surfaceView, getActivity(), new Callback<Bitmap>() {
@@ -253,12 +260,38 @@ public class AcceptNewLook extends Fragment {
                                     facePartArrayList.add(userInformation.getPerson().getNose());
                                     facePartArrayList.add(userInformation.getPerson().getPirsing());
                                     facePartArrayList.add(userInformation.getPerson().getSkinColor());
+                                    Person person=new Person();
+                                    for(int i=0;i<facePartArrayList.size();i++){
+                                        FacePart facePart=facePartArrayList.get(i);
+                                        if(facePart!=null){
+                                                facePart.setBuffer(null);
+                                            switch (facePart.getPartType()){
+                                                case "body":
+                                                    person.setBody(facePart);
+                                                    break;
+                                                case "hair":
+                                                    person.setHair(facePart);
+                                                    break;
+                                                case "lips":
+                                                    person.setLips(facePart);
+                                                    break;
+                                                case "nose":
+                                                    person.setNose(facePart);
+                                                    break;
+                                                case "brows":
+                                                    person.setBrows(facePart);
+                                                    break;
+                                                case "eyes":
+                                                    person.setEyes(facePart);
+                                                    break;
+                                            }
+                                        }
+                                    }
                                     newsModel.getReference().child(nick).child(lookId)
                                             .setValue(new NewsItem(downloadUrl.toString(), descriptionLook.getText().toString(), "0", lookId,
                                                     "", userInformation.getLookClothes(), 1200, 0,
-                                                    "", nick, 0, RecentMethods.setAllPerson(facePartArrayList,"base"), 0));
+                                                    "", nick, 0, person, 0));
                                     newsModel.getReference().child(nick).child(lookId).child("timestamp").setValue(ServerValue.TIMESTAMP);
-                                    Toast.makeText(getContext(), getContext().getResources().getText(R.string.lookpublishedsuccessfully), Toast.LENGTH_SHORT).show();
                                     RecentMethods.setCurrentFragment(ProfileFragment.newInstance(type, nick, fragment,userInformation,bundle), getActivity());
 
                                 }

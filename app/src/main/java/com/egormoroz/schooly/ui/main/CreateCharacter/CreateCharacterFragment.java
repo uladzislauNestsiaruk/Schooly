@@ -1,12 +1,20 @@
 package com.egormoroz.schooly.ui.main.CreateCharacter;
 
+import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.PixelCopy;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +26,7 @@ import android.widget.Toast;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Lifecycle;
@@ -37,12 +46,16 @@ import com.egormoroz.schooly.ui.main.GenderFragment;
 import com.egormoroz.schooly.ui.main.MainFragment;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
 import com.egormoroz.schooly.ui.main.UserInformation;
+import com.egormoroz.schooly.ui.news.NewsItem;
 import com.egormoroz.schooly.ui.people.UserPeopleAdapter;
+import com.egormoroz.schooly.ui.profile.ProfileFragment;
+import com.egormoroz.schooly.ui.profile.Wardrobe.AcceptNewLook;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -54,7 +67,12 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -306,6 +324,7 @@ public class CreateCharacterFragment extends Fragment {
     public void createNewEmailUser(String email, String password, String nick) {
         AuthenticationBase.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
+                    @RequiresApi(api = Build.VERSION_CODES.O)
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
@@ -313,20 +332,43 @@ public class CreateCharacterFragment extends Fragment {
                             Log.d("###", "createUserWithEmail:success");
                             Person person=RecentMethods.setAllPerson(activeFaceParts,"base");
                             FirebaseUser user = AuthenticationBase.getCurrentUser();
-                            UserInformation res = new UserInformation(nick, RecentMethods.getPhone(email), user.getUid(),
-                                    "6", password, "Helicopter", 1000, new ArrayList<>(),new ArrayList<>(),1,100,0
-                                    , new ArrayList<>(), new ArrayList<>(), ""," ","open","open","open","open"
-                                    ,new ArrayList<>(),"regular", new ArrayList<>(),0,new ArrayList<>(),new ArrayList<>()
-                                    ,new ArrayList<>(),new ArrayList<>(),new ArrayList<>(),new ArrayList<>(),new ArrayList<Clothes>(),person,
-                                    new ArrayList<>(),new ArrayList<>());
-                            reference.child(nick).setValue(res);
-                            FirebaseModel firebaseModel=new FirebaseModel();
-                            firebaseModel.initAll();
-                            firebaseModel.getReference("usersNicks")
-                                    .child(nick).setValue(new UserPeopleAdapter(nick,"6"," "));
-                            ((MainActivity)getActivity()).IsEntered();
-                            ((MainActivity)getActivity()).checkMining();
-                            RecentMethods.setCurrentFragment(MainFragment.newInstance(res,bundle), getActivity());
+                            getBitmapFormSurfaceView(surfaceView, new Callback<Bitmap>() {
+                                @Override
+                                public void onResult1(Bitmap bitmap) {
+                                    StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("Images")
+                                            .child(user.getUid() + ".png");
+                                    UploadTask uploadTask = storageReference.putBytes(getImageUri(getContext(), bitmap));
+                                    uploadTask.continueWithTask(new Continuation() {
+                                        @Override
+                                        public Object then(@NonNull Task task) throws Exception {
+                                            if (!task.isSuccessful()) {
+                                                throw task.getException();
+                                            }
+                                            return storageReference.getDownloadUrl();
+                                        }
+                                    }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Uri> task) {
+                                            Uri downloadUrl = task.getResult();
+                                            UserInformation res = new UserInformation(nick, RecentMethods.getPhone(email), user.getUid(),
+                                                    "6", password, "Helicopter", 1000, new ArrayList<>(),new ArrayList<>(),1,100,0
+                                                    , new ArrayList<>(), new ArrayList<>(), ""," ","open","open","open","open"
+                                                    ,new ArrayList<>(),"regular", new ArrayList<>(),0,new ArrayList<>(),new ArrayList<>()
+                                                    ,new ArrayList<>(),new ArrayList<>(),new ArrayList<>(),new ArrayList<>(),new ArrayList<Clothes>(),person,
+                                                    new ArrayList<>(),new ArrayList<>(),"",downloadUrl.toString());
+                                            reference.child(nick).setValue(res);
+                                            FirebaseModel firebaseModel=new FirebaseModel();
+                                            firebaseModel.initAll();
+                                            firebaseModel.getReference("usersNicks")
+                                                    .child(nick).setValue(new UserPeopleAdapter(nick,"6"," "));
+                                            ((MainActivity)getActivity()).IsEntered();
+                                            ((MainActivity)getActivity()).checkMining();
+                                            RecentMethods.setCurrentFragment(MainFragment.newInstance(res,bundle), getActivity());
+
+                                        }
+                                    });
+                                }
+                            });
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w("###", "createUserWithEmail:failure", task.getException());
@@ -335,6 +377,27 @@ public class CreateCharacterFragment extends Fragment {
                         }
                     }
                 });
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public static void getBitmapFormSurfaceView(View view, Callback<Bitmap> callback) {
+        Bitmap bitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
+        PixelCopy.request((SurfaceView) view, bitmap, copyResult -> {
+            if (copyResult == PixelCopy.SUCCESS) {
+                callback.onResult1(bitmap);
+            }
+        }, new Handler(Looper.getMainLooper()));
+    }
+
+    public byte[] getImageUri(Context inContext, Bitmap inImage) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        inImage.compress(Bitmap.CompressFormat.PNG, 100, bytes);
+        byte[] bytesArray=bytes.toByteArray();
+        return bytesArray;
+    }
+
+    public interface Callback<Bitmap> {
+        void onResult1(Bitmap bitmap);
     }
 
     private void firebaseAuthWithGoogle(String idToken) {

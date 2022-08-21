@@ -422,6 +422,7 @@ public class ClothesViewingProfileOther extends Fragment {
             RecentMethods.getDialogs(userInformation.getNick(), firebaseModel, new Callbacks.loadDialogs() {
                 @Override
                 public void LoadData(ArrayList<Chat> dialogs, ArrayList<Chat> talksArrayList) {
+                    ArrayList<Chat> allChats=new ArrayList<>();
                     allChats.addAll(dialogs);
                     allChats.addAll(talksArrayList);
                     allChats=RecentMethods.sort_chats_by_time(allChats);
@@ -432,9 +433,11 @@ public class ClothesViewingProfileOther extends Fragment {
                         SendLookAdapter sendLookAdapter = new SendLookAdapter(allChats,itemClickListener);
                         recyclerView.setAdapter(sendLookAdapter);
                     }
+                    initUserEnter(allChats);
                 }
             });
         }else {
+            ArrayList<Chat> allChats=new ArrayList<>();
             allChats.addAll(userInformation.getChats());
             allChats.addAll(userInformation.getTalksArrayList());
             allChats=RecentMethods.sort_chats_by_time(allChats);
@@ -445,14 +448,13 @@ public class ClothesViewingProfileOther extends Fragment {
                 SendLookAdapter sendLookAdapter = new SendLookAdapter(allChats,itemClickListener);
                 recyclerView.setAdapter(sendLookAdapter);
             }
+            initUserEnter(allChats);
         }
-
-        initUserEnter();
 
         bottomSheetDialog.show();
     }
 
-    public void initUserEnter() {
+    public void initUserEnter(ArrayList<Chat> allChats) {
         editText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -463,7 +465,7 @@ public class ClothesViewingProfileOther extends Fragment {
                 getEditText=editText.getText().toString().toLowerCase();
                 if (getEditText.length()>0){
                     recyclerView.setVisibility(View.GONE);
-                    searchChats(getEditText.toLowerCase());
+                    searchChats(getEditText.toLowerCase(),allChats);
 
                 }else if(getEditText.length()==0){
 
@@ -478,7 +480,7 @@ public class ClothesViewingProfileOther extends Fragment {
         });
     }
 
-    public void searchChats(String textEdit){
+    public void searchChats(String textEdit,ArrayList<Chat> allChats){
         if(allChats==null){
             firebaseModel.getUsersReference().child(userInformation.getNick()).child("Chats").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                 @Override

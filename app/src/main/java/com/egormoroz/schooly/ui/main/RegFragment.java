@@ -336,34 +336,4 @@ public class RegFragment extends Fragment {
             }
         });
     }
-    public void createNewEmailUser(String email, String password, String nick) {
-        AuthenticationBase.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "createUserWithEmail:success");
-                            FirebaseUser user = AuthenticationBase.getCurrentUser();
-                            UserInformation res = new UserInformation(nick, RecentMethods.getPhone(email), user.getUid(),
-                                    "6", password, "Helicopter", 1000, new ArrayList<>(),new ArrayList<>(),1,100,0
-                                    , new ArrayList<>(), new ArrayList<>(), ""," ","open","open","open","open"
-                                    ,new ArrayList<>(),"regular", new ArrayList<>(),0,new ArrayList<>(),new ArrayList<>()
-                                    ,new ArrayList<>(),new ArrayList<>(),new ArrayList<>(),new ArrayList<>()
-                                    ,new ArrayList<Clothes>(),new Person(new FacePart(), new FacePart(), new FacePart(), new FacePart(), new FacePart(), new FacePart(), new FacePart(), new FacePart("", "", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Fma.glb?alt=media&token=f7430695-13cb-4365-8910-c61b59a96acf", "",b ),
-                                    new FacePart(), new FacePart()),
-                                    new ArrayList<>(),new ArrayList<>());
-                            reference.child(nick).setValue(res);
-                            database.getReference("usersNicks")
-                                    .child(nick).setValue(new UserPeopleAdapter(nick,"6"," "));
-                            RecentMethods.setCurrentFragment(MainFragment.newInstance(res,bundle), getActivity());
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                            Toast.makeText(getActivity(), "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-    }
 }

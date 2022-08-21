@@ -96,7 +96,7 @@ class ModelViewer(
 
     constructor(
         surfaceView: SurfaceView,
-        engine: Engine = Engine.create(),
+        engine: Engine ,
         uiHelper: UiHelper = UiHelper(UiHelper.ContextErrorPolicy.DONT_CHECK),
         manipulator: Manipulator? = null
     ) : this(engine, uiHelper) {
