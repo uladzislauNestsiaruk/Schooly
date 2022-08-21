@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.MediaController;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -51,6 +52,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     private String fromUserID;
     private DatabaseReference reference;
     static Clothes trueClothes;
+    private boolean isMpPlaying = false;
+    private CurrentVoice currentVoice = new CurrentVoice();
     MessageAdapter.ItemClickListener itemClickListener;
 
 
@@ -141,6 +144,45 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         return new MessageViewHolder(view);
     }
 
+    class CurrentVoice {
+        MediaPlayer mediaPlayer;
+        ImageView play, pause;
+
+        public CurrentVoice(MediaPlayer mp, ImageView play, ImageView pause) {
+            this.play = play;
+            this.pause = pause;
+            mediaPlayer = mp;
+        }
+
+        public CurrentVoice() {
+
+        }
+
+        public MediaPlayer getMediaPlayer() {
+            return mediaPlayer;
+        }
+
+        public void setMediaPlayer(MediaPlayer mediaPlayer) {
+            this.mediaPlayer = mediaPlayer;
+        }
+
+        public ImageView getPlay() {
+            return play;
+        }
+
+        public void setPlay(ImageView play) {
+            this.play = play;
+        }
+
+        public ImageView getPause() {
+            return pause;
+        }
+
+        public void setPause(ImageView pause) {
+            this.pause = pause;
+        }
+    }
+
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -151,7 +193,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         String fromMessageType = messages.getType();
         messageViewHolder.receiverTimePost.setText(messages.getTime());
         messageViewHolder.senderTimePost.setText(messages.getTime());
-        VoicePlayer voicePlayer = new VoicePlayer(messageViewHolder.itemView.getContext());
+
+        //VoicePlayer voicePlayer = new VoicePlayer(messageViewHolder.itemView.getContext());
         double voiceDuration = 1;
         messageViewHolder.senderSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -199,7 +242,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             messageViewHolder.senderSeekBar.setMax((int) voiceDuration);
         } catch (Exception e) {
         }
-        voicePlayer.setMediaPlayerListener(new VoicePlayer.MediaPlayerListener() {
+
+        /*voicePlayer.setMediaPlayerListener(new VoicePlayer.MediaPlayerListener() {
             @Override
             public void isPlaying(int currentDuration) {
 
@@ -207,6 +251,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
             @Override
             public void onPause() {
+                messageViewHolder.senderPlay.setVisibility(View.VISIBLE);
+                messageViewHolder.senderPause.setVisibility(View.GONE);
 
             }
 
@@ -214,7 +260,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             public void onStart() {
 
             }
-        });
+        });*/
 
         usersRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -322,23 +368,30 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                             messageViewHolder.senderPlay.setVisibility(View.VISIBLE);
                             messageViewHolder.senderPause.setVisibility(View.GONE);
                             mediaplayer.pause();
+                            isMpPlaying = false;
                         }
                     });
                     messageViewHolder.senderPlay.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
+                            if (isMpPlaying) {
+                                currentVoice.getMediaPlayer().pause();
+                                currentVoice.getPause().setVisibility(View.GONE);
+                                currentVoice.getPlay().setVisibility(View.VISIBLE);
+                            }
                             messageViewHolder.senderPlay.setVisibility(View.GONE);
                             messageViewHolder.senderPause.setVisibility(View.VISIBLE);
-
+                            currentVoice.setMediaPlayer(mediaplayer);
+                            currentVoice.setPause(messageViewHolder.senderPause);
+                            currentVoice.setPlay(messageViewHolder.senderPlay);
                             mediaplayer.start();
-
-
+                            isMpPlaying = true;
                             mediaplayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                                 @Override
                                 public void onCompletion(MediaPlayer mp) {
-                                    Log.d("###", "onCompletion: final ");
                                     messageViewHolder.senderPlay.setVisibility(View.VISIBLE);
                                     messageViewHolder.senderPause.setVisibility(View.GONE);
+                                    isMpPlaying = false;
                                 }
                             });
 
@@ -351,21 +404,31 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                         public void onClick(View v) {
                             messageViewHolder.receivePlay.setVisibility(View.VISIBLE);
                             messageViewHolder.receivePause.setVisibility(View.GONE);
+                            currentVoice.setMediaPlayer(mediaplayer);
+                            currentVoice.setPause(messageViewHolder.receivePause);
+                            currentVoice.setPlay(messageViewHolder.receivePlay);
                             mediaplayer.pause();
+                            isMpPlaying = false;
                         }
                     });
                     messageViewHolder.receivePlay.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
+                            if (isMpPlaying) {
+                                currentVoice.getMediaPlayer().pause();
+                                currentVoice.getPause().setVisibility(View.GONE);
+                                currentVoice.getPlay().setVisibility(View.VISIBLE);
+                            }
                             messageViewHolder.receivePlay.setVisibility(View.GONE);
                             messageViewHolder.receivePause.setVisibility(View.VISIBLE);
                             mediaplayer.start();
+                            isMpPlaying = true;
                             mediaplayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                                 @Override
                                 public void onCompletion(MediaPlayer mp) {
-                                    Log.d("###", "onCompletion: final ");
                                     messageViewHolder.receivePlay.setVisibility(View.VISIBLE);
                                     messageViewHolder.receivePause.setVisibility(View.GONE);
+                                    isMpPlaying = false;
                                 }
                             });
                         }
