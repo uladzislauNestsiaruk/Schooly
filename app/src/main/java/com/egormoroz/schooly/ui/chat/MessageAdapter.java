@@ -243,7 +243,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
                     case MotionEvent.ACTION_DOWN:
                         timeBefore[0] = System.currentTimeMillis();
-                        Log.d("##", "onTouch: sasja");
                         break;
 
                     case MotionEvent.ACTION_UP:
@@ -252,7 +251,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                         if ((timeAfter - timeBefore[0]) > 500){
                             messageFragment.showChatFunc(messages);
                         }
-                        Log.d("###", "onTouch: asdas");
                         break;
                 }
                 return true;
