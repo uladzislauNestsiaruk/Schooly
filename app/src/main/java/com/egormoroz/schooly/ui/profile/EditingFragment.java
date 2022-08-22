@@ -150,7 +150,7 @@ public class EditingFragment extends Fragment {
         dialog.setContentView(R.layout.dialog_layout);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-        RelativeLayout Relative=dialog.findViewById(R.id.Relative);
+        RelativeLayout Relative=dialog.findViewById(R.id.Delete_relative_layout);
         TextView textView=dialog.findViewById(R.id.Text);
         textView.setText(R.string.changenotavailable);
 

@@ -711,7 +711,7 @@ public class ViewingClothesPopular extends Fragment {
 
         TextView text=dialog.findViewById(R.id.Text);
         text.setText(textInDialog);
-        RelativeLayout relative=dialog.findViewById(R.id.Relative);
+        RelativeLayout relative=dialog.findViewById(R.id.Delete_relative_layout);
 
 
         relative.setOnClickListener(new View.OnClickListener() {
@@ -733,7 +733,7 @@ public class ViewingClothesPopular extends Fragment {
 
         TextView text=dialog.findViewById(R.id.Text);
         text.setText(textInDialog);
-        RelativeLayout relative=dialog.findViewById(R.id.Relative);
+        RelativeLayout relative=dialog.findViewById(R.id.Delete_relative_layout);
 
 
         relative.setOnClickListener(new View.OnClickListener() {

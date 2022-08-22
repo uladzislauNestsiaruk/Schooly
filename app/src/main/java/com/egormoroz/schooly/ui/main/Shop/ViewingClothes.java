@@ -1,9 +1,6 @@
 package com.egormoroz.schooly.ui.main.Shop;
 
 import android.app.Dialog;
-import android.content.Context;
-import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -24,10 +21,8 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager2.widget.ViewPager2;
 
 import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FirebaseModel;
@@ -35,13 +30,9 @@ import com.egormoroz.schooly.InstagramShareFragment;
 import com.egormoroz.schooly.Nontification;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
-import com.egormoroz.schooly.Subscriber;
 import com.egormoroz.schooly.ui.chat.Chat;
-import com.egormoroz.schooly.ui.chat.DialogAdapter;
-import com.egormoroz.schooly.ui.chat.DialogsFragment;
 import com.egormoroz.schooly.ui.chat.MessageFragment;
 import com.egormoroz.schooly.ui.coins.CoinsFragmentSecond;
-import com.egormoroz.schooly.ui.main.MyClothes.ViewingMyClothes;
 import com.egormoroz.schooly.ui.main.UserInformation;
 import com.egormoroz.schooly.ui.profile.ProfileFragment;
 import com.egormoroz.schooly.ui.profile.SendLookAdapter;
@@ -49,11 +40,9 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
-import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
@@ -69,6 +58,7 @@ public class ViewingClothes extends Fragment {
   Fragment fragment;
   UserInformation userInformation;
   Bundle bundle;
+
 
   public ViewingClothes(Fragment fragment,UserInformation userInformation,Bundle bundle) {
     this.fragment = fragment;
@@ -628,7 +618,7 @@ public class ViewingClothes extends Fragment {
 
     TextView text=dialog.findViewById(R.id.Text);
     text.setText(textInDialog);
-    RelativeLayout relative=dialog.findViewById(R.id.Relative);
+    RelativeLayout relative=dialog.findViewById(R.id.Delete_relative_layout);
 
 
     relative.setOnClickListener(new View.OnClickListener() {
@@ -752,7 +742,7 @@ public class ViewingClothes extends Fragment {
 
     TextView text=dialog.findViewById(R.id.Text);
     text.setText(textInDialog);
-    RelativeLayout relative=dialog.findViewById(R.id.Relative);
+    RelativeLayout relative=dialog.findViewById(R.id.Delete_relative_layout);
 
 
     relative.setOnClickListener(new View.OnClickListener() {

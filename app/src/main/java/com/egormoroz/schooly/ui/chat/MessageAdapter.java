@@ -4,12 +4,16 @@ package com.egormoroz.schooly.ui.chat;
 import static com.google.android.material.transition.MaterialSharedAxis.X;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -38,6 +42,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -52,6 +57,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     private String messageSenderNick = "", messageReceiverNick = "";
     private String fromUserID;
     private DatabaseReference reference;
+    private MessageFragment messageFragment;
     static Clothes trueClothes;
     static NewsItem newsItem;
     private boolean isMpPlaying = false;
@@ -59,11 +65,19 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     MessageAdapter.ItemClickListener itemClickListener;
 
 
+    public MessageAdapter(List<Message> userMessagesList, String messageSenderId, String messageReceiverId, ItemClickListener itemClickListener,MessageFragment messageFragment) {
+        this.userMessagesList = userMessagesList;
+        this.messageSenderNick = messageSenderId;
+        this.messageReceiverNick = messageReceiverId;
+        this.itemClickListener = itemClickListener;
+        this.messageFragment = messageFragment;
+    }
     public MessageAdapter(List<Message> userMessagesList, String messageSenderId, String messageReceiverId, ItemClickListener itemClickListener) {
         this.userMessagesList = userMessagesList;
         this.messageSenderNick = messageSenderId;
         this.messageReceiverNick = messageReceiverId;
         this.itemClickListener = itemClickListener;
+
     }
 
 //    public MessageAdapter(List<Message> userMessagesList, String messageSenderId) {
@@ -199,6 +213,55 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         String fromMessageType = messages.getType();
         messageViewHolder.receiverTimePost.setText(messages.getTime());
         messageViewHolder.senderTimePost.setText(messages.getTime());
+        int duration;
+        final long[] timeBefore = new long[1];
+        messageViewHolder.inMessage.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+                switch (event.getAction() & MotionEvent.ACTION_MASK) {
+
+                    case MotionEvent.ACTION_DOWN:
+                        timeBefore[0] = System.currentTimeMillis();
+                        Log.d("##", "onTouch: sasja");
+                        break;
+
+                    case MotionEvent.ACTION_UP:
+                        long timeAfter = System.currentTimeMillis();
+                        Log.d("###", "time: " + (timeAfter - timeBefore[0]));
+                        if ((timeAfter - timeBefore[0]) > 500){
+                            messageFragment.showChatFunc(messages);
+                        }
+                        Log.d("###", "onTouch: asdas");
+                        break;
+                }
+                return true;
+            }
+        });
+        messageViewHolder.outMessage.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+                switch (event.getAction() & MotionEvent.ACTION_MASK) {
+
+                    case MotionEvent.ACTION_DOWN:
+                        timeBefore[0] = System.currentTimeMillis();
+                        Log.d("##", "onTouch: sasja");
+                        break;
+
+                    case MotionEvent.ACTION_UP:
+                        long timeAfter = System.currentTimeMillis();
+                        Log.d("###", "time: " + (timeAfter - timeBefore[0]));
+                        if ((timeAfter - timeBefore[0]) > 500){
+                            messageFragment.showChatFunc(messages);
+                        }
+                        Log.d("###", "onTouch: asdas");
+                        break;
+                }
+                return true;
+            }
+        });
+
 
         //VoicePlayer voicePlayer = new VoicePlayer(messageViewHolder.itemView.getContext());
         double voiceDuration = 1;
@@ -540,6 +603,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     }
 
 
+
     @Override
     public int getItemCount() {
         return userMessagesList.size();
@@ -558,5 +622,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     public static void singeClothesInfo(NewClothesAdapter.ItemClickListener itemClickListener) {
         itemClickListener.onItemClick(trueClothes);
     }
+
 
 }
