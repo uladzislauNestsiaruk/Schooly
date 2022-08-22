@@ -1101,6 +1101,7 @@ public class ViewingLookFragment extends Fragment {
     }
 
     public void loadBuffers(NewsItem newsItem,CircularProgressIndicator progressIndicator,SurfaceView surfaceView){
+        filamentModel.postFrameCallback();
         LoadNewsItemInScene loadNewsItemInScene=new LoadNewsItemInScene(userInformation, newsItem, new Callbacks.loadNewsTread() {
             @Override
             public void LoadNews(NewsItem newsItem)  {

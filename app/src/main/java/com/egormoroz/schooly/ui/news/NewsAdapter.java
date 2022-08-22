@@ -1002,6 +1002,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
 
         FirebaseModel newsModel = new FirebaseModel();
 
+        filamentModel.postFrameCallback();
         CircularProgressIndicator progressIndicator;
         SurfaceView surfaceView;
         progressIndicator=dialog.findViewById(R.id.progressIndicator);

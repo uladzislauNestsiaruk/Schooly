@@ -441,6 +441,7 @@ public class FilamentModel {
         uiHelper=new UiHelper(UiHelper.ContextErrorPolicy.DONT_CHECK);
         doubleTapDetector=new GestureDetector(surfaceView, cameraManipulator);
         engine=Engine.create();
+
         modelViewer=new ModelViewer(surfaceView, engine, uiHelper, cameraManipulator);
         setupFilament();
         surfaceView.setOnTouchListener(new android.view.View.OnTouchListener() {
