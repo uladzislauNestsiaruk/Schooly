@@ -15,6 +15,9 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -370,7 +373,9 @@ public final class MessageFragment extends Fragment {
         }
     }
     public void copy(Message message){
-
+        ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipData clip = ClipData.newPlainText("CopyText", message.getText());
+        clipboard.setPrimaryClip(clip);
         Log.d("###", "copy: complete");
     }
     public void deleteMessage(Message message){
