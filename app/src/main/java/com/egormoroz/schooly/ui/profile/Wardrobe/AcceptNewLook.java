@@ -287,11 +287,18 @@ public class AcceptNewLook extends Fragment {
                                             }
                                         }
                                     }
-                                    newsModel.getReference().child(nick).child(lookId)
-                                            .setValue(new NewsItem(downloadUrl.toString(), descriptionLook.getText().toString(), "0", lookId,
-                                                    "", userInformation.getLookClothes(), 1200, 0,
-                                                    "", nick, 0, person, 0));
-                                    newsModel.getReference().child(nick).child(lookId).child("timestamp").setValue(ServerValue.TIMESTAMP);
+                                    if(lookType.equals("mainlook")){
+                                        firebaseModel.getUsersReference().child(nick).child("mainLook")
+                                                .setValue(userInformation.getLookClothes());
+                                        firebaseModel.getUsersReference().child(nick).child("mainLookImage")
+                                                .child(downloadUrl.toString());
+                                    }else {
+                                        newsModel.getReference().child(nick).child(lookId)
+                                                .setValue(new NewsItem(downloadUrl.toString(), descriptionLook.getText().toString(), "0", lookId,
+                                                        "", userInformation.getLookClothes(), 1200, 0,
+                                                        "", nick, 0, person, 0));
+                                        newsModel.getReference().child(nick).child(lookId).child("timestamp").setValue(ServerValue.TIMESTAMP);
+                                    }
                                     RecentMethods.setCurrentFragment(ProfileFragment.newInstance(type, nick, fragment,userInformation,bundle), getActivity());
 
                                 }
@@ -311,6 +318,7 @@ public class AcceptNewLook extends Fragment {
             });
         }
     }
+
 
     @Override
     public void onResume() {

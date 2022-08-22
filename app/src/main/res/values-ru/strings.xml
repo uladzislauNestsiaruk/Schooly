@@ -1,10 +1,10 @@
 <resources>
-    <string name="app_name">Schooly</string>
+    <string name="app_name">Sholly</string>
 
     <string name="hellosteve">Привет, я Стив!</string>
-    <string name="virtualSteve">Твой виртуальный помощник \nSchooly. Чтобы начать работу с\nприложением, нужно пройти\nнесколько простых шагов.\nПриступим!</string>
-    <string name="regOrEnter">Ты уже есть в Schooly? Если да, то войди \nв свой аккаунт, если нет, то \nрегистрируйся!</string>
-    <string name="regSteps">Пройди несколько простых \nшагов регистрации или\nиспользуй свой аккаунт \nв Google Play</string>
+    <string name="virtualSteve">Твой виртуальный помощник \nSholly. Чтобы начать работу с\nприложением, нужно пройти\nнесколько простых шагов.\nПриступим!</string>
+    <string name="regOrEnter">Ты уже есть в Sholly? Если да, то войди \nв свой аккаунт, если нет, то \nрегистрируйся!</string>
+    <string name="regSteps">Пройди несколько простых \nшагов регистрации или\nиспользуй свой аккаунт \nв Google</string>
     <string name="belarus">from Belarus, with love)</string>
     <string name="enterFast">Скорее производи вход в\nприложение, а мне нужно\nнемного времени вспомнить,\nгде мы могли видеться</string>
     <string name="startregtext">Начнем регистрацию!</string>
@@ -23,7 +23,7 @@
     <string name="next">Продолжить</string>
     <string name="ent">войти</string>
     <string name="from">через</string>
-    <string name="googleplay">Google Play</string>
+    <string name="googleplay">Google</string>
     <string name="reg">регистрация</string>
     <string name="redact">Редактировать</string>
 
@@ -192,7 +192,7 @@
     <string name="closeAccount">У этого пользователя закрытый аккаунт(</string>
 
     <string name="createFirstClothes">Создавай одежду</string>
-    <string name="getSchoolyCoin">и получай Schooly-coin!</string>
+    <string name="getSchoolyCoin">и получай Sholly-coin!</string>
     <string name="create">Создать</string>
 
     <string name="noClothes">Нет одежды в гардеробе(</string>
@@ -263,7 +263,7 @@
 
     <string name="messageLimit">Отправка сообщений ограничена</string>
 
-    <string name="schoolyPremium">Schooly Premium</string>
+    <string name="schoolyPremium">Sholly Premium</string>
     <string name="buyPremium">Купить подписку</string>
     <string name="publish">Опубликовать</string>
 
@@ -316,7 +316,7 @@
     <string name="resale">Продать</string>
     <string name="present">Подарить</string>
 
-    <string name="schoolyCoin">Schooly Coin</string>
+    <string name="schoolyCoin">Sholly Coin</string>
     <string name="dollar">Dollar (необходим Premium)</string>
 
     <string name="transferCoins">Перевести коины</string>
@@ -338,7 +338,7 @@
     <string name="uniqueClothes">Создавай уникальные и неповторимые модели</string>
     <string name="eightyPerCent">Получай до 80% от стоимости одежды с продажи</string>
     <string name="giveClothes">Дари одежду друзьям</string>
-    <string name="earn">Зарабатывай реальные деньги и Schooly-коины</string>
+    <string name="earn">Зарабатывай реальные деньги и Sholly-коины</string>
 
     <string name="ten">+10%</string>
     <string name="twenty">+20%</string>
@@ -387,7 +387,7 @@
     <string name="balance">Баланс:</string>
     <string name="shareProfile">Поделиться этим профилем</string>
     <string name="exclusiveText">Эксклюзивная одежда:</string>
-    <string name="noExclusive">Для просмотра премиум одежды необходимо быть подписанным на Schooly Premium</string>
+    <string name="noExclusive">Для просмотра премиум одежды необходимо быть подписанным на Sholly Premium</string>
     <string name="noClothesInBasket">Нет одежды в корзине:(</string>
     <string name="writeMessage">Введи сообщение...</string>
     <string name="instagram">Инстаграм</string>
@@ -409,14 +409,14 @@
     <string name="textOnClothes">8. Нельзя изображать запрещенные знаки и чужие товарные знаки, писать названия запрещенных
     организаций и оскорбительные тексты на одежде</string>
     <string name="exclusiveClothes">9. Если вы помечаете одежду как эксклюзивную, это значит, что ее смогут видеть
-    и покупать только обладатели Schooly Premium</string>
+    и покупать только обладатели Sholly Premium</string>
     <string name="paidClothes">10. При выборе типа валюты "доллар" пользователи смогут
     покупать заявляемую одежду только за реальные деньги. Ваша прибыть с продажи данной одежды
     будет тоже в реальной валюте</string>
     <string name="cantSellClothes">К сожалению, в данный момент эта функция недоступна. Она появится в следующих обновлениях:)</string>
     <string name="buyClothes">Купить предмет?</string>
     <string name="buyFirstMiner">Купи свой первый майнер!</string>
-    <string name="exclusivePremium">Только пользователи с подпиской Schooly Premium смогут купить эту одежду</string>
+    <string name="exclusivePremium">Только пользователи с подпиской Sholly Premium смогут купить эту одежду</string>
     <string name="sendClothesApplication">Отправить заявку</string>
     <string name="clothesApplication">Заявка на одежду может обрабатываться несколько дней. После обработки мы пришлем вам ответ.</string>
     <string name="loading">Загрузка...</string>
@@ -452,7 +452,7 @@
     <string name="givealreadytext">У</string>
     <string name="alreadнhasthisgift"> уже есть этот предмет одежды</string>
     <string name="giftsent">Подарок отправлен</string>
-    <string name="themodelhasbeenadded">Модель добавлена в магазин одежды Schooly</string>
+    <string name="themodelhasbeenadded">Модель добавлена в магазин одежды Sholly</string>
     <string name="addrequestdenied">Запрос на добавление отказан</string>
     <string name="gaveyou"> подарил тебе </string>
     <string name="moveto">Перейти</string>
@@ -496,7 +496,7 @@
     <string name="openchat">Открыть чат</string>
     <string name="loginwithGoogle">Вход через Google</string>
     <string name="looksaved">Образ сохранен</string>
-    <string name="youarenotsubscribedtoSchoolyPremium">К сожалению, вы не подписаны на Schooly Premium</string>
+    <string name="youarenotsubscribedtoSchoolyPremium">К сожалению, вы не подписаны на Sholly Premium</string>
     <string name="coins1"> коинов</string>
     <string name="comments">Комментарии:</string>
     <string name="submitcomplaint">Отправить жалобу</string>

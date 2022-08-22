@@ -636,6 +636,7 @@ public class ViewingClothesPopular extends Fragment {
                                     if(snapshot.exists()){
                                         Toast.makeText(getContext(), getContext().getResources().getText(R.string.itempurchased), Toast.LENGTH_SHORT).show();
                                     }else {
+                                        clothesViewing.setBuffer(null);
                                         firebaseModel.getUsersReference().child(nick).child("clothes")
                                                 .child(clothesViewing.getUid()).setValue(clothesViewing);
                                         firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes")

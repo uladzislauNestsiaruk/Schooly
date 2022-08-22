@@ -33,6 +33,7 @@ import com.egormoroz.schooly.ui.main.UserInformation;
 import com.egormoroz.schooly.ui.news.NewsAdapter;
 import com.egormoroz.schooly.ui.news.NewsItem;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.progressindicator.CircularProgressIndicator;
 import com.squareup.picasso.Picasso;
 
 import java.io.BufferedInputStream;
@@ -68,9 +69,11 @@ public class InstagramShareFragment extends Fragment {
     Person person;
     static URI uri;
     static Future<Buffer> future;
-    static Buffer buffer1,bufferToFilament,b;
+    static Buffer buffer1;
     static byte[] buffer;
     String socialMediaType;
+    CircularProgressIndicator progressIndicator;
+    static int loadValue=0;
 
     public InstagramShareFragment(Fragment fragment, UserInformation userInformation, Bundle bundle, Clothes clothes, String type
             , NewsItem newsItem,Person person,String socialMediaType) {
@@ -114,9 +117,11 @@ public class InstagramShareFragment extends Fragment {
         relativeBackground=view.findViewById(R.id.relativeBackground);
         surfaceView=view.findViewById(R.id.surfaceView);
         imageBackground=view.findViewById(R.id.imageBackground);
+        progressIndicator=view.findViewById(R.id.progressIndicator);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (loadValue==0)
                 RecentMethods.setCurrentFragment(fragment, getActivity());
             }
         });
@@ -124,6 +129,7 @@ public class InstagramShareFragment extends Fragment {
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
+                if (loadValue==0)
                 RecentMethods.setCurrentFragment(fragment, getActivity());
             }
         };
@@ -132,89 +138,86 @@ public class InstagramShareFragment extends Fragment {
         if(type.equals("look")){
             relativeLayout.setVisibility(View.GONE);
             imageBackground.setVisibility(View.GONE);
-            try {
-                if(bundle.getSerializable("CHARACTERMODEL")==null){
-                    loadBuffer(userInformation.getPerson().getBody().getModel());
-                    bufferToFilament=future.get();
-                    ArrayList<Buffer> buffers=new ArrayList<>();
-                    buffers.add(bufferToFilament);
-                    bundle.putSerializable("CHARACTERMODEL",buffers);
-                    filamentModel.initFilament(surfaceView,bufferToFilament,true,null,"regularRender",true);
-                }else{
-                    ArrayList<Buffer> buffers= (ArrayList<Buffer>) bundle.getSerializable("CHARACTERMODEL");
-                    Buffer buffer3=buffers.get(0);
-                    filamentModel.initFilament(surfaceView,buffer3,true,null,"regularRender",true);
-                }
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (URISyntaxException e) {
-                e.printStackTrace();
-            }
-            if(newsItem.getClothesCreators()!=null){
-                for(int i=0;i<newsItem.getClothesCreators().size();i++){
-                    Clothes clothes=newsItem.getClothesCreators().get(i);
-                    filamentModel.populateScene(clothes.getBuffer(), clothes);
-                }
-            }
-            share.setOnClickListener(new View.OnClickListener() {
-                @RequiresApi(api = Build.VERSION_CODES.O)
+            loadValue=1;
+            LoadNewsItemInScene loadNewsItemInScene=new LoadNewsItemInScene(userInformation, newsItem, new Callbacks.loadNewsTread() {
                 @Override
-                public void onClick(View v) {
-                    if(socialMediaType.equals("instagram")){
-                        getBitmapFormSurfaceView(surfaceView, getActivity(), new NewsAdapter.Callback<Bitmap>() {
-                            @Override
-                            public void onResult1(Bitmap bitmap) {
-                                Uri backgroundAssetUri = getImageUri(getActivity(), bitmap);
-                                String sourceApplication = "com.egormoroz.schooly";
-
-                                Intent intent = new Intent("com.instagram.share.ADD_TO_STORY");
-                                intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-
-                                intent.setDataAndType(backgroundAssetUri, "image/*");
-
-
-                                Activity activity = getActivity();
-                                if (activity.getPackageManager().resolveActivity(intent, 0) != null) {
-                                    activity.startActivityForResult(intent, 0);
-                                }
-                            }
-                        });
-                    }else if(socialMediaType.equals("telegram")){
-                        getBitmapFormSurfaceView(surfaceView, getActivity(), new NewsAdapter.Callback<Bitmap>() {
-                            @Override
-                            public void onResult1(Bitmap bitmap) {
-                                String TelegramName = "org.telegram.messenger";
-                                Intent shareIntent = new Intent();
-                                shareIntent.setAction(Intent.ACTION_SEND);
-                                shareIntent.putExtra(Intent.EXTRA_STREAM, getImageUri(getActivity(),bitmap));
-                                shareIntent.setType("image/png");
-                                shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                                shareIntent.setPackage(TelegramName);
-                                startActivity(Intent.createChooser(shareIntent, null));
-                            }
-                        });
-                    }else if(socialMediaType.equals("all")){
-                        getBitmapFormSurfaceView(surfaceView, getActivity(), new NewsAdapter.Callback<Bitmap>() {
-                            @Override
-                            public void onResult1(Bitmap bitmap) {
-                                Intent sendIntent = new Intent();
-                                sendIntent.setAction(Intent.ACTION_SEND);
-                                sendIntent.putExtra(Intent.EXTRA_STREAM, getImageUri(getActivity(),bitmap));
-                                sendIntent.setType("image/png");
-                                sendIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                                Intent shareIntent = Intent.createChooser(sendIntent, null);
-                                startActivity(shareIntent);
-                            }
-                        });
+                public void LoadNews(NewsItem newsItem)  {
+                    progressIndicator.setVisibility(View.GONE);
+                    try {
+                        filamentModel.initNewsFilament(surfaceView,newsItem.getPerson().getBody().getBuffer(),true,null,"regularRender",true);
+                        loadClothesInScene(newsItem.getClothesCreators());
+                        if(newsItem.getPerson().getBrows()!=null){
+                            filamentModel.populateSceneFacePart(newsItem.getPerson().getBrows().getBuffer());
+                        }
+                        if(newsItem.getPerson().getHair()!=null){
+                            filamentModel.populateSceneFacePart(newsItem.getPerson().getHair().getBuffer());
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (URISyntaxException e) {
+                        e.printStackTrace();
                     }
+                    loadValue=0;
                 }
             });
+            if (loadValue==0){
+                share.setOnClickListener(new View.OnClickListener() {
+                    @RequiresApi(api = Build.VERSION_CODES.O)
+                    @Override
+                    public void onClick(View v) {
+                        if(socialMediaType.equals("instagram")){
+                            getBitmapFormSurfaceView(surfaceView, getActivity(), new NewsAdapter.Callback<Bitmap>() {
+                                @Override
+                                public void onResult1(Bitmap bitmap) {
+                                    Uri backgroundAssetUri = getImageUri(getActivity(), bitmap);
+                                    String sourceApplication = "com.egormoroz.schooly";
+
+                                    Intent intent = new Intent("com.instagram.share.ADD_TO_STORY");
+                                    intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+                                    intent.setDataAndType(backgroundAssetUri, "image/*");
+
+
+                                    Activity activity = getActivity();
+                                    if (activity.getPackageManager().resolveActivity(intent, 0) != null) {
+                                        activity.startActivityForResult(intent, 0);
+                                    }
+                                }
+                            });
+                        }else if(socialMediaType.equals("telegram")){
+                            getBitmapFormSurfaceView(surfaceView, getActivity(), new NewsAdapter.Callback<Bitmap>() {
+                                @Override
+                                public void onResult1(Bitmap bitmap) {
+                                    String TelegramName = "org.telegram.messenger";
+                                    Intent shareIntent = new Intent();
+                                    shareIntent.setAction(Intent.ACTION_SEND);
+                                    shareIntent.putExtra(Intent.EXTRA_STREAM, getImageUri(getActivity(),bitmap));
+                                    shareIntent.setType("image/png");
+                                    shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                    shareIntent.setPackage(TelegramName);
+                                    startActivity(Intent.createChooser(shareIntent, null));
+                                }
+                            });
+                        }else if(socialMediaType.equals("all")){
+                            getBitmapFormSurfaceView(surfaceView, getActivity(), new NewsAdapter.Callback<Bitmap>() {
+                                @Override
+                                public void onResult1(Bitmap bitmap) {
+                                    Intent sendIntent = new Intent();
+                                    sendIntent.setAction(Intent.ACTION_SEND);
+                                    sendIntent.putExtra(Intent.EXTRA_STREAM, getImageUri(getActivity(),bitmap));
+                                    sendIntent.setType("image/png");
+                                    sendIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                    Intent shareIntent = Intent.createChooser(sendIntent, null);
+                                    startActivity(shareIntent);
+                                }
+                            });
+                        }
+                    }
+                });
+            }
         }else{
             surfaceView.setVisibility(View.GONE);
+            progressIndicator.setVisibility(View.GONE);
             Picasso.get().load(clothes.getClothesImage()).into(clothesImage);
             clothesTitle.setText(clothes.getClothesTitle());
             clothesCreator.setText(clothes.getCreator());
@@ -310,33 +313,20 @@ public class InstagramShareFragment extends Fragment {
         future = executorService.submit(new Callable(){
             public Buffer call() throws Exception {
                 uri = new URI(model);
-                buffer = getBytes(uri.toURL());
+                buffer = RecentMethods.getBytes(uri.toURL());
                 buffer1= ByteBuffer.wrap(buffer);
                 return buffer1;
             }
         });
     }
 
-    public static byte[] getBytes( URL url) throws IOException {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        InputStream is = null;
-        try {
-            is = new BufferedInputStream(url.openStream());
-            byte[] byteChunk = new byte[4096];
-            int n;
-
-            while ( (n = is.read(byteChunk)) > 0 ) {
-                baos.write(byteChunk, 0, n);
+    public void loadClothesInScene(ArrayList<Clothes> clothesArrayList){
+        for(int i=0;i<clothesArrayList.size();i++){
+            Clothes clothes=clothesArrayList.get(i);
+            if(clothes.getBuffer()!=null){
+                filamentModel.populateScene(clothes.getBuffer(), clothes);
             }
         }
-        catch (IOException e) {
-            Log.d("####", "Failed while reading bytes from %s: %s"+ url.toExternalForm()+ e.getMessage());
-            e.printStackTrace ();
-        }
-        finally {
-            if (is != null) { is.close(); }
-        }
-        return  baos.toByteArray();
     }
 
     public Uri getImageUri(Context inContext, Bitmap inImage) {

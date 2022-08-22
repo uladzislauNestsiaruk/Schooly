@@ -207,7 +207,7 @@ public class ProfileFragment extends Fragment {
             }
         });
         RecentMethods.setCurrentFragment(MessageFragment.newInstance(userInformation, bundle, ProfileFragment.newInstance("other", info.getNick(), fragment, userInformation, bundle),
-                new Chat(info.getNick(), "", "", "personal", 0, new ArrayList<>(), "falce", new ArrayList<>(),0,0)), getActivity());
+                new Chat(info.getNick(), "", "", "personal", 0, new ArrayList<>(), "falce", new ArrayList<>(),0,0,"")), getActivity());
     }
 
     @Override
@@ -1562,6 +1562,7 @@ public class ProfileFragment extends Fragment {
     }
 
     public void loadPerson(UserInformation userInformation,LockableNestedScrollView lockableNestedScrollView,SurfaceView surfaceView){
+        loadValue=1;
         if(userInformation.getPerson()==null){
             Log.d("AAAAA", "aaaasssh  "+userInformation.getNick());
             loadPersonBuffer(userInformation,lockableNestedScrollView,surfaceView);
@@ -1657,6 +1658,9 @@ public class ProfileFragment extends Fragment {
                                     for(int i=0;i<clothesArrayList.size();i++){
                                         Clothes clothes=clothesArrayList.get(i);
                                         filamentModel.populateScene(clothes.getBuffer(), clothes);
+                                        if (i == clothesArrayList.size() - 1) {
+                                            loadValue=1;
+                                        }
                                     }
                                 }
                             });
@@ -1669,6 +1673,9 @@ public class ProfileFragment extends Fragment {
                 for (int i = 0; i < mainLookClothes.size(); i++) {
                     Clothes clothes = mainLookClothes.get(0);
                     filamentModel.populateScene(clothes.getBuffer(), clothes);
+                    if (i == mainLookClothes.size() - 1) {
+                        loadValue=1;
+                    }
                 }
             }
     }

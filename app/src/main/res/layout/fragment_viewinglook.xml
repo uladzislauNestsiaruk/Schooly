@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/darkblack">
 
     <ImageView
         android:id="@+id/back"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/left_arrow" />
+        android:src="@drawable/left_arrow"
+        android:elevation="0.1dp"/>
 
     <TextView
         android:id="@+id/nick"
@@ -18,7 +20,8 @@
         android:layout_toRightOf="@+id/back"
         android:fontFamily="@font/montserrat_bold"
         android:textColor="@color/app_color"
-        android:textSize="22sp" />
+        android:textSize="22sp"
+        android:elevation="0.1dp"/>
 
     <TextView
         android:id="@+id/lookPriceText"
@@ -29,14 +32,16 @@
         android:layout_marginEnd="24dp"
         android:fontFamily="@font/montserrat_bold"
         android:text="@string/lookPrice"
-        android:textColor="@color/app_grey" />
+        android:textColor="@color/app_grey"
+        android:elevation="0.1dp"/>
 
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/lookPriceText"
         android:layout_alignParentEnd="true"
-        android:layout_marginEnd="24dp">
+        android:layout_marginEnd="24dp"
+        android:elevation="0.1dp">
 
         <TextView
             android:id="@+id/lookPrice"
@@ -69,17 +74,21 @@
 
     </RelativeLayout>
 
-    <SurfaceView
-        android:id="@+id/sceneView"
+    <ImageView
+        android:id="@+id/lookImage"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="40dp"
-        android:layout_above="@+id/comment"
-        android:layout_below="@+id/back"
-        android:layout_marginStart="24dp"
+        android:layout_height="match_parent" />
+
+    <ImageView
+        android:id="@+id/show"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/relativeLike"
+        android:layout_alignParentEnd="true"
         android:layout_marginEnd="24dp"
-        android:layout_marginTop="84dp"
-        android:background="@color/white" />
+        android:layout_marginBottom="26dp"
+        android:elevation="0.1dp"
+        android:src="@drawable/ic_show" />
 
     <RelativeLayout
         android:id="@+id/relativeLike"
@@ -88,13 +97,15 @@
         android:layout_above="@+id/comment"
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="24dp"
-        android:layout_marginBottom="14dp">
+        android:layout_marginBottom="14dp"
+        android:elevation="0.1dp">
 
         <ImageView
             android:id="@+id/like"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_heart40dp" />
+            android:src="@drawable/ic_heart40dp"
+            android:elevation="0.1dp"/>
 
         <TextView
             android:id="@+id/likesCount"
@@ -103,7 +114,8 @@
             android:layout_below="@+id/like"
             android:layout_centerHorizontal="true"
             android:fontFamily="@font/montserrat_extrabold"
-            android:textColor="@color/app_grey" />
+            android:textColor="@color/app_grey"
+            android:elevation="0.1dp"/>
 
     </RelativeLayout>
 
@@ -115,6 +127,7 @@
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="24dp"
         android:layout_marginBottom="26dp"
+        android:elevation="0.1dp"
         android:src="@drawable/ic_chat40dp" />
 
     <ImageView
@@ -125,7 +138,8 @@
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="24dp"
         android:layout_marginBottom="26dp"
-        android:src="@drawable/ic_send40dp" />
+        android:src="@drawable/ic_send40dp"
+        android:elevation="0.1dp"/>
 
     <ImageView
         android:id="@+id/options"
@@ -134,7 +148,8 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
         android:layout_marginEnd="24dp"
-        android:layout_marginBottom="24dp"
+        android:layout_marginBottom="40dp"
+        android:elevation="0.1dp"
         android:src="@drawable/ic_options" />
 
 
@@ -153,7 +168,8 @@
         android:paddingBottom="8dp"
         android:text="@string/clothesCreators"
         android:textColor="@color/white"
-        android:textSize="15dp" />
+        android:textSize="15dp"
+        android:elevation="0.1dp"/>
 
     <TextView
         android:id="@+id/description"
@@ -162,9 +178,10 @@
         android:layout_alignParentBottom="true"
         android:layout_marginStart="24dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="24dp"
-        android:autoLink="all"
+        android:layout_marginBottom="40dp"
         android:layout_toLeftOf="@+id/send"
+        android:autoLink="all"
+        android:elevation="0.1dp"
         android:fontFamily="@font/montserrat_bold"
         android:textColor="@color/app_grey" />
 

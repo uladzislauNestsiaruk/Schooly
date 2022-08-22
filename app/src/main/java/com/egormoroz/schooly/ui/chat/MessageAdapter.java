@@ -30,6 +30,7 @@ import com.egormoroz.schooly.ui.chat.holders.VoicePlayer;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
 import com.egormoroz.schooly.ui.main.Shop.NewClothesAdapter;
 import com.egormoroz.schooly.ui.main.Shop.ViewingClothes;
+import com.egormoroz.schooly.ui.news.NewsItem;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -52,6 +53,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     private String fromUserID;
     private DatabaseReference reference;
     static Clothes trueClothes;
+    static NewsItem newsItem;
     private boolean isMpPlaying = false;
     private CurrentVoice currentVoice = new CurrentVoice();
     MessageAdapter.ItemClickListener itemClickListener;
@@ -71,11 +73,15 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
 
     public static class MessageViewHolder extends RecyclerView.ViewHolder {
-        public TextView senderMessageText, receiverMessageText, senderMessageTime, receiverTimePost, receiverMessageTime, senderTimeVoice, senderTimePost, clothesTitleAndCreator, senderTimeClothes, senderMessageTextClothes, clothesTitleAndCreatorOther, receiverTimeClothesOther, receiverMessageTextClothesOther, lookFrom, watchLook, senderTimeLook, senderMessageTextLook, lookFromOther, watchLookOther, receiverTimeLook, receiverMessageTextLook, receiveTimeVoice;
+        public TextView senderMessageText, receiverMessageText, senderMessageTime, receiverTimePost,
+                receiverMessageTime, senderTimeVoice, senderTimePost, clothesTitleAndCreator, senderTimeClothes,
+                senderMessageTextClothes, clothesTitleAndCreatorOther, receiverTimeClothesOther,
+                receiverMessageTextClothesOther, lookFrom,  senderTimeLook, senderMessageTextLook,
+                lookFromOther, receiverTimeLook, receiverMessageTextLook, receiveTimeVoice;
         //public ImageView receiverProfileImage;
         public RelativeLayout outMessage, inMessage, outVoice, inVoice, inClothes, outClothes, inLook, outLook;
         public ImageView messageSenderPicture, senderPlay, senderPause, clothesImage, clothesImageOther;
-        public ImageView messageReceiverPicture, receivePlay, receivePause;
+        public ImageView messageReceiverPicture, receivePlay, receivePause,watchLookOther,watchLook;
         public SeekBar senderSeekBar, receiveSeekBar;
 
         private void handleShowView(View view) {
@@ -449,7 +455,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                     messageViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            itemClickListener.onItemClick(userMessagesList.get(messageViewHolder.getAdapterPosition()).getClothes());
+                            itemClickListener.onItemClick(userMessagesList.get(messageViewHolder.getAdapterPosition()).getClothes(),null);
                             trueClothes = userMessagesList.get(messageViewHolder.getAdapterPosition()).getClothes();
                         }
                     });
@@ -466,7 +472,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                     messageViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            itemClickListener.onItemClick(userMessagesList.get(messageViewHolder.getAdapterPosition()).getClothes());
+                            itemClickListener.onItemClick(userMessagesList.get(messageViewHolder.getAdapterPosition()).getClothes(),null);
                             trueClothes = userMessagesList.get(messageViewHolder.getAdapterPosition()).getClothes();
                         }
                     });
@@ -474,6 +480,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                 break;
             case "look":
                 if (fromUserID.equals(messageSenderNick)) {
+                    Log.d("#####", "AA   "+messages.getNewsItem());
                     messageViewHolder.inLook.setVisibility(View.VISIBLE);
                     messageViewHolder.lookFrom.setText(
                             messageViewHolder.lookFrom.getContext().getResources().getString(R.string.lookby) + " "
@@ -481,7 +488,14 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
                     messageViewHolder.senderMessageTextLook.setText(messages.getMessage());
                     messageViewHolder.senderTimeLook.setText(messages.getTime());
-
+                    Picasso.get().load(messages.getNewsItem().getImageUrl()).into(messageViewHolder.watchLook);
+                    messageViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            itemClickListener.onItemClick(null,userMessagesList.get(messageViewHolder.getAdapterPosition()).getNewsItem());
+                            trueClothes = userMessagesList.get(messageViewHolder.getAdapterPosition()).getClothes();
+                        }
+                    });
                 } else {
                     messageViewHolder.outLook.setVisibility(View.VISIBLE);
                     messageViewHolder.lookFromOther.setText(
@@ -491,6 +505,15 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
                     messageViewHolder.receiverMessageTextLook.setText(messages.getMessage());
                     messageViewHolder.receiverTimeLook.setText(messages.getTime());
+                    Picasso.get().load(messages.getNewsItem().getImageUrl()).into(messageViewHolder.watchLook);
+
+                    messageViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            itemClickListener.onItemClick(null,userMessagesList.get(messageViewHolder.getAdapterPosition()).getNewsItem());
+                            trueClothes = userMessagesList.get(messageViewHolder.getAdapterPosition()).getClothes();
+                        }
+                    });
                 }
                 break;
 
@@ -529,7 +552,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     }
 
     public interface ItemClickListener {
-        void onItemClick(Clothes clothes);
+        void onItemClick(Clothes clothes, NewsItem newsItem);
     }
 
     public static void singeClothesInfo(NewClothesAdapter.ItemClickListener itemClickListener) {

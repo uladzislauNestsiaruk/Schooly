@@ -141,6 +141,7 @@ public class WardrobeFragment extends Fragment {
         bundle.putSerializable("CLOTHESUID", clothesUid);
         bundle.putSerializable("ALLLOADCLOTHESLIST", clothesList);
         bundle.putSerializable("ALLLOADCLOTHESUID", allLoadClothesUid);
+        Log.d("AAAA", "FINISH COUNT  "+clothesUid.size());
     }
 
     @Override
@@ -426,10 +427,11 @@ public class WardrobeFragment extends Fragment {
                                     Clothes clothes=clothesArrayList.get(i);
                                     filamentModel.populateScene(clothes.getBuffer(), clothes);
                                     clothesUid.add(clothes.getUid());
+                                    Log.d("AAAA", "ALOAD V1   "+loadValue+"   "+clothes.getClothesTitle());
                                     if(!allLoadClothesUid.contains(clothes.getUid())) {
                                         clothesList.add(clothes);
                                         allLoadClothesUid.add(clothes.getUid());
-                                        Log.d("AAAA", "q   "+loadValue+"   "+clothes.getClothesTitle());
+                                        Log.d("AAAA", "ALOAD V   "+loadValue+"   "+clothes.getClothesTitle());
                                     }
                                 }
                                 loadValue=0;
@@ -441,7 +443,7 @@ public class WardrobeFragment extends Fragment {
                 }
             });
         } else{
-            Log.d("AAAA", "LOAD SIZE   "+clothesList.size());
+            Log.d("AAAA", "LOAD SIZE   "+clothesList.size()+"     "+clothesUid.size());
             loadValue=clothesUid.size();
             for(int i=0;i<clothesList.size();i++ ){
                 Clothes clothes=clothesList.get(i);

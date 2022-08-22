@@ -332,6 +332,7 @@
         </RelativeLayout>
 
         <RelativeLayout
+            android:id="@+id/allPremium"
             android:layout_width="match_parent"
             android:layout_height="282dp"
             android:layout_below="@+id/transferMoney"

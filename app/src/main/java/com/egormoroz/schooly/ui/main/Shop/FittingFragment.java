@@ -120,7 +120,7 @@ public class FittingFragment extends Fragment {
         filamentModel=new FilamentModel();
         if(bundle.getSerializable("CLOTHESUID")!=null){
             clothesUid= (ArrayList<String>) bundle.getSerializable("CLOTHESUID");
-            Log.d("####", "w   "+clothesUid.size());
+            Log.d("####", "SS   "+clothesUid.size());
         }
         if(bundle.getSerializable("ALLLOADCLOTHESLIST")!=null){
             clothesList= (ArrayList<Clothes>) bundle.getSerializable("ALLLOADCLOTHESLIST");
@@ -137,6 +137,7 @@ public class FittingFragment extends Fragment {
         bundle.putSerializable("CLOTHESUID", clothesUid);
         bundle.putSerializable("ALLLOADCLOTHESLIST", clothesList);
         bundle.putSerializable("ALLLOADCLOTHESUID", allLoadClothesUid);
+        Log.d("####", "FINISH SIZE   "+clothesUid.size());
     }
 
     @Override
@@ -453,31 +454,28 @@ public class FittingFragment extends Fragment {
                 }
             });
         } else{
-            Log.d("####", "o"+clothesList.size()+"     "+clothesUid.size());
+            Log.d("####", "START LOAD SIZES   "+clothesList.size()+"     "+clothesUid.size());
             loadValue=clothesUid.size();
             for(int i=0;i<clothesList.size();i++ ){
                 Clothes clothes=clothesList.get(i);
-                Log.d("####", "z"+clothes.getClothesTitle());
+                Log.d("####", "TITLE   "+clothes.getClothesTitle());
                 if(!clothes.getUid().equals(clothesFitting.getUid())){
-                    Log.d("####", "t");
                     if(clothesUid.contains(clothes.getUid())){
                         if(!clothes.getBodyType().equals(clothesFitting.getBodyType())){
-                            Log.d("####", "p");
                             if(clothes.getBuffer()!=null){
                                 filamentModel.populateScene(clothes.getBuffer(), clothes);
                                 loadValue--;
-                                Log.d("####", "ddd   "+loadValue);
+                                Log.d("####", "LOAD VAALUE1   "+loadValue);
                                 if(loadValue==0){
                                     loadValue=0;
                                 }
                                 a++;
                             }    else{
                                 TaskRunner taskRunner=new TaskRunner();
-                                Log.d("####", "l");
                                 taskRunner.executeAsync(new LongRunningTask(clothes), (data) -> {
                                     filamentModel.populateScene(data.getBuffer(), data);
                                     loadValue--;
-                                    Log.d("####", "ddd1   "+loadValue);
+                                    Log.d("####", "LOAD VALUE2   "+loadValue);
                                     if(loadValue==0){
                                         loadValue=0;
                                     }
@@ -487,21 +485,22 @@ public class FittingFragment extends Fragment {
                         }else{
                             filamentModel.setMask(clothes);
                             loadValue--;
+                            Log.d("####", "LOAD VALUE3   "+loadValue);
                             if(loadValue==0) {
                                 loadValue = 0;
                             }
                             if (clothesUid.contains(clothes.getUid())){
                                 a++;
                             }
-                            Log.d("####", "vv  "+clothesUid.size());
                         }
                     }else{
+                        Log.d("####", "LOAD VALUE4   "+loadValue);
                         if(i==clothesUid.size()-1) {
                             loadValue = 0;
                         }
-                        Log.d("####", "vv1  "+clothesUid.size());
                     }
                 }else{
+                    Log.d("####", "LOAD VALUE5   "+loadValue);
                     loadValue--;
                     if(loadValue==0) {
                         loadValue = 0;
@@ -526,6 +525,7 @@ public class FittingFragment extends Fragment {
                     }
                     filamentModel.populateScene(clothes.getBuffer(),clothes);
                     clothesUid.add(clothes.getUid());
+                    Log.d("#####", "SIZEEEE2   "+clothesUid.size());
                     loadValue=0;
                     break;
                 }else if(a==0 && i==clothesList.size()-1){
@@ -536,6 +536,7 @@ public class FittingFragment extends Fragment {
                         }
                         filamentModel.populateScene(data.getBuffer(), data);
                         loadValue=0;
+                        Log.d("#####", "SIZEEEE1   "+clothesUid.size());
                     });
                     break;
                 }
@@ -548,6 +549,7 @@ public class FittingFragment extends Fragment {
                 }
                 filamentModel.populateScene(data.getBuffer(), data);
                 loadValue=0;
+                Log.d("#####", "SIZEEEE   "+clothesUid.size());
             });
             a++;
         }

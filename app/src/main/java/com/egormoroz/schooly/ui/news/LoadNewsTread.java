@@ -67,8 +67,8 @@ public class LoadNewsTread {
             Log.d("AAAAA", "ffff2222     "+userInformation.getSubscription().size());
             for(int i=0;i<userInformation.getSubscription().size();i++){
                 stringSubscriptionArrayList.add(userInformation.getSubscription().get(i).getSub());
+                if(i==userInformation.getSubscription().size()-1)getNews(stringSubscriptionArrayList, loadNewsTread);
             }
-            getNews(stringSubscriptionArrayList, loadNewsTread);
         }
     }
 
@@ -76,7 +76,7 @@ public class LoadNewsTread {
         for(int i=0;i<stringSubscriptionArrayList.size();i++){
             Log.d("AAAAA", "fffff");
             String searchNick=stringSubscriptionArrayList.get(i);
-            newsModel.getReference().child("tyomaa6").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            newsModel.getReference().child(searchNick).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DataSnapshot> task) {
                     if(task.isSuccessful()){
@@ -99,7 +99,6 @@ public class LoadNewsTread {
                     }
                 }
             });
-            break;
         }
     }
 
@@ -134,7 +133,14 @@ public class LoadNewsTread {
                             clothesArrayList.add(clothes);
                         }
                         newsItem.setClothesCreators(clothesArrayList);
-                        loadLooksPerson(newsItem,loadNewsTread);
+                        try {
+                            loadNewsTread.LoadNews(newsItem);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } catch (URISyntaxException e) {
+                            e.printStackTrace();
+                        }
+                        //loadLooksPerson(newsItem,loadNewsTread);
                     }
                 }
             });

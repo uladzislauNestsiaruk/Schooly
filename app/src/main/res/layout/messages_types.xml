@@ -385,7 +385,7 @@
 
     <RelativeLayout
         android:id="@+id/relativeLook"
-        android:layout_width="160dp"
+        android:layout_width="260dp"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_marginTop="4dp"
@@ -404,18 +404,14 @@
             android:textColor="@color/white"
             android:textSize="16sp" />
 
-        <TextView
+        <ImageView
             android:id="@+id/watchLook"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="280dp"
+            android:layout_height="340dp"
             android:layout_below="@+id/lookFrom"
             android:layout_alignParentEnd="true"
             android:layout_marginTop="8dp"
-            android:fontFamily="@font/montserratblack"
-            android:padding="24dp"
-            android:text="@string/goToView"
-            android:textColor="@color/white"
-            android:textSize="18sp" />
+            android:background="@color/darkblack"/>
 
         <TextView
             android:id="@+id/sender_time_look"
@@ -450,7 +446,7 @@
 
     <RelativeLayout
         android:id="@+id/relativeLookOther"
-        android:layout_width="160dp"
+        android:layout_width="280dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:layout_marginBottom="4dp"
@@ -468,18 +464,15 @@
             android:textColor="@color/white"
             android:textSize="16sp" />
 
-        <TextView
+        <ImageView
             android:id="@+id/watchLookOther"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="280dp"
+            android:layout_height="280dp"
             android:layout_below="@+id/lookFromOther"
             android:layout_alignParentEnd="true"
             android:layout_marginTop="8dp"
-            android:fontFamily="@font/montserratblack"
             android:padding="24dp"
-            android:text="@string/goToView"
-            android:textColor="@color/white"
-            android:textSize="18sp" />
+            />
 
         <TextView
             android:id="@+id/receiver_message_text_look_other"

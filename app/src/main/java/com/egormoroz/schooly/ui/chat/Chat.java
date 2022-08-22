@@ -16,10 +16,11 @@ public class Chat {
   ArrayList<String> dialogueMaterials;
   private long timeMill;
   long voiceDuration;
+  String chatId;
 
   public Chat (String name, String LastTime, String LastMessage, String type,long unreadMessages,
                ArrayList<UserPeopleAdapter> members,String notificationType,ArrayList<String> dialogueMaterials
-          ,long timeMill,long voiceDuration){
+          ,long timeMill,long voiceDuration,String chatId){
     this.name = name;
     this.LastTime = LastTime;
     this.LastMessage = LastMessage;
@@ -30,6 +31,7 @@ public class Chat {
     this.dialogueMaterials=dialogueMaterials;
     this.timeMill=timeMill;
     this.voiceDuration=voiceDuration;
+    this.chatId=chatId;
   }
 
   public Chat() {
@@ -80,6 +82,7 @@ public class Chat {
 
   public void setVoiceDuration (long voiceDuration) {this.voiceDuration = voiceDuration;}
 
+  public String getChatId () {return  this.chatId;}
 
-
+  public void setChatId (String chatId) {this.chatId = chatId;}
 }

@@ -17,6 +17,8 @@ import com.google.android.filament.EntityManager;
 import com.google.android.filament.Fence;
 import com.google.android.filament.Filament;
 import com.google.android.filament.LightManager;
+import com.google.android.filament.Material;
+import com.google.android.filament.MaterialInstance;
 import com.google.android.filament.RenderableManager;
 import com.google.android.filament.Skybox;
 import com.google.android.filament.TransformManager;
@@ -263,6 +265,7 @@ public class FilamentModel {
 
     public void loadGlb(Buffer buffer){
         materialProvider=new UbershaderLoader(engine);
+
         Log.d("#####", "gg1");
         assetLoader=new AssetLoader(engine,materialProvider,EntityManager.get());
         filamentAsset=assetLoader.createAssetFromBinary(buffer);
@@ -270,10 +273,13 @@ public class FilamentModel {
         resourceLoader.asyncBeginLoad(filamentAsset);
         Animator animator= filamentAsset.getAnimator();
         filamentAsset.releaseSourceData();
+        int[] e=filamentAsset.getEntities();
+        MaterialInstance material=modelViewer.getEngine().getRenderableManager().getMaterialInstanceAt(modelViewer.getEngine().getRenderableManager().getInstance(e[0]),0);
+        //material.setParameter("baseColor",1f, 1f, 1f, 1.0f);
+        material.setParameter("emissiveFactor", 0.5f, 0.2f, 0.4f);
         modelViewer.getScene().addEntities(filamentAsset.getEntities());
         loadStartTime=System.nanoTime();
         loadStartFence=modelViewer.getEngine().createFence();
-        int[] e=filamentAsset.getEntities();
     }
 
     public void populateScene(Buffer buffer,Clothes clothes){
@@ -425,17 +431,49 @@ public class FilamentModel {
         Gltfio.init();
         Utils.INSTANCE.init();
         cameraManipulator=new Manipulator.Builder()
-                .targetPosition(0.0f, 8f, -1.0f)
-                .orbitHomePosition(0.0f, 16.0f, 40.0f)
+                .targetPosition(0.0f, 10f, -1.0f)
+                .orbitHomePosition(0.0f, 18.0f, 30.0f)
                 .viewport(surfaceView.getWidth(), surfaceView.getHeight())
                 .zoomSpeed(0.05f)
                 .orbitSpeed(0.007f, 0.007f)
                 .mapMinDistance(-150.0f)
                 .build(Manipulator.Mode.ORBIT);
         uiHelper=new UiHelper(UiHelper.ContextErrorPolicy.DONT_CHECK);
+        doubleTapDetector=new GestureDetector(surfaceView, cameraManipulator);
         engine=Engine.create();
         modelViewer=new ModelViewer(surfaceView, engine, uiHelper, cameraManipulator);
         setupFilament();
+        surfaceView.setOnTouchListener(new android.view.View.OnTouchListener() {
+            @Override
+            public boolean onTouch(android.view.View v, MotionEvent event) {
+                modelViewer.onTouchEvent(event);
+                doubleTapDetector.onTouchEvent(event);
+                if(lockableNestedScrollView!=null){
+                    int action = MotionEventCompat.getActionMasked(event);
+                    switch(action) {
+                        case (MotionEvent.ACTION_DOWN) :
+                            lockableNestedScrollView.setScrollingEnabled(false);
+                            return true;
+                        case (MotionEvent.ACTION_MOVE) :
+                            lockableNestedScrollView.setScrollingEnabled(false);
+                            return true;
+                        case (MotionEvent.ACTION_UP) :
+                            lockableNestedScrollView.setScrollingEnabled(true);
+                            return true;
+                        case (MotionEvent.ACTION_CANCEL) :
+                            lockableNestedScrollView.setScrollingEnabled(true);
+                            return true;
+                        case (MotionEvent.ACTION_OUTSIDE) :
+                            lockableNestedScrollView.setScrollingEnabled(true);
+                            return true;
+                        case (MotionEvent.ACTION_SCROLL) :
+                            lockableNestedScrollView.setScrollingEnabled(true);
+                            return true;
+                    }
+                }
+                return onTouch;
+            }
+        });
         loadGlb(buffer);
         Skybox skybox=new Skybox.Builder()
                 //.color(0.255f, 0.124f, 0.232f, 1.0f)

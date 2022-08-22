@@ -155,8 +155,12 @@ public final class MessageFragment extends Fragment {
 
         itemClickListener=new MessageAdapter.ItemClickListener() {
             @Override
-            public void onItemClick(Clothes clothes) {
-                RecentMethods.setCurrentFragment(ViewingClothesChat.newInstance(MessageFragment.newInstance(userInformation, bundle, fragment, chat), userInformation, bundle), getActivity());
+            public void onItemClick(Clothes clothes,NewsItem newsItem) {
+                if(clothes!=null){
+                    RecentMethods.setCurrentFragment(ViewingClothesChat.newInstance(MessageFragment.newInstance(userInformation, bundle, fragment, chat), userInformation, bundle), getActivity());
+                }else {
+
+                }
             }
         };
         messageSenderName=userInformation.getNick();
@@ -175,7 +179,7 @@ public final class MessageFragment extends Fragment {
                         if(messages.getType().equals("clothes")){
                             messages.setClothes(dataSnapshot.child("clothes").getValue(Clothes.class));
                         }else if(messages.getType().equals("look")){
-                            messages.setNewsItem(dataSnapshot.child("newsItem").getValue(NewsItem.class));
+                            messages.setNewsItem(dataSnapshot.child("look").getValue(NewsItem.class));
                         }
                         messagesList.add(messages);
                         if(messagesList.size()>0 && a==0&& !messages.getFrom().equals(userInformation.getNick())){
@@ -633,19 +637,20 @@ public final class MessageFragment extends Fragment {
                                     userPeopleAdapter1.setAvatar(snapshot1.getValue(String.class));
                                     receiverMembers.add(userPeopleAdapter1);
                                     Log.d("#####", messageSenderName+"fdgbreb");
+                                    String uid=firebaseModel.getUsersReference().child(messageSenderName).child("Dialogs").push().getKey();
                                     firebaseModel.getUsersReference().child(messageReceiverName).child("Dialogs").child(messageSenderName)
-                                            .setValue(new Chat(messageSenderName,"" , "", "personal", 0,senderMembers,"false",new ArrayList<>(),0,duration));
+                                            .setValue(new Chat(messageSenderName,"" , "", "personal", 0,senderMembers,"false",new ArrayList<>(),0,duration,uid));
                                     firebaseModel.getUsersReference().child(messageSenderName).child("Dialogs").child(messageReceiverName)
-                                            .setValue(new Chat(messageReceiverName,"" ,"" , "personal", 0,receiverMembers,"false",new ArrayList<>(),0,duration));
+                                            .setValue(new Chat(messageReceiverName,"" ,"" , "personal", 0,receiverMembers,"false",new ArrayList<>(),0,duration,uid));
                                     addLastMessage(type, message);
                                     addUnread();
                                     if(type.equals("image")){
-                                        String uid=firebaseModel.getUsersReference().child(messageSenderName).child("Dialogs")
+                                        String uidMaterials=firebaseModel.getUsersReference().child(messageSenderName).child("Dialogs")
                                                 .child(messageReceiverName).child("dialogueMaterials").push().getKey();
                                         firebaseModel.getUsersReference().child(messageSenderName).child("Dialogs")
-                                                .child(messageReceiverName).child("dialogueMaterials").child(uid).setValue(message);
+                                                .child(messageReceiverName).child("dialogueMaterials").child(uidMaterials).setValue(message);
                                         firebaseModel.getUsersReference().child(messageReceiverName).child("Dialogs")
-                                                .child(messageSenderName).child("dialogueMaterials").child(uid).setValue(message);
+                                                .child(messageSenderName).child("dialogueMaterials").child(uidMaterials).setValue(message);
                                     }
                                 }
                             }

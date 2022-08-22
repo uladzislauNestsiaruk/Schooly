@@ -1582,6 +1582,7 @@ public class RecentMethods {
                     chat.setUnreadMessages(snap.child("unreadMessages").getValue(Long.class));
                     chat.setType(snap.child("type").getValue(String.class));
                     chat.setTimeMill(snap.child("timeMill").getValue(Long.class));
+                    chat.setChatId(snap.child("chatId").getValue(String.class));
                     if(chat.getType().equals("personal")){
                         chatArrayList.add(chat);
                     }else{
