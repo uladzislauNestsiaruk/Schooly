@@ -316,33 +316,50 @@ public class PeopleFragment extends Fragment {
     public void loadRecommendations(){
         Log.d("#####", "G G11 ");
         if(bundle.getSerializable("RECOMMENDATIONPEOPLELIST")==null){
-            RecomendationThread getRecThread = new RecomendationThread(nick, userInformation, new Callbacks.getRecommendationsThread() {
-                            @Override
-                            public void getRecommendationsInterface(ArrayList<UserPeopleAdapter> recommendationsList) {
-                                Log.d("#####", "G G "+recommendationsList);
-                                if(recommendationsList.size()==0){
-                                    firebaseModel.getReference().child("usersNicks").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<DataSnapshot> task) {
-                                           if(task.isSuccessful()){
-                                               DataSnapshot snapshot=task.getResult();
-                                               ArrayList <UserPeopleAdapter> userPeopleAdapters=new ArrayList<>();
-                                               for(  DataSnapshot snap  :snapshot.getChildren()) {
-                                                    UserPeopleAdapter userPeopleAdapter=snap.getValue( UserPeopleAdapter.class);
-                                                    userPeopleAdapters.add(userPeopleAdapter);
-                                                    if(userPeopleAdapters.size()==49){
-                                                        break;
-                                                    }
-                                               }
-                                               initRecommendationAdapter(userPeopleAdapters);
-                                           }
-                                        }
-                                    });
-                                }else{
-                                    initRecommendationAdapter(recommendationsList);
-                                }
+//            RecomendationThread getRecThread = new RecomendationThread(nick, userInformation, new Callbacks.getRecommendationsThread() {
+//                            @Override
+//                            public void getRecommendationsInterface(ArrayList<UserPeopleAdapter> recommendationsList) {
+//                                Log.d("#####", "G G "+recommendationsList);
+//                                if(recommendationsList.size()==0 || recommendationsList.size()< 14){
+//                                    firebaseModel.getReference().child("usersNicks").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+//                                        @Override
+//                                        public void onComplete(@NonNull Task<DataSnapshot> task) {
+//                                           if(task.isSuccessful()){
+//                                               DataSnapshot snapshot=task.getResult();
+//                                               ArrayList <UserPeopleAdapter> userPeopleAdapters=new ArrayList<>();
+//                                               for(  DataSnapshot snap  :snapshot.getChildren()) {
+//                                                    UserPeopleAdapter userPeopleAdapter=snap.getValue( UserPeopleAdapter.class);
+//                                                    userPeopleAdapters.add(userPeopleAdapter);
+//                                                    if(userPeopleAdapters.size()==49){
+//                                                        break;
+//                                                    }
+//                                               }
+//                                               initRecommendationAdapter(userPeopleAdapters);
+//                                           }
+//                                        }
+//                                    });
+//                                }else{
+//                                    initRecommendationAdapter(recommendationsList);
+//                                }
+//                            }
+//                        });
+            firebaseModel.getReference().child("usersNicks").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DataSnapshot> task) {
+                    if(task.isSuccessful()){
+                        DataSnapshot snapshot=task.getResult();
+                        ArrayList <UserPeopleAdapter> userPeopleAdapters=new ArrayList<>();
+                        for(  DataSnapshot snap  :snapshot.getChildren()) {
+                            UserPeopleAdapter userPeopleAdapter=snap.getValue( UserPeopleAdapter.class);
+                            userPeopleAdapters.add(userPeopleAdapter);
+                            if(userPeopleAdapters.size()==49){
+                                break;
                             }
-                        });
+                        }
+                        initRecommendationAdapter(userPeopleAdapters);
+                    }
+                }
+            });
         }else {
             recommendationList= (ArrayList<UserPeopleAdapter>) bundle.getSerializable("RECOMMENDATIONPEOPLELIST");
             initRecommendationAdapter(recommendationList);

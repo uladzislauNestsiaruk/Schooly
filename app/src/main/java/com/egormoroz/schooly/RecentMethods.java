@@ -1755,21 +1755,32 @@ public class RecentMethods {
             newsItem1.setPerson(person);
         }
         ArrayList<Clothes> clothesWithoutBuffers=new ArrayList<>();
-        for(int i=0;i<newsItem1.getClothesCreators().size();i++){
-            Clothes clothes=newsItem1.getClothesCreators().get(i);
-            clothes.setBuffer(null);
-            clothesWithoutBuffers.add(clothes);
-            if(i==newsItem1.getClothesCreators().size()-1){
-                newsItem1.setClothesCreators(clothesWithoutBuffers);
-                try {
-                    loadNewsTread.LoadNews(newsItem1);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (URISyntaxException e) {
-                    e.printStackTrace();
+        if( newsItem1.getClothesCreators()!=null){
+            for(int i=0;i<newsItem1.getClothesCreators().size();i++){
+                Clothes clothes=newsItem1.getClothesCreators().get(i);
+                clothes.setBuffer(null);
+                clothesWithoutBuffers.add(clothes);
+                if(i==newsItem1.getClothesCreators().size()-1){
+                    newsItem1.setClothesCreators(clothesWithoutBuffers);
+                    try {
+                        loadNewsTread.LoadNews(newsItem1);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (URISyntaxException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
+        }else  {
+            try {
+                loadNewsTread.LoadNews(newsItem1);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
         }
+
     }
 
 

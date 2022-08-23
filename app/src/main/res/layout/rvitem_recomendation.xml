@@ -3,9 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="200dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:paddingEnd="4dp"
-    android:paddingTop="4dp"
-    android:paddingBottom="4dp"
+    android:layout_margin="4dp"
     android:background="@drawable/corners14dpadaptivecolor2dpgreystroke"
     android:paddingStart="4dp">
 

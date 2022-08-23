@@ -22,6 +22,7 @@ public class RecomendationThread {
     UserInformation userInformation;
     FirebaseModel model = new FirebaseModel();
     Set<String> was = new HashSet<String>();
+    int checkValue;
     public RecomendationThread(String input, UserInformation info, Callbacks.getRecommendationsThread recommendationsInterface){
         model.initAll();
         this.userNick = input;
@@ -45,7 +46,6 @@ public class RecomendationThread {
                                 Log.d("######", "MIDDLE1" +
                                         "  "+userInformation.getSubscription());
                                 DataSnapshot snapshot = task.getResult();
-
                                 for(DataSnapshot snap : snapshot.getChildren()) {
                                     Subscriber current_user = ValidateSnap(snap);
                                     if(was.contains(current_user.getSub()))
@@ -53,6 +53,7 @@ public class RecomendationThread {
                                     was.add(current_user.getSub());
                                     Log.d("######", "MIDDLE" +
                                             "  "+userInformation.getSubscription());
+                                    checkValue++;
                                     validate_Subscriber(ValidateSnap(snap), recommendationsInterface);
                                 }
                             }

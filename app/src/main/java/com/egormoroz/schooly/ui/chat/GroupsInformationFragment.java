@@ -24,8 +24,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
-import com.egormoroz.schooly.ui.chat.Chat;
-import com.egormoroz.schooly.ui.chat.DialogueMaterialsAdapter;
 import com.egormoroz.schooly.ui.main.UserInformation;
 import com.egormoroz.schooly.ui.people.PeopleAdapter;
 import com.egormoroz.schooly.ui.people.UserPeopleAdapter;
@@ -41,7 +39,8 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class ChatInformationFragment extends Fragment {
+public class GroupsInformationFragment extends Fragment {
+
     TextView noMaterials, clearStory, nick,leaveChat;
     ImageView avatar, back;
     RecyclerView recyclerMembers,recyclerMaterials;
@@ -56,15 +55,15 @@ public class ChatInformationFragment extends Fragment {
     Fragment fragment;
     Chat chat;
 
-    public ChatInformationFragment(UserInformation userInformation, Bundle bundle, Fragment fragment, Chat chat) {
+    public GroupsInformationFragment(UserInformation userInformation, Bundle bundle, Fragment fragment, Chat chat) {
         this.userInformation=userInformation;
         this.bundle=bundle;
         this.fragment=fragment;
         this.chat=chat;
     }
 
-    public static ChatInformationFragment newInstance(UserInformation userInformation, Bundle bundle, Fragment fragment, Chat chat) {
-        return new ChatInformationFragment(userInformation,bundle,fragment,chat);
+    public static GroupsInformationFragment newInstance(UserInformation userInformation, Bundle bundle, Fragment fragment, Chat chat) {
+        return new GroupsInformationFragment(userInformation,bundle,fragment,chat);
 
     }
 
@@ -182,9 +181,9 @@ public class ChatInformationFragment extends Fragment {
     }
 
     public void loadChatMembers(){
-        if(bundle.getSerializable(chat.getName()+"MEMBERS")==null){
+        if(bundle.getSerializable(chat.getChatId()+"MEMBERS")==null){
             firebaseModel.getUsersReference().child(userInformation.getNick()).child("Dialogs")
-                    .child(chat.getName()).child("members").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                    .child(chat.getChatId()).child("members").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<DataSnapshot> task) {
                             if(task.isSuccessful()){
@@ -193,7 +192,7 @@ public class ChatInformationFragment extends Fragment {
                                     UserPeopleAdapter userPeopleAdapter=snap.getValue(UserPeopleAdapter.class);
                                     members.add(userPeopleAdapter);
                                 }
-                                bundle.putSerializable(chat.getName()+"MEMBERS",members);
+                                bundle.putSerializable(chat.getChatId()+"MEMBERS",members);
                                 PeopleAdapter peopleAdapter=new PeopleAdapter(members, userInformation);
                                 recyclerMembers.setLayoutManager(new LinearLayoutManager(getContext()));
                                 recyclerMembers.setAdapter(peopleAdapter);
@@ -218,7 +217,7 @@ public class ChatInformationFragment extends Fragment {
                         }
                     });
         }else{
-            members= (ArrayList<UserPeopleAdapter>) bundle.getSerializable(chat.getName()+"MEMBERS");
+            members= (ArrayList<UserPeopleAdapter>) bundle.getSerializable(chat.getChatId()+"MEMBERS");
             PeopleAdapter peopleAdapter=new PeopleAdapter(members, userInformation);
             recyclerMembers.setLayoutManager(new LinearLayoutManager(getContext()));
             recyclerMembers.setAdapter(peopleAdapter);
@@ -241,11 +240,10 @@ public class ChatInformationFragment extends Fragment {
             peopleAdapter.setClickListener(clickListener);
         }
     }
-
     public void loadChatMaterial(){
-        if(bundle.getSerializable(chat.getName()+"MATERIALS")==null){
+        if(bundle.getSerializable(chat.getChatId()+"MATERIALS")==null){
             firebaseModel.getUsersReference().child(userInformation.getNick()).child("Dialogs")
-                    .child(chat.getName()).child("dialogueMaterials").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                    .child(chat.getChatId()).child("dialogueMaterials").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<DataSnapshot> task) {
                             if(task.isSuccessful()){
@@ -255,8 +253,7 @@ public class ChatInformationFragment extends Fragment {
                                     String image=snap.getValue(String.class);
                                     dialogueMaterials.add(image);
                                 }
-
-                                bundle.putSerializable(chat.getName()+"MATERIALS",dialogueMaterials);
+                                bundle.putSerializable(chat.getChatId()+"MATERIALS",dialogueMaterials);
                                 if(dialogueMaterials.size()==0){
                                     noMaterials.setVisibility(View.VISIBLE);
                                 } else{
@@ -270,7 +267,7 @@ public class ChatInformationFragment extends Fragment {
                         }
                     });
         }else {
-            materials= (ArrayList<String>) bundle.getSerializable(chat.getName()+"MATERIALS");
+            materials= (ArrayList<String>) bundle.getSerializable(chat.getChatId()+"MATERIALS");
             if(materials.size()==0){
                 noMaterials.setVisibility(View.VISIBLE);
             } else{
