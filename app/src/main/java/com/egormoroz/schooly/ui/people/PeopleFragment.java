@@ -314,6 +314,7 @@ public class PeopleFragment extends Fragment {
     }
 
     public void loadRecommendations(){
+        Log.d("#####", "G G11 ");
         if(bundle.getSerializable("RECOMMENDATIONPEOPLELIST")==null){
             RecomendationThread getRecThread = new RecomendationThread(nick, userInformation, new Callbacks.getRecommendationsThread() {
                             @Override

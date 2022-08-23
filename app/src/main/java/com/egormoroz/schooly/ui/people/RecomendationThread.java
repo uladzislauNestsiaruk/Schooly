@@ -31,20 +31,28 @@ public class RecomendationThread {
     }
     HashMap<UserPeopleAdapter, Integer> user_accurancy = new HashMap<>();
     public void get_Subs(Callbacks.getRecommendationsThread recommendationsInterface){
+        Log.d("######", "START  "+userInformation.getSubscription());
         ArrayList<Subscriber> subscribers = userInformation.getSubscription();
         for(Subscriber user : subscribers){
+            Log.d("######", "MIDDLE0" +
+                    "  "+userInformation.getSubscription());
             was.add(user.getSub());
             model.getUsersReference().child(user.getSub()).child("subscription").get()
                     .addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<DataSnapshot> task) {
                             if(task.isSuccessful()){
+                                Log.d("######", "MIDDLE1" +
+                                        "  "+userInformation.getSubscription());
                                 DataSnapshot snapshot = task.getResult();
+
                                 for(DataSnapshot snap : snapshot.getChildren()) {
                                     Subscriber current_user = ValidateSnap(snap);
                                     if(was.contains(current_user.getSub()))
                                         continue;
                                     was.add(current_user.getSub());
+                                    Log.d("######", "MIDDLE" +
+                                            "  "+userInformation.getSubscription());
                                     validate_Subscriber(ValidateSnap(snap), recommendationsInterface);
                                 }
                             }
@@ -61,6 +69,7 @@ public class RecomendationThread {
         return result_list;
     }
     public void validate_Subscriber(Subscriber sub, Callbacks.getRecommendationsThread recommendationsInterface){
+        Log.d("#####", "FINISH   ");
         UserPeopleAdapter userPeopleAdapter=new UserPeopleAdapter();
         userPeopleAdapter.setNick(sub.getSub());
         model.getUsersReference().child(sub.getSub()).get()
@@ -85,6 +94,7 @@ public class RecomendationThread {
     public Subscriber ValidateSnap(DataSnapshot snap){
         Subscriber subscriber = new Subscriber();
         subscriber.setSub(snap.getValue(String.class));
+        Log.d("####","ser ");
         return subscriber;
     }
 }
