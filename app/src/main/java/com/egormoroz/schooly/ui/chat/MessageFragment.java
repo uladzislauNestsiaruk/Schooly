@@ -372,18 +372,46 @@ public final class MessageFragment extends Fragment {
             }
         }
     }
-    public void copy(Message message){
+
+    public void copy(Message message) {
         ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
-        ClipData clip = ClipData.newPlainText("CopyText", message.getText());
+        ClipData clip = ClipData.newPlainText("CopyText", message.getMessage());
         clipboard.setPrimaryClip(clip);
-        Log.d("###", "copy: complete");
-    }
-    public void deleteMessage(Message message){
-        firebaseModel.getUsersReference().child(message.getTo()).child("Chats").child(message.getFrom()).child("Messages").child(message.getId()).removeValue();
-        firebaseModel.getUsersReference().child(message.getFrom()).child("Chats").child(message.getTo()).child("Messages").child(message.getId()).removeValue();
-        Log.d("###", "delete: complete");
     }
 
+    public void deleteMessage(Message message) {
+        firebaseModel.getUsersReference().child(message.getTo()).child("Chats").child(message.getFrom()).child("Messages").child(message.getId()).removeValue();
+        firebaseModel.getUsersReference().child(message.getFrom()).child("Chats").child(message.getTo()).child("Messages").child(message.getId()).removeValue();
+        Log.d("###", "deleteMessage: " + chat.getLastMessage());
+        messageAdapter = new MessageAdapter(messagesList, messageSenderName, messageReceiverName, itemClickListener);
+        firebaseModel.getUsersReference().child(message.getFrom()).child("Chats").child(message.getTo()).child("Messages").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                int i = 1;
+                for (DataSnapshot snap : snapshot.getChildren()) {
+                    if (i == snapshot.getChildrenCount()){
+                        firebaseModel.getUsersReference().child(messageSenderName).child("Dialogs").child(messageReceiverName).child("lastMessage").setValue(snap.child("message").getValue().toString());
+                        firebaseModel.getUsersReference().child(messageReceiverName).child("Dialogs").child(messageSenderName).child("lastMessage").setValue(snap.child("message").getValue().toString());
+                        firebaseModel.getUsersReference().child(messageSenderName).child("Dialogs").child(messageReceiverName).child("lastTime").setValue(snap.child("time").getValue().toString());
+                        firebaseModel.getUsersReference().child(messageReceiverName).child("Dialogs").child(messageSenderName).child("lastTime").setValue(snap.child("time").getValue().toString());
+                    }
+                    i++;
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        //addLastMessage("text",);
+
+    }
+    public void upload(){
+
+    }
     private void DisplayLastSeen() {
         RootRef.child(messageSenderName)
                 .addValueEventListener(new ValueEventListener() {
