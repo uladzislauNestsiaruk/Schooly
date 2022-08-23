@@ -276,7 +276,7 @@ public class FilamentModel {
         int[] e=filamentAsset.getEntities();
         MaterialInstance material=modelViewer.getEngine().getRenderableManager().getMaterialInstanceAt(modelViewer.getEngine().getRenderableManager().getInstance(e[0]),0);
         //material.setParameter("baseColor",1f, 1f, 1f, 1.0f);
-        material.setParameter("emissiveFactor", 0.5f, 0.2f, 0.4f);
+        material.setParameter("baseColorFactor",  Colors.RgbaType.SRGB,0.5f, 0.2f, 0.4f,1f);
         modelViewer.getScene().addEntities(filamentAsset.getEntities());
         loadStartTime=System.nanoTime();
         loadStartFence=modelViewer.getEngine().createFence();

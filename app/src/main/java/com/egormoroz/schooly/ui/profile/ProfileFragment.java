@@ -102,7 +102,7 @@ public class ProfileFragment extends Fragment {
     FirebaseModel firebaseModel = new FirebaseModel();
     Context profileContext, context;
     EditText editText,messageEdit;
-    UserInformation info;
+    static UserInformation info;
     CircularProgressIndicator circularProgressIndicator;
     WardrobeAdapterProfile.ItemClickListener itemClickListenerWardrobe;
     TextView nickname,message,biographyTextView,looksCount,subscriptionsCount,subscribersCount,otherLooksCount,otherSubscriptionCount,
@@ -116,10 +116,10 @@ public class ProfileFragment extends Fragment {
     SendLookAdapter.ItemClickListener itemClickListenerSendLookAdapter;
     RecyclerView wardrobeRecycler,recyclerView;
     ImageView moreSquare,back,newLook,editMainLook,editMainLookBack;
-    String sendNick,subscriptionsCountString,subscribersCountString
+    static String sendNick,subscriptionsCountString,subscribersCountString
             ,otherSubscriptionCountString,
             otherSubscribersCountString,type,userName;
-    Fragment fragment;
+    static Fragment fragment;
     View root;
     ArrayList<Clothes> clothesList=new ArrayList<>();
     ViewPager2 viewPager,viewPagerOther;
@@ -131,14 +131,14 @@ public class ProfileFragment extends Fragment {
     int tabLayoutPosition,tabLayoutPositionOther;
     private float[] backgroundColor = new float[]{0f, 0f, 0f, 1.0f};
     int a,profileCheckValue,checkOnSubscribeValue, b=0,v;
-    UserInformation userInformation;
-    Bundle bundle;
+    static UserInformation userInformation;
+    static Bundle bundle;
     static FilamentModel filamentModel;
     ArrayList<Clothes> mainLookClothes=new ArrayList<>();
     static byte[] buffer;
     static URI uri;
     static Buffer buffer1,bufferToFilament;
-    int loadValue=0;
+    static int loadValue=0;
     static  ArrayList<Buffer> facePartsBuffers=new ArrayList<>();
 
 
@@ -206,8 +206,11 @@ public class ProfileFragment extends Fragment {
 
             }
         });
-        RecentMethods.setCurrentFragment(MessageFragment.newInstance(userInformation, bundle, ProfileFragment.newInstance("other", info.getNick(), fragment, userInformation, bundle),
-                new Chat(info.getNick(), "", "", "personal", 0, new ArrayList<>(), "falce", new ArrayList<>(),0,0,"")), getActivity());
+        if (loadValue==0){
+            RecentMethods.setCurrentFragment(MessageFragment.newInstance(userInformation, bundle, ProfileFragment.newInstance("other", info.getNick(), fragment, userInformation, bundle),
+                    new Chat(info.getNick(), "", "", "personal", 0, new ArrayList<>(), "falce", new ArrayList<>(),0,0,"")), getActivity());
+        }
+
     }
 
     @Override
@@ -248,8 +251,9 @@ public class ProfileFragment extends Fragment {
                 OnBackPressedCallback callback1 = new OnBackPressedCallback(true) {
                     @Override
                     public void handleOnBackPressed() {
-
-                        RecentMethods.setCurrentFragment(MainFragment.newInstance(userInformation, bundle), getActivity());
+                        if(loadValue==0) {
+                            RecentMethods.setCurrentFragment(MainFragment.newInstance(userInformation, bundle), getActivity());
+                        }
                     }
                 };
 
@@ -262,14 +266,19 @@ public class ProfileFragment extends Fragment {
                 imageView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ((MainActivity) getActivity()).setCurrentFragment(SettingsFragment.newInstance("user",fragment,userInformation,bundle));
+                        if(loadValue==0) {
+                            ((MainActivity) getActivity()).setCurrentFragment(SettingsFragment.newInstance("user",fragment,userInformation,bundle));
+                        }
+
                     }
                 });
                 newLook=view.findViewById(R.id.newLook);
                 newLook.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        RecentMethods.setCurrentFragment(CreateLookFragment.newInstance("user",fragment,userInformation,bundle,"newlook"), getActivity());
+                        if (loadValue==0){
+                            RecentMethods.setCurrentFragment(CreateLookFragment.newInstance("user",fragment,userInformation,bundle,"newlook"), getActivity());
+                        }
                     }
                 });
                 ///////// I want GM on CF
@@ -277,14 +286,19 @@ public class ProfileFragment extends Fragment {
                 arrowtowardrobe.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        RecentMethods.setCurrentFragment(WardrobeFragment.newInstance("user",fragment,userInformation,bundle), getActivity());
+                        if (loadValue==0){
+                            RecentMethods.setCurrentFragment(WardrobeFragment.newInstance("user",fragment,userInformation,bundle), getActivity());
+                        }
                     }
                 });
                 TextView editing = view.findViewById(R.id.redact);
                 editing.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ((MainActivity) getActivity()).setCurrentFragment(EditingFragment.newInstance("user",fragment,userInformation,bundle));
+                        if (loadValue==0){
+                            ((MainActivity) getActivity()).setCurrentFragment(EditingFragment.newInstance("user",fragment,userInformation,bundle));
+                        }
+
                     }
                 });
                 if (bundle!=null){
@@ -294,7 +308,10 @@ public class ProfileFragment extends Fragment {
                 editMainLook.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        RecentMethods.setCurrentFragment(CreateLookFragment.newInstance("user",fragment,userInformation,bundle,"mainlook"),getActivity());
+                        if (loadValue==0){
+                            RecentMethods.setCurrentFragment(CreateLookFragment.newInstance("user",fragment,userInformation,bundle,"mainlook"),getActivity());
+                        }
+
                     }
                 });
                 //////////////////////////////
@@ -351,13 +368,18 @@ public class ProfileFragment extends Fragment {
                 linearSubscribersProfile.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        RecentMethods.setCurrentFragment(SubscriberFragment.newInstance("user",fragment,userInformation,bundle), getActivity());
+                        if (loadValue==0){
+                            RecentMethods.setCurrentFragment(SubscriberFragment.newInstance("user",fragment,userInformation,bundle), getActivity());
+                        }
                     }
                 });
                 linearSubscriptionsProfile.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        RecentMethods.setCurrentFragment(SubscriptionsFragment.newInstance("user",fragment,userInformation,bundle), getActivity());
+                        if (loadValue==0){
+                            RecentMethods.setCurrentFragment(SubscriptionsFragment.newInstance("user",fragment,userInformation,bundle), getActivity());
+                        }
+
                     }
                 });
                 ////////////////WARDROBE/////////////
@@ -365,8 +387,11 @@ public class ProfileFragment extends Fragment {
                 texttowardrobe.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        RecentMethods.setCurrentFragment(WardrobeFragment
-                                .newInstance("user",fragment,userInformation,bundle), getActivity());
+                        if (loadValue==0){
+                            RecentMethods.setCurrentFragment(WardrobeFragment
+                                    .newInstance("user",fragment,userInformation,bundle), getActivity());
+                        }
+
                     }
                 });
                 wardrobeRecycler=view.findViewById(R.id.recyclerProfileToWardrobe);
@@ -375,7 +400,10 @@ public class ProfileFragment extends Fragment {
                 itemClickListenerWardrobe=new WardrobeAdapterProfile.ItemClickListener() {
                     @Override
                     public void onItemClick(Clothes clothes) {
-                        RecentMethods.setCurrentFragment(WardrobeFragment.newInstance("user",fragment,userInformation,bundle), getActivity());
+                        if (loadValue==0){
+                            RecentMethods.setCurrentFragment(WardrobeFragment.newInstance("user",fragment,userInformation,bundle), getActivity());
+                        }
+
                     }
                 };
                 checkWardrobe();
@@ -392,13 +420,19 @@ public class ProfileFragment extends Fragment {
                 back.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        RecentMethods.setCurrentFragment(fragment, getActivity());
+                        if (loadValue==0){
+                            RecentMethods.setCurrentFragment(fragment, getActivity());
+                        }
+
                     }
                 });
                 OnBackPressedCallback callback = new OnBackPressedCallback(true) {
                     @Override
                     public void handleOnBackPressed() {
-                        RecentMethods.setCurrentFragment(fragment, getActivity());
+                        if (loadValue==0){
+                            RecentMethods.setCurrentFragment(fragment, getActivity());
+                        }
+
                     }
                 };
                 requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
@@ -574,21 +608,29 @@ public class ProfileFragment extends Fragment {
 
                     @Override
                     public void onClick(View v) {
-                        ((MainActivity) getActivity()).setCurrentFragment(SettingsFragment.newInstance("userback",fragment,userInformation,bundle));
+                        if (loadValue==0){
+                            ((MainActivity) getActivity()).setCurrentFragment(SettingsFragment.newInstance("userback",fragment,userInformation,bundle));
+                        }
+
                     }
                 });
                 back=view.findViewById(R.id.back);
                 back.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        RecentMethods.setCurrentFragment(fragment, getActivity());
+                        if (loadValue==0){
+                            RecentMethods.setCurrentFragment(fragment, getActivity());
+                        }
+
                     }
                 });
                 OnBackPressedCallback callbackUserBack = new OnBackPressedCallback(true) {
                     @Override
                     public void handleOnBackPressed() {
+                        if (loadValue==0){
+                            RecentMethods.setCurrentFragment(fragment, getActivity());
+                        }
 
-                        RecentMethods.setCurrentFragment(fragment, getActivity());
                     }
                 };
 
@@ -605,7 +647,10 @@ public class ProfileFragment extends Fragment {
                 newLook.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        RecentMethods.setCurrentFragment(CreateLookFragment.newInstance("userback",fragment,userInformation,bundle,"newlook"), getActivity());
+                        if (loadValue==0){
+                            RecentMethods.setCurrentFragment(CreateLookFragment.newInstance("userback",fragment,userInformation,bundle,"newlook"), getActivity());
+                        }
+
                     }
                 });
                 ///////// I want GM on CF
@@ -613,7 +658,10 @@ public class ProfileFragment extends Fragment {
                 arrowtowardrobe1.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        RecentMethods.setCurrentFragment(WardrobeFragment.newInstance("userback",fragment,userInformation,bundle), getActivity());
+                        if (loadValue==0){
+                            RecentMethods.setCurrentFragment(WardrobeFragment.newInstance("userback",fragment,userInformation,bundle), getActivity());
+                        }
+
                     }
                 });
 
@@ -621,7 +669,10 @@ public class ProfileFragment extends Fragment {
                 editMainLookBack.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        RecentMethods.setCurrentFragment(CreateLookFragment.newInstance("userback",fragment,userInformation,bundle,"mainlook"),getActivity());
+                        if (loadValue==0){
+                            RecentMethods.setCurrentFragment(CreateLookFragment.newInstance("userback",fragment,userInformation,bundle,"mainlook"),getActivity());
+                        }
+
                     }
                 });
 
@@ -629,8 +680,10 @@ public class ProfileFragment extends Fragment {
                 editing1.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        if (loadValue==0){
+                            ((MainActivity) getActivity()).setCurrentFragment(EditingFragment.newInstance("userback",fragment,userInformation,bundle));
+                        }
 
-                        ((MainActivity) getActivity()).setCurrentFragment(EditingFragment.newInstance("userback",fragment,userInformation,bundle));
                     }
                 });
                 //////////////////////////////
@@ -688,13 +741,17 @@ public class ProfileFragment extends Fragment {
                 linearSubscribersProfile.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        RecentMethods.setCurrentFragment(SubscriberFragment.newInstance("userback",fragment,userInformation,bundle), getActivity());
+                        if (loadValue==0){
+                            RecentMethods.setCurrentFragment(SubscriberFragment.newInstance("userback",fragment,userInformation,bundle), getActivity());
+                        }
                     }
                 });
                 linearSubscriptionsProfile.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        RecentMethods.setCurrentFragment(SubscriptionsFragment.newInstance("userback",fragment,userInformation,bundle), getActivity());
+                        if (loadValue==0){
+                            RecentMethods.setCurrentFragment(SubscriptionsFragment.newInstance("userback",fragment,userInformation,bundle), getActivity());
+                        }
                     }
                 });
                 ////////////////WARDROBE/////////////
@@ -702,8 +759,11 @@ public class ProfileFragment extends Fragment {
                 texttowardrobe1.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        RecentMethods.setCurrentFragment(WardrobeFragment
-                                .newInstance("userback",fragment,userInformation,bundle), getActivity());
+                        if (loadValue==0){
+                            RecentMethods.setCurrentFragment(WardrobeFragment
+                                    .newInstance("userback",fragment,userInformation,bundle), getActivity());
+                        }
+
                     }
                 });
                 wardrobeRecycler=view.findViewById(R.id.recyclerProfileToWardrobe);
@@ -712,33 +772,17 @@ public class ProfileFragment extends Fragment {
                 itemClickListenerWardrobe=new WardrobeAdapterProfile.ItemClickListener() {
                     @Override
                     public void onItemClick(Clothes clothes) {
-                        RecentMethods.setCurrentFragment(WardrobeFragment.newInstance("userback",fragment,userInformation,bundle), getActivity());
+                        if (loadValue==0){
+                            RecentMethods.setCurrentFragment(WardrobeFragment.newInstance("userback",fragment,userInformation,bundle), getActivity());
+
+                        }
                     }
                 };
                 checkWardrobe();
                 //////////////////////////////////////
 
-                handler = new Handler(getMainLooper());
-                StorageReference storageReference1 = FirebaseStorage.getInstance().getReference().child("Models");
-                StorageReference islandRef1 = storageReference1.child("models/untitled.gltf");
-                File localFile1 = null;
-                try {
-                    localFile1 = File.createTempFile("model", ".gltf");
-                } catch (IOException ioException) {
-                    ioException.printStackTrace();
-                }
 
-                islandRef1.getFile(localFile1).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                        // Local temp file has been created
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-                        // Handle any errors
-                    }
-                });
+
 
                 break;
 
@@ -977,7 +1021,7 @@ public class ProfileFragment extends Fragment {
                         buyClothesProfile.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                RecentMethods.setCurrentFragment(ShopFragment.newInstance(userInformation,bundle,ProfileFragment.newInstance(type, sendNick, fragment, userInformation, bundle)), getActivity());
+                                if (loadValue==0)RecentMethods.setCurrentFragment(ShopFragment.newInstance(userInformation,bundle,ProfileFragment.newInstance(type, sendNick, fragment, userInformation, bundle)), getActivity());
                             }
                         });
                     }else {
@@ -995,7 +1039,7 @@ public class ProfileFragment extends Fragment {
                 buyClothesProfile.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        RecentMethods.setCurrentFragment(ShopFragment.newInstance(userInformation,bundle,ProfileFragment.newInstance(type, sendNick, fragment, userInformation, bundle)), getActivity());
+                        if (loadValue==0) RecentMethods.setCurrentFragment(ShopFragment.newInstance(userInformation,bundle,ProfileFragment.newInstance(type, sendNick, fragment, userInformation, bundle)), getActivity());
                     }
                 });
             }else {
@@ -1118,13 +1162,13 @@ public class ProfileFragment extends Fragment {
                 linearSubscriptions.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        RecentMethods.setCurrentFragment(SubscriptionsFragmentOther.newInstance(fragment, info.getNick(), userInformation,bundle), getActivity());
+                        if (loadValue==0)RecentMethods.setCurrentFragment(SubscriptionsFragmentOther.newInstance(fragment, info.getNick(), userInformation,bundle), getActivity());
                     }
                 });
                 linearSubscribers.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        RecentMethods.setCurrentFragment(SubscribesFragmentOther.newInstance(fragment, info.getNick(), userInformation,bundle), getActivity());
+                        if (loadValue==0) RecentMethods.setCurrentFragment(SubscribesFragmentOther.newInstance(fragment, info.getNick(), userInformation,bundle), getActivity());
                     }
                 });
 
@@ -1659,9 +1703,11 @@ public class ProfileFragment extends Fragment {
                                         Clothes clothes=clothesArrayList.get(i);
                                         filamentModel.populateScene(clothes.getBuffer(), clothes);
                                         if (i == clothesArrayList.size() - 1) {
-                                            loadValue=1;
+                                            loadValue=0;
+                                            userInformation.setMainLook(clothesArrayList);
                                         }
                                     }
+
                                 }
                             });
                         }
@@ -1671,10 +1717,10 @@ public class ProfileFragment extends Fragment {
             } else {
                 mainLookClothes = userInformation.getMainLook();
                 for (int i = 0; i < mainLookClothes.size(); i++) {
-                    Clothes clothes = mainLookClothes.get(0);
+                    Clothes clothes = mainLookClothes.get(i);
                     filamentModel.populateScene(clothes.getBuffer(), clothes);
                     if (i == mainLookClothes.size() - 1) {
-                        loadValue=1;
+                        loadValue=0;
                     }
                 }
             }
@@ -1718,10 +1764,13 @@ public class ProfileFragment extends Fragment {
         complain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(ComplainFragment.newInstance(info.getNick(),fragment,userInformation,bundle), getActivity());
-                bottomSheetDialog.dismiss();
+                if (loadValue==0) {
+                    RecentMethods.setCurrentFragment(ComplainFragment.newInstance(info.getNick(), fragment, userInformation, bundle), getActivity());
+                    bottomSheetDialog.dismiss();
+                }
             }
         });
+
 
         deleteSubscriber.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -1756,6 +1805,24 @@ public class ProfileFragment extends Fragment {
 //        });
 
         bottomSheetDialog.show();
+
+
+
+    }
+
+    public static void checkLoadValue(NewsItem newsItem,UserInformation userInformation,Activity activity){
+
+        if(loadValue==0){
+            RecentMethods.setCurrentFragment(ViewingLookFragment.newInstance(ProfileFragment.
+                    newInstance(type, userInformation.getNick(), fragment,userInformation,bundle),userInformation,bundle), activity);
+        }
+    }
+
+    public static void checkLoadValueOther(NewsItem newsItem,String userName,Activity activity){
+        if(loadValue==0){
+            RecentMethods.setCurrentFragment(ViewingLookFragment.newInstance(ProfileFragment.
+                    newInstance("other", userName, fragment,userInformation,bundle),userInformation,bundle), activity);
+        }
     }
 
     private void showBottomSheetDialogSend() {

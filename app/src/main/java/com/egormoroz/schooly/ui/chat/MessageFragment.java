@@ -239,20 +239,7 @@ public final class MessageFragment extends Fragment {
                 RecentMethods.setCurrentFragment(fragment, getActivity());
             }
         });
-        DatabaseReference ref = firebaseModel.getUsersReference().child(messageSenderName).child("Chats").child(messageReceiverName).child("Unread");
-        ref.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    dataSnapshot.getRef().setValue(0);
-                }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
         Query query = firebaseModel.getUsersReference().child(messageReceiverName).child("blackList")
                 .child(userInformation.getNick());
         query.addValueEventListener(new ValueEventListener() {

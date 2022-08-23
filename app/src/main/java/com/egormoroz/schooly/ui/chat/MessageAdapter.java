@@ -519,22 +519,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
         }
 
-//        messageViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                if (fromUserID.equals(messageSenderNick)) {
-//                    FirebaseDatabase.getInstance().getReference("users")
-//                            .child(messageSenderNick)
-//                            .child("Chats").child(messageReceiverNick).child("Messages")
-//                            .child(userMessagesList.get(position).getMessageID()).removeValue();
-//                    FirebaseDatabase.getInstance().getReference("users")
-//                            .child(messageReceiverNick)
-//                            .child("Chats").child(messageSenderNick).child("Messages")
-//                            .child(userMessagesList.get(position).getMessageID()).removeValue();
-//                    delete(position);
-//                }
-//            }
-//        });
+
 
 
     }

@@ -17,16 +17,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.egormoroz.schooly.ui.chat.Chat;
 import com.egormoroz.schooly.ui.coins.Transfer;
-import com.egormoroz.schooly.ui.coins.TransferHistoryAdapter;
 import com.egormoroz.schooly.ui.main.MainFragment;
 import com.egormoroz.schooly.ui.main.Mining.Miner;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
 import com.egormoroz.schooly.ui.main.UserInformation;
 import com.egormoroz.schooly.ui.news.Comment;
-import com.egormoroz.schooly.ui.news.LoadNewsTread;
 import com.egormoroz.schooly.ui.news.NewsItem;
 import com.egormoroz.schooly.ui.people.UserPeopleAdapter;
-import com.egormoroz.schooly.ui.profile.Look;
 import com.egormoroz.schooly.ui.profile.Reason;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -39,11 +36,13 @@ import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.Buffer;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Random;
@@ -1599,6 +1598,25 @@ public class RecentMethods {
         });
     }
 
+    public static void loadChatMembers(String nick,String uid,FirebaseModel firebaseModel,Callbacks.GetChatMembers callback){
+        firebaseModel.initAll();
+        firebaseModel.getUsersReference().child(nick).child("Dialogs").child(uid).child("members").get()
+                .addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DataSnapshot> task) {
+                        if(task.isSuccessful()){
+                            DataSnapshot snapshot=task.getResult();
+                            ArrayList<UserPeopleAdapter> members=new ArrayList<>();
+                            for(DataSnapshot snap:snapshot.getChildren()){
+                                UserPeopleAdapter userPeopleAdapter=snap.getValue(UserPeopleAdapter.class);
+                                members.add(userPeopleAdapter);
+                            }
+                            callback.getChatMembers(members);
+                        }
+                    }
+                });
+    }
+
     public static void getMyLookClothesOnce(String nick, FirebaseModel firebaseModel, Callbacks.getLookClothes callback){
         firebaseModel.initAll();
         firebaseModel.getUsersReference().child(nick).child("lookClothes")
@@ -1718,6 +1736,40 @@ public class RecentMethods {
     public static ArrayList<Chat> sort_chats_by_time(ArrayList<Chat> cur){
         cur.sort((Chat a, Chat b) -> (int)(a.getTimeMill() - b.getTimeMill()));
         return cur;
+    }
+
+    public static void returnNewsItem(NewsItem newsItem1 ,Callbacks.loadNewsTread loadNewsTread) {
+        ArrayList<FacePart> facePartArrayList=new ArrayList<>();
+        if(newsItem1.getPerson()!=null){
+            facePartArrayList.add(newsItem1.getPerson().getBody());
+            facePartArrayList.add(newsItem1.getPerson().getBrows());
+            facePartArrayList.add(newsItem1.getPerson().getEars());
+            facePartArrayList.add(newsItem1.getPerson().getEyes());
+            facePartArrayList.add(newsItem1.getPerson().getHair());
+            facePartArrayList.add(newsItem1.getPerson().getHead());
+            facePartArrayList.add(newsItem1.getPerson().getLips());
+            facePartArrayList.add(newsItem1.getPerson().getNose());
+            facePartArrayList.add(newsItem1.getPerson().getPirsing());
+            facePartArrayList.add(newsItem1.getPerson().getSkinColor());
+            Person person=RecentMethods.setAllPerson(facePartArrayList,"base");
+            newsItem1.setPerson(person);
+        }
+        ArrayList<Clothes> clothesWithoutBuffers=new ArrayList<>();
+        for(int i=0;i<newsItem1.getClothesCreators().size();i++){
+            Clothes clothes=newsItem1.getClothesCreators().get(i);
+            clothes.setBuffer(null);
+            clothesWithoutBuffers.add(clothes);
+            if(i==newsItem1.getClothesCreators().size()-1){
+                newsItem1.setClothesCreators(clothesWithoutBuffers);
+                try {
+                    loadNewsTread.LoadNews(newsItem1);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (URISyntaxException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
 

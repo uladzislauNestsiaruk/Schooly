@@ -49,7 +49,6 @@ import com.egormoroz.schooly.ui.main.UserInformation;
 import com.egormoroz.schooly.ui.news.NewsAdapter;
 import com.egormoroz.schooly.ui.news.NewsItem;
 import com.egormoroz.schooly.ui.news.ViewingClothesNews;
-import com.egormoroz.schooly.ui.profile.Look;
 import com.egormoroz.schooly.ui.profile.LooksAdapter;
 import com.egormoroz.schooly.ui.profile.LooksFragmentProfileOther;
 import com.egormoroz.schooly.ui.profile.ProfileFragment;

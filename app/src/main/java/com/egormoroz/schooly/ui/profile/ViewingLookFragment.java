@@ -439,36 +439,48 @@ public class ViewingLookFragment extends Fragment {
                 save.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        DefaultDatabase.getUsersReference().child(nick).child("saved").child(newsItem.getNewsId())
-                                .get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<DataSnapshot> task) {
-                                        if(task.isSuccessful()){
-                                            DataSnapshot snapshot=task.getResult();
-                                            if(snapshot.exists()){
-                                                save.setText(R.string.save);
-                                                DefaultDatabase.getUsersReference().child(nick).child("saved").child(newsItem.getNewsId())
-                                                        .removeValue();
-                                                Toast.makeText(getContext(), v.getContext().getResources().getText(R.string.lookwasdeletedfromsaved), Toast.LENGTH_SHORT).show();
-                                            }else {
-                                                save.setText(R.string.dontsave);
-                                                Log.d("####", "####11"+newsItem.getNewsId()+"  "+newsItem.getNewsId());
-                                                DefaultDatabase.getUsersReference().child(nick).child("saved").child(newsItem.getNewsId())
-                                                        .setValue(newsItem);
-                                                Toast.makeText(getContext(), v.getContext().getResources().getText(R.string.looksaved), Toast.LENGTH_SHORT).show();
+                        RecentMethods.returnNewsItem(newsItem, new Callbacks.loadNewsTread() {
+                            @Override
+                            public void LoadNews(NewsItem newsItem) throws IOException, URISyntaxException {
+                                DefaultDatabase.getUsersReference().child(nick).child("saved").child(newsItem.getNewsId())
+                                        .get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                                                if(task.isSuccessful()){
+                                                    DataSnapshot snapshot=task.getResult();
+                                                    if(snapshot.exists()){
+                                                        save.setText(R.string.save);
+                                                        DefaultDatabase.getUsersReference().child(nick).child("saved").child(newsItem.getNewsId())
+                                                                .removeValue();
+                                                        Toast.makeText(getContext(), v.getContext().getResources().getText(R.string.lookwasdeletedfromsaved), Toast.LENGTH_SHORT).show();
+                                                    }else {
+                                                        save.setText(R.string.dontsave);
+                                                        Log.d("####", "####11"+newsItem.getNewsId()+"  "+newsItem.getNewsId());
+                                                        DefaultDatabase.getUsersReference().child(nick).child("saved").child(newsItem.getNewsId())
+                                                                .setValue(newsItem);
+                                                        Toast.makeText(getContext(), v.getContext().getResources().getText(R.string.looksaved), Toast.LENGTH_SHORT).show();
+                                                    }
+                                                }
                                             }
-                                        }
-                                    }
-                                });
+                                        });
+                            }
+                        });
+
                     }
                 });
             }else {
                 save.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        DefaultDatabase.getUsersReference().child(nick).child("saved").child(newsItem.getNewsId())
-                                .setValue(newsItem);
-                        Toast.makeText(getContext(), v.getContext().getResources().getText(R.string.looksaved), Toast.LENGTH_SHORT).show();
+                        RecentMethods.returnNewsItem(newsItem, new Callbacks.loadNewsTread() {
+                            @Override
+                            public void LoadNews(NewsItem newsItem) throws IOException, URISyntaxException {
+                                DefaultDatabase.getUsersReference().child(nick).child("saved").child(newsItem.getNewsId())
+                                        .setValue(newsItem);
+                                Toast.makeText(getContext(), v.getContext().getResources().getText(R.string.looksaved), Toast.LENGTH_SHORT).show();
+                            }
+                        });
+
                     }
                 });
             }
@@ -500,35 +512,47 @@ public class ViewingLookFragment extends Fragment {
                 save.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        DefaultDatabase.getUsersReference().child(nick).child("saved").child(newsItem.getNewsId())
-                                .get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<DataSnapshot> task) {
-                                        if(task.isSuccessful()){
-                                            DataSnapshot snapshot=task.getResult();
-                                            if(snapshot.exists()){
-                                                save.setText(R.string.save);
-                                                DefaultDatabase.getUsersReference().child(nick).child("saved").child(newsItem.getNewsId())
-                                                        .removeValue();
-                                                Toast.makeText(getContext(), v.getContext().getResources().getText(R.string.lookwasdeletedfromsaved), Toast.LENGTH_SHORT).show();
-                                            }else {
-                                                save.setText(R.string.dontsave);
-                                                DefaultDatabase.getUsersReference().child(nick).child("saved").child(newsItem.getNewsId())
-                                                        .setValue(newsItem);
-                                                Toast.makeText(getContext(), v.getContext().getResources().getText(R.string.looksaved), Toast.LENGTH_SHORT).show();
+                        RecentMethods.returnNewsItem(newsItem, new Callbacks.loadNewsTread() {
+                            @Override
+                            public void LoadNews(NewsItem newsItem) throws IOException, URISyntaxException {
+                                DefaultDatabase.getUsersReference().child(nick).child("saved").child(newsItem.getNewsId())
+                                        .get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                                                if(task.isSuccessful()){
+                                                    DataSnapshot snapshot=task.getResult();
+                                                    if(snapshot.exists()){
+                                                        save.setText(R.string.save);
+                                                        DefaultDatabase.getUsersReference().child(nick).child("saved").child(newsItem.getNewsId())
+                                                                .removeValue();
+                                                        Toast.makeText(getContext(), v.getContext().getResources().getText(R.string.lookwasdeletedfromsaved), Toast.LENGTH_SHORT).show();
+                                                    }else {
+                                                        save.setText(R.string.dontsave);
+                                                        DefaultDatabase.getUsersReference().child(nick).child("saved").child(newsItem.getNewsId())
+                                                                .setValue(newsItem);
+                                                        Toast.makeText(getContext(), v.getContext().getResources().getText(R.string.looksaved), Toast.LENGTH_SHORT).show();
+                                                    }
+                                                }
                                             }
-                                        }
-                                    }
-                                });
+                                        });
+                            }
+                        });
+
                     }
                 });
             }else {
                 save.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        DefaultDatabase.getUsersReference().child(nick).child("saved").child(newsItem.getNewsId())
-                                .setValue(newsItem);
-                        Toast.makeText(getContext(), v.getContext().getResources().getText(R.string.looksaved), Toast.LENGTH_SHORT).show();
+                        RecentMethods.returnNewsItem(newsItem, new Callbacks.loadNewsTread() {
+                            @Override
+                            public void LoadNews(NewsItem newsItem) throws IOException, URISyntaxException {
+                                DefaultDatabase.getUsersReference().child(nick).child("saved").child(newsItem.getNewsId())
+                                        .setValue(newsItem);
+                                Toast.makeText(getContext(), v.getContext().getResources().getText(R.string.looksaved), Toast.LENGTH_SHORT).show();
+                            }
+                        });
+
                     }
                 });
             }
@@ -559,12 +583,18 @@ public class ViewingLookFragment extends Fragment {
         sendReason.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                descriptionText=addDescriptionEdit.getText().toString();
-                String uid=DefaultDatabase.getReference().child("AppData").child("complains").push().getKey();
-                DefaultDatabase.getReference().child("AppData").child("complains").child(uid)
-                        .setValue(new Complain(newsItem.getNick(),nick, reasonTextString,descriptionText,uid,newsItem));
-                Toast.makeText(getContext(), R.string.complaintsent, Toast.LENGTH_SHORT).show();
-                bottomSheetDialog.dismiss();
+                RecentMethods.returnNewsItem(newsItem, new Callbacks.loadNewsTread() {
+                    @Override
+                    public void LoadNews(NewsItem newsItem) throws IOException, URISyntaxException {
+                        descriptionText=addDescriptionEdit.getText().toString();
+                        String uid=DefaultDatabase.getReference().child("AppData").child("complains").push().getKey();
+                        DefaultDatabase.getReference().child("AppData").child("complains").child(uid)
+                                .setValue(new Complain(newsItem.getNick(),nick, reasonTextString,descriptionText,uid,newsItem));
+                        Toast.makeText(getContext(), R.string.complaintsent, Toast.LENGTH_SHORT).show();
+                        bottomSheetDialog.dismiss();
+                    }
+                });
+
             }
         });
 
@@ -788,28 +818,9 @@ public class ViewingLookFragment extends Fragment {
 
                     NewsItem newsItem1;
                     newsItem1=newsItem;
-                    ArrayList<FacePart> facePartArrayList=new ArrayList<>();
-                    if(newsItem1.getPerson()!=null){
-                        facePartArrayList.add(newsItem1.getPerson().getBody());
-                        facePartArrayList.add(newsItem1.getPerson().getBrows());
-                        facePartArrayList.add(newsItem1.getPerson().getEars());
-                        facePartArrayList.add(newsItem1.getPerson().getEyes());
-                        facePartArrayList.add(newsItem1.getPerson().getHair());
-                        facePartArrayList.add(newsItem1.getPerson().getHead());
-                        facePartArrayList.add(newsItem1.getPerson().getLips());
-                        facePartArrayList.add(newsItem1.getPerson().getNose());
-                        facePartArrayList.add(newsItem1.getPerson().getPirsing());
-                        facePartArrayList.add(newsItem1.getPerson().getSkinColor());
-                        Person person=RecentMethods.setAllPerson(facePartArrayList,"base");
-                        newsItem1.setPerson(person);
-                    }
-                    ArrayList<Clothes> clothesWithoutBuffers=new ArrayList<>();
-                    for(int i=0;i<newsItem1.getClothesCreators().size();i++){
-                        Clothes clothes=newsItem1.getClothesCreators().get(i);
-                        clothes.setBuffer(null);
-                        clothesWithoutBuffers.add(clothes);
-                        if(i==newsItem1.getClothesCreators().size()-1){
-                            newsItem1.setClothesCreators(clothesWithoutBuffers);
+                    RecentMethods.returnNewsItem(newsItem1, new Callbacks.loadNewsTread() {
+                        @Override
+                        public void LoadNews(NewsItem newsItem) throws IOException, URISyntaxException {
                             Map<String, Object> messageTextBody = new HashMap<>();
                             messageTextBody.put("message", messageText);
                             messageTextBody.put("type", "look");
@@ -829,7 +840,7 @@ public class ViewingLookFragment extends Fragment {
                                 }
                             });
                         }
-                    }
+                    });
                 }else {
                     RecentMethods.setCurrentFragment(MessageFragment.newInstance(userInformation, bundle, ViewingLookFragment.newInstance( fragment,userInformation, bundle), chat),getActivity());
                     bottomSheetDialog.dismiss();
@@ -1101,11 +1112,11 @@ public class ViewingLookFragment extends Fragment {
     }
 
     public void loadBuffers(NewsItem newsItem,CircularProgressIndicator progressIndicator,SurfaceView surfaceView){
-        filamentModel.postFrameCallback();
         LoadNewsItemInScene loadNewsItemInScene=new LoadNewsItemInScene(userInformation, newsItem, new Callbacks.loadNewsTread() {
             @Override
             public void LoadNews(NewsItem newsItem)  {
                 progressIndicator.setVisibility(View.GONE);
+                filamentModel.postFrameCallback();
                 try {
                     filamentModel.initNewsFilament(surfaceView,newsItem.getPerson().getBody().getBuffer(),true,null,"regularRender",true);
                     loadClothesInScene(newsItem.getClothesCreators());

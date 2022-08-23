@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Sholly</string>
-    <string name="virtualSteve">Твой виртуальный помощник \nSholly. Чтобы начать работу с\nприложением, нужно пройти\nнесколько простых шагов.\nПриступим!</string>
+    <string name="virtualSteve">Your Virtual Assistant  in\nSholly. There are a few simple\n steps to get started\n with the app. \nLet\'s do it!</string>
     <string name="hellosteve">Hello, I\'m Steve!</string>
     <string name="regOrEnter">Are you already at Sholly? If yes, then log \ninto your account, if not, then \nregister!</string>
     <string name="regSteps">Follow a few simple\nregistration steps or\nuse your Google account</string>
@@ -170,7 +170,7 @@
 
     <string name="rules">Terms of use</string>
     <string name="change">Change</string>
-    <string name="fromBrest">From Brest to You</string>
+    <string name="fromBrest">For you with love</string>
 
     <string name="deleteFriend">Delete</string>
 

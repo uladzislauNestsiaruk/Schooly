@@ -283,8 +283,10 @@ public class PresentClothesFragment extends Fragment {
                     Toast.makeText(getContext(), getContext().getResources().getText(R.string.givealreadytext)
                             + userNameToProfile + getContext().getResources().getString(R.string.alreadнhasthisgift), Toast.LENGTH_SHORT).show();
                 } else {
+                    Clothes clothes1=clothes;
+                    clothes1.setBuffer(null);
                     firebaseModel.getUsersReference().child(userNameToProfile).child("clothes")
-                            .child(clothes.getUid()).setValue(clothes);
+                            .child(clothes.getUid()).setValue(clothes1);
                     String numToBase = firebaseModel.getReference().child("users")
                             .child(userNameToProfile).child("nontifications").push().getKey();
                     firebaseModel.getReference().child("users")

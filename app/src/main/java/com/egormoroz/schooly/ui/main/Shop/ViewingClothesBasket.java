@@ -282,8 +282,10 @@ public class ViewingClothesBasket extends Fragment {
                                     firebaseModel.getUsersReference().child(userInformation.getNick()).child("basket")
                                             .child(clothesViewing.getUid()).removeValue();
                                 }else if (a==2){
+                                    Clothes clothes=clothesViewing;
+                                    clothes.setBuffer(null);
                                     firebaseModel.getUsersReference().child(userInformation.getNick()).child("basket")
-                                            .child(clothesViewing.getUid()).setValue(clothesViewing);
+                                            .child(clothesViewing.getUid()).setValue(clothes);
                                 }
                             }
                         }
@@ -386,7 +388,8 @@ public class ViewingClothesBasket extends Fragment {
 
                     addLastMessage("clothes", messageText);
                     addUnread();
-
+                    Clothes clothes=clothesViewing;
+                    clothes.setBuffer(null);
                     Map<String, Object> messageTextBody = new HashMap<>();
                     messageTextBody.put("message", messageText);
                     messageTextBody.put("type", "clothes");
@@ -394,7 +397,7 @@ public class ViewingClothesBasket extends Fragment {
                     messageTextBody.put("to", chat.getName());
                     messageTextBody.put("time", RecentMethods.getCurrentTime());
                     messageTextBody.put("messageID", messagePushID);
-                    messageTextBody.put("clothes", clothesViewing);
+                    messageTextBody.put("clothes", clothes);
 
                     Map<String, Object> messageBodyDetails = new HashMap<String, Object>();
                     messageBodyDetails.put(messageSenderRef + "/" + messagePushID, messageTextBody);
@@ -656,21 +659,44 @@ public class ViewingClothesBasket extends Fragment {
                                     if(snapshot.exists()){
                                         Toast.makeText(getContext(), getContext().getResources().getText(R.string.itempurchased), Toast.LENGTH_SHORT).show();
                                     }else {
-                                        clothesViewing.setBuffer(null);
-                                        firebaseModel.getUsersReference().child(nick).child("clothes")
-                                                .child(clothesViewing.getUid()).setValue(clothesViewing);
+                                        Clothes clothes=clothesViewing;
+                                        clothes.setBuffer(null);
                                         firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes")
-                                                .child(clothesViewing.getUid()).child("purchaseNumber")
-                                                .setValue(clothesViewing.getPurchaseNumber()+1);
-                                        firebaseModel.getUsersReference().child(clothesViewing.getCreator()).child("myClothes").
-                                                child(clothesViewing.getUid()).child("purchaseNumber")
-                                                .setValue(clothesViewing.getPurchaseNumber()+1);
+                                                .child(clothesViewing.getUid()).child("purchaseNumber").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<DataSnapshot> task) {
+                                                        if(task.isSuccessful()){
+                                                            DataSnapshot snapshot1=task.getResult();
+                                                            Long purchaseNumber=snapshot1.getValue(Long.class);
+                                                            clothesViewing.setPurchaseNumber(purchaseNumber);
+                                                            firebaseModel.getUsersReference().child(userInformation.getNick()).child("clothes")
+                                                                    .child(clothesViewing.getUid()).setValue(clothes);
+                                                            firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes")
+                                                                    .child(clothesViewing.getUid()).child("purchaseNumber")
+                                                                    .setValue(clothesViewing.getPurchaseNumber() + 1);
+                                                            firebaseModel.getUsersReference().child(clothesViewing.getCreator()).child("myClothes").
+                                                                    child(clothesViewing.getUid()).child("purchaseNumber")
+                                                                    .setValue(clothesViewing.getPurchaseNumber() + 1);
+                                                        }
+                                                    }
+                                                });
                                         firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes")
-                                                .child(clothesViewing.getUid()).child("purchaseToday")
-                                                .setValue(clothesViewing.getPurchaseToday()+1);
-                                        firebaseModel.getUsersReference().child(clothesViewing.getCreator()).child("myClothes").
-                                                child(clothesViewing.getUid()).child("purchaseToday")
-                                                .setValue(clothesViewing.getPurchaseToday()+1);
+                                                .child(clothesViewing.getUid()).child("purchaseToday").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<DataSnapshot> task) {
+                                                        if(task.isSuccessful()){
+                                                            DataSnapshot snapshot1=task.getResult();
+                                                            Long purchaseToday=snapshot1.getValue(Long.class);
+                                                            clothesViewing.setPurchaseToday(purchaseToday);
+                                                            firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes")
+                                                                    .child(clothesViewing.getUid()).child("purchaseToday")
+                                                                    .setValue(clothesViewing.getPurchaseToday() + 1);
+                                                            firebaseModel.getUsersReference().child(clothesViewing.getCreator()).child("myClothes").
+                                                                    child(clothesViewing.getUid()).child("purchaseToday")
+                                                                    .setValue(clothesViewing.getPurchaseToday() + 1);
+                                                        }
+                                                    }
+                                                });
                                         if(clothesViewing.getCreator().equals("Schooly")){
 
                                         }else {

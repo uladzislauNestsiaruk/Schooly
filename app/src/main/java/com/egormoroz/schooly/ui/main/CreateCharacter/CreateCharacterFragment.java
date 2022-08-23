@@ -199,7 +199,7 @@ public class CreateCharacterFragment extends Fragment {
         tabLayout.addTab(tabLayout.newTab().setText(getContext().getResources().getText(R.string.hairstyleColor)));
         tabLayout.addTab(tabLayout.newTab().setText(getContext().getResources().getText(R.string.brows)));
         tabLayout.addTab(tabLayout.newTab().setText(getContext().getResources().getText(R.string.browsColor)));
-        tabLayout.addTab(tabLayout.newTab().setText(getContext().getResources().getText(R.string.lips)));
+        //tabLayout.addTab(tabLayout.newTab().setText(getContext().getResources().getText(R.string.lips)));
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -360,7 +360,7 @@ public class CreateCharacterFragment extends Fragment {
                                             FirebaseModel firebaseModel=new FirebaseModel();
                                             firebaseModel.initAll();
                                             firebaseModel.getReference("usersNicks")
-                                                    .child(nick).setValue(new UserPeopleAdapter(nick,"6"," "));
+                                                    .child(nick).setValue(new UserPeopleAdapter(nick,downloadUrl.toString()," "));
                                             ((MainActivity)getActivity()).IsEntered();
                                             ((MainActivity)getActivity()).checkMining();
                                             RecentMethods.setCurrentFragment(MainFragment.newInstance(res,bundle), getActivity());
@@ -436,8 +436,8 @@ public class CreateCharacterFragment extends Fragment {
                     return new EyebrowsFragment();
                 case 4:
                     return new EyebrowsColorFragment();
-                case 5:
-                    return new LipsFragment();
+//                case 5:
+//                    return new LipsFragment();
             }
             return new SkinColourFragment();
         }

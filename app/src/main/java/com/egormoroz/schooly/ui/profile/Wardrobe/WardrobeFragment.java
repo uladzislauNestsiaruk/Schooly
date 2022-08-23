@@ -30,8 +30,6 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
-
-import com.egormoroz.schooly.BufferLoader;
 import com.egormoroz.schooly.Callbacks;
 import com.egormoroz.schooly.FacePart;
 import com.egormoroz.schooly.FilamentModel;

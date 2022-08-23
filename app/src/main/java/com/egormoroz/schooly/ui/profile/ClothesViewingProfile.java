@@ -382,6 +382,8 @@ public class ClothesViewingProfile extends Fragment {
                     addLastMessage("clothes", messageText);
                     addUnread();
 
+                    Clothes clothes=clothesViewing;
+                    clothes.setBuffer(null);
                     Map<String, Object> messageTextBody = new HashMap<>();
                     messageTextBody.put("message", messageText);
                     messageTextBody.put("type", "clothes");
@@ -389,7 +391,7 @@ public class ClothesViewingProfile extends Fragment {
                     messageTextBody.put("to", chat.getName());
                     messageTextBody.put("time", RecentMethods.getCurrentTime());
                     messageTextBody.put("messageID", messagePushID);
-                    messageTextBody.put("clothes", clothesViewing);
+                    messageTextBody.put("clothes", clothes);
 
                     Map<String, Object> messageBodyDetails = new HashMap<String, Object>();
                     messageBodyDetails.put(messageSenderRef + "/" + messagePushID, messageTextBody);
