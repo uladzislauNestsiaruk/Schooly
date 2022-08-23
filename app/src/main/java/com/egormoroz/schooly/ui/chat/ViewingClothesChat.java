@@ -34,7 +34,6 @@ import com.egormoroz.schooly.ui.coins.CoinsFragmentSecond;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
 import com.egormoroz.schooly.ui.main.Shop.FittingFragment;
 import com.egormoroz.schooly.ui.main.Shop.NewClothesAdapter;
-import com.egormoroz.schooly.ui.main.Shop.ViewingClothes;
 import com.egormoroz.schooly.ui.main.UserInformation;
 import com.egormoroz.schooly.ui.people.UserPeopleAdapter;
 import com.egormoroz.schooly.ui.profile.ProfileFragment;
@@ -684,7 +683,7 @@ public class ViewingClothesChat extends Fragment {
 
         TextView text=dialog.findViewById(R.id.Text);
         text.setText(textInDialog);
-        RelativeLayout relative=dialog.findViewById(R.id.Relative);
+        RelativeLayout relative=dialog.findViewById(R.id.Delete_relative_layout);
 
 
         relative.setOnClickListener(new View.OnClickListener() {
@@ -853,7 +852,7 @@ public class ViewingClothesChat extends Fragment {
 
         TextView text=dialog.findViewById(R.id.Text);
         text.setText(textInDialog);
-        RelativeLayout relative=dialog.findViewById(R.id.Relative);
+        RelativeLayout relative=dialog.findViewById(R.id.Delete_relative_layout);
 
 
         relative.setOnClickListener(new View.OnClickListener() {
