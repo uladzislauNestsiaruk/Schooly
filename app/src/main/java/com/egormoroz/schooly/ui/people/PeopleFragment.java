@@ -33,6 +33,8 @@ import com.egormoroz.schooly.ui.main.Shop.Clothes;
 import com.egormoroz.schooly.ui.main.UserInformation;
 import com.egormoroz.schooly.ui.news.ViewingClothesNews;
 import com.egormoroz.schooly.ui.profile.ProfileFragment;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.Query;
@@ -316,47 +318,55 @@ public class PeopleFragment extends Fragment {
             RecomendationThread getRecThread = new RecomendationThread(nick, userInformation, new Callbacks.getRecommendationsThread() {
                             @Override
                             public void getRecommendationsInterface(ArrayList<UserPeopleAdapter> recommendationsList) {
-                                RecomendationAdapter recomendationAdapter=new RecomendationAdapter(recommendationsList,userInformation);
-                                peopleRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
-                                peopleRecyclerView.setAdapter(recomendationAdapter);
-                                recommendationList=recommendationsList;
-                                RecomendationAdapter.ItemClickListener itemClickListener=new RecomendationAdapter.ItemClickListener() {
-                                    @Override
-                                    public void onItemClick(View view, int position, String avatar, String bio) {
-                                        UserPeopleAdapter user = recomendationAdapter.getItem(position);
-                                        userNameToProfile = user.getNick();
-                                        if (userNameToProfile.equals(nick)) {
-                                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback", nick, PeopleFragment.newInstance(userInformation,bundle),userInformation,bundle), getActivity());
+                                Log.d("#####", "G G "+recommendationsList);
+                                if(recommendationsList.size()==0){
+                                    firebaseModel.getReference().child("usersNicks").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<DataSnapshot> task) {
+                                           if(task.isSuccessful()){
+                                               DataSnapshot snapshot=task.getResult();
+                                               ArrayList <UserPeopleAdapter> userPeopleAdapters=new ArrayList<>();
+                                               for(  DataSnapshot snap  :snapshot.getChildren()) {
+                                                    UserPeopleAdapter userPeopleAdapter=snap.getValue( UserPeopleAdapter.class);
+                                                    userPeopleAdapters.add(userPeopleAdapter);
+                                                    if(userPeopleAdapters.size()==49){
+                                                        break;
+                                                    }
+                                               }
+                                               initRecommendationAdapter(userPeopleAdapters);
+                                           }
                                         }
-                                        else {
-                                            RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile, PeopleFragment.newInstance(userInformation,bundle),userInformation,bundle),
-                                                    getActivity());
-                                        }
-                                    }
-                                };
-                                recomendationAdapter.setClickListener(itemClickListener);
+                                    });
+                                }else{
+                                    initRecommendationAdapter(recommendationsList);
+                                }
                             }
                         });
         }else {
             recommendationList= (ArrayList<UserPeopleAdapter>) bundle.getSerializable("RECOMMENDATIONPEOPLELIST");
-            RecomendationAdapter recomendationAdapter=new RecomendationAdapter(recommendationList,userInformation);
-            peopleRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
-            peopleRecyclerView.setAdapter(recomendationAdapter);
-            RecomendationAdapter.ItemClickListener itemClickListener=new RecomendationAdapter.ItemClickListener() {
-                @Override
-                public void onItemClick(View view, int position, String avatar, String bio) {
-                    UserPeopleAdapter user = recomendationAdapter.getItem(position);
-                    userNameToProfile = user.getNick();
-                    if (userNameToProfile.equals(nick)) {
-                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback", nick, PeopleFragment.newInstance(userInformation,bundle),userInformation,bundle), getActivity());
-                    }
-                    else {
-                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile, PeopleFragment.newInstance(userInformation,bundle),userInformation,bundle),
-                                getActivity());
-                    }
-                }
-            };
-            recomendationAdapter.setClickListener(itemClickListener);
+            initRecommendationAdapter(recommendationList);
         }
+    }
+
+    public void initRecommendationAdapter(ArrayList<UserPeopleAdapter> recommendationsList){
+        RecomendationAdapter recomendationAdapter=new RecomendationAdapter(recommendationsList,userInformation);
+        peopleRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        peopleRecyclerView.setAdapter(recomendationAdapter);
+        recommendationList=recommendationsList;
+        RecomendationAdapter.ItemClickListener itemClickListener=new RecomendationAdapter.ItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position, String avatar, String bio) {
+                UserPeopleAdapter user = recomendationAdapter.getItem(position);
+                userNameToProfile = user.getNick();
+                if (userNameToProfile.equals(nick)) {
+                    RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback", nick, PeopleFragment.newInstance(userInformation,bundle),userInformation,bundle), getActivity());
+                }
+                else {
+                    RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile, PeopleFragment.newInstance(userInformation,bundle),userInformation,bundle),
+                            getActivity());
+                }
+            }
+        };
+        recomendationAdapter.setClickListener(itemClickListener);
     }
 }

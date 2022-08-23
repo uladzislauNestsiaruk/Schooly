@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -15,6 +16,7 @@ import com.egormoroz.schooly.FilamentModel;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
 import com.egormoroz.schooly.ui.main.UserInformation;
+import com.squareup.picasso.Picasso;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -65,6 +67,7 @@ public class RecomendationAdapter extends RecyclerView.Adapter<RecomendationAdap
     public void onBindViewHolder(ViewHolder holder, int position) {
         UserPeopleAdapter userInformation=listAdapterPeople.get(position);
         holder.usernickname.setText(userInformation.getNick());
+        Picasso.get().load(userInformation.getAvatar()).into(holder.imageView);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -81,11 +84,11 @@ public class RecomendationAdapter extends RecyclerView.Adapter<RecomendationAdap
 
     public class ViewHolder extends RecyclerView.ViewHolder{
         final TextView usernickname;
-        SurfaceView surfaceView;
+        ImageView imageView;
         ViewHolder(View itemView) {
             super(itemView);
             usernickname=itemView.findViewById(R.id.nick);
-            //surfaceView=itemView.findViewById(R.id.surfaceView);
+            imageView=itemView.findViewById(R.id.personImage);
         }
     }
 

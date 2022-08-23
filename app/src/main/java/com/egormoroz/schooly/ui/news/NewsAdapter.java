@@ -52,10 +52,12 @@ import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.Subscriber;
 import com.egormoroz.schooly.TaskRunner;
 import com.egormoroz.schooly.ui.chat.Chat;
+import com.egormoroz.schooly.ui.chat.GroupChatFragment;
 import com.egormoroz.schooly.ui.chat.MessageFragment;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
 import com.egormoroz.schooly.ui.main.Shop.ViewingClothes;
 import com.egormoroz.schooly.ui.main.UserInformation;
+import com.egormoroz.schooly.ui.people.UserPeopleAdapter;
 import com.egormoroz.schooly.ui.profile.Complain;
 import com.egormoroz.schooly.ui.profile.ComplainAdapter;
 import com.egormoroz.schooly.ui.profile.ProfileFragment;
@@ -737,45 +739,92 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
             public void onItemClick(Chat chat, String type) {
                 if(type.equals("send")){
                     String messageText = messageEdit.getText().toString();
+                    if(chat.getType().equals("talk")){
+                        String messageSenderRef = chat.getChatId() + "/Messages";
 
-                    String messageSenderRef = chat.getName() + "/Chats/" + userInformation.getNick() + "/Messages";
-                    String messageReceiverRef = userInformation.getNick()  + "/Chats/" + chat.getName()+ "/Messages";
-                    otherUserNickString=chat.getName();
-
-                    DatabaseReference userMessageKeyRef = DefaultDatabase.getUsersReference().child(userInformation.getNick() ).child("Chats").child(chat.getName()).child("Messages").push();
-                    String messagePushID = userMessageKeyRef.getKey();
-
-                    addLastMessage("clothes", messageText);
-                    addUnread();
-
-                    NewsItem newsItem1;
-                    newsItem1=newsItem;
-                    RecentMethods.returnNewsItem(newsItem1, new Callbacks.loadNewsTread() {
-                        @Override
-                        public void LoadNews(NewsItem newsItem) throws IOException, URISyntaxException {
-                            Map<String, Object> messageTextBody = new HashMap<>();
-                            messageTextBody.put("message", messageText);
-                            messageTextBody.put("type", "look");
-                            messageTextBody.put("from", userInformation.getNick() );
-                            messageTextBody.put("to", chat.getName());
-                            messageTextBody.put("time", RecentMethods.getCurrentTime());
-                            messageTextBody.put("messageID", messagePushID);
-                            messageTextBody.put("look", newsItem);
-
-                            Map<String, Object> messageBodyDetails = new HashMap<String, Object>();
-                            messageBodyDetails.put(messageSenderRef + "/" + messagePushID, messageTextBody);
-                            messageBodyDetails.put(messageReceiverRef + "/" + messagePushID, messageTextBody);
-                            DefaultDatabase.getUsersReference().updateChildren(messageBodyDetails).addOnCompleteListener(new OnCompleteListener() {
-                                @Override
-                                public void onComplete(@NonNull Task task) {
-                                    messageEdit.setText("");
+                        RecentMethods.loadChatMembers(userInformation.getNick(), chat.getChatId(), DefaultDatabase, new Callbacks.GetChatMembers() {
+                            @Override
+                            public void getChatMembers(ArrayList<UserPeopleAdapter> chatMembers) {
+                                for(int i=0;i<chatMembers.size();i++){
+                                    String nick=chatMembers.get(i).getNick();
+                                    addLastMessageGroup("look", messageText,nick,chat);
+                                    addUnreadGroup(nick,chat);
                                 }
-                            });
-                        }
-                    });
+                            }
+                        });
+
+                        NewsItem newsItem1;
+                        newsItem1=newsItem;
+                        RecentMethods.returnNewsItem(newsItem1, new Callbacks.loadNewsTread() {
+                            @Override
+                            public void LoadNews(NewsItem newsItem) throws IOException, URISyntaxException {
+                                Map<String, Object> messageTextBody = new HashMap<>();
+                                DatabaseReference userMessageKeyRef = DefaultDatabase.getReference().child("groups").child(chat.getChatId()).child("Messages").push();
+                                String messagePushID = userMessageKeyRef.getKey();
+                                messageTextBody.put("message", messageText);
+                                messageTextBody.put("type", "look");
+                                messageTextBody.put("from", userInformation.getNick() );
+                                messageTextBody.put("to", chat.getName());
+                                messageTextBody.put("time", RecentMethods.getCurrentTime());
+                                messageTextBody.put("messageID", messagePushID);
+                                messageTextBody.put("look", newsItem);
+
+                                Map<String, Object> messageBodyDetails = new HashMap<String, Object>();
+                                messageBodyDetails.put(messageSenderRef + "/" + messagePushID, messageTextBody);
+                                DefaultDatabase.getReference().child("groups").updateChildren(messageBodyDetails).addOnCompleteListener(new OnCompleteListener() {
+                                    @Override
+                                    public void onComplete(@NonNull Task task) {
+                                        messageEdit.setText("");
+                                    }
+                                });
+                            }
+                        });
+                    }else{
+
+                        String messageSenderRef = chat.getName() + "/Chats/" + userInformation.getNick() + "/Messages";
+                        String messageReceiverRef = userInformation.getNick()  + "/Chats/" + chat.getName()+ "/Messages";
+                        otherUserNickString=chat.getName();
+
+                        DatabaseReference userMessageKeyRef = DefaultDatabase.getUsersReference().child(userInformation.getNick() ).child("Chats").child(chat.getName()).child("Messages").push();
+                        String messagePushID = userMessageKeyRef.getKey();
+
+                        addLastMessage("look", messageText);
+                        addUnread();
+
+                        NewsItem newsItem1;
+                        newsItem1=newsItem;
+                        RecentMethods.returnNewsItem(newsItem1, new Callbacks.loadNewsTread() {
+                            @Override
+                            public void LoadNews(NewsItem newsItem) throws IOException, URISyntaxException {
+                                Map<String, Object> messageTextBody = new HashMap<>();
+                                messageTextBody.put("message", messageText);
+                                messageTextBody.put("type", "look");
+                                messageTextBody.put("from", userInformation.getNick() );
+                                messageTextBody.put("to", chat.getName());
+                                messageTextBody.put("time", RecentMethods.getCurrentTime());
+                                messageTextBody.put("messageID", messagePushID);
+                                messageTextBody.put("look", newsItem);
+
+                                Map<String, Object> messageBodyDetails = new HashMap<String, Object>();
+                                messageBodyDetails.put(messageSenderRef + "/" + messagePushID, messageTextBody);
+                                messageBodyDetails.put(messageReceiverRef + "/" + messagePushID, messageTextBody);
+                                DefaultDatabase.getUsersReference().updateChildren(messageBodyDetails).addOnCompleteListener(new OnCompleteListener() {
+                                    @Override
+                                    public void onComplete(@NonNull Task task) {
+                                        messageEdit.setText("");
+                                    }
+                                });
+                            }
+                        });
+                    }
                 }else {
-                    RecentMethods.setCurrentFragment(MessageFragment.newInstance(userInformation, bundle, NewsFragment.newInstance( userInformation, bundle), chat),activity);
-                    bottomSheetDialog.dismiss();
+                    if(chat.getType().equals("talk")){
+                        RecentMethods.setCurrentFragment(GroupChatFragment.newInstance(userInformation, bundle, NewsFragment.newInstance( userInformation, bundle), chat),activity);
+                        bottomSheetDialog.dismiss();
+                    }else{
+                        RecentMethods.setCurrentFragment(MessageFragment.newInstance(userInformation, bundle, NewsFragment.newInstance( userInformation, bundle), chat),activity);
+                        bottomSheetDialog.dismiss();
+                    }
                 }
             }
         };
@@ -813,6 +862,42 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
         }
 
         bottomSheetDialog.show();
+    }
+
+    private void addLastMessageGroup(String type, String Message,String name,Chat chat) {
+
+        Log.d("####",type);
+        DefaultDatabase.getUsersReference().child(name).child("Dialogs").child(chat.getChatId()).child("lastMessage").setValue("Образ");
+
+        Calendar calendar = Calendar.getInstance();
+        DefaultDatabase.getUsersReference().child(name).child("Dialogs").child(chat.getChatId()).child("lastTime").setValue(RecentMethods.getCurrentTime());
+        Map<String,String> map=new HashMap<>();
+        map= ServerValue.TIMESTAMP;
+        DefaultDatabase.getUsersReference().child(name).child("Dialogs").child(chat.getChatId()).child("timeMill").setValue(map);
+    }
+
+    public void addUnreadGroup(String name,Chat chat) {
+        final long[] value = new long[1];
+        DatabaseReference ref = DefaultDatabase.getUsersReference().child(name).child("Dialogs").child(chat.getChatId()).child("unreadMessages");
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    value[0] = (long) dataSnapshot.getValue();
+                    value[0] = value[0] + 1;
+                    dataSnapshot.getRef().setValue(value[0]);
+                    DefaultDatabase.getUsersReference().child(name).child("Dialogs")
+                            .child(chat.getChatId()).child("unreadMessages").setValue(0);
+                } else dataSnapshot.getRef().setValue(0);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+
+
+        });
     }
 
     public void initUserEnter(ArrayList<Chat> allChats) {
@@ -911,7 +996,6 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
     }
 
     private void addLastMessage(String type, String Message){
-        addType(type);
         DefaultDatabase.getUsersReference().child(userInformation.getNick()).child("Dialogs").child(otherUserNickString).child("lastMessage").setValue("Образ");
         DefaultDatabase.getUsersReference().child(otherUserNickString).child("Dialogs").child(userInformation.getNick()).child("lastMessage").setValue("Образ");
         Calendar calendar = Calendar.getInstance();
@@ -936,28 +1020,6 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
                     DefaultDatabase.getUsersReference().child(userInformation.getNick()).child("Dialogs")
                             .child(otherUserNickString).child("unreadMessages").setValue(0);
                 } else dataSnapshot.getRef().setValue(0);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-
-
-        });
-    }
-
-    public void addType(String type) {
-        final long[] value = new long[1];
-        DatabaseReference ref = DefaultDatabase.getUsersReference().child(otherUserNickString).child("Chats").child(userInformation.getNick()).child(type);
-        ref.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()){
-                    value[0] = (long) dataSnapshot.getValue();
-                    value[0] = value[0] + 1;
-                    dataSnapshot.getRef().setValue(value[0]);}
-                else dataSnapshot.getRef().setValue(1);
             }
 
             @Override

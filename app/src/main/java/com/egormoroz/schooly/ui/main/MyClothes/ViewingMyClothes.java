@@ -6,6 +6,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,9 +30,12 @@ import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.Subscriber;
 import com.egormoroz.schooly.ui.chat.Chat;
+import com.egormoroz.schooly.ui.chat.GroupChatFragment;
 import com.egormoroz.schooly.ui.chat.MessageFragment;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
+import com.egormoroz.schooly.ui.main.Shop.ViewingClothes;
 import com.egormoroz.schooly.ui.main.UserInformation;
+import com.egormoroz.schooly.ui.people.UserPeopleAdapter;
 import com.egormoroz.schooly.ui.profile.SendLookAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -371,40 +375,85 @@ public class ViewingMyClothes extends Fragment {
             public void onItemClick(Chat chat, String type) {
                 if(type.equals("send")){
                     String messageText = messageEdit.getText().toString();
+                    if(chat.getType().equals("talk")){
 
-                    String messageSenderRef = chat.getName() + "/Chats/" + userInformation.getNick() + "/Messages";
-                    String messageReceiverRef = userInformation.getNick()  + "/Chats/" + chat.getName()+ "/Messages";
-                    otherUserNickString=chat.getName();
+                        String messageSenderRef = chat.getChatId() + "/Messages";
 
-                    DatabaseReference userMessageKeyRef = firebaseModel.getUsersReference().child(userInformation.getNick() ).child("Chats").child(chat.getName()).child("Messages").push();
-                    String messagePushID = userMessageKeyRef.getKey();
 
-                    addLastMessage("clothes", messageText);
-                    addUnread();
 
-                    Clothes clothes=clothesViewing;
-                    clothes.setBuffer(null);
-                    Map<String, Object> messageTextBody = new HashMap<>();
-                    messageTextBody.put("message", messageText);
-                    messageTextBody.put("type", "clothes");
-                    messageTextBody.put("from", userInformation.getNick() );
-                    messageTextBody.put("to", chat.getName());
-                    messageTextBody.put("time", RecentMethods.getCurrentTime());
-                    messageTextBody.put("messageID", messagePushID);
-                    messageTextBody.put("clothes", clothes);
+                        RecentMethods.loadChatMembers(userInformation.getNick(), chat.getChatId(), firebaseModel, new Callbacks.GetChatMembers() {
+                            @Override
+                            public void getChatMembers(ArrayList<UserPeopleAdapter> chatMembers) {
+                                for(int i=0;i<chatMembers.size();i++){
+                                    String nick=chatMembers.get(i).getNick();
+                                    addLastMessageGroup("clothes", messageText,nick,chat);
+                                    addUnreadGroup(nick,chat);
+                                }
+                            }
+                        });
 
-                    Map<String, Object> messageBodyDetails = new HashMap<String, Object>();
-                    messageBodyDetails.put(messageSenderRef + "/" + messagePushID, messageTextBody);
-                    messageBodyDetails.put(messageReceiverRef + "/" + messagePushID, messageTextBody);
-                    firebaseModel.getUsersReference().updateChildren(messageBodyDetails).addOnCompleteListener(new OnCompleteListener() {
-                        @Override
-                        public void onComplete(@NonNull Task task) {
-                            messageEdit.setText("");
-                        }
-                    });
+                        Clothes clothes=clothesViewing;
+                        clothes.setBuffer(null);
+                        DatabaseReference userMessageKeyRef = firebaseModel.getReference().child("groups").child(chat.getChatId()).child("Messages").push();
+                        String messagePushID = userMessageKeyRef.getKey();
+                        Map<String, Object> messageTextBody = new HashMap<>();
+                        messageTextBody.put("message", messageText);
+                        messageTextBody.put("type", "clothes");
+                        messageTextBody.put("from", userInformation.getNick() );
+                        messageTextBody.put("to", chat.getName());
+                        messageTextBody.put("time", RecentMethods.getCurrentTime());
+                        messageTextBody.put("messageID", messagePushID);
+                        messageTextBody.put("clothes", clothes);
+                        Map<String, Object> messageBodyDetails = new HashMap<>();
+                        messageBodyDetails.put(messageSenderRef + "/" + messagePushID, messageTextBody);
+
+                        firebaseModel.getReference().child("groups").updateChildren(messageBodyDetails).addOnCompleteListener(new OnCompleteListener() {
+                            @Override
+                            public void onComplete(@NonNull Task task) {
+                                messageEdit.setText("");
+                            }
+                        });
+                    }else{
+
+                        String messageSenderRef = chat.getName() + "/Chats/" + userInformation.getNick() + "/Messages";
+                        String messageReceiverRef = userInformation.getNick()  + "/Chats/" + chat.getName()+ "/Messages";
+                        otherUserNickString=chat.getName();
+
+                        DatabaseReference userMessageKeyRef = firebaseModel.getUsersReference().child(userInformation.getNick() ).child("Chats").child(chat.getName()).child("Messages").push();
+                        String messagePushID = userMessageKeyRef.getKey();
+
+                        addLastMessage("clothes", messageText);
+                        addUnread();
+
+                        Clothes clothes=clothesViewing;
+                        clothes.setBuffer(null);
+                        Map<String, Object> messageTextBody = new HashMap<>();
+                        messageTextBody.put("message", messageText);
+                        messageTextBody.put("type", "clothes");
+                        messageTextBody.put("from", userInformation.getNick() );
+                        messageTextBody.put("to", chat.getName());
+                        messageTextBody.put("time", RecentMethods.getCurrentTime());
+                        messageTextBody.put("messageID", messagePushID);
+                        messageTextBody.put("clothes", clothes);
+
+                        Map<String, Object> messageBodyDetails = new HashMap<String, Object>();
+                        messageBodyDetails.put(messageSenderRef + "/" + messagePushID, messageTextBody);
+                        messageBodyDetails.put(messageReceiverRef + "/" + messagePushID, messageTextBody);
+                        firebaseModel.getUsersReference().updateChildren(messageBodyDetails).addOnCompleteListener(new OnCompleteListener() {
+                            @Override
+                            public void onComplete(@NonNull Task task) {
+                                messageEdit.setText("");
+                            }
+                        });
+                    }
                 }else {
-                    RecentMethods.setCurrentFragment(MessageFragment.newInstance(userInformation, bundle, ViewingMyClothes.newInstance(fragment, userInformation, bundle), chat),getActivity());
-                    bottomSheetDialog.dismiss();
+                    if(chat.getType().equals("talk")){
+                        RecentMethods.setCurrentFragment(GroupChatFragment.newInstance(userInformation, bundle, ViewingMyClothes.newInstance(fragment, userInformation, bundle), chat),getActivity());
+                        bottomSheetDialog.dismiss();
+                    }else{
+                        RecentMethods.setCurrentFragment(MessageFragment.newInstance(userInformation, bundle, ViewingMyClothes.newInstance(fragment, userInformation, bundle), chat),getActivity());
+                        bottomSheetDialog.dismiss();
+                    }
                 }
             }
         };
@@ -550,6 +599,42 @@ public class ViewingMyClothes extends Fragment {
         map= ServerValue.TIMESTAMP;
         firebaseModel.getUsersReference().child(userInformation.getNick()).child("Dialogs").child(otherUserNickString).child("timeMill").setValue(map);
         firebaseModel.getUsersReference().child(otherUserNickString).child("Dialogs").child(userInformation.getNick()).child("timeMill").setValue(map);
+    }
+
+    private void addLastMessageGroup(String type, String Message,String name,Chat chat) {
+
+        Log.d("####",type);
+        firebaseModel.getUsersReference().child(name).child("Dialogs").child(chat.getChatId()).child("lastMessage").setValue("Одежда");
+
+        Calendar calendar = Calendar.getInstance();
+        firebaseModel.getUsersReference().child(name).child("Dialogs").child(chat.getChatId()).child("lastTime").setValue(RecentMethods.getCurrentTime());
+        Map<String,String> map=new HashMap<>();
+        map= ServerValue.TIMESTAMP;
+        firebaseModel.getUsersReference().child(name).child("Dialogs").child(chat.getChatId()).child("timeMill").setValue(map);
+    }
+
+    public void addUnreadGroup(String name,Chat chat) {
+        final long[] value = new long[1];
+        DatabaseReference ref = firebaseModel.getUsersReference().child(name).child("Dialogs").child(chat.getChatId()).child("unreadMessages");
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    value[0] = (long) dataSnapshot.getValue();
+                    value[0] = value[0] + 1;
+                    dataSnapshot.getRef().setValue(value[0]);
+                    firebaseModel.getUsersReference().child(name).child("Dialogs")
+                            .child(chat.getChatId()).child("unreadMessages").setValue(0);
+                } else dataSnapshot.getRef().setValue(0);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+
+
+        });
     }
 
     public void addUnread() {
