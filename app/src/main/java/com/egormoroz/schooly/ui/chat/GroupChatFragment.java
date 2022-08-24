@@ -4,8 +4,16 @@ import static android.app.Activity.RESULT_OK;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.app.Application;
+import android.app.Dialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaRecorder;
 import android.net.Uri;
@@ -20,6 +28,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -73,26 +82,27 @@ public final class GroupChatFragment extends Fragment {
     Bundle bundle;
     Fragment fragment;
     Chat chat;
-    MessageAdapter.ItemClickListener itemClickListener;
+    GroupChatAdapter.ItemClickListener itemClickListener;
 
-    public GroupChatFragment(UserInformation userInformation,Bundle bundle,Fragment fragment,Chat chat) {
-        this.userInformation=userInformation;
-        this.bundle=bundle;
-        this.fragment=fragment;
-        this.chat=chat;
+    public GroupChatFragment(UserInformation userInformation, Bundle bundle, Fragment fragment, Chat chat) {
+        this.userInformation = userInformation;
+        this.bundle = bundle;
+        this.fragment = fragment;
+        this.chat = chat;
     }
 
-    public static GroupChatFragment newInstance(UserInformation userInformation, Bundle bundle, Fragment fragment,Chat chat) {
-        return new GroupChatFragment(userInformation,bundle,fragment,chat);
+    public static GroupChatFragment newInstance(UserInformation userInformation, Bundle bundle, Fragment fragment, Chat chat) {
+        return new GroupChatFragment(userInformation, bundle, fragment, chat);
 
     }
+
     private String messageReceiverName, messageReceiverImage, messageSenderName;
 
-    private TextView  userLastSeen,groupName;
+    private TextView userLastSeen, groupName;
     private ImageView userImage;
     FirebaseModel firebaseModel = new FirebaseModel();
 
-    ImageView back,info;
+    ImageView back, info;
     private DatabaseReference RootRef;
 
     private MediaRecorder recorder = null;
@@ -105,19 +115,22 @@ public final class GroupChatFragment extends Fragment {
     private EditText MessageInputText;
 
     private final List<Message> messagesList = new ArrayList<>();
-    private MessageAdapter messageAdapter;
+    private GroupChatAdapter groupChatAdapter;
+    private Context mContext;
     private RecyclerView userMessagesList;
 
     private String checker = "", myUrl = "";
     private Uri fileUri;
     int chatCheckValue;
     private StorageTask uploadTask;
-    int a=0;
+    int a = 0;
+
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         firebaseModel.initAll();
+
         RootRef = firebaseModel.getUsersReference();
         ActivityCompat.requestPermissions(getActivity(), permissions, REQUEST_RECORD_AUDIO_PERMISSION);
         BottomNavigationView bnv = getActivity().findViewById(R.id.bottomNavigationView);
@@ -126,12 +139,12 @@ public final class GroupChatFragment extends Fragment {
     }
 
     @Override
-    public void onViewCreated(@Nullable View view,@NonNull Bundle savedInstanceState) {
+    public void onViewCreated(@Nullable View view, @NonNull Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        messageSenderName=userInformation.getNick();
-        messageReceiverName=chat.getName();
-
+        info = view.findViewById(R.id.info);
+        back = view.findViewById(R.id.backtoalldialogs);
+        messageSenderName = userInformation.getNick();
+        messageReceiverName = chat.getName();
         OnBackPressedCallback callback1 = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
@@ -142,18 +155,18 @@ public final class GroupChatFragment extends Fragment {
 
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback1);
 
-        itemClickListener=new MessageAdapter.ItemClickListener() {
+        itemClickListener = new GroupChatAdapter.ItemClickListener() {
             @Override
             public void onItemClick(Clothes clothes, NewsItem newsItem) {
-                if(clothes!=null){
+                if (clothes != null) {
                     RecentMethods.setCurrentFragment(ViewingClothesChat.newInstance(GroupChatFragment.newInstance(userInformation, bundle, fragment, chat), userInformation, bundle), getActivity());
-                }else {
+                } else {
 
                 }
             }
         };
-        messageSenderName=userInformation.getNick();
-        messageReceiverName=chat.getName();
+        messageSenderName = userInformation.getNick();
+        messageReceiverName = chat.getName();
         firebaseModel.getReference().child("groups").child(chat.getChatId()).child("Messages")
                 .addChildEventListener(new ChildEventListener() {
                     @Override
@@ -165,19 +178,19 @@ public final class GroupChatFragment extends Fragment {
                         messages.setType(dataSnapshot.child("type").getValue(String.class));
                         messages.setFrom(dataSnapshot.child("from").getValue(String.class));
                         messages.setTo(dataSnapshot.child("to").getValue(String.class));
-                        if(messages.getType().equals("clothes")){
+                        if (messages.getType().equals("clothes")) {
                             messages.setClothes(dataSnapshot.child("clothes").getValue(Clothes.class));
-                        }else if(messages.getType().equals("look")){
+                        } else if (messages.getType().equals("look")) {
                             messages.setNewsItem(dataSnapshot.child("look").getValue(NewsItem.class));
                         }
                         messagesList.add(messages);
-                        if(messagesList.size()>0 && a==0&& !messages.getFrom().equals(userInformation.getNick())){
-                            Log.d("#####", messageReceiverName);
+                        if (messagesList.size() > 0 && a == 0 && !messages.getFrom().equals(userInformation.getNick())) {
+                            //Log.d("#####", messageReceiverName);
                             firebaseModel.getUsersReference().child(messageSenderName).child("Dialogs")
                                     .child(chat.getChatId()).child("unreadMessages").setValue(0);
                             a++;
                         }
-                        messageAdapter.notifyDataSetChanged();
+                        groupChatAdapter.notifyDataSetChanged();
                         userMessagesList.smoothScrollToPosition(userMessagesList.getAdapter().getItemCount());
                     }
 
@@ -212,20 +225,18 @@ public final class GroupChatFragment extends Fragment {
             }
         });
         groupName = view.findViewById(R.id.custom_profile_name);
+        groupName.setText(messageReceiverName);
         userLastSeen = view.findViewById(R.id.custom_user_last_seen);
-
-
         SendMessageButton = view.findViewById(R.id.send_message_btn);
         SendFilesButton = view.findViewById(R.id.send_files_btn);
         MessageInputText = view.findViewById(R.id.input_message);
-
-        messageAdapter = new MessageAdapter(messagesList, messageSenderName, messageReceiverName,itemClickListener);
+        groupChatAdapter = new GroupChatAdapter(messagesList, messageSenderName, messageReceiverName, itemClickListener, this);
         userMessagesList = view.findViewById(R.id.private_messages_list_of_users);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         userMessagesList.setLayoutManager(linearLayoutManager);
-        userMessagesList.setAdapter(messageAdapter);
+        userMessagesList.setAdapter(groupChatAdapter);
         userMessagesList.setItemViewCacheSize(20);
-        back=view.findViewById(R.id.backtoalldialogs);
+        back = view.findViewById(R.id.backtoalldialogs);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -245,11 +256,11 @@ public final class GroupChatFragment extends Fragment {
             }
         }
         userMessagesList.scrollToPosition(userMessagesList.getAdapter().getItemCount());
-        info=view.findViewById(R.id.info);
+        info = view.findViewById(R.id.info);
         info.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                RecentMethods.setCurrentFragment(GroupsInformationFragment.newInstance(userInformation,bundle,GroupChatFragment.newInstance(userInformation, bundle, fragment, chat),chat),getActivity());
+                RecentMethods.setCurrentFragment(GroupsInformationFragment.newInstance(userInformation, bundle, GroupChatFragment.newInstance(userInformation, bundle, fragment, chat), chat), getActivity());
             }
         });
         Picasso.get().load(messageReceiverImage).placeholder(R.drawable.corners14).into(userImage);
@@ -305,7 +316,7 @@ public final class GroupChatFragment extends Fragment {
                     public void onComplete(@NonNull Task<Uri> task) {
                         Uri downloadUrl = task.getResult();
                         myUrl = downloadUrl.toString();
-                        Send(myUrl, "image",0);
+                        Send(myUrl, "image", 0);
 
                     }
                 });
@@ -313,7 +324,66 @@ public final class GroupChatFragment extends Fragment {
         }
     }
 
+    public void copy(Message message) {
+        ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipData clip = ClipData.newPlainText("CopyText", message.getMessage());
+        clipboard.setPrimaryClip(clip);
+    }
 
+    public void deleteMessage(Message message) {
+        firebaseModel.getReference().child("groups").child(chat.getChatId()).child("Messages").child(message.getMessageID()).removeValue();
+        Log.d("###", "deleteMessage: " + chat.getLastMessage());
+        firebaseModel.getReference().child("groups").child(chat.getChatId()).child("Messages").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                int i = 1;
+                for (DataSnapshot snap : snapshot.getChildren()) {
+                    if (i == snapshot.getChildrenCount()) {
+                        firebaseModel.getUsersReference().child(messageSenderName).child("Dialogs").child(chat.getChatId()).child("lastMessage").setValue(snap.child("message").getValue().toString());
+                        firebaseModel.getUsersReference().child(messageReceiverName).child("Dialogs").child(chat.getChatId()).child("lastMessage").setValue(snap.child("message").getValue().toString());
+                        firebaseModel.getUsersReference().child(messageSenderName).child("Dialogs").child(chat.getChatId()).child("lastTime").setValue(snap.child("time").getValue().toString());
+                        firebaseModel.getUsersReference().child(messageReceiverName).child("Dialogs").child(chat.getChatId()).child("lastTime").setValue(snap.child("time").getValue().toString());
+
+                    }
+                    i++;
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        //addLastMessage("text",);
+
+    }
+
+    public void showChatFunc(Message message) {
+        final Dialog dialog = new Dialog(getContext());
+        dialog.setContentView(R.layout.dialog_chat_depnds);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        RelativeLayout copyLayout = dialog.findViewById(R.id.Copy_relative_layout);
+        RelativeLayout deleteLayout = dialog.findViewById(R.id.Delete_relative_layout);
+
+        copyLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                copy(message);
+                dialog.dismiss();
+            }
+        });
+        deleteLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                deleteMessage(message);
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+    }
 
     private void SendMessage() {
 
@@ -322,7 +392,7 @@ public final class GroupChatFragment extends Fragment {
         if (TextUtils.isEmpty(messageText)) {
             Toast.makeText(getContext(), "first write your message...", Toast.LENGTH_SHORT).show();
         } else {
-            Send(messageText, "text",0);
+            Send(messageText, "text", 0);
         }
 
     }
@@ -347,10 +417,10 @@ public final class GroupChatFragment extends Fragment {
         }).addOnCompleteListener(new OnCompleteListener<Uri>() {
             @Override
             public void onComplete(@NonNull Task<Uri> task) {
-                if(task.isSuccessful()){
+                if (task.isSuccessful()) {
                     Uri downloadUrl = task.getResult();
                     myUrl = downloadUrl.toString();
-                    Send(myUrl, "voice",duration);
+                    Send(myUrl, "voice", duration);
                 }
             }
         });
@@ -369,8 +439,8 @@ public final class GroupChatFragment extends Fragment {
 
                     case MotionEvent.ACTION_DOWN:
                         try {
-                            circleVoice.setVisibility(View.VISIBLE);
-                            voice.setVisibility(View.GONE);
+                            //circleVoice.setVisibility(View.VISIBLE);
+                            //voice.setVisibility(View.GONE);
                             startRecording();
 
                         } catch (IOException e) {
@@ -380,8 +450,8 @@ public final class GroupChatFragment extends Fragment {
                         break;
 
                     case MotionEvent.ACTION_UP:
-                        circleVoice.setVisibility(View.GONE);
-                        voice.setVisibility(View.VISIBLE);
+                        //circleVoice.setVisibility(View.GONE);
+                        //voice.setVisibility(View.VISIBLE);
                         stopRecording();
                         break;
                 }
@@ -444,13 +514,13 @@ public final class GroupChatFragment extends Fragment {
     }
 
 
-    private void addLastMessage(String type, String Message,String name) {
+    private void addLastMessage(String type, String Message, String name) {
 
-        Log.d("####",type);
+        Log.d("####", type);
         switch (type) {
             case "text":
                 //addType("text");
-                Log.d("###", "gg"+messageSenderName+"   "+messageReceiverName+"  "+Message);
+                Log.d("###", "gg" + messageSenderName + "   " + messageReceiverName + "  " + Message);
                 firebaseModel.getUsersReference().child(name).child("Dialogs").child(chat.getChatId()).child("lastMessage").setValue(Message);
 
                 break;
@@ -467,8 +537,8 @@ public final class GroupChatFragment extends Fragment {
         }
         Calendar calendar = Calendar.getInstance();
         firebaseModel.getUsersReference().child(name).child("Dialogs").child(chat.getChatId()).child("lastTime").setValue(RecentMethods.getCurrentTime());
-        Map<String,String> map=new HashMap<>();
-        map= ServerValue.TIMESTAMP;
+        Map<String, String> map = new HashMap<>();
+        map = ServerValue.TIMESTAMP;
         firebaseModel.getUsersReference().child(name).child("Dialogs").child(chat.getChatId()).child("timeMill").setValue(map);
     }
 
@@ -520,17 +590,16 @@ public final class GroupChatFragment extends Fragment {
     }
 
 
-    public void Send(String message, String type,long duration) {
+    public void Send(String message, String type, long duration) {
         String messageSenderRef = chat.getChatId() + "/Messages";
 
 
-
-        for(int i=0;i<chat.getMembers().size();i++){
-            String nick=chat.getMembers().get(i).getNick();
-            addLastMessage(type, message,nick);
+        for (int i = 0; i < chat.getMembers().size(); i++) {
+            String nick = chat.getMembers().get(i).getNick();
+            addLastMessage(type, message, nick);
             addUnread(nick);
-            if(type.equals("image")){
-                String uid=firebaseModel.getUsersReference().child(nick).child("Dialogs")
+            if (type.equals("image")) {
+                String uid = firebaseModel.getUsersReference().child(nick).child("Dialogs")
                         .child(chat.getChatId()).child("dialogueMaterials").push().getKey();
                 firebaseModel.getUsersReference().child(nick).child("Dialogs")
                         .child(chat.getChatId()).child("dialogueMaterials").child(uid).setValue(message);
@@ -557,6 +626,12 @@ public final class GroupChatFragment extends Fragment {
                 MessageInputText.setText("");
             }
         });
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mContext = context;
     }
 
 

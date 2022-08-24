@@ -35,7 +35,7 @@ public class GroupsFragment extends Fragment
     UserInformation userInformation;
     Bundle bundle;
     Fragment fragment;
-
+    private  MessageAdapter messageAdapter;
     public GroupsFragment(UserInformation userInformation,Bundle bundle,Fragment fragment) {
         this.userInformation=userInformation;
         this.bundle=bundle;

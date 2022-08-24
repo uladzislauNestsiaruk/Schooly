@@ -370,13 +370,12 @@ public final class MessageFragment extends Fragment {
         firebaseModel.getUsersReference().child(message.getTo()).child("Chats").child(message.getFrom()).child("Messages").child(message.getId()).removeValue();
         firebaseModel.getUsersReference().child(message.getFrom()).child("Chats").child(message.getTo()).child("Messages").child(message.getId()).removeValue();
         Log.d("###", "deleteMessage: " + chat.getLastMessage());
-        messageAdapter = new MessageAdapter(messagesList, messageSenderName, messageReceiverName, itemClickListener);
         firebaseModel.getUsersReference().child(message.getFrom()).child("Chats").child(message.getTo()).child("Messages").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 int i = 1;
                 for (DataSnapshot snap : snapshot.getChildren()) {
-                    if (i == snapshot.getChildrenCount()){
+                    if (i == snapshot.getChildrenCount()) {
                         firebaseModel.getUsersReference().child(messageSenderName).child("Dialogs").child(messageReceiverName).child("lastMessage").setValue(snap.child("message").getValue().toString());
                         firebaseModel.getUsersReference().child(messageReceiverName).child("Dialogs").child(messageSenderName).child("lastMessage").setValue(snap.child("message").getValue().toString());
                         firebaseModel.getUsersReference().child(messageSenderName).child("Dialogs").child(messageReceiverName).child("lastTime").setValue(snap.child("time").getValue().toString());
@@ -396,9 +395,11 @@ public final class MessageFragment extends Fragment {
         //addLastMessage("text",);
 
     }
-    public void upload(){
+
+    public void upload() {
 
     }
+
     private void DisplayLastSeen() {
         RootRef.child(messageSenderName)
                 .addValueEventListener(new ValueEventListener() {
@@ -610,7 +611,9 @@ public final class MessageFragment extends Fragment {
 
 
     public void showChatFunc(Message message) {
+        Log.d("###", "1: " + message.getMessage());
         final Dialog dialog = new Dialog(getContext());
+        Log.d("###", "2: " + message.getMessage());
         dialog.setContentView(R.layout.dialog_chat_depnds);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         RelativeLayout copyLayout = dialog.findViewById(R.id.Copy_relative_layout);
