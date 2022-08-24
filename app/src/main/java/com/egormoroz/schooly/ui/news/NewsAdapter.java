@@ -65,6 +65,7 @@ import com.egormoroz.schooly.ui.profile.Reason;
 import com.egormoroz.schooly.ui.profile.SendLookAdapter;
 import com.egormoroz.schooly.ui.profile.ViewingLookFragment;
 import com.egormoroz.schooly.ui.profile.Wardrobe.ConstituentsAdapter;
+import com.egormoroz.schooly.ui.profile.Wardrobe.ViewingClothesWardrobe;
 import com.egormoroz.schooly.ui.profile.Wardrobe.WardrobeFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -819,8 +820,14 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
                     }
                 }else {
                     if(chat.getType().equals("talk")){
-                        RecentMethods.setCurrentFragment(GroupChatFragment.newInstance(userInformation, bundle, NewsFragment.newInstance( userInformation, bundle), chat),activity);
-                        bottomSheetDialog.dismiss();
+                        RecentMethods.loadChatMembers(userInformation.getNick(), chat.getChatId(), DefaultDatabase, new Callbacks.GetChatMembers() {
+                            @Override
+                            public void getChatMembers(ArrayList<UserPeopleAdapter> chatMembers) {
+                                chat.setMembers(chatMembers);
+                                RecentMethods.setCurrentFragment(GroupChatFragment.newInstance(userInformation, bundle, NewsFragment.newInstance( userInformation, bundle), chat),activity);
+                                bottomSheetDialog.dismiss();
+                            }
+                        });
                     }else{
                         RecentMethods.setCurrentFragment(MessageFragment.newInstance(userInformation, bundle, NewsFragment.newInstance( userInformation, bundle), chat),activity);
                         bottomSheetDialog.dismiss();

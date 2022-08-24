@@ -448,8 +448,14 @@ public class ViewingMyClothesMain extends Fragment {
                     }
                 }else {
                     if(chat.getType().equals("talk")){
-                        RecentMethods.setCurrentFragment(GroupChatFragment.newInstance(userInformation, bundle, ViewingMyClothesMain.newInstance(fragment, userInformation, bundle), chat),getActivity());
-                        bottomSheetDialog.dismiss();
+                        RecentMethods.loadChatMembers(userInformation.getNick(), chat.getChatId(), firebaseModel, new Callbacks.GetChatMembers() {
+                            @Override
+                            public void getChatMembers(ArrayList<UserPeopleAdapter> chatMembers) {
+                                chat.setMembers(chatMembers);
+                                RecentMethods.setCurrentFragment(GroupChatFragment.newInstance(userInformation, bundle, ViewingMyClothesMain.newInstance(fragment, userInformation, bundle), chat),getActivity());
+                                bottomSheetDialog.dismiss();
+                            }
+                        });
                     }else{
                         RecentMethods.setCurrentFragment(MessageFragment.newInstance(userInformation, bundle, ViewingMyClothesMain.newInstance(fragment, userInformation, bundle), chat),getActivity());
                         bottomSheetDialog.dismiss();

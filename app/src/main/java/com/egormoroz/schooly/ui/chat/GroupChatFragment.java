@@ -159,8 +159,9 @@ public final class GroupChatFragment extends Fragment {
             @Override
             public void onItemClick(Clothes clothes, NewsItem newsItem) {
                 if (clothes != null) {
-                    RecentMethods.setCurrentFragment(ViewingClothesChat.newInstance(GroupChatFragment.newInstance(userInformation, bundle, fragment, chat), userInformation, bundle), getActivity());
+                    RecentMethods.setCurrentFragment(ViewingClothesGroup.newInstance(GroupChatFragment.newInstance(userInformation, bundle, fragment, chat), userInformation, bundle), getActivity());
                 } else {
+                    RecentMethods.setCurrentFragment(ViewingLookFragmentGroup.newInstance(GroupChatFragment.newInstance(userInformation, bundle, fragment, chat), userInformation, bundle), getActivity());
 
                 }
             }

@@ -47,7 +47,7 @@ public class GroupChatAdapter extends RecyclerView.Adapter<GroupChatAdapter.Grou
     static Clothes trueClothes;
     private MessageFragment messageFragment;
     private GroupChatFragment groupChatFragment;
-    static NewsItem newsItem;
+    static  NewsItem newsItemToViewing;
     private boolean isMpPlaying = false;
     private CurrentVoice currentVoice = new CurrentVoice();
     GroupChatAdapter.ItemClickListener itemClickListener;
@@ -547,7 +547,7 @@ public class GroupChatAdapter extends RecyclerView.Adapter<GroupChatAdapter.Grou
                         @Override
                         public void onClick(View v) {
                             itemClickListener.onItemClick(null, userMessagesList.get(groupChatViewHolder.getAdapterPosition()).getNewsItem());
-                            trueClothes = userMessagesList.get(groupChatViewHolder.getAdapterPosition()).getClothes();
+                            newsItemToViewing = userMessagesList.get(groupChatViewHolder.getAdapterPosition()).getNewsItem();
                         }
                     });
                 } else {
@@ -565,7 +565,7 @@ public class GroupChatAdapter extends RecyclerView.Adapter<GroupChatAdapter.Grou
                         @Override
                         public void onClick(View v) {
                             itemClickListener.onItemClick(null, userMessagesList.get(groupChatViewHolder.getAdapterPosition()).getNewsItem());
-                            trueClothes = userMessagesList.get(groupChatViewHolder.getAdapterPosition()).getClothes();
+                            newsItemToViewing = userMessagesList.get(groupChatViewHolder.getAdapterPosition()).getNewsItem();
                         }
                     });
                 }
@@ -586,6 +586,10 @@ public class GroupChatAdapter extends RecyclerView.Adapter<GroupChatAdapter.Grou
     public void delete(int position) {
         userMessagesList.remove(position);
         notifyItemRemoved(position);
+    }
+
+    public static void lookInfo(ItemClickListener itemClickListener){
+        itemClickListener.onItemClick(null, newsItemToViewing);
     }
 
     public interface ItemClickListener {

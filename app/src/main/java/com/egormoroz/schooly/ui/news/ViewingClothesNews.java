@@ -34,6 +34,7 @@ import com.egormoroz.schooly.Subscriber;
 import com.egormoroz.schooly.ui.chat.Chat;
 import com.egormoroz.schooly.ui.chat.GroupChatFragment;
 import com.egormoroz.schooly.ui.chat.MessageFragment;
+import com.egormoroz.schooly.ui.chat.ViewingClothesChat;
 import com.egormoroz.schooly.ui.coins.CoinsFragmentSecond;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
 import com.egormoroz.schooly.ui.main.Shop.FittingFragment;
@@ -473,8 +474,14 @@ public class ViewingClothesNews extends Fragment {
                     }
                 }else {
                     if(chat.getType().equals("talk")){
-                        RecentMethods.setCurrentFragment(GroupChatFragment.newInstance(userInformation, bundle, ViewingClothesNews.newInstance(fragment, userInformation, bundle), chat),getActivity());
-                        bottomSheetDialog.dismiss();
+                        RecentMethods.loadChatMembers(userInformation.getNick(), chat.getChatId(), firebaseModel, new Callbacks.GetChatMembers() {
+                            @Override
+                            public void getChatMembers(ArrayList<UserPeopleAdapter> chatMembers) {
+                                chat.setMembers(chatMembers);
+                                RecentMethods.setCurrentFragment(GroupChatFragment.newInstance(userInformation, bundle, ViewingClothesNews.newInstance(fragment, userInformation, bundle), chat),getActivity());
+                                bottomSheetDialog.dismiss();
+                            }
+                        });
                     }else{
                         RecentMethods.setCurrentFragment(MessageFragment.newInstance(userInformation, bundle, ViewingClothesNews.newInstance(fragment, userInformation, bundle), chat),getActivity());
                         bottomSheetDialog.dismiss();

@@ -35,6 +35,7 @@ import com.egormoroz.schooly.ui.main.MyClothes.PresentClothesFragment;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
 import com.egormoroz.schooly.ui.main.Shop.ViewingClothes;
 import com.egormoroz.schooly.ui.main.UserInformation;
+import com.egormoroz.schooly.ui.news.NewsFragment;
 import com.egormoroz.schooly.ui.people.UserPeopleAdapter;
 import com.egormoroz.schooly.ui.profile.Wardrobe.ViewingClothesWardrobe;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -449,8 +450,14 @@ public class ClothesViewingProfile extends Fragment {
                     }
                 }else {
                     if(chat.getType().equals("talk")){
-                        RecentMethods.setCurrentFragment(GroupChatFragment.newInstance(userInformation, bundle, ClothesViewingProfile.newInstance(type,fragment, userInformation, bundle), chat),getActivity());
-                        bottomSheetDialog.dismiss();
+                        RecentMethods.loadChatMembers(userInformation.getNick(), chat.getChatId(), firebaseModel, new Callbacks.GetChatMembers() {
+                            @Override
+                            public void getChatMembers(ArrayList<UserPeopleAdapter> chatMembers) {
+                                chat.setMembers(chatMembers);
+                                RecentMethods.setCurrentFragment(GroupChatFragment.newInstance(userInformation, bundle, ClothesViewingProfile.newInstance(type,fragment, userInformation, bundle), chat),getActivity());
+                                bottomSheetDialog.dismiss();
+                            }
+                        });
                     }else{
                         RecentMethods.setCurrentFragment(MessageFragment.newInstance(userInformation, bundle, ClothesViewingProfile.newInstance(type,fragment, userInformation, bundle), chat),getActivity());
                         bottomSheetDialog.dismiss();

@@ -1,23 +1,14 @@
-package com.egormoroz.schooly.ui.profile;
+package com.egormoroz.schooly.ui.chat;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.text.Editable;
-import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.PixelCopy;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,37 +22,29 @@ import android.widget.Toast;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.egormoroz.schooly.Callbacks;
-import com.egormoroz.schooly.FacePart;
 import com.egormoroz.schooly.FilamentModel;
 import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.InstagramShareFragment;
 import com.egormoroz.schooly.LoadNewsItemInScene;
-import com.egormoroz.schooly.Person;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
-import com.egormoroz.schooly.Subscriber;
-import com.egormoroz.schooly.ui.chat.Chat;
-import com.egormoroz.schooly.ui.chat.GroupChatFragment;
-import com.egormoroz.schooly.ui.chat.MessageFragment;
-import com.egormoroz.schooly.ui.main.MyClothes.CreateClothesFragment;
-import com.egormoroz.schooly.ui.main.MyClothes.CriteriaFragment;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
-import com.egormoroz.schooly.ui.main.Shop.ViewingClothes;
 import com.egormoroz.schooly.ui.main.UserInformation;
 import com.egormoroz.schooly.ui.news.Comment;
 import com.egormoroz.schooly.ui.news.CommentAdapter;
-import com.egormoroz.schooly.ui.news.NewsFragment;
 import com.egormoroz.schooly.ui.news.NewsItem;
 import com.egormoroz.schooly.ui.news.ViewingClothesNews;
-import com.egormoroz.schooly.ui.people.PeopleFragment;
 import com.egormoroz.schooly.ui.people.UserPeopleAdapter;
-import com.egormoroz.schooly.ui.profile.Wardrobe.AcceptNewLook;
+import com.egormoroz.schooly.ui.profile.Complain;
+import com.egormoroz.schooly.ui.profile.ComplainAdapter;
+import com.egormoroz.schooly.ui.profile.ProfileFragment;
+import com.egormoroz.schooly.ui.profile.Reason;
+import com.egormoroz.schooly.ui.profile.SendLookAdapter;
 import com.egormoroz.schooly.ui.profile.Wardrobe.ConstituentsAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -84,12 +67,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
-import java.util.function.Consumer;
 
-import javax.security.auth.callback.Callback;
-
-public class ViewingLookFragment extends Fragment {
+public class ViewingLookFragmentGroup extends Fragment {
 
     FirebaseModel firebaseModel=new FirebaseModel();
     static FirebaseModel firebaseNewsModel=new FirebaseModel();
@@ -118,7 +97,7 @@ public class ViewingLookFragment extends Fragment {
     static FilamentModel filamentModel=new FilamentModel();
     String getEditText;
 
-    public ViewingLookFragment(Fragment fragment,UserInformation userInformation,Bundle bundle) {
+    public ViewingLookFragmentGroup(Fragment fragment,UserInformation userInformation,Bundle bundle) {
         this.fragment = fragment;
         this.userInformation=userInformation;
         this.bundle=bundle;
@@ -126,8 +105,8 @@ public class ViewingLookFragment extends Fragment {
         DefaultDatabase.initAll();
     }
 
-    public static ViewingLookFragment newInstance(Fragment fragment,UserInformation userInformation,Bundle bundle) {
-        return new ViewingLookFragment(fragment,userInformation,bundle);
+    public static ViewingLookFragmentGroup newInstance(Fragment fragment, UserInformation userInformation, Bundle bundle) {
+        return new ViewingLookFragmentGroup(fragment,userInformation,bundle);
 
     }
 
@@ -176,9 +155,9 @@ public class ViewingLookFragment extends Fragment {
         };
 
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
-        LooksAdapter.lookInfo(new LooksAdapter.ItemClickListener() {
+        GroupChatAdapter.lookInfo(new GroupChatAdapter.ItemClickListener() {
             @Override
-            public void onItemClick(NewsItem newsItem) {
+            public void onItemClick(Clothes clothes, NewsItem newsItem) {
                 nickView.setText(newsItem.getNick());
                 nickView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -191,9 +170,9 @@ public class ViewingLookFragment extends Fragment {
                                     Toast.makeText(getContext(), R.string.usernotfound, Toast.LENGTH_SHORT).show();
                                 }else {
                                     if(userNameToProfile.equals(nick)){
-                                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback",nick,ViewingLookFragment.newInstance(fragment, userInformation,bundle),userInformation,bundle),getActivity());
+                                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback",nick,ViewingLookFragmentGroup.newInstance(fragment, userInformation,bundle),userInformation,bundle),getActivity());
                                     }else {
-                                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile,ViewingLookFragment.newInstance(fragment, userInformation,bundle),userInformation,bundle
+                                        RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile,ViewingLookFragmentGroup.newInstance(fragment, userInformation,bundle),userInformation,bundle
                                         ), getActivity());
                                     }
                                 }
@@ -734,7 +713,7 @@ public class ViewingLookFragment extends Fragment {
             @Override
             public void onItemClick(Clothes clothes) {
                 bottomSheetDialog.dismiss();
-                RecentMethods.setCurrentFragment(ViewingClothesNews.newInstance(ViewingLookFragment.newInstance(fragment, userInformation,bundle),userInformation,bundle), (Activity) getContext());
+                RecentMethods.setCurrentFragment(ViewingClothesNews.newInstance(ViewingLookFragmentGroup.newInstance(fragment, userInformation,bundle),userInformation,bundle), (Activity) getContext());
             }
         };
         if(newsItem.getClothesCreators()==null){
@@ -783,7 +762,7 @@ public class ViewingLookFragment extends Fragment {
         linearElse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(InstagramShareFragment.newInstance(ViewingLookFragment.newInstance( fragment,userInformation, bundle), userInformation, bundle, null,"look",newsItem,null,"all"), getActivity());
+                RecentMethods.setCurrentFragment(InstagramShareFragment.newInstance(ViewingLookFragmentGroup.newInstance( fragment,userInformation, bundle), userInformation, bundle, null,"look",newsItem,null,"all"), getActivity());
                 bottomSheetDialog.dismiss();
             }
         });
@@ -791,14 +770,14 @@ public class ViewingLookFragment extends Fragment {
         linearTelegram.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(InstagramShareFragment.newInstance(ViewingLookFragment.newInstance( fragment,userInformation, bundle), userInformation, bundle, null,"look",newsItem,null,"telegram"), getActivity());
+                RecentMethods.setCurrentFragment(InstagramShareFragment.newInstance(ViewingLookFragmentGroup.newInstance( fragment,userInformation, bundle), userInformation, bundle, null,"look",newsItem,null,"telegram"), getActivity());
                 bottomSheetDialog.dismiss();
             }
         });
         linearInstagram.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(InstagramShareFragment.newInstance(ViewingLookFragment.newInstance(fragment, userInformation, bundle), userInformation, bundle, null,"look",newsItem,null,"instagram"), getActivity());
+                RecentMethods.setCurrentFragment(InstagramShareFragment.newInstance(ViewingLookFragmentGroup.newInstance(fragment, userInformation, bundle), userInformation, bundle, null,"look",newsItem,null,"instagram"), getActivity());
                 bottomSheetDialog.dismiss();
             }
         });
@@ -891,12 +870,12 @@ public class ViewingLookFragment extends Fragment {
                             @Override
                             public void getChatMembers(ArrayList<UserPeopleAdapter> chatMembers) {
                                 chat.setMembers(chatMembers);
-                                RecentMethods.setCurrentFragment(GroupChatFragment.newInstance(userInformation, bundle, ViewingLookFragment.newInstance(fragment, userInformation, bundle), chat),getActivity());
+                                RecentMethods.setCurrentFragment(GroupChatFragment.newInstance(userInformation, bundle, ViewingLookFragmentGroup.newInstance(fragment, userInformation, bundle), chat),getActivity());
                                 bottomSheetDialog.dismiss();
                             }
                         });
                     }else{
-                        RecentMethods.setCurrentFragment(MessageFragment.newInstance(userInformation, bundle, ViewingLookFragment.newInstance(fragment, userInformation, bundle), chat),getActivity());
+                        RecentMethods.setCurrentFragment(MessageFragment.newInstance(userInformation, bundle, ViewingLookFragmentGroup.newInstance(fragment, userInformation, bundle), chat),getActivity());
                         bottomSheetDialog.dismiss();
                     }
                 }
@@ -1236,3 +1215,4 @@ public class ViewingLookFragment extends Fragment {
     }
 
 }
+

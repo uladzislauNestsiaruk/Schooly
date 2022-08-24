@@ -160,12 +160,18 @@ public final class MessageFragment extends Fragment {
         };
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback1);
 
-        /*itemClickListener=new MessageAdapter.ItemClickListener() {
+        itemClickListener=new MessageAdapter.ItemClickListener() {
             @Override
-            public void onItemClick(Clothes clothes) {
-                RecentMethods.setCurrentFragment(ViewingClothesChat.newInstance(MessageFragment.newInstance(userInformation, bundle, fragment, chat), userInformation, bundle), getActivity());
+            public void onItemClick(Clothes clothes, NewsItem newsItem) {
+                if (clothes != null) {
+                    RecentMethods.setCurrentFragment(ViewingClothesChat.newInstance(MessageFragment.newInstance(userInformation, bundle, fragment, chat), userInformation, bundle), getActivity());
+                } else {
+                    RecentMethods.setCurrentFragment(ViewingLookFragmentChat.newInstance(MessageFragment.newInstance(userInformation, bundle, fragment, chat), userInformation, bundle), getActivity());
+
+                }
             }
-        };*/
+
+        };
         messageSenderName = userInformation.getNick();
         messageReceiverName = chat.getName();
         firebaseModel.getUsersReference().child(messageSenderName).child("Chats").child(messageReceiverName).child("Messages")
@@ -182,7 +188,8 @@ public final class MessageFragment extends Fragment {
                         if (messages.getType().equals("clothes")) {
                             messages.setClothes(dataSnapshot.child("clothes").getValue(Clothes.class));
                         } else if (messages.getType().equals("look")) {
-                            messages.setNewsItem(dataSnapshot.child("newsItem").getValue(NewsItem.class));
+                              Log.d("### #", "look");
+                            messages.setNewsItem(dataSnapshot.child("look").getValue(NewsItem.class));
                         }
                         messagesList.add(messages);
                         if (messagesList.size() > 0 && a == 0 && !messages.getFrom().equals(userInformation.getNick())) {

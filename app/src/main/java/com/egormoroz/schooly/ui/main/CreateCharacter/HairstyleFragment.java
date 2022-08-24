@@ -74,18 +74,20 @@ public class HairstyleFragment extends Fragment {
                 CreateCharacterFragment.loadNewFacePart(facePart);
             }
         };
-        RecentMethods.getCurrentFaceParts("hair", firebaseModel, new Callbacks.loadFacePartsCustom() {
-            @Override
-            public void LoadNews(ArrayList<FacePart> facePartsArrayList) {
-                Log.d("######", "a  "+facePartsArrayList);
-                loadBuffers(facePartsArrayList);
-            }
-        });
+//        RecentMethods.getCurrentFaceParts("hair", firebaseModel, new Callbacks.loadFacePartsCustom() {
+//            @Override
+//            public void LoadNews(ArrayList<FacePart> facePartsArrayList) {
+//                Log.d("######", "a  "+facePartsArrayList);
+//                loadBuffers(facePartsArrayList);
+//            }
+//        });
 
         circularProgressIndicator=view.findViewById(R.id.progressIndicator);
         recyclerView=view.findViewById(R.id.recyclerSkinColour);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
 
+//        ArrayList<FacePart> facePartArrayList=new ArrayList<>();
+//        FacePart facePart=new FacePart("hair", "hair", )
     }
 
     public void loadBuffers(ArrayList<FacePart>  facePartArrayList){

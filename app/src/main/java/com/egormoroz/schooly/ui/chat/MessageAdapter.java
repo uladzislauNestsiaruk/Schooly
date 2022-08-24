@@ -28,6 +28,7 @@ import com.egormoroz.schooly.ui.chat.holders.ImageViewerActivity;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
 import com.egormoroz.schooly.ui.main.Shop.NewClothesAdapter;
 import com.egormoroz.schooly.ui.news.NewsItem;
+import com.egormoroz.schooly.ui.profile.LooksAdapter;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -50,6 +51,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     private MessageFragment messageFragment;
     private GroupChatFragment groupChatFragment;
     static NewsItem newsItem;
+    static  NewsItem newsItemToViewing;
     private boolean isMpPlaying = false;
     private CurrentVoice currentVoice = new CurrentVoice();
     MessageAdapter.ItemClickListener itemClickListener;
@@ -556,7 +558,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                         @Override
                         public void onClick(View v) {
                             itemClickListener.onItemClick(null, userMessagesList.get(messageViewHolder.getAdapterPosition()).getNewsItem());
-                            trueClothes = userMessagesList.get(messageViewHolder.getAdapterPosition()).getClothes();
+                            newsItemToViewing = userMessagesList.get(messageViewHolder.getAdapterPosition()).getNewsItem();
                         }
                     });
                 } else {
@@ -574,7 +576,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                         @Override
                         public void onClick(View v) {
                             itemClickListener.onItemClick(null, userMessagesList.get(messageViewHolder.getAdapterPosition()).getNewsItem());
-                            trueClothes = userMessagesList.get(messageViewHolder.getAdapterPosition()).getClothes();
+                            newsItemToViewing = userMessagesList.get(messageViewHolder.getAdapterPosition()).getNewsItem();
                         }
                     });
                 }
@@ -583,6 +585,10 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         }
 
 
+    }
+
+    public static void lookInfo(ItemClickListener itemClickListener){
+        itemClickListener.onItemClick(null, newsItemToViewing);
     }
 
 

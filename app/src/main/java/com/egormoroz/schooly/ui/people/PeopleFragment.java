@@ -234,7 +234,7 @@ public class PeopleFragment extends Fragment {
                 , new ArrayList<>(), ""," ","open","open","open","open",
                 new ArrayList<>(),"regular", new ArrayList<>(),0,new ArrayList<>(),new ArrayList<>()
                 ,new ArrayList<>(),new ArrayList<>(),new ArrayList<>(),new ArrayList<>()
-                ,new ArrayList<Clothes>(),new Person(new FacePart(), new FacePart(), new FacePart(), new FacePart(), new FacePart(), new FacePart(), new FacePart(), new FacePart("", "", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Fma.glb?alt=media&token=f7430695-13cb-4365-8910-c61b59a96acf", "",b ),
+                ,new ArrayList<Clothes>(),new Person(new FacePart(), new FacePart(), new FacePart(), new FacePart(), new FacePart(), new FacePart(), new FacePart(), new FacePart("", "", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Fma.glb?alt=media&token=f7430695-13cb-4365-8910-c61b59a96acf", "",b ,  "",0f,0f,0f),
                 new FacePart(), new FacePart()),
                 new ArrayList<>(),new ArrayList<>(),"",""));
     }
@@ -351,7 +351,7 @@ public class PeopleFragment extends Fragment {
                         ArrayList <UserPeopleAdapter> userPeopleAdapters=new ArrayList<>();
                         for(  DataSnapshot snap  :snapshot.getChildren()) {
                             UserPeopleAdapter userPeopleAdapter=snap.getValue( UserPeopleAdapter.class);
-                            userPeopleAdapters.add(userPeopleAdapter);
+                            if(!userInformation.getSubscription().contains(userPeopleAdapter.getNick()))userPeopleAdapters.add(userPeopleAdapter);
                             if(userPeopleAdapters.size()==49){
                                 break;
                             }

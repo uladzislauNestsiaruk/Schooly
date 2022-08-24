@@ -1,5 +1,6 @@
 package com.egormoroz.schooly;
 
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.view.Choreographer;
@@ -157,99 +158,142 @@ public class FilamentModel {
     }
 
     public void loadPointLights(){
-        int light=EntityManager.get().create();
         float[] float1 = Colors.cct(5_500.0f);
+        int light=EntityManager.get().create();
         new LightManager.Builder(LightManager.Type.POINT)
                 .color(float1[0], float1[1], float1[2])
-                .intensity(100_000_000.0f)
+                .intensity(250_000_000.0f)
                 .falloff(20)
-                .position(0.0f, 6.0f, 8.0f)
+                .position(-8.0f, 6.0f, 8.0f)
                 .build(engine, light);
         int light1=EntityManager.get().create();
         new LightManager.Builder(LightManager.Type.POINT)
                 .color(float1[0], float1[1], float1[2])
-                .intensity(180_000_000.0f)
+                .intensity(250_000_000.0f)
                 .falloff(20)
-                .position(-7.0f, 8.0f, -10.0f)
+                .position(8.0f, 6.0f, 8.0f)
                 .build(engine, light1);
         int light2=EntityManager.get().create();
         new LightManager.Builder(LightManager.Type.POINT)
                 .color(float1[0], float1[1], float1[2])
-                .intensity(110_000_000.0f)
-                .falloff(16)
-                .position(-7.0f, 8.0f, -6.0f)
+                .intensity(120_000_000.0f)
+                .falloff(20)
+                .position(0.0f, 17.0f, 8.0f)
                 .build(engine, light2);
         int light3=EntityManager.get().create();
         new LightManager.Builder(LightManager.Type.POINT)
                 .color(float1[0], float1[1], float1[2])
-                .intensity(110_000_000.0f)
-                .falloff(15)
-                .position(7.0f, 8.0f, -6.0f)
+                .intensity(200_000_000.0f)
+                .falloff(20)
+                .position(-8.0f, 6.0f, -8.0f)
                 .build(engine, light3);
         int light4=EntityManager.get().create();
         new LightManager.Builder(LightManager.Type.POINT)
                 .color(float1[0], float1[1], float1[2])
-                .intensity(40_000_000.0f)
-                .falloff(9)
-                .position(0.0f, -5.0f, -2.0f)
+                .intensity(200_000_000.0f)
+                .falloff(20)
+                .position(8.0f, 6.0f, -8.0f)
                 .build(engine, light4);
         int light5=EntityManager.get().create();
         new LightManager.Builder(LightManager.Type.POINT)
                 .color(float1[0], float1[1], float1[2])
-                .intensity(40_000_000.0f)
-                .falloff(9)
-                .position(0.0f, -4.0f, 0.0f)
+                .intensity(90_000_000.0f)
+                .falloff(20)
+                .position(0.0f, 17.0f, -8.0f)
                 .build(engine, light5);
         int light6=EntityManager.get().create();
         new LightManager.Builder(LightManager.Type.POINT)
                 .color(float1[0], float1[1], float1[2])
-                .intensity(80_000_000.0f)
-                .falloff(16)
-                .position(7.0f, 11.0f, 8.0f)
+                .intensity(50_000_000.0f)
+                .falloff(20)
+                .position(8.0f, 17f, 0.0f)
                 .build(engine, light6);
         int light7=EntityManager.get().create();
         new LightManager.Builder(LightManager.Type.POINT)
                 .color(float1[0], float1[1], float1[2])
-                .intensity(10_000_000.0f)
-                .falloff(9)
-                .position(0.0f, 3.0f, 5.0f)
-                .build(engine, light7);
-        int light8=EntityManager.get().create();
-        new LightManager.Builder(LightManager.Type.POINT)
-                .color(float1[0], float1[1], float1[2])
-                .intensity(30_000_000.0f)
-                .falloff(15)
-                .position(0.0f, 17.0f, 5.0f)
-                .build(engine, light8);
-        int light9=EntityManager.get().create();
-        new LightManager.Builder(LightManager.Type.POINT)
-                .color(float1[0], float1[1], float1[2])
-                .intensity(15_000_000.0f)
-                .falloff(9)
-                .position(0.0f, 17.0f, -5.0f)
-                .build(engine, light9);
-        int light10=EntityManager.get().create();
-        new LightManager.Builder(LightManager.Type.POINT)
-                .color(float1[0], float1[1], float1[2])
                 .intensity(50_000_000.0f)
-                .falloff(9)
-                .position(7.0f, 4.0f, 0.0f)
-                .build(engine, light10);
-        int light11=EntityManager.get().create();
-        new LightManager.Builder(LightManager.Type.POINT)
-                .color(float1[0], float1[1], float1[2])
-                .intensity(40_000_000.0f)
-                .falloff(9)
-                .position(-7.0f, 15.0f, 0.0f)
-                .build(engine, light11);
-        int light12=EntityManager.get().create();
-        new LightManager.Builder(LightManager.Type.POINT)
-                .color(float1[0], float1[1], float1[2])
-                .intensity(40_000_000.0f)
-                .falloff(9)
-                .position(7.0f, 15.0f, 0.0f)
-                .build(engine, light12);
-        int[] lights={light,light2,light3,light4,light8,light9,light10};
+                .falloff(20)
+                .position(-8.0f, 17.0f, 0.0f)
+                .build(engine, light7);
+//        int light2=EntityManager.get().create();
+//        new LightManager.Builder(LightManager.Type.POINT)
+//                .color(float1[0], float1[1], float1[2])
+//                .intensity(110_000_000.0f)
+//                .falloff(16)
+//                .position(-7.0f, 8.0f, -6.0f)
+//                .build(engine, light2);
+//        int light3=EntityManager.get().create();
+//        new LightManager.Builder(LightManager.Type.POINT)
+//                .color(float1[0], float1[1], float1[2])
+//                .intensity(110_000_000.0f)
+//                .falloff(15)
+//                .position(7.0f, 8.0f, -6.0f)
+//                .build(engine, light3);
+//        int light4=EntityManager.get().create();
+//        new LightManager.Builder(LightManager.Type.POINT)
+//                .color(float1[0], float1[1], float1[2])
+//                .intensity(40_000_000.0f)
+//                .falloff(9)
+//                .position(0.0f, -5.0f, -2.0f)
+//                .build(engine, light4);
+//        int light5=EntityManager.get().create();
+//        new LightManager.Builder(LightManager.Type.POINT)
+//                .color(float1[0], float1[1], float1[2])
+//                .intensity(40_000_000.0f)
+//                .falloff(9)
+//                .position(0.0f, -4.0f, 0.0f)
+//                .build(engine, light5);
+//        int light6=EntityManager.get().create();
+//        new LightManager.Builder(LightManager.Type.POINT)
+//                .color(float1[0], float1[1], float1[2])
+//                .intensity(80_000_000.0f)
+//                .falloff(16)
+//                .position(7.0f, 11.0f, 8.0f)
+//                .build(engine, light6);
+//        int light7=EntityManager.get().create();
+//        new LightManager.Builder(LightManager.Type.POINT)
+//                .color(float1[0], float1[1], float1[2])
+//                .intensity(10_000_000.0f)
+//                .falloff(9)
+//                .position(0.0f, 3.0f, 5.0f)
+//                .build(engine, light7);
+//        int light8=EntityManager.get().create();
+//        new LightManager.Builder(LightManager.Type.POINT)
+//                .color(float1[0], float1[1], float1[2])
+//                .intensity(30_000_000.0f)
+//                .falloff(15)
+//                .position(0.0f, 17.0f, 5.0f)
+//                .build(engine, light8);
+//        int light9=EntityManager.get().create();
+//        new LightManager.Builder(LightManager.Type.POINT)
+//                .color(float1[0], float1[1], float1[2])
+//                .intensity(15_000_000.0f)
+//                .falloff(9)
+//                .position(0.0f, 17.0f, -5.0f)
+//                .build(engine, light9);
+//        int light10=EntityManager.get().create();
+//        new LightManager.Builder(LightManager.Type.POINT)
+//                .color(float1[0], float1[1], float1[2])
+//                .intensity(50_000_000.0f)
+//                .falloff(9)
+//                .position(7.0f, 4.0f, 0.0f)
+//                .build(engine, light10);
+//        int light11=EntityManager.get().create();
+//        new LightManager.Builder(LightManager.Type.POINT)
+//                .color(float1[0], float1[1], float1[2])
+//                .intensity(40_000_000.0f)
+//                .falloff(9)
+//                .position(-7.0f, 15.0f, 0.0f)
+//                .build(engine, light11);
+//        int light12=EntityManager.get().create();
+//        new LightManager.Builder(LightManager.Type.POINT)
+//                .color(float1[0], float1[1], float1[2])
+//                .intensity(40_000_000.0f)
+//                .falloff(9)
+//                .position(7.0f, 15.0f, 0.0f)
+//                .build(engine, light12);
+        //int[] lights={light,light2,light3,light4,light8,light9,light10};
+        int[] lights={light,light1,light2,light3,light4,light5,light6,light7};
         modelViewer.getScene().addEntities(lights);
     }
 
@@ -276,7 +320,8 @@ public class FilamentModel {
         int[] e=filamentAsset.getEntities();
         MaterialInstance material=modelViewer.getEngine().getRenderableManager().getMaterialInstanceAt(modelViewer.getEngine().getRenderableManager().getInstance(e[0]),0);
         //material.setParameter("baseColor",1f, 1f, 1f, 1.0f);
-        material.setParameter("baseColorFactor",  Colors.RgbaType.SRGB,0.5f, 0.2f, 0.4f,1f);
+
+        material.setParameter("baseColorFactor",  Colors.RgbaType.SRGB,1f, 1f, 1f,1f);
         modelViewer.getScene().addEntities(filamentAsset.getEntities());
         loadStartTime=System.nanoTime();
         loadStartFence=modelViewer.getEngine().createFence();
