@@ -487,8 +487,8 @@ public final class MessageFragment extends Fragment {
 
                     case MotionEvent.ACTION_DOWN:
                         try {
-                            circleVoice.setVisibility(View.VISIBLE);
-                            voice.setVisibility(View.GONE);
+                            //circleVoice.setVisibility(View.VISIBLE);
+                            //voice.setVisibility(View.GONE);
                             startRecording();
 
                         } catch (IOException e) {
@@ -498,8 +498,8 @@ public final class MessageFragment extends Fragment {
                         break;
 
                     case MotionEvent.ACTION_UP:
-                        circleVoice.setVisibility(View.GONE);
-                        voice.setVisibility(View.VISIBLE);
+                        //circleVoice.setVisibility(View.GONE);
+                        //voice.setVisibility(View.VISIBLE);
                         stopRecording();
                         break;
                 }
