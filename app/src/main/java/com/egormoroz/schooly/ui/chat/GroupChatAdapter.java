@@ -252,6 +252,58 @@ public class GroupChatAdapter extends RecyclerView.Adapter<GroupChatAdapter.Grou
                 return true;
             }
         });
+        groupChatViewHolder.inVoice.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction() & MotionEvent.ACTION_MASK) {
+
+                    case MotionEvent.ACTION_DOWN:
+                        timeBefore[0] = System.currentTimeMillis();
+                        break;
+
+                    case MotionEvent.ACTION_UP:
+                        long timeAfter = System.currentTimeMillis();
+                        Log.d("###", "time: " + (timeAfter - timeBefore[0]));
+                        if ((timeAfter - timeBefore[0]) > 500) {
+                            try {
+                                groupChatFragment.showChatFunc(messages);
+                            } catch (Exception e) {
+
+                            }
+
+                        }
+                        break;
+                }
+                return true;
+
+            }
+        });
+        groupChatViewHolder.outVoice.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction() & MotionEvent.ACTION_MASK) {
+
+                    case MotionEvent.ACTION_DOWN:
+                        timeBefore[0] = System.currentTimeMillis();
+                        break;
+
+                    case MotionEvent.ACTION_UP:
+                        long timeAfter = System.currentTimeMillis();
+                        Log.d("###", "time: " + (timeAfter - timeBefore[0]));
+                        if ((timeAfter - timeBefore[0]) > 500) {
+                            try {
+                                groupChatFragment.showChatFunc(messages);
+                            } catch (Exception e) {
+
+                            }
+
+                        }
+                        break;
+                }
+                return true;
+
+            }
+        });
 
 
         //VoicePlayer voicePlayer = new VoicePlayer(groupChatViewHolder.itemView.getContext());

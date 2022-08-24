@@ -391,6 +391,9 @@ public final class MessageFragment extends Fragment {
                     i++;
 
                 }
+                if (i == 1){
+
+                }
 
             }
 

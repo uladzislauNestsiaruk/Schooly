@@ -51,11 +51,10 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     private MessageFragment messageFragment;
     private GroupChatFragment groupChatFragment;
     static NewsItem newsItem;
-    static  NewsItem newsItemToViewing;
+    static NewsItem newsItemToViewing;
     private boolean isMpPlaying = false;
     private CurrentVoice currentVoice = new CurrentVoice();
     MessageAdapter.ItemClickListener itemClickListener;
-
 
 
     public MessageAdapter(List<Message> userMessagesList, String messageSenderId, String messageReceiverId, ItemClickListener itemClickListener, MessageFragment messageFragment) {
@@ -256,6 +255,58 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                         break;
                 }
                 return true;
+            }
+        });
+        messageViewHolder.inVoice.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction() & MotionEvent.ACTION_MASK) {
+
+                    case MotionEvent.ACTION_DOWN:
+                        timeBefore[0] = System.currentTimeMillis();
+                        break;
+
+                    case MotionEvent.ACTION_UP:
+                        long timeAfter = System.currentTimeMillis();
+                        Log.d("###", "time: " + (timeAfter - timeBefore[0]));
+                        if ((timeAfter - timeBefore[0]) > 500) {
+                            try {
+                                messageFragment.showChatFunc(messages);
+                            } catch (Exception e) {
+
+                            }
+
+                        }
+                        break;
+                }
+                return true;
+
+            }
+        });
+        messageViewHolder.outVoice.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction() & MotionEvent.ACTION_MASK) {
+
+                    case MotionEvent.ACTION_DOWN:
+                        timeBefore[0] = System.currentTimeMillis();
+                        break;
+
+                    case MotionEvent.ACTION_UP:
+                        long timeAfter = System.currentTimeMillis();
+                        Log.d("###", "time: " + (timeAfter - timeBefore[0]));
+                        if ((timeAfter - timeBefore[0]) > 500) {
+                            try {
+                                messageFragment.showChatFunc(messages);
+                            } catch (Exception e) {
+
+                            }
+
+                        }
+                        break;
+                }
+                return true;
+
             }
         });
 
@@ -535,7 +586,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                             try {
                                 itemClickListener.onItemClick(userMessagesList.get(messageViewHolder.getAdapterPosition()).getClothes(), null);
                                 trueClothes = userMessagesList.get(messageViewHolder.getAdapterPosition()).getClothes();
-                            }catch (Exception e){
+                            } catch (Exception e) {
 
                             }
 
@@ -587,7 +638,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
     }
 
-    public static void lookInfo(ItemClickListener itemClickListener){
+    public static void lookInfo(ItemClickListener itemClickListener) {
         itemClickListener.onItemClick(null, newsItemToViewing);
     }
 
