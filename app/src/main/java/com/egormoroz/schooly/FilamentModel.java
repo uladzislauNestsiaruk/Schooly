@@ -1,6 +1,5 @@
 package com.egormoroz.schooly;
 
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.view.Choreographer;
@@ -157,6 +156,26 @@ public class FilamentModel {
         modelViewer.getScene().addEntity(light);
     }
 
+    public void loadPersonLight(){
+        int light=EntityManager.get().create();
+        float[] float1 = Colors.cct(5_500.0f);
+        new LightManager.Builder(LightManager.Type.DIRECTIONAL)
+                .color(float1[0], float1[1], float1[2])
+                .intensity(120_000.0f)
+                .direction(0.0f, -0.5f, -1.0f)
+                .castShadows(false)
+                .build(engine, light);
+        int light6=EntityManager.get().create();
+        new LightManager.Builder(LightManager.Type.POINT)
+                .color(float1[0], float1[1], float1[2])
+                .intensity(50_000_000.0f)
+                .falloff(20)
+                .position(8.0f, 17f, 0.0f)
+                .build(engine, light6);
+        int[] lights={light,light6};
+        modelViewer.getScene().addEntities(lights);
+    }
+
     public void loadPointLights(){
         float[] float1 = Colors.cct(5_500.0f);
         int light=EntityManager.get().create();
@@ -215,84 +234,6 @@ public class FilamentModel {
                 .falloff(20)
                 .position(-8.0f, 17.0f, 0.0f)
                 .build(engine, light7);
-//        int light2=EntityManager.get().create();
-//        new LightManager.Builder(LightManager.Type.POINT)
-//                .color(float1[0], float1[1], float1[2])
-//                .intensity(110_000_000.0f)
-//                .falloff(16)
-//                .position(-7.0f, 8.0f, -6.0f)
-//                .build(engine, light2);
-//        int light3=EntityManager.get().create();
-//        new LightManager.Builder(LightManager.Type.POINT)
-//                .color(float1[0], float1[1], float1[2])
-//                .intensity(110_000_000.0f)
-//                .falloff(15)
-//                .position(7.0f, 8.0f, -6.0f)
-//                .build(engine, light3);
-//        int light4=EntityManager.get().create();
-//        new LightManager.Builder(LightManager.Type.POINT)
-//                .color(float1[0], float1[1], float1[2])
-//                .intensity(40_000_000.0f)
-//                .falloff(9)
-//                .position(0.0f, -5.0f, -2.0f)
-//                .build(engine, light4);
-//        int light5=EntityManager.get().create();
-//        new LightManager.Builder(LightManager.Type.POINT)
-//                .color(float1[0], float1[1], float1[2])
-//                .intensity(40_000_000.0f)
-//                .falloff(9)
-//                .position(0.0f, -4.0f, 0.0f)
-//                .build(engine, light5);
-//        int light6=EntityManager.get().create();
-//        new LightManager.Builder(LightManager.Type.POINT)
-//                .color(float1[0], float1[1], float1[2])
-//                .intensity(80_000_000.0f)
-//                .falloff(16)
-//                .position(7.0f, 11.0f, 8.0f)
-//                .build(engine, light6);
-//        int light7=EntityManager.get().create();
-//        new LightManager.Builder(LightManager.Type.POINT)
-//                .color(float1[0], float1[1], float1[2])
-//                .intensity(10_000_000.0f)
-//                .falloff(9)
-//                .position(0.0f, 3.0f, 5.0f)
-//                .build(engine, light7);
-//        int light8=EntityManager.get().create();
-//        new LightManager.Builder(LightManager.Type.POINT)
-//                .color(float1[0], float1[1], float1[2])
-//                .intensity(30_000_000.0f)
-//                .falloff(15)
-//                .position(0.0f, 17.0f, 5.0f)
-//                .build(engine, light8);
-//        int light9=EntityManager.get().create();
-//        new LightManager.Builder(LightManager.Type.POINT)
-//                .color(float1[0], float1[1], float1[2])
-//                .intensity(15_000_000.0f)
-//                .falloff(9)
-//                .position(0.0f, 17.0f, -5.0f)
-//                .build(engine, light9);
-//        int light10=EntityManager.get().create();
-//        new LightManager.Builder(LightManager.Type.POINT)
-//                .color(float1[0], float1[1], float1[2])
-//                .intensity(50_000_000.0f)
-//                .falloff(9)
-//                .position(7.0f, 4.0f, 0.0f)
-//                .build(engine, light10);
-//        int light11=EntityManager.get().create();
-//        new LightManager.Builder(LightManager.Type.POINT)
-//                .color(float1[0], float1[1], float1[2])
-//                .intensity(40_000_000.0f)
-//                .falloff(9)
-//                .position(-7.0f, 15.0f, 0.0f)
-//                .build(engine, light11);
-//        int light12=EntityManager.get().create();
-//        new LightManager.Builder(LightManager.Type.POINT)
-//                .color(float1[0], float1[1], float1[2])
-//                .intensity(40_000_000.0f)
-//                .falloff(9)
-//                .position(7.0f, 15.0f, 0.0f)
-//                .build(engine, light12);
-        //int[] lights={light,light2,light3,light4,light8,light9,light10};
         int[] lights={light,light1,light2,light3,light4,light5,light6,light7};
         modelViewer.getScene().addEntities(lights);
     }
@@ -313,15 +254,12 @@ public class FilamentModel {
         Log.d("#####", "gg1");
         assetLoader=new AssetLoader(engine,materialProvider,EntityManager.get());
         filamentAsset=assetLoader.createAssetFromBinary(buffer);
+        filamentAssets.add(filamentAsset);
         resourceLoader=new ResourceLoader(engine, normalizeSkinningWeights, recomputeBoundingBoxes, ignoreBindTransform);
         resourceLoader.asyncBeginLoad(filamentAsset);
         Animator animator= filamentAsset.getAnimator();
         filamentAsset.releaseSourceData();
         int[] e=filamentAsset.getEntities();
-        MaterialInstance material=modelViewer.getEngine().getRenderableManager().getMaterialInstanceAt(modelViewer.getEngine().getRenderableManager().getInstance(e[0]),0);
-        //material.setParameter("baseColor",1f, 1f, 1f, 1.0f);
-
-        material.setParameter("baseColorFactor",  Colors.RgbaType.SRGB,1f, 1f, 1f,1f);
         modelViewer.getScene().addEntities(filamentAsset.getEntities());
         loadStartTime=System.nanoTime();
         loadStartFence=modelViewer.getEngine().createFence();
@@ -350,12 +288,26 @@ public class FilamentModel {
     }
 
     public void setMask(Clothes clothes){
-        RenderableManager renderableManager=engine.getRenderableManager();
         for(int i=0;i<filamentAssets.size();i++){
             FilamentAsset filamentAsset=filamentAssets.get(i);
             int[] entities=filamentAsset.getEntitiesByName(clothes.getClothesTitle());
             if(entities.length!=0){
                 modelViewer.getScene().removeEntity(entities[0]);
+            }
+        }
+    }
+
+    public void changeColor(String type, Color color){
+        Log.d("####", "FINISH   "+filamentAssets.size()+"   "+filamentAssets.get(0).getFirstEntityByName("body"));
+        RenderableManager renderableManager=engine.getRenderableManager();
+        for(int i=0;i<filamentAssets.size();i++){
+            FilamentAsset filamentAsset=filamentAssets.get(i);
+            int[] entities=filamentAsset.getEntitiesByName(type);
+            if(entities.length!=0){
+                Log.d("####", "FINISH 1   "+filamentAssets.size());
+                MaterialInstance material=renderableManager.
+                        getMaterialInstanceAt(renderableManager.getInstance(entities[0]),0);
+                material.setParameter("baseColorFactor",  Colors.RgbaType.SRGB,color.getColorX(), color.getColorY(), color.getColorZ(),1f);
             }
         }
     }
@@ -439,8 +391,8 @@ public class FilamentModel {
         Gltfio.init();
         Utils.INSTANCE.init();
         cameraManipulator=new Manipulator.Builder()
-                .targetPosition(0.0f, 19.5f, 0.0f)
-                .orbitHomePosition(0.0f, 19.5f, 5.0f)
+                .targetPosition(0.9f, 19.5f, 0.0f)
+                .orbitHomePosition(4.0f, 19.5f, 4.0f)
                 .viewport(surfaceView.getWidth(), surfaceView.getHeight())
                 .zoomSpeed(0.07f)
                 .mapMinDistance(5.0f)
@@ -454,7 +406,7 @@ public class FilamentModel {
                 //.color(0.255f, 0.124f, 0.232f, 1.0f)
                 .color(0f, 0f, 0f, 1.0f)
                 .build(modelViewer.getEngine());
-        loadDefaultLight();
+        loadPersonLight();
         modelViewer.getScene().setSkybox(skybox);
     }
 

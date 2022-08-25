@@ -436,8 +436,8 @@
     <string name="skincolour">Цвет кожи</string>
     <string name="faceshape">Форма лица</string>
     <string name="body">Тело</string>
-    <string name="browsColor">Brows color</string>
-    <string name="hairstyleColor">Hairstyle color</string>
+    <string name="browsColor">Цвет бровей</string>
+    <string name="hairstyleColor">Цвет прически</string>
     <string name="hairstyle">Прическа</string>
     <string name="notactive">Не активен</string>
     <string name="purchased">Куплено</string>

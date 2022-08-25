@@ -11,18 +11,20 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.egormoroz.schooly.Color;
 import com.egormoroz.schooly.FacePart;
 import com.egormoroz.schooly.R;
+import com.egormoroz.schooly.RecentMethods;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.progressindicator.CircularProgressIndicator;
 
 import java.util.ArrayList;
 
 public class EyebrowsColorFragment extends Fragment {
 
     RecyclerView recyclerView;
-    CharacterAdapter.ItemClickListener itemClickListener;
-    ArrayList<FacePart> bodyPartsArrayList=new ArrayList<>();
-    ArrayList<FacePart> activeFaceParts=new ArrayList<>();
+    ColorsAdapter.ItemClickListener itemClickListener;
+    CircularProgressIndicator progressIndicator;
 
     public static EyebrowsColorFragment newInstance() {
         return new EyebrowsColorFragment();
@@ -35,8 +37,6 @@ public class EyebrowsColorFragment extends Fragment {
         View root = inflater.inflate(R.layout.viewpagerskincolour, container, false);
         BottomNavigationView bnv = getActivity().findViewById(R.id.bottomNavigationView);
         bnv.setVisibility(bnv.GONE);
-//        AppBarLayout abl = getActivity().findViewById(R.id.AppBarLayout);
-//        abl.setVisibility(abl.GONE);
         return root;
     }
 
@@ -44,9 +44,18 @@ public class EyebrowsColorFragment extends Fragment {
     public void onViewCreated(@Nullable View view,@NonNull Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
 
+        itemClickListener=new ColorsAdapter.ItemClickListener() {
+            @Override
+            public void onItemClick(Color color) {
+                CreateCharacterFragment.changeColor("brows", color);
+            }
+        };
+        progressIndicator=view.findViewById(R.id.progressIndicator);
         recyclerView=view.findViewById(R.id.recyclerSkinColour);
-        CharacterAdapter characterAdapter=new CharacterAdapter(bodyPartsArrayList,itemClickListener,activeFaceParts,"nose");
-        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
-        recyclerView.setAdapter(characterAdapter);
+        ArrayList< Color> colorsArrayList= RecentMethods.returnColors();
+        progressIndicator.setVisibility(View.GONE);
+        ColorsAdapter colorsAdapter=new ColorsAdapter(colorsArrayList, itemClickListener, "brows");
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 4));
+        recyclerView.setAdapter(colorsAdapter);
     }
 }

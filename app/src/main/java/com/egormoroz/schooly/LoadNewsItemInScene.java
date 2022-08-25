@@ -98,7 +98,7 @@ public class LoadNewsItemInScene {
                         stopLoad[0]--;
                         Log.d("AAAA", " MIDDLE LOAD BODY  1 "+ stopLoad[0]+"   "+ finalI);
                         if(stopLoad[0]==0){
-                            newsItem.setPerson(RecentMethods.setAllPerson(facePartArrayWithBuffers,"not"));
+                            newsItem.setPerson(RecentMethods.setAllPerson(facePartArrayWithBuffers,"not",null,null,null));
                             loadNewsTread.LoadNews(newsItem);
                             Log.d("AAAA", " STOP LOAD BODY  1 "+ stopLoad[0]+"   "+finalI);
                         }

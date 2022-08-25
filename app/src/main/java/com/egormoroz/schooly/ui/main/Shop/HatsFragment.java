@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.egormoroz.schooly.Callbacks;
@@ -45,7 +46,9 @@ public class HatsFragment extends Fragment {
     RecyclerView clothes,popularClothes;
     NewClothesAdapter.ItemClickListener itemClickListener;
     PopularClothesAdapter.ItemClickListener itemClickListenerPopular;
-
+    LinearLayoutManager linearLayoutManager;
+    GridLayoutManager gridLayoutManager;
+    int positionNew,positionPopular;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -56,6 +59,8 @@ public class HatsFragment extends Fragment {
         firebaseModel.initAll();
         clothes=root.findViewById(R.id.newchlothesinshop);
         popularClothes=root.findViewById(R.id.popularchlothesinshop);
+        positionNew=bundle.getInt("HATSNEWPOSITION");
+        positionPopular=bundle.getInt("HATSPOPULARPOSITION");
         return root;
     }
 
@@ -63,7 +68,15 @@ public class HatsFragment extends Fragment {
     public void onResume() {
         super.onResume();
         getView().requestLayout();
+        positionNew=bundle.getInt("HATSNEWPOSITION");
+        positionPopular=bundle.getInt("HATSPOPULARPOSITION");
+    }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        bundle.putInt("HATSNEWPOSITION",linearLayoutManager.findFirstCompletelyVisibleItemPosition());
+        bundle.putInt("HATSPOPULARPOSITION", gridLayoutManager.findFirstVisibleItemPosition());
     }
 
     @Override
@@ -90,7 +103,12 @@ public class HatsFragment extends Fragment {
         if(bundle.getSerializable("HATS_NEW")!=null){
             ArrayList<Clothes> newClothesArrayList= (ArrayList<Clothes>) bundle.getSerializable("HATS_NEW");
             NewClothesAdapter newClothesAdapter=new NewClothesAdapter(newClothesArrayList,itemClickListener,userInformation);
+            linearLayoutManager=new LinearLayoutManager(getContext());
+            linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+            clothes.setLayoutManager(linearLayoutManager);
             clothes.setAdapter(newClothesAdapter);
+            if(positionPopular==0)
+                clothes.scrollToPosition(positionNew);
         }else{
             ArrayList<Clothes> allClothes= (ArrayList<Clothes>) bundle.getSerializable("ALL_CLOTHES");
             for(int i=0;i<allClothes.size();i++){
@@ -102,14 +120,20 @@ public class HatsFragment extends Fragment {
             }
             bundle.putSerializable("HATS_NEW",hatsArrayList);
             NewClothesAdapter newClothesAdapter=new NewClothesAdapter(hatsArrayList,itemClickListener,userInformation);
+            linearLayoutManager=new LinearLayoutManager(getContext());
+            linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+            clothes.setLayoutManager(linearLayoutManager);
             clothes.setAdapter(newClothesAdapter);
+            if(positionPopular==0)
+                clothes.scrollToPosition(positionNew);
         }
         if(bundle.getSerializable("HATS_POPULAR")!=null){
             popularClothesArrayList= (ArrayList<Clothes>) bundle.getSerializable("HATS_POPULAR");
             PopularClothesAdapter popularClothesAdapter=new PopularClothesAdapter(popularClothesArrayList,itemClickListenerPopular,userInformation);
-            popularClothes.setLayoutManager(new GridLayoutManager(getActivity(), 2));
-            popularClothes.setNestedScrollingEnabled(false);
+            gridLayoutManager=new GridLayoutManager(getContext(), 2);
+            popularClothes.setLayoutManager(gridLayoutManager);
             popularClothes.setAdapter(popularClothesAdapter);
+            popularClothes.scrollToPosition(positionPopular);
         }else{
             ArrayList<Clothes> allClothes= (ArrayList<Clothes>) bundle.getSerializable("ALL_CLOTHES");
             for(int i=0;i<allClothes.size();i++){
@@ -121,9 +145,10 @@ public class HatsFragment extends Fragment {
             }
             bundle.putSerializable("HATS_POPULAR",popularSortHatsArrayList);
             PopularClothesAdapter popularClothesAdapter=new PopularClothesAdapter(popularSortHatsArrayList,itemClickListenerPopular,userInformation);
-            popularClothes.setLayoutManager(new GridLayoutManager(getActivity(), 2));
-            popularClothes.setNestedScrollingEnabled(false);
+            gridLayoutManager=new GridLayoutManager(getContext(), 2);
+            popularClothes.setLayoutManager(gridLayoutManager);
             popularClothes.setAdapter(popularClothesAdapter);
+            popularClothes.scrollToPosition(positionPopular);
         }
     }
 }

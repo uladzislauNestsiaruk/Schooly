@@ -158,6 +158,8 @@ public class MainFragment extends Fragment{
         relativeMyClothes=view.findViewById(R.id.relativeClothes);
         relativeMining=view.findViewById(R.id.relativeMining);
         relativeShop=view.findViewById(R.id.relativeshop);
+        FirebaseModel appDataModel=new FirebaseModel();
+        appDataModel.initAppDataDatabase();
 //                        firebaseModel.getUsersReference().child(nick).child("clothesRequest")
 //                        .child("-MxuHf_f26Lr39Vx2Tx8").setValue(new ClothesRequest("shoes", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
 //                , 100, "Jordan 4", 123, nick, "coin", "d", " https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Funtitled.glb?alt=media&token=657b45d7-a84b-4f2a-89f4-a699029401f7"

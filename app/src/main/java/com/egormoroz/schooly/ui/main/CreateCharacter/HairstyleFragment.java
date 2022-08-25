@@ -38,11 +38,9 @@ public class HairstyleFragment extends Fragment {
 
     RecyclerView recyclerView;
     CharacterAdapter.ItemClickListener itemClickListener;
-    ArrayList<FacePart> bodyPartsArrayList=new ArrayList<>();
     ArrayList<FacePart> activeFaceParts=new ArrayList<>();
     ArrayList<FacePart> facePartsWithBuffers=new ArrayList<>();
     FirebaseModel firebaseModel=new FirebaseModel();
-    static ArrayList<Buffer> buffers;
     static byte[] buffer;
     static URI uri;
     static Buffer bufferToFilament,b;
@@ -74,13 +72,13 @@ public class HairstyleFragment extends Fragment {
                 CreateCharacterFragment.loadNewFacePart(facePart);
             }
         };
-//        RecentMethods.getCurrentFaceParts("hair", firebaseModel, new Callbacks.loadFacePartsCustom() {
-//            @Override
-//            public void LoadNews(ArrayList<FacePart> facePartsArrayList) {
-//                Log.d("######", "a  "+facePartsArrayList);
-//                loadBuffers(facePartsArrayList);
-//            }
-//        });
+         RecentMethods.getCurrentFaceParts("hair", firebaseModel, new Callbacks.loadFacePartsCustom() {
+            @Override
+            public void LoadNews(ArrayList<FacePart> facePartsArrayList) {
+                Log.d("######", "a  "+facePartsArrayList);
+                loadBuffers(facePartsArrayList);
+            }
+        });
 
         circularProgressIndicator=view.findViewById(R.id.progressIndicator);
         recyclerView=view.findViewById(R.id.recyclerSkinColour);
@@ -93,13 +91,26 @@ public class HairstyleFragment extends Fragment {
     public void loadBuffers(ArrayList<FacePart>  facePartArrayList){
         loadValue=facePartArrayList.size()-1;
         for(int i=0;i<facePartArrayList.size();i++){
-            FacePart facePart=facePartArrayList.get(0);
-            Log.d("######", "b  "+facePart);
-            TaskRunnerCustom taskRunnerCustom=new TaskRunnerCustom();
-            int finalI = i;
-            taskRunnerCustom.executeAsync(new LongRunningTask(facePart), (data) -> {
-                facePartsWithBuffers.add(data);
-                Log.d("######", "f1  "+facePart.getBuffer());
+            FacePart facePart=facePartArrayList.get(i);
+            Log.d("######", "f1  "+facePart.getModel()+"    "+facePart.getPartTitle());
+            if(!facePart.getPartTitle().equals("bald")){
+                TaskRunnerCustom taskRunnerCustom=new TaskRunnerCustom();
+                taskRunnerCustom.executeAsync(new LongRunningTask(facePart), (data) -> {
+                    if(data.getModel()!=null){
+                        facePartsWithBuffers.add(data);
+                    }
+                    loadValue--;
+                    if(loadValue==0){
+                        activeFaceParts=CreateCharacterFragment.sentFaceParts();
+                        circularProgressIndicator.setVisibility(View.GONE);
+                        Log.d("######", "f  "+facePartsWithBuffers);
+                        CharacterAdapter characterAdapter=new CharacterAdapter(facePartsWithBuffers,itemClickListener,activeFaceParts,"hair");
+                        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
+                        recyclerView.setAdapter(characterAdapter);
+                    }
+                });
+            }else {
+                facePartsWithBuffers.add(facePart);
                 loadValue--;
                 if(loadValue==0){
                     activeFaceParts=CreateCharacterFragment.sentFaceParts();
@@ -109,7 +120,7 @@ public class HairstyleFragment extends Fragment {
                     recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
                     recyclerView.setAdapter(characterAdapter);
                 }
-            });
+            }
         }
     }
 
@@ -127,16 +138,17 @@ public class HairstyleFragment extends Fragment {
     }
 
     public static FacePart loadFacePart(FacePart facePart){
-        try {
-            Log.d("####", "s");
-            uri = new URI(facePart.getModel());
-            buffer = RecentMethods.getBytes(uri.toURL());
-            bufferToFilament= ByteBuffer.wrap(buffer);
-            facePart.setBuffer(bufferToFilament);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
+        if(facePart.getModel()!=null) {
+            try {
+                uri = new URI(facePart.getModel());
+                buffer = RecentMethods.getBytes(uri.toURL());
+                bufferToFilament = ByteBuffer.wrap(buffer);
+                facePart.setBuffer(bufferToFilament);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
         }
         return facePart;
     }

@@ -257,7 +257,7 @@ public class AcceptNewLook extends Fragment {
                                     facePartArrayList.add(userInformation.getPerson().getHead());
                                     facePartArrayList.add(userInformation.getPerson().getLips());
                                     facePartArrayList.add(userInformation.getPerson().getNose());
-                                    facePartArrayList.add(userInformation.getPerson().getPirsing());
+                                    facePartArrayList.add(userInformation.getPerson().getMustache());
                                     facePartArrayList.add(userInformation.getPerson().getSkinColor());
                                     Person person=new Person();
                                     for(int i=0;i<facePartArrayList.size();i++){
@@ -527,7 +527,7 @@ public class AcceptNewLook extends Fragment {
                                     filamentModel.populateSceneFacePart(facePartsArrayList.get(i).getBuffer());
                                 }
                             }
-                            userInformation.setPerson(RecentMethods.setAllPerson(facePartsArrayList,"not"));
+                            userInformation.setPerson(RecentMethods.setAllPerson(facePartsArrayList,"not",null,null,null));
                         }
                     });
                 }
@@ -544,7 +544,7 @@ public class AcceptNewLook extends Fragment {
             facePartArrayList.add(userInformation.getPerson().getHead());
             facePartArrayList.add(userInformation.getPerson().getLips());
             facePartArrayList.add(userInformation.getPerson().getNose());
-            facePartArrayList.add(userInformation.getPerson().getPirsing());
+            facePartArrayList.add(userInformation.getPerson().getMustache());
             facePartArrayList.add(userInformation.getPerson().getSkinColor());
             for(int i=0;i<facePartArrayList.size();i++){
                 FacePart facePart=facePartArrayList.get(i);
