@@ -192,6 +192,7 @@ public class CreateCharacterFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (loadValue==0)
+
                 showDialog();
             }
         });
