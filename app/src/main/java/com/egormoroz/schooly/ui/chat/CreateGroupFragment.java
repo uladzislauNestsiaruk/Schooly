@@ -104,7 +104,7 @@ public class CreateGroupFragment extends Fragment {
                             UserPeopleAdapter userPeopleAdapter=dialogMembers.get(i);
                             firebaseModel.getUsersReference().child(userPeopleAdapter.getNick()).child("Dialogs")
                                     .child(uid).setValue(new Chat(chatName, "", "", "talk",
-                                            0, dialogMembers, "open", new ArrayList<>(),0,0,uid));
+                                            0, dialogMembers, "open", new ArrayList<>(),0,0,uid,userInformation.getNick()));
                         }
                         Toast.makeText(getContext(), R.string.talkIsCreated, Toast.LENGTH_SHORT).show();
                     }    else{

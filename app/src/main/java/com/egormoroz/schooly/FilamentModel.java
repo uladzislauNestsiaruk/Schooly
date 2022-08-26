@@ -84,6 +84,7 @@ public class FilamentModel {
     public void initFilament(SurfaceView surfaceView,Buffer buffer,boolean onTouch
             ,LockableNestedScrollView lockableNestedScrollView,String type
             ,boolean transform) throws IOException, URISyntaxException {
+        Log.d("#####", "FONOSH780   ");
         Filament.init();
         Gltfio.init();
         Utils.INSTANCE.init();
@@ -95,11 +96,14 @@ public class FilamentModel {
                 .orbitSpeed(0.007f, 0.007f)
                 .mapMinDistance(-150.0f)
                 .build(Manipulator.Mode.ORBIT);
+        Log.d("#####", "FONOSH788   ");
         doubleTapDetector=new GestureDetector(surfaceView, cameraManipulator);
         uiHelper=new UiHelper(UiHelper.ContextErrorPolicy.DONT_CHECK);
         engine=Engine.create();
+        filamentAssets=new ArrayList<>();
         modelViewer=new ModelViewer(surfaceView, engine, uiHelper, cameraManipulator);
         setupFilament();
+        Log.d("#####", "FONOSH00   ");
         surfaceView.setOnTouchListener(new android.view.View.OnTouchListener() {
             @Override
             public boolean onTouch(android.view.View v, MotionEvent event) {
@@ -133,7 +137,6 @@ public class FilamentModel {
         });
         loadGlb(buffer);
         Skybox skybox=new Skybox.Builder()
-                //.color(0.255f, 0.124f, 0.232f, 1.0f)
                 .color(0f, 0f, 0f, 1.0f)
                 .build(modelViewer.getEngine());
         if(type.equals("regularRender")){
@@ -142,6 +145,7 @@ public class FilamentModel {
             loadDefaultLight();
         }
         modelViewer.getScene().setSkybox(skybox);
+        Log.d("#####", "FONOSH   ");
     }
 
     public void loadDefaultLight(){
@@ -296,6 +300,7 @@ public class FilamentModel {
     }
 
     public void changeColor(String type, Color color){
+        Log.d("#####", "WWWWW   "+filamentAssets+"   "+type);
         RenderableManager renderableManager=engine.getRenderableManager();
         for(int i=0;i<filamentAssets.size();i++){
             FilamentAsset filamentAsset=filamentAssets.get(i);
@@ -304,8 +309,10 @@ public class FilamentModel {
                 MaterialInstance material=renderableManager.
                         getMaterialInstanceAt(renderableManager.getInstance(entities[0]),0);
                 material.setParameter("baseColorFactor",  Colors.RgbaType.SRGB,color.getColorX(), color.getColorY(), color.getColorZ(),1f);
+                break;
             }
         }
+        Log.d("#####", "WWWWW22   ");
     }
 
     public void postFrameCallback(){
@@ -330,7 +337,7 @@ public class FilamentModel {
         Gltfio.init();
         Utils.INSTANCE.init();
         cameraManipulator=new Manipulator.Builder()
-                .targetPosition(0.6f, 19.5f, 0.0f)
+                .targetPosition(0.7f, 19.5f, 0.0f)
                 .orbitHomePosition(3.0f, 19.5f, 4.0f)
                 .viewport(surfaceView.getWidth(), surfaceView.getHeight())
                 .zoomSpeed(0.07f)
@@ -338,6 +345,7 @@ public class FilamentModel {
                 .build(Manipulator.Mode.ORBIT);
         uiHelper=new UiHelper(UiHelper.ContextErrorPolicy.DONT_CHECK);
         engine=Engine.create();
+        filamentAssets=new ArrayList<>();
         modelViewer=new ModelViewer(surfaceView, engine, uiHelper, cameraManipulator);
         setupFilament();
         loadGlb(buffer);
@@ -376,7 +384,7 @@ public class FilamentModel {
         uiHelper=new UiHelper(UiHelper.ContextErrorPolicy.DONT_CHECK);
         doubleTapDetector=new GestureDetector(surfaceView, cameraManipulator);
         engine=Engine.create();
-
+        filamentAssets=new ArrayList<>();
         modelViewer=new ModelViewer(surfaceView, engine, uiHelper, cameraManipulator);
         setupFilament();
         surfaceView.setOnTouchListener(new android.view.View.OnTouchListener() {
@@ -412,7 +420,37 @@ public class FilamentModel {
         });
         loadGlb(buffer);
         Skybox skybox=new Skybox.Builder()
-                //.color(0.255f, 0.124f, 0.232f, 1.0f)
+                .color(0f, 0f, 0f, 1.0f)
+                .build(modelViewer.getEngine());
+        if(type.equals("regularRender")){
+            loadPointLights();
+        }else if(type.equals("looksRecycler")){
+            loadDefaultLight();
+        }
+        modelViewer.getScene().setSkybox(skybox);
+    }
+
+    public void initShareFilament(SurfaceView surfaceView,Buffer buffer,boolean onTouch
+            ,LockableNestedScrollView lockableNestedScrollView,String type
+            ,boolean transform) throws IOException, URISyntaxException {
+        Filament.init();
+        Gltfio.init();
+        Utils.INSTANCE.init();
+        cameraManipulator=new Manipulator.Builder()
+                .targetPosition(0.0f, 10f, -1.0f)
+                .orbitHomePosition(9.0f, 18.0f, 30.0f)
+                .viewport(surfaceView.getWidth(), surfaceView.getHeight())
+                .zoomSpeed(0.05f)
+                .orbitSpeed(0.007f, 0.007f)
+                .mapMinDistance(-150.0f)
+                .build(Manipulator.Mode.ORBIT);
+        uiHelper=new UiHelper(UiHelper.ContextErrorPolicy.DONT_CHECK);
+        engine=Engine.create();
+        filamentAssets=new ArrayList<>();
+        modelViewer=new ModelViewer(surfaceView, engine, uiHelper, cameraManipulator);
+        setupFilament();
+        loadGlb(buffer);
+        Skybox skybox=new Skybox.Builder()
                 .color(0f, 0f, 0f, 1.0f)
                 .build(modelViewer.getEngine());
         if(type.equals("regularRender")){

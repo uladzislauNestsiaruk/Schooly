@@ -529,7 +529,7 @@
     <string name="talkTitle">Название беседы</string>
     <string name="addMoreUsers">Добавь больше участников</string>
     <string name="enterTalkTitle">Введи название беседы</string>
-    <string name="leaveTalk">Покинуть буседу</string>
+    <string name="leaveTalk">Покинуть беседу</string>
     <string name="leaveTalkQuestion">Покинуть буседу?</string>
     <string name="talkIsCreated">Беседа создана</string>
     <string name="watchcommercial">Посмотри рекламу и получи 25 коинов</string>

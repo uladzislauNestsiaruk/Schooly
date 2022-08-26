@@ -531,7 +531,7 @@ public class AcceptNewLook extends Fragment {
                         }
                         if(i==0){
                             try {
-                                filamentModel.initFilament(surfaceView, facePart.getBuffer(), true, lockableNestedScrollView
+                                filamentModel.initShareFilament(surfaceView, facePart.getBuffer(), true, lockableNestedScrollView
                                         , "regularRender", true);
                                 if(color[0].getColorX() !=null)
                                     filamentModel.changeColor(facePart.getPartType(),color[0] );
@@ -592,7 +592,7 @@ public class AcceptNewLook extends Fragment {
                             }
                             if(i==0){
                                 try {
-                                    filamentModel.initFilament(surfaceView, facePart.getBuffer(), true, lockableNestedScrollView
+                                    filamentModel.initShareFilament(surfaceView, facePart.getBuffer(), true, lockableNestedScrollView
                                             , "regularRender", true);
                                     if(color[0].getColorX() !=null)
                                         filamentModel.changeColor(facePart.getPartType(), color[0]);

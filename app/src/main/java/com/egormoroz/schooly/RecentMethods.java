@@ -206,6 +206,7 @@ public class RecentMethods {
                     userData.setmoney(snapshot.child("money").getValue(Long.class));
                     userData.setTodayMining(snapshot.child("todayMining").getValue(Double.class));
                     userData.setPerson(snapshot.child("person").getValue(Person.class));
+                    userData.setPersonImage(snapshot.child("personImage").getValue(String.class));
                     data.add(userData);
                 }
                 callback.LoadData(data);
@@ -1784,7 +1785,7 @@ public class RecentMethods {
                         }
                         person.setHair(facePart);
                         break;
-                    case "lips":
+                    case "mouth":
                         person.setLips(facePart);
                         break;
                     case "nose":

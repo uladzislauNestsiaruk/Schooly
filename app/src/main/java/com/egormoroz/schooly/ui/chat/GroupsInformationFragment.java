@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
+import com.egormoroz.schooly.ui.main.MainFragment;
 import com.egormoroz.schooly.ui.main.UserInformation;
 import com.egormoroz.schooly.ui.people.PeopleAdapter;
 import com.egormoroz.schooly.ui.people.UserPeopleAdapter;
@@ -41,7 +42,7 @@ import java.util.Collections;
 
 public class GroupsInformationFragment extends Fragment {
 
-    TextView noMaterials, clearStory, nick,leaveChat;
+    TextView noMaterials,addNewMember, nick,leaveChat;
     ImageView avatar, back;
     RecyclerView recyclerMembers,recyclerMaterials;
     SwitchMaterial switchMaterial;
@@ -49,7 +50,7 @@ public class GroupsInformationFragment extends Fragment {
     boolean checkType;
     ArrayList<UserPeopleAdapter> members=new ArrayList<>();
     ArrayList<String> materials=new ArrayList<>();
-    String photoNumber, otherUserNick, messageNumber, voiceNumber;
+    String  otherUserNick;
     UserInformation userInformation;
     Bundle bundle;
     Fragment fragment;
@@ -71,15 +72,15 @@ public class GroupsInformationFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_chatsinfo, container, false);
+        View root = inflater.inflate(R.layout.fragment_groupinfo, container, false);
         firebaseModel.initAll();
         switchMaterial = root.findViewById(R.id.nontsSwitch);
         noMaterials = root.findViewById(R.id.noMaterials);
-        clearStory = root.findViewById(R.id.deleteHistory);
         recyclerMembers = root.findViewById(R.id.recyclerMembers);
         leaveChat=root.findViewById(R.id.leaveTalk);
         recyclerMaterials=root.findViewById(R.id.recyclerMaterials);
         back = root.findViewById(R.id.back_tochat);
+        addNewMember=root.findViewById(R.id.addNewMember);
         return root;
     }
 
@@ -103,7 +104,7 @@ public class GroupsInformationFragment extends Fragment {
             leaveChat.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    showDialogLeaveChat();
+                    showDialog();
                 }
             });
         }
@@ -163,19 +164,11 @@ public class GroupsInformationFragment extends Fragment {
             }
         });
 
-
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 RecentMethods.setCurrentFragment(fragment, getActivity());
             }
-        });
-        clearStory.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showDialog();
-            }
-
         });
 
     }
@@ -193,6 +186,14 @@ public class GroupsInformationFragment extends Fragment {
                                     members.add(userPeopleAdapter);
                                 }
                                 bundle.putSerializable(chat.getChatId()+"MEMBERS",members);
+                                chat.setMembers(members);
+                                addNewMember.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        RecentMethods.setCurrentFragment(FragmentAddMemberInGroup.newInstance(userInformation, bundle,
+                                                GroupsInformationFragment.newInstance(userInformation,bundle,fragment,chat),chat),getActivity());
+                                    }
+                                });
                                 PeopleAdapter peopleAdapter=new PeopleAdapter(members, userInformation);
                                 recyclerMembers.setLayoutManager(new LinearLayoutManager(getContext()));
                                 recyclerMembers.setAdapter(peopleAdapter);
@@ -221,6 +222,14 @@ public class GroupsInformationFragment extends Fragment {
             PeopleAdapter peopleAdapter=new PeopleAdapter(members, userInformation);
             recyclerMembers.setLayoutManager(new LinearLayoutManager(getContext()));
             recyclerMembers.setAdapter(peopleAdapter);
+            chat.setMembers(members);
+            addNewMember.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    RecentMethods.setCurrentFragment(FragmentAddMemberInGroup.newInstance(userInformation, bundle,
+                            GroupsInformationFragment.newInstance(userInformation,bundle,fragment,chat),chat),getActivity());
+                }
+            });
             PeopleAdapter.ItemClickListener clickListener =
                     new PeopleAdapter.ItemClickListener() {
                         @Override
@@ -285,7 +294,7 @@ public class GroupsInformationFragment extends Fragment {
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
         TextView text=dialog.findViewById(R.id.complainText);
-        text.setText(R.string.deleteChat);
+        text.setText(R.string.leaveTalk);
 
         RelativeLayout no=dialog.findViewById(R.id.no);
         RelativeLayout yes=dialog.findViewById(R.id.yes);
@@ -301,44 +310,26 @@ public class GroupsInformationFragment extends Fragment {
         yes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                firebaseModel.getUsersReference().child(userInformation.getNick()).child("Chats").child(otherUserNick).removeValue();
-                firebaseModel.getUsersReference().child(userInformation.getNick()).child("Dialogs").child(otherUserNick).removeValue();
-
+                for(int i=0;i<chat.getMembers().size();i++){
+                    UserPeopleAdapter userPeopleAdapter=chat.getMembers().get(i);
+                    if(userPeopleAdapter.getNick().equals(userInformation.getNick()))
+                        chat.getMembers().remove(i);
+                    if(i==chat.getMembers().size()-1){
+                        for(int s=0;s<chat.getMembers().size();s++){
+                            UserPeopleAdapter userPeopleAdapter1=chat.getMembers().get(s);
+                            firebaseModel.getUsersReference().child(userPeopleAdapter1.getNick())
+                                    .child("Dialogs").child(chat.getChatId()).child("members").setValue(chat.getMembers());
+                        }
+                    }
+                }
+                firebaseModel.getUsersReference().child(userInformation.getNick()).child("Dialogs").child(chat.getChatId()).removeValue();
+                dialog.dismiss();
                 Toast.makeText(getContext(), R.string.chatDeleted, Toast.LENGTH_SHORT).show();
+                RecentMethods.setCurrentFragment(DialogsFragment.newInstance(userInformation, bundle, MainFragment.newInstance(userInformation, bundle)),getActivity());
             }
         });
 
         dialog.show();
     }
 
-    public void showDialogLeaveChat(){
-
-        final Dialog dialog = new Dialog(getContext());
-        dialog.setContentView(R.layout.dialog_layout_blacklist);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
-        TextView text=dialog.findViewById(R.id.complainText);
-        text.setText(R.string.leaveTalkQuestion);
-
-        RelativeLayout no=dialog.findViewById(R.id.no);
-        RelativeLayout yes=dialog.findViewById(R.id.yes);
-
-
-        no.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-
-        yes.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                firebaseModel.getUsersReference().child(userInformation.getNick())
-                        .child("Dialogs").child(chat.getName()).removeValue();
-            }
-        });
-
-        dialog.show();
-    }
 }

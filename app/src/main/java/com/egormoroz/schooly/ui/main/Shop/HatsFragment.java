@@ -23,6 +23,7 @@ import com.egormoroz.schooly.ui.main.UserInformation;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class HatsFragment extends Fragment {
     UserInformation userInformation;
@@ -48,7 +49,7 @@ public class HatsFragment extends Fragment {
     PopularClothesAdapter.ItemClickListener itemClickListenerPopular;
     LinearLayoutManager linearLayoutManager;
     GridLayoutManager gridLayoutManager;
-    int positionNew,positionPopular;
+    int positionNew,positionPopular,reverse;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -61,6 +62,7 @@ public class HatsFragment extends Fragment {
         popularClothes=root.findViewById(R.id.popularchlothesinshop);
         positionNew=bundle.getInt("HATSNEWPOSITION");
         positionPopular=bundle.getInt("HATSPOPULARPOSITION");
+        reverse=bundle.getInt("REVERSEHATS");
         return root;
     }
 
@@ -84,6 +86,7 @@ public class HatsFragment extends Fragment {
         super.onDestroyView();
         bundle.putInt("HATSNEWPOSITION",linearLayoutManager.findFirstCompletelyVisibleItemPosition());
         bundle.putInt("HATSPOPULARPOSITION", gridLayoutManager.findFirstVisibleItemPosition());
+        bundle.putInt("REVERSEHATS", reverse);
     }
 
     @Override
@@ -109,6 +112,8 @@ public class HatsFragment extends Fragment {
     public void loadClothesFromBase(){
         if(bundle.getSerializable("HATS_NEW")!=null){
             ArrayList<Clothes> newClothesArrayList= (ArrayList<Clothes>) bundle.getSerializable("HATS_NEW");
+            if(reverse==0) Collections.reverse(newClothesArrayList);
+            reverse++;
             NewClothesAdapter newClothesAdapter=new NewClothesAdapter(newClothesArrayList,itemClickListener,userInformation);
             linearLayoutManager=new LinearLayoutManager(getContext());
             linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
@@ -125,6 +130,8 @@ public class HatsFragment extends Fragment {
 
             }
             bundle.putSerializable("HATS_NEW",hatsArrayList);
+            if(reverse==0)Collections.reverse(hatsArrayList);
+            reverse++;
             NewClothesAdapter newClothesAdapter=new NewClothesAdapter(hatsArrayList,itemClickListener,userInformation);
             linearLayoutManager=new LinearLayoutManager(getContext());
             linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);

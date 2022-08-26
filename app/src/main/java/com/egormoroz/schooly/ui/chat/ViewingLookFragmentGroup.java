@@ -184,6 +184,18 @@ public class ViewingLookFragmentGroup extends Fragment {
                         });
                     }
                 });
+                firebaseNewsModel.getReference().child(newsItem.getNick()).child(newsItem.getNewsId())
+                        .child("viewCount").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                                if(task.isSuccessful()){
+                                    DataSnapshot snapshot=task.getResult();
+                                    long viewCount=snapshot.getValue(Long.class);
+                                    firebaseNewsModel.getReference().child(newsItem.getNick()).child(newsItem.getNewsId())
+                                            .child("viewCount").setValue(viewCount+1);
+                                }
+                            }
+                        });
                 Picasso.get().load(newsItem.getImageUrl()).into(lookImage);
                 description.setText(newsItem.getItem_description());
                 if(userInformation.getViewedNews()!=null){

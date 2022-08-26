@@ -23,6 +23,7 @@ import com.egormoroz.schooly.ui.main.UserInformation;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class ClothesFragment extends Fragment {
     UserInformation userInformation;
@@ -47,7 +48,7 @@ public class ClothesFragment extends Fragment {
     PopularClothesAdapter.ItemClickListener itemClickListenerPopular;
     LinearLayoutManager linearLayoutManager;
     GridLayoutManager gridLayoutManager;
-    int positionNew,positionPopular;
+    int positionNew,positionPopular,reverse;
 
 
     @Override
@@ -61,6 +62,7 @@ public class ClothesFragment extends Fragment {
         popularClothes=root.findViewById(R.id.popularchlothesinshop);
         positionNew=bundle.getInt("CLOTHESNEWPOSITION");
         positionPopular=bundle.getInt("CLOTHESPOPULARPOSITION");
+        reverse=bundle.getInt("REVERSECLOTHES");
         return root;
     }
 
@@ -84,6 +86,7 @@ public class ClothesFragment extends Fragment {
         super.onDestroyView();
         bundle.putInt("CLOTHESNEWPOSITION",linearLayoutManager.findFirstCompletelyVisibleItemPosition());
         bundle.putInt("CLOTHESPOPULARPOSITION", gridLayoutManager.findFirstVisibleItemPosition());
+        bundle.putInt("REVERSECLOTHES", reverse);
     }
 
     @Override
@@ -110,6 +113,8 @@ public class ClothesFragment extends Fragment {
         if(bundle.getSerializable("WEAR_NEW")!=null){
             ArrayList<Clothes> newClothesArrayList= (ArrayList<Clothes>) bundle.getSerializable("WEAR_NEW");
             Log.d("####", "n  "+newClothesArrayList);
+            if(reverse==0)Collections.reverse(newClothesArrayList);
+            reverse++;
             NewClothesAdapter newClothesAdapter=new NewClothesAdapter(newClothesArrayList,itemClickListener,userInformation);
             linearLayoutManager=new LinearLayoutManager(getContext());
             linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
@@ -126,6 +131,8 @@ public class ClothesFragment extends Fragment {
                 }
 
             }
+            if(reverse==0)Collections.reverse(newClothesArrayList);
+            reverse++;
             NewClothesAdapter newClothesAdapter=new NewClothesAdapter(newClothesArrayList,itemClickListener,userInformation);
             linearLayoutManager=new LinearLayoutManager(getContext());
             linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);

@@ -25,6 +25,7 @@ import com.egormoroz.schooly.ui.main.UserInformation;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class ExclusiveFragment extends Fragment {
 
@@ -58,7 +59,7 @@ public class ExclusiveFragment extends Fragment {
     RelativeLayout premium,buyPremium;
     LinearLayoutManager linearLayoutManager;
     GridLayoutManager gridLayoutManager;
-    int positionNew,positionPopular;
+    int positionNew,positionPopular,reverse;
 
 
     @Override
@@ -129,6 +130,8 @@ public class ExclusiveFragment extends Fragment {
     public void loadClothesFromBase(){
         if(bundle.getSerializable("EXCLUSIVE_NEW")!=null){
             ArrayList<Clothes> newClothesArrayList= (ArrayList<Clothes>) bundle.getSerializable("EXCLUSIVE_NEW");
+            if(reverse==0)Collections.reverse(newClothesArrayList);
+            reverse++;
             NewClothesAdapter newClothesAdapter=new NewClothesAdapter(newClothesArrayList,itemClickListener,userInformation);
             linearLayoutManager=new LinearLayoutManager(getContext());
             linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
@@ -145,6 +148,8 @@ public class ExclusiveFragment extends Fragment {
 
             }
             bundle.putSerializable("EXCLUSIVE_NEW",exclusiveClothesArrayList);
+            if(reverse==0)Collections.reverse(exclusiveClothesArrayList);
+            reverse++;
             NewClothesAdapter newClothesAdapter=new NewClothesAdapter(exclusiveClothesArrayList,itemClickListener,userInformation);
             linearLayoutManager=new LinearLayoutManager(getContext());
             linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);

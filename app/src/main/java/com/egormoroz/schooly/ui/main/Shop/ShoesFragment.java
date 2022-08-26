@@ -52,7 +52,7 @@ public class ShoesFragment extends Fragment {
     TextView newText;
     LinearLayoutManager linearLayoutManager;
     GridLayoutManager gridLayoutManager;
-    int positionNew,positionPopular;
+    int positionNew,positionPopular,reverse;
 
 
     @Override
@@ -66,6 +66,7 @@ public class ShoesFragment extends Fragment {
         popularClothes=root.findViewById(R.id.popularchlothesinshop);
         positionNew=bundle.getInt("SHOESNEWPOSITION");
         positionPopular=bundle.getInt("SHOESPOPULARPOSITION");
+        reverse=bundle.getInt("REVERSESHOES");
         Log.d("#####", "P   "+positionPopular);
         return root;
     }
@@ -90,6 +91,7 @@ public class ShoesFragment extends Fragment {
         super.onDestroyView();
         bundle.putInt("SHOESNEWPOSITION",linearLayoutManager.findFirstCompletelyVisibleItemPosition());
         bundle.putInt("SHOESPOPULARPOSITION", gridLayoutManager.findFirstVisibleItemPosition());
+        bundle.putInt("REVERSESHOES", reverse);
     }
 
     @Override
@@ -117,6 +119,8 @@ public class ShoesFragment extends Fragment {
     public void loadClothesFromBase(){
         if(bundle.getSerializable("SHOES_NEW")!=null){
             ArrayList<Clothes> newClothesArrayList= (ArrayList<Clothes>) bundle.getSerializable("SHOES_NEW");
+            if(reverse==0) Collections.reverse(newClothesArrayList);
+            reverse++;
             NewClothesAdapter newClothesAdapter=new NewClothesAdapter(newClothesArrayList,itemClickListener,userInformation);
             linearLayoutManager=new LinearLayoutManager(getContext());
             linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
@@ -134,6 +138,8 @@ public class ShoesFragment extends Fragment {
 
             }
             bundle.putSerializable("SHOES_NEW",shoesArrayList);
+            if(reverse==0)Collections.reverse(shoesArrayList);
+            reverse++;
             NewClothesAdapter newClothesAdapter=new NewClothesAdapter(shoesArrayList,itemClickListener,userInformation);
             linearLayoutManager=new LinearLayoutManager(getContext());
             linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);

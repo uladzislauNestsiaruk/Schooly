@@ -208,6 +208,18 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
                     }
                 });
             }
+            firebaseNewsModel.getReference().child(newsItem.getNick()).child(newsItem.getNewsId())
+                            .child("viewCount").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DataSnapshot> task) {
+                            if(task.isSuccessful()){
+                                DataSnapshot snapshot=task.getResult();
+                                long viewCount=snapshot.getValue(Long.class);
+                                firebaseNewsModel.getReference().child(newsItem.getNick()).child(newsItem.getNewsId())
+                                        .child("viewCount").setValue(viewCount+1);
+                            }
+                        }
+                    });
             holder.like_count.setText(newsItem.getLikes_count());
             holder.description.setText(newsItem.getItem_description());
             firebaseNewsModel.initNewsDatabase();

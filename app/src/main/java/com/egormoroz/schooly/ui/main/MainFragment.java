@@ -80,7 +80,7 @@ public class MainFragment extends Fragment{
     private static final String CHANNEL_ID = "Tyomaa channel";
     CircularProgressIndicator circularProgressIndicator;
     LinearLayoutManager linearLayoutManager;
-    int newPosition;
+    int newPosition,reverse;
 
 
     UserInformation userInformation;
@@ -104,13 +104,16 @@ public class MainFragment extends Fragment{
         bnv.setVisibility(View.VISIBLE);
         firebaseModel.initAll();
         newPosition=bundle.getInt("NEWPOSITION");
+        reverse=bundle.getInt("REVERSE");
         return root;
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        if(linearLayoutManager!=null)
         bundle.putInt("NEWPOSITION",linearLayoutManager.findFirstCompletelyVisibleItemPosition());
+        bundle.putInt("REVERSE", reverse);
     }
     @Override
     public void onViewCreated(@Nullable View view,@NonNull Bundle savedInstanceState){
@@ -264,10 +267,11 @@ public class MainFragment extends Fragment{
                 RecentMethods.setCurrentFragment(CoinsFragmentSecond.newInstance(MainFragment.newInstance(userInformation, bundle), userInformation, bundle), getActivity());
             }
         });
-        //              firebaseModel.getReference().child("usersNicks").child("Spaccacrani").setValue(new UserPeopleAdapter("Spaccacrani", "5", "hello"));
-        //               String uid=firebaseModel.getUsersReference().child("tyomaa6").child("myClothes").push().getKey();
-//                firebaseModel.getUsersReference().child("tyomaa6").child("myClothes").child(uid).setValue(new Clothes("shoes", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
-        //                       ,220,"Prada",344,123,"tyomaa6","coin"," ","",72,"foot",uid,"exclusive"));
+
+//                       String uid=firebaseModel.getUsersReference().child("tyomaa6").child("myClothes").push().getKey();
+//                firebaseModel.getUsersReference().child("tyomaa6").child("myClothes").child("-N78dSmApk_OlaBoh-LA").setValue(new Clothes("shoes", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Funtitled%20(7).png?alt=media&token=3b195cab-df73-4186-925f-88d382270c5b"
+//                               ,270,"Plurixx",344,123,"tyomaa6","coin"," ","",72,"foot","-N78dSmApk_OlaBoh-LA","exclusive",null,0f,0f,0f,0f));
+////
 //                firebaseModel.getUsersReference().child("Vladcpp").child("myClothes").child(uid).setValue(new Clothes("shoes", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fjordan.jpg?alt=media&token=823b2a10-1dcd-47c5-8170-b5a4fb155500"
 //                        ,220,"Blazer",344,123,"Vladcpp","coin"," ","",72,"foot",uid,"exclusive"));
 //                String uid=firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").push().getKey();
@@ -416,6 +420,8 @@ public class MainFragment extends Fragment{
         if(bundle.getSerializable("MAIN_REC_CLOTHES")!=null){
             circularProgressIndicator.setVisibility(View.GONE);
             popularClothesArrayList = (ArrayList<Clothes>) bundle.getSerializable("MAIN_REC_CLOTHES");
+            if(reverse==0)Collections.reverse(popularClothesArrayList);
+            reverse++;
             NewClothesAdapter newClothesAdapter=new NewClothesAdapter(popularClothesArrayList,itemClickListener,userInformation);
             linearLayoutManager=new LinearLayoutManager(getContext());
             linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
@@ -440,6 +446,8 @@ public class MainFragment extends Fragment{
                         popularClothesArrayList.add(cl);
                     }
                     bundle.putSerializable("MAIN_REC_CLOTHES",popularClothesArrayList);
+                    if(reverse==0)Collections.reverse(popularClothesArrayList);
+                    reverse++;
                     NewClothesAdapter newClothesAdapter=new NewClothesAdapter(popularClothesArrayList,itemClickListener,userInformation);
                     linearLayoutManager=new LinearLayoutManager(getContext());
                     linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);

@@ -706,9 +706,9 @@ public final class MessageFragment extends Fragment {
                                             receiverMembers.add(userPeopleAdapter1);
                                             Log.d("#####", messageSenderName + "fdgbreb");
                                             firebaseModel.getUsersReference().child(messageReceiverName).child("Dialogs").child(messageSenderName)
-                                                    .setValue(new Chat(messageSenderName, "", "", "personal", 0, senderMembers, "false", new ArrayList<>(), 0, duration, chat.getChatId()));
+                                                    .setValue(new Chat(messageSenderName, "", "", "personal", 0, senderMembers, "false", new ArrayList<>(), 0, duration, chat.getChatId(),""));
                                             firebaseModel.getUsersReference().child(messageSenderName).child("Dialogs").child(messageReceiverName)
-                                                    .setValue(new Chat(messageReceiverName, "", "", "personal", 0, receiverMembers, "false", new ArrayList<>(), 0, duration, chat.getChatId()));
+                                                    .setValue(new Chat(messageReceiverName, "", "", "personal", 0, receiverMembers, "false", new ArrayList<>(), 0, duration, chat.getChatId(),""));
                                             addLastMessage(type, message);
                                             addUnread();
                                             if (type.equals("image")) {

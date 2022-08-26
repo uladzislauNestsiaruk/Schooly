@@ -144,7 +144,7 @@ public class InstagramShareFragment extends Fragment {
                 public void LoadNews(NewsItem newsItem)  {
                     progressIndicator.setVisibility(View.GONE);
                     try {
-                        filamentModel.initNewsFilament(surfaceView,newsItem.getPerson().getBody().getBuffer(),true,null,"regularRender",true);
+                        filamentModel.initShareFilament(surfaceView,newsItem.getPerson().getBody().getBuffer(),true,null,"regularRender",true);
                         loadClothesInScene(newsItem.getClothesCreators());
                         if(newsItem.getPerson().getBrows()!=null){
                             filamentModel.populateSceneFacePart(newsItem.getPerson().getBrows().getBuffer());
