@@ -153,7 +153,6 @@ public class ViewingLookFragmentGroup extends Fragment {
                 RecentMethods.setCurrentFragment(fragment, getActivity());
             }
         };
-
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
         GroupChatAdapter.lookInfo(new GroupChatAdapter.ItemClickListener() {
             @Override
@@ -187,6 +186,20 @@ public class ViewingLookFragmentGroup extends Fragment {
                 });
                 Picasso.get().load(newsItem.getImageUrl()).into(lookImage);
                 description.setText(newsItem.getItem_description());
+                if(userInformation.getViewedNews()!=null){
+                    if(!userInformation.getViewedNews().contains(newsItem.getNewsId()))
+                        DefaultDatabase.getUsersReference().child(userInformation.getNick())
+                                .child("viewedNews").child(newsItem.getNewsId()).setValue(newsItem.getNewsId());
+                }else {
+                    RecentMethods.loadViewedNews(userInformation.getNick(), DefaultDatabase, new Callbacks.LoadViewedNews() {
+                        @Override
+                        public void getViewedNews(ArrayList<String> viewedNews) {
+                            if(!viewedNews.contains(newsItem.getNewsId()))
+                                DefaultDatabase.getUsersReference().child(userInformation.getNick())
+                                        .child("viewedNews").child(newsItem.getNewsId()).setValue(newsItem.getNewsId());
+                        }
+                    });
+                }
                 likesCountString=String.valueOf(newsItem.getLikes_count());
                 comment.setOnClickListener(new View.OnClickListener() {
                     @Override

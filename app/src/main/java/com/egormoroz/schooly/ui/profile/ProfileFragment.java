@@ -1629,12 +1629,19 @@ public class ProfileFragment extends Fragment {
                 facePartArrayList.add(userInformation.getPerson().getSkinColor());
                 for(int i=0;i<facePartArrayList.size();i++){
                     FacePart facePart=facePartArrayList.get(i);
+                    com.egormoroz.schooly.Color[] color = {new com.egormoroz.schooly.Color()};
                     if(facePart!=null){
+                        if(facePart.getColorX()!=-1f && facePart.getColorY()!=-1f && facePart.getColorZ()!=-1f) {
+                            color[0] = new com.egormoroz.schooly.Color(facePart.getColorX(),
+                                    facePart.getColorY(), facePart.getColorZ()
+                                    , 0, 0, 0);
+                        }
                         if(i==0){
                             try {
-                                Log.d("AAAA", facePart.getPartType());
                                 filamentModel.initFilament(surfaceView, facePart.getBuffer(), true, lockableNestedScrollView
                                         , "regularRender", true);
+                                if(color[0].getColorX() !=null)
+                                    filamentModel.changeColor(facePart.getPartType(),color[0] );
                                 loadMainLook(userInformation);
                             } catch (IOException e) {
                                 e.printStackTrace();
@@ -1643,6 +1650,8 @@ public class ProfileFragment extends Fragment {
                             }
                         }else{
                             filamentModel.populateSceneFacePart(facePart.getBuffer());
+                            if(color[0].getColorX() !=null)
+                                filamentModel.changeColor(facePart.getPartType(),color[0] );
                         }
                     }
                 }
@@ -1651,21 +1660,50 @@ public class ProfileFragment extends Fragment {
     }
 
     public void loadPersonBuffer(UserInformation userInformation,LockableNestedScrollView lockableNestedScrollView,SurfaceView surfaceView){
+        com.egormoroz.schooly.Color colorBody=new com.egormoroz.schooly.Color();
+        com.egormoroz.schooly.Color colorHair=new com.egormoroz.schooly.Color();
+        com.egormoroz.schooly.Color colorBrows=new com.egormoroz.schooly.Color();
         RecentMethods.startLoadPerson(userInformation.getNick(), firebaseModel, new Callbacks.loadPerson() {
             @Override
             public void LoadPerson(Person person,ArrayList<FacePart> facePartArrayList) {
-                Log.d("AAA","ss  "+person.getBody());
+                Log.d("AAA","ss  "+person.getHair().getColorY());
                 LoadBodyParts.loadPersonBuffers(facePartArrayList, new Callbacks.loadFaceParts() {
                     @Override
                     public void LoadFaceParts(ArrayList<FacePart> facePartsArrayList) {
-                        Log.d("AAAAA","ss11  "+facePartsArrayList.get(0).getBuffer()+"   "+facePartsArrayList.get(0).getUid());
+                        Log.d("AAAAA","ss11  "+facePartsArrayList.get(0).getColorZ()+"   "+facePartsArrayList.get(0).getUid());
                         for(int i=0;i<facePartsArrayList.size();i++){
                             FacePart facePart=facePartsArrayList.get(i);
-                            Log.d("AAAAA","ss22  "+facePartsArrayList.get(i).getBuffer()+"   "+facePart.getUid()+"   "+i);
+                            com.egormoroz.schooly.Color[] color = {new com.egormoroz.schooly.Color()};
+                            if(facePart.getColorX()!=-1f && facePart.getColorY()!=-1f && facePart.getColorZ()!=-1f){
+                                Log.d("AAAAA","ss22  "+facePartsArrayList.get(i).getColorX()+"   "+facePartsArrayList.get(i).getColorY()
+                                        +"   "+facePartsArrayList.get(i).getColorZ());
+                                color[0] =new com.egormoroz.schooly.Color(facePartsArrayList.get(i).getColorX(),
+                                        facePartsArrayList.get(i).getColorY(), facePartsArrayList.get(i).getColorZ()
+                                        , 0, 0, 0);
+                                switch (facePart.getPartType()) {
+                                    case "body":
+                                        colorBody.setColorX(facePart.getColorX());
+                                        colorBody.setColorY(facePart.getColorY());
+                                        colorBody.setColorZ(facePart.getColorZ());
+                                        break;
+                                    case "hair":
+                                        colorHair.setColorX(facePart.getColorX());
+                                        colorHair.setColorY(facePart.getColorY());
+                                        colorHair.setColorZ(facePart.getColorZ());
+                                        break;
+                                    case "brows":
+                                        colorBrows.setColorX(facePart.getColorX());
+                                        colorBrows.setColorY(facePart.getColorY());
+                                        colorBrows.setColorZ(facePart.getColorZ());
+                                        break;
+                                }
+                            }
                             if(i==0){
                                 try {
                                     filamentModel.initFilament(surfaceView, facePart.getBuffer(), true, lockableNestedScrollView
                                             , "regularRender", true);
+                                    if(color[0].getColorX() !=null)
+                                    filamentModel.changeColor(facePart.getPartType(), color[0]);
                                     loadMainLook(userInformation);
                                 } catch (IOException e) {
                                     e.printStackTrace();
@@ -1673,10 +1711,12 @@ public class ProfileFragment extends Fragment {
                                     e.printStackTrace();
                                 }
                             }else{
-                                filamentModel.populateSceneFacePart(facePartsArrayList.get(i).getBuffer());
+                                filamentModel.populateSceneFacePart(facePart.getBuffer());
+                                if(color[0].getColorX() !=null)
+                                    filamentModel.changeColor(facePart.getPartType(), color[0]);
                             }
                         }
-                        userInformation.setPerson(RecentMethods.setAllPerson(facePartsArrayList,"not",null,null,null));
+                        userInformation.setPerson(RecentMethods.setAllPerson(facePartsArrayList,"not",colorBody,colorHair,colorBrows));
                     }
                 });
             }
@@ -1724,22 +1764,6 @@ public class ProfileFragment extends Fragment {
                     }
                 }
             }
-    }
-
-
-    public void addModelInScene(Clothes clothes)  {
-        try {
-            uri = new URI(clothes.getModel());
-            buffer = RecentMethods.getBytes(uri.toURL());
-            buffer1= ByteBuffer.wrap(buffer);
-            clothes.setBuffer(bufferToFilament);
-            mainLookClothes.add(clothes);
-            clothesList.add(clothes);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
     }
 
     private void showBottomSheetDialog(View view) {

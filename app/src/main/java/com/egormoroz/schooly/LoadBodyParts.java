@@ -21,12 +21,12 @@ public class LoadBodyParts {
     public static void loadPersonBuffers(ArrayList<FacePart> facePartArrayList, Callbacks.loadFaceParts loadFaceParts){
         int loadValue=0;
         ArrayList<FacePart> facePartArrayWithBuffers=new ArrayList<>();
-        Log.d("AAAA", " COME TO METHOD");
         ArrayList<FacePart> filteredFaceParts=new ArrayList<>();
         for(int s=0;s<facePartArrayList.size();s++){
             FacePart facePart=facePartArrayList.get(s);
             if(facePart!=null){
                 filteredFaceParts.add(facePart);
+                Log.d("AAAA", " COME TO METHOD   " + facePart.getColorZ()+"   "+facePart.getColorY()+"   "+facePart.getPartType());
                 loadValue++;
             }
             if(s==facePartArrayList.size()-1){
@@ -42,7 +42,7 @@ public class LoadBodyParts {
                         Log.d("AAAA", " MIDDLE LOAD BODY  1 "+ stopLoad[0]+"   "+ finalI);
                         if(stopLoad[0]==0){
                             Log.d("AAAA", " STOP LOAD BODY  1 "+ stopLoad[0]+"   "+finalI);
-                            Log.d("AAAA", " STOP BUFFER "+ facePartArrayWithBuffers.get(0).getBuffer());
+                            Log.d("AAAA", " STOP BUFFER "+ facePartArrayWithBuffers.get(0).getColorY());
                             loadFaceParts.LoadFaceParts(facePartArrayWithBuffers);
                         }
                     });

@@ -19,6 +19,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.egormoroz.schooly.Callbacks;
@@ -78,7 +79,8 @@ public class MainFragment extends Fragment{
     long totalProfitLong,totalPurchaseLong,totalProfitDollarLong;
     private static final String CHANNEL_ID = "Tyomaa channel";
     CircularProgressIndicator circularProgressIndicator;
-    Buffer b;
+    LinearLayoutManager linearLayoutManager;
+    int newPosition;
 
 
     UserInformation userInformation;
@@ -101,7 +103,14 @@ public class MainFragment extends Fragment{
         BottomNavigationView bnv = getActivity().findViewById(R.id.bottomNavigationView);
         bnv.setVisibility(View.VISIBLE);
         firebaseModel.initAll();
+        newPosition=bundle.getInt("NEWPOSITION");
         return root;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        bundle.putInt("NEWPOSITION",linearLayoutManager.findFirstCompletelyVisibleItemPosition());
     }
     @Override
     public void onViewCreated(@Nullable View view,@NonNull Bundle savedInstanceState){
@@ -307,12 +316,6 @@ public class MainFragment extends Fragment{
 //            }
 //        });
 
-        relativeShop.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ((MainActivity)getActivity()).setCurrentFragment((ShopFragment.newInstance(userInformation,bundle,MainFragment.newInstance(userInformation, bundle))));
-            }
-        });
         if (userInformation.getMiners()==null){
             RecentMethods.GetActiveMiner(nick, firebaseModel, new Callbacks.GetActiveMiners() {
                 @Override
@@ -414,12 +417,23 @@ public class MainFragment extends Fragment{
             circularProgressIndicator.setVisibility(View.GONE);
             popularClothesArrayList = (ArrayList<Clothes>) bundle.getSerializable("MAIN_REC_CLOTHES");
             NewClothesAdapter newClothesAdapter=new NewClothesAdapter(popularClothesArrayList,itemClickListener,userInformation);
+            linearLayoutManager=new LinearLayoutManager(getContext());
+            linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+            clothesRecyclerMain.setLayoutManager(linearLayoutManager);
             clothesRecyclerMain.setAdapter(newClothesAdapter);
+                clothesRecyclerMain.scrollToPosition(newPosition);
+            relativeShop.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ((MainActivity)getActivity()).setCurrentFragment((ShopFragment.newInstance(userInformation,bundle,MainFragment.newInstance(userInformation, bundle))));
+                }
+            });
         }else {
             RecentMethods.getClothes(firebaseModel, new Callbacks.GetClothes() {
                 @Override
                 public void getClothes(ArrayList<Clothes> allClothes) {
                     clothesArrayList.addAll(allClothes);
+                    Collections.reverse(allClothes);
                     circularProgressIndicator.setVisibility(View.GONE);
                     for(int i=0;i<clothesArrayList.size();i++){
                         Clothes cl=clothesArrayList.get(i);
@@ -427,7 +441,18 @@ public class MainFragment extends Fragment{
                     }
                     bundle.putSerializable("MAIN_REC_CLOTHES",popularClothesArrayList);
                     NewClothesAdapter newClothesAdapter=new NewClothesAdapter(popularClothesArrayList,itemClickListener,userInformation);
+                    linearLayoutManager=new LinearLayoutManager(getContext());
+                    linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+                    clothesRecyclerMain.setLayoutManager(linearLayoutManager);
                     clothesRecyclerMain.setAdapter(newClothesAdapter);
+                    if(newPosition==0)
+                        clothesRecyclerMain.scrollToPosition(newPosition);
+                    relativeShop.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            ((MainActivity)getActivity()).setCurrentFragment((ShopFragment.newInstance(userInformation,bundle,MainFragment.newInstance(userInformation, bundle))));
+                        }
+                    });
                 }
             });
         }

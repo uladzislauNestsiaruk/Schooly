@@ -80,6 +80,13 @@ public class HatsFragment extends Fragment {
     }
 
     @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        bundle.putInt("HATSNEWPOSITION",linearLayoutManager.findFirstCompletelyVisibleItemPosition());
+        bundle.putInt("HATSPOPULARPOSITION", gridLayoutManager.findFirstVisibleItemPosition());
+    }
+
+    @Override
     public void onViewCreated(@Nullable View view,@NonNull Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
 
@@ -107,7 +114,6 @@ public class HatsFragment extends Fragment {
             linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
             clothes.setLayoutManager(linearLayoutManager);
             clothes.setAdapter(newClothesAdapter);
-            if(positionPopular==0)
                 clothes.scrollToPosition(positionNew);
         }else{
             ArrayList<Clothes> allClothes= (ArrayList<Clothes>) bundle.getSerializable("ALL_CLOTHES");
@@ -124,7 +130,6 @@ public class HatsFragment extends Fragment {
             linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
             clothes.setLayoutManager(linearLayoutManager);
             clothes.setAdapter(newClothesAdapter);
-            if(positionPopular==0)
                 clothes.scrollToPosition(positionNew);
         }
         if(bundle.getSerializable("HATS_POPULAR")!=null){

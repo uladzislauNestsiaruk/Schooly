@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
     relativeLayout=findViewById(R.id.rel);
     s=findViewById(R.id.s);
     loading=findViewById(R.id.load);
-    bundle.putString("START_BUNDLE", "Schooly");
+    bundle.putString("START_BUNDLE", "Sholly");
     initFirebase();
     firebaseModel.initAll();
     ///////////Authorization block
@@ -308,12 +308,12 @@ public class MainActivity extends AppCompatActivity {
             userInformation.setTalksArrayList(talksArrayList);
           }
         });
-//        RecentMethods.startLoadPerson(nick, firebaseModel, new Callbacks.loadPerson() {
-//          @Override
-//          public void LoadPerson(Person person,ArrayList<FacePart> facePartArrayList) {
-//            userInformation.setPerson(person);
-//          }
-//        });
+        RecentMethods.loadViewedNews(nick, firebaseModel, new Callbacks.LoadViewedNews() {
+          @Override
+          public void getViewedNews(ArrayList<String> viewedNews) {
+            userInformation.setViewedNews(viewedNews);
+          }
+        });
 
       }
     });

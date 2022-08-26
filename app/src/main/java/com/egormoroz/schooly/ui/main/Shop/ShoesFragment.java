@@ -122,7 +122,6 @@ public class ShoesFragment extends Fragment {
             linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
             clothes.setLayoutManager(linearLayoutManager);
             clothes.setAdapter(newClothesAdapter);
-            if(positionPopular==0)
             clothes.scrollToPosition(positionNew);
 
         }else{
@@ -140,7 +139,6 @@ public class ShoesFragment extends Fragment {
             linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
             clothes.setLayoutManager(linearLayoutManager);
             clothes.setAdapter(newClothesAdapter);
-            if(positionPopular==0)
             clothes.scrollToPosition(positionNew);
         }
         if(bundle.getSerializable("SHOES_POPULAR")!=null){

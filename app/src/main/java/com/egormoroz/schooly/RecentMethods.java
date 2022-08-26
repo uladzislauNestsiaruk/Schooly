@@ -138,7 +138,7 @@ public class RecentMethods {
                 "","","open","open","open",
                 "open",new ArrayList<>(),"regular", new ArrayList<>(),0,mainLookClothes,defaultClothes,new ArrayList<>()
                 ,new ArrayList<>(),new ArrayList<>(),new ArrayList<>(),mainLookClothes,person
-        ,new ArrayList<>(),new ArrayList<>(),"",personImage);
+        ,new ArrayList<>(),new ArrayList<>(),"",personImage,new ArrayList<>());
         ref.child(nick).setValue(res).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
@@ -789,6 +789,43 @@ public class RecentMethods {
     public static void getClothesInBasket(String nick,FirebaseModel firebaseModel,Callbacks.GetClothes callback){
         firebaseModel.initAll();
         Query query=firebaseModel.getUsersReference().child(nick).child("basket");
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                ArrayList<Clothes> clothesFromBase=new ArrayList<>();
+                for (DataSnapshot snap : snapshot.getChildren()) {
+                    Clothes clothes = new Clothes();
+                    clothes.setClothesImage(snap.child("clothesImage").getValue(String.class));
+                    clothes.setClothesPrice(snap.child("clothesPrice").getValue(Long.class));
+                    clothes.setPurchaseNumber(snap.child("purchaseNumber").getValue(Long.class));
+                    clothes.setClothesType(snap.child("clothesType").getValue(String.class));
+                    clothes.setClothesTitle(snap.child("clothesTitle").getValue(String.class));
+                    clothes.setCreator(snap.child("creator").getValue(String.class));
+                    clothes.setCurrencyType(snap.child("currencyType").getValue(String.class));
+                    clothes.setDescription(snap.child("description").getValue(String.class));
+                    clothes.setPurchaseToday(snap.child("purchaseToday").getValue(Long.class));
+                    clothes.setModel(snap.child("model").getValue(String.class));
+                    clothes.setUid(snap.child("uid").getValue(String.class));
+                    clothes.setExclusive(snap.child("exclusive").getValue(String.class));
+                    clothes.setX(snap.child("x").getValue(Float.class));
+                    clothes.setY(snap.child("y").getValue(Float.class));
+                    clothes.setZ(snap.child("z").getValue(Float.class));
+                    clothes.setTransformRatio(snap.child("transformRatio").getValue(Float.class));
+                    clothesFromBase.add(clothes);
+                }
+                callback.getClothes(clothesFromBase);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    public static void getDefaultLookClothes(String path,FirebaseModel firebaseModel,Callbacks.GetClothes callback){
+        firebaseModel.initAppDataDatabase();
+        Query query=firebaseModel.getReference().child(path);
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -1506,7 +1543,7 @@ public class RecentMethods {
                 ,new ArrayList<>(),new ArrayList<>(),new ArrayList<>(),new ArrayList<>()
                 ,new ArrayList<Clothes>(),new Person(new FacePart(), new FacePart(), new FacePart(), new FacePart(), new FacePart(), new FacePart(), new FacePart(), new FacePart("", "", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Fma.glb?alt=media&token=f7430695-13cb-4365-8910-c61b59a96acf", "",b ,"",0f,0f,0f),
                 new FacePart(), new FacePart()),new ArrayList<>(),new ArrayList<>(),"",""
-        );
+        ,new ArrayList<>());
         user.setNick("fake");
         Random random = new Random();
         for(int i = 0; i < 10; i++)
@@ -1681,6 +1718,9 @@ public class RecentMethods {
 
     public static void startLoadPerson(String nick,FirebaseModel firebaseModel,Callbacks.loadPerson callback){
         firebaseModel.initAll();
+         Color colorBody=new Color();
+          Color colorHair=new Color();
+           Color colorBrows=new Color();
         firebaseModel.getUsersReference().child(nick).child("person").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
@@ -1688,10 +1728,29 @@ public class RecentMethods {
                     DataSnapshot snapshot=task.getResult();
                     ArrayList<FacePart> facePartArrayList=new ArrayList<>();
                     for(DataSnapshot snap:snapshot.getChildren()){
-                        FacePart facePart=snap. getValue(FacePart.class);
+                        FacePart facePart=snap.getValue(FacePart.class);
+                        switch (facePart.getPartType()) {
+                            case "body":
+                                colorBody.setColorX(facePart.getColorX());
+                                colorBody.setColorY(facePart.getColorY());
+                                colorBody.setColorZ(facePart.getColorZ());
+                                Log.d("AAAAA", "body  " + colorBody.getColorY()+"   "+facePart.getPartType());
+                                break;
+                            case "hair":
+                                colorHair.setColorX(facePart.getColorX());
+                                colorHair.setColorY(facePart.getColorY());
+                                colorHair.setColorZ(facePart.getColorZ());
+                                Log.d("AAAAA", "hair  " + colorHair.getColorY()+"   "+facePart.getPartType());
+                                break;
+                            case "brows":
+                                colorBrows.setColorX(facePart.getColorX());
+                                colorBrows.setColorY(facePart.getColorY());
+                                colorBrows.setColorZ(facePart.getColorZ());
+                                break;
+                        }
                         facePartArrayList.add(facePart);
                     }
-                    callback.LoadPerson(setAllPerson(facePartArrayList,"not",null,null,null),facePartArrayList);
+                    callback.LoadPerson(setAllPerson(facePartArrayList,"not",colorBody,colorHair ,colorBrows),facePartArrayList);
                 }
             }
         });
@@ -1706,7 +1765,6 @@ public class RecentMethods {
             FacePart facePart=parts.get(i);
             if(facePart!=null){
                 if(type.equals("base")){
-                    Log.d("AAAA", "GG");
                     facePart.setBuffer(null);
                 }
                 switch (facePart.getPartType()){
@@ -1746,7 +1804,6 @@ public class RecentMethods {
                 }
             }
         }
-        Log.d("AAAAA", "PERSON");
         return person;
     }
 
@@ -1798,6 +1855,24 @@ public class RecentMethods {
             }
         }
 
+    }
+
+    public static void loadViewedNews(String nick,FirebaseModel firebaseModel,Callbacks.LoadViewedNews callback){
+        firebaseModel.getUsersReference().child(nick).child("viewedNews").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if(task.isSuccessful()){
+                    DataSnapshot snapshot=task.getResult();
+                    ArrayList<String> viewedNewsList=new ArrayList<>();
+                    for(DataSnapshot snap:snapshot.getChildren()){
+                        String viewedNews=snap.getValue(String.class);
+                        viewedNewsList.add(viewedNews);
+                    }
+                    callback.getViewedNews(viewedNewsList);
+
+                }
+            }
+        });
     }
 
     public static ArrayList<Color> returnColors(){

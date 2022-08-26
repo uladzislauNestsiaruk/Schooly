@@ -162,55 +162,28 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
     public void onBindViewHolder(@NonNull ImageViewHolder holder, int position) {
         Log.d("ON BIND", "BIND POSITION: " + position);
         NewsItem newsItem = newsList.get(position);
-        nick=userInformation.getNick();
-        holder.nick.setText(newsItem.getNick());
+        if(newsItem!=null){
+            holder.relativeAll.setVisibility( View.VISIBLE);
+            nick=userInformation.getNick();
+            holder.nick.setText(newsItem.getNick());
+            holder.noLooks.setVisibility(View.GONE);
 
-        holder.nick.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String userNameToProfile=holder.nick.getText().toString();
-                DefaultDatabase.getUsersReference().child(userNameToProfile).addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if(!snapshot.exists()){
-                            Toast.makeText(holder.itemView.getContext(), R.string.usernotfound, Toast.LENGTH_SHORT).show();
-                        }else {
-                            if(userNameToProfile.equals(nick)){
-                                RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback",nick,NewsFragment.newInstance( userInformation,bundle),userInformation,bundle),activity);
-                            }else {
-                                RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile,NewsFragment.newInstance( userInformation,bundle),userInformation,bundle
-                                ), activity);
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-            }
-        });
-        holder.like_count.setText(newsItem.getLikes_count());
-        holder.description.setText(newsItem.getItem_description());
-        firebaseNewsModel.initNewsDatabase();
-        Picasso.get().load(newsItem.getImageUrl()).into(holder.surfaceView);
-        Log.d("#####", "Database url" + firebaseNewsModel.getReference());
-        firebaseNewsModel.getReference().child(newsItem.getNick()).child(newsItem.getNewsId()).child("likes_count").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if(task.isSuccessful()){
-                    final long[] value = {Integer.valueOf(task.getResult().getValue(String.class))};
-                    holder.like_count.setText(String.valueOf(value[0]));
-                    Query likeref = DefaultDatabase.getUsersReference().child(nick).child("likedNews").child(newsItem.getNewsId());
-                    likeref.addValueEventListener(new ValueEventListener() {
+            holder.nick.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String userNameToProfile=holder.nick.getText().toString();
+                    DefaultDatabase.getUsersReference().child(userNameToProfile).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            if (snapshot.exists()) {
-                                holder.like.setImageResource(R.drawable.ic_pressedheart40dp);
-                            }
-                            else {
-                                holder.like.setImageResource(R.drawable.ic_heart40dp);
+                            if(!snapshot.exists()){
+                                Toast.makeText(holder.itemView.getContext(), R.string.usernotfound, Toast.LENGTH_SHORT).show();
+                            }else {
+                                if(userNameToProfile.equals(nick)){
+                                    RecentMethods.setCurrentFragment(ProfileFragment.newInstance("userback",nick,NewsFragment.newInstance( userInformation,bundle),userInformation,bundle),activity);
+                                }else {
+                                    RecentMethods.setCurrentFragment(ProfileFragment.newInstance("other", userNameToProfile,NewsFragment.newInstance( userInformation,bundle),userInformation,bundle
+                                    ), activity);
+                                }
                             }
                         }
 
@@ -219,74 +192,122 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
 
                         }
                     });
-                    holder.like.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            Log.d("#####", "Firebase : " + firebaseNewsModel.getReference() + "   Likes before " + value[0]);
-                            Query likeref = DefaultDatabase.getUsersReference().child(nick).child("likedNews").child(newsItem.getNewsId());
-                            likeref.addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                    if (snapshot.exists()) {
-                                        value[0] -= 1;
-                                        holder.like.setImageResource(R.drawable.ic_heart40dp);
-                                        DefaultDatabase.getUsersReference().child(nick).child("likedNews").child(newsItem.getNewsId()).removeValue();
-                                    }
-                                    else{
-                                        value[0] += 1;
-                                        holder.like.setImageResource(R.drawable.ic_pressedheart40dp);
-                                        DefaultDatabase.getUsersReference().child(nick).child("likedNews").child(newsItem.getNewsId()).setValue("liked");
-                                    }
-                                    Log.d("#####", "Firebase : " + firebaseNewsModel.getReference() + "   Likes " + value[0]);
-                                    holder.like_count.setText(String.valueOf(value[0]));
-                                    firebaseNewsModel.getReference().child(newsItem.getNick()).child(newsItem.getNewsId()).child("likes_count").setValue(String.valueOf(value[0]));
-                                    itemChangeListener.onItemChanged(position, "like");
-                                }
-
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError error) {
-
-                                }
-                            });
-                        }
-                    });
                 }
+            });
+            if(userInformation.getViewedNews()!=null){
+                if(!userInformation.getViewedNews().contains(newsItem.getNewsId()))
+                    DefaultDatabase.getUsersReference().child(userInformation.getNick())
+                            .child("viewedNews").child(newsItem.getNewsId()).setValue(newsItem.getNewsId());
+            }else {
+                RecentMethods.loadViewedNews(userInformation.getNick(), DefaultDatabase, new Callbacks.LoadViewedNews() {
+                    @Override
+                    public void getViewedNews(ArrayList<String> viewedNews) {
+                        if(!viewedNews.contains(newsItem.getNewsId()))
+                            DefaultDatabase.getUsersReference().child(userInformation.getNick())
+                                    .child("viewedNews").child(newsItem.getNewsId()).setValue(newsItem.getNewsId());
+                    }
+                });
             }
-        });
+            holder.like_count.setText(newsItem.getLikes_count());
+            holder.description.setText(newsItem.getItem_description());
+            firebaseNewsModel.initNewsDatabase();
+            Picasso.get().load(newsItem.getImageUrl()).into(holder.surfaceView);
+            Log.d("#####", "Database url" + firebaseNewsModel.getReference());
+            firebaseNewsModel.getReference().child(newsItem.getNick()).child(newsItem.getNewsId()).child("likes_count").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DataSnapshot> task) {
+                    if(task.isSuccessful()){
+                        final long[] value = {Integer.valueOf(task.getResult().getValue(String.class))};
+                        holder.like_count.setText(String.valueOf(value[0]));
+                        Query likeref = DefaultDatabase.getUsersReference().child(nick).child("likedNews").child(newsItem.getNewsId());
+                        likeref.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                if (snapshot.exists()) {
+                                    holder.like.setImageResource(R.drawable.ic_pressedheart40dp);
+                                }
+                                else {
+                                    holder.like.setImageResource(R.drawable.ic_heart40dp);
+                                }
+                            }
 
-        holder.lookPrice.setText(String.valueOf(newsItem.getLookPrice()));
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
 
-        holder.show.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showDialogViewingLook(newsItem, holder.itemView);
-            }
-        });
+                            }
+                        });
+                        holder.like.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Log.d("#####", "Firebase : " + firebaseNewsModel.getReference() + "   Likes before " + value[0]);
+                                Query likeref = DefaultDatabase.getUsersReference().child(nick).child("likedNews").child(newsItem.getNewsId());
+                                likeref.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        if (snapshot.exists()) {
+                                            value[0] -= 1;
+                                            holder.like.setImageResource(R.drawable.ic_heart40dp);
+                                            DefaultDatabase.getUsersReference().child(nick).child("likedNews").child(newsItem.getNewsId()).removeValue();
+                                        }
+                                        else{
+                                            value[0] += 1;
+                                            holder.like.setImageResource(R.drawable.ic_pressedheart40dp);
+                                            DefaultDatabase.getUsersReference().child(nick).child("likedNews").child(newsItem.getNewsId()).setValue("liked");
+                                        }
+                                        Log.d("#####", "Firebase : " + firebaseNewsModel.getReference() + "   Likes " + value[0]);
+                                        holder.like_count.setText(String.valueOf(value[0]));
+                                        firebaseNewsModel.getReference().child(newsItem.getNick()).child(newsItem.getNewsId()).child("likes_count").setValue(String.valueOf(value[0]));
+                                        itemChangeListener.onItemChanged(position, "like");
+                                    }
 
-        holder.send.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showBottomSheetDialog(holder.itemView,newsItem);
-            }
-        });
-        holder.comment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showBottomSheetDialogComments(newsItem, holder.comment);
-            }
-        });
-        holder.clothesComponents.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showBottomSheetDialogClothesCreators(newsItem, holder.itemView);
-            }
-        });
-        holder.options.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showBottomSheetDialogLookOptions(newsItem,holder.itemView);
-            }
-        });
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                    }
+                                });
+                            }
+                        });
+                    }
+                }
+            });
+
+            holder.lookPrice.setText(String.valueOf(newsItem.getLookPrice()));
+
+            holder.show.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showDialogViewingLook(newsItem, holder.itemView);
+                }
+            });
+
+            holder.send.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showBottomSheetDialog(holder.itemView,newsItem);
+                }
+            });
+            holder.comment.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    showBottomSheetDialogComments(newsItem, holder.comment);
+                }
+            });
+            holder.clothesComponents.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showBottomSheetDialogClothesCreators(newsItem, holder.itemView);
+                }
+            });
+            holder.options.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showBottomSheetDialogLookOptions(newsItem,holder.itemView);
+                }
+            });
+        }else {
+            holder.noLooks.setVisibility( View.VISIBLE);
+            holder.relativeAll.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -297,14 +318,16 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
     class ImageViewHolder extends RecyclerView.ViewHolder {
 
         ImageView  like, comment,send,options,show;
-        TextView description, like_count,clothesComponents,lookPrice,nick;
+        TextView description, like_count,clothesComponents,lookPrice,nick,noLooks;
         ImageView surfaceView;
+        RelativeLayout relativeAll;
 
         public ImageViewHolder(@NonNull View itemView) {
             super(itemView);
 
             surfaceView=itemView.findViewById(R.id.surfaceView);
             send=itemView.findViewById(R.id.send);
+            noLooks=itemView.findViewById(R.id.noLooks);
             like = itemView.findViewById(R.id.like);
             description = itemView.findViewById(R.id.description);
             like_count = itemView.findViewById(R.id.likesCount);
@@ -314,6 +337,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
             lookPrice=itemView.findViewById(R.id.lookPrice);
             nick=itemView.findViewById(R.id.nick);
             show=itemView.findViewById(R.id.show);
+            relativeAll=itemView.findViewById(R.id.relativeAll);
         }
     }
 

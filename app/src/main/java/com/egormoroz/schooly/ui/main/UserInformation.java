@@ -57,6 +57,7 @@ public class UserInformation implements Serializable {
     String personImage;
     ArrayList<Chat> chatArrayList;
     ArrayList<Chat> talksArrayList;
+    ArrayList<String> viewedNews;
 
     public UserInformation() {
     }
@@ -350,6 +351,14 @@ public class UserInformation implements Serializable {
         this.personImage = personImage;
     }
 
+    public ArrayList<String> getViewedNews() {
+        return viewedNews;
+    }
+
+    public void setViewedNews(ArrayList<String> viewedNews) {
+        this.viewedNews = viewedNews;
+    }
+
     public UserInformation(String nick, String phone, String uid, String Avatar, String password,
                            String gender, long age, ArrayList<Miner> activeMinerArrayList,ArrayList<Miner> minerArrayList, long level, long money, double todayMining,
                            ArrayList<Subscriber> subscription, ArrayList<Subscriber> subscribers, String queue, String bio,
@@ -357,7 +366,7 @@ public class UserInformation implements Serializable {
                            String groupChatsNontsType, String profileNontsType, ArrayList<Clothes> myClothes, String version,
                            ArrayList<NewsItem> looks,long miningPremium,ArrayList<Clothes> lookClothes,ArrayList<Clothes> clothes,ArrayList<Nontification> notifications
             ,ArrayList<Transfer> transfers, ArrayList<NewsItem> savedLooks,ArrayList<Subscriber> blackList,ArrayList<Clothes> mainLook,Person person,ArrayList<Chat> chatArrayList
-            ,ArrayList<Chat> talksArrayList,String mainLookImage,String personImage) {
+            ,ArrayList<Chat> talksArrayList,String mainLookImage,String personImage,ArrayList<String> viewedNews) {
         this.Nick = nick;
         this.uid = uid;
         this.phone = phone;
@@ -394,5 +403,6 @@ public class UserInformation implements Serializable {
         this.talksArrayList=talksArrayList;
         this.mainLookImage=mainLookImage;
         this.personImage=personImage;
+        this.viewedNews=viewedNews;
     }
 }

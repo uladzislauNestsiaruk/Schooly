@@ -28,6 +28,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class PopularFragment extends Fragment {
     UserInformation userInformation;
@@ -87,6 +88,13 @@ public class PopularFragment extends Fragment {
     }
 
     @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        bundle.putInt("POPULARNEWPOSITION",linearLayoutManager.findFirstCompletelyVisibleItemPosition());
+        bundle.putInt("POPULARPOPULARPOSITION", gridLayoutManager.findFirstVisibleItemPosition());
+    }
+
+    @Override
     public void onViewCreated(@Nullable View view,@NonNull Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
 
@@ -116,7 +124,6 @@ public class PopularFragment extends Fragment {
             linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
             clothes.setLayoutManager(linearLayoutManager);
             clothes.setAdapter(newClothesAdapter);
-            if(positionPopular==0)
                 clothes.scrollToPosition(positionNew);
         }else{
             ArrayList<Clothes> allClothes= (ArrayList<Clothes>) bundle.getSerializable("ALL_CLOTHES");
@@ -131,7 +138,6 @@ public class PopularFragment extends Fragment {
             linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
             clothes.setLayoutManager(linearLayoutManager);
             clothes.setAdapter(newClothesAdapter);
-            if(positionPopular==0)
                 clothes.scrollToPosition(positionNew);
         }
         if(bundle.getSerializable("CLOTHES_POPULAR")!=null){
@@ -140,7 +146,7 @@ public class PopularFragment extends Fragment {
             gridLayoutManager=new GridLayoutManager(getContext(), 2);
             popularClothes.setLayoutManager(gridLayoutManager);
             popularClothes.setAdapter(popularClothesAdapter);
-            popularClothes.scrollToPosition(positionPopular);
+                popularClothes.scrollToPosition(positionNew);
         }else{
             ArrayList<Clothes> allClothes= (ArrayList<Clothes>) bundle.getSerializable("ALL_CLOTHES");
             for(int i=0;i<allClothes.size();i++){
@@ -155,7 +161,7 @@ public class PopularFragment extends Fragment {
             gridLayoutManager=new GridLayoutManager(getContext(), 2);
             popularClothes.setLayoutManager(gridLayoutManager);
             popularClothes.setAdapter(popularClothesAdapter);
-            popularClothes.scrollToPosition(positionPopular);
+                popularClothes.scrollToPosition(positionNew);
         }
     }
     public ArrayList<Clothes> sort_clothes_by_purchase_number(ArrayList<Clothes> cur){

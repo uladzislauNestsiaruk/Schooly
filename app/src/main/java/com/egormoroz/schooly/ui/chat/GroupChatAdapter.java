@@ -148,7 +148,7 @@ public class GroupChatAdapter extends RecyclerView.Adapter<GroupChatAdapter.Grou
     @Override
     public GroupChatViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.messages_types, viewGroup, false);
+                .inflate(R.layout.messages_types_groups, viewGroup, false);
         reference = FirebaseDatabase.getInstance().getReference("users").child(messageSenderNick).child("Chats").child(messageReceiverNick).child("Messages");
         usersRef = FirebaseDatabase.getInstance().getReference().child("users");
         return new GroupChatViewHolder(view);
@@ -206,102 +206,32 @@ public class GroupChatAdapter extends RecyclerView.Adapter<GroupChatAdapter.Grou
         int duration;
         final long[] timeBefore = new long[1];
 
-        groupChatViewHolder.inMessage.setOnTouchListener(new View.OnTouchListener() {
+        groupChatViewHolder.inMessage.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction() & MotionEvent.ACTION_MASK) {
-
-                    case MotionEvent.ACTION_DOWN:
-
-                        timeBefore[0] = System.currentTimeMillis();
-                        break;
-
-                    case MotionEvent.ACTION_UP:
-                        long timeAfter = System.currentTimeMillis();
-                        if ((timeAfter - timeBefore[0]) > 500) {
-                            groupChatFragment.showChatFunc(messages);
-                        }
-                        break;
-                }
+            public boolean onLongClick(View v) {
+                groupChatFragment.showChatFunc(messages);
                 return true;
             }
         });
-        groupChatViewHolder.outMessage.setOnTouchListener(new View.OnTouchListener() {
+        groupChatViewHolder.outMessage.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
-
-                switch (event.getAction() & MotionEvent.ACTION_MASK) {
-
-                    case MotionEvent.ACTION_DOWN:
-                        timeBefore[0] = System.currentTimeMillis();
-                        break;
-
-                    case MotionEvent.ACTION_UP:
-                        long timeAfter = System.currentTimeMillis();
-                        Log.d("###", "time: " + (timeAfter - timeBefore[0]));
-                        if ((timeAfter - timeBefore[0]) > 500) {
-                            try {
-                                groupChatFragment.showChatFunc(messages);
-                            } catch (Exception e) {
-
-                            }
-
-                        }
-                        break;
-                }
+            public boolean onLongClick(View v) {
+                groupChatFragment.showChatFunc(messages);
                 return true;
             }
         });
-        groupChatViewHolder.inVoice.setOnTouchListener(new View.OnTouchListener() {
+        groupChatViewHolder.inVoice.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction() & MotionEvent.ACTION_MASK) {
-
-                    case MotionEvent.ACTION_DOWN:
-                        timeBefore[0] = System.currentTimeMillis();
-                        break;
-
-                    case MotionEvent.ACTION_UP:
-                        long timeAfter = System.currentTimeMillis();
-                        Log.d("###", "time: " + (timeAfter - timeBefore[0]));
-                        if ((timeAfter - timeBefore[0]) > 500) {
-                            try {
-                                groupChatFragment.showChatFunc(messages);
-                            } catch (Exception e) {
-
-                            }
-
-                        }
-                        break;
-                }
+            public boolean onLongClick(View v) {
+                groupChatFragment.showChatFunc(messages);
                 return true;
-
             }
         });
-        groupChatViewHolder.outVoice.setOnTouchListener(new View.OnTouchListener() {
+        groupChatViewHolder.outVoice.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction() & MotionEvent.ACTION_MASK) {
-
-                    case MotionEvent.ACTION_DOWN:
-                        timeBefore[0] = System.currentTimeMillis();
-                        break;
-
-                    case MotionEvent.ACTION_UP:
-                        long timeAfter = System.currentTimeMillis();
-                        Log.d("###", "time: " + (timeAfter - timeBefore[0]));
-                        if ((timeAfter - timeBefore[0]) > 500) {
-                            try {
-                                groupChatFragment.showChatFunc(messages);
-                            } catch (Exception e) {
-
-                            }
-
-                        }
-                        break;
-                }
+            public boolean onLongClick(View v) {
+                groupChatFragment.showChatFunc(messages);
                 return true;
-
             }
         });
 

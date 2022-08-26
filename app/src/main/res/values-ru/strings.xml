@@ -539,6 +539,7 @@
     <string name="goToView">Перейти к просмотру</string>
     <string name="by">от</string>
     <string name="lookby">Образ от</string>
+    <string name="looksover">Новые образы закончились:(</string>
 
 
 </resources>

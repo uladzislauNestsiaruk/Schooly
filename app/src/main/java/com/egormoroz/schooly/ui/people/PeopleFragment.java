@@ -236,7 +236,7 @@ public class PeopleFragment extends Fragment {
                 ,new ArrayList<>(),new ArrayList<>(),new ArrayList<>(),new ArrayList<>()
                 ,new ArrayList<Clothes>(),new Person(new FacePart(), new FacePart(), new FacePart(), new FacePart(), new FacePart(), new FacePart(), new FacePart(), new FacePart("", "", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Fma.glb?alt=media&token=f7430695-13cb-4365-8910-c61b59a96acf", "",b ,  "",0f,0f,0f),
                 new FacePart(), new FacePart()),
-                new ArrayList<>(),new ArrayList<>(),"",""));
+                new ArrayList<>(),new ArrayList<>(),"","",new ArrayList<>()));
     }
     public void initUserEnter(){
         searchUser.setOnFocusChangeListener(new View.OnFocusChangeListener() {

@@ -210,103 +210,33 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         int duration;
         final long[] timeBefore = new long[1];
 
-        messageViewHolder.inMessage.setOnTouchListener(new View.OnTouchListener() {
+
+        messageViewHolder.inMessage.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction() & MotionEvent.ACTION_MASK) {
-
-                    case MotionEvent.ACTION_DOWN:
-
-                        timeBefore[0] = System.currentTimeMillis();
-                        break;
-
-                    case MotionEvent.ACTION_UP:
-                        long timeAfter = System.currentTimeMillis();
-                        if ((timeAfter - timeBefore[0]) > 500) {
-                            Log.d("###", "onTouch: " + context.toString());
-                            messageFragment.showChatFunc(messages);
-                        }
-                        break;
-                }
+            public boolean onLongClick(View v) {
+                messageFragment.showChatFunc(messages);
                 return true;
             }
         });
-        messageViewHolder.outMessage.setOnTouchListener(new View.OnTouchListener() {
+        messageViewHolder.outMessage.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
-
-                switch (event.getAction() & MotionEvent.ACTION_MASK) {
-
-                    case MotionEvent.ACTION_DOWN:
-                        timeBefore[0] = System.currentTimeMillis();
-                        break;
-
-                    case MotionEvent.ACTION_UP:
-                        long timeAfter = System.currentTimeMillis();
-                        Log.d("###", "time: " + (timeAfter - timeBefore[0]));
-                        if ((timeAfter - timeBefore[0]) > 500) {
-                            try {
-                                messageFragment.showChatFunc(messages);
-                            } catch (Exception e) {
-
-                            }
-
-                        }
-                        break;
-                }
+            public boolean onLongClick(View v) {
+                messageFragment.showChatFunc(messages);
                 return true;
             }
         });
-        messageViewHolder.inVoice.setOnTouchListener(new View.OnTouchListener() {
+        messageViewHolder.inVoice.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction() & MotionEvent.ACTION_MASK) {
-
-                    case MotionEvent.ACTION_DOWN:
-                        timeBefore[0] = System.currentTimeMillis();
-                        break;
-
-                    case MotionEvent.ACTION_UP:
-                        long timeAfter = System.currentTimeMillis();
-                        Log.d("###", "time: " + (timeAfter - timeBefore[0]));
-                        if ((timeAfter - timeBefore[0]) > 500) {
-                            try {
-                                messageFragment.showChatFunc(messages);
-                            } catch (Exception e) {
-
-                            }
-
-                        }
-                        break;
-                }
+            public boolean onLongClick(View v) {
+                messageFragment.showChatFunc(messages);
                 return true;
-
             }
         });
-        messageViewHolder.outVoice.setOnTouchListener(new View.OnTouchListener() {
+        messageViewHolder.outVoice.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction() & MotionEvent.ACTION_MASK) {
-
-                    case MotionEvent.ACTION_DOWN:
-                        timeBefore[0] = System.currentTimeMillis();
-                        break;
-
-                    case MotionEvent.ACTION_UP:
-                        long timeAfter = System.currentTimeMillis();
-                        Log.d("###", "time: " + (timeAfter - timeBefore[0]));
-                        if ((timeAfter - timeBefore[0]) > 500) {
-                            try {
-                                messageFragment.showChatFunc(messages);
-                            } catch (Exception e) {
-
-                            }
-
-                        }
-                        break;
-                }
+            public boolean onLongClick(View v) {
+                messageFragment.showChatFunc(messages);
                 return true;
-
             }
         });
 

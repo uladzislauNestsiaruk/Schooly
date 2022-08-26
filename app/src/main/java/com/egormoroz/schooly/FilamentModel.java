@@ -250,8 +250,6 @@ public class FilamentModel {
 
     public void loadGlb(Buffer buffer){
         materialProvider=new UbershaderLoader(engine);
-
-        Log.d("#####", "gg1");
         assetLoader=new AssetLoader(engine,materialProvider,EntityManager.get());
         filamentAsset=assetLoader.createAssetFromBinary(buffer);
         filamentAssets.add(filamentAsset);
@@ -272,13 +270,13 @@ public class FilamentModel {
         filamentAsset.releaseSourceData();
         resourceLoader.asyncUpdateLoad();
         modelViewer.populateScene(filamentAsset);
-        Float3 float3=new Float3(clothes.getX(), clothes.getY(), clothes.getZ());
-        modelViewer.transformToUnitCube(float3,filamentAsset,clothes.getTransformRatio());
-        int[] e=filamentAsset.getEntities();
+        if(clothes.getTransformRatio()!=0){
+            Float3 float3=new Float3(clothes.getX(), clothes.getY(), clothes.getZ());
+            modelViewer.transformToUnitCube(float3,filamentAsset,clothes.getTransformRatio());
+        }
     }
 
     public void populateSceneFacePart(Buffer buffer) {
-        Log.d("#####", "gg");
         FilamentAsset filamentAsset=assetLoader.createAssetFromBinary(buffer);
         filamentAssets.add(filamentAsset);
         resourceLoader.asyncBeginLoad(filamentAsset);
@@ -298,13 +296,11 @@ public class FilamentModel {
     }
 
     public void changeColor(String type, Color color){
-        Log.d("####", "FINISH   "+filamentAssets.size()+"   "+filamentAssets.get(0).getFirstEntityByName("body"));
         RenderableManager renderableManager=engine.getRenderableManager();
         for(int i=0;i<filamentAssets.size();i++){
             FilamentAsset filamentAsset=filamentAssets.get(i);
             int[] entities=filamentAsset.getEntitiesByName(type);
             if(entities.length!=0){
-                Log.d("####", "FINISH 1   "+filamentAssets.size());
                 MaterialInstance material=renderableManager.
                         getMaterialInstanceAt(renderableManager.getInstance(entities[0]),0);
                 material.setParameter("baseColorFactor",  Colors.RgbaType.SRGB,color.getColorX(), color.getColorY(), color.getColorZ(),1f);
@@ -329,70 +325,13 @@ public class FilamentModel {
 
     }
 
-    public void executeTask(String url, SurfaceView surfaceView, boolean onTouch, Buffer buffer,LockableNestedScrollView lockableNestedScrollView
-            , String type, boolean transform
-    ) throws ExecutionException, InterruptedException, IOException, URISyntaxException {
-        MyAsyncTask myAsyncTask=new MyAsyncTask();
-        if(buffer==null){
-            myAsyncTask.execute(url);
-            bufferToFilament = myAsyncTask.get();
-            initFilament(surfaceView,bufferToFilament,onTouch,lockableNestedScrollView,type,transform);
-        }else{
-            initFilament(surfaceView,buffer,onTouch,lockableNestedScrollView,type,transform);
-        }
-    }
-
-    public byte[] getBytes( URL url) throws IOException {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        InputStream is = null;
-        try {
-            is = new BufferedInputStream(url.openStream ());
-            byte[] byteChunk = new byte[4096];
-            int n;
-
-            while ( (n = is.read(byteChunk)) > 0 ) {
-                baos.write(byteChunk, 0, n);
-            }
-        }
-        catch (IOException e) {
-            Log.d("####", "Failed while reading bytes from %s: %s"+ url.toExternalForm()+ e.getMessage());
-            e.printStackTrace ();
-        }
-        finally {
-            if (is != null) { is.close(); }
-        }
-        return  baos.toByteArray();
-    }
-
-    public class MyAsyncTask extends AsyncTask<String, Integer, Buffer> {
-        @Override
-        protected Buffer doInBackground(String... parameter) {
-            try {
-                uri = new URI(parameter[0]);
-                buffer = getBytes(uri.toURL());
-                buffer1= ByteBuffer.wrap(buffer);
-            } catch (URISyntaxException | MalformedURLException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return buffer1;
-        }
-
-        @Override
-        protected void onProgressUpdate(Integer... progress) {
-
-        }
-
-    }
-
     public void initFilamentForPersonCustom(SurfaceView surfaceView,Buffer buffer){
         Filament.init();
         Gltfio.init();
         Utils.INSTANCE.init();
         cameraManipulator=new Manipulator.Builder()
-                .targetPosition(0.9f, 19.5f, 0.0f)
-                .orbitHomePosition(4.0f, 19.5f, 4.0f)
+                .targetPosition(0.6f, 19.5f, 0.0f)
+                .orbitHomePosition(3.0f, 19.5f, 4.0f)
                 .viewport(surfaceView.getWidth(), surfaceView.getHeight())
                 .zoomSpeed(0.07f)
                 .mapMinDistance(5.0f)
@@ -403,7 +342,6 @@ public class FilamentModel {
         setupFilament();
         loadGlb(buffer);
         Skybox skybox=new Skybox.Builder()
-                //.color(0.255f, 0.124f, 0.232f, 1.0f)
                 .color(0f, 0f, 0f, 1.0f)
                 .build(modelViewer.getEngine());
         loadPersonLight();

@@ -16,6 +16,7 @@ import com.egormoroz.schooly.TaskRunner;
 import com.egormoroz.schooly.TaskRunnerCustom;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
 import com.egormoroz.schooly.ui.main.UserInformation;
+import com.egormoroz.schooly.ui.people.UserPeopleAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
@@ -30,6 +31,7 @@ import java.net.URL;
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -49,6 +51,7 @@ public class LoadNewsTread {
     static Buffer bufferToFilament,buffer1;
     ArrayList<String> stringSubscriptionArrayList=new ArrayList<>();
     FirebaseModel firebaseModel=new FirebaseModel();
+    ArrayList<String> allLoadNewsArrayList=new ArrayList<>();
 
     public void getSubsForNews(Callbacks.loadNewsTread loadNewsTread){
         firebaseModel.initAll();
@@ -59,29 +62,56 @@ public class LoadNewsTread {
                     Log.d("AAAAA", "fffff11     "+friends.size());
                     for(int i=0;i<friends.size();i++){
                         stringSubscriptionArrayList.add(friends.get(i).getSub());
+                        if(i==userInformation.getSubscription().size()-1){
+                            if(stringSubscriptionArrayList.size()==0){
+                                loadRandomRecommendationNews(loadNewsTread);
+                            }else {
+                                getNews(stringSubscriptionArrayList, loadNewsTread);
+                            }
+                        }
                     }
-                    getNews(stringSubscriptionArrayList, loadNewsTread);
                 }
             });
         }else{
             Log.d("AAAAA", "ffff2222     "+userInformation.getSubscription().size());
             for(int i=0;i<userInformation.getSubscription().size();i++){
                 stringSubscriptionArrayList.add(userInformation.getSubscription().get(i).getSub());
-                if(i==userInformation.getSubscription().size()-1)getNews(stringSubscriptionArrayList, loadNewsTread);
+                if(i==userInformation.getSubscription().size()-1){
+                    if(stringSubscriptionArrayList.size()==0){
+                        loadRandomRecommendationNews(loadNewsTread);
+                    }else {
+                        getNews(stringSubscriptionArrayList, loadNewsTread);
+                    }
+                }
             }
         }
     }
 
     public void getNews(ArrayList<String> stringSubscriptionArrayList,Callbacks.loadNewsTread loadNewsTread){
+        if(userInformation.getViewedNews()!=null){
+            loadNews(stringSubscriptionArrayList, loadNewsTread,"first");
+        }else {
+            RecentMethods.loadViewedNews(userInformation.getNick(), firebaseModel, new Callbacks.LoadViewedNews() {
+                @Override
+                public void getViewedNews(ArrayList<String> viewedNews) {
+                    loadNews(stringSubscriptionArrayList, loadNewsTread,"first");
+                }
+            });
+        }
+    }
+
+    public void loadNews(ArrayList<String> stringSubscriptionArrayList,Callbacks.loadNewsTread loadNewsTread,String type){
+        ArrayList<NewsItem> newsItemArrayList=new ArrayList<>();
         for(int i=0;i<stringSubscriptionArrayList.size();i++){
-            Log.d("AAAAA", "fffff");
+            Log.d("AAAAA", "fffff    "+type);
             String searchNick=stringSubscriptionArrayList.get(i);
+            int finalI = i;
             newsModel.getReference().child(searchNick).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DataSnapshot> task) {
                     if(task.isSuccessful()){
+                        Log.d("AAAAA", "fffff55");
                         DataSnapshot snapshot=task.getResult();
-                        ArrayList<NewsItem> newsItemArrayList=new ArrayList<>();
                         for(DataSnapshot snap:snapshot.getChildren()){
                             NewsItem newsItem=new NewsItem();
                             newsItem.setImageUrl(snap.child("imageUrl").getValue(String.class));
@@ -93,22 +123,53 @@ public class LoadNewsTread {
                             newsItem.setPostTime(snap.child("postTime").getValue(String.class));
                             newsItem.setNick(snap.child("nick").getValue(String.class));
                             newsItem.setLookPriceDollar(snap.child("lookPriceDollar").getValue(Long.class));
-                            newsItemArrayList.add(newsItem);
+                            if(!userInformation.getViewedNews().contains(newsItem.getNewsId())&&!allLoadNewsArrayList.contains(newsItem.getNewsId())&&
+                            !newsItem.getNick().equals(userInformation.getNick())){
+                                Log.d("MMM", "mynews");
+                                allLoadNewsArrayList.add(newsItem.getNewsId());
+                                newsItemArrayList.add(newsItem);
+                            }
+
                         }
-                        loadLooksClothes(newsItemArrayList,loadNewsTread);
+                        if(finalI ==stringSubscriptionArrayList.size()-1){
+                            if(!type.equals("third")){
+                                if(newsItemArrayList.size()==0){
+                                    loadRandomRecommendationNews(loadNewsTread);
+                                }else {
+                                    loadLooksClothes(newsItemArrayList, loadNewsTread, type);
+                                }
+                            }
+                            else {
+                                if(newsItemArrayList.size()==0){
+                                    try {
+                                        loadNewsTread.LoadNews(null);
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    } catch (URISyntaxException e) {
+                                        e.printStackTrace();
+                                    }
+                                }else {
+                                    loadLooksClothes(newsItemArrayList, loadNewsTread, type);
+                                }
+                                Log.d("AAAAAA", "QQQQQ");
+                            }
+                        }
                     }
                 }
             });
         }
     }
 
-    public void loadLooksClothes(ArrayList<NewsItem> newsItemArrayList,Callbacks.loadNewsTread loadNewsTread){
+    public void loadLooksClothes(ArrayList<NewsItem> newsItemArrayList,Callbacks.loadNewsTread loadNewsTread,String type){
+        Log.d("AAAAA", "CONTINUE AFTER1230 ");
         for(int i=0;i<newsItemArrayList.size();i++){
             NewsItem newsItem=newsItemArrayList.get(i);
+            int finalI = i;
             newsModel.getReference().child(newsItem.getNick()).child(newsItem.getNewsId()).child("clothesCreators").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DataSnapshot> task) {
                     if(task.isSuccessful()){
+                        Log.d("AAAAA", "CONTINUE AFTER0 ");
                         DataSnapshot snapshot= task.getResult();
                         ArrayList<Clothes> clothesArrayList=new ArrayList<>();
                         for(DataSnapshot snap:snapshot.getChildren()){
@@ -133,18 +194,77 @@ public class LoadNewsTread {
                             clothesArrayList.add(clothes);
                         }
                         newsItem.setClothesCreators(clothesArrayList);
-                        try {
-                            loadNewsTread.LoadNews(newsItem);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        } catch (URISyntaxException e) {
-                            e.printStackTrace();
+                        if(finalI ==newsItemArrayList.size()-1){
+                            sortNewsList(newsItemArrayList, loadNewsTread,type);
                         }
-                        //loadLooksPerson(newsItem,loadNewsTread);
                     }
                 }
             });
         }
+    }
+
+    public void sortNewsList(ArrayList<NewsItem> newsItemArrayList,Callbacks.loadNewsTread loadNewsTread,String type)  {
+        ArrayList<NewsItem> sortNewsArrayList=sort_news_by_time(newsItemArrayList);
+        Log.d("AAAAA", "CONTINUE AFTER "+sortNewsArrayList.size());
+        Collections.reverse(sortNewsArrayList);
+        for(int i=0;i<sortNewsArrayList.size();i++){
+            NewsItem newsItem=sortNewsArrayList.get(i);
+            try {
+                loadNewsTread.LoadNews(newsItem);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
+            if(i==sortNewsArrayList.size()-1){
+                if(type.equals("first")) {
+                    getSecondNewsTread(loadNewsTread);
+                }else {
+                    loadRandomRecommendationNews(loadNewsTread);
+                }
+            }
+        }
+    }
+
+    public void getSecondNewsTread(Callbacks.loadNewsTread loadNewsTread){
+        ArrayList<String> stringSubsList=new ArrayList<>();
+        for(int i=0;i<userInformation.getSubscription().size();i++){
+            String nick=userInformation.getSubscription().get(i).getSub();
+            int finalI = i;
+            RecentMethods.getSubscriptionList(nick, firebaseModel, new Callbacks.getFriendsList() {
+                @Override
+                public void getFriendsList(ArrayList<Subscriber> friends) {
+                    for(int i=0;i<friends.size();i++){
+                        stringSubsList.add(friends.get(i).getSub());
+                    }
+                    if(finalI ==userInformation.getSubscription().size()-1){
+                        loadNews(stringSubsList,loadNewsTread,"second");
+                    }
+                }
+            });
+        }
+    }
+
+    public void loadRandomRecommendationNews(Callbacks.loadNewsTread loadNewsTread){
+        Log.d("AAAAA", "RANDOM");
+        ArrayList<String> usersNicks=new ArrayList<>();
+        firebaseModel.getReference().child("usersNicks").limitToFirst(300).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if(task.isSuccessful()){
+                    DataSnapshot snapshot=task.getResult();
+                    for(DataSnapshot snap:snapshot.getChildren()){
+                        usersNicks.add(snap.child("nick").getValue(String.class));
+                    }
+                    loadNews(usersNicks, loadNewsTread, "third");
+                }
+            }
+        });
+    }
+
+    public ArrayList<NewsItem> sort_news_by_time(ArrayList<NewsItem> cur){
+        cur.sort((NewsItem a, NewsItem b) -> (int)(a.getTimestamp() - b.getTimestamp()));
+        return cur;
     }
 
     public void loadLooksPerson(NewsItem newsItem,Callbacks.loadNewsTread loadNewsTread){

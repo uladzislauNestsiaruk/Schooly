@@ -209,6 +209,20 @@ public class ViewingLookFragment extends Fragment {
                 Picasso.get().load(newsItem.getImageUrl()).into(lookImage);
                 description.setText(newsItem.getItem_description());
                 likesCountString=String.valueOf(newsItem.getLikes_count());
+                if(userInformation.getViewedNews()!=null){
+                    if(!userInformation.getViewedNews().contains(newsItem.getNewsId()))
+                        DefaultDatabase.getUsersReference().child(userInformation.getNick())
+                                .child("viewedNews").child(newsItem.getNewsId()).setValue(newsItem.getNewsId());
+                }else {
+                    RecentMethods.loadViewedNews(userInformation.getNick(), DefaultDatabase, new Callbacks.LoadViewedNews() {
+                        @Override
+                        public void getViewedNews(ArrayList<String> viewedNews) {
+                            if(!viewedNews.contains(newsItem.getNewsId()))
+                                DefaultDatabase.getUsersReference().child(userInformation.getNick())
+                                        .child("viewedNews").child(newsItem.getNewsId()).setValue(newsItem.getNewsId());
+                        }
+                    });
+                }
                 comment.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

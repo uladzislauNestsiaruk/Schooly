@@ -70,8 +70,8 @@ public class ExclusiveFragment extends Fragment {
         firebaseModel.initAll();
         clothes=root.findViewById(R.id.newchlothesinshop);
         popularClothes=root.findViewById(R.id.popularchlothesinshop);
-        positionNew=bundle.getInt("SHOESNEWPOSITION");
-        positionPopular=bundle.getInt("SHOESPOPULARPOSITION");
+        positionNew=bundle.getInt("EXCLUSIVENEWPOSITION");
+        positionPopular=bundle.getInt("EXCLUSIVEPOPULARPOSITION");
         return root;
     }
 
@@ -79,15 +79,8 @@ public class ExclusiveFragment extends Fragment {
     public void onResume() {
         super.onResume();
         getView().requestLayout();
-//        positionNew=bundle.getInt("SHOESNEWPOSITION");
-//        positionPopular=bundle.getInt("SHOESPOPULARPOSITION");
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-//        bundle.putInt("SHOESNEWPOSITION",linearLayoutManager.findFirstCompletelyVisibleItemPosition());
-//        bundle.putInt("SHOESPOPULARPOSITION", gridLayoutManager.findFirstVisibleItemPosition());
+        positionNew=bundle.getInt("EXCLUSIVENEWPOSITION");
+        positionPopular=bundle.getInt("EXCLUSIVEPOPULARPOSITION");
     }
 
     @Override
@@ -141,7 +134,6 @@ public class ExclusiveFragment extends Fragment {
             linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
             clothes.setLayoutManager(linearLayoutManager);
             clothes.setAdapter(newClothesAdapter);
-            if(positionPopular==0)
                 clothes.scrollToPosition(positionNew);
         }else{
             ArrayList<Clothes> allClothes= (ArrayList<Clothes>) bundle.getSerializable("ALL_CLOTHES");
@@ -158,7 +150,6 @@ public class ExclusiveFragment extends Fragment {
             linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
             clothes.setLayoutManager(linearLayoutManager);
             clothes.setAdapter(newClothesAdapter);
-            if(positionPopular==0)
                 clothes.scrollToPosition(positionNew);
         }
         if(bundle.getSerializable("EXCLUSIVE_POPULAR")!=null){

@@ -142,4 +142,9 @@ public class Callbacks {
         default void getChatMembers(ArrayList<UserPeopleAdapter> chatMembers) {
         }
     }
+
+    public interface LoadViewedNews{
+        default void getViewedNews(ArrayList<String> viewedNews) {
+        }
+    }
 }

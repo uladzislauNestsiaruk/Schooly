@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.media.FaceDetector;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -150,7 +151,7 @@ public class CreateCharacterFragment extends Fragment {
         ready=view.findViewById(R.id.ready);
         surfaceView=view.findViewById(R.id.surfaceViewCreateCharacter);
         viewPager=view.findViewById(R.id.viewPagerCharacter);
-        if(from.equals("dd")){
+        if(from.equals("reg") || from.equals("nick")){
             FacePart body=new FacePart();
             body.setPartType("body");
             body.setUid("bodyUID");
@@ -165,7 +166,27 @@ public class CreateCharacterFragment extends Fragment {
                 loadDefaultParts(facePartArrayList);
             });
         }else{
-
+            ArrayList<FacePart> facePartArrayList=new ArrayList<>();
+            if(userInformation.getPerson()!=null){
+                facePartArrayList.add(userInformation.getPerson().getBody());
+                facePartArrayList.add(userInformation.getPerson().getBrows());
+                facePartArrayList.add(userInformation.getPerson().getEars());
+                facePartArrayList.add(userInformation.getPerson().getEyes());
+                facePartArrayList.add(userInformation.getPerson().getHair());
+                facePartArrayList.add(userInformation.getPerson().getHead());
+                facePartArrayList.add(userInformation.getPerson().getLips());
+                facePartArrayList.add(userInformation.getPerson().getNose());
+                facePartArrayList.add(userInformation.getPerson().getMustache());
+                facePartArrayList.add(userInformation.getPerson().getSkinColor());
+            }
+            for(int i=0;i<facePartArrayList.size();i++){
+                FacePart facePart=facePartArrayList.get(i);
+                if(facePart!=null){
+                    activeFaceParts.add(facePart);
+                    activeFacePartsString.add(facePart.getUid());
+                }
+            }
+            loadPerson(userInformation, surfaceView);
         }
         ready.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -180,15 +201,14 @@ public class CreateCharacterFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (loadValue==0)
-                ((MainActivity)getActivity()).setCurrentFragment(GenderFragment.newInstance(userInformation, bundle, fragment,from));
+                RecentMethods.setCurrentFragment( fragment,getActivity());
             }
         });
 
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-
-                ((MainActivity)getActivity()).setCurrentFragment(GenderFragment.newInstance(userInformation, bundle, fragment,from));
+                RecentMethods.setCurrentFragment(fragment,getActivity());
             }
         };
 
@@ -318,7 +338,6 @@ public class CreateCharacterFragment extends Fragment {
 
         RelativeLayout no=dialog.findViewById(R.id.no);
         RelativeLayout yes=dialog.findViewById(R.id.yes);
-        TextView textView=dialog.findViewById(R.id.acceptText);
 
         no.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -328,6 +347,7 @@ public class CreateCharacterFragment extends Fragment {
         });
 
         yes.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
                 if(from.equals("reg")){
@@ -340,6 +360,37 @@ public class CreateCharacterFragment extends Fragment {
                         authenticationDatabase = FirebaseAuth.getInstance();
                         AuthorizationThrowGoogle();
                     }
+                }else if(from.equals("editing")){
+                    getBitmapFormSurfaceView(surfaceView, new Callback<Bitmap>() {
+                        @Override
+                        public void onResult1(Bitmap bitmap) {
+                            StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("Images")
+                                    .child(userInformation.getUid() + ".png");
+                            UploadTask uploadTask = storageReference.putBytes(getImageUri(getContext(), bitmap));
+                            uploadTask.continueWithTask(new Continuation() {
+                                @Override
+                                public Object then(@NonNull Task task) throws Exception {
+                                    if (!task.isSuccessful()) {
+                                        throw task.getException();
+                                    }
+                                    return storageReference.getDownloadUrl();
+                                }
+                            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Uri> task) {
+                                    Uri downloadUrl = task.getResult();
+                                    Person person=RecentMethods.setAllPerson(activeFaceParts, "base", colorBody, colorHair, colorBrows);
+                                    userInformation.setPerson(person);
+                                    userInformation.setPersonImage(downloadUrl.toString());
+                                    firebaseModel.getUsersReference().child(userInformation.getNick())
+                                            .child("person").setValue(person);
+                                    firebaseModel.getUsersReference().child(userInformation.getNick())
+                                                    .child("personImage").setValue(downloadUrl.toString());
+                                    RecentMethods.setCurrentFragment(fragment, getActivity());
+                                }
+                            });
+                        }
+                    });
                 }
                 dialog.dismiss();
             }
@@ -377,27 +428,39 @@ public class CreateCharacterFragment extends Fragment {
                                         @Override
                                         public void onComplete(@NonNull Task<Uri> task) {
                                             Uri downloadUrl = task.getResult();
-                                            UserInformation res = new UserInformation(nick, RecentMethods.getPhone(email), user.getUid(),
-                                                    "6", password, "Helicopter", 1000, new ArrayList<>(),new ArrayList<>(),1,100,0
-                                                    , new ArrayList<>(), new ArrayList<>(), ""," ","open","open","open","open"
-                                                    ,new ArrayList<>(),"regular", new ArrayList<>(),0,new ArrayList<>(),new ArrayList<>()
-                                                    ,new ArrayList<>(),new ArrayList<>(),new ArrayList<>(),new ArrayList<>(),new ArrayList<Clothes>(),person,
-                                                    new ArrayList<>(),new ArrayList<>(),"",downloadUrl.toString());
-                                            reference.child(nick).setValue(res);
                                             FirebaseModel firebaseModel=new FirebaseModel();
-                                            firebaseModel.initAll();
-                                            firebaseModel.getReference("usersNicks")
-                                                    .child(nick).setValue(new UserPeopleAdapter(nick,downloadUrl.toString()," "));
-                                            ((MainActivity)getActivity()).IsEntered();
-                                            ((MainActivity)getActivity()).checkMining();
-                                            RecentMethods.setCurrentFragment(MainFragment.newInstance(res,bundle), getActivity());
+                                            firebaseModel.initAppDataDatabase();
+                                            RecentMethods.getDefaultLookClothes("defaultLook", firebaseModel, new Callbacks.GetClothes() {
+                                                @Override
+                                                public void getClothes(ArrayList<Clothes> allClothes) {
+                                                    ArrayList<Clothes> defaultClothesArrayList=new ArrayList<>(allClothes);
+                                                    RecentMethods.getDefaultLookClothes("defaultClothes", firebaseModel, new Callbacks.GetClothes() {
+                                                        @Override
+                                                        public void getClothes(ArrayList<Clothes> allClothes) {
+                                                            UserInformation res = new UserInformation(nick, RecentMethods.getPhone(email), user.getUid(),
+                                                                    "6", password, "Helicopter", 1000, new ArrayList<>(),new ArrayList<>(),1,100,0
+                                                                    , new ArrayList<>(), new ArrayList<>(), ""," ","open","open","open","open"
+                                                                    ,new ArrayList<>(),"regular", new ArrayList<>(),0,defaultClothesArrayList,allClothes
+                                                                    ,new ArrayList<>(),new ArrayList<>(),new ArrayList<>(),new ArrayList<>(),new ArrayList<Clothes>(),person,
+                                                                    new ArrayList<>(),new ArrayList<>(),"",downloadUrl.toString(),new ArrayList<>());
+                                                            reference.child(nick).setValue(res);
+                                                            FirebaseModel firebaseModel=new FirebaseModel();
+                                                            firebaseModel.initAll();
+                                                            firebaseModel.getReference("usersNicks")
+                                                                    .child(nick).setValue(new UserPeopleAdapter(nick,downloadUrl.toString()," "));
+                                                            ((MainActivity)getActivity()).IsEntered();
+                                                            ((MainActivity)getActivity()).checkMining();
+                                                            RecentMethods.setCurrentFragment(MainFragment.newInstance(res,bundle), getActivity());
+                                                        }
+                                                    });
 
+                                                }
+                                            });
                                         }
                                     });
                                 }
                             });
                         } else {
-                            // If sign in fails, display a message to the user.
                             Log.w("###", "createUserWithEmail:failure", task.getException());
                             Toast.makeText(getActivity(), getContext().getResources().getText(R.string.authenticationfailed),
                                     Toast.LENGTH_SHORT).show();
@@ -454,9 +517,21 @@ public class CreateCharacterFragment extends Fragment {
                                 @Override
                                 public void onComplete(@NonNull Task<Uri> task) {
                                     Uri downloadUrl = task.getResult();
-//                                    RecentMethods.saveData(reference, authenticationDatabase.getCurrentUser()
-//                                            , bundle.getString("NICKNAMEFRAGMENT"),bundle,getActivity()
-//                                    ,downloadUrl.toString(),person);
+                                    RecentMethods.getDefaultLookClothes("defaultLook", firebaseModel, new Callbacks.GetClothes() {
+                                        @Override
+                                        public void getClothes(ArrayList<Clothes> allClothes) {
+                                            ArrayList<Clothes> defaultClothesArrayList=new ArrayList<>(allClothes);
+                                            RecentMethods.getDefaultLookClothes("defaultClothes", firebaseModel, new Callbacks.GetClothes() {
+                                                @Override
+                                                public void getClothes(ArrayList<Clothes> allClothes) {
+                                                    RecentMethods.saveData(reference, authenticationDatabase.getCurrentUser()
+                                                            , bundle.getString("NICKNAMEFRAGMENT"),bundle,getActivity()
+                                                            ,downloadUrl.toString(),person,defaultClothesArrayList,allClothes);
+                                                }
+                                            });
+
+                                        }
+                                    });
                                 }
                             });
                         }
@@ -530,7 +605,6 @@ public class CreateCharacterFragment extends Fragment {
 
     public void loadDefaultParts(ArrayList<FacePart> facePartArrayList){
         for(int i=0;i<facePartArrayList.size();i++){
-            Log.d("#####", "dd ");
             FacePart facePart=facePartArrayList.get(i);
             TaskRunnerCustom taskRunnerCustom=new TaskRunnerCustom();
             taskRunnerCustom.executeAsync(new LongRunningTask(facePart), (data) -> {
@@ -539,15 +613,14 @@ public class CreateCharacterFragment extends Fragment {
         }
     }
 
-    public void loadPerson(UserInformation userInformation, LockableNestedScrollView lockableNestedScrollView, SurfaceView surfaceView){
+    public void loadPerson(UserInformation userInformation, SurfaceView surfaceView){
         loadValue=1;
         if(userInformation.getPerson()==null){
-            Log.d("AAAAA", "aaaasssh  "+userInformation.getNick());
-            loadPersonBuffer(userInformation,lockableNestedScrollView,surfaceView);
+            loadPersonBuffer(userInformation,surfaceView);
 
         }else{
             if (userInformation.getPerson().getBody().getBuffer()==null){
-                loadPersonBuffer(userInformation,lockableNestedScrollView,surfaceView);
+                loadPersonBuffer(userInformation,surfaceView);
             }else{
                 Log.d("####", "aa    "+userInformation.getPerson());
                 ArrayList<FacePart> facePartArrayList=new ArrayList<>();
@@ -563,19 +636,21 @@ public class CreateCharacterFragment extends Fragment {
                 facePartArrayList.add(userInformation.getPerson().getSkinColor());
                 for(int i=0;i<facePartArrayList.size();i++){
                     FacePart facePart=facePartArrayList.get(i);
+                    com.egormoroz.schooly.Color[] color = {new com.egormoroz.schooly.Color()};
                     if(facePart!=null){
+                        if(facePart.getColorX()!=-1f && facePart.getColorY()!=-1f && facePart.getColorZ()!=-1f) {
+                            color[0] = new com.egormoroz.schooly.Color(facePart.getColorX(),
+                                    facePart.getColorY(), facePart.getColorZ()
+                                    , 0, 0, 0);
+                        }
                         if(i==0){
-                            try {
-                                Log.d("AAAA", facePart.getPartType());
-                                filamentModel.initFilament(surfaceView, facePart.getBuffer(), true, lockableNestedScrollView
-                                        , "regularRender", true);
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            } catch (URISyntaxException e) {
-                                e.printStackTrace();
-                            }
+                                filamentModel.initFilamentForPersonCustom(surfaceView, facePart.getBuffer());
+                                if(color[0].getColorX() !=null)
+                                    filamentModel.changeColor(facePart.getPartType(),color[0] );
                         }else{
                             filamentModel.populateSceneFacePart(facePart.getBuffer());
+                            if(color[0].getColorX() !=null)
+                                filamentModel.changeColor(facePart.getPartType(),color[0] );
                         }
                     }
                 }
@@ -583,7 +658,7 @@ public class CreateCharacterFragment extends Fragment {
         }
     }
 
-    public void loadPersonBuffer(UserInformation userInformation,LockableNestedScrollView lockableNestedScrollView,SurfaceView surfaceView){
+    public void loadPersonBuffer(UserInformation userInformation,SurfaceView surfaceView){
         RecentMethods.startLoadPerson(userInformation.getNick(), firebaseModel, new Callbacks.loadPerson() {
             @Override
             public void LoadPerson(Person person,ArrayList<FacePart> facePartArrayList) {
@@ -594,21 +669,40 @@ public class CreateCharacterFragment extends Fragment {
                         Log.d("AAAAA","ss11  "+facePartsArrayList.get(0).getBuffer()+"   "+facePartsArrayList.get(0).getUid());
                         for(int i=0;i<facePartsArrayList.size();i++){
                             FacePart facePart=facePartsArrayList.get(i);
-                            Log.d("AAAAA","ss22  "+facePartsArrayList.get(i).getBuffer()+"   "+facePart.getUid()+"   "+i);
-                            if(i==0){
-                                try {
-                                    filamentModel.initFilament(surfaceView, facePart.getBuffer(), true, lockableNestedScrollView
-                                            , "regularRender", true);
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                } catch (URISyntaxException e) {
-                                    e.printStackTrace();
+                            com.egormoroz.schooly.Color[] color = {new com.egormoroz.schooly.Color()};
+                            if(facePart.getColorX()!=-1f && facePart.getColorY()!=-1f && facePart.getColorZ()!=-1f){
+                                color[0] =new com.egormoroz.schooly.Color(facePartsArrayList.get(i).getColorX(),
+                                        facePartsArrayList.get(i).getColorY(), facePartsArrayList.get(i).getColorZ()
+                                        , 0, 0, 0);
+                                switch (facePart.getPartType()) {
+                                    case "body":
+                                        colorBody.setColorX(facePart.getColorX());
+                                        colorBody.setColorY(facePart.getColorY());
+                                        colorBody.setColorZ(facePart.getColorZ());
+                                        break;
+                                    case "hair":
+                                        colorHair.setColorX(facePart.getColorX());
+                                        colorHair.setColorY(facePart.getColorY());
+                                        colorHair.setColorZ(facePart.getColorZ());
+                                        break;
+                                    case "brows":
+                                        colorBrows.setColorX(facePart.getColorX());
+                                        colorBrows.setColorY(facePart.getColorY());
+                                        colorBrows.setColorZ(facePart.getColorZ());
+                                        break;
                                 }
+                            }
+                            if(i==0){
+                                    filamentModel.initFilamentForPersonCustom(surfaceView, facePart.getBuffer());
+                                    if(color[0].getColorX() !=null)
+                                        filamentModel.changeColor(facePart.getPartType(), color[0]);
                             }else{
-                                filamentModel.populateSceneFacePart(facePartsArrayList.get(i).getBuffer());
+                                filamentModel.populateSceneFacePart(facePart.getBuffer());
+                                if(color[0].getColorX() !=null )
+                                    filamentModel.changeColor(facePart.getPartType(), color[0]);
                             }
                         }
-                        userInformation.setPerson(RecentMethods.setAllPerson(facePartsArrayList,"not",null,null,null));
+                        userInformation.setPerson(RecentMethods.setAllPerson(facePartsArrayList,"not",colorBody,colorHair,colorBrows));
                     }
                 });
             }
