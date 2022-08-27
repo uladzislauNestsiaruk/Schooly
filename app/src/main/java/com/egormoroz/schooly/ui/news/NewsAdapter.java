@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
+import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -515,47 +516,34 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
         firebaseNewsModel.getReference().child(newsItem.getNick()).child(newsItem.getNewsId()).child("comments").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                comment.add(snapshot.getValue(Comment.class));
+                comment.add(convertSnapshotToComment(snapshot));
                 commentAdapter.notifyItemInserted(comment.size() - 1);
-               //if(snapshot.getValue(Comment.class).getType().equals("comment"))
-               //    firebaseNewsModel.getReference().child(newsItem.getNick()).child(newsItem.getNewsId())
-               //            .child("comments").child(snapshot.getValue(Comment.class).getCommentId()).child("reply").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-               //        @Override
-               //        public void onComplete(@NonNull Task<DataSnapshot> task) {
-               //            if(task.isSuccessful())
-               //                for(DataSnapshot snap : task.getResult().getChildren()) {
-               //                    comment.add(snap.getValue(Comment.class));
-               //                    commentAdapter.notifyItemInserted(comment.size() - 1);
-               //                }
-               //        }
-               //    });
+               if(convertSnapshotToComment(snapshot).getType().equals("comment"))
+                   for(DataSnapshot snap : snapshot.child("reply").getChildren()) {
+                       comment.add(convertSnapshotToComment(snap));
+                       commentAdapter.notifyItemInserted(comment.size() - 1);
+                   }
             }
-
             @Override
             public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                Comment comment1 = snapshot.getValue(Comment.class);
-                firebaseNewsModel.getReference().child(newsItem.getNick()).child(newsItem.getNewsId()).child("comments")
-                        .child(comment1.getCommentId()).child("reply").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DataSnapshot> task) {
-                        if(task.isSuccessful()) {
-                            DataSnapshot request = task.getResult();
-                            int it = 0;
-                            for(DataSnapshot snap : request.getChildren()) {
-                                if (it == request.getChildrenCount() - 1) {
-                                    Log.d("****", "HERE");
-                                    int insert_id = 0;
-                                    for(int j = 0; j < comment.size(); j++)
-                                        if(comment.get(j).getCommentId() == snap.getValue(Comment.class).getParentId())
-                                            insert_id = j;
-                                    comment.add(insert_id + 1, snap.getValue(Comment.class));
-                                    commentAdapter.notifyItemInserted(insert_id + 1);
-                                }
-                                ++it;
-                            }
+                Log.d("*****", "IM HERE");
+                int it = 0;
+                if(!convertSnapshotToComment(snapshot).getType().equals("reply")) {
+                    for (DataSnapshot snap : snapshot.child("reply").getChildren()) {
+                        if (it == snapshot.child("reply").getChildrenCount() - 1) {
+                            Log.d("****", String.valueOf(snap.getRef()));
+                            int insert_id = 0;
+                            for (int j = 0; j < comment.size(); j++)
+                                if (comment.get(j).getCommentId().equals(convertSnapshotToComment(snap).getParentId()))
+                                    insert_id = j;
+                            Log.d("*****", comment.size() + "   " + insert_id);
+                            comment.add(insert_id + 1, convertSnapshotToComment(snap));
+                            commentAdapter.notifyItemInserted(insert_id + 1);
+                            Log.d("****", "Reply successfully completed");
                         }
+                        ++it;
                     }
-                });
+                }
             }
 
             @Override
@@ -766,7 +754,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
         });
     }
 
-    private void addLastMessage(String type, String Message){
+    private void addLastMessage(@NonNull String type, String Message){
         switch (type) {
             case "text":
                 addType("text");
@@ -829,11 +817,12 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
                         @Override
                         public void onClick(View v) {
                             String commentId=firebaseNewsModel.getReference().child(newsItem.getNick())
-                                    .child(newsItem.getNewsId()).child("comments").push().getKey();
+                                    .child(newsItem.getNewsId()).child("comments").child(mainCommentId).child("reply").push().getKey();
                             firebaseNewsModel.getReference().child(newsItem.getNick())
                                     .child(newsItem.getNewsId()).child("comments").child(mainCommentId).child("reply").child(commentId)
                                     .setValue(new Comment(editText.getText().toString(), 0, commentId,RecentMethods.getCurrentTime(),nick,"image","reply", mainCommentId));
                             editText.getText().clear();
+                            editText.setHint("");
                         }
                     });
                 }
@@ -844,7 +833,16 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ImageViewHolde
             }
         });
     }
-
+    public Comment convertSnapshotToComment(DataSnapshot snap){
+        return new Comment(snap.child("text").getValue(String.class),
+                           snap.child("likes_count").getValue(Long.class),
+                           snap.child("commentId").getValue(String.class),
+                           snap.child("postTime").getValue(String.class),
+                           snap.child("nick").getValue(String.class),
+                           snap.child("image").getValue(String.class),
+                           snap.child("type").getValue(String.class),
+                           snap.child("parentId").getValue(String.class));
+    }
 
 }
 
