@@ -18,6 +18,7 @@ import com.egormoroz.schooly.Person;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.ui.main.Shop.BasketAdapter;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -25,7 +26,6 @@ public class CharacterAdapter extends RecyclerView.Adapter<CharacterAdapter.View
 
     ArrayList<FacePart> bodyPartArrayList;
     ItemClickListener onItemClick;
-    FilamentModel filamentModel=new FilamentModel();
     ArrayList<FacePart> activeFaceParts;
     String type;
 
@@ -49,34 +49,13 @@ public class CharacterAdapter extends RecyclerView.Adapter<CharacterAdapter.View
     @Override
     public void onBindViewHolder(@NonNull CharacterAdapter.ViewHolder holder, int position) {
         FacePart facePart=bodyPartArrayList.get(position);
-        filamentModel.postFrameCallback();
-        for(int i=0;i<activeFaceParts.size();i++){
-            FacePart facePartActive=activeFaceParts.get(i);
-            if(!facePartActive.getPartType().equals(type)){
-                if(i==0){
-                    Log.d("#####", "aafefvecc     "+facePartActive.getPartType());
-                    filamentModel.initFilamentForPersonCustom(holder.surfaceView, facePartActive.getBuffer());
-                    if(i==activeFaceParts.size()-1){
-                        Log.d("#####", "vvvvdvd");
-                        filamentModel.populateSceneFacePart(facePart.getBuffer());
-                    }
-                }else{
-                    Log.d("#####", "bbdgtr   "+facePartActive.getPartType());
-                    filamentModel.populateSceneFacePart(facePartActive.getBuffer());
-                    if(i==activeFaceParts.size()-1){
-                        Log.d("#####", "vvvvdvd");
-                        filamentModel.populateSceneFacePart(facePart.getBuffer());
-                    }
-                }
-            }
-        }
-        holder.surfaceView.setOnClickListener(new View.OnClickListener() {
+        Picasso.get().load(facePart.getFacePartImage()).into(holder.imageViewPerson);
+        holder.imageViewPerson.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onItemClick.onItemClick(facePart);
             }
         });
-
     }
 
     public interface ItemClickListener {
@@ -89,10 +68,10 @@ public class CharacterAdapter extends RecyclerView.Adapter<CharacterAdapter.View
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        SurfaceView surfaceView;
+        ImageView imageViewPerson;
         ViewHolder(View itemView) {
             super(itemView);
-            surfaceView=itemView.findViewById(R.id.surfaceView);
+            imageViewPerson=itemView.findViewById(R.id.personImage);
         }
 
 

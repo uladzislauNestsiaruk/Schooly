@@ -55,7 +55,7 @@ public class CoinsMainFragment extends Fragment {
     Bundle bundle;
     Buffer buffer;
     long adCount=0;
-    RelativeLayout adRelative;
+    RelativeLayout adRelative,allPremium;
 
     public CoinsMainFragment(UserInformation userInformation,Bundle bundle) {
         this.userInformation=userInformation;
@@ -116,34 +116,13 @@ public class CoinsMainFragment extends Fragment {
 //        firebaseModel.getUsersReference().child("kloun").child("person").child("body")
 //                .setValue(new FacePart("body","dody","https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2F%D0%BD%D1%83%20%D1%82%D0%BE%D1%87%D0%BD%D0%BE%20%D0%BB%D0%B0%D1%81%D1%82%D0%BE%D0%B2%D1%8B%D0%B9.glb?alt=media&token=70c0adb9-e73e-43ea-ab8c-f29ba62de911"
 //                ,uid,null));
-        Float x=-0.01f;
-        Float y=0.21f;
-        Float z=-0.17f;
-        Float transformRatio=9.9f;
-        Float x1=0f;
-        Float y1=3.7f;
-        Float z1=-0.4499f;
-        Float transformRatio1=4.5f;
-//        String uid8=firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").push().getKey();
-//        String uid7=firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").push().getKey();
-//        String uid9=firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").push().getKey();
-//        String uid10=firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").push().getKey();
-//        firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").child(uid8)
-//                .setValue(new Clothes("clothes", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fgray%20skirt.png?alt=media&token=cfad7fc3-05ec-41d7-a9a8-c6563aded022"
-//                        , 40, "gray skirt", 0, 0, "Sholly", "coin", "", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Fgray%20skirt.glb?alt=media&token=95d40256-1327-4c7d-8273-f1741dd7b75e",
-//                        0, "leg", uid8, "no",buffer , x1,y1,z1,transformRatio1));
-//        firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").child(uid9)
-//                .setValue(new Clothes("clothes", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fpink%20skirt.png?alt=media&token=d5af23d9-f5bd-4342-b813-25d607da3cb5"
-//                        , 40, "pink skirt", 0, 0, "Sholly", "coin", "", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Fpink%20skirt.glb?alt=media&token=f0ab1901-f02b-4a7a-ab06-07e1683c49da",
-//                        0, "leg", uid9, "no",buffer , x1,y1,z1,transformRatio1));
-//        firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").child(uid7)
-//                .setValue(new Clothes("clothes", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fblue%20skirt.png?alt=media&token=3590631d-8ca6-44b0-b66b-b09b5085ec5a"
-//                        , 40, "blue skirt", 0, 0, "Sholly", "coin", "", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Fblue%20skirt.glb?alt=media&token=5384cbbd-30aa-4698-badd-e55c7b3dc575",
-//                        0, "leg", uid7, "no",buffer , x1,y1,z1,transformRatio1));
-//        firebaseModel.getReference().child("AppData").child("Clothes").child("AllClothes").child(uid10)
-//                .setValue(new Clothes("clothes", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/clothes%2Fdark%20red%20long%20skini%20skirt.png?alt=media&token=f1081211-c1df-423d-a301-de2919852b3b"
-//                        , 40, "dark red long skini skirt", 0, 0, "Sholly", "coin", "", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Fdark%20red%20long%20skini%20skirt.glb?alt=media&token=54775e5d-8394-420f-8133-c0599f7cf428",
-//                        0, "leg", uid10, "no",buffer , x1,y1,z1,transformRatio1));
+
+
+
+
+
+
+
 
 
 
@@ -173,54 +152,74 @@ public class CoinsMainFragment extends Fragment {
         sevenImage=view.findViewById(R.id.sevenCoinsImage);
         tenImage=view.findViewById(R.id.tenCoinsImage);
         twentyImage=view.findViewById(R.id.twentyCoinsImage);
+        allPremium=view.findViewById(R.id.allPremium);
         transferMoney.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 RecentMethods.setCurrentFragment(TransferMoneyFragment.newInstance(CoinsMainFragment.newInstance(userInformation,bundle),userInformation,bundle), getActivity());
             }
         });
-//        oneLinear.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                RecentMethods.setCurrentFragment(BuyCoinsFragment
-//                        .newInstance(oneS.getText().toString(),oneD.getText().toString() ), getActivity());
-//            }
-//        });
-//        twoLinear.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                RecentMethods.setCurrentFragment(BuyCoinsFragment
-//                        .newInstance(twoS.getText().toString(),twoD.getText().toString() ), getActivity());
-//            }
-//        });
-//        fiveLinear.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                RecentMethods.setCurrentFragment(BuyCoinsFragment
-//                        .newInstance(fiveS.getText().toString(),fiveD.getText().toString() ), getActivity());
-//            }
-//        });
-//        sevenLinear.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                RecentMethods.setCurrentFragment(BuyCoinsFragment
-//                        .newInstance(sevenS.getText().toString(),sevenD.getText().toString() ), getActivity());
-//            }
-//        });
-//        tenLinear.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                RecentMethods.setCurrentFragment(BuyCoinsFragment
-//                        .newInstance(tenS.getText().toString(),tenD.getText().toString() ), getActivity());
-//            }
-//        });
-//        twentyLinear.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                RecentMethods.setCurrentFragment(BuyCoinsFragment
-//                        .newInstance(twentyS.getText().toString(),twentyD.getText().toString() ), getActivity());
-//            }
-//        });
+        allPremium.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDialog();
+            }
+        });
+        oneLinear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDialog();
+            }
+        });
+        twoLinear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDialog();
+            }
+        });
+        fiveLinear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDialog();
+            }
+        });
+        sevenLinear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDialog();
+            }
+        });
+        tenLinear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDialog();
+            }
+        });
+        twentyLinear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDialog();
+            }
+        });
+    }
+
+    public void showDialog(){
+
+        final Dialog dialog = new Dialog(getContext());
+        dialog.setContentView(R.layout.dialog_layout_sell_clothes);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        RelativeLayout sellRelative=dialog.findViewById(R.id.sellRelative);
+
+
+        sellRelative.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
     }
 
 }

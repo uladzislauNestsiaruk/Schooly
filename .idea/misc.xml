@@ -793,15 +793,36 @@
         <entry key="..\:/Users/User/Downloads/Schooly_NEW17.06/app/src/main/res/layout/rvitem_myclothesfrag.xml" value="0.12360688956433637" />
         <entry key="..\:/Users/User/Downloads/Schooly_NEW17.06/app/src/main/res/layout/viewpager_profile.xml" value="0.2246376811594203" />
         <entry key="..\:/Users/User/Downloads/Schooly_NEW17.06/app/src/main/res/layout/viewpager_profileother.xml" value="0.2246376811594203" />
+        <entry key="..\:/Users/User/Downloads/Schooly_NEW18.08true1/app/src/main/res/drawable/corners4dpgreylook.xml" value="0.1635" />
         <entry key="..\:/Users/User/Downloads/Schooly_NEW18.08true1/app/src/main/res/layout/activity_chat.xml" value="0.22146739130434784" />
         <entry key="..\:/Users/User/Downloads/Schooly_NEW18.08true1/app/src/main/res/layout/bottom_sheet_dialog_layout.xml" value="0.12360688956433637" />
         <entry key="..\:/Users/User/Downloads/Schooly_NEW18.08true1/app/src/main/res/layout/bottom_sheet_dialog_profile.xml" value="0.25407608695652173" />
+        <entry key="..\:/Users/User/Downloads/Schooly_NEW18.08true1/app/src/main/res/layout/dialog_layout_sell_clothes.xml" value="0.12360688956433637" />
         <entry key="..\:/Users/User/Downloads/Schooly_NEW18.08true1/app/src/main/res/layout/fragment_acceptnewlook.xml" value="0.12360688956433637" />
         <entry key="..\:/Users/User/Downloads/Schooly_NEW18.08true1/app/src/main/res/layout/fragment_ad.xml" value="0.25407608695652173" />
+        <entry key="..\:/Users/User/Downloads/Schooly_NEW18.08true1/app/src/main/res/layout/fragment_add_group_member.xml" value="0.24954710144927536" />
         <entry key="..\:/Users/User/Downloads/Schooly_NEW18.08true1/app/src/main/res/layout/fragment_chats.xml" value="0.22146739130434784" />
         <entry key="..\:/Users/User/Downloads/Schooly_NEW18.08true1/app/src/main/res/layout/fragment_chatsinfo.xml" value="0.12360688956433637" />
+        <entry key="..\:/Users/User/Downloads/Schooly_NEW18.08true1/app/src/main/res/layout/fragment_clothesrequest.xml" value="0.12360688956433637" />
+        <entry key="..\:/Users/User/Downloads/Schooly_NEW18.08true1/app/src/main/res/layout/fragment_coins.xml" value="0.25407608695652173" />
+        <entry key="..\:/Users/User/Downloads/Schooly_NEW18.08true1/app/src/main/res/layout/fragment_create_group.xml" value="0.12360688956433637" />
+        <entry key="..\:/Users/User/Downloads/Schooly_NEW18.08true1/app/src/main/res/layout/fragment_editing.xml" value="0.12360688956433637" />
+        <entry key="..\:/Users/User/Downloads/Schooly_NEW18.08true1/app/src/main/res/layout/fragment_groupinfo.xml" value="0.24954710144927536" />
+        <entry key="..\:/Users/User/Downloads/Schooly_NEW18.08true1/app/src/main/res/layout/fragment_reg.xml" value="0.2504528985507246" />
+        <entry key="..\:/Users/User/Downloads/Schooly_NEW18.08true1/app/src/main/res/layout/fragment_registration.xml" value="0.12360688956433637" />
+        <entry key="..\:/Users/User/Downloads/Schooly_NEW18.08true1/app/src/main/res/layout/fragment_shop.xml" value="0.12360688956433637" />
         <entry key="..\:/Users/User/Downloads/Schooly_NEW18.08true1/app/src/main/res/layout/item_news_image.xml" value="0.25407608695652173" />
+        <entry key="..\:/Users/User/Downloads/Schooly_NEW18.08true1/app/src/main/res/layout/layoutwiewpagershop.xml" value="0.12360688956433637" />
         <entry key="..\:/Users/User/Downloads/Schooly_NEW18.08true1/app/src/main/res/layout/messages_types.xml" value="0.12360688956433637" />
+        <entry key="..\:/Users/User/Downloads/Schooly_NEW18.08true1/app/src/main/res/layout/messages_types_groups.xml" value="0.12360688956433637" />
+        <entry key="..\:/Users/User/Downloads/Schooly_NEW18.08true1/app/src/main/res/layout/peoplerecyclerview_item.xml" value="0.8800000000000001" />
+        <entry key="..\:/Users/User/Downloads/Schooly_NEW18.08true1/app/src/main/res/layout/rvitem_alreadysearch.xml" value="0.24954710144927536" />
+        <entry key="..\:/Users/User/Downloads/Schooly_NEW18.08true1/app/src/main/res/layout/rvitem_brows.xml" value="0.25" />
+        <entry key="..\:/Users/User/Downloads/Schooly_NEW18.08true1/app/src/main/res/layout/rvitem_clothesprofile.xml" value="0.12360688956433637" />
+        <entry key="..\:/Users/User/Downloads/Schooly_NEW18.08true1/app/src/main/res/layout/rvitem_colors_adapter.xml" value="0.12360688956433637" />
+        <entry key="..\:/Users/User/Downloads/Schooly_NEW18.08true1/app/src/main/res/layout/rvitem_look.xml" value="0.25407608695652173" />
+        <entry key="..\:/Users/User/Downloads/Schooly_NEW18.08true1/app/src/main/res/layout/rvitemcharacter.xml" value="0.12360688956433637" />
+        <entry key="..\:/Users/User/Downloads/Schooly_NEW18.08true1/app/src/main/res/layout/viewpagerskincolour.xml" value="0.12360688956433637" />
         <entry key="..\:/Users/User/Downloads/Schooly_NEW19.12/app/src/main/res/layout/fragment_otheruser.xml" value="0.4" />
         <entry key="..\:/Users/User/Downloads/Schooly_NEW19.12/app/src/main/res/layout/fragment_profile.xml" value="0.12" />
         <entry key="..\:/Users/User/Downloads/Schooly_NEW19.12/app/src/main/res/layout/fragment_subscriptions.xml" value="0.10400000000000001" />
@@ -1201,7 +1222,18 @@
         <entry key="..\:/Users/Дима/Documents/GitHub/Schooly_NEW_19_12/app/src/main/res/layout/fragment_wardrobe.xml" value="0.16799999999999998" />
         <entry key="..\:/google play projects/Schooly_NEW/app/src/main/res/layout/fragment_nickname.xml" value="0.1" />
         <entry key="..\:/google play projects/Schooly_NEW/app/src/main/res/layout/fragment_people.xml" value="0.1585144927536232" />
-        <entry key="..\:/фе/app/src/main/res/layout/activity_chat.xml" value="0.10989583333333333" />
+        <entry key="..\:/фе/app/src/main/res/drawable/ic_vector.xml" value="0.112" />
+        <entry key="..\:/фе/app/src/main/res/drawable/icon.xml" value="0.111" />
+        <entry key="..\:/фе/app/src/main/res/layout/activity_chat.xml" value="0.264" />
+        <entry key="..\:/фе/app/src/main/res/layout/activity_chat_group.xml" value="0.4" />
+        <entry key="..\:/фе/app/src/main/res/layout/activity_default_dialogs.xml" value="0.1" />
+        <entry key="..\:/фе/app/src/main/res/layout/custom_chat_bar.xml" value="0.2" />
+        <entry key="..\:/фе/app/src/main/res/layout/dialog_chat_depnds.xml" value="0.25" />
+        <entry key="..\:/фе/app/src/main/res/layout/dialog_item_layout.xml" value="0.25" />
+        <entry key="..\:/фе/app/src/main/res/layout/fragment_chats.xml" value="0.25" />
+        <entry key="..\:/фе/app/src/main/res/layout/fragment_create_group.xml" value="0.20199275362318841" />
+        <entry key="..\:/фе/app/src/main/res/layout/fragment_groups.xml" value="0.1" />
+        <entry key="..\:/фе/app/src/main/res/layout/group_chat_types.xml" value="0.4" />
         <entry key="..\:/фе/app/src/main/res/layout/messages_types.xml" value="0.6" />
       </map>
     </option>
@@ -1220,5 +1252,12 @@
   </component>
   <component name="SuppressionsComponent">
     <option name="suppComments" value="[]" />
+  </component>
+  <component name="VisualizationToolProject">
+    <option name="state">
+      <ProjectState>
+        <option name="scale" value="0.4" />
+      </ProjectState>
+    </option>
   </component>
 </project>

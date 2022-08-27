@@ -7,20 +7,20 @@ public class Person {
     private FacePart nose;
     private FacePart lips;
     private FacePart skinColor;
-    private FacePart pirsing;
+    private FacePart mustache;
     private FacePart body;
     private FacePart ears;
     private FacePart head;
 
     public Person(FacePart hair,FacePart brows,FacePart eyes,FacePart nose,FacePart lips,
-                  FacePart skinColor,FacePart pirsing,FacePart body,FacePart ears,FacePart head){
+                  FacePart skinColor,FacePart mustache,FacePart body,FacePart ears,FacePart head){
         this.hair=hair;
         this.brows=brows;
         this.eyes=eyes;
         this.nose=nose;
         this.lips=lips;
         this.skinColor=skinColor;
-        this.pirsing=pirsing;
+        this.mustache=mustache;
         this.body=body;
         this.ears=ears;
         this.head=head;
@@ -78,12 +78,12 @@ public class Person {
         this.skinColor=skinColor;
     }
 
-    public FacePart  getPirsing(){
-        return this.pirsing;
+    public FacePart  getMustache(){
+        return this.mustache;
     }
 
-    public void setPirsing(FacePart  pirsing){
-        this.pirsing=pirsing;
+    public void setMustache(FacePart  mustache){
+        this.mustache=mustache;
     }
 
     public FacePart getBody(){

@@ -4,7 +4,24 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/darkblack"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+        android:id="@+id/noLooks"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:layout_centerInParent="true"
+        android:textColor="@color/app_color"
+        android:text="@string/looksover"
+        android:visibility="gone"
+        android:fontFamily="@font/montserrat_extrabold"/>
+
+    <RelativeLayout
+        android:id="@+id/relativeAll"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
     <TextView
         android:id="@+id/nick"
@@ -72,6 +89,17 @@
         android:id="@+id/surfaceView"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
+    <ImageView
+        android:id="@+id/show"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/relativeLike"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="26dp"
+        android:elevation="0.1dp"
+        android:src="@drawable/ic_show" />
 
     <RelativeLayout
         android:id="@+id/relativeLike"
@@ -160,5 +188,7 @@
         android:elevation="0.1dp"
         android:fontFamily="@font/montserrat_bold"
         android:textColor="@color/app_grey" />
+
+    </RelativeLayout>
 
 </RelativeLayout>

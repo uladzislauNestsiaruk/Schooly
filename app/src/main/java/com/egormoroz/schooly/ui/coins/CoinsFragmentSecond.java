@@ -1,5 +1,8 @@
 package com.egormoroz.schooly.ui.coins;
 
+import android.app.Dialog;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -38,12 +41,11 @@ public class CoinsFragmentSecond extends Fragment {
             ,sevenD,tenD,twentyD;
     ImageView oneImage,twoImage,fiveImage
             ,sevenImage,tenImage,twentyImage,back;
-
     long adCount=0;
     Fragment fragment;
     UserInformation userInformation;
     Bundle bundle;
-    RelativeLayout adRelative;
+    RelativeLayout adRelative,allPremium;
 
     public CoinsFragmentSecond(Fragment fragment,UserInformation userInformation,Bundle bundle) {
         this.fragment = fragment;
@@ -133,54 +135,74 @@ public class CoinsFragmentSecond extends Fragment {
         sevenImage=view.findViewById(R.id.sevenCoinsImage);
         tenImage=view.findViewById(R.id.tenCoinsImage);
         twentyImage=view.findViewById(R.id.twentyCoinsImage);
+        allPremium=view.findViewById(R.id.allPremium);
         transferMoney.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 RecentMethods.setCurrentFragment(TransferMoneyFragment.newInstance(CoinsFragmentSecond.newInstance(fragment,userInformation,bundle),userInformation,bundle), getActivity());
             }
         });
-//        oneLinear.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                RecentMethods.setCurrentFragment(BuyCoinsFragment
-//                        .newInstance(oneS.getText().toString(),oneD.getText().toString() ), getActivity());
-//            }
-//        });
-//        twoLinear.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                RecentMethods.setCurrentFragment(BuyCoinsFragment
-//                        .newInstance(twoS.getText().toString(),twoD.getText().toString() ), getActivity());
-//            }
-//        });
-//        fiveLinear.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                RecentMethods.setCurrentFragment(BuyCoinsFragment
-//                        .newInstance(fiveS.getText().toString(),fiveD.getText().toString() ), getActivity());
-//            }
-//        });
-//        sevenLinear.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                RecentMethods.setCurrentFragment(BuyCoinsFragment
-//                        .newInstance(sevenS.getText().toString(),sevenD.getText().toString() ), getActivity());
-//            }
-//        });
-//        tenLinear.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                RecentMethods.setCurrentFragment(BuyCoinsFragment
-//                        .newInstance(tenS.getText().toString(),tenD.getText().toString() ), getActivity());
-//            }
-//        });
-//        twentyLinear.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                RecentMethods.setCurrentFragment(BuyCoinsFragment
-//                        .newInstance(twentyS.getText().toString(),twentyD.getText().toString() ), getActivity());
-//            }
-//        });
+        allPremium.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDialog();
+            }
+        });
+        oneLinear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDialog();
+            }
+        });
+        twoLinear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDialog();
+            }
+        });
+        fiveLinear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDialog();
+            }
+        });
+        sevenLinear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDialog();
+            }
+        });
+        tenLinear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDialog();
+            }
+        });
+        twentyLinear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDialog();
+            }
+        });
+    }
+
+    public void showDialog(){
+
+        final Dialog dialog = new Dialog(getContext());
+        dialog.setContentView(R.layout.dialog_layout_sell_clothes);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        RelativeLayout sellRelative=dialog.findViewById(R.id.sellRelative);
+
+
+        sellRelative.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
     }
 
 }

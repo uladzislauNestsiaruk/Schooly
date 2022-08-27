@@ -53,7 +53,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="-80dp"
-            android:layout_marginTop="-40dp"
+            android:layout_marginTop="-70dp"
             android:layout_toRightOf="@+id/longtextreg"
             android:src="@drawable/steve" />
 
@@ -63,9 +63,10 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/steve"
             android:layout_marginStart="40dp"
-            android:layout_marginTop="-108dp"
+            android:layout_marginTop="-178dp"
             android:layout_marginEnd="40dp"
             android:background="@drawable/corners20white2dpwhitestroke"
+            android:elevation="4dp"
             android:fontFamily="@font/montserratblack"
             android:paddingStart="26dp"
             android:paddingTop="21dp"
@@ -116,7 +117,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="24dp"
             android:fontFamily="@font/montserratblack"
-            android:text="@string/belarus"
+            android:text="by Artyom Lysyuk"
             android:textColor="@color/app_grey"
             android:textSize="12dp" />
 

@@ -10,9 +10,10 @@ import com.egormoroz.schooly.ui.news.NewsItem;
 import com.egormoroz.schooly.ui.people.AlreadySearchAdapter;
 import com.egormoroz.schooly.ui.people.RecomendationAdapter;
 import com.egormoroz.schooly.ui.people.UserPeopleAdapter;
-import com.egormoroz.schooly.ui.profile.Look;
 import com.egormoroz.schooly.ui.profile.Reason;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 
 public class Callbacks {
@@ -116,7 +117,7 @@ public class Callbacks {
     }
 
     public interface loadNewsTread{
-        void LoadNews(NewsItem newsItem);
+        void LoadNews(NewsItem newsItem) throws IOException, URISyntaxException;
     }
 
     public interface loadClothesArrayList{
@@ -136,5 +137,14 @@ public class Callbacks {
     }
     public interface addCommentToTheList{
         void addComment();
+    }
+    public interface GetChatMembers{
+        default void getChatMembers(ArrayList<UserPeopleAdapter> chatMembers) {
+        }
+    }
+
+    public interface LoadViewedNews{
+        default void getViewedNews(ArrayList<String> viewedNews) {
+        }
     }
 }

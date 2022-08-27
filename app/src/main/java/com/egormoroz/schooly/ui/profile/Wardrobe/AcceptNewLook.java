@@ -49,7 +49,6 @@ import com.egormoroz.schooly.ui.main.UserInformation;
 import com.egormoroz.schooly.ui.news.NewsAdapter;
 import com.egormoroz.schooly.ui.news.NewsItem;
 import com.egormoroz.schooly.ui.news.ViewingClothesNews;
-import com.egormoroz.schooly.ui.profile.Look;
 import com.egormoroz.schooly.ui.profile.LooksAdapter;
 import com.egormoroz.schooly.ui.profile.LooksFragmentProfileOther;
 import com.egormoroz.schooly.ui.profile.ProfileFragment;
@@ -59,6 +58,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.progressindicator.CircularProgressIndicator;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.Query;
@@ -90,7 +90,8 @@ public class AcceptNewLook extends Fragment {
 
     FirebaseModel firebaseModel=new FirebaseModel();
     RelativeLayout publish;
-    TextView lookPrice,lookPriceDollar,constituentsText;
+    TextView lookPrice,lookPriceDollar,constituentsText,publishText;
+    CircularProgressIndicator circularProgressIndicator;
     EditText descriptionLook;
     ImageView schoolyCoin;
     RecyclerView recyclerView;
@@ -112,6 +113,7 @@ public class AcceptNewLook extends Fragment {
     static int loadValue;
     int a=0;
     static ArrayList<String > allLoadClothesUid=new ArrayList<>();
+    Person personMain=new Person();
 
     public AcceptNewLook( String type, Fragment fragment, UserInformation userInformation, Bundle bundle, String lookType, ArrayList<String> clothesUid,
                          ArrayList<Clothes> clothesList) {
@@ -164,6 +166,9 @@ public class AcceptNewLook extends Fragment {
         recyclerView=view.findViewById(R.id.constituentsRecycler);
         schoolyCoin=view.findViewById(R.id.schoolyCoin);
         constituentsText=view.findViewById(R.id.lookConstituentsText);
+        circularProgressIndicator=view.findViewById(R.id.progressIndicator);
+        publishText=view.findViewById(R.id.publishText);
+        personMain=userInformation.getPerson();
         itemClickListener=new ConstituentsAdapter.ItemClickListener() {
             @Override
             public void onItemClick(Clothes clothes) {
@@ -185,7 +190,6 @@ public class AcceptNewLook extends Fragment {
             }
         };
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
-
         lockableNestedScrollView=view.findViewById(R.id.lockableNestedScrollView);
         loadPerson(userInformation, lockableNestedScrollView,surfaceView);
         if(bundle!=null){
@@ -222,6 +226,8 @@ public class AcceptNewLook extends Fragment {
                 @RequiresApi(api = Build.VERSION_CODES.O)
                 @Override
                 public void onClick(View v) {
+                    publishText.setVisibility(View.GONE);
+                    circularProgressIndicator.setVisibility(View.VISIBLE);
                     String lookId=newsModel.getReference().child(nick).push().getKey();
                     descriptionLook.getText().clear();
                     getBitmapFormSurfaceView(surfaceView, getActivity(), new Callback<Bitmap>() {
@@ -251,14 +257,47 @@ public class AcceptNewLook extends Fragment {
                                     facePartArrayList.add(userInformation.getPerson().getHead());
                                     facePartArrayList.add(userInformation.getPerson().getLips());
                                     facePartArrayList.add(userInformation.getPerson().getNose());
-                                    facePartArrayList.add(userInformation.getPerson().getPirsing());
+                                    facePartArrayList.add(userInformation.getPerson().getMustache());
                                     facePartArrayList.add(userInformation.getPerson().getSkinColor());
-                                    newsModel.getReference().child(nick).child(lookId)
-                                            .setValue(new NewsItem(downloadUrl.toString(), descriptionLook.getText().toString(), "0", lookId,
-                                                    "", userInformation.getLookClothes(), 1200, 0,
-                                                    "", nick, 0, RecentMethods.setAllPerson(facePartArrayList,"base"), 0));
-                                    newsModel.getReference().child(nick).child(lookId).child("timestamp").setValue(ServerValue.TIMESTAMP);
-                                    Toast.makeText(getContext(), getContext().getResources().getText(R.string.lookpublishedsuccessfully), Toast.LENGTH_SHORT).show();
+                                    Person person=new Person();
+                                    for(int i=0;i<facePartArrayList.size();i++){
+                                        FacePart facePart=facePartArrayList.get(i);
+                                        if(facePart!=null){
+                                                facePart.setBuffer(null);
+                                            switch (facePart.getPartType()){
+                                                case "body":
+                                                    person.setBody(facePart);
+                                                    break;
+                                                case "hair":
+                                                    person.setHair(facePart);
+                                                    break;
+                                                case "lips":
+                                                    person.setLips(facePart);
+                                                    break;
+                                                case "nose":
+                                                    person.setNose(facePart);
+                                                    break;
+                                                case "brows":
+                                                    person.setBrows(facePart);
+                                                    break;
+                                                case "eyes":
+                                                    person.setEyes(facePart);
+                                                    break;
+                                            }
+                                        }
+                                    }
+                                    if(lookType.equals("mainlook")){
+                                        firebaseModel.getUsersReference().child(nick).child("mainLook")
+                                                .setValue(userInformation.getLookClothes());
+                                        firebaseModel.getUsersReference().child(nick).child("mainLookImage")
+                                                .child(downloadUrl.toString());
+                                    }else {
+                                        newsModel.getReference().child(nick).child(lookId)
+                                                .setValue(new NewsItem(downloadUrl.toString(), descriptionLook.getText().toString(), "0", lookId,
+                                                        "", userInformation.getLookClothes(), 1200, 0,
+                                                        "", nick, 0, person, 0));
+                                        newsModel.getReference().child(nick).child(lookId).child("timestamp").setValue(ServerValue.TIMESTAMP);
+                                    }
                                     RecentMethods.setCurrentFragment(ProfileFragment.newInstance(type, nick, fragment,userInformation,bundle), getActivity());
 
                                 }
@@ -278,6 +317,7 @@ public class AcceptNewLook extends Fragment {
             });
         }
     }
+
 
     @Override
     public void onResume() {
@@ -462,69 +502,117 @@ public class AcceptNewLook extends Fragment {
         loadValue=1;
         if(userInformation.getPerson()==null){
             Log.d("AAAAA", "aaaasssh  "+userInformation.getNick());
-            RecentMethods.startLoadPerson(userInformation.getNick(), firebaseModel, new Callbacks.loadPerson() {
-                @Override
-                public void LoadPerson(Person person, ArrayList<FacePart> facePartArrayList) {
-                    Log.d("AAA","ss  "+person.getBody());
-                    LoadBodyParts.loadPersonBuffers(facePartArrayList, new Callbacks.loadFaceParts() {
-                        @Override
-                        public void LoadFaceParts(ArrayList<FacePart> facePartsArrayList) {
-                            Log.d("AAAAA","ss11  "+facePartsArrayList.get(0).getBuffer()+"   "+facePartsArrayList.get(0).getUid());
-                            for(int i=0;i<facePartsArrayList.size();i++){
-                                FacePart facePart=facePartsArrayList.get(i);
-                                Log.d("AAAAA","ss22  "+facePartsArrayList.get(i).getBuffer()+"   "+facePart.getUid()+"   "+i);
-                                if(i==0){
-                                    try {
-                                        filamentModel.initFilament(surfaceView, facePart.getBuffer(), true, lockableNestedScrollView
-                                                , "regularRender", true);
-                                        loadLookClothes();
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
-                                    } catch (URISyntaxException e) {
-                                        e.printStackTrace();
-                                    }
-                                }else{
-                                    filamentModel.populateSceneFacePart(facePartsArrayList.get(i).getBuffer());
-                                }
-                            }
-                            userInformation.setPerson(RecentMethods.setAllPerson(facePartsArrayList,"not"));
-                        }
-                    });
-                }
-            });
+            loadPersonBuffer(userInformation,lockableNestedScrollView,surfaceView);
 
         }else{
-            Log.d("####", "aa    "+userInformation.getPerson());
-            ArrayList<FacePart> facePartArrayList=new ArrayList<>();
-            facePartArrayList.add(userInformation.getPerson().getBody());
-            facePartArrayList.add(userInformation.getPerson().getBrows());
-            facePartArrayList.add(userInformation.getPerson().getEars());
-            facePartArrayList.add(userInformation.getPerson().getEyes());
-            facePartArrayList.add(userInformation.getPerson().getHair());
-            facePartArrayList.add(userInformation.getPerson().getHead());
-            facePartArrayList.add(userInformation.getPerson().getLips());
-            facePartArrayList.add(userInformation.getPerson().getNose());
-            facePartArrayList.add(userInformation.getPerson().getPirsing());
-            facePartArrayList.add(userInformation.getPerson().getSkinColor());
-            for(int i=0;i<facePartArrayList.size();i++){
-                FacePart facePart=facePartArrayList.get(i);
-                if(facePart!=null){
-                    if(i==0){
-                        try {
-                            filamentModel.initFilament(surfaceView, facePart.getBuffer(), true, lockableNestedScrollView
-                                    , "regularRender", true);
-                            loadLookClothes();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        } catch (URISyntaxException e) {
-                            e.printStackTrace();
+            if (userInformation.getPerson().getBody().getBuffer()==null){
+                loadPersonBuffer(userInformation,lockableNestedScrollView,surfaceView);
+            }else{
+                Log.d("####", "aa    "+userInformation.getPerson());
+                ArrayList<FacePart> facePartArrayList=new ArrayList<>();
+                facePartArrayList.add(userInformation.getPerson().getBody());
+                facePartArrayList.add(userInformation.getPerson().getBrows());
+                facePartArrayList.add(userInformation.getPerson().getEars());
+                facePartArrayList.add(userInformation.getPerson().getEyes());
+                facePartArrayList.add(userInformation.getPerson().getHair());
+                facePartArrayList.add(userInformation.getPerson().getHead());
+                facePartArrayList.add(userInformation.getPerson().getLips());
+                facePartArrayList.add(userInformation.getPerson().getNose());
+                facePartArrayList.add(userInformation.getPerson().getMustache());
+                facePartArrayList.add(userInformation.getPerson().getSkinColor());
+                for(int i=0;i<facePartArrayList.size();i++){
+                    FacePart facePart=facePartArrayList.get(i);
+                    com.egormoroz.schooly.Color[] color = {new com.egormoroz.schooly.Color()};
+                    if(facePart!=null){
+                        if(facePart.getColorX()!=-1f && facePart.getColorY()!=-1f && facePart.getColorZ()!=-1f) {
+                            color[0] = new com.egormoroz.schooly.Color(facePart.getColorX(),
+                                    facePart.getColorY(), facePart.getColorZ()
+                                    , 0, 0, 0);
                         }
-                    }else{
-                        filamentModel.populateSceneFacePart(facePart.getBuffer());
+                        if(i==0){
+                            try {
+                                filamentModel.initShareFilament(surfaceView, facePart.getBuffer(), true, lockableNestedScrollView
+                                        , "regularRender", true);
+                                if(color[0].getColorX() !=null)
+                                    filamentModel.changeColor(facePart.getPartType(),color[0] );
+                                loadLookClothes();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            } catch (URISyntaxException e) {
+                                e.printStackTrace();
+                            }
+                        }else{
+                            filamentModel.populateSceneFacePart(facePart.getBuffer());
+                            if(color[0].getColorX() !=null)
+                                filamentModel.changeColor(facePart.getPartType(),color[0] );
+                        }
                     }
                 }
             }
         }
+    }
+
+    public void loadPersonBuffer(UserInformation userInformation,LockableNestedScrollView lockableNestedScrollView,SurfaceView surfaceView){
+        com.egormoroz.schooly.Color colorBody=new com.egormoroz.schooly.Color();
+        com.egormoroz.schooly.Color colorHair=new com.egormoroz.schooly.Color();
+        com.egormoroz.schooly.Color colorBrows=new com.egormoroz.schooly.Color();
+        RecentMethods.startLoadPerson(userInformation.getNick(), firebaseModel, new Callbacks.loadPerson() {
+            @Override
+            public void LoadPerson(Person person,ArrayList<FacePart> facePartArrayList) {
+                Log.d("AAA","ss  "+person.getHair().getColorY());
+                LoadBodyParts.loadPersonBuffers(facePartArrayList, new Callbacks.loadFaceParts() {
+                    @Override
+                    public void LoadFaceParts(ArrayList<FacePart> facePartsArrayList) {
+                        Log.d("AAAAA","ss11  "+facePartsArrayList.get(0).getColorZ()+"   "+facePartsArrayList.get(0).getUid());
+                        for(int i=0;i<facePartsArrayList.size();i++){
+                            FacePart facePart=facePartsArrayList.get(i);
+                            com.egormoroz.schooly.Color[] color = {new com.egormoroz.schooly.Color()};
+                            Log.d("AAAAA","ss22  "+facePartsArrayList.get(i).getColorY()+"   "+facePart.getUid()+"   "+i);
+                            if(facePart.getColorX()!=-1f && facePart.getColorY()!=-1f && facePart.getColorZ()!=-1f){
+                                color[0] =new com.egormoroz.schooly.Color(facePartsArrayList.get(i).getColorX(),
+                                        facePartsArrayList.get(i).getColorY(), facePartsArrayList.get(i).getColorZ()
+                                        , 0, 0, 0);
+                                switch (facePart.getPartType()) {
+                                    case "body":
+                                        colorBody.setColorX(facePart.getColorX());
+                                        colorBody.setColorY(facePart.getColorY());
+                                        colorBody.setColorZ(facePart.getColorZ());
+                                        break;
+                                    case "hair":
+                                        colorHair.setColorX(facePart.getColorX());
+                                        colorHair.setColorY(facePart.getColorY());
+                                        colorHair.setColorZ(facePart.getColorZ());
+                                        break;
+                                    case "brows":
+                                        colorBrows.setColorX(facePart.getColorX());
+                                        colorBrows.setColorY(facePart.getColorY());
+                                        colorBrows.setColorZ(facePart.getColorZ());
+                                        break;
+                                }
+                            }
+                            if(i==0){
+                                try {
+                                    filamentModel.initShareFilament(surfaceView, facePart.getBuffer(), true, lockableNestedScrollView
+                                            , "regularRender", true);
+                                    if(color[0].getColorX() !=null)
+                                        filamentModel.changeColor(facePart.getPartType(), color[0]);
+                                    loadLookClothes();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                } catch (URISyntaxException e) {
+                                    e.printStackTrace();
+                                }
+                            }else{
+                                filamentModel.populateSceneFacePart(facePart.getBuffer());
+                                if(color[0].getColorX() !=null)
+                                    filamentModel.changeColor(facePart.getPartType(), color[0]);
+                            }
+                        }
+                        userInformation.setPerson(RecentMethods.setAllPerson(facePartsArrayList,"not",colorBody,colorHair,colorBrows));
+                    }
+                });
+            }
+        });
     }
 
     static class LongRunningTask implements Callable<Clothes> {

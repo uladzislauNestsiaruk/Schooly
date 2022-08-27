@@ -17,16 +17,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.egormoroz.schooly.ui.chat.Chat;
 import com.egormoroz.schooly.ui.coins.Transfer;
-import com.egormoroz.schooly.ui.coins.TransferHistoryAdapter;
 import com.egormoroz.schooly.ui.main.MainFragment;
 import com.egormoroz.schooly.ui.main.Mining.Miner;
 import com.egormoroz.schooly.ui.main.Shop.Clothes;
 import com.egormoroz.schooly.ui.main.UserInformation;
 import com.egormoroz.schooly.ui.news.Comment;
-import com.egormoroz.schooly.ui.news.LoadNewsTread;
 import com.egormoroz.schooly.ui.news.NewsItem;
 import com.egormoroz.schooly.ui.people.UserPeopleAdapter;
-import com.egormoroz.schooly.ui.profile.Look;
 import com.egormoroz.schooly.ui.profile.Reason;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -39,11 +36,13 @@ import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.Buffer;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Random;
@@ -130,23 +129,23 @@ public class RecentMethods {
         res = res.replace("@gmail.com", "");
         return "+" + res;
     }
-    public static boolean saveData(DatabaseReference ref, FirebaseUser user, String nick, Bundle bundle, Activity activity) {
+    public static boolean saveData(DatabaseReference ref, FirebaseUser user, String nick, Bundle bundle, Activity activity
+    ,String personImage,Person person,ArrayList<Clothes> defaultClothes,ArrayList<Clothes> mainLookClothes){
 
         UserInformation res = new UserInformation(nick, "unknown", user.getUid(),
                 "6", "unknown", "Helicopter", 1000
-                , new ArrayList<>(),new ArrayList<>(), 1,100,0, new ArrayList<>(),new ArrayList<>(),
+                , new ArrayList<>(),new ArrayList<>(), 1,1000,0, new ArrayList<>(),new ArrayList<>(),
                 "","","open","open","open",
-                "open",new ArrayList<>(),"regular", new ArrayList<>(),0,new ArrayList<>(),new ArrayList<>(),new ArrayList<>()
-                ,new ArrayList<>(),new ArrayList<>(),new ArrayList<>(),new ArrayList<Clothes>(),new Person(new FacePart(), new FacePart(), new FacePart(), new FacePart(), new FacePart(), new FacePart(), new FacePart(), new FacePart("", "", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Fma.glb?alt=media&token=f7430695-13cb-4365-8910-c61b59a96acf", "",b ),
-                new FacePart(), new FacePart())
-        ,new ArrayList<>(),new ArrayList<>());
+                "open",new ArrayList<>(),"regular", new ArrayList<>(),0,mainLookClothes,defaultClothes,new ArrayList<>()
+                ,new ArrayList<>(),new ArrayList<>(),new ArrayList<>(),mainLookClothes,person
+        ,new ArrayList<>(),new ArrayList<>(),"",personImage,new ArrayList<>());
         ref.child(nick).setValue(res).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 FirebaseModel firebaseModel=new FirebaseModel();
                 firebaseModel.initAll();
                 firebaseModel.getReference("usersNicks")
-                        .child(nick).setValue(new UserPeopleAdapter(nick,"6"," "));
+                        .child(nick).setValue(new UserPeopleAdapter(nick,personImage," "));
                 RecentMethods.setCurrentFragment(MainFragment.newInstance(res, bundle),activity );
                 ((MainActivity)activity).IsEntered();
                 ((MainActivity)activity).checkMining();
@@ -207,6 +206,7 @@ public class RecentMethods {
                     userData.setmoney(snapshot.child("money").getValue(Long.class));
                     userData.setTodayMining(snapshot.child("todayMining").getValue(Double.class));
                     userData.setPerson(snapshot.child("person").getValue(Person.class));
+                    userData.setPersonImage(snapshot.child("personImage").getValue(String.class));
                     data.add(userData);
                 }
                 callback.LoadData(data);
@@ -824,6 +824,43 @@ public class RecentMethods {
         });
     }
 
+    public static void getDefaultLookClothes(String path,FirebaseModel firebaseModel,Callbacks.GetClothes callback){
+        firebaseModel.initAppDataDatabase();
+        Query query=firebaseModel.getReference().child(path);
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                ArrayList<Clothes> clothesFromBase=new ArrayList<>();
+                for (DataSnapshot snap : snapshot.getChildren()) {
+                    Clothes clothes = new Clothes();
+                    clothes.setClothesImage(snap.child("clothesImage").getValue(String.class));
+                    clothes.setClothesPrice(snap.child("clothesPrice").getValue(Long.class));
+                    clothes.setPurchaseNumber(snap.child("purchaseNumber").getValue(Long.class));
+                    clothes.setClothesType(snap.child("clothesType").getValue(String.class));
+                    clothes.setClothesTitle(snap.child("clothesTitle").getValue(String.class));
+                    clothes.setCreator(snap.child("creator").getValue(String.class));
+                    clothes.setCurrencyType(snap.child("currencyType").getValue(String.class));
+                    clothes.setDescription(snap.child("description").getValue(String.class));
+                    clothes.setPurchaseToday(snap.child("purchaseToday").getValue(Long.class));
+                    clothes.setModel(snap.child("model").getValue(String.class));
+                    clothes.setUid(snap.child("uid").getValue(String.class));
+                    clothes.setExclusive(snap.child("exclusive").getValue(String.class));
+                    clothes.setX(snap.child("x").getValue(Float.class));
+                    clothes.setY(snap.child("y").getValue(Float.class));
+                    clothes.setZ(snap.child("z").getValue(Float.class));
+                    clothes.setTransformRatio(snap.child("transformRatio").getValue(Float.class));
+                    clothesFromBase.add(clothes);
+                }
+                callback.getClothes(clothesFromBase);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
     /////////////////////////Wardrobe////////////////////////
     public static void getClothesInWardrobe(String nick,FirebaseModel firebaseModel,Callbacks.GetClothes callback){
         firebaseModel.initAll();
@@ -1365,8 +1402,8 @@ public class RecentMethods {
     }
 
     public static void getLookClothes(String nick,String uid,FirebaseModel firebaseModel,Callbacks.getLookClothes callback){
-        firebaseModel.initAll();
-        Query query=firebaseModel.getUsersReference().child(nick).child("looks").child(uid)
+        firebaseModel.initNewsDatabase();
+        Query query=firebaseModel.getReference().child(nick).child(uid)
                 .child("clothesCreators");
         query.addValueEventListener(new ValueEventListener() {
             @Override
@@ -1505,9 +1542,9 @@ public class RecentMethods {
                 , new ArrayList<>(), ""," ","open","open","open","open",
                 new ArrayList<>(),"regular", new ArrayList<>(),0,new ArrayList<>(),new ArrayList<>()
                 ,new ArrayList<>(),new ArrayList<>(),new ArrayList<>(),new ArrayList<>()
-                ,new ArrayList<Clothes>(),new Person(new FacePart(), new FacePart(), new FacePart(), new FacePart(), new FacePart(), new FacePart(), new FacePart(), new FacePart("", "", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Fma.glb?alt=media&token=f7430695-13cb-4365-8910-c61b59a96acf", "",b ),
-                new FacePart(), new FacePart()),new ArrayList<>(),new ArrayList<>()
-        );
+                ,new ArrayList<Clothes>(),new Person(new FacePart(), new FacePart(), new FacePart(), new FacePart(), new FacePart(), new FacePart(), new FacePart(), new FacePart("", "", "https://firebasestorage.googleapis.com/v0/b/schooly-47238.appspot.com/o/3d%20models%2Fma.glb?alt=media&token=f7430695-13cb-4365-8910-c61b59a96acf", "",b ,"",0f,0f,0f),
+                new FacePart(), new FacePart()),new ArrayList<>(),new ArrayList<>(),"",""
+        ,new ArrayList<>());
         user.setNick("fake");
         Random random = new Random();
         for(int i = 0; i < 10; i++)
@@ -1582,6 +1619,7 @@ public class RecentMethods {
                     chat.setUnreadMessages(snap.child("unreadMessages").getValue(Long.class));
                     chat.setType(snap.child("type").getValue(String.class));
                     chat.setTimeMill(snap.child("timeMill").getValue(Long.class));
+                    chat.setChatId(snap.child("chatId").getValue(String.class));
                     if(chat.getType().equals("personal")){
                         chatArrayList.add(chat);
                     }else{
@@ -1596,6 +1634,25 @@ public class RecentMethods {
 
             }
         });
+    }
+
+    public static void loadChatMembers(String nick,String uid,FirebaseModel firebaseModel,Callbacks.GetChatMembers callback){
+        firebaseModel.initAll();
+        firebaseModel.getUsersReference().child(nick).child("Dialogs").child(uid).child("members").get()
+                .addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DataSnapshot> task) {
+                        if(task.isSuccessful()){
+                            DataSnapshot snapshot=task.getResult();
+                            ArrayList<UserPeopleAdapter> members=new ArrayList<>();
+                            for(DataSnapshot snap:snapshot.getChildren()){
+                                UserPeopleAdapter userPeopleAdapter=snap.getValue(UserPeopleAdapter.class);
+                                members.add(userPeopleAdapter);
+                            }
+                            callback.getChatMembers(members);
+                        }
+                    }
+                });
     }
 
     public static void getMyLookClothesOnce(String nick, FirebaseModel firebaseModel, Callbacks.getLookClothes callback){
@@ -1629,6 +1686,7 @@ public class RecentMethods {
                     ArrayList<FacePart> facePartArrayList = new ArrayList<>();
                     for (DataSnapshot snap : snapshot.getChildren()) {
                         FacePart facePart = snap.getValue(FacePart.class);
+                        Log.d("#####", facePart.getPartTitle());
                         facePartArrayList.add(facePart);
                     }
                     callback.LoadNews(facePartArrayList);
@@ -1661,6 +1719,9 @@ public class RecentMethods {
 
     public static void startLoadPerson(String nick,FirebaseModel firebaseModel,Callbacks.loadPerson callback){
         firebaseModel.initAll();
+         Color colorBody=new Color();
+          Color colorHair=new Color();
+           Color colorBrows=new Color();
         firebaseModel.getUsersReference().child(nick).child("person").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
@@ -1668,37 +1729,74 @@ public class RecentMethods {
                     DataSnapshot snapshot=task.getResult();
                     ArrayList<FacePart> facePartArrayList=new ArrayList<>();
                     for(DataSnapshot snap:snapshot.getChildren()){
-                        FacePart facePart=snap. getValue(FacePart.class);
+                        FacePart facePart=snap.getValue(FacePart.class);
+                        switch (facePart.getPartType()) {
+                            case "body":
+                                colorBody.setColorX(facePart.getColorX());
+                                colorBody.setColorY(facePart.getColorY());
+                                colorBody.setColorZ(facePart.getColorZ());
+                                Log.d("AAAAA", "body  " + colorBody.getColorY()+"   "+facePart.getPartType());
+                                break;
+                            case "hair":
+                                colorHair.setColorX(facePart.getColorX());
+                                colorHair.setColorY(facePart.getColorY());
+                                colorHair.setColorZ(facePart.getColorZ());
+                                Log.d("AAAAA", "hair  " + colorHair.getColorY()+"   "+facePart.getPartType());
+                                break;
+                            case "brows":
+                                colorBrows.setColorX(facePart.getColorX());
+                                colorBrows.setColorY(facePart.getColorY());
+                                colorBrows.setColorZ(facePart.getColorZ());
+                                break;
+                        }
                         facePartArrayList.add(facePart);
                     }
-                    callback.LoadPerson(setAllPerson(facePartArrayList,"not"),facePartArrayList);
+                    callback.LoadPerson(setAllPerson(facePartArrayList,"not",colorBody,colorHair ,colorBrows),facePartArrayList);
                 }
             }
         });
     }
 
-    public static Person setAllPerson(ArrayList<FacePart> personParts,String type){
+    public static Person setAllPerson(ArrayList<FacePart> personParts,String type,Color colorBody,Color colorHair,
+                                      Color colorBrows){
         Person person=new Person();
-        for(int i=0;i<personParts.size();i++){
-            FacePart facePart=personParts.get(i);
+        ArrayList<FacePart> parts=new ArrayList<>();
+        parts.addAll(personParts);
+        for(int i=0;i<parts.size();i++){
+            FacePart facePart=parts.get(i);
             if(facePart!=null){
                 if(type.equals("base")){
                     facePart.setBuffer(null);
                 }
                 switch (facePart.getPartType()){
                     case "body":
+                        if(colorBody!=null){
+                            facePart.setColorX(colorBody.getColorX());
+                            facePart.setColorY(colorBody.getColorY());
+                            facePart.setColorZ(colorBody.getColorZ());
+                        }
                         person.setBody(facePart);
                         break;
                     case "hair":
+                        if(colorHair!=null){
+                            facePart.setColorX(colorHair.getColorX());
+                            facePart.setColorY(colorHair.getColorY());
+                            facePart.setColorZ(colorHair.getColorZ());
+                        }
                         person.setHair(facePart);
                         break;
-                    case "lips":
+                    case "mouth":
                         person.setLips(facePart);
                         break;
                     case "nose":
                         person.setNose(facePart);
                         break;
                     case "brows":
+                        if(colorBrows!=null){
+                            facePart.setColorX(colorBrows.getColorX());
+                            facePart.setColorY(colorBrows.getColorY());
+                            facePart.setColorZ(colorBrows.getColorZ());
+                        }
                         person.setBrows(facePart);
                         break;
                     case "eyes":
@@ -1713,6 +1811,139 @@ public class RecentMethods {
     public static ArrayList<Chat> sort_chats_by_time(ArrayList<Chat> cur){
         cur.sort((Chat a, Chat b) -> (int)(a.getTimeMill() - b.getTimeMill()));
         return cur;
+    }
+
+    public static void returnNewsItem(NewsItem newsItem1 ,Callbacks.loadNewsTread loadNewsTread) {
+        ArrayList<FacePart> facePartArrayList=new ArrayList<>();
+        if(newsItem1.getPerson()!=null){
+            facePartArrayList.add(newsItem1.getPerson().getBody());
+            facePartArrayList.add(newsItem1.getPerson().getBrows());
+            facePartArrayList.add(newsItem1.getPerson().getEars());
+            facePartArrayList.add(newsItem1.getPerson().getEyes());
+            facePartArrayList.add(newsItem1.getPerson().getHair());
+            facePartArrayList.add(newsItem1.getPerson().getHead());
+            facePartArrayList.add(newsItem1.getPerson().getLips());
+            facePartArrayList.add(newsItem1.getPerson().getNose());
+            facePartArrayList.add(newsItem1.getPerson().getMustache());
+            facePartArrayList.add(newsItem1.getPerson().getSkinColor());
+            Person person=RecentMethods.setAllPerson(facePartArrayList,"base",null,null,null);
+            newsItem1.setPerson(person);
+        }
+        ArrayList<Clothes> clothesWithoutBuffers=new ArrayList<>();
+        if( newsItem1.getClothesCreators()!=null){
+            for(int i=0;i<newsItem1.getClothesCreators().size();i++){
+                Clothes clothes=newsItem1.getClothesCreators().get(i);
+                clothes.setBuffer(null);
+                clothesWithoutBuffers.add(clothes);
+                if(i==newsItem1.getClothesCreators().size()-1){
+                    newsItem1.setClothesCreators(clothesWithoutBuffers);
+                    try {
+                        loadNewsTread.LoadNews(newsItem1);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (URISyntaxException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }else  {
+            try {
+                loadNewsTread.LoadNews(newsItem1);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
+    public static void loadViewedNews(String nick,FirebaseModel firebaseModel,Callbacks.LoadViewedNews callback){
+        firebaseModel.getUsersReference().child(nick).child("viewedNews").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if(task.isSuccessful()){
+                    DataSnapshot snapshot=task.getResult();
+                    ArrayList<String> viewedNewsList=new ArrayList<>();
+                    for(DataSnapshot snap:snapshot.getChildren()){
+                        String viewedNews=snap.getValue(String.class);
+                        viewedNewsList.add(viewedNews);
+                    }
+                    callback.getViewedNews(viewedNewsList);
+
+                }
+            }
+        });
+    }
+
+    public static ArrayList<Color> returnColors(){
+        ArrayList<Color> colorsArrayList=new ArrayList<>();
+        Color color=new Color(1f, 1f, 1f,255, 255, 255);
+        colorsArrayList.add(color);
+        Color color1=new Color(0f, 0f, 0f,0, 0, 0);
+        colorsArrayList.add(color1);
+        Color color2=new Color(1f, 0.909f, 0.470f,255, 232, 120);
+        colorsArrayList.add(color2);
+        Color color3=new Color(1f, 0.894f, 0.368f,255, 228, 94);
+        colorsArrayList.add(color3);
+        Color color4=new Color(0.988f, 0.537f, 0.188f,252, 137, 48);
+        colorsArrayList.add(color4);
+        Color colorMilky=new Color(0.901f,0.901f, 0.901f,230, 230, 230);
+        colorsArrayList.add(colorMilky);
+        Color color5=new Color(0.721f, 0.721f, 0.721f,184, 184, 184);
+        colorsArrayList.add(color5);
+        Color color6=new Color(0.541f, 0.541f, 0.541f,138, 138, 138);
+        colorsArrayList.add(color6);
+        Color colorBrown=new Color(0.188f, 0.094f, 0.019f,48, 24, 5);
+        colorsArrayList.add(colorBrown);
+        Color colorBrownBlack=new Color(0.141f, 0.105f, 0.078f,36, 27, 20);
+        colorsArrayList.add(colorBrownBlack);
+        Color colorRed=new Color(0.760f, 0.090f,0.054f,194, 23, 14);
+        colorsArrayList.add(colorRed);
+        Color colorLightRed=new Color(0.941f, 0.317f, 0.380f,240, 81, 97);
+        colorsArrayList.add(colorLightRed);
+        Color colorYellow=new Color(0.760f, 0.713f, 0.054f,194, 182, 14);
+        colorsArrayList.add(colorYellow);
+        Color colorGreen=new Color(0.337f, 0.760f, 0.054f,86, 194, 14);
+        colorsArrayList.add(colorGreen);
+        Color colorGreen2=new Color(0.054f, 0.760f, 0.396f,14, 194, 101);
+        colorsArrayList.add(colorGreen2);
+        Color colorBlue=new Color(0.054f, 0.760f,0.666f,14, 194, 170);
+        colorsArrayList.add(colorBlue);
+        Color colorBlueMore=new Color(0.054f, 0.396f, 0.760f,14, 101, 194);
+        colorsArrayList.add(colorBlueMore);
+        Color colorPurple=new Color(0.290f, 0.054f, 0.760f,74, 14, 194);
+        colorsArrayList.add(colorPurple);
+        Color colorPurpleLight=new Color(0.803f, 0.317f, 0.941f,205, 81, 240);
+        colorsArrayList.add(colorPurpleLight);
+        Color colorPinkLight=new Color(0.941f, 0.317f, 0.858f,240, 81, 219);
+        colorsArrayList.add(colorPinkLight);
+        return colorsArrayList;
+    }
+
+    public static ArrayList<Color> returnBodyColors(){
+        ArrayList<Color> colorsArrayList=new ArrayList<>();
+        Color color=new Color(1f, 0.847f, 0.619f,255, 216, 158);
+        colorsArrayList.add(color);
+        Color colorBrownLighter=new Color( 0.98f, 0.776f, 0.470f,250, 198, 120);
+        colorsArrayList.add(colorBrownLighter);
+        Color color1=new Color(1f, 0.8f, 0.501f,255, 204, 128);
+        colorsArrayList.add(color1);
+        Color colorBrown=new Color(0.89f, 0.686f, 0.384f,227, 175, 98);
+        colorsArrayList.add(colorBrown);
+        Color color2=new Color(1f, 0.725f, 0.309f,255, 185, 79);
+        colorsArrayList.add(color2);
+        Color color3=new Color(0.858f, 0.572f, 0.137f,219, 146, 35);
+        colorsArrayList.add(color3);
+        Color color4=new Color(0.988f, 0.537f, 0.188f,252, 137, 48);
+        colorsArrayList.add(color4);
+        Color colorMilky=new Color(0.329f,0.219f, 0.05f,84, 56, 13);
+        colorsArrayList.add(colorMilky);
+        Color color5=new Color(0.239f, 0.152f, 0.023f,61, 39, 6);
+        colorsArrayList.add(color5);
+        Color color6=new Color(0.211f, 0.129f, 0.007f,54, 33, 2);
+        colorsArrayList.add(color6);
+        return colorsArrayList;
     }
 
 

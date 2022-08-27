@@ -19,6 +19,7 @@ import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
 import com.egormoroz.schooly.ui.main.UserInformation;
+import com.egormoroz.schooly.ui.people.UserPeopleAdapter;
 import com.google.firebase.database.DatabaseReference;
 
 import java.util.ArrayList;
@@ -34,7 +35,7 @@ public class GroupsFragment extends Fragment
     UserInformation userInformation;
     Bundle bundle;
     Fragment fragment;
-
+    private  MessageAdapter messageAdapter;
     public GroupsFragment(UserInformation userInformation,Bundle bundle,Fragment fragment) {
         this.userInformation=userInformation;
         this.bundle=bundle;
@@ -91,7 +92,13 @@ public class GroupsFragment extends Fragment
                         DialogAdapter.ItemClickListener itemClickListener=new DialogAdapter.ItemClickListener() {
                             @Override
                             public void onItemClick(Chat chat) {
-                                RecentMethods.setCurrentFragment(GroupChatFragment.newInstance(userInformation, bundle, DialogsFragment.newInstance(userInformation, bundle,fragment),chat), getActivity());
+                                RecentMethods.loadChatMembers(userInformation.getNick(), chat.getChatId(), firebaseModel, new Callbacks.GetChatMembers() {
+                                    @Override
+                                    public void getChatMembers(ArrayList<UserPeopleAdapter> chatMembers) {
+                                        chat.setMembers(chatMembers);
+                                        RecentMethods.setCurrentFragment(GroupChatFragment.newInstance(userInformation, bundle, DialogsFragment.newInstance(userInformation, bundle,fragment),chat), getActivity());
+                                    }
+                                });
                             }
                         };
                         dialogAdapter.setClickListener(itemClickListener);
@@ -109,7 +116,13 @@ public class GroupsFragment extends Fragment
                 DialogAdapter.ItemClickListener itemClickListener=new DialogAdapter.ItemClickListener() {
                     @Override
                     public void onItemClick(Chat chat) {
-                        RecentMethods.setCurrentFragment(GroupChatFragment.newInstance(userInformation, bundle, DialogsFragment.newInstance(userInformation, bundle,fragment),chat), getActivity());
+                        RecentMethods.loadChatMembers(userInformation.getNick(), chat.getChatId(), firebaseModel, new Callbacks.GetChatMembers() {
+                            @Override
+                            public void getChatMembers(ArrayList<UserPeopleAdapter> chatMembers) {
+                                chat.setMembers(chatMembers);
+                                RecentMethods.setCurrentFragment(GroupChatFragment.newInstance(userInformation, bundle, DialogsFragment.newInstance(userInformation, bundle,fragment),chat), getActivity());
+                            }
+                        });
                     }
                 };
                 dialogAdapter.setClickListener(itemClickListener);

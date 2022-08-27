@@ -1,9 +1,9 @@
 <resources>
-    <string name="app_name">Schooly</string>
-    <string name="virtualSteve">Твой виртуальный помощник \nSchooly. Чтобы начать работу с\nприложением, нужно пройти\nнесколько простых шагов.\nПриступим!</string>
+    <string name="app_name">Sholly</string>
+    <string name="virtualSteve">Your Virtual Assistant  in\nSholly. There are a few simple\n steps to get started\n with the app. \nLet\'s do it!</string>
     <string name="hellosteve">Hello, I\'m Steve!</string>
-    <string name="regOrEnter">Are you already at Schooly? If yes, then log \ninto your account, if not, then \nregister!</string>
-    <string name="regSteps">Follow a few simple\nregistration steps or\nuse your Google Play account</string>
+    <string name="regOrEnter">Are you already at Sholly? If yes, then log \ninto your account, if not, then \nregister!</string>
+    <string name="regSteps">Follow a few simple\nregistration steps or\nuse your Google account</string>
     <string name="belarus">from Belarus, with love)</string>
     <string name="enterFast">Hurry, sign in to the\napplication, and I need\nto remember for a little while\nwhere we could see each other</string>
     <string name="startregtext">Let\'s start registration!</string>
@@ -22,7 +22,7 @@
     <string name="next">Continue</string>
     <string name="ent">login</string>
     <string name="from">via</string>
-    <string name="googleplay">Google Play</string>
+    <string name="googleplay">Google</string>
     <string name="reg">registration</string>
     <string name="redact">Edit</string>
 
@@ -130,7 +130,7 @@
 
     <string name="searchtests">Поиск тестов</string>
     <string name="mytests">МОИ ТЕСТЫ</string>
-    <string name="schoolytests">Тесты Schooly</string>
+    <string name="schoolytests">Тесты Sholly</string>
 
     <string name="chanel_name">tyomaa</string>
 
@@ -170,7 +170,7 @@
 
     <string name="rules">Terms of use</string>
     <string name="change">Change</string>
-    <string name="fromBrest">From Brest to You</string>
+    <string name="fromBrest">For you with love</string>
 
     <string name="deleteFriend">Delete</string>
 
@@ -192,7 +192,7 @@
     <string name="closeAccount">This user has a closed account(</string>
 
     <string name="createFirstClothes">Design clothes</string>
-    <string name="getSchoolyCoin">and get Schooly-coin!</string>
+    <string name="getSchoolyCoin">and get Sholly-coin!</string>
     <string name="create">Create</string>
 
     <string name="noClothes">No clothes in wardrobe(</string>
@@ -263,7 +263,7 @@
 
     <string name="messageLimit">Sending messages is limited</string>
 
-    <string name="schoolyPremium">Schooly Premium</string>
+    <string name="schoolyPremium">Sholly Premium</string>
     <string name="buyPremium">Buy a subscription</string>
     <string name="publish">Publish</string>
 
@@ -282,7 +282,7 @@
     <string name="moreCoinsMining">Increase earnings from mining</string>
     <string name="eightyPerSentFromClothes">Get 80% from the sale of clothes</string>
     <string name="closePremium">Cancel subscription at any time</string>
-    <string name="exclusive">Exclusive clothing</string>
+    <string name="exclusive">Buy exclusive clothes</string>
 
     <string name="createClothes">Create clothes</string>
 
@@ -316,7 +316,7 @@
     <string name="resale">Sell</string>
     <string name="present">Give</string>
 
-    <string name="schoolyCoin">Schooly Coin</string>
+    <string name="schoolyCoin">Sholly Coin</string>
     <string name="dollar">Dollar (requires Premium)</string>
 
     <string name="transferCoins">Transfer coins</string>
@@ -335,10 +335,10 @@
 
     <string name="coins">Coins</string>
 
-    <string name="uniqueClothes">Create unique and inimitable models and publish them to the Schooly store</string>
+    <string name="uniqueClothes">Create unique and inimitable models and publish them to the Sholly store</string>
     <string name="eightyPerCent">Get up to 80% of the sale price of your clothes</string>
     <string name="giveClothes">Give clothes to friends</string>
-    <string name="earn">Earn real money and Schooly coins from selling clothes</string>
+    <string name="earn">Earn real money and Sholly coins from selling clothes</string>
 
     <string name="ten">+10%</string>
     <string name="twenty">+20%</string>
@@ -387,7 +387,7 @@
     <string name="balance">Balance:</string>
     <string name="shareProfile">Share this profile</string>
     <string name="exclusiveText">Exclusive clothes:</string>
-    <string name="noExclusive">To view premium clothes, you must be a subscriber to Schooly Premium</string>
+    <string name="noExclusive">To view premium clothes, you must be a subscriber to Sholly Premium</string>
     <string name="noClothesInBasket">No clothes in cart :(</string>
     <string name="writeMessage">Enter a message...</string>
     <string name="instagram">Instagram</string>
@@ -416,7 +416,7 @@
     <string name="cantSellClothes">Unfortunately, this feature is currently not available. It will appear in the next updates :)</string>
     <string name="buyClothes">Buy item?</string>
     <string name="buyFirstMiner">Buy your first miner!</string>
-    <string name="exclusivePremium">Only users with a Schooly Premium subscription will be able to buy these clothes</string>
+    <string name="exclusivePremium">Only users with a Sholly Premium subscription will be able to buy these clothes</string>
     <string name="sendClothesApplication">Submit an application</string>
     <string name="clothesApplication">An application for clothes can be processed for several days. After processing, we will send you a response.</string>
     <string name="loading">Loading...</string>
@@ -452,7 +452,7 @@
     <string name="givealreadytext"></string>
     <string name="alreadнhasthisgift"> already has this gift</string>
     <string name="giftsent">Gift sent </string>
-    <string name="themodelhasbeenadded">The model has been added to the Schooly clothing store</string>
+    <string name="themodelhasbeenadded">The model has been added to the Sholly clothing store</string>
     <string name="addrequestdenied">Add request denied</string>
     <string name="gaveyou"> gave you </string>
     <string name="moveto">Move to</string>
@@ -496,7 +496,7 @@
     <string name="openchat">Open chat</string>
     <string name="loginwithGoogle">Login with Google</string>
     <string name="looksaved">Look saved</string>
-    <string name="youarenotsubscribedtoSchoolyPremium">Sorry, you are not subscribed to Schooly Premium</string>
+    <string name="youarenotsubscribedtoSchoolyPremium">Sorry, you are not subscribed to Sholly Premium</string>
     <string name="coins1"> coins</string>
     <string name="comments">Comments:</string>
     <string name="submitcomplaint">Submit a complaint</string>
@@ -539,6 +539,7 @@
     <string name="goToView">Go to view</string>
     <string name="by">by</string>
     <string name="lookby">Look by</string>
+    <string name="looksover">The new looks are over:( </string>
 
 
 

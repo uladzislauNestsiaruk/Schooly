@@ -23,11 +23,13 @@ import androidx.fragment.app.Fragment;
 import com.egormoroz.schooly.FirebaseModel;
 import com.egormoroz.schooly.R;
 import com.egormoroz.schooly.RecentMethods;
+import com.egormoroz.schooly.ui.main.CreateCharacter.CreateCharacterFragment;
 import com.egormoroz.schooly.ui.main.UserInformation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.database.DataSnapshot;
+import com.squareup.picasso.Picasso;
 
 public class EditingFragment extends Fragment {
     FirebaseModel firebaseModel=new FirebaseModel();
@@ -35,6 +37,8 @@ public class EditingFragment extends Fragment {
     String nickname,nick;
     RelativeLayout agree;
     String type;
+    ImageView personImage;
+    TextView textViewEditFace;
     Fragment fragment;
     UserInformation userInformation;
     Bundle bundle;
@@ -65,6 +69,14 @@ public class EditingFragment extends Fragment {
     public void onViewCreated(@Nullable View view, @NonNull Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         nick=userInformation.getNick();
+        textViewEditFace=view.findViewById(R.id.editing);
+        textViewEditFace.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RecentMethods.setCurrentFragment(CreateCharacterFragment.newInstance(userInformation, bundle,
+                        EditingFragment.newInstance(type, fragment, userInformation, bundle), "editing"), getActivity());
+            }
+        });
         ImageView arrowtoprofileediting = view.findViewById(R.id.back_toprofile);
         arrowtoprofileediting.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -82,6 +94,8 @@ public class EditingFragment extends Fragment {
         };
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
 
+        personImage=view.findViewById(R.id.personImage);
+        Picasso.get().load(userInformation.getPersonImage()).into(personImage);
         nickEdit=view.findViewById(R.id.edittextnickname);
         bioEdit=view.findViewById(R.id.edittextbio);
         agree=view.findViewById(R.id.agree);
@@ -150,7 +164,7 @@ public class EditingFragment extends Fragment {
         dialog.setContentView(R.layout.dialog_layout);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-        RelativeLayout Relative=dialog.findViewById(R.id.Relative);
+        RelativeLayout Relative=dialog.findViewById(R.id.Delete_relative_layout);
         TextView textView=dialog.findViewById(R.id.Text);
         textView.setText(R.string.changenotavailable);
 

@@ -43,6 +43,7 @@ public class NewsFragment extends Fragment {
     NewsAdapter newsAdapter;
     ArrayList<NewsItem> newsArrayList=new ArrayList<>();
     CircularProgressIndicator circularProgressIndicator;
+    int currentItem;
 
     public NewsFragment(UserInformation userInformation,Bundle bundle) {
         this.userInformation=userInformation;
@@ -52,6 +53,13 @@ public class NewsFragment extends Fragment {
     public static NewsFragment newInstance(UserInformation userInformation, Bundle bundle) {
         return new NewsFragment(userInformation,bundle);
 
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        bundle.putInt("CURRENTPOSITION", viewPager2.getCurrentItem());
+        bundle.putSerializable("NEWSLIST", newsArrayList);
     }
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -76,29 +84,16 @@ public class NewsFragment extends Fragment {
                 }
             }
         };
+
+        currentItem=bundle.getInt("CURRENTPOSITION");
+
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback1);
         circularProgressIndicator=root.findViewById(R.id.progressIndicator);
         viewPager2 = root.findViewById(R.id.picturenewspager);
         ref = FirebaseDatabase.getInstance().getReference("news");
-        LoadNewsTread loadNewsTread=new LoadNewsTread(userInformation, new Callbacks.loadNewsTread() {
-            @Override
-            public void LoadNews(NewsItem newsItem) {
-                Log.d("####", "dd   "+newsItem);
-                circularProgressIndicator.setVisibility(View.GONE);
-                if(newsAdapter==null){
-                    newsArrayList.add(newsItem);
-                    newsAdapter=new NewsAdapter(newsArrayList, userInformation, bundle,NewsFragment.newInstance(userInformation, bundle),getActivity(), onItemChangedListener);
-                    Log.d("####", "dd 3   "+newsArrayList.size());
-                    viewPager2.setAdapter(newsAdapter);
-                }else{
-                    newsArrayList.add(newsItem);
-                    Log.d("####", "dd 1  "+newsArrayList.size());
-                    newsAdapter.notifyItemChanged(newsArrayList.size()-1);
-                }
 
-            }
-        });
 
+        loadNews();
        return root;
     }
 
@@ -169,6 +164,35 @@ public class NewsFragment extends Fragment {
 
             }
         });
+    }
+
+    public void loadNews(){
+        if(bundle.getSerializable("NEWSLIST")==null){
+            LoadNewsTread loadNewsTread=new LoadNewsTread(userInformation, new Callbacks.loadNewsTread() {
+                @Override
+                public void LoadNews(NewsItem newsItem) {
+                    Log.d("####", "dd   "+newsItem);
+                    circularProgressIndicator.setVisibility(View.GONE);
+                    if(newsAdapter==null){
+                        newsArrayList.add(newsItem);
+                        newsAdapter=new NewsAdapter(newsArrayList, userInformation, bundle,NewsFragment.newInstance(userInformation, bundle),getActivity(), onItemChangedListener);
+
+                        viewPager2.setAdapter(newsAdapter);
+                    }else{
+                        newsArrayList.add(newsItem);
+                        Log.d("####", "dd 1  "+newsArrayList.size());
+                        newsAdapter.notifyItemChanged(newsArrayList.size()-1);
+                        viewPager2.setCurrentItem(currentItem);
+                    }
+
+                }
+            });
+        }else {
+            newsArrayList= (ArrayList<NewsItem>) bundle.getSerializable("NEWSLIST");
+            newsAdapter=new NewsAdapter(newsArrayList, userInformation, bundle,NewsFragment.newInstance(userInformation, bundle),getActivity(), onItemChangedListener);
+            viewPager2.setAdapter(newsAdapter);
+            viewPager2.setCurrentItem(currentItem);
+        }
     }
 
 }

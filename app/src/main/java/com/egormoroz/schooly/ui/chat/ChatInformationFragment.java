@@ -193,6 +193,7 @@ public class ChatInformationFragment extends Fragment {
                                     UserPeopleAdapter userPeopleAdapter=snap.getValue(UserPeopleAdapter.class);
                                     members.add(userPeopleAdapter);
                                 }
+                                bundle.putSerializable(chat.getName()+"MEMBERS",members);
                                 PeopleAdapter peopleAdapter=new PeopleAdapter(members, userInformation);
                                 recyclerMembers.setLayoutManager(new LinearLayoutManager(getContext()));
                                 recyclerMembers.setAdapter(peopleAdapter);
@@ -254,6 +255,8 @@ public class ChatInformationFragment extends Fragment {
                                     String image=snap.getValue(String.class);
                                     dialogueMaterials.add(image);
                                 }
+
+                                bundle.putSerializable(chat.getName()+"MATERIALS",dialogueMaterials);
                                 if(dialogueMaterials.size()==0){
                                     noMaterials.setVisibility(View.VISIBLE);
                                 } else{

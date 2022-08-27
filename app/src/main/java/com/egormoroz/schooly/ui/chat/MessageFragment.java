@@ -14,8 +14,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Dialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaRecorder;
 import android.net.Uri;
@@ -34,6 +40,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -77,15 +84,15 @@ public final class MessageFragment extends Fragment {
     Fragment fragment;
     Chat chat;
 
-    public MessageFragment(UserInformation userInformation,Bundle bundle,Fragment fragment,Chat chat) {
-        this.userInformation=userInformation;
-        this.bundle=bundle;
-        this.fragment=fragment;
-        this.chat=chat;
+    public MessageFragment(UserInformation userInformation, Bundle bundle, Fragment fragment, Chat chat) {
+        this.userInformation = userInformation;
+        this.bundle = bundle;
+        this.fragment = fragment;
+        this.chat = chat;
     }
 
-    public static MessageFragment newInstance(UserInformation userInformation, Bundle bundle, Fragment fragment,Chat chat) {
-        return new MessageFragment(userInformation,bundle,fragment,chat);
+    public static MessageFragment newInstance(UserInformation userInformation, Bundle bundle, Fragment fragment, Chat chat) {
+        return new MessageFragment(userInformation, bundle, fragment, chat);
 
     }
 
@@ -116,7 +123,7 @@ public final class MessageFragment extends Fragment {
     private Uri fileUri;
     private StorageTask uploadTask;
     int chatCheckValue;
-    int a=0;
+    int a = 0;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -130,7 +137,7 @@ public final class MessageFragment extends Fragment {
     }
 
     @Override
-    public void onViewCreated(@Nullable View view,@NonNull Bundle savedInstanceState) {
+    public void onViewCreated(@Nullable View view, @NonNull Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         info = view.findViewById(R.id.info);
         back = view.findViewById(R.id.backtoalldialogs);
@@ -155,12 +162,18 @@ public final class MessageFragment extends Fragment {
 
         itemClickListener=new MessageAdapter.ItemClickListener() {
             @Override
-            public void onItemClick(Clothes clothes) {
-                RecentMethods.setCurrentFragment(ViewingClothesChat.newInstance(MessageFragment.newInstance(userInformation, bundle, fragment, chat), userInformation, bundle), getActivity());
+            public void onItemClick(Clothes clothes, NewsItem newsItem) {
+                if (clothes != null) {
+                    RecentMethods.setCurrentFragment(ViewingClothesChat.newInstance(MessageFragment.newInstance(userInformation, bundle, fragment, chat), userInformation, bundle), getActivity());
+                } else {
+                    RecentMethods.setCurrentFragment(ViewingLookFragmentChat.newInstance(MessageFragment.newInstance(userInformation, bundle, fragment, chat), userInformation, bundle), getActivity());
+
+                }
             }
+
         };
-        messageSenderName=userInformation.getNick();
-        messageReceiverName=chat.getName();
+        messageSenderName = userInformation.getNick();
+        messageReceiverName = chat.getName();
         firebaseModel.getUsersReference().child(messageSenderName).child("Chats").child(messageReceiverName).child("Messages")
                 .addChildEventListener(new ChildEventListener() {
                     @Override
@@ -172,13 +185,14 @@ public final class MessageFragment extends Fragment {
                         messages.setType(dataSnapshot.child("type").getValue(String.class));
                         messages.setFrom(dataSnapshot.child("from").getValue(String.class));
                         messages.setTo(dataSnapshot.child("to").getValue(String.class));
-                        if(messages.getType().equals("clothes")){
+                        if (messages.getType().equals("clothes")) {
                             messages.setClothes(dataSnapshot.child("clothes").getValue(Clothes.class));
-                        }else if(messages.getType().equals("look")){
-                            messages.setNewsItem(dataSnapshot.child("newsItem").getValue(NewsItem.class));
+                        } else if (messages.getType().equals("look")) {
+                              Log.d("### #", "look");
+                            messages.setNewsItem(dataSnapshot.child("look").getValue(NewsItem.class));
                         }
                         messagesList.add(messages);
-                        if(messagesList.size()>0 && a==0&& !messages.getFrom().equals(userInformation.getNick())){
+                        if (messagesList.size() > 0 && a == 0 && !messages.getFrom().equals(userInformation.getNick())) {
                             Log.d("#####", messageReceiverName);
                             firebaseModel.getUsersReference().child(messageSenderName).child("Dialogs")
                                     .child(messageReceiverName).child("unreadMessages").setValue(0);
@@ -223,7 +237,7 @@ public final class MessageFragment extends Fragment {
         SendFilesButton = view.findViewById(R.id.send_files_btn);
         MessageInputText = view.findViewById(R.id.input_message);
 
-        messageAdapter = new MessageAdapter(messagesList, messageSenderName, messageReceiverName,itemClickListener);
+        messageAdapter = new MessageAdapter(messagesList, messageSenderName, messageReceiverName, itemClickListener, this);
         userMessagesList = view.findViewById(R.id.private_messages_list_of_users);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         userMessagesList.setLayoutManager(linearLayoutManager);
@@ -235,20 +249,7 @@ public final class MessageFragment extends Fragment {
                 RecentMethods.setCurrentFragment(fragment, getActivity());
             }
         });
-        DatabaseReference ref = firebaseModel.getUsersReference().child(messageSenderName).child("Chats").child(messageReceiverName).child("Unread");
-        ref.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    dataSnapshot.getRef().setValue(0);
-                }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
         Query query = firebaseModel.getUsersReference().child(messageReceiverName).child("blackList")
                 .child(userInformation.getNick());
         query.addValueEventListener(new ValueEventListener() {
@@ -299,7 +300,7 @@ public final class MessageFragment extends Fragment {
         info.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                RecentMethods.setCurrentFragment(ChatInformationFragment.newInstance(userInformation,bundle,MessageFragment.newInstance(userInformation, bundle, fragment, chat),chat),getActivity());
+                RecentMethods.setCurrentFragment(ChatInformationFragment.newInstance(userInformation, bundle, MessageFragment.newInstance(userInformation, bundle, fragment, chat), chat), getActivity());
             }
         });
         Picasso.get().load(messageReceiverImage).placeholder(R.drawable.corners14).into(userImage);
@@ -358,12 +359,55 @@ public final class MessageFragment extends Fragment {
                     public void onComplete(@NonNull Task<Uri> task) {
                         Uri downloadUrl = task.getResult();
                         myUrl = downloadUrl.toString();
-                        Send(myUrl, "image",0);
+                        Send(myUrl, "image", 0);
 
                     }
                 });
             }
         }
+    }
+
+    public void copy(Message message) {
+        ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipData clip = ClipData.newPlainText("CopyText", message.getMessage());
+        clipboard.setPrimaryClip(clip);
+    }
+
+    public void deleteMessage(Message message) {
+        firebaseModel.getUsersReference().child(message.getTo()).child("Chats").child(message.getFrom()).child("Messages").child(message.getId()).removeValue();
+        firebaseModel.getUsersReference().child(message.getFrom()).child("Chats").child(message.getTo()).child("Messages").child(message.getId()).removeValue();
+        Log.d("###", "deleteMessage: " + chat.getLastMessage());
+        firebaseModel.getUsersReference().child(message.getFrom()).child("Chats").child(message.getTo()).child("Messages").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                int i = 1;
+                for (DataSnapshot snap : snapshot.getChildren()) {
+                    if (i == snapshot.getChildrenCount()) {
+                        firebaseModel.getUsersReference().child(messageSenderName).child("Dialogs").child(messageReceiverName).child("lastMessage").setValue(snap.child("message").getValue().toString());
+                        firebaseModel.getUsersReference().child(messageReceiverName).child("Dialogs").child(messageSenderName).child("lastMessage").setValue(snap.child("message").getValue().toString());
+                        firebaseModel.getUsersReference().child(messageSenderName).child("Dialogs").child(messageReceiverName).child("lastTime").setValue(snap.child("time").getValue().toString());
+                        firebaseModel.getUsersReference().child(messageReceiverName).child("Dialogs").child(messageSenderName).child("lastTime").setValue(snap.child("time").getValue().toString());
+                    }
+                    i++;
+
+                }
+                if (i == 1){
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        //addLastMessage("text",);
+
+    }
+
+    public void upload() {
+
     }
 
     private void DisplayLastSeen() {
@@ -399,7 +443,7 @@ public final class MessageFragment extends Fragment {
         if (TextUtils.isEmpty(messageText)) {
             Toast.makeText(getContext(), "first write your message...", Toast.LENGTH_SHORT).show();
         } else {
-            Send(messageText, "text",0);
+            Send(messageText, "text", 0);
         }
 
     }
@@ -424,10 +468,10 @@ public final class MessageFragment extends Fragment {
         }).addOnCompleteListener(new OnCompleteListener<Uri>() {
             @Override
             public void onComplete(@NonNull Task<Uri> task) {
-                if(task.isSuccessful()){
+                if (task.isSuccessful()) {
                     Uri downloadUrl = task.getResult();
                     myUrl = downloadUrl.toString();
-                    Send(myUrl, "voice",duration);
+                    Send(myUrl, "voice", duration);
                 }
             }
         });
@@ -437,7 +481,7 @@ public final class MessageFragment extends Fragment {
     @SuppressLint("ClickableViewAccessibility")
     private void IntializeVoice(View v) {
         ImageView voice = v.findViewById(R.id.voiceinput);
-
+        ImageView circleVoice = v.findViewById(R.id.voiceActivityCircle);
         voice.setOnTouchListener(new View.OnTouchListener() {
             @SuppressLint("ClickableViewAccessibility")
             @RequiresApi(api = Build.VERSION_CODES.O)
@@ -446,7 +490,10 @@ public final class MessageFragment extends Fragment {
 
                     case MotionEvent.ACTION_DOWN:
                         try {
+                            //circleVoice.setVisibility(View.VISIBLE);
+                            //voice.setVisibility(View.GONE);
                             startRecording();
+
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -454,6 +501,8 @@ public final class MessageFragment extends Fragment {
                         break;
 
                     case MotionEvent.ACTION_UP:
+                        //circleVoice.setVisibility(View.GONE);
+                        //voice.setVisibility(View.VISIBLE);
                         stopRecording();
                         break;
                 }
@@ -518,11 +567,11 @@ public final class MessageFragment extends Fragment {
 
     private void addLastMessage(String type, String Message) {
 
-        Log.d("####",type);
+        Log.d("####", type);
         switch (type) {
             case "text":
                 //addType("text");
-                Log.d("###", "gg"+messageSenderName+"   "+messageReceiverName+"  "+Message);
+                Log.d("###", "gg" + messageSenderName + "   " + messageReceiverName + "  " + Message);
                 firebaseModel.getUsersReference().child(messageSenderName).child("Dialogs").child(messageReceiverName).child("lastMessage").setValue(Message);
                 firebaseModel.getUsersReference().child(messageReceiverName).child("Dialogs").child(messageSenderName).child("lastMessage").setValue(Message);
                 break;
@@ -540,8 +589,8 @@ public final class MessageFragment extends Fragment {
         Calendar calendar = Calendar.getInstance();
         firebaseModel.getUsersReference().child(messageSenderName).child("Dialogs").child(messageReceiverName).child("lastTime").setValue(RecentMethods.getCurrentTime());
         firebaseModel.getUsersReference().child(messageReceiverName).child("Dialogs").child(messageSenderName).child("lastTime").setValue(RecentMethods.getCurrentTime());
-        Map<String,String> map=new HashMap<>();
-        map=ServerValue.TIMESTAMP;
+        Map<String, String> map = new HashMap<>();
+        map = ServerValue.TIMESTAMP;
         firebaseModel.getUsersReference().child(messageSenderName).child("Dialogs").child(messageReceiverName).child("timeMill").setValue(map);
         firebaseModel.getUsersReference().child(messageReceiverName).child("Dialogs").child(messageSenderName).child("timeMill").setValue(map);
     }
@@ -571,6 +620,34 @@ public final class MessageFragment extends Fragment {
     }
 
 
+    public void showChatFunc(Message message) {
+        Log.d("###", "1: " + message.getMessage());
+        final Dialog dialog = new Dialog(getContext());
+        Log.d("###", "2: " + message.getMessage());
+        dialog.setContentView(R.layout.dialog_chat_depnds);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        RelativeLayout copyLayout = dialog.findViewById(R.id.Copy_relative_layout);
+        RelativeLayout deleteLayout = dialog.findViewById(R.id.Delete_relative_layout);
+
+        copyLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                copy(message);
+                dialog.dismiss();
+            }
+        });
+        deleteLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                deleteMessage(message);
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+    }
+
+
     public void addType(String type) {
         final long[] value = new long[1];
         DatabaseReference ref = firebaseModel.getUsersReference().child(messageReceiverName).child("Chats").child(messageSenderName).child(type);
@@ -594,65 +671,65 @@ public final class MessageFragment extends Fragment {
     }
 
 
-    public void Send(String message, String type,long duration) {
+    public void Send(String message, String type, long duration) {
         String messageSenderRef = messageReceiverName + "/Chats/" + messageSenderName + "/Messages";
         String messageReceiverRef = messageSenderName + "/Chats/" + messageReceiverName + "/Messages";
 
 
-        if(messagesList.size()==0){
-            ArrayList<UserPeopleAdapter> senderMembers=new ArrayList<>();
-            UserPeopleAdapter userPeopleAdapter=new UserPeopleAdapter();
+        if (messagesList.size() == 0) {
+            ArrayList<UserPeopleAdapter> senderMembers = new ArrayList<>();
+            UserPeopleAdapter userPeopleAdapter = new UserPeopleAdapter();
             userPeopleAdapter.setNick(userInformation.getNick());
             userPeopleAdapter.setBio(userPeopleAdapter.getBio());
             userPeopleAdapter.setAvatar(userPeopleAdapter.getAvatar());
             senderMembers.add(userPeopleAdapter);
-            ArrayList<UserPeopleAdapter> receiverMembers=new ArrayList<>();
-            UserPeopleAdapter userPeopleAdapter1=new UserPeopleAdapter();
+            ArrayList<UserPeopleAdapter> receiverMembers = new ArrayList<>();
+            UserPeopleAdapter userPeopleAdapter1 = new UserPeopleAdapter();
             userPeopleAdapter1.setNick(messageReceiverName);
             firebaseModel.getUsersReference().child(messageReceiverName).child("bio").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DataSnapshot> task) {
-                    if(task.isSuccessful()){
-                        DataSnapshot snapshot=task.getResult();
-                        String bio="";
-                        if(snapshot.exists()){
-                            bio=snapshot.getValue(String.class);
+                    if (task.isSuccessful()) {
+                        DataSnapshot snapshot = task.getResult();
+                        String bio = "";
+                        if (snapshot.exists()) {
+                            bio = snapshot.getValue(String.class);
                         }
                         userPeopleAdapter1.setBio(bio);
                         firebaseModel.getUsersReference().child(messageReceiverName).child("avatar")
                                 .get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                                if(task.isSuccessful()){
-                                    DataSnapshot snapshot1=task.getResult();
-                                    userPeopleAdapter1.setAvatar(snapshot1.getValue(String.class));
-                                    receiverMembers.add(userPeopleAdapter1);
-                                    Log.d("#####", messageSenderName+"fdgbreb");
-                                    firebaseModel.getUsersReference().child(messageReceiverName).child("Dialogs").child(messageSenderName)
-                                            .setValue(new Chat(messageSenderName,"" , "", "personal", 0,senderMembers,"false",new ArrayList<>(),0,duration));
-                                    firebaseModel.getUsersReference().child(messageSenderName).child("Dialogs").child(messageReceiverName)
-                                            .setValue(new Chat(messageReceiverName,"" ,"" , "personal", 0,receiverMembers,"false",new ArrayList<>(),0,duration));
-                                    addLastMessage(type, message);
-                                    addUnread();
-                                    if(type.equals("image")){
-                                        String uid=firebaseModel.getUsersReference().child(messageSenderName).child("Dialogs")
-                                                .child(messageReceiverName).child("dialogueMaterials").push().getKey();
-                                        firebaseModel.getUsersReference().child(messageSenderName).child("Dialogs")
-                                                .child(messageReceiverName).child("dialogueMaterials").child(uid).setValue(message);
-                                        firebaseModel.getUsersReference().child(messageReceiverName).child("Dialogs")
-                                                .child(messageSenderName).child("dialogueMaterials").child(uid).setValue(message);
+                                    @Override
+                                    public void onComplete(@NonNull Task<DataSnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            DataSnapshot snapshot1 = task.getResult();
+                                            userPeopleAdapter1.setAvatar(snapshot1.getValue(String.class));
+                                            receiverMembers.add(userPeopleAdapter1);
+                                            Log.d("#####", messageSenderName + "fdgbreb");
+                                            firebaseModel.getUsersReference().child(messageReceiverName).child("Dialogs").child(messageSenderName)
+                                                    .setValue(new Chat(messageSenderName, "", "", "personal", 0, senderMembers, "false", new ArrayList<>(), 0, duration, chat.getChatId(),""));
+                                            firebaseModel.getUsersReference().child(messageSenderName).child("Dialogs").child(messageReceiverName)
+                                                    .setValue(new Chat(messageReceiverName, "", "", "personal", 0, receiverMembers, "false", new ArrayList<>(), 0, duration, chat.getChatId(),""));
+                                            addLastMessage(type, message);
+                                            addUnread();
+                                            if (type.equals("image")) {
+                                                String uid = firebaseModel.getUsersReference().child(messageSenderName).child("Dialogs")
+                                                        .child(messageReceiverName).child("dialogueMaterials").push().getKey();
+                                                firebaseModel.getUsersReference().child(messageSenderName).child("Dialogs")
+                                                        .child(messageReceiverName).child("dialogueMaterials").child(uid).setValue(message);
+                                                firebaseModel.getUsersReference().child(messageReceiverName).child("Dialogs")
+                                                        .child(messageSenderName).child("dialogueMaterials").child(uid).setValue(message);
+                                            }
+                                        }
                                     }
-                                }
-                            }
-                        });
+                                });
                     }
                 }
             });
-        }else{
+        } else {
             addLastMessage(type, message);
             addUnread();
-            if(type.equals("image")){
-                String uid=firebaseModel.getUsersReference().child(messageSenderName).child("Dialogs")
+            if (type.equals("image")) {
+                String uid = firebaseModel.getUsersReference().child(messageSenderName).child("Dialogs")
                         .child(messageReceiverName).child("dialogueMaterials").push().getKey();
                 firebaseModel.getUsersReference().child(messageSenderName).child("Dialogs")
                         .child(messageReceiverName).child("dialogueMaterials").child(uid).setValue(message);
@@ -680,7 +757,6 @@ public final class MessageFragment extends Fragment {
             }
         });
     }
-
 
 
 }

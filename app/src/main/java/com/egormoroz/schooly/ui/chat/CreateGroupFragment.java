@@ -97,10 +97,15 @@ public class CreateGroupFragment extends Fragment {
             public void onClick(View view) {
                 if(dialogMembers.size()>=2){
                     if(editText.getText().toString().trim().length()>0){
+                        dialogMembers.add(new UserPeopleAdapter(userInformation.getNick(), userInformation.getPersonImage(), userInformation.getBio()));
                         String chatName=editText.getText().toString().trim();
-                        firebaseModel.getUsersReference().child(userInformation.getNick()).child("Dialogs")
-                                .child(chatName).setValue(new Chat(chatName, "", "", "talk",
-                                0, dialogMembers, "open", new ArrayList<>(),0,0));
+                        String uid=firebaseModel.getReference().child("groups").push().getKey();
+                        for(int i=0;i<dialogMembers.size();i++){
+                            UserPeopleAdapter userPeopleAdapter=dialogMembers.get(i);
+                            firebaseModel.getUsersReference().child(userPeopleAdapter.getNick()).child("Dialogs")
+                                    .child(uid).setValue(new Chat(chatName, "", "", "talk",
+                                            0, dialogMembers, "open", new ArrayList<>(),0,0,uid,userInformation.getNick()));
+                        }
                         Toast.makeText(getContext(), R.string.talkIsCreated, Toast.LENGTH_SHORT).show();
                     }    else{
                         Toast.makeText(getContext(), R.string.enterTalkTitle, Toast.LENGTH_SHORT).show();

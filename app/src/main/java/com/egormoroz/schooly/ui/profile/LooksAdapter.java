@@ -82,6 +82,7 @@ public class LooksAdapter extends RecyclerView.Adapter<LooksAdapter.ViewHolder> 
                 newsItemToViewing=listAdapter.get(holder.getAdapterPosition());
             }
         });
+        Picasso.get().load(newsItem.getImageUrl()).into(holder.surfaceView);
         viewLookCount=String.valueOf(newsItem.getViewCount());
 //        try {
 //            filamentModel.executeTask(newsItem.getImageUrl(), holder.surfaceView,false,null);
@@ -123,7 +124,7 @@ public class LooksAdapter extends RecyclerView.Adapter<LooksAdapter.ViewHolder> 
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        SurfaceView surfaceView;
+        ImageView surfaceView;
         TextView viewPurchase;
         ViewHolder(View itemView) {
             super(itemView);

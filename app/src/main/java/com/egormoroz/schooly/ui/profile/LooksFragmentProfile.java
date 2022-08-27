@@ -106,8 +106,8 @@ public class LooksFragmentProfile extends Fragment {
                         LooksAdapter.ItemClickListener itemClickListener=new LooksAdapter.ItemClickListener() {
                             @Override
                             public void onItemClick(NewsItem newsItem) {
-                                RecentMethods.setCurrentFragment(ViewingLookFragment.newInstance(ProfileFragment.
-                                        newInstance(type, nick, fragment,userInformation,bundle),userInformation,bundle), getActivity());
+                                ProfileFragment.checkLoadValue(newsItem,userInformation,getActivity());
+
                             }
                         };
                         looksAdapter.setClickListener(itemClickListener);
@@ -137,8 +137,7 @@ public class LooksFragmentProfile extends Fragment {
                 LooksAdapter.ItemClickListener itemClickListener = new LooksAdapter.ItemClickListener() {
                     @Override
                     public void onItemClick(NewsItem newsItem) {
-                        RecentMethods.setCurrentFragment(ViewingLookFragment.newInstance(ProfileFragment.
-                                newInstance(type, nick, fragment, userInformation,bundle), userInformation,bundle), getActivity());
+                        ProfileFragment.checkLoadValue(newsItem,userInformation,getActivity());
                     }
                 };
                 looksAdapter.setClickListener(itemClickListener);

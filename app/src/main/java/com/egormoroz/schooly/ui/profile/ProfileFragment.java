@@ -102,7 +102,7 @@ public class ProfileFragment extends Fragment {
     FirebaseModel firebaseModel = new FirebaseModel();
     Context profileContext, context;
     EditText editText,messageEdit;
-    UserInformation info;
+    static UserInformation info;
     CircularProgressIndicator circularProgressIndicator;
     WardrobeAdapterProfile.ItemClickListener itemClickListenerWardrobe;
     TextView nickname,message,biographyTextView,looksCount,subscriptionsCount,subscribersCount,otherLooksCount,otherSubscriptionCount,
@@ -116,10 +116,10 @@ public class ProfileFragment extends Fragment {
     SendLookAdapter.ItemClickListener itemClickListenerSendLookAdapter;
     RecyclerView wardrobeRecycler,recyclerView;
     ImageView moreSquare,back,newLook,editMainLook,editMainLookBack;
-    String sendNick,subscriptionsCountString,subscribersCountString
+    static String sendNick,subscriptionsCountString,subscribersCountString
             ,otherSubscriptionCountString,
             otherSubscribersCountString,type,userName;
-    Fragment fragment;
+    static Fragment fragment;
     View root;
     ArrayList<Clothes> clothesList=new ArrayList<>();
     ViewPager2 viewPager,viewPagerOther;
@@ -131,14 +131,14 @@ public class ProfileFragment extends Fragment {
     int tabLayoutPosition,tabLayoutPositionOther;
     private float[] backgroundColor = new float[]{0f, 0f, 0f, 1.0f};
     int a,profileCheckValue,checkOnSubscribeValue, b=0,v;
-    UserInformation userInformation;
-    Bundle bundle;
+    static UserInformation userInformation;
+    static Bundle bundle;
     static FilamentModel filamentModel;
     ArrayList<Clothes> mainLookClothes=new ArrayList<>();
     static byte[] buffer;
     static URI uri;
     static Buffer buffer1,bufferToFilament;
-    int loadValue=0;
+    static int loadValue=0;
     static  ArrayList<Buffer> facePartsBuffers=new ArrayList<>();
 
 
@@ -206,8 +206,11 @@ public class ProfileFragment extends Fragment {
 
             }
         });
-        RecentMethods.setCurrentFragment(MessageFragment.newInstance(userInformation, bundle, ProfileFragment.newInstance("other", info.getNick(), fragment, userInformation, bundle),
-                new Chat(info.getNick(), "", "", "personal", 0, new ArrayList<>(), "falce", new ArrayList<>(),0,0)), getActivity());
+        if (loadValue==0){
+            RecentMethods.setCurrentFragment(MessageFragment.newInstance(userInformation, bundle, ProfileFragment.newInstance("other", info.getNick(), fragment, userInformation, bundle),
+                    new Chat(info.getNick(), "", "", "personal", 0, new ArrayList<>(), "falce", new ArrayList<>(),0,0,"","")), getActivity());
+        }
+
     }
 
     @Override
@@ -248,8 +251,9 @@ public class ProfileFragment extends Fragment {
                 OnBackPressedCallback callback1 = new OnBackPressedCallback(true) {
                     @Override
                     public void handleOnBackPressed() {
-
-                        RecentMethods.setCurrentFragment(MainFragment.newInstance(userInformation, bundle), getActivity());
+                        if(loadValue==0) {
+                            RecentMethods.setCurrentFragment(MainFragment.newInstance(userInformation, bundle), getActivity());
+                        }
                     }
                 };
 
@@ -262,14 +266,19 @@ public class ProfileFragment extends Fragment {
                 imageView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ((MainActivity) getActivity()).setCurrentFragment(SettingsFragment.newInstance("user",fragment,userInformation,bundle));
+                        if(loadValue==0) {
+                            ((MainActivity) getActivity()).setCurrentFragment(SettingsFragment.newInstance("user",fragment,userInformation,bundle));
+                        }
+
                     }
                 });
                 newLook=view.findViewById(R.id.newLook);
                 newLook.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        RecentMethods.setCurrentFragment(CreateLookFragment.newInstance("user",fragment,userInformation,bundle,"newlook"), getActivity());
+                        if (loadValue==0){
+                            RecentMethods.setCurrentFragment(CreateLookFragment.newInstance("user",fragment,userInformation,bundle,"newlook"), getActivity());
+                        }
                     }
                 });
                 ///////// I want GM on CF
@@ -277,14 +286,19 @@ public class ProfileFragment extends Fragment {
                 arrowtowardrobe.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        RecentMethods.setCurrentFragment(WardrobeFragment.newInstance("user",fragment,userInformation,bundle), getActivity());
+                        if (loadValue==0){
+                            RecentMethods.setCurrentFragment(WardrobeFragment.newInstance("user",fragment,userInformation,bundle), getActivity());
+                        }
                     }
                 });
                 TextView editing = view.findViewById(R.id.redact);
                 editing.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ((MainActivity) getActivity()).setCurrentFragment(EditingFragment.newInstance("user",fragment,userInformation,bundle));
+                        if (loadValue==0){
+                            ((MainActivity) getActivity()).setCurrentFragment(EditingFragment.newInstance("user",fragment,userInformation,bundle));
+                        }
+
                     }
                 });
                 if (bundle!=null){
@@ -294,7 +308,10 @@ public class ProfileFragment extends Fragment {
                 editMainLook.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        RecentMethods.setCurrentFragment(CreateLookFragment.newInstance("user",fragment,userInformation,bundle,"mainlook"),getActivity());
+                        if (loadValue==0){
+                            RecentMethods.setCurrentFragment(CreateLookFragment.newInstance("user",fragment,userInformation,bundle,"mainlook"),getActivity());
+                        }
+
                     }
                 });
                 //////////////////////////////
@@ -351,13 +368,18 @@ public class ProfileFragment extends Fragment {
                 linearSubscribersProfile.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        RecentMethods.setCurrentFragment(SubscriberFragment.newInstance("user",fragment,userInformation,bundle), getActivity());
+                        if (loadValue==0){
+                            RecentMethods.setCurrentFragment(SubscriberFragment.newInstance("user",fragment,userInformation,bundle), getActivity());
+                        }
                     }
                 });
                 linearSubscriptionsProfile.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        RecentMethods.setCurrentFragment(SubscriptionsFragment.newInstance("user",fragment,userInformation,bundle), getActivity());
+                        if (loadValue==0){
+                            RecentMethods.setCurrentFragment(SubscriptionsFragment.newInstance("user",fragment,userInformation,bundle), getActivity());
+                        }
+
                     }
                 });
                 ////////////////WARDROBE/////////////
@@ -365,8 +387,11 @@ public class ProfileFragment extends Fragment {
                 texttowardrobe.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        RecentMethods.setCurrentFragment(WardrobeFragment
-                                .newInstance("user",fragment,userInformation,bundle), getActivity());
+                        if (loadValue==0){
+                            RecentMethods.setCurrentFragment(WardrobeFragment
+                                    .newInstance("user",fragment,userInformation,bundle), getActivity());
+                        }
+
                     }
                 });
                 wardrobeRecycler=view.findViewById(R.id.recyclerProfileToWardrobe);
@@ -375,7 +400,10 @@ public class ProfileFragment extends Fragment {
                 itemClickListenerWardrobe=new WardrobeAdapterProfile.ItemClickListener() {
                     @Override
                     public void onItemClick(Clothes clothes) {
-                        RecentMethods.setCurrentFragment(WardrobeFragment.newInstance("user",fragment,userInformation,bundle), getActivity());
+                        if (loadValue==0){
+                            RecentMethods.setCurrentFragment(WardrobeFragment.newInstance("user",fragment,userInformation,bundle), getActivity());
+                        }
+
                     }
                 };
                 checkWardrobe();
@@ -392,13 +420,19 @@ public class ProfileFragment extends Fragment {
                 back.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        RecentMethods.setCurrentFragment(fragment, getActivity());
+                        if (loadValue==0){
+                            RecentMethods.setCurrentFragment(fragment, getActivity());
+                        }
+
                     }
                 });
                 OnBackPressedCallback callback = new OnBackPressedCallback(true) {
                     @Override
                     public void handleOnBackPressed() {
-                        RecentMethods.setCurrentFragment(fragment, getActivity());
+                        if (loadValue==0){
+                            RecentMethods.setCurrentFragment(fragment, getActivity());
+                        }
+
                     }
                 };
                 requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
@@ -574,21 +608,29 @@ public class ProfileFragment extends Fragment {
 
                     @Override
                     public void onClick(View v) {
-                        ((MainActivity) getActivity()).setCurrentFragment(SettingsFragment.newInstance("userback",fragment,userInformation,bundle));
+                        if (loadValue==0){
+                            ((MainActivity) getActivity()).setCurrentFragment(SettingsFragment.newInstance("userback",fragment,userInformation,bundle));
+                        }
+
                     }
                 });
                 back=view.findViewById(R.id.back);
                 back.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        RecentMethods.setCurrentFragment(fragment, getActivity());
+                        if (loadValue==0){
+                            RecentMethods.setCurrentFragment(fragment, getActivity());
+                        }
+
                     }
                 });
                 OnBackPressedCallback callbackUserBack = new OnBackPressedCallback(true) {
                     @Override
                     public void handleOnBackPressed() {
+                        if (loadValue==0){
+                            RecentMethods.setCurrentFragment(fragment, getActivity());
+                        }
 
-                        RecentMethods.setCurrentFragment(fragment, getActivity());
                     }
                 };
 
@@ -605,7 +647,10 @@ public class ProfileFragment extends Fragment {
                 newLook.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        RecentMethods.setCurrentFragment(CreateLookFragment.newInstance("userback",fragment,userInformation,bundle,"newlook"), getActivity());
+                        if (loadValue==0){
+                            RecentMethods.setCurrentFragment(CreateLookFragment.newInstance("userback",fragment,userInformation,bundle,"newlook"), getActivity());
+                        }
+
                     }
                 });
                 ///////// I want GM on CF
@@ -613,7 +658,10 @@ public class ProfileFragment extends Fragment {
                 arrowtowardrobe1.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        RecentMethods.setCurrentFragment(WardrobeFragment.newInstance("userback",fragment,userInformation,bundle), getActivity());
+                        if (loadValue==0){
+                            RecentMethods.setCurrentFragment(WardrobeFragment.newInstance("userback",fragment,userInformation,bundle), getActivity());
+                        }
+
                     }
                 });
 
@@ -621,7 +669,10 @@ public class ProfileFragment extends Fragment {
                 editMainLookBack.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        RecentMethods.setCurrentFragment(CreateLookFragment.newInstance("userback",fragment,userInformation,bundle,"mainlook"),getActivity());
+                        if (loadValue==0){
+                            RecentMethods.setCurrentFragment(CreateLookFragment.newInstance("userback",fragment,userInformation,bundle,"mainlook"),getActivity());
+                        }
+
                     }
                 });
 
@@ -629,8 +680,10 @@ public class ProfileFragment extends Fragment {
                 editing1.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        if (loadValue==0){
+                            ((MainActivity) getActivity()).setCurrentFragment(EditingFragment.newInstance("userback",fragment,userInformation,bundle));
+                        }
 
-                        ((MainActivity) getActivity()).setCurrentFragment(EditingFragment.newInstance("userback",fragment,userInformation,bundle));
                     }
                 });
                 //////////////////////////////
@@ -688,13 +741,17 @@ public class ProfileFragment extends Fragment {
                 linearSubscribersProfile.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        RecentMethods.setCurrentFragment(SubscriberFragment.newInstance("userback",fragment,userInformation,bundle), getActivity());
+                        if (loadValue==0){
+                            RecentMethods.setCurrentFragment(SubscriberFragment.newInstance("userback",fragment,userInformation,bundle), getActivity());
+                        }
                     }
                 });
                 linearSubscriptionsProfile.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        RecentMethods.setCurrentFragment(SubscriptionsFragment.newInstance("userback",fragment,userInformation,bundle), getActivity());
+                        if (loadValue==0){
+                            RecentMethods.setCurrentFragment(SubscriptionsFragment.newInstance("userback",fragment,userInformation,bundle), getActivity());
+                        }
                     }
                 });
                 ////////////////WARDROBE/////////////
@@ -702,8 +759,11 @@ public class ProfileFragment extends Fragment {
                 texttowardrobe1.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        RecentMethods.setCurrentFragment(WardrobeFragment
-                                .newInstance("userback",fragment,userInformation,bundle), getActivity());
+                        if (loadValue==0){
+                            RecentMethods.setCurrentFragment(WardrobeFragment
+                                    .newInstance("userback",fragment,userInformation,bundle), getActivity());
+                        }
+
                     }
                 });
                 wardrobeRecycler=view.findViewById(R.id.recyclerProfileToWardrobe);
@@ -712,33 +772,17 @@ public class ProfileFragment extends Fragment {
                 itemClickListenerWardrobe=new WardrobeAdapterProfile.ItemClickListener() {
                     @Override
                     public void onItemClick(Clothes clothes) {
-                        RecentMethods.setCurrentFragment(WardrobeFragment.newInstance("userback",fragment,userInformation,bundle), getActivity());
+                        if (loadValue==0){
+                            RecentMethods.setCurrentFragment(WardrobeFragment.newInstance("userback",fragment,userInformation,bundle), getActivity());
+
+                        }
                     }
                 };
                 checkWardrobe();
                 //////////////////////////////////////
 
-                handler = new Handler(getMainLooper());
-                StorageReference storageReference1 = FirebaseStorage.getInstance().getReference().child("Models");
-                StorageReference islandRef1 = storageReference1.child("models/untitled.gltf");
-                File localFile1 = null;
-                try {
-                    localFile1 = File.createTempFile("model", ".gltf");
-                } catch (IOException ioException) {
-                    ioException.printStackTrace();
-                }
 
-                islandRef1.getFile(localFile1).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                        // Local temp file has been created
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-                        // Handle any errors
-                    }
-                });
+
 
                 break;
 
@@ -977,7 +1021,7 @@ public class ProfileFragment extends Fragment {
                         buyClothesProfile.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                RecentMethods.setCurrentFragment(ShopFragment.newInstance(userInformation,bundle,ProfileFragment.newInstance(type, sendNick, fragment, userInformation, bundle)), getActivity());
+                                if (loadValue==0)RecentMethods.setCurrentFragment(ShopFragment.newInstance(userInformation,bundle,ProfileFragment.newInstance(type, sendNick, fragment, userInformation, bundle)), getActivity());
                             }
                         });
                     }else {
@@ -995,7 +1039,7 @@ public class ProfileFragment extends Fragment {
                 buyClothesProfile.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        RecentMethods.setCurrentFragment(ShopFragment.newInstance(userInformation,bundle,ProfileFragment.newInstance(type, sendNick, fragment, userInformation, bundle)), getActivity());
+                        if (loadValue==0) RecentMethods.setCurrentFragment(ShopFragment.newInstance(userInformation,bundle,ProfileFragment.newInstance(type, sendNick, fragment, userInformation, bundle)), getActivity());
                     }
                 });
             }else {
@@ -1118,13 +1162,13 @@ public class ProfileFragment extends Fragment {
                 linearSubscriptions.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        RecentMethods.setCurrentFragment(SubscriptionsFragmentOther.newInstance(fragment, info.getNick(), userInformation,bundle), getActivity());
+                        if (loadValue==0)RecentMethods.setCurrentFragment(SubscriptionsFragmentOther.newInstance(fragment, info.getNick(), userInformation,bundle), getActivity());
                     }
                 });
                 linearSubscribers.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        RecentMethods.setCurrentFragment(SubscribesFragmentOther.newInstance(fragment, info.getNick(), userInformation,bundle), getActivity());
+                        if (loadValue==0) RecentMethods.setCurrentFragment(SubscribesFragmentOther.newInstance(fragment, info.getNick(), userInformation,bundle), getActivity());
                     }
                 });
 
@@ -1562,71 +1606,121 @@ public class ProfileFragment extends Fragment {
     }
 
     public void loadPerson(UserInformation userInformation,LockableNestedScrollView lockableNestedScrollView,SurfaceView surfaceView){
+        loadValue=1;
         if(userInformation.getPerson()==null){
             Log.d("AAAAA", "aaaasssh  "+userInformation.getNick());
-            RecentMethods.startLoadPerson(userInformation.getNick(), firebaseModel, new Callbacks.loadPerson() {
-                @Override
-                public void LoadPerson(Person person,ArrayList<FacePart> facePartArrayList) {
-                    Log.d("AAA","ss  "+person.getBody());
-                    LoadBodyParts.loadPersonBuffers(facePartArrayList, new Callbacks.loadFaceParts() {
-                        @Override
-                        public void LoadFaceParts(ArrayList<FacePart> facePartsArrayList) {
-                            Log.d("AAAAA","ss11  "+facePartsArrayList.get(0).getBuffer()+"   "+facePartsArrayList.get(0).getUid());
-                            for(int i=0;i<facePartsArrayList.size();i++){
-                                FacePart facePart=facePartsArrayList.get(i);
-                                Log.d("AAAAA","ss22  "+facePartsArrayList.get(i).getBuffer()+"   "+facePart.getUid()+"   "+i);
-                                if(i==0){
-                                    try {
-                                        filamentModel.initFilament(surfaceView, facePart.getBuffer(), true, lockableNestedScrollView
-                                                , "regularRender", true);
-                                        loadMainLook(userInformation);
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
-                                    } catch (URISyntaxException e) {
-                                        e.printStackTrace();
-                                    }
-                                }else{
-                                    filamentModel.populateSceneFacePart(facePartsArrayList.get(i).getBuffer());
-                                }
-                            }
-                            userInformation.setPerson(RecentMethods.setAllPerson(facePartsArrayList,"not"));
-                        }
-                    });
-                }
-            });
+            loadPersonBuffer(userInformation,lockableNestedScrollView,surfaceView);
 
         }else{
-            Log.d("####", "aa    "+userInformation.getPerson());
-            ArrayList<FacePart> facePartArrayList=new ArrayList<>();
-            facePartArrayList.add(userInformation.getPerson().getBody());
-            facePartArrayList.add(userInformation.getPerson().getBrows());
-            facePartArrayList.add(userInformation.getPerson().getEars());
-            facePartArrayList.add(userInformation.getPerson().getEyes());
-            facePartArrayList.add(userInformation.getPerson().getHair());
-            facePartArrayList.add(userInformation.getPerson().getHead());
-            facePartArrayList.add(userInformation.getPerson().getLips());
-            facePartArrayList.add(userInformation.getPerson().getNose());
-            facePartArrayList.add(userInformation.getPerson().getPirsing());
-            facePartArrayList.add(userInformation.getPerson().getSkinColor());
-            for(int i=0;i<facePartArrayList.size();i++){
-                FacePart facePart=facePartArrayList.get(i);
-                if(facePart!=null){
-                    if(i==0){
-                        try {
-                            filamentModel.initFilament(surfaceView, facePart.getBuffer(), true, lockableNestedScrollView
-                                    , "regularRender", true);
-                            loadMainLook(userInformation);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        } catch (URISyntaxException e) {
-                            e.printStackTrace();
+            if (userInformation.getPerson().getBody().getBuffer()==null){
+                loadPersonBuffer(userInformation,lockableNestedScrollView,surfaceView);
+            }else{
+                Log.d("####", "aa    "+userInformation.getPerson());
+                ArrayList<FacePart> facePartArrayList=new ArrayList<>();
+                facePartArrayList.add(userInformation.getPerson().getBody());
+                facePartArrayList.add(userInformation.getPerson().getBrows());
+                facePartArrayList.add(userInformation.getPerson().getEars());
+                facePartArrayList.add(userInformation.getPerson().getEyes());
+                facePartArrayList.add(userInformation.getPerson().getHair());
+                facePartArrayList.add(userInformation.getPerson().getHead());
+                facePartArrayList.add(userInformation.getPerson().getLips());
+                facePartArrayList.add(userInformation.getPerson().getNose());
+                facePartArrayList.add(userInformation.getPerson().getMustache());
+                facePartArrayList.add(userInformation.getPerson().getSkinColor());
+                for(int i=0;i<facePartArrayList.size();i++){
+                    FacePart facePart=facePartArrayList.get(i);
+                    com.egormoroz.schooly.Color[] color = {new com.egormoroz.schooly.Color()};
+                    if(facePart!=null){
+                        if(facePart.getColorX()!=-1f && facePart.getColorY()!=-1f && facePart.getColorZ()!=-1f) {
+                            color[0] = new com.egormoroz.schooly.Color(facePart.getColorX(),
+                                    facePart.getColorY(), facePart.getColorZ()
+                                    , 0, 0, 0);
                         }
-                    }else{
-                        filamentModel.populateSceneFacePart(facePart.getBuffer());
+                        if(i==0){
+                            try {
+                                filamentModel.initFilament(surfaceView, facePart.getBuffer(), true, lockableNestedScrollView
+                                        , "regularRender", true);
+                                if(color[0].getColorX() !=null)
+                                    filamentModel.changeColor(facePart.getPartType(),color[0] );
+                                loadMainLook(userInformation);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            } catch (URISyntaxException e) {
+                                e.printStackTrace();
+                            }
+                        }else{
+                            filamentModel.populateSceneFacePart(facePart.getBuffer());
+                            if(color[0].getColorX() !=null)
+                                filamentModel.changeColor(facePart.getPartType(),color[0] );
+                        }
                     }
                 }
             }
         }
+    }
+
+    public void loadPersonBuffer(UserInformation userInformation,LockableNestedScrollView lockableNestedScrollView,SurfaceView surfaceView){
+        com.egormoroz.schooly.Color colorBody=new com.egormoroz.schooly.Color();
+        com.egormoroz.schooly.Color colorHair=new com.egormoroz.schooly.Color();
+        com.egormoroz.schooly.Color colorBrows=new com.egormoroz.schooly.Color();
+        RecentMethods.startLoadPerson(userInformation.getNick(), firebaseModel, new Callbacks.loadPerson() {
+            @Override
+            public void LoadPerson(Person person,ArrayList<FacePart> facePartArrayList) {
+                Log.d("AAA","ss  "+person.getHair().getColorY());
+                LoadBodyParts.loadPersonBuffers(facePartArrayList, new Callbacks.loadFaceParts() {
+                    @Override
+                    public void LoadFaceParts(ArrayList<FacePart> facePartsArrayList) {
+                        Log.d("AAAAA","ss11  "+facePartsArrayList.get(0).getColorZ()+"   "+facePartsArrayList.get(0).getUid());
+                        for(int i=0;i<facePartsArrayList.size();i++){
+                            FacePart facePart=facePartsArrayList.get(i);
+                            com.egormoroz.schooly.Color[] color = {new com.egormoroz.schooly.Color()};
+                            if(facePart.getColorX()!=-1f && facePart.getColorY()!=-1f && facePart.getColorZ()!=-1f){
+                                Log.d("AAAAA","ss22  "+facePartsArrayList.get(i).getColorX()+"   "+facePartsArrayList.get(i).getColorY()
+                                        +"   "+facePartsArrayList.get(i).getColorZ());
+                                color[0] =new com.egormoroz.schooly.Color(facePartsArrayList.get(i).getColorX(),
+                                        facePartsArrayList.get(i).getColorY(), facePartsArrayList.get(i).getColorZ()
+                                        , 0, 0, 0);
+                                switch (facePart.getPartType()) {
+                                    case "body":
+                                        colorBody.setColorX(facePart.getColorX());
+                                        colorBody.setColorY(facePart.getColorY());
+                                        colorBody.setColorZ(facePart.getColorZ());
+                                        break;
+                                    case "hair":
+                                        colorHair.setColorX(facePart.getColorX());
+                                        colorHair.setColorY(facePart.getColorY());
+                                        colorHair.setColorZ(facePart.getColorZ());
+                                        break;
+                                    case "brows":
+                                        colorBrows.setColorX(facePart.getColorX());
+                                        colorBrows.setColorY(facePart.getColorY());
+                                        colorBrows.setColorZ(facePart.getColorZ());
+                                        break;
+                                }
+                            }
+                            if(i==0){
+                                try {
+                                    filamentModel.initFilament(surfaceView, facePart.getBuffer(), true, lockableNestedScrollView
+                                            , "regularRender", true);
+                                    if(color[0].getColorX() !=null)
+                                    filamentModel.changeColor(facePart.getPartType(), color[0]);
+                                    loadMainLook(userInformation);
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                } catch (URISyntaxException e) {
+                                    e.printStackTrace();
+                                }
+                            }else{
+                                filamentModel.populateSceneFacePart(facePart.getBuffer());
+                                if(color[0].getColorX() !=null)
+                                    filamentModel.changeColor(facePart.getPartType(), color[0]);
+                            }
+                        }
+                        userInformation.setPerson(RecentMethods.setAllPerson(facePartsArrayList,"not",colorBody,colorHair,colorBrows));
+                    }
+                });
+            }
+        });
     }
 
     public void loadMainLook(UserInformation userInformation){
@@ -1648,7 +1742,12 @@ public class ProfileFragment extends Fragment {
                                     for(int i=0;i<clothesArrayList.size();i++){
                                         Clothes clothes=clothesArrayList.get(i);
                                         filamentModel.populateScene(clothes.getBuffer(), clothes);
+                                        if (i == clothesArrayList.size() - 1) {
+                                            loadValue=0;
+                                            userInformation.setMainLook(clothesArrayList);
+                                        }
                                     }
+
                                 }
                             });
                         }
@@ -1658,95 +1757,13 @@ public class ProfileFragment extends Fragment {
             } else {
                 mainLookClothes = userInformation.getMainLook();
                 for (int i = 0; i < mainLookClothes.size(); i++) {
-                    Clothes clothes = mainLookClothes.get(0);
+                    Clothes clothes = mainLookClothes.get(i);
                     filamentModel.populateScene(clothes.getBuffer(), clothes);
+                    if (i == mainLookClothes.size() - 1) {
+                        loadValue=0;
+                    }
                 }
             }
-    }
-
-    public void loadPersonBuffers(SurfaceView surfaceView,Person person,ArrayList<FacePart> facePartArrayList
-    ,LockableNestedScrollView lockableNestedScrollView,String nick){
-        FacePart facePart=person.getBody();
-        Log.d("####","ss111  "+person.getBody());
-        TaskRunnerCustom taskRunnerCustom=new TaskRunnerCustom();
-        taskRunnerCustom.executeAsync(new LongRunningTaskBody(facePart), (data) -> {
-            //Log.d("####","ss111777  "+data.getBuffer());
-            filamentModel.initFilament(surfaceView,data.getBuffer(),true,lockableNestedScrollView
-                    ,"regularRender",true);
-            for(int i=0;i<facePartArrayList.size();i++){
-                Log.d("#####", "q  "+facePartArrayList.size());
-                FacePart facePart1=facePartArrayList.get(i);
-                TaskRunnerCustom taskRunnerCustom1=new TaskRunnerCustom();
-                int finalI = i;
-                taskRunnerCustom1.executeAsync(new LongRunningTask(facePart1), (data1) -> {
-                    if(data1!=null){
-                        Log.d("#####", "l  "+data1.getPartTitle()+"  "+ finalI +"  "+facePartArrayList.size());
-                        filamentModel.populateSceneFacePart(data1.getBuffer());
-                    }
-                    if(finalI ==facePartArrayList.size()-1){
-                        Log.d("####", "ddd");
-                    }
-                });
-            }
-        });
-    }
-
-    public static FacePart loadBodyPart(FacePart facePart){
-        if(facePart!=null){
-            try {
-                if(!facePart.getPartType().equals("body")){
-                    uri = new URI(facePart.getModel());
-                    buffer = RecentMethods.getBytes(uri.toURL());
-                    buffer1= ByteBuffer.wrap(buffer);
-                    facePart.setBuffer(buffer1);
-                    facePartsBuffers.add(buffer1);
-                }else{
-                    facePart=null;
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (URISyntaxException e) {
-                e.printStackTrace();
-            }
-        }else {
-            facePart=null;
-        }
-        return facePart;
-    }
-
-    public static FacePart loadBody(FacePart facePart){
-        if(facePart!=null){
-            try {
-                uri = new URI(facePart.getModel());
-                buffer = RecentMethods.getBytes(uri.toURL());
-                buffer1= ByteBuffer.wrap(buffer);
-                facePart.setBuffer(buffer1);
-                facePartsBuffers.add(buffer1);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (URISyntaxException e) {
-                e.printStackTrace();
-            }
-        }else {
-            facePart=null;
-        }
-        return facePart;
-    }
-
-
-    public void addModelInScene(Clothes clothes)  {
-        try {
-            uri = new URI(clothes.getModel());
-            buffer = RecentMethods.getBytes(uri.toURL());
-            buffer1= ByteBuffer.wrap(buffer);
-            clothes.setBuffer(bufferToFilament);
-            mainLookClothes.add(clothes);
-            clothesList.add(clothes);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
     }
 
     private void showBottomSheetDialog(View view) {
@@ -1771,10 +1788,13 @@ public class ProfileFragment extends Fragment {
         complain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecentMethods.setCurrentFragment(ComplainFragment.newInstance(info.getNick(),fragment,userInformation,bundle), getActivity());
-                bottomSheetDialog.dismiss();
+                if (loadValue==0) {
+                    RecentMethods.setCurrentFragment(ComplainFragment.newInstance(info.getNick(), fragment, userInformation, bundle), getActivity());
+                    bottomSheetDialog.dismiss();
+                }
             }
         });
+
 
         deleteSubscriber.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -1809,6 +1829,24 @@ public class ProfileFragment extends Fragment {
 //        });
 
         bottomSheetDialog.show();
+
+
+
+    }
+
+    public static void checkLoadValue(NewsItem newsItem,UserInformation userInformation,Activity activity){
+
+        if(loadValue==0){
+            RecentMethods.setCurrentFragment(ViewingLookFragment.newInstance(ProfileFragment.
+                    newInstance(type, userInformation.getNick(), fragment,userInformation,bundle),userInformation,bundle), activity);
+        }
+    }
+
+    public static void checkLoadValueOther(NewsItem newsItem,String userName,Activity activity){
+        if(loadValue==0){
+            RecentMethods.setCurrentFragment(ViewingLookFragment.newInstance(ProfileFragment.
+                    newInstance("other", userName, fragment,userInformation,bundle),userInformation,bundle), activity);
+        }
     }
 
     private void showBottomSheetDialogSend() {
@@ -1953,31 +1991,5 @@ public class ProfileFragment extends Fragment {
         super.onDestroy();
 
         filamentModel.removeFrameCallback();
-    }
-
-    static class LongRunningTask implements Callable<FacePart> {
-        private FacePart facePart;
-
-        public LongRunningTask(FacePart facePart) {
-            this.facePart = facePart;
-        }
-
-        @Override
-        public FacePart call() {
-            return loadBodyPart(facePart);
-        }
-    }
-
-    static class LongRunningTaskBody implements Callable<FacePart> {
-        private FacePart facePart;
-
-        public LongRunningTaskBody(FacePart facePart) {
-            this.facePart = facePart;
-        }
-
-        @Override
-        public FacePart call() {
-            return loadBody(facePart);
-        }
     }
 }

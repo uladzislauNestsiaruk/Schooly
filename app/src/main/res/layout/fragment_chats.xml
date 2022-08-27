@@ -17,13 +17,13 @@
         android:id="@+id/noChats"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/app_grey"
-        android:textSize="16sp"
-        android:fontFamily="@font/montserrat_bold"
-        android:visibility="gone"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="250dp"
-        android:text="@string/noChats"/>
+        android:fontFamily="@font/montserrat_bold"
+        android:text="@string/noChats"
+        android:textColor="@color/app_grey"
+        android:textSize="16sp"
+        android:visibility="gone" />
 
     
 

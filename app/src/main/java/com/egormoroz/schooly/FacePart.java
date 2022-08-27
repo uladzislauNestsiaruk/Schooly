@@ -8,16 +8,23 @@ public class FacePart {
     String model;
     String uid;
     Buffer buffer;
+    String facePartImage;
+    Float colorX,colorY,colorZ;
 
 
     public FacePart(String type, String  partTitle,
-                    String model,String uid,Buffer buffer
+                    String model,String uid,Buffer buffer,String facePartImage,Float colorX,Float colorY
+                    ,Float colorZ
     ){
         this.type=type;
         this.partTitle=partTitle;
         this.model=model;
         this.uid=uid;
         this.buffer=buffer;
+        this.facePartImage=facePartImage;
+        this.colorX=colorX;
+        this.colorY=colorY;
+        this.colorZ=colorZ;
     }
     public FacePart(){
     }
@@ -60,6 +67,38 @@ public class FacePart {
 
     public void setBuffer(Buffer buffer){
         this.buffer=buffer;
+    }
+
+    public String getFacePartImage(){
+        return this.facePartImage;
+    }
+
+    public void setFacePartImage(String facePartImage){
+        this.facePartImage=facePartImage;
+    }
+
+    public Float getColorX(){
+        return this.colorX;
+    }
+
+    public void setColorX(Float colorX){
+        this.colorX=colorX;
+    }
+
+    public Float getColorY(){
+        return this.colorY;
+    }
+
+    public void setColorY(Float colorY){
+        this.colorY=colorY;
+    }
+
+    public Float getColorZ(){
+        return this.colorZ;
+    }
+
+    public void setColorZ(Float colorZ){
+        this.colorZ=colorZ;
     }
 
 
